@@ -127,9 +127,6 @@ function openScene(fileInfo) {
         TQ.SkinningCtrl.end();
         TQ.floatToolbar.show(false);
         TQ.WCY.currentScene = currScene;
-        if (TQ.displayUI.initialize) {
-            TQ.displayUI.initialize();
-        }
     } else {
       var filename = localStorage.getItem("sceneName");
       TQ.SceneEditorUI.promptToSave(filename);
