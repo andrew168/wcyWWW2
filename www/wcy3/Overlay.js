@@ -14,6 +14,9 @@ window.TQ = window.TQ || {};
     p.Level_update = p.update;
     p.Level_initialize = p.initialize;
     p.initialize = function (desc) {
+        if (!desc.name) {
+          desc.name = "overlay";
+        }
         this.Level_initialize(desc);
         this.show();
     };

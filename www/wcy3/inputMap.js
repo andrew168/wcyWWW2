@@ -11,6 +11,7 @@ var TOUCH_MOVING_FLAG = 999;
 
 (function () {
     var InputMap = {};
+    InputMap.playOnlyFlag = true;
     InputMap.isPresseds = [];
     InputMap.lastPresseds = [];
     InputMap.DELETE_KEY = 46;
@@ -59,7 +60,7 @@ var TOUCH_MOVING_FLAG = 999;
         InputMap.toolbarState = buttonIDString;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TOOLBAR);
     };
-    
+
     InputMap.IsOperating = function() {
         return ((InputMap.isTouchMoving || InputMap.isMouseDown) && (InputMap.toolbarState == null));
     };
@@ -67,7 +68,7 @@ var TOUCH_MOVING_FLAG = 999;
     InputMap.maps = [];
     InputMap.registerAction = function (key, action){
         // key可以是组合键, 例如:
-        // key = InputMap.DELETE_KEY | InputMap.LEFT_SHIFT_FLAG;        
+        // key = InputMap.DELETE_KEY | InputMap.LEFT_SHIFT_FLAG;
 		InputMap.maps[key] = action;
     };
 
@@ -83,41 +84,51 @@ var TOUCH_MOVING_FLAG = 999;
         InputMap.isPresseds[InputMap.LEFT_ALT] = InputMap.lastPresseds[InputMap.LEFT_ALT];
     };
 
-    $(document).bind('mousemove touchmove touchcancel', function(e) {
-        TQ.Log.info("which:" + e.which + "mousedown:" + InputMap.isMouseDown + " type:" + e.type + "(x,y):" + e.screenX +"," + e.screenY);
+    InputMap.initialize = function(playOnlyFlag) {
+      if (!!playOnlyFlag) {
+        return;
+      }
+
+      $(document).bind('mousemove touchmove touchcancel', function (e) {
+        TQ.Log.info("which:" + e.which + "mousedown:" + InputMap.isMouseDown + " type:" + e.type + "(x,y):" + e.screenX + "," + e.screenY);
         InputMap.mouseMoving = true;
         InputMap.updateSpecialKey(e);
-    });
+      });
 
-    $(document).bind('mouseup touchend', function(e) {
+      $(document).bind('mouseup touchend', function (e) {
         InputMap._updateMouse(e, false);
         InputMap.updateSpecialKey(e);
-    });
+      });
 
-    $(document).bind('mousedown touchstart', function(e) {
+      $(document).bind('mousedown touchstart', function (e) {
         InputMap._updateMouse(e, true);
         InputMap.updateSpecialKey(e);
-    });
+      });
 
-    $(document).keydown(function (e) {
-        if (!InputMap._on){ return;}
+      $(document).keydown(function (e) {
+        if (!InputMap._on) {
+          return;
+        }
         InputMap.updateSpecialKey(e);
         var action = InputMap.maps[InputMap.getCombination(e)];
-        if ( (action != null) && (!InputMap.isPresseds[e.which])) { // 有action, 而且首次按下
-            // 一对down和up,复制一份, 持续按住不放, 只算一次.
-            e.stopPropagation();
-            e.preventDefault();
-            TQ.TaskMgr.addTask(action, []);
+        if ((action != null) && (!InputMap.isPresseds[e.which])) { // 有action, 而且首次按下
+          // 一对down和up,复制一份, 持续按住不放, 只算一次.
+          e.stopPropagation();
+          e.preventDefault();
+          TQ.TaskMgr.addTask(action, []);
         }
 
         InputMap._updateKey(e, true);
-    });
+      });
 
-    $(document).keyup(function (e) {
-        if (!InputMap._on) { return;}
+      $(document).keyup(function (e) {
+        if (!InputMap._on) {
+          return;
+        }
         InputMap.updateSpecialKey(e);
         InputMap._updateKey(e, false);
-    });
+      });
+    };
 
     InputMap._updateKey = function (e, isDown) {
         InputMap.isPresseds[e.which] = isDown;
@@ -164,5 +175,5 @@ var TOUCH_MOVING_FLAG = 999;
         TQ.InputMap._on = false;
     };
 
-    TQ.InputMap = InputMap;
+  TQ.InputMap = InputMap;
 }());

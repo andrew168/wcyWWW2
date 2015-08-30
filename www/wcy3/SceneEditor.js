@@ -94,6 +94,7 @@ function init(fileInfo) {
 var currScene = null;
 
 function initializeControllers() {
+    TQ.InputMap.initialize(TQ.WCY.isPlayOnly);
     TQ.TaskMgr.initialize();
     TQ.GarbageCollector.initialize();
     TQ.CommandMgr.initialize();
