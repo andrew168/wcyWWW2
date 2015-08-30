@@ -83,7 +83,8 @@ this.TQ = this.TQ || {};
             var resID = event.item.id;
             var result = event.result;
             //ToDo: 唯一化断言
-            RM.items[resID] = { ID: resID, res:result, type:event.item.type};
+            RM.items[resID].res = result;
+            RM.items[resID].type = event.item.type;
             console.log(event.toString() +": " + event.item.id);
             RM.onFileLoad(resID, result, event);
         });
@@ -197,13 +198,22 @@ this.TQ = this.TQ || {};
         RM.preloader.removeEventListener(eventName,  callback);
     };
 
+    function _addReference(resourceID) {
+
+    }
     RM.addItem = function(resourceID, _callback) {
         if (!RM.hasDefaultResource) {
             RM.setupDefaultResource();
         }
         resourceID = RM.toFullPath(resourceID);
-        if (this.hasResource(resourceID)) return;
+        if (this.hasResource(resourceID)) {
+          _addReference(resourceID);
+          return;
+        }
+
         // 添加Item 到预加载队列中， 并启动运行预加载（如果没有运行的话）
+        //ToDo: RM.Items.push({});
+        RM.items[resourceID] = { ID: resourceID, res:null, type:null};
 
         if (!!_callback) {
             RM.callbackList.push({ID:resourceID, func:_callback});
