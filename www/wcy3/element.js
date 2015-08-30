@@ -650,8 +650,9 @@ window.TQ = window.TQ || {};
             assertNotNull(TQ.Dictionary.FoundNull, this.displayObj);
         }
         if (jsonObj.isVis && !this.isVirtualObject() && !this.hasFlag(Element.IN_STAGE)) {
-            TQ.Log.out(TQ.Dictionary.INVALID_LOGIC + this.jsonObj.src); //飞线: 谁在使用这种情况?, 顶多在Show的时候检查"
-            // this._doAddItemToStage();
+            //飞线: 谁在使用这种情况?, 顶多在Show的时候检查"
+            TQ.Log.warn(TQ.Dictionary.INVALID_LOGIC + ":setTRSAVZ一个不在DOM的元素：" + this.jsonObj.src);
+            return;
         }
 
         // 可见性由父子共同决定：

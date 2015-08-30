@@ -28,11 +28,11 @@ window.TQ = window.TQ || {};
     };
 
     Log.error = function (str) {
-        if (Log.level >= Log.ERROR_LEVEL) console.log(str);
+        if (Log.level >= Log.ERROR_LEVEL) console.error(str);
     };
 
     Log.warn = function (str) {
-        if (Log.level >= Log.WARN_LEVEL) console.log(str);
+        if (Log.level >= Log.WARN_LEVEL) console.warn(str);
     };
 
     if (Log.level >= Log.INFO_LEVEL) {
