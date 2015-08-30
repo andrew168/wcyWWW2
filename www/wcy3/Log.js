@@ -1,0 +1,47 @@
+/**
+ * 图强动漫引擎,
+ * 专利产品 领先技术
+ * 移动操作器
+ */
+
+window.TQ = window.TQ || {};
+
+(function () {
+    var Log =function () {
+    };
+
+    Log.CLOSE = 0;
+    Log.CRITICAL_LEVEL = 1;
+    Log.ERROR_LEVEL = 2; // 代替 assert 的throw
+    Log.WARN_LEVEL = 5;
+    Log.INFO_LEVEL = 7; // 用于 跟踪调试, 查看软件的执行过程
+    Log.level = TQ.Config.LOG_LEVEL;
+    Log.open = function () { Log.level = Log.INFO_LEVEL;};
+    Log.close = function () {Log.level = Log.CLOSE;};
+    Log.setLevel = function(level) { Log.level = level;};
+    Log.trace = function (str) {  //  只用于跟踪调试, (改info为trace), 不能直接出现在 release版中,
+      console.log(str);
+    };
+
+    Log.criticalError = function (str) {
+        if (Log.level >= Log.CRITICAL_LEVEL) console.log(str);
+    };
+
+    Log.error = function (str) {
+        if (Log.level >= Log.ERROR_LEVEL) console.log(str);
+    };
+
+    Log.warn = function (str) {
+        if (Log.level >= Log.WARN_LEVEL) console.log(str);
+    };
+
+    if (Log.level >= Log.INFO_LEVEL) {
+        Log.info = Log.out = function(str) {
+            console.log(str);
+        };
+    } else {
+        Log.info = Log.out = function() {};
+    }
+
+    TQ.Log = Log;
+}) ();

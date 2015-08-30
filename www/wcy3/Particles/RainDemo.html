@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Particle Emitter Example - Comet</title>
+    <script src="libs/easeljs-0.5.0.min.js"></script>
+    <script src="libs/tweenjs-0.3.0.min.js"></script>
+    <script src="libs/movieclip-0.5.0.min.js"></script>
+    <script src="libs/preloadjs-0.2.0.min.js"></script>
+    <script src="libs/Filter.js"></script>
+    <script src="libs/ColorFilter.js"></script>
+    <script src="src/BaseParticle.js"></script>
+    <script src="src/BitmapParticle.js"></script>
+    <script src="src/ParticleEmitter.js"></script>
+    <script src="src/ShapeParticle.js"></script>
+    <script src="src/RainEffect.js"></script>
+    <script type="text/javascript">
+        var canvas;         // the canvas element
+        var context;        // the 2d context of the canvas
+        var stage;          // the createjs stage
+        var emitter;        // the emitter
+        var fpsLabel;       // label to show the current frames per second
+        var particleImage;  // the image to use for each particle
+
+        function loadAssets() {
+            particleImage = new Image();
+            particleImage.onload = initCanvas;
+            particleImage.src = "images/yudi3.png";
+//            particleImage.src = "images/xuehua1.png";
+        }
+
+        function initCanvas() {
+
+            canvas = document.getElementById('particleEmitterCanvas');
+            context = canvas.getContext("2d");
+            stage = new createjs.Stage(canvas);
+
+            createjs.Ticker.setFPS(30);
+            createjs.Ticker.addListener(update);
+
+            addFPS();
+            var snow1 = {density: 40, startSize:10, direction:110,    dy:50, v0:300, endOpacity:-1, endSize:0, endSizeVar:5};
+            var snow2 = snow1.clone();
+            snow2.startSize = 20;
+            snow2.dy = 10;
+            snow2.v0 = 100;
+            snow2.endOpacity = 0.1;
+            snow2.endSize = -1;
+            snow2.endSizeVar = 5;
+
+            // rain(snow1, particleImage);
+            rain(snow2, particleImage);
+        }
+
+        function addFPS() {
+
+            fpsLabel = new createjs.Text("-- fps", "bold 14px Arial", "#BBBBBB");
+            stage.addChild(fpsLabel);
+        }
+
+        function update() {
+            fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
+            stage.update();
+        }
+    </script>
+</head>
+<body onload="loadAssets();">
+    <canvas id="particleEmitterCanvas" style="background-color: black;" width="1024" height="900"></canvas>
+</body>
+</html>

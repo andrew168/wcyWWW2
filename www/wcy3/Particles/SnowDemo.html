@@ -1,0 +1,28 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>Particle Emitter Example - Comet</title>
+    <script src="libs/easeljs-0.5.0.min.js"></script>
+    <script src="libs/tweenjs-0.3.0.min.js"></script>
+    <script src="libs/movieclip-0.5.0.min.js"></script>
+    <script src="libs/preloadjs-0.2.0.min.js"></script>
+    <script src="libs/Filter.js"></script>
+    <script src="libs/ColorFilter.js"></script>
+    <script src="src/utilsTemp.js"></script>
+    <script src="src/BaseParticle.js"></script>
+    <script src="src/BitmapParticle.js"></script>
+    <script src="src/ParticleEmitter.js"></script>
+    <script src="src/ShapeParticle.js"></script>
+    <script src="src/RainEffect.js"></script>
+
+    <script type="text/javascript">
+
+        function unitTest() {
+            TQ.RainEffect.loadAsset();
+        }
+    </script>
+</head>
+<body onload="unitTest();">
+    <canvas id="particleEmitterCanvas" style="background-color: black;" width="1024" height="900"></canvas>
+</body>
+</html>
