@@ -19,9 +19,162 @@
     <script src="cordova.js"></script>
 
     <!-- your app's js -->
+    <script src="lib/imgcache.js"></script>
+    <script src="lib/ngStorage.js"></script>
+
     <script src="js/app.js"></script>
     <script src="js/controllers.js"></script>
     <script src="js/services.js"></script>
+
+    <script type="text/javascript" src="lib/modernizr-latest.js"></script>
+    <script type="text/javascript" src="lib/jquery-1.9.1.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/jquery-ui-1.10.0.custom.min.js"></script>
+    <script type="text/javascript" src="lib/jquery.ui.touch-punch.min.js"></script>
+    <script type="text/javascript" src="lib/jqia2.support.js"></script>
+    <script type="text/javascript" src="lib/jquery.cookie.js"></script>
+    <script type="text/javascript" src="lib/jQueryRotateCompressed.2.2.js"></script>
+    <script type="text/javascript" src="lib/gif.js"></script>
+    <link rel="stylesheet" href="lib/easydialog/easydialog.css" />
+    <script type="text/javascript" src="lib/easydialog/easydialog.js"></script>
+    <script type="text/javascript" src="lib/soundjs-0.4.1.min.js"></script>
+    <script type="text/javascript" src="lib/soundjs.flashplugin-0.4.1.min.js"></script>
+
+    <!-- 测试代码区域 -->
+    <!-- 矩阵运算库 -->
+    <script type="text/javascript" src="lib/sylvester.js"></script>
+    <script type="text/javascript" src="lib/preloadjs-NEXT.min.js"></script>
+    <script type="text/javascript" src="lib/easeljs-0.6.1.min.js"></script>
+    <script type="text/javascript" src="lib/tweenjs-0.4.1.min.js"></script>
+    <script type="text/javascript" src="SDK/easeljs/display/DisplayObject.js"></script>
+    <script type="text/javascript" src="SDK/easeljs/display/Stage.js"></script>
+    <script type="text/javascript" src="SDK/easeljs/display/Bitmap.js"></script>
+    <script type="text/javascript" src="SDK/easeljs/display/Text.js"></script>
+
+    <script type="text/javascript" src="SDK/easeljs/display/Sprite.js"></script>
+    <script type="text/javascript" src="SDK/easeljs/utils/SpriteSheetUtils.js"></script>
+
+    <!-- 以下文件在min.js库里面已经有了, load他们是为了 debug, -->
+    <script type="text/javascript" src="SDK/soundjs/Sound.js"></script>
+    <script type="text/javascript" src="SDK/soundjs/WebAudioPlugin.js"></script>
+    <script type="text/javascript" src="SDK/soundjs/HTMLAudioPlugin.js"></script>
+    <script type="text/javascript" src="SDK/soundjs/FlashPlugin.js"></script>
+    <script type="text/javascript" src="SDK/swfobject.js"></script>
+
+    <!-- script type="text/javascript" src="libW/wcy.min.js"></script -->
+    <!-- 源文件，只供调试用 -->
+    <script type="text/javascript" src="wcy3/initwa.js"></script>
+    <script type="text/javascript" src="wcy3/utilityBase.js"></script>
+    <script type="text/javascript" src="wcy3/Dictionary.js"></script>
+    <script type="text/javascript" src="wcy3/Config.js"></script>
+    <script type="text/javascript" src="wcy3/Log.js"></script>
+    <script type="text/javascript" src="wcy3/Asserts.js"></script>
+    <script type="text/javascript" src="wcy3/AssertsExt.js"></script>
+    <script type="text/javascript" src="wcy3/MathExt.js"></script>
+    <script type="text/javascript" src="wcy3/Vector2D.js"></script>
+    <script type="text/javascript" src="wcy3/Matrix2D.js"></script>
+    <script type="text/javascript" src="wcy3/utility.js"></script>
+
+    <script type="text/javascript" src="wcy3/EventHandler.js"></script>
+
+
+    <script type="text/javascript" src="wcy3/ResourceManager.js"></script>
+
+    <script type="text/javascript" src="wcy3/TouchMgr.js"></script>
+
+    <script type="text/javascript" src="wcy3/GarbageCollector.js"></script>
+    <script type="text/javascript" src="wcy3/TaskMgr.js"></script>
+    <script type="text/javascript" src="wcy3/CommandMgr.js"></script>
+    <script type="text/javascript" src="wcy3/TraceMgr.js"></script>
+    <script type="text/javascript" src="wcy3/FrameCounter.js"></script>
+    <script type="text/javascript" src="wcy3/GifManager.js"></script>
+    <script type="text/javascript" src="wcy3/inputMap.js"></script>
+    <script type="text/javascript" src="wcy3/levelState.js"></script>
+    <script type="text/javascript" src="wcy3/TQBase/Trsa.js"></script>
+    <script type="text/javascript" src="wcy3/Scene.js"></script>
+    <script type="text/javascript" src="wcy3/Level.js"></script>
+    <script type="text/javascript" src="wcy3/Overlay.js"></script>
+    <script type="text/javascript" src="wcy3/MessageBox.js"></script>
+    <script type="text/javascript" src="wcy3/SoundMgr.js"></script>
+    <script type="text/javascript" src="wcy3/StageBuffer.js"></script>
+    <script type="text/javascript" src="wcy3/Pose.js"></script>
+    <script type="text/javascript" src="wcy3/oneTrack.js"></script>
+    <script type="text/javascript" src="wcy3/animeTrack.js"></script>
+    <script type="text/javascript" src="wcy3/TrackDecoder.js"></script>
+    <script type="text/javascript" src="wcy3/TrackRecorder.js"></script>
+    <script type="text/javascript" src="wcy3/ActionDecoder.js"></script>
+    <script type="text/javascript" src="wcy3/ActionRecorder.js"></script>
+    <script type="text/javascript" src="wcy3/Action.js"></script>
+    <script type="text/javascript" src="wcy3/Animation.js"></script>
+    <script type="text/javascript" src="wcy3/MultiView.js"></script>
+    <script type="text/javascript" src="wcy3/element.js"></script>
+    <script type="text/javascript" src="wcy3/SoundElement.js"></script>
+    <script type="text/javascript" src="wcy3/ButtonElement.js"></script>
+    <script type="text/javascript" src="wcy3/TextElement.js"></script>
+    <script type="text/javascript" src="wcy3/ButtonMgr.js"></script>
+    <script type="text/javascript" src="wcy3/elementBuilder.js"></script>
+    <script type="text/javascript" src="wcy3/InputCtrl.js"></script>
+    <script type="text/javascript" src="wcy3/moveCtrl.js"></script>
+    <script type="text/javascript" src="wcy3/SkinningCtrl.js"></script>
+    <script type="text/javascript" src="wcy3/IKCtrl.js"></script>
+    <script type="text/javascript" src="wcy3/Marker.js"></script>
+    <script type="text/javascript" src="wcy3/SelectSet.js"></script>  <!-- 依赖于InputCtrl -->
+    <!-- script type="text/javascript" src="wcy3/Particles/src/utilsTemp.js"></script -->
+    <script type="text/javascript" src="wcy3/Particles/libs/Filter.js"></script>
+    <script type="text/javascript" src="wcy3/Particles/libs/ColorFilter.js"></script>
+    <script type="text/javascript" src="wcy3/Particles/src/BaseParticle.js"></script>
+    <script type="text/javascript" src="wcy3/Particles/src/BitmapParticle.js"></script>
+    <script type="text/javascript" src="wcy3/Particles/src/ShapeParticle.js"></script>
+    <script type="text/javascript" src="wcy3/Particles/src/ParticleEmitter.js"></script>
+    <script type="text/javascript" src="wcy3/Particles/src/RainEffect.js"></script>
+    <script type="text/javascript" src="wcy3/Particles/src/SnowEffect.js"></script>
+
+    <script type="text/javascript" src="wcy3/DitherRemover.js"></script>
+
+    <!-- 以下是共同使用的 -->
+    <script type="text/javascript" src="wcy3/TextEditor.js"></script>
+    <script type="text/javascript" src="wcy3/MessageBubble.js"></script>
+    <script type="text/javascript" src="wcy3/floatToolbar.js"></script>
+    <script type="text/javascript" src="wcy3/globalAPI.js"></script>
+    <script type="text/javascript" src="wcy3/SceneEditor.js"></script>
+    <script type="text/javascript" src="wcy3/ScreenShot.js"></script>
+    <script type="text/javascript" src="wcy3/getInputFromDialog.js"></script>
+    <!--  以上是Debug专用 -->
+
+
+    <script type="text/javascript" src="Weidongman/wui/defines.js"></script>
+    <script type="text/javascript" src="Weidongman/src/Config.js"></script>
+    <!-- script type="text/javascript" src="Weidongman/src/globalAPI.js"></script -->
+    <script type="text/javascript" src="Weidongman/src/getInputFromDialog.js"></script>
+    <script type="text/javascript" src="Weidongman/src/MessageBubble.js"></script>
+    <script type="text/javascript" src="Weidongman/wfile/netIO.js"></script>
+    <script type="text/javascript" src="Weidongman/src/floatToolbar.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/SceneEditorUI.js"></script>
+    <script type="text/javascript" src="Weidongman/src/ScreenShot.js"></script>
+    <script type="text/javascript" src="Weidongman/wutils/wd_utils.js"></script>
+    <script type="text/javascript" src="Weidongman/src/Recorderobj.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/global.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/TimerUI.js"></script>
+
+    <script>
+      TQ.Init.uid="<?php echo $_SESSION['uid'];?>";
+      TQ.Init.wcyid="<?php echo $_GET['wcyID']?>";
+      TQ.Init.userCategoryId="<?php echo $_SESSION['user_category_id']?>";
+    </script>
+
+    <!-- menu是主要的调用函数， 必须是最后一个load的-->
+    <script type="text/javascript" src="Weidongman/wui/tabs_menu.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/wd_menu.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/scenes.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/sound.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/displayUI.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/html.js"></script>
+    <script type="text/javascript" src="Weidongman/wui/defines.js"></script>
+
+    <!--- __play_only==false){?
+    <script type="text/javascript" src="Weidongman/wui/mc.js"></script>
+
+    --->
   </head>
   <body ng-app="starter">
     <!--

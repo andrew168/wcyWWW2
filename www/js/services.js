@@ -1,4 +1,42 @@
 angular.module('starter.services', [])
+    .factory("GetWcy", function($http, $localStorage) {
+        function test() {
+            var filename = "p12853.wdm";
+            // var filename = "p12585.wdm"; // Bear
+            var content = null;
+            var url = 'http://bone.udoido.cn/wcy/wdmOpen?filename=' + filename;
+            // content = $localStorage.testScene;
+            if (!content) {
+                $http.get(url, {})
+                    .success(function (data, status, headers, config) {
+                        console.log(data);
+                        content = $localStorage.testScene = JSON.stringify(data);
+                        var fileInfo = {name: filename, content: content};
+                        showWcy(fileInfo);
+                    }).error(function (data, status, headers, config) {
+                        console.log(data);
+                    });
+            } else {
+                var fileInfo = {name: filename, content: content};
+                showWcy(fileInfo);
+            }
+        }
+
+        function showWcy(fileinfo) {
+            $("#Container").css("width", TQ.Config.validPageWidth.toString() + "px");
+            // setStageSize(600, 480);
+            TQ.WCY.isPlayOnly = true;
+            initCreateEnvironment(TQ.WCY.isPlayOnly);
+            init(fileinfo, TQ.WCY.isPlayOnly);  // in SceneEditor
+            TQ.floatToolbar.initialize();
+            TQ.floatToolbar.isVisible();
+        }
+
+        return {
+            test: test,
+            showWcy: showWcy
+        };
+    })
 
 .factory('Chats', function() {
   // Might use a resource here that returns a JSON array
