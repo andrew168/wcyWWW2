@@ -79,18 +79,20 @@ this.TQ = this.TQ || {};
 
     RM.setupListeners = function() {
         //Available PreloadJS callbacks
+        var fileCounter = 0;
         RM.preloader.on("fileload", function(event) {
             var resID = event.item.id;
             var result = event.result;
             //ToDo: 唯一化断言
             RM.items[resID].res = result;
             RM.items[resID].type = event.item.type;
-            console.log(event.toString() +": " + event.item.id);
+            fileCounter ++;
+            TQ.Log.info("Loaded: (" + fileCounter + "/" + Object.keys(RM.items).length +"): " + event.item.id);
             RM.onFileLoad(resID, result, event);
         });
 
         RM.preloader.addEventListener("complete",  function(event) {
-            console.log(event.toString());
+            TQ.Log.info(event.toString());
             RM.dataReady = true;
             var num = RM.completeOnceHandlers.length; // 防止动态添加的函数
             for (; num > 0; num --) {
@@ -101,7 +103,7 @@ this.TQ = this.TQ || {};
         });
 
         RM.preloader.addEventListener("error",  function(event) {
-            console.log(event.item.src + ": " + event.toString() );
+            TQ.Log.info(event.item.src + ": " + event.toString() );
             var resID = event.item.id;
             var result = null;
             var altResID = null;
@@ -119,7 +121,7 @@ this.TQ = this.TQ || {};
                     break;
 
                 default :
-                    console.log(event.item.type +": 未处理的资源类型!");
+                    TQ.Log.info(event.item.type +": 未处理的资源类型!");
             }
 
             if ((altResID != null) && (!!RM.items[altResID])) {
@@ -143,7 +145,7 @@ this.TQ = this.TQ || {};
         });
 
         RM.preloader.addEventListener("progress",  function(event) {
-            // console.log("." + event.toString() + ": " + event.loaded);
+            // TQ.Log.info("." + event.toString() + ": " + event.loaded);
         });
         RM.dataReady = false;
     };
@@ -152,7 +154,7 @@ this.TQ = this.TQ || {};
         //check for callback
         for (var i = 0; i < RM.callbackList.length; i++) {
             if (RM.callbackList[i].ID == resID) {
-                console.log("find immediate call back to do");
+                TQ.Log.info("find immediate call back to do");
                 var item = RM.callbackList.splice(i, 1);
                 item[0].func(event);
                 i--;
@@ -300,7 +302,7 @@ this.TQ = this.TQ || {};
     RM.getResource = function(id) {
         id = RM.toFullPath(id);
         if (!RM.items[id]) {// 没有发现， 需要调入
-            console.log(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
+            TQ.Log.info(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
             // 添加到预加载列表中
             // 设置回调函数
             return null;
@@ -338,7 +340,7 @@ this.TQ = this.TQ || {};
     }
 
     function handleProgress(event) {
-        console.log(event.loaded);
+        TQ.Log.info(event.loaded);
         // bar.scaleX = event.loaded * loaderWidth;
     }
 

@@ -425,7 +425,7 @@ window.TQ = window.TQ || {};
     };
 
     p.updateState = function () {
-      TQ.Log.info("update state");
+      // TQ.Log.info("update state");
       if (this.state <= TQBase.LevelState.INITING) {
         if (this.resourceReady || TQ.RM.isEmpty){
           this.onLoaded();
