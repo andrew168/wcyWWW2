@@ -20,6 +20,7 @@ TQ = TQ || {};
         } else {
             this.t0 = 0;
         }
+        this.version = jsonObj.version;
         this.isMultiScene = (this.version == TQ.Element.VER2) ? true: false;
         this.initialize(jsonObj);
     }
