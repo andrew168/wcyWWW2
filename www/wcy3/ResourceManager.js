@@ -34,6 +34,7 @@ this.TQ = this.TQ || {};
     var RM = ResourceManager;
     var FAST_SERVER = "http://bone.udoido.cn";
     // var FAST_SERVER = "http://www.udoido.com";
+    // var FAST_SERVER = "http://localhost:63342/eCard/www";
     RM.NOSOUND = "/mcSounds/p1.wav";
     RM.NOPIC = "/mcImages/p1.png";
     RM.BASE_PATH = null;
