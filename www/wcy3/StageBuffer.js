@@ -9,15 +9,15 @@ window.TQ = window.TQ || {};
 (function () {
     var StageBuffer =function () {
     };
-    StageBuffer.isBatchMode = true;
+    StageBuffer.isBatchMode = false;  // by default, it's not batchMode, i.e. closed,
     StageBuffer.members = [];
     StageBuffer.open = function () { StageBuffer.isBatchMode = true;};
     StageBuffer.close = function () {
-        StageBuffer.flush();
-        StageBuffer.isBatchMode = false;
-    };
+     StageBuffer.flush();
+     StageBuffer.isBatchMode = false;
+     };
 
-    /*
+     /*
     求上边界： 即: 在zIndex > z的范围中， 求最小的zIndex（在上边最靠近z）。
      */
     StageBuffer.findUpperBoundary = function(z) {
