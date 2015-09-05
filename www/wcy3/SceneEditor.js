@@ -1,6 +1,5 @@
 window.TQ = window.TQ || {};
 
-
 (function () {
 
     // 场景编辑器,
@@ -9,12 +8,28 @@ window.TQ = window.TQ || {};
 
     SceneEditor._mode = TQBase.LevelState.EDITING; // 创作界面的缺省模式是编辑.
 
-    SceneEditor.loadScene = function(fileInfo) {
+    SceneEditor.showWcy = function (fileInfo) {
+        var playOnlyFlag = true;
+        init(fileInfo, playOnlyFlag);
+    };
+
+    SceneEditor.createScene = function () {
+        var playOnlyFlag = false;
+        var fileInfo = {filename: TQ.Config.UNNAMED_SCENE,
+            content:TQ.Scene.getEmptySceneJSON()};
+        init(fileInfo, playOnlyFlag);
+    };
+
+    SceneEditor.addItem = function(desc) {
+        addImage(desc);
+    };
+
+    SceneEditor.loadScene = function (fileInfo) {
         // fileInfo.name = getDefaultTitle(fileInfo.name);
         openScene(fileInfo);
     };
 
-    SceneEditor.emptyScene = function() { // empty the current scene
+    SceneEditor.emptyScene = function () { // empty the current scene
         if (!currScene) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             return false;
@@ -23,14 +38,14 @@ window.TQ = window.TQ || {};
         currScene.forceToRemoveAll();
     };
 
-    SceneEditor.getMode = function() {
+    SceneEditor.getMode = function () {
         if (TQ.WCY.isPlayOnly) {
             return TQBase.LevelState.RUNNING;
         }
         return SceneEditor._mode;
     };
 
-    SceneEditor.setEditMode = function() {
+    SceneEditor.setEditMode = function () {
         if (!currScene) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             return false;
@@ -39,7 +54,7 @@ window.TQ = window.TQ || {};
         SceneEditor.setMode(TQBase.LevelState.EDITING);
     };
 
-    SceneEditor.setPlayMode = function() {
+    SceneEditor.setPlayMode = function () {
         if (!currScene) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             return false;
@@ -48,19 +63,24 @@ window.TQ = window.TQ || {};
         SceneEditor.setMode(TQBase.LevelState.RUNNING);
     };
 
-    SceneEditor.updateMode = function() {
+    SceneEditor.updateMode = function () {
         if (SceneEditor._requestMode == null) return;
         SceneEditor._mode = SceneEditor._requestMode;
         SceneEditor._requestMode = null;
     };
 
-    SceneEditor.setMode = function(mode) { SceneEditor._requestMode = mode; };
-    SceneEditor.isEditMode = function() { return (SceneEditor.getMode() == TQBase.LevelState.EDITING); };
-    SceneEditor.isPlayMode = function() { return (SceneEditor.getMode() == TQBase.LevelState.RUNNING); };
+    SceneEditor.setMode = function (mode) {
+        SceneEditor._requestMode = mode;
+    };
+    SceneEditor.isEditMode = function () {
+        return (SceneEditor.getMode() == TQBase.LevelState.EDITING);
+    };
+    SceneEditor.isPlayMode = function () {
+        return (SceneEditor.getMode() == TQBase.LevelState.RUNNING);
+    };
 
     TQ.SceneEditor = SceneEditor;
 }());
-
 
 var canvas;
 var messageBoard;
@@ -68,7 +88,7 @@ var stage = null;
 
 function init(fileInfo) {
     if ((typeof fileInfo) === "string") {
-        fileInfo = {name: fileInfo, content:null};
+        fileInfo = {name: fileInfo, content: null};
     }
     canvas = document.getElementById("testCanvas1122");
     //ToDo:AZ
@@ -77,7 +97,7 @@ function init(fileInfo) {
     stage = new createjs.Stage(canvas);
     //stage.enableMouseOver();
     messageBoard = new TQ.MessageBox(canvas);
-	TQ.SoundMgr.initialize();
+    TQ.SoundMgr.initialize();
     TQ.RM.initialize();
     TQ.SceneEditor.loadScene(fileInfo);
     initializeControllers();
@@ -110,7 +130,7 @@ function initializeControllers() {
 
 function openScene(fileInfo) {
     if ((typeof fileInfo) === "string") {
-        fileInfo = {name: fileInfo, content:null};
+        fileInfo = {name: fileInfo, content: null};
     }
     if ((!currScene) || (currScene.isSaved)) {
         messageBoard.hide();
@@ -129,50 +149,50 @@ function openScene(fileInfo) {
         TQ.floatToolbar.show(false);
         TQ.WCY.currentScene = currScene;
     } else {
-      var filename = localStorage.getItem("sceneName");
-      TQ.SceneEditorUI.promptToSave(filename);
+        var filename = localStorage.getItem("sceneName");
+        TQ.SceneEditorUI.promptToSave(filename);
     }
     return currScene;
- }
+}
 
 function getDefaultTitle(givenName) {
-    var defaultTitle =  ((!currScene) || (!currScene.title)) ?
-        givenName: currScene.title;
+    var defaultTitle = ((!currScene) || (!currScene.title)) ?
+        givenName : currScene.title;
     if (!defaultTitle) {
         defaultTitle = TQ.Config.UNNAMED_SCENE;
     }
 
     var id = defaultTitle.lastIndexOf("\\");
-    if (id <=0) {
+    if (id <= 0) {
         id = defaultTitle.lastIndexOf("/");
     }
 
-    var shortTitle = (id > 0) ? defaultTitle.substr(id+1) : defaultTitle;
+    var shortTitle = (id > 0) ? defaultTitle.substr(id + 1) : defaultTitle;
     return TQ.Utility.forceExt(shortTitle);
 }
 
- function save() {
-     if (TQ.Utility.getUserID() <= 0) {
-         TQ.MessageBubble.show(TQ.Dictionary.LoginPlease);
-         return;
-     }
-     TQ.InputMap.turnOff();
-     TQ.FileDialog.getFilename(getDefaultTitle(null), _doSave);
- }
+function save() {
+    if (TQ.Utility.getUserID() <= 0) {
+        TQ.MessageBubble.show(TQ.Dictionary.LoginPlease);
+        return;
+    }
+    TQ.InputMap.turnOff();
+    TQ.FileDialog.getFilename(getDefaultTitle(null), _doSave);
+}
 
- function deleteScene() {
-     var title = currScene.title;
-     if ((title.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) // 不能覆盖系统的演示文件
-         && (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
-         var filename = currScene.filename;
-         TQ.TaskMgr.addTask(function () {
-                 netDelete(filename);
-             },
-             null);
-     } else {
-         displayInfo2("<" + title + ">:" + TQ.Dictionary.CanntDelete);
-     }
- }
+function deleteScene() {
+    var title = currScene.title;
+    if ((title.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) // 不能覆盖系统的演示文件
+        && (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
+        var filename = currScene.filename;
+        TQ.TaskMgr.addTask(function () {
+                netDelete(filename);
+            },
+            null);
+    } else {
+        displayInfo2("<" + title + ">:" + TQ.Dictionary.CanntDelete);
+    }
+}
 
 function _doSave(filename, keywords) {
     TQ.TaskMgr.addTask(function () {
@@ -184,20 +204,18 @@ function _doSave(filename, keywords) {
     localStorage.setItem("sceneName", filename);
 }
 
-function addLevelTest()
-{
+function addLevelTest() {
     var levelId = currScene.addLevel();
     currScene.gotoLevel(levelId);
 }
 
-function addImage(desc)
-{
+function addImage(desc) {
     desc.version = TQ.Element.VER2;  // 新增加的元素都是2.0
 
     // "Groupfile" 暂时还没有纳入RM的管理范畴
-    if (((desc.type == "SOUND") ||(desc.type == "Bitmap") || (desc.type == "BUTTON"))
+    if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
         && (!TQ.RM.hasElementDesc(desc))) {
-        TQ.RM.addElementDesc(desc, function() {
+        TQ.RM.addElementDesc(desc, function () {
             currScene.addItem(desc)
         });
 
@@ -207,19 +225,20 @@ function addImage(desc)
     return currScene.addItem(desc);
 }
 
-function addAnimationTest()
-{
-    currScene.addItem({src:TQ.Config.SCENES_CORE_PATH + "AnimationDesc.adm", type:"BitmapAnimation"});
+function addAnimationTest() {
+    currScene.addItem({src: TQ.Config.SCENES_CORE_PATH + "AnimationDesc.adm", type: "BitmapAnimation"});
 }
 
-function makeAnimationTest() {currScene.shooting(); }
+function makeAnimationTest() {
+    currScene.shooting();
+}
 
 function uploadImageWindow() {
     // 从JS调用PHP, 则PHP的URL 是相对于当前HTML或PHP文件的目录, 而不是JS文件的目录,
-    createWindow("Weidongman/src/upload_image.php", 500,400);
+    createWindow("Weidongman/src/upload_image.php", 500, 400);
 }
 
-function createWindow (url, width, height) {
+function createWindow(url, width, height) {
     // Add some pixels to the width and height:
     var borderWidth = 10;
     width = width + borderWidth;
@@ -240,18 +259,15 @@ function createWindow (url, width, height) {
 
 } // End of function.
 
-function addTextTest()
-{
+function addTextTest() {
     TQ.TextEditor.addText(TQ.Dictionary.defaultText);
 }
 
-function backToPreviousLevel()
-{
+function backToPreviousLevel() {
     currScene.preLevel();
 }
 
-function advanceToNextLevel()
-{
+function advanceToNextLevel() {
     currScene.nextLevel();
 }
 
@@ -268,8 +284,7 @@ function create3DElement() {
     clearSubjectModeAndMultiSelect();
 }
 
-function editActions()
-{
+function editActions() {
     var ele = TQ.SelectSet.peek();
 
     if (ele != null) {
