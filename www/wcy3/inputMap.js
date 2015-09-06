@@ -90,7 +90,7 @@ var TOUCH_MOVING_FLAG = 999;
       }
 
       $(document).bind('mousemove touchmove touchcancel', function (e) {
-        TQ.Log.info("which:" + e.which + "mousedown:" + InputMap.isMouseDown + " type:" + e.type + "(x,y):" + e.screenX + "," + e.screenY);
+        // TQ.Log.info("which:" + e.which + "mousedown:" + InputMap.isMouseDown + " type:" + e.type + "(x,y):" + e.screenX + "," + e.screenY);
         InputMap.mouseMoving = true;
         InputMap.updateSpecialKey(e);
       });
