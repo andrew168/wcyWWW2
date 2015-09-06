@@ -256,7 +256,7 @@ TQ = TQ || {};
 
   p.open = function (fileInfo) {
     this.reset();
-    this.filename = fileInfo.name;
+    this.filename = fileInfo.filename;
     this.title = null;
     // 删除 旧的Levels。
     this.onsceneload = this.showLevel;
@@ -494,16 +494,23 @@ TQ = TQ || {};
       pt.startPreloader(pt, 0, num);
 
       // 设置each Level的resourceReady标志, and start show
-      TQ.RM.onCompleteOnce(function () {
-        for (i=0; i< num; i++) {
-          pt.levels[i].resourceReady = true;
+        if (!TQ.RM.isEmpty) {
+            TQ.RM.onCompleteOnce(onResourceReady);
+        } else {
+            onResourceReady();
         }
-        console.log("All asset loaded!");
 
-        if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
-          pt.onsceneload();
+        function onResourceReady() {
+            for (i=0; i< num; i++) {
+                pt.levels[i].resourceReady = true;
+            }
+            console.log("All asset loaded!");
+
+            if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
+                pt.onsceneload();
+            }
         }
-      });
+
     })(this);
 
     displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
