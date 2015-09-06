@@ -886,7 +886,7 @@ window.TQ = window.TQ || {};
                             return;
                         }
                         TQ.floatToolbar.show(false);
-                        TQBase.Trsa.do(ele2, thislevel, offset, ev, stage.selectedItem);
+                        // TQBase.Trsa.do(ele2, thislevel, offset, ev, stage.selectedItem);
                     };
                     evt.onMouseUp = function (evt) {
                         showFloatToolbar(evt);
@@ -1316,6 +1316,10 @@ window.TQ = window.TQ || {};
 
     p.getRotation = function () {
         return this.jsonObj.rotation;
+    };
+
+    p.getPosition = function () {
+        return {x: this.jsonObj.x, y: this.jsonObj.y};
     };
 
     p.rotateTo = function (angle) {
