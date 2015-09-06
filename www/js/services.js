@@ -1,11 +1,13 @@
 angular.module('starter.services', [])
     .factory("GetWcy", function($http, $localStorage) {
         function test() {
-            var filename = "p12853.wdm";
+            // var filename = "p12853.wdm";
             // var filename = "p12585.wdm"; // Bear
+            // var filename = "p14959.wdm"; // straw berry
+            var filename = "p14961.wdm"; // 比例变换测试
             var content = null;
             var url = 'http://bone.udoido.cn/wcy/wdmOpen?filename=' + filename;
-            // content = $localStorage.testScene;
+            content = $localStorage.testScene;
             if (!content) {
                 $http.get(url, {})
                     .success(function (data, status, headers, config) {
@@ -27,13 +29,18 @@ angular.module('starter.services', [])
             // setStageSize(600, 480);
             TQ.WCY.isPlayOnly = true;
             initCreateEnvironment(TQ.WCY.isPlayOnly);
-            init(fileinfo, TQ.WCY.isPlayOnly);  // in SceneEditor
+            TQ.SceneEditor.showWcy(fileinfo);
             TQ.floatToolbar.initialize();
             TQ.floatToolbar.isVisible();
         }
 
+        function testCreateScene() {
+            TQ.SceneEditor.createScene();
+        }
+
         return {
             test: test,
+            testCreateScene: testCreateScene,
             showWcy: showWcy
         };
     })
