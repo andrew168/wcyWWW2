@@ -532,8 +532,7 @@ window.TQ = window.TQ || {};
         this.itemCounter++;
         if ((this.state == TQBase.LevelState.EDITING) ||
             (this.state == TQBase.LevelState.RUNNING)) {
-            TQ.Log.out(TQ.Dictionary.isDepreciated); // level.onItemLoaded: 应该只在临时添加的时候, 才调用
-            // assertTrue("应该只在临时添加的时候, 才调用", false);
+            assertTrue("应该只在临时添加的时候, 才调用", !TQ.StageBuffer.isBatchMode);
             item.addItemToStage();
         } else {
             // 正在 loading, 或者fixup, 由update来控制状态
