@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
@@ -130,6 +130,7 @@
     <script type="text/javascript" src="wcy3/Particles/src/SnowEffect.js"></script>
 
     <script type="text/javascript" src="wcy3/DitherRemover.js"></script>
+    <script type="text/javascript" src="wcy3/GenCommand.js"></script>
 
     <!-- 以下是共同使用的 -->
     <script type="text/javascript" src="wcy3/TextEditor.js"></script>
@@ -157,9 +158,9 @@
     <script type="text/javascript" src="Weidongman/wui/TimerUI.js"></script>
 
     <script>
-      TQ.Init.uid="<?php echo $_SESSION['uid'];?>";
-      TQ.Init.wcyid="<?php echo $_GET['wcyID']?>";
-      TQ.Init.userCategoryId="<?php echo $_SESSION['user_category_id']?>";
+        TQ.Init.uid="<?php echo $_SESSION['uid'];?>";
+        TQ.Init.wcyid="<?php echo $_GET['wcyID']?>";
+        TQ.Init.userCategoryId="<?php echo $_SESSION['user_category_id']?>";
     </script>
 
     <!-- menu是主要的调用函数， 必须是最后一个load的-->
@@ -175,20 +176,20 @@
     <script type="text/javascript" src="Weidongman/wui/mc.js"></script>
 
     --->
-  </head>
-  <body ng-app="starter">
-    <!--
-      The nav bar that will be updated as we navigate between views.
-    -->
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <!--
-      The views will be rendered in the <ion-nav-view> directive below
-      Templates are in the /templates folder (but you could also
-      have templates inline in this html file if you'd like).
-    -->
-    <ion-nav-view></ion-nav-view>
-  </body>
+</head>
+<body ng-app="starter">
+<!--
+  The nav bar that will be updated as we navigate between views.
+-->
+<ion-nav-bar class="bar-stable">
+    <ion-nav-back-button>
+    </ion-nav-back-button>
+</ion-nav-bar>
+<!--
+  The views will be rendered in the <ion-nav-view> directive below
+  Templates are in the /templates folder (but you could also
+  have templates inline in this html file if you'd like).
+-->
+<ion-nav-view></ion-nav-view>
+</body>
 </html>
