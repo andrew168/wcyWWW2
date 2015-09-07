@@ -1,7 +1,8 @@
 angular.module('starter')
-.controller('DashCtrl', function($scope, GetWcy, $cordovaImagePicker) {
+.controller('DashCtrl', function($scope, $timeout, GetWcy, $cordovaImagePicker) {
         // GetWcy.test();
 
+        var isDithering = false;
         GetWcy.testCreateScene();
         var canvas = document.getElementById("testCanvas1122");
         ionic.EventController.onGesture('touch', onStart, canvas);
@@ -40,17 +41,27 @@ angular.module('starter')
             console.log("start");
         }
 
+        function ditherStart() {
+            isDithering = true;
+            $timeout(ditherEnd, 300);
+        }
+
+        function ditherEnd() {
+            isDithering = false;
+        }
+
         function onTouchEnd(e) {
             isMultiTouching = false;
-            onStart(e);
+            ditherStart();
         }
 
         function onRelease() {
             isMultiTouching = false;
+            isDithering = false;
         }
 
         function onMove(e) {
-            if (isMultiTouching) {
+            if (isMultiTouching || isDithering) {
                 return;
             }
             if (!ele) {
@@ -64,6 +75,10 @@ angular.module('starter')
         }
 
         function onRotate(e) {
+            if (isDithering) {
+                return;
+            }
+
             if (!ele) {
                 console.log("Rotete...");
             } else {
@@ -75,6 +90,10 @@ angular.module('starter')
         }
 
         function onPinch(e) {
+            if (isDithering) {
+                return;
+            }
+
             if (!ele) {
                 console.log("pinch...");
             } else {
@@ -106,10 +125,10 @@ angular.module('starter')
         $scope.testInsert = function() {
             x += 50;
             y += 50;
-            // insertImage("mcImages/p10324.png", x, y);
+            insertImage("mcImages/p10324.png", x, y);
             // insertSound("mcSounds/p8574.wav", x, y);
             // insertText("Hello Andrew", x, y);
-            insertAlbum();
+            // insertAlbum();
         };
 
         function insertImage(filename, x, y) {
