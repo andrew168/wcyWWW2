@@ -96,17 +96,19 @@ window.TQ = window.TQ || {};
             // 如果所需资源都在RM， 则直接init， 否则，sent到RM， 要求调入。完成后， 再init
             if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
                 && (!TQ.RM.hasElementDesc(desc))) {
-                TQ.RM.addElementDesc(desc);
-                (function (pt) {
-                    TQ.RM.setPaused(true);
-                    if (!TQ.RM.isEmpty) {
-                        TQ.RM.onCompleteOnce(function () {
-                            pt.initialize(desc);
-                        });
-                    }
-                    TQ.RM.setPaused(false);
-                })(this);
-                return this;
+                if (!TQ.RM.isLocalResource(desc.src)) {
+                    TQ.RM.addElementDesc(desc);
+                    (function (pt) {
+                        TQ.RM.setPaused(true);
+                        if (!TQ.RM.isEmpty) {
+                            TQ.RM.onCompleteOnce(function () {
+                                pt.initialize(desc);
+                            });
+                        }
+                        TQ.RM.setPaused(false);
+                    })(this);
+                    return this;
+                }
             }
         }
 
@@ -616,13 +618,15 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
         var jsonObj = this.jsonObj;
         var item = TQ.RM.getResource(jsonObj.src);
+        item = null;
         if (!item) {
             var img3 = new Image();   // 由他调入图像资源！！
             (function (pt) {
                 img3.onload = function () {
                     // 创建Bitmap
                     pt.loaded = true;
-                    var resource = pt.getImageResource(item, jsonObj);
+                    // var resource = pt.getImageResource(item, jsonObj);
+                    var resource = jsonObj.src;
                     pt.displayObj = new createjs.Bitmap(resource);
                     jsonObj.img = null;
                     pt._afterItemLoaded();
@@ -1006,6 +1010,9 @@ window.TQ = window.TQ || {};
     };
 
     p.toJSON = function () {
+        if (!this.jsonObj) {
+            return null;
+        }
         //备注：displayObj 本身里面有Cycle， 无法消除。所以必须让他null。
         // JQuery 调用的toJSON， 只需要这个字段即可， 一定不要在这里调用stringify！
         this.highlight(false);

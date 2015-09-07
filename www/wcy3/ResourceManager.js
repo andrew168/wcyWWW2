@@ -259,7 +259,7 @@ this.TQ = this.TQ || {};
             var resName = RM.toRelative(desc.src);
             resName.trim();
             if (resName.length > 0) {
-                if (!RM.hasResource(resName)) {
+                if ((!RM.hasResource(resName)) && (!RM.isLocalResource(resName))) {
                     RM.addItem(resName, callback);
                     result = true;
                 } else if (!!callback) {
@@ -269,6 +269,10 @@ this.TQ = this.TQ || {};
         }
 
         return result;
+    };
+
+    RM.isLocalResource = function(resName) {
+        return (resName.indexOf("file:///") === 0);
     };
 
     /*
