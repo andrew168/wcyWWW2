@@ -1,4 +1,4 @@
-angular.module('starter.services', [])
+angular.module('starter')
     .factory("GetWcy", function($http, $localStorage) {
         function test() {
             // var filename = "p12853.wdm";

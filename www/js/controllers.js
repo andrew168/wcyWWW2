@@ -1,13 +1,12 @@
-angular.module('starter.controllers', [])
-
-.controller('DashCtrl', function($scope, GetWcy) {
+angular.module('starter')
+.controller('DashCtrl', function($scope, GetWcy, $cordovaImagePicker) {
         // GetWcy.test();
 
         GetWcy.testCreateScene();
         var canvas = document.getElementById("testCanvas1122");
         ionic.EventController.onGesture('touch', onStart, canvas);
-        ionic.EventController.onGesture('touchend', onShowToucInfo, canvas);
-        ionic.EventController.onGesture('release', onShowToucInfo, canvas);
+        ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
+        ionic.EventController.onGesture('release', onRelease, canvas);
         ionic.EventController.onGesture('rotate', onRotate, canvas);
         function onShowToucInfo(e) {
             console.log(e.type);
@@ -22,6 +21,7 @@ angular.module('starter.controllers', [])
         var ang = 0, scale = 1;
         var dAngle = 0, dScale = 1;
         var pos = {x:0, y:0};
+        var isMultiTouching = false;
 
         $scope.params = 0;
 
@@ -40,7 +40,19 @@ angular.module('starter.controllers', [])
             console.log("start");
         }
 
+        function onTouchEnd(e) {
+            isMultiTouching = false;
+            onStart(e);
+        }
+
+        function onRelease() {
+            isMultiTouching = false;
+        }
+
         function onMove(e) {
+            if (isMultiTouching) {
+                return;
+            }
             if (!ele) {
                 console.log("Move...");
             } else {
@@ -58,6 +70,7 @@ angular.module('starter.controllers', [])
                 ele = currScene.currentLevel.elements[0];
                 dAngle = e.gesture.rotation;
                 ele.rotateTo(ang - dAngle);
+                isMultiTouching = true;
             }
         }
 
@@ -74,6 +87,7 @@ angular.module('starter.controllers', [])
                         console.warn("Too small");
                     } else {
                         ele.scaleTo({sx:newScale, sy:newScale});
+                        isMultiTouching = true;
                     }
                 }
             }
@@ -92,10 +106,11 @@ angular.module('starter.controllers', [])
         $scope.testInsert = function() {
             x += 50;
             y += 50;
-            insertImage("mcImages/p10324.png", x, y);
+            // insertImage("mcImages/p10324.png", x, y);
             // insertSound("mcSounds/p8574.wav", x, y);
             // insertText("Hello Andrew", x, y);
-        }
+            insertAlbum();
+        };
 
         function insertImage(filename, x, y) {
             var desc = {src: filename, type:"Bitmap", x:x, y:y};
@@ -112,4 +127,24 @@ angular.module('starter.controllers', [])
             TQ.SceneEditor.addItem(desc);
         }
 
+        function insertAlbum() {
+            var options = {
+                maximumImagesCount: 10,
+                width: 800,
+                height: 800,
+                quality: 80
+            };
+
+            $cordovaImagePicker.getPictures(options)
+                .then(function (results) {
+                    for (var i = 0; i < results.length; i++) {
+                        console.log('Image URI: ' + results[i]);
+                        x += 50;
+                        y += 50;
+                        insertImage(results[i], x, y);
+                    }
+                }, function(error) {
+                    // error getting photos
+                });
+        }
     });
