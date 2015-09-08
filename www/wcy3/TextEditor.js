@@ -10,7 +10,12 @@ window.TQ = window.TQ || {};
     TextEditor.visible = false;
     TextEditor.lastElement = null;
     TextEditor.x0 = 100;
+    var _initialized = false;
     TextEditor.initialize = function() {
+        if (_initialized) {
+            return;
+        }
+        _initialized = true;
         TextEditor.boxDiv = $("#textEditBoxDiv");
         TextEditor.inputBox = $("#textEditBox");
         TextEditor.boxDiv.hide();
@@ -126,6 +131,9 @@ window.TQ = window.TQ || {};
 
     function setSelectorByText (id, text) {
         var selector = $("#"+id).get(0);
+        if (!selector) {
+            return;
+        }
         var count=selector.options.length;
         for(var i=0;i<count;i++){
             if(selector.options[i].text == text)
@@ -138,6 +146,9 @@ window.TQ = window.TQ || {};
 
     function setSelectorByValue (id, value) {
         var selector = $("#"+id).get(0);
+        if (!selector) {
+            return;
+        }
         var count=selector.options.length;
         for(var i=0;i<count;i++){
             if(selector.options[i].value == value)
