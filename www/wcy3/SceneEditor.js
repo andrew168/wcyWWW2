@@ -90,7 +90,7 @@ function init(fileInfo) {
     if ((typeof fileInfo) === "string") {
         fileInfo = {name: fileInfo, content: null};
     }
-    canvas = document.getElementById("testCanvas1122");
+    canvas = document.getElementById("testCanvas");
     //ToDo:AZ
     // addHammer(canvas);
     // create a new stage and point it at our canvas:
