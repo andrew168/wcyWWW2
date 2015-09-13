@@ -1,10 +1,9 @@
 angular.module('starter')
 .controller('DashCtrl', function($scope, $timeout, GetWcy, $cordovaImagePicker) {
         // GetWcy.test();
-
         var isDithering = false;
         GetWcy.testCreateScene();
-        var canvas = document.getElementById("testCanvas1122");
+        var canvas = document.getElementById("testCanvas");
         ionic.EventController.onGesture('touch', onStart, canvas);
         ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
         ionic.EventController.onGesture('release', onRelease, canvas);
@@ -125,11 +124,13 @@ angular.module('starter')
         $scope.testInsert = function() {
             x += 50;
             y += 50;
-            insertImage("mcImages/p10324.png", x, y);
+            // insertImage("mcImages/p10324.png", x, y);
             // insertSound("mcSounds/p8574.wav", x, y);
-            // insertText("Hello Andrew", x, y);
+            // TQ.TextInputMgr.start();
+            insertText("Hello 世界！", x, y);
             // insertAlbum();
         };
+
 
         function insertImage(filename, x, y) {
             var desc = {src: filename, type:"Bitmap", x:x, y:y};
@@ -143,8 +144,19 @@ angular.module('starter')
 
         function insertText(message, x, y) {
             var desc = {src: null, text: message, type:"Text", x:x, y:y};
-            TQ.SceneEditor.addItem(desc);
+            // TQ.SceneEditor.addItem(desc);
+            TQ.TextEditor.initialize();
+            TQ.TextEditor.addText(TQ.Dictionary.defaultText);
         }
+
+        $scope.onEndInputText = function () {
+            x += 50;
+            y += 50;
+            TQ.TextEditor.onOK();
+            var message = TQ.TextEditor.inputBox.val();
+            var desc = {src: null, text: message, type:"Text", x:x, y:y};
+            TQ.SceneEditor.addItem(desc);
+        };
 
         function insertAlbum() {
             var options = {

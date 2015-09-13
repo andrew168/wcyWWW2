@@ -3,9 +3,104 @@
       <div class="float-tool">
       <button class="button button-positive"  ng-click="testCreateLevel()">Add New Level</button>
       <button class="button button-positive" ng-click="testInsert()">Insert</button>
+      <button class="button button-positive" ng-click="onEndInputText()">EndInputText</button>
       <label>{{params}}</label>
       </div>
-    <canvas id="testCanvas1122" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="positive-border"></canvas>
+      <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="positive-border"></canvas>
+      <div id="textEditBoxDiv" style="display:none">
+      <input type="text" value="7332058" id="textEditBox"/>
+      <div id="anchor">EndOfPageEndOfPageEnd</div>
+
+
+          <!-- 以下是专门供"保存文件"对话框界面使用的, 不需要在首页中load, 可以分开 -->
+          <div id="GetTextInput" style="display:none">
+              <form>
+                  <fieldset>
+                      <label for="textEditorDemo"> </label>
+                      <input type="text" name="textEditorDemo"   id="textEditorDemo" class="text ui-widget-content ui-corner-all" />
+                  </fieldset>
+              </form>
+          </div>
+
+          <!-- 以下是 TextEditor的 对话框资源 -->
+          <style>
+              #textEditBoxDiv {
+                  position:absolute;
+                  left: 10px;
+                  top:10px;
+                  z-index: 1001;
+                  border: 0;
+                  display: none;
+              }
+
+              #textEditBox {
+                  font-family: "宋体";
+                  font-size: 16px;
+                  color:#0000ff;
+                  opacity: 0.0;
+                  background: none repeat scroll 0 0 transparent;
+                  width: 660px;
+              }
+          </style>
+
+          <div id="textEditBoxDiv" style="display:none">
+              <input type="text" value="7332058" id="textEditBox"/>
+              <div id="idTextEditorToolbar" style="display:">
+                  <select class="fn-left" id="fontFamilySelector">
+                      <option value="楷体" selected="selected">楷体</option>
+                      <option value="仿宋">仿宋</option>
+                      <option value="宋体">宋体</option>
+                      <option value="新宋体">新宋体</option>
+                      <option value="隶书">隶书</option>
+                      <option value="幼圆">幼圆</option>
+                      <option value="黑体">黑体</option>
+                      <option value="微软雅黑">微软雅黑</option>
+                      <option value="新宋体">新宋体</option>
+                      <option value="方正舒体">方正舒体</option>
+                      <option value="方正姚体">方正姚体</option>
+                      <option value="华文彩云">华文彩云</option>
+                      <option value="华文仿宋">华文仿宋</option>
+                      <option value="华文行楷">华文行楷</option>
+                      <option value="华文琥珀">华文琥珀</option>
+                      <option value="华文楷体">华文楷体</option>
+                      <option value="华文隶书">华文隶书</option>
+                      <option value="华文宋体">华文宋体</option>
+                      <option value="华文细黑">华文细黑</option>
+                      <option value="华文新魏">华文新魏</option>
+                      <option value="华文中宋">华文中宋</option>
+                      <!--- English --->
+                      <option value="Arial Unicode MS">Arial Unicode MS</option>
+                      <option value="Meiryo UI">Meiryo UI</option>
+                      <option value="Microsoft JhengHei">Microsoft JhengHei</option>
+                      <option value="Microsoft JhengHei UI">Microsoft JhengHei UI</option>
+                      <option value="DotumChe">DotumChe</option>
+                      <option value="MS PGothic">MS PGothic</option>
+                      <option value="comic sans ms">Comic Sans</option>
+                      <option value="courier new">Courier New</option>
+                      <option value="georgia">Georgia</option>
+                      <option value="helvetica">Helvetica</option>
+                      <option value="impact">Impact</option>
+                      <option value="times new roman">Times</option>
+                      <option value="trebuchet ms">Trebuchet</option>
+                      <option value="verdana">Verdana</option>
+                  </select>
+
+                  <div class="jdt-xia3" id="textEditBoxDivFontSize">
+                      <span class="fn-left jdt-wenzi"></span>
+                      <div class="jdt-progress" style="position:relative" aria-disabled="false"></div>
+                  </div>
+                  <div class="fn-left leftwidth">
+                      <input class="color" id="fontcolor" value="66ff00">
+                  </div>
+
+                  <button class="W_btn_b fontsb" id="idOK">queren></button>
+                  <button class="W_btn_b fontsb" id="idNo">guanbi></button>
+              </div>
+          </div>
+
+          <div id="messageBubbleDiv" style="display:none">
+              <label for="bubble" id="bubble"></label>
+          </div>
 
   </ion-content>
 </ion-view>
