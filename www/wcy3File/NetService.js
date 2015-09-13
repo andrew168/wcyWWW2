@@ -2,7 +2,7 @@
  * Created by admin on 9/11/2015.
  */
 angular.module('starter')
-.factory("NetIOService", function ($cordovaFileTransfer, DeviceService) {
+.factory("NetService", function ($cordovaFileTransfer, DeviceService) {
         var baseUrl = "http://bone.udoido.cn/mcImages/";
 
         function get(path) {

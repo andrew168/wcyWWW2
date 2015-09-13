@@ -2,7 +2,7 @@
  * Created by admin on 9/9/2015.
  */
 angular.module('starter')
-    .factory("FileIO", function ($cordovaFileTransfer, $cordovaFile) {
+    .factory("FileService", function ($cordovaFileTransfer, $cordovaFile) {
         var rootFolder = "";
 
         function createDir(dir) {
