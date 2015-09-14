@@ -188,4 +188,14 @@ angular.module('starter')
         $scope.testDownload = function() {
             NetService.get("p10324.png");
         };
+
+        $scope.saveScreenShot = function () {
+            var data = TQ.ScreenShot.getData();
+            console.log(data);
+        };
+
+        $scope.saveWorks = function () {
+            var data = currScene.getData();
+            console.log(data);
+        };
     });

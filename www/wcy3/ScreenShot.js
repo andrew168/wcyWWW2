@@ -20,6 +20,11 @@ window.TQ = window.TQ || {};
         ScreenShot.imageData = stage.toDataURL(); // 默认生成透明图, 带alpha信息, PNG格式的
     };
 
+    ScreenShot.getData = function() {
+        ScreenShot.take();
+        return ScreenShot.imageData;
+    };
+
     ScreenShot.upload = function (_keywords)
     {
         assertNotNull(TQ.Dictionary.FoundNull,  ScreenShot.imageData); // 先截取屏幕
