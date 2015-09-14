@@ -1,5 +1,6 @@
 angular.module('starter')
-.controller('DashCtrl', function($scope, $timeout, GetWcy, $cordovaImagePicker) {
+.controller('DashCtrl', function($scope, $timeout, GetWcy, $cordovaImagePicker,
+                                 NetService, DeviceService) {
         // GetWcy.test();
         var isDithering = false;
         GetWcy.testCreateScene();
@@ -128,9 +129,13 @@ angular.module('starter')
             // insertSound("mcSounds/p8574.wav", x, y);
             // TQ.TextInputMgr.start();
             insertText("Hello 世界！", x, y);
-            // insertAlbum();
         };
 
+        $scope.insertLocalImage = function() {
+            var path = "p10324.png";
+            path = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
+            insertImage(path, x, y);
+        };
 
         function insertImage(filename, x, y) {
             var desc = {src: filename, type:"Bitmap", x:x, y:y};
@@ -158,7 +163,7 @@ angular.module('starter')
             TQ.SceneEditor.addItem(desc);
         };
 
-        function insertAlbum() {
+        $scope.insertAlbum = function() {
             var options = {
                 maximumImagesCount: 10,
                 width: 800,
@@ -177,5 +182,10 @@ angular.module('starter')
                 }, function(error) {
                     // error getting photos
                 });
-        }
+
+        };
+
+        $scope.testDownload = function() {
+            NetService.get("p10324.png");
+        };
     });

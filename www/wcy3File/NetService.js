@@ -9,7 +9,7 @@ angular.module('starter')
             var url = baseUrl + path;
             console.log("get from : " + url);
 
-            var targetPath = DeviceService.getFullPath(path);
+            var targetPath = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
             var trustHosts = true;
             var options = {};
 
