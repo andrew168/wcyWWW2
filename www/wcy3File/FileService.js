@@ -2,23 +2,30 @@
  * Created by admin on 9/9/2015.
  */
 angular.module('starter')
-    .factory("FileService", function ($cordovaFileTransfer, $cordovaFile) {
+    .factory("FileService", function ($cordovaFileTransfer, $cordovaFile, DeviceService) {
         var rootFolder = "";
-
         function createDir(dir) {
-            rootFolder = cordova.file.dataDirectory;
-            return $cordovaFile.createDir(rootFolder, dir, false);
+            // 确保建立， 避免重复建立
+            rootFolder = DeviceService.getRootFolder();
+            var finalPath = DeviceService.getFullPath(dir);
+            if (dir[dir.length - 1] === '/') {
+                dir = dir.substr(0, dir.length - 1);
+            }
+            $cordovaFile.checkDir(rootFolder, dir)
+                .then(function (success) {
+                    // exist, do nothing;
+                }, function (error) {
+                    $cordovaFile.createDir(rootFolder, dir, false);
+                });
         }
 
         function saveFile(fullPath, data) {
             // WRITE
-            rootFolder = cordova.file.dataDirectory;
-            return $cordovaFile.writeFile(rootFolder, fullPath, data, true);
+            return $cordovaFile.writeFile(DeviceService.getRootFolder(), fullPath, data, true);
         }
 
         function readFile(fullPath) {
-            rootFolder = cordova.file.dataDirectory;
-            return $cordovaFile.readAsText(rootFolder, fullPath);
+            return $cordovaFile.readAsText(DeviceService.getRootFolder(), fullPath);
         }
 
         function testFilePathOP() {
