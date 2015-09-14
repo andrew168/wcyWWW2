@@ -45,19 +45,19 @@ function netSave(filename, dataBuffer,keywords,otherObj)
         processData: false, //必须
         data:f
     })
-    .done(function(msg){
-        msg=JSON.parse(msg);
-        if(msg.name!=undefined && msg.name!=''){
-            TQ.Init.wcyTempName=msg.name;
-        }
-        if(flag){
-            displayInfo3();
-        }
-        NET_IO_DATA_TYPE
-    })
-    .done(function(){
-        TQ.Init.saveServerWcyProcess=0;
-    })
+        .done(function(msg){
+            msg=JSON.parse(msg);
+            if(msg.name!=undefined && msg.name!=''){
+                TQ.Init.wcyTempName=msg.name;
+            }
+            if(flag){
+                displayInfo3();
+            }
+            NET_IO_DATA_TYPE
+        })
+        .done(function(){
+            TQ.Init.saveServerWcyProcess=0;
+        })
 }
 
 function netOpen(filename, callback)
@@ -75,9 +75,9 @@ function onDelete(msg) {
 }
 
 /*
-function netDelete(wcyID)
-{
-    var para = "&userID=" + localStorage.getItem("userID");
-    $.post('http://'+TQ.Config.DOMAIN_NAME+'/Weidongman/wfile/netDelete.php?wcyID='+wcyID + para, null, onDelete, NET_IO_DATA_TYPE);
-}
-*/
+ function netDelete(wcyID)
+ {
+ var para = "&userID=" + localStorage.getItem("userID");
+ $.post('http://'+TQ.Config.DOMAIN_NAME+'/Weidongman/wfile/netDelete.php?wcyID='+wcyID + para, null, onDelete, NET_IO_DATA_TYPE);
+ }
+ */
