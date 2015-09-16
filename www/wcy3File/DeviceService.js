@@ -15,7 +15,15 @@ angular.module('starter')
         }
 
         function initialize() {
-            rootFolder = cordova.file.dataDirectory;
+            if (ionic.Platform.isAndroid() ||
+                ionic.Platform.isIOS() ||
+                ionic.Platform.isWebView() ||
+                ionic.Platform.isWindowsPhone()) {
+                rootFolder = cordova.file.dataDirectory;
+            } else {
+                rootFolder = "";
+            }
+
             _isReady = true;
         }
 
