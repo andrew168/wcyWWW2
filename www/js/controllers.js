@@ -27,6 +27,7 @@ angular.module('starter')
         $scope.params = 0;
 
         function onStart() {
+            ele = TQ.SelectSet.getSelectedElement();
             if (!ele) {
                 ele = currScene.currentLevel.elements[0];
             }
@@ -67,7 +68,7 @@ angular.module('starter')
             if (!ele) {
                 console.log("Move...");
             } else {
-                ele = currScene.currentLevel.elements[0];
+                // ele = currScene.currentLevel.elements[0];
                 var deltaX = e.gesture.deltaX;
                 var deltaY = - e.gesture.deltaY;
                 ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
@@ -82,7 +83,7 @@ angular.module('starter')
             if (!ele) {
                 console.log("Rotete...");
             } else {
-                ele = currScene.currentLevel.elements[0];
+                // ele = currScene.currentLevel.elements[0];
                 dAngle = e.gesture.rotation;
                 ele.rotateTo(ang - dAngle);
                 isMultiTouching = true;
@@ -97,7 +98,7 @@ angular.module('starter')
             if (!ele) {
                 console.log("pinch...");
             } else {
-                ele = currScene.currentLevel.elements[0];
+                // ele = currScene.currentLevel.elements[0];
                 dScale = e.gesture.scale;
                 var newScale = scale * dScale;
                 $scope.params = Math.round(newScale *100) / 100;
@@ -183,6 +184,10 @@ angular.module('starter')
                     // error getting photos
                 });
 
+        };
+
+        $scope.deleteElement = function() {
+            TQ.SelectSet.delete();
         };
 
         $scope.testDownload = function() {
