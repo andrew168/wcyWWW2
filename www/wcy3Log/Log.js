@@ -35,6 +35,10 @@ window.TQ = window.TQ || {};
         if (Log.level >= Log.WARN_LEVEL) console.warn(str);
     };
 
+    Log.depreciated = function (str) {
+        console.error("this is depreciated. " + str);
+    };
+
     if (Log.level >= Log.INFO_LEVEL) {
         Log.info = Log.out = function(str) {
             console.log(str);
