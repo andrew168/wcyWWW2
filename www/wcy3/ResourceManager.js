@@ -71,6 +71,7 @@ this.TQ = this.TQ || {};
         RM.preloader = new createjs.LoadQueue(true); // , "assets/");
         RM.preloader.installPlugin(createjs.Sound);
         RM.setupListeners();
+        RM.setupDefaultResource();
     };
 
     RM.setupDefaultResource = function() {
