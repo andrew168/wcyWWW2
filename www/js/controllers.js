@@ -25,11 +25,22 @@ angular.module('starter')
         var isMultiTouching = false;
 
         $scope.params = 0;
+        $scope.getTextMsg = function () {
+            var msg = (( !currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name)) ?
+                "": currScene.currentLevel.name;
+
+            return msg + ": " + TQ.FrameCounter.t();
+        };
 
         function onStart() {
             ele = TQ.SelectSet.getSelectedElement();
             if (!ele) {
                 ele = currScene.currentLevel.elements[0];
+            }
+
+            if (!ele) {
+                console.error("No Element selected");
+                return;
             }
 
             ang = ele.getRotation();
@@ -114,11 +125,17 @@ angular.module('starter')
         }
 
         $scope.testCreateLevel = function() {
-            if (currScene.levelNum() < 2) {
-                currScene.addLevel();
-                currScene.selectLevel(1);
-                currScene.currentLevel.state = TQBase.LevelState.EDITING;
-            }
+            var id = currScene.currentLevelId;
+            currScene.addLevel(id);
+            currScene.gotoLevel(id);
+        };
+
+        $scope.gotoPreLevel = function() {
+            currScene.preLevel();
+        };
+
+        $scope.gotoNextLevel = function() {
+            currScene.nextLevel();
         };
 
         var x = 300,

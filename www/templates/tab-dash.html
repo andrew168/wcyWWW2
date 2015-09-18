@@ -1,7 +1,6 @@
 <ion-view>
     <ion-content scroll="false">
         <div class="float-tool">
-            <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
             <button class="button button-positive" ng-click="onEndInputText()">EndInputText</button>
             <button class="button button-positive" ng-click="testDownload()">下载资源</button>
@@ -10,7 +9,10 @@
             <button class="button button-positive" ng-click="deleteElement()">删除</button>
             <button class="button button-positive" ng-click="saveScreenShot()">截屏</button>
             <button class="button button-positive" ng-click="saveWorks()">保存作品</button>
-            <label>{{params}}</label>
+            <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
+            <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
+            <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
+            <label>{{params}}{{getTextMsg()}} </label>
         </div>
         <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="positive-border"></canvas>
         <div id="textEditBoxDiv" style="display:none">
