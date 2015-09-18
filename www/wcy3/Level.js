@@ -40,6 +40,8 @@ window.TQ = window.TQ || {};
     {
         TQ.FrameCounter.initialize(this._t, this.FPS, this);
         TQ.TimerUI.initialize();
+  //      this.state = TQBase.LevelState.NOT_INIT;
+//        this.dataReady = false;
     };
 
     p.itemNum = function() {
