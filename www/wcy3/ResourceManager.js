@@ -70,6 +70,7 @@ this.TQ = this.TQ || {};
 		// Instantiate a queue.
         RM.preloader = new createjs.LoadQueue(true); // , "assets/");
         RM.preloader.installPlugin(createjs.Sound);
+        RM.preloader.installPlugin(ImagePreloader);
         RM.setupListeners();
         RM.setupDefaultResource();
     };
@@ -77,7 +78,7 @@ this.TQ = this.TQ || {};
     RM.setupDefaultResource = function() {
         RM.hasDefaultResource = true;
         RM.addItem(RM.NOPIC);
-        RM.addItem(RM.NOSOUND);
+//ToDO:临时关闭， 需要下载高版本！        RM.addItem(RM.NOSOUND);
     };
 
     RM.setupListeners = function() {
