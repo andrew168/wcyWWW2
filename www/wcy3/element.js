@@ -617,16 +617,18 @@ window.TQ = window.TQ || {};
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
         var jsonObj = this.jsonObj;
+        assertTrue(jsonObj.src === "", "must has image name");
         var item = TQ.RM.getResource(jsonObj.src);
-        item = null;
+        // item = null;
+        TQ.Log.warn("ToDo: to preload local resource, file:///...,  item = null!");
         if (!item) {
             var img3 = new Image();   // 由他调入图像资源！！
             (function (pt) {
                 img3.onload = function () {
                     // 创建Bitmap
                     pt.loaded = true;
-                    // var resource = pt.getImageResource(item, jsonObj);
-                    var resource = jsonObj.src;
+                    var resource = pt.getImageResource(item, jsonObj);
+                    // var resource = jsonObj.src;
                     pt.displayObj = new createjs.Bitmap(resource);
                     jsonObj.img = null;
                     pt._afterItemLoaded();
