@@ -13,6 +13,7 @@
             <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
             <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
             <label>{{params}}{{getTextMsg()}} </label>
+            <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
         </div>
         <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="positive-border"></canvas>
         <div id="textEditBoxDiv" style="display:none">

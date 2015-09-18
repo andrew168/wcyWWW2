@@ -138,6 +138,16 @@ angular.module('starter')
             currScene.nextLevel();
         };
 
+        $scope.isPlaying = TQ.FrameCounter.isPlaying();
+        $scope.onChange = function() {
+            $scope.isPlaying = !$scope.isPlaying;
+            if ($scope.isPlaying) {
+               TQ.FrameCounter.play();
+            } else {
+                TQ.FrameCounter.stop();
+            }
+        };
+
         var x = 300,
             y = 300;
         $scope.testInsert = function() {
