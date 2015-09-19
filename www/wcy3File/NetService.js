@@ -3,13 +3,13 @@
  */
 angular.module('starter')
 .factory("NetService", function ($cordovaFileTransfer, DeviceService) {
-        var baseUrl = "http://bone.udoido.cn/mcImages/";
+        var baseUrl = "http://bone.udoido.cn/";
 
         function get(path) {
             var url = baseUrl + path;
             console.log("get from : " + url);
 
-            var targetPath = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
+            var targetPath = DeviceService.getFullPath(path);
             var trustHosts = true;
             var options = {};
 

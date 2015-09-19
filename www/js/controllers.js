@@ -235,16 +235,20 @@ angular.module('starter')
         };
 
         $scope.testDownload = function() {
-            NetService.get("p10324.png");
+            NetService.get(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
+            NetService.get(TQ.Config.IMAGES_CORE_PATH + "p1.png");
+            NetService.get(TQ.Config.SOUNDS_PATH + "p1.wav");
         };
 
         $scope.saveScreenShot = function () {
             var data = TQ.ScreenShot.getData();
             console.log(data);
+            FileService.saveFile(TQ.Config.SCREENSHOT_CORE_PATH + "/nn.png", data);
         };
 
         $scope.saveWorks = function () {
             var data = currScene.getData();
             console.log(data);
+            FileService.saveFile(TQ.Config.SCREENSHOT_CORE_PATH + "/nn.wcy", data);
         };
     });
