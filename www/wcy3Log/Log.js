@@ -24,7 +24,7 @@ window.TQ = window.TQ || {};
     };
 
     Log.criticalError = function (str) {
-        if (Log.level >= Log.CRITICAL_LEVEL) console.log(str);
+        if (Log.level >= Log.CRITICAL_LEVEL) console.error(str);
     };
 
     Log.error = function (str) {
