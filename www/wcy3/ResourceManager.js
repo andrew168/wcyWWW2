@@ -36,8 +36,10 @@ this.TQ = this.TQ || {};
     // var FAST_SERVER = "http://www.udoido.com";
     // var FAST_SERVER = "http://localhost:63342/eCard/www";
     var FAST_SERVER = "";
-    RM.NOSOUND = "/mcSounds/p1.wav";
-    RM.NOPIC = "/mcImages/p1.png";
+    RM.NOSOUND = "p1.wav";
+    RM.NOPIC = "p1.png";
+    RM.NOSOUND_FULL = "p1.wav";
+    RM.NOPIC_FULL = "p1.png";
     RM.BASE_PATH = null;
     RM.isEmpty = true;
     RM.items = [];
@@ -54,8 +56,10 @@ this.TQ = this.TQ || {};
         RM.hasDefaultResource = false;
         // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
         RM.BASE_PATH = FAST_SERVER;
-        RM.NOPIC = RM.toFullPath(RM.NOPIC);
-        RM.NOSOUND = RM.toFullPath(RM.NOSOUND);
+        // RM.NOPIC = RM.toFullPath(RM.NOPIC);
+        // RM.NOSOUND = RM.toFullPath(RM.NOSOUND);
+        RM.FULLPATH_NOPIC = TQ.Config.getResourceHost() + "/" + (TQ.Config.IMAGES_CORE_PATH + RM.NOPIC);
+        RM.FULLPATH_NOSOUND = TQ.Config.getResourceHost() + "/" + (TQ.Config.SOUNDS_PATH + RM.NOSOUND);
         createjs.FlashPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.Sound.BrowserDetect.isChrome ||  // Chrome, Safari, IOS移动版 都支持MP3
             createjs.Sound.BrowserDetect.isIOS) {
@@ -77,8 +81,8 @@ this.TQ = this.TQ || {};
 
     RM.setupDefaultResource = function() {
         RM.hasDefaultResource = true;
-        RM.addItem(RM.NOPIC);
-        RM.addItem(RM.NOSOUND);
+        RM.addItem(RM.FULLPATH_NOPIC);
+        RM.addItem(RM.FULLPATH_NOSOUND);
     };
 
     RM.setupListeners = function() {
@@ -107,25 +111,38 @@ this.TQ = this.TQ || {};
         });
 
         RM.preloader.addEventListener("error",  function(event) {
-            TQ.Log.info(event.item.src + ": " + event.toString() );
-            var resID = event.item.id;
+            var item = event.data;
+            assertTrue("缺少系统文件",
+                ((item.src !== RM.FULLPATH_NOSOUND) &&
+                (item.src !== RM.FULLPATH_NOPIC)));
+            TQ.Log.info(item.src + ": " + event.toString() );
+            var resID = item.id;
             var result = null;
             var altResID = null;
 
-            switch (event.item.type) {
+            switch (item.type) {
                 case createjs.LoadQueue.IMAGE:
-                    altResID = RM.toFullPath(RM.NOPIC);
+                    altResID = RM.FULLPATH_NOPIC;
                     break;
 
                 case createjs.LoadQueue.SOUND:
-                    altResID = RM.toFullPath(RM.NOSOUND);
+                    altResID = RM.FULLPATH_NOSOUND;
                     break;
 
-                case createjs.LoadQueue.TEXT: // 元件的文件
+                case createjs.LoadQueue.TEXT: // 元件的文件, or bad file
+                    if (TQ.Utility.isImage(item.src)) {
+                        altResID = RM.FULLPATH_NOPIC;
+                        item.type = createjs.LoadQueue.IMAGE;
+                    } else if (TQ.Utility.isSoundResource(item.src)) {
+                        altResID = RM.FULLPATH_NOSOUND;
+                        item.type = createjs.LoadQueue.SOUND;
+                    } else {
+                        TQ.Log.error(item.type +": 未处理的资源类型!");
+                    }
                     break;
 
                 default :
-                    TQ.Log.info(event.item.type +": 未处理的资源类型!");
+                    TQ.Log.error(item.type +": 未处理的资源类型!");
             }
 
             if ((altResID != null) && (!!RM.items[altResID])) {
@@ -134,7 +151,7 @@ this.TQ = this.TQ || {};
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             }
 
-            RM.items[resID] = { ID: resID, res:result, type:event.item.type};
+            RM.items[resID] = { ID: resID, res:result, type:item.type};
             if (result == null) {
                 RM.addItem(altResID, function() {
                     RM.items[resID].res = RM.items[altResID].res;
@@ -204,8 +221,14 @@ this.TQ = this.TQ || {};
         RM.preloader.removeEventListener(eventName,  callback);
     };
 
-    function _addReference(resourceID) {
+    function _addReference(resourceID, _callback) {
+        var item = RM.getResource(resourceID);
+        assertTrue("_addReference: 先确保resource 存在！", !!item);
+        if (!!_callback) {
+            RM.callbackList.push({ID:resourceID, func:_callback});
+        }
 
+        //ToDo:@@@ 增加和减少 reference Counter
     }
     RM.addItem = function(resourceID, _callback) {
         if (!RM.hasDefaultResource) {
@@ -213,7 +236,8 @@ this.TQ = this.TQ || {};
         }
         resourceID = RM.toFullPath(resourceID);
         if (this.hasResource(resourceID)) {
-          _addReference(resourceID);
+            assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
+            _addReference(resourceID, _callback);
           return;
         }
 
@@ -261,7 +285,7 @@ this.TQ = this.TQ || {};
             var resName = RM.toRelative(desc.src);
             resName.trim();
             if (resName.length > 0) {
-                if ((!RM.hasResource(resName)) && (!RM.isLocalResource(resName))) {
+                if (!RM.hasResourceReady(resName)) {
                     RM.addItem(resName, callback);
                     result = true;
                 } else if (!!callback) {
@@ -296,15 +320,20 @@ this.TQ = this.TQ || {};
             var resName = RM.toRelative(desc.src);
             resName.trim();
             if (resName.length > 0) {
-                if (!RM.hasResource(resName)) result = false;
+                if (!RM.hasResourceReady(resName)) result = false;
             }
         }
 
         return result;
     };
 
-    RM.hasResource = function(id) {
+    RM.hasResource = function(id) {  // registered, may not loaded
         return !(!RM.items[RM.toFullPath(id)]);
+    };
+
+    RM.hasResourceReady = function(id) {
+        var res = RM.items[RM.toFullPath(id)];
+        return (!!res  && !!res.res);
     };
 
     RM.getResource = function(id) {
