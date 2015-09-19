@@ -15,11 +15,12 @@ angular.module('starter')
         }
 
         function initialize() {
-            if (ionic.Platform.isAndroid() ||
-                ionic.Platform.isIOS() ||
-                ionic.Platform.isWebView() ||
-                ionic.Platform.isWindowsPhone()) {
-                rootFolder = cordova.file.dataDirectory;
+            if (TQ.Base.Utility.isMobileDevice()) {
+                if ((typeof cordova =="undefined") || (typeof cordova.file ==="undefined")) {// for Chrome simulator
+                    rootFolder = "";
+                } else {
+                    rootFolder = cordova.file.dataDirectory;
+                }
             } else {
                 rootFolder = "";
             }

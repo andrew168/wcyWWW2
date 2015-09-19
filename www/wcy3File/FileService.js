@@ -21,10 +21,18 @@ angular.module('starter')
 
         function saveFile(fullPath, data) {
             // WRITE
+            if (!TQ.Base.Utility.isMobileDevice()) {
+                return;
+            }
+
             return $cordovaFile.writeFile(DeviceService.getRootFolder(), fullPath, data, true);
         }
 
         function readFile(fullPath) {
+            // WRITE
+            if (!TQ.Base.Utility.isMobileDevice()) {
+                return;
+            }
             return $cordovaFile.readAsText(DeviceService.getRootFolder(), fullPath);
         }
 

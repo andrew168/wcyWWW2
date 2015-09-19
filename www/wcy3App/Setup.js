@@ -8,6 +8,8 @@ angular.module('starter')
                 TQ.Log.error("Device not ready! in createFolders");
                 return;
             }
+
+            TQ.Config.setResourceHost(DeviceService.getRootFolder());
             FileService.createDir(TQ.Config.IMAGES_CORE_PATH);
             FileService.createDir(TQ.Config.SOUNDS_PATH);
             FileService.createDir(TQ.Config.VIDEOS_CORE_PATH);
