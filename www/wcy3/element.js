@@ -617,7 +617,7 @@ window.TQ = window.TQ || {};
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
         var jsonObj = this.jsonObj;
-        assertTrue(jsonObj.src === "", "must has image name");
+        assertTrue("must has image name", jsonObj.src !== "");
         var item = TQ.RM.getResource(jsonObj.src);
         // item = null;
         TQ.Log.warn("ToDo: to preload local resource, file:///...,  item = null!");
