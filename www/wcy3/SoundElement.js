@@ -39,7 +39,7 @@ TQ = TQ || {};
     SoundElement.composeResource = function (res) {
         // wav: 都可以用(似乎IE不行）, 已经被FF24.0，CM29.0， SF5.1.7都支持了！！！
         // MP3: IE, CM, SF： ==》 ogg: 火狐, opera
-        var currentBrowser = createjs.Sound.BrowserDetect;
+        var currentBrowser = createjs.BrowserDetect;
         var newRes = null;
         if (currentBrowser.isFirefox || currentBrowser.isOpera ) {
             newRes = res.replace("mp3", "ogg");
