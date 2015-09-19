@@ -1,9 +1,26 @@
 angular.module('starter')
-.controller('DashCtrl', function($scope, $timeout, GetWcy, $cordovaImagePicker,
-                                 NetService, DeviceService) {
+    .controller('DashCtrl', function(
+        $scope, $state, $timeout, GetWcy, $cordovaImagePicker,
+        $cordovaProgress,
+        FileService, NetService, DeviceService, Setup) {
+
+        if (!DeviceService.isReady()) {
+            // $cordovaProgress.showSimple(true);
+            ionic.Platform.ready(_init);
+        } else {
+            _init();
+        }
+
+        function _init() {
+            DeviceService.initialize();
+            Setup.initialize();
+            assertTrue("device要先ready", DeviceService.isReady());
+            GetWcy.testCreateScene();
+            // $cordovaProgress.hide();
+        }
+
         // GetWcy.test();
         var isDithering = false;
-        GetWcy.testCreateScene();
         var canvas = document.getElementById("testCanvas");
         ionic.EventController.onGesture('touch', onStart, canvas);
         ionic.EventController.onGesture('touchend', onTouchEnd, canvas);

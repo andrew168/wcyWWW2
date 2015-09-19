@@ -4,7 +4,7 @@
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
 angular.module('starter', ['ionic', 'ngStorage', 'ngCordova'])
-.run(function($ionicPlatform, DeviceService, Setup) {
+.run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -17,8 +17,6 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova'])
       // org.apache.cordova.statusbar required
       StatusBar.styleLightContent();
     }
-      DeviceService.initialize();
-      Setup.initialize();
   });
 })
 
@@ -29,13 +27,13 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova'])
   // Set up the various states which the app can be in.
   // Each state's controller can be found in controllers.js
   $stateProvider
-  .state('dash', {
-    url: '/dash',
-    templateUrl: 'templates/tab-dash.html',
-    controller: 'DashCtrl'
-  });
+      .state('dash', {
+          url: '/dash',
+          templateUrl: 'templates/tab-dash.html',
+          controller: 'DashCtrl'
+      })
+;
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/dash');
-
 });
