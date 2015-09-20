@@ -5,6 +5,7 @@
  */
 angular.module('starter')
 .factory('Setup', function(FileService, NetService, DeviceService) {
+        var dirCounter = 0;
         var dirs = [TQ.Config.IMAGES_CORE_PATH,
             TQ.Config.SOUNDS_PATH,
             TQ.Config.VIDEOS_CORE_PATH,
@@ -24,12 +25,10 @@ angular.module('starter')
 
             TQ.Config.setResourceHost(DeviceService.getRootFolder());
 
-            for (var i = 0; i < dirs.length; i++) {
-                FileService.createDir(dirs[i], onSuccess, onError);
-            }
+            dirCounter = 0;
+            FileService.createDir(dirs[dirCounter], onSuccess, onError);
         }
 
-        var dirCounter = 0;
         function onSuccess(success) {
             dirCounter++;
             onDirCreated();
@@ -45,9 +44,12 @@ angular.module('starter')
             onDirCreated();
         }
 
+        //对于Android，处理速度慢，不能使用for循环连续发出命令，必须使用这种 回调方式
         function onDirCreated() {
             if (dirCounter === dirs.length) {
                 TQ.Base.Utility.triggerEvent(document, TQ.EVENT.DIR_READY);
+            } else {
+                FileService.createDir(dirs[dirCounter], onSuccess, onError);
             }
         }
 
