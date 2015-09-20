@@ -15,11 +15,6 @@ var ImgCache = {
             skipURIencoding: false                  /* enable if URIs are already encoded (skips call to sanitizeURI) */
         },
         overridables: {
-            hash: function (s) {
-                var parser = document.createElement('a');
-                parser.href = s;
-                return parser.pathname;
-            },
             log: function (str, level) {
                     'use strict';
                     if (ImgCache.options.debug) {
@@ -117,7 +112,7 @@ var ImgCache = {
             return Private.attributes.hasLocalStorage;
         }
         try {
-            var mod = ImgCache.overridables.hash('imgcache_test');
+            var mod = TQ.Base.Utility.urlParser('imgcache_test').pathname;
             localStorage.setItem(mod, mod);
             localStorage.removeItem(mod);
             Private.attributes.hasLocalStorage = true;
@@ -152,7 +147,7 @@ var ImgCache = {
             ImgCache.overridables.log('No source given to getCachedFileName', LOG_LEVEL_WARNING);
             return;
         }
-        var nameInCache = ImgCache.overridables.hash(img_src);
+        var nameInCache = TQ.Base.Utility.urlParser(img_src).pathname;
         return nameInCache;
     };
 
