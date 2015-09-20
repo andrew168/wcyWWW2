@@ -472,8 +472,7 @@ var ImgCache = {
     };
 
     ImgCache.getRoot =function() {
-        var local_root = Helpers.EntryGetPath(ImgCache.attributes.dirEntry);
-        return (local_root ? local_root : '') + ImgCache.options.localCacheFolder;
+        return Helpers.EntryGetURL(ImgCache.attributes.dirEntry);
     };
 
     // private methods can now be used publicly

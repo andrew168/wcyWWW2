@@ -35,6 +35,11 @@ angular.module('starter')
             } else {
                 rootFolder = ImgCache.getRoot();
             }
+            if (rootFolder !== '') {
+                if ((rootFolder[rootFolder.length - 1] !== '/') || (rootFolder[rootFolder.length - 1] !== '\\')) {
+                    rootFolder += "/";
+                }
+            }
             _isReady = true;
             TQ.Base.Utility.triggerEvent(document, TQ.EVENT.FILE_SYSTEM_READY);
         }
