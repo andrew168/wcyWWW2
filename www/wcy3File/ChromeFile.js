@@ -1,6 +1,7 @@
 /*jslint browser:true*/
 /*global console,LocalFileSystem,device,FileTransfer,define,module*/
 
+
 var ImgCache = {
         version: '1.0rc1',
         // options to override before using the library (but after loading this script!)
@@ -15,10 +16,9 @@ var ImgCache = {
         },
         overridables: {
             hash: function (s) {
-                /* tiny-sha1 r4 (11/2011) - MIT License - http://code.google.com/p/tiny-sha1/ */
-                /* jshint ignore:start */
-                function U(a,b,c){while(0<c--)a.push(b)}function L(a,b){return(a<<b)|(a>>>(32-b))}function P(a,b,c){return a^b^c}function A(a,b){var c=(b&0xFFFF)+(a&0xFFFF),d=(b>>>16)+(a>>>16)+(c>>>16);return((d&0xFFFF)<<16)|(c&0xFFFF)}var B="0123456789abcdef";return(function(a){var c=[],d=a.length*4,e;for(var i=0;i<d;i++){e=a[i>>2]>>((3-(i%4))*8);c.push(B.charAt((e>>4)&0xF)+B.charAt(e&0xF))}return c.join('')}((function(a,b){var c,d,e,f,g,h=a.length,v=0x67452301,w=0xefcdab89,x=0x98badcfe,y=0x10325476,z=0xc3d2e1f0,M=[];U(M,0x5a827999,20);U(M,0x6ed9eba1,20);U(M,0x8f1bbcdc,20);U(M,0xca62c1d6,20);a[b>>5]|=0x80<<(24-(b%32));a[(((b+65)>>9)<<4)+15]=b;for(var i=0;i<h;i+=16){c=v;d=w;e=x;f=y;g=z;for(var j=0,O=[];j<80;j++){O[j]=j<16?a[j+i]:L(O[j-3]^O[j-8]^O[j-14]^O[j-16],1);var k=(function(a,b,c,d,e){var f=(e&0xFFFF)+(a&0xFFFF)+(b&0xFFFF)+(c&0xFFFF)+(d&0xFFFF),g=(e>>>16)+(a>>>16)+(b>>>16)+(c>>>16)+(d>>>16)+(f>>>16);return((g&0xFFFF)<<16)|(f&0xFFFF)})(j<20?(function(t,a,b){return(t&a)^(~t&b)}(d,e,f)):j<40?P(d,e,f):j<60?(function(t,a,b){return(t&a)^(t&b)^(a&b)}(d,e,f)):P(d,e,f),g,M[j],O[j],L(c,5));g=f;f=e;e=L(d,30);d=c;c=k}v=A(v,c);w=A(w,d);x=A(x,e);y=A(y,f);z=A(z,g)}return[v,w,x,y,z]}((function(t){var a=[],b=255,c=t.length*8;for(var i=0;i<c;i+=8){a[i>>5]|=(t.charCodeAt(i/8)&b)<<(24-(i%32))}return a}(s)).slice(),s.length*8))));
-                /* jshint ignore:end */
+                var parser = document.createElement('a');
+                parser.href = s;
+                return parser.pathname;
             },
             log: function (str, level) {
                     'use strict';
@@ -88,24 +88,6 @@ var ImgCache = {
         return uri.path.toLowerCase();
     };
 
-    // returns extension from filename (without leading '.')
-    Helpers.FileGetExtension = function (filename) {
-        if (!filename) {
-            return '';
-        }
-        filename = filename.split('?')[0];
-        var ext = filename.split('.').pop();
-        // make sure it's a realistic file extension - for images no more than 4 characters long (.jpeg)
-        if (!ext || ext.length > 4) {
-            return '';
-        }
-        return ext;
-    };
-
-    Helpers.hasJqueryOrJqueryLite = function () {
-        return (ImgCache.jQuery || ImgCache.jQueryLite);
-    };
-
     // Returns a URL that can be used to locate a file
     Helpers.EntryGetURL = function (entry) {
         // toURL for html5, toURI for cordova 1.x
@@ -117,24 +99,12 @@ var ImgCache = {
          return entry.fullPath;
     };
 
-    /****************************************************************************/
-
-    /** DomHelpers **************************************************************/
-    var DomHelpers = {};
-
-    DomHelpers.trigger = function (DomElement, eventName) {
-        if (ImgCache.jQuery) {
-            $(DomElement).trigger(eventName);
-        } else {
-            DomElement.dispatchEvent(new CustomEvent(eventName));
-        }
-    };
-
-
-    /****************************************************************************/
-
     /** Private *****************************************************************/
     var Private = { attributes: {} };
+
+    Private.trigger = function (DomElement, eventName) {
+        DomElement.dispatchEvent(new CustomEvent(eventName));
+    };
 
     Private.isImgCacheLoaded = function () {
         if (!ImgCache.attributes.filesystem || !ImgCache.attributes.dirEntry) {
@@ -178,7 +148,7 @@ var ImgCache = {
     // used for FileTransfer.download only
     Private.getCachedFileFullPath = function (img_src) {
         var local_root = Helpers.EntryGetPath(ImgCache.attributes.dirEntry);
-        return (local_root ? local_root + '/' : '/') + Private.getCachedFileName(img_src);
+        return (local_root ? local_root : '') + Private.getCachedFileName(img_src);
     };
 
     Private.getCachedFileName = function (img_src) {
@@ -186,9 +156,8 @@ var ImgCache = {
             ImgCache.overridables.log('No source given to getCachedFileName', LOG_LEVEL_WARNING);
             return;
         }
-        var hash = ImgCache.overridables.hash(img_src);
-        var ext = Helpers.FileGetExtension(Helpers.URIGetFileName(img_src));
-        return hash + (ext ? ('.' + ext) : '');
+        var nameInCache = ImgCache.overridables.hash(img_src);
+        return nameInCache;
     };
 
     Private.setNewImgPath = function (){};
@@ -204,7 +173,7 @@ var ImgCache = {
             if (success_callback) { success_callback(); }
 
             ImgCache.ready = true;
-            DomHelpers.trigger(document, IMGCACHE_READY_TRIGGERED_EVENT);
+            Private.trigger(document, ImgCache.READY_EVENT);
         };
         ImgCache.attributes.filesystem.root.getDirectory(ImgCache.options.localCacheFolder, {create: true, exclusive: false}, _getDirSuccess, _fail);
     };
@@ -265,43 +234,10 @@ var ImgCache = {
         xhr.send();
     };
 
-    Private.loadCachedFile = function ($element, img_src, set_path_callback, success_callback, error_callback) {
-        if (!Private.isImgCacheLoaded()) {
-            return;
-        }
-
-        if (!$element) {
-            return;
-        }
-
-        var filename = Helpers.URIGetFileName(img_src);
-
-        var _gotFileEntry = function (entry) {
-             {
-                // using src="filesystem:" kind of url
-                var new_url = Helpers.EntryGetURL(entry);
-                set_path_callback($element, new_url, img_src);
-                ImgCache.overridables.log('File ' + filename + ' loaded from cache', LOG_LEVEL_INFO);
-                if (success_callback) { success_callback($element); }
-            }
-        };
-        // if file does not exist in cache, cache it now!
-        var _fail = function () {
-            ImgCache.overridables.log('File ' + filename + ' not in cache', LOG_LEVEL_INFO);
-            if (error_callback) { error_callback($element); }
-        };
-        ImgCache.attributes.filesystem.root.getFile(Private.getCachedFilePath(img_src), {create: false}, _gotFileEntry, _fail);
-    };
-
     /****************************************************************************/
-
-
-    var OLD_SRC_ATTR = 'data-old-src',
-        IMGCACHE_READY_TRIGGERED_EVENT = 'ImgCacheReady';
-
+    ImgCache.READY_EVENT = 'ImgCacheReady';
     ImgCache.init = function (success_callback, error_callback) {
         ImgCache.jQuery = (window.jQuery || window.Zepto) ? true : false;        /* using jQuery if it's available otherwise the DOM API */
-        ImgCache.jQueryLite = (typeof window.angular !== 'undefined' && window.angular.element) ? true : false;    /* is AngularJS jQueryLite available */
 
         ImgCache.attributes.init_callback = success_callback;
 
@@ -471,18 +407,6 @@ var ImgCache = {
         });
     };
 
-    // $img: jQuery object of an <img/> element
-    // Synchronous method
-    ImgCache.useOnlineFile = function (){};
-
-
-
-    // $img: jQuery object of an <img/> element
-    ImgCache.useCachedFile = function (){};
-
-    // When the source url is not the 'src' attribute of the given img element
-    ImgCache.useCachedFileWithSource = function (){};
-
     // clears the cache
     ImgCache.clearCache = function (success_callback, error_callback) {
 
@@ -536,9 +460,20 @@ var ImgCache = {
         return Helpers.EntryGetURL(ImgCache.attributes.dirEntry);
     };
 
+    ImgCache.createDir = function (dirName) {
+        var _fail = function (error) {
+            ImgCache.overridables.log('Failed to get/create local cache directory: ' + error.code, LOG_LEVEL_ERROR);
+        };
+        var _getDirSuccess = function (dirEntry) {
+            ImgCache.overridables.log('Local cache folder opened: ' + Helpers.EntryGetPath(dirEntry), LOG_LEVEL_INFO);
+        };
+
+        var pathname = ImgCache.options.localCacheFolder + "/" + dirName;
+        ImgCache.attributes.filesystem.root.getDirectory(pathname, {create: true, exclusive: false}, _getDirSuccess, _fail);
+    };
+
     // private methods can now be used publicly
     ImgCache.helpers = Helpers;
-    ImgCache.domHelpers = DomHelpers;
     ImgCache.private = Private;
 
     /****************************************************************************/

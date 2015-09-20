@@ -11,12 +11,55 @@ angular.module('starter')
             _init();
         }
 
+
+        var initChromeFileSystem = function() {
+            // see console output for debug info
+            document.addEventListener(ImgCache.READY_EVENT, onFileSystemReady, false);
+            ImgCache.options.debug = true;
+            ImgCache.options.usePersistentCache = true;
+            ImgCache.init();
+        };
+
+        function onFileSystemReady() {
+            ImgCache.createDir("mcImages");
+            ImgCache.createDir("mcSounds");
+            document.removeEventListener(ImgCache.READY_EVENT, onFileSystemReady);
+        }
+
+        if (typeof(cordova) !== 'undefined') {
+            // cordova test
+            console.log('cordova start');
+            document.addEventListener('deviceready', initChromeFileSystem, false);
+        } else {
+            // normal browser test
+            initChromeFileSystem();
+        }
+
+        function testChromeFile() {
+            ImgCache.cacheFile('http://bone.udoido.cn/mcImages/p10324.png');
+            ImgCache.cacheFile('http://bone.udoido.cn/mcImages/p1.png');
+        }
+
+        $(document).ready(function () {
+            $('#clear_cache').click(function(e) {
+                e.preventDefault();
+                ImgCache.clearCache();
+            });
+            $('#cache_folder').click(function(e) {
+                $(this).attr('href', ImgCache.getCacheFolderURI());
+            });
+        });
+
         function _init() {
             DeviceService.initialize();
             Setup.initialize();
             assertTrue("device要先ready", DeviceService.isReady());
-            GetWcy.testCreateScene();
+
+            // GetWcy.testCreateScene();
+            // GetWcy.test();
             // $cordovaProgress.hide();
+
+            testChromeFile();
         }
 
         // GetWcy.test();
