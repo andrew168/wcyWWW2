@@ -102,10 +102,6 @@ var ImgCache = {
     /** Private *****************************************************************/
     var Private = { attributes: {} };
 
-    Private.trigger = function (DomElement, eventName) {
-        DomElement.dispatchEvent(new CustomEvent(eventName));
-    };
-
     Private.isImgCacheLoaded = function () {
         if (!ImgCache.attributes.filesystem || !ImgCache.attributes.dirEntry) {
             ImgCache.overridables.log('ImgCache not loaded yet! - Have you called ImgCache.init() first?', LOG_LEVEL_WARNING);
@@ -173,7 +169,7 @@ var ImgCache = {
             if (success_callback) { success_callback(); }
 
             ImgCache.ready = true;
-            Private.trigger(document, ImgCache.READY_EVENT);
+            TQ.Base.Utility.triggerEvent(document, ImgCache.FILE_SYSTEM_READY);
         };
         ImgCache.attributes.filesystem.root.getDirectory(ImgCache.options.localCacheFolder, {create: true, exclusive: false}, _getDirSuccess, _fail);
     };
@@ -235,7 +231,8 @@ var ImgCache = {
     };
 
     /****************************************************************************/
-    ImgCache.READY_EVENT = 'ImgCacheReady';
+    ImgCache.FILE_SYSTEM_READY = 'imgCache ready';
+
     ImgCache.init = function (success_callback, error_callback) {
         ImgCache.jQuery = (window.jQuery || window.Zepto) ? true : false;        /* using jQuery if it's available otherwise the DOM API */
 
@@ -460,16 +457,23 @@ var ImgCache = {
         return Helpers.EntryGetURL(ImgCache.attributes.dirEntry);
     };
 
-    ImgCache.createDir = function (dirName) {
+    ImgCache.createDir = function (dirName, onSuccess, onError) {
         var _fail = function (error) {
             ImgCache.overridables.log('Failed to get/create local cache directory: ' + error.code, LOG_LEVEL_ERROR);
+            if (!!onError) onError(error);
         };
         var _getDirSuccess = function (dirEntry) {
             ImgCache.overridables.log('Local cache folder opened: ' + Helpers.EntryGetPath(dirEntry), LOG_LEVEL_INFO);
+            if (!!onSuccess) onSuccess(dirEntry);
         };
 
         var pathname = ImgCache.options.localCacheFolder + "/" + dirName;
         ImgCache.attributes.filesystem.root.getDirectory(pathname, {create: true, exclusive: false}, _getDirSuccess, _fail);
+    };
+
+    ImgCache.getRoot =function() {
+        var local_root = Helpers.EntryGetPath(ImgCache.attributes.dirEntry);
+        return (local_root ? local_root : '') + ImgCache.options.localCacheFolder;
     };
 
     // private methods can now be used publicly

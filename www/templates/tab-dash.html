@@ -1,5 +1,17 @@
 <ion-view>
     <ion-content scroll="false">
+        <div>
+            <a href="#" id="clear_cache">Clear the local filesystem cache</a>
+            <a href="#" id="cache_folder" target="new">Navigate into local cache folder</a>
+        </div>
+        <div>Image from cache: </div>
+        <div>
+            <!-- local file -->
+            <img src='filesystem:http://localhost:8100/temporary/imgcache/mcImages/p10324.png'
+                height="100" width="100">
+            <img src="filesystem:http://localhost:8100/temporary/imgcache/mcImages/p1.png" width="120" height="82">
+        </div>
+
         <div class="float-tool">
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
             <button class="button button-positive" ng-click="onEndInputText()">EndInputText</button>

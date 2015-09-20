@@ -16,6 +16,11 @@ TQ.Base = TQ.Base || {};
             ionic.Platform.isWindowsPhone());
     };
 
+    Utility.triggerEvent = function (DomElement, eventName) {
+        DomElement.dispatchEvent(new CustomEvent(eventName));
+    };
+
+
     TQ.Base.Utility = Utility;
 }());
 

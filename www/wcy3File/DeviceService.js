@@ -16,16 +16,27 @@ angular.module('starter')
 
         function initialize() {
             if (TQ.Base.Utility.isMobileDevice()) {
-                if ((typeof cordova =="undefined") || (typeof cordova.file ==="undefined")) {// for Chrome simulator
+                onFileSystemReady();
+            } else { // for Chrome Desktop
+                ImgCache.options.debug = true;
+                ImgCache.options.usePersistentCache = true;
+                ImgCache.init();
+                document.addEventListener(ImgCache.FILE_SYSTEM_READY, onFileSystemReady, false);
+            }
+        }
+
+        function onFileSystemReady() {
+            if (TQ.Base.Utility.isMobileDevice()) {
+                if ((typeof cordova == "undefined") || (typeof cordova.file === "undefined")) {// for Chrome simulator
                     rootFolder = "";
                 } else {
                     rootFolder = cordova.file.dataDirectory;
                 }
             } else {
-                rootFolder = "";
+                rootFolder = ImgCache.getRoot();
             }
-
             _isReady = true;
+            TQ.Base.Utility.triggerEvent(document, TQ.EVENT.FILE_SYSTEM_READY);
         }
 
         return {

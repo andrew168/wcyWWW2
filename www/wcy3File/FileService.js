@@ -4,19 +4,25 @@
 angular.module('starter')
     .factory("FileService", function ($cordovaFileTransfer, $cordovaFile, DeviceService) {
         var rootFolder = "";
-        function createDir(dir) {
+        function createDir(dir, onSuccess, onError) {
             // 确保建立， 避免重复建立
             rootFolder = DeviceService.getRootFolder();
             var finalPath = DeviceService.getFullPath(dir);
             if (dir[dir.length - 1] === '/') {
                 dir = dir.substr(0, dir.length - 1);
             }
-            $cordovaFile.checkDir(rootFolder, dir)
-                .then(function (success) {
-                    // exist, do nothing;
-                }, function (error) {
-                    $cordovaFile.createDir(rootFolder, dir, false);
-                });
+
+            if (TQ.Base.Utility.isMobileDevice()) {
+                $cordovaFile.checkDir(rootFolder, dir)
+                    .then(function (success) {
+                        if (!!onSuccess) onSuccess(success);
+                    }, function (error) {
+                        $cordovaFile.createDir(rootFolder, dir, false)
+                            .then(onSuccess, onError);
+                    });
+            } else {
+                ImgCache.createDir(dir, onSuccess, onError);
+            }
         }
 
         function saveFile(fullPath, data) {
