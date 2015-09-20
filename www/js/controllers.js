@@ -203,7 +203,7 @@ angular.module('starter')
         };
 
         $scope.insertLocalImage = function() {
-            var path = "p10324.png";
+            var path = "p12504.png";
             path = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
             insertImage(path, x, y);
         };
@@ -262,10 +262,11 @@ angular.module('starter')
 
         $scope.testDownload = function() {
             NetService.get(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
+            NetService.get(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
             NetService.get(TQ.Config.IMAGES_CORE_PATH + "p1.png");
             NetService.get(TQ.Config.SOUNDS_PATH + "p1.wav");
-            $scope.localImage1 = DeviceService.getRootFolder() + '/mcImages/p10324.png';
-            $scope.localImage2 = DeviceService.getRootFolder() + '/mcImages/p1.png';
+            $scope.localImage1 = DeviceService.getRootFolder() + 'mcImages/p12504.png';
+            $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p1.png';
         };
 
         $scope.saveScreenShot = function () {
