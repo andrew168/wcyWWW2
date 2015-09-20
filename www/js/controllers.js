@@ -4,17 +4,14 @@ angular.module('starter')
         $cordovaProgress,
         FileService, NetService, DeviceService, Setup) {
 
+        $scope.localImage1 = null;
+        $scope.localImage2 = null;
+
         if (!DeviceService.isReady()) {
             // $cordovaProgress.showSimple(true);
             ionic.Platform.ready(_init);
         } else {
             _init();
-        }
-
-        function testChromeFile() {
-            ImgCache.cacheFile('http://bone.udoido.cn/mcImages/p10324.png');
-            ImgCache.cacheFile('http://bone.udoido.cn/mcImages/p1.png');
-            ImgCache.cacheFile('http://bone.udoido.cn/mcSounds/p1.wav');
         }
 
         $(document).ready(function () {
@@ -23,7 +20,7 @@ angular.module('starter')
                 ImgCache.clearCache();
             });
             $('#cache_folder').click(function(e) {
-                $(this).attr('href', ImgCache.getCacheFolderURI());
+                window.open(DeviceService.getRootFolder());
             });
         });
 
@@ -42,10 +39,10 @@ angular.module('starter')
         function onDirReady() {
             document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
             assertTrue("device要先ready", DeviceService.isReady());
-            // GetWcy.testCreateScene();
+            $scope.testDownload();
+            GetWcy.testCreateScene();
             // GetWcy.test();
             // $cordovaProgress.hide();
-            testChromeFile();
         }
 
         // GetWcy.test();
@@ -267,6 +264,8 @@ angular.module('starter')
             NetService.get(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
             NetService.get(TQ.Config.IMAGES_CORE_PATH + "p1.png");
             NetService.get(TQ.Config.SOUNDS_PATH + "p1.wav");
+            $scope.localImage1 = DeviceService.getRootFolder() + '/mcImages/p10324.png';
+            $scope.localImage2 = DeviceService.getRootFolder() + '/mcImages/p1.png';
         };
 
         $scope.saveScreenShot = function () {

@@ -13,18 +13,22 @@ angular.module('starter')
             var trustHosts = true;
             var options = {};
 
-            $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
-                .then(function(result) {
-                    console.log(result);
-                }, function(err) {
-                    console.log(err);
-                }, function (progress) {
-                    var ratio = progress.loaded / progress.total;
-                    console.log(ratio + ": " + progress);
-                    // $timeout(function () {
-                       // $scope.downloadProgress = (progress.loaded / progress.total) * 100;
-                    // })
-                });
+            if (TQ.Base.Utility.isMobileDevice()) {
+                $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
+                    .then(function (result) {
+                        console.log(result);
+                    }, function (err) {
+                        console.log(err);
+                    }, function (progress) {
+                        var ratio = progress.loaded / progress.total;
+                        console.log(ratio + ": " + progress);
+                        // $timeout(function () {
+                        // $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+                        // })
+                    });
+            } else {
+                ImgCache.cacheFile(url);
+            }
         }
 
         function put(path) {
