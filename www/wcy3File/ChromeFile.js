@@ -174,8 +174,21 @@ var ImgCache = {
     Private.FileTransferWrapper = function (filesystem) {
         this.filesystem = filesystem;    // only useful for CHROME
     };
-    Private.FileTransferWrapper.prototype.download = function (uri, localPath, success_callback, error_callback, on_progress) {
 
+    Private.WriteFile = function(localPath, data, success_callback, error_callback) {
+        var filesystem = ImgCache.attributes.filesystem;
+
+        // assertTrue("需要本地的path， 不带host", TQ.Base.Utility.urlParser(localPath).host ==='');
+        filesystem.root.getFile(localPath, { create:true }, function (fileEntry) {
+            fileEntry.createWriter(function (writer) {
+                writer.onerror = error_callback;
+                writer.onwriteend = function () { success_callback(fileEntry);  };
+                writer.write(data, error_callback);
+            }, error_callback);
+        }, error_callback);
+    };
+
+    Private.FileTransferWrapper.prototype.download = function (uri, localPath, success_callback, error_callback, on_progress) {
         var headers = ImgCache.options.headers || {};
         var isOnProgressAvailable = (typeof on_progress === 'function');
 
@@ -185,8 +198,6 @@ var ImgCache = {
             }
             return this.fileTransfer.download(uri, localPath, success_callback, error_callback, false, { 'headers': headers });
         }
-
-        var filesystem = this.filesystem;
 
         // CHROME - browsers
         var _fail = function (str, level, error_callback) {
@@ -208,13 +219,7 @@ var ImgCache = {
         }
         xhr.onload = function () {
             if (xhr.response && (xhr.status === 200 || xhr.status === 0)) {
-                filesystem.root.getFile(localPath, { create:true }, function (fileEntry) {
-                    fileEntry.createWriter(function (writer) {
-                        writer.onerror = error_callback;
-                        writer.onwriteend = function () { success_callback(fileEntry);  };
-                        writer.write(xhr.response, error_callback);
-                    }, error_callback);
-                }, error_callback);
+                Private.WriteFile(localPath, xhr.response, success_callback, error_callback);
             } else {
                 _fail('Image ' + uri + ' could not be downloaded - status: ' + xhr.status, 3, error_callback);
             }
@@ -450,6 +455,11 @@ var ImgCache = {
         }
 
         return Helpers.EntryGetURL(ImgCache.attributes.dirEntry);
+    };
+
+    ImgCache.WriteFile = function(filename, data, success_callback, error_callback) {
+        var localPath = Private.getCachedFileFullPath(filename);
+        Private.WriteFile(localPath, data, success_callback, error_callback);
     };
 
     ImgCache.createDir = function (dirName, onSuccess, onError) {

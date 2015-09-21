@@ -20,6 +20,7 @@ angular.module('starter')
                 ImgCache.clearCache();
             });
             $('#cache_folder').click(function(e) {
+                e.preventDefault();
                 window.open(DeviceService.getRootFolder());
             });
         });
@@ -271,13 +272,14 @@ angular.module('starter')
 
         $scope.saveScreenShot = function () {
             var data = TQ.ScreenShot.getData();
-            console.log(data);
-            FileService.saveFile(TQ.Config.SCREENSHOT_CORE_PATH + "/nn.png", data);
+            data = data.replace(/^data:image\/\w+;base64,/, "");
+            data = new Blob([Base64Binary.decodeArrayBuffer(data)], {type: 'image/png', encoding: 'utf-8'});
+            FileService.saveFile(TQ.Config.SCREENSHOT_CORE_PATH + "nn.png", data);
         };
 
         $scope.saveWorks = function () {
             var data = currScene.getData();
-            console.log(data);
-            FileService.saveFile(TQ.Config.SCREENSHOT_CORE_PATH + "/nn.wcy", data);
+            data = new Blob([data], {type: 'text/plain'});
+            FileService.saveFile(TQ.Config.WORKS_CORE_PATH + "nn.wcy", data);
         };
     });
