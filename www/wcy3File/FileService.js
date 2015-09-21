@@ -25,7 +25,7 @@ angular.module('starter')
             }
         }
 
-        function saveFile(fullPath, data) {
+        function saveFile(fullPath, data, onSuccess, onError) {
             // WRITE
             if (!TQ.Base.Utility.isMobileDevice()) {
                 return ImgCache.WriteFile(fullPath, data, onSuccess, onError);

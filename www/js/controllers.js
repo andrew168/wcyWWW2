@@ -270,12 +270,22 @@ angular.module('starter')
             $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p1.png';
         };
 
+        var screenshotCounter = 0;
+        var screenshotName;
         $scope.saveScreenShot = function () {
             var data = TQ.ScreenShot.getData();
             data = data.replace(/^data:image\/\w+;base64,/, "");
             data = new Blob([Base64Binary.decodeArrayBuffer(data)], {type: 'image/png', encoding: 'utf-8'});
-            FileService.saveFile(TQ.Config.SCREENSHOT_CORE_PATH + "nn.png", data);
+            screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + "nn" + screenshotCounter + ".png";
+            FileService.saveFile(screenshotName, data, onSuccess, null);
+            screenshotCounter++;
         };
+
+        function onSuccess() {
+            $scope.$apply(function () {
+                $scope.localImage2 = DeviceService.getFullPath(screenshotName);
+            });
+        }
 
         $scope.saveWorks = function () {
             var data = currScene.getData();
