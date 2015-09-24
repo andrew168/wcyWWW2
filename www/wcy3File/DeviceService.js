@@ -36,7 +36,7 @@ angular.module('starter')
                 rootFolder = ImgCache.getRoot();
             }
             if (rootFolder !== '') {
-                if ((rootFolder[rootFolder.length - 1] !== '/') || (rootFolder[rootFolder.length - 1] !== '\\')) {
+                if ((rootFolder[rootFolder.length - 1] !== '/') && (rootFolder[rootFolder.length - 1] !== '\\')) {
                     rootFolder += "/";
                 }
             }
