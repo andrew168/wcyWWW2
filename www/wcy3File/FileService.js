@@ -31,7 +31,8 @@ angular.module('starter')
                 return ImgCache.WriteFile(fullPath, data, onSuccess, onError);
             }
 
-            return $cordovaFile.writeFile(DeviceService.getRootFolder(), fullPath, data, true);
+            $cordovaFile.writeFile(DeviceService.getRootFolder(), fullPath, data, true)
+                .then(onSuccess, onError);
         }
 
         function onSuccess(info) {

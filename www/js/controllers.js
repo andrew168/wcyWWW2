@@ -282,7 +282,7 @@ angular.module('starter')
         };
 
         function onSuccess() {
-            $scope.$apply(function () {
+            $timeout(function () {
                 $scope.localImage2 = DeviceService.getFullPath(screenshotName);
             });
         }
