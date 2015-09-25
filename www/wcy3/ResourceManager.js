@@ -56,8 +56,8 @@ this.TQ = this.TQ || {};
         RM.hasDefaultResource = false;
         // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
         RM.BASE_PATH = FAST_SERVER;
-        // RM.NOPIC = RM.toFullPath(RM.NOPIC);
-        // RM.NOSOUND = RM.toFullPath(RM.NOSOUND);
+        // RM.NOPIC = _toFullPath(RM.NOPIC);
+        // RM.NOSOUND = _toFullPath(RM.NOSOUND);
         RM.FULLPATH_NOPIC = TQ.Config.getResourceHost() + "/" + (TQ.Config.IMAGES_CORE_PATH + RM.NOPIC);
         RM.FULLPATH_NOSOUND = TQ.Config.getResourceHost() + "/" + (TQ.Config.SOUNDS_PATH + RM.NOSOUND);
         createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
@@ -81,14 +81,14 @@ this.TQ = this.TQ || {};
             RM.preloader.installPlugin(createjs.CordovaAudioLoader);
         }
         RM.setupListeners();
-        RM.setupDefaultResource();
+        _setupDefaultResource();
     };
 
-    RM.setupDefaultResource = function() {
+    function _setupDefaultResource() {
         RM.hasDefaultResource = true;
         RM.addItem(RM.FULLPATH_NOPIC);
         RM.addItem(RM.FULLPATH_NOSOUND);
-    };
+    }
 
     RM.setupListeners = function() {
         //Available PreloadJS callbacks
@@ -237,9 +237,9 @@ this.TQ = this.TQ || {};
     }
     RM.addItem = function(resourceID, _callback) {
         if (!RM.hasDefaultResource) {
-            RM.setupDefaultResource();
+            _setupDefaultResource();
         }
-        resourceID = RM.toFullPath(resourceID);
+        resourceID = _toFullPath(resourceID);
         if (this.hasResource(resourceID)) {
             assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
             _addReference(resourceID, _callback);
@@ -333,16 +333,16 @@ this.TQ = this.TQ || {};
     };
 
     RM.hasResource = function(id) {  // registered, may not loaded
-        return !(!RM.items[RM.toFullPath(id)]);
+        return !(!RM.items[_toFullPath(id)]);
     };
 
     RM.hasResourceReady = function(id) {
-        var res = RM.items[RM.toFullPath(id)];
+        var res = RM.items[_toFullPath(id)];
         return (!!res  && !!res.res);
     };
 
     RM.getResource = function(id) {
-        id = RM.toFullPath(id);
+        id = _toFullPath(id);
         if (!RM.items[id]) {// 没有发现， 需要调入
             TQ.Log.info(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
             // 添加到预加载列表中
@@ -396,12 +396,12 @@ this.TQ = this.TQ || {};
         return newStr;
     };
 
-    RM._isFullPath = function(name) {
+    function _isFullPath(name) {
         return (name.indexOf(RM.BASE_PATH) >= 0);
-    };
+    }
 
-    RM.toFullPath = function(name) {
-        if (RM._isFullPath(name)) {
+    function _toFullPath(name) {
+        if (_isFullPath(name)) {
             return name;
         }
 
@@ -410,7 +410,7 @@ this.TQ = this.TQ || {};
         }
 
         return (RM.BASE_PATH + "/" + name);
-    };
+    }
 
     TQ.RM = RM;
     TQ.ResourceManager = RM;
