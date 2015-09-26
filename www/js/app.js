@@ -20,6 +20,25 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova'])
   });
 })
 
+
+    // workaround: ngClick Fires Twice on Button #1022
+    .directive('myClick', function() {
+    return function(scope, element, attrs) {
+        element.bind('touchstart click', function(event) {
+            event.preventDefault();
+            event.stopPropagation();
+            scope.$apply(attrs['myClick']);
+        });
+    };
+})
+
+
+    /* if conflict bewteen ng Material and IONIC
+    /*
+.config(function($mdGestureProvider) {
+    $mdGestureProvider.skipClickHijack();
+ })
+*/
 .config(function($stateProvider, $urlRouterProvider, $compileProvider) {
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|file|filesystem):/);
