@@ -93,21 +93,8 @@ window.TQ = window.TQ || {};
         this.id = createjs.UID.get();
         if ((this.level.isStageReady())) {
             // 如果所需资源都在RM， 则直接init， 否则，sent到RM， 要求调入。完成后， 再init
-            if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
-                && (!TQ.RM.hasElementDesc(desc))) {
-                if (!TQ.RM.isLocalResource(desc.src)) {
-                    TQ.RM.addElementDesc(desc);
-                    (function (pt) {
-                        TQ.RM.setPaused(true);
-                        if (!TQ.RM.isEmpty) {
-                            TQ.RM.onCompleteOnce(function () {
-                                pt.initialize(desc);
-                            });
-                        }
-                        TQ.RM.setPaused(false);
-                    })(this);
-                    return this;
-                }
+            if ((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON")){
+                TQ.Assert.isTrue(TQ.RM.hasElementDesc(desc), "先准备好资源， 再创建元素");
             }
         }
 

@@ -21,7 +21,19 @@ window.TQ = window.TQ || {};
     };
 
     SceneEditor.addItem = function(desc) {
-        addImage(desc);
+        desc.version = TQ.Element.VER2;  // 新增加的元素都是2.0
+
+        // "Groupfile" 暂时还没有纳入RM的管理范畴
+        if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
+            && (!TQ.RM.hasElementDesc(desc))) {
+            TQ.RM.addElementDesc(desc, function () {
+                currScene.addItem(desc)
+            });
+
+            return null;
+        }
+
+        return currScene.addItem(desc);
     };
 
     SceneEditor.loadScene = function (fileInfo) {
@@ -209,19 +221,7 @@ function addLevelTest() {
 }
 
 function addImage(desc) {
-    desc.version = TQ.Element.VER2;  // 新增加的元素都是2.0
-
-    // "Groupfile" 暂时还没有纳入RM的管理范畴
-    if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
-        && (!TQ.RM.hasElementDesc(desc))) {
-        TQ.RM.addElementDesc(desc, function () {
-            currScene.addItem(desc)
-        });
-
-        return null;
-    }
-
-    return currScene.addItem(desc);
+    TQ.Log.depreciated("replaced by: SceneEditor.addItem");
 }
 
 function addAnimationTest() {
