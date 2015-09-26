@@ -40,9 +40,9 @@ angular.module('starter')
         function onDirReady() {
             document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
             assertTrue("device要先ready", DeviceService.isReady());
-            $scope.testDownload();
-            GetWcy.testCreateScene();
-            // GetWcy.test();
+            // $scope.testDownload();
+            // GetWcy.testCreateScene();
+            GetWcy.test();
             // $cordovaProgress.hide();
         }
 
@@ -270,6 +270,14 @@ angular.module('starter')
             $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p1.png';
         };
 
+        $scope.testShowWCY = function() {
+            GetWcy.test();
+        };
+
+        $scope.testClearAll = function() {
+            TQ.SceneEditor.emptyScene();
+        };
+
         var screenshotCounter = 0;
         var screenshotName;
         $scope.saveScreenShot = function () {
@@ -294,6 +302,7 @@ angular.module('starter')
             FileService.saveFile(fileName, data,
                 function onSuccess(e) {
                     TQ.Log.info(fileName + " saved");
+                    currScene.isSaved = true;
                 },
                 function onSuccess(e) {
                     TQ.Log.info(fileName + " saved");
