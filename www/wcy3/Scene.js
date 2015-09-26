@@ -394,17 +394,16 @@ TQ = TQ || {};
     // empty the current scene
     p.forceToRemoveAll = function () {
         this.stop();
-        this.close();
+        this.close(true);  // discard
         while (this.levelNum() > 0) {
             this.deleteLevel(0);
         }
         this.addLevel(); // all one empty level
         this.selectLevel(0);
         this.currentLevel.state = TQBase.LevelState.INITING;
-        this.currentLevel.onLevelCreated();
+        this.currentLevel.show();
         this.title = TQ.Config.UNNAMED_SCENE;
-        // this.state = TQBase.LevelState.INITING;
-        this.state = TQBase.LevelState.NOT_INIT
+        this.state = TQBase.LevelState.NOT_INIT;
         this.isSaved = true;
     };
 
@@ -584,8 +583,8 @@ TQ = TQ || {};
     };
 
     /// close current scene
-    p.close = function () {
-        if (this.isSaved) {
+    p.close = function (discard) {
+        if (this.isSaved || !!discard) {
             if (this.currentLevel != null) {
                 TQ.RM.reset(); // 必须先停止RM，否则其中的callback如果引用了Level对象就会出错
                 TQ.SoundMgr.close();
@@ -601,6 +600,7 @@ TQ = TQ || {};
             return true;
         }
 
+        TQ.Log.warn("请先保存作品！");
         return false;
     };
 

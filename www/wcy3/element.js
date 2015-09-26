@@ -91,8 +91,7 @@ window.TQ = window.TQ || {};
     // Add image item
     p.initialize = function (desc) {
         this.id = createjs.UID.get();
-        if ((this.level.state == TQBase.LevelState.EDITING) ||
-            (this.level.state == TQBase.LevelState.RUNNING)) {
+        if ((this.level.isStageReady())) {
             // 如果所需资源都在RM， 则直接init， 否则，sent到RM， 要求调入。完成后， 再init
             if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
                 && (!TQ.RM.hasElementDesc(desc))) {

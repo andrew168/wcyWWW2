@@ -149,8 +149,7 @@ function openScene(fileInfo) {
         TQ.floatToolbar.show(false);
         TQ.WCY.currentScene = currScene;
     } else {
-        var filename = localStorage.getItem("sceneName");
-        TQ.SceneEditorUI.promptToSave(filename);
+        TQ.Log.warn("请先保存作品！");
     }
     return currScene;
 }

@@ -43,8 +43,7 @@ TQ = TQ || {};
     p._parent_afterItemLoaded = p._afterItemLoaded;
     p._afterItemLoaded = function(desc) {
         this._parent_afterItemLoaded(desc);
-        if ((this.level.state == TQBase.LevelState.EDITING) ||
-            (this.level.state == TQBase.LevelState.RUNNING)) {
+        if (this.level.isStageReady()) {
             if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
                 TQ.AnimeTrack.setButton(this, this.jsonObj.t0);
             }
