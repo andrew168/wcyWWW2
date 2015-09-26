@@ -31,6 +31,7 @@ this.TQ = this.TQ || {};
     function ResourceManager() {
     }
 
+    var urlParser = TQ.Base.Utility.urlParser;
     var RM = ResourceManager;
     // var FAST_SERVER = "http://bone.udoido.cn";
     // var FAST_SERVER = "http://www.udoido.com";
@@ -236,9 +237,7 @@ this.TQ = this.TQ || {};
         //ToDo:@@@ 增加和减少 reference Counter
     }
     RM.addItem = function(resourceID, _callback) {
-        if (!RM.hasDefaultResource) {
-            _setupDefaultResource();
-        }
+        TQ.Assert.isTrue(RM.hasDefaultResource, "没有初始化RM！");
         resourceID = _toFullPath(resourceID);
         if (this.hasResource(resourceID)) {
             assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
@@ -287,15 +286,12 @@ this.TQ = this.TQ || {};
         }
 
         if (!!desc.src) {  // 处理自己的资源
-            var resName = RM.toRelative(desc.src);
-            resName.trim();
-            if (resName.length > 0) {
-                if (!RM.hasResourceReady(resName)) {
-                    RM.addItem(resName, callback);
-                    result = true;
-                } else if (!!callback) {
-                    callback();
-                }
+            var resName = desc.src;
+            if (!RM.hasResourceReady(resName)) {
+                RM.addItem(resName, callback);
+                result = true;
+            } else if (!!callback) {
+                callback();
             }
         }
 
@@ -315,6 +311,7 @@ this.TQ = this.TQ || {};
 
         if (!!desc.children) {  // 先调入子孙的资源， 以便于执行callback
             for (var i = 0; i < desc.children.length; i++) {
+                TQ.Assert.isTrue(false, "addElementDesc or hasElementDesc???");
                 if (RM.addElementDesc(desc.children[i])) {
                     result = false;
                 }
@@ -322,13 +319,10 @@ this.TQ = this.TQ || {};
         }
 
         if (!!desc.src) {  // 处理自己的资源
-            var resName = RM.toRelative(desc.src);
-            resName.trim();
-            if (resName.length > 0) {
-                if (!RM.hasResourceReady(resName)) result = false;
-            }
+            return RM.hasResourceReady(desc.src);
         }
 
+        // for virtual object;
         return result;
     };
 
@@ -387,29 +381,48 @@ this.TQ = this.TQ || {};
     }
 
     RM.toRelative = function(str) {
-        var newStr = str.replace("http://" + TQ.Config.DOMAIN_NAME + "/", "");
+        if (_isLocalFileSystem(str)) {
+            TQ.Log.warn("Local file to Relative??");
+            return str;
+        }
 
-        // 防止此前旧文件中存在的其它域名
-        newStr = newStr.replace("http://", "");
-        newStr = newStr.replace("test.udoido.cn", "");
-        newStr = newStr.replace("www.udoido.cn", "");
-        return newStr;
+        return urlParser(str).pathname;
     };
 
     function _isFullPath(name) {
+        var protocols = ['filesystem:', 'file:', 'http://', 'https://'];
+        for (var i = 0; i < protocols.length; i++) {
+            if (name.indexOf(protocols[i]) ===0 ) {
+                return true;
+            }
+        }
+
+        if (urlParser(name).pathname === name) {
+            return false;
+        }
+
+        assertTrue("BASE_PATH是空，",  RM.BASE_PATH != "");
         return (name.indexOf(RM.BASE_PATH) >= 0);
     }
 
+    function _isLocalFileSystem(name) {
+        return (name.indexOf("filesystem:") === 0);
+    }
+
     function _toFullPath(name) {
+        if (_isLocalFileSystem(name)) {
+            return name;
+        }
+
         if (_isFullPath(name)) {
             return name;
         }
 
-        if (name[0] =='/') {
-            return (RM.BASE_PATH + name);
+        var fullpath = TQ.Base.Utility.urlComposer(name);
+        if (RM.BASE_PATH != "") {
+            TQ.Assert.isTrue(RM.BASE_PATH === urlParser(fullpath).hostname, "hostname 不一致");
         }
-
-        return (RM.BASE_PATH + "/" + name);
+        return fullpath;
     }
 
     TQ.RM = RM;
