@@ -29,6 +29,19 @@ TQ.Base = TQ.Base || {};
         return parser;
     };
 
+    Utility.urlComposer = function(path, host, protocol) {
+        var parser = Utility.urlParser(path);
+        if (!host) {
+            host = parser.host;
+        }
+
+        if (!protocol) {
+            protocol = parser.protocol;
+        }
+
+        return protocol+"//" + host + parser.pathname;
+    };
+
     TQ.Base.Utility = Utility;
 }());
 
