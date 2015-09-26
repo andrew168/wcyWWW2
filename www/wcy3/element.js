@@ -1409,8 +1409,8 @@ window.TQ = window.TQ || {};
             jsonStr.replace("thumbs/", TQ.Config.THUMBS_CORE_PATH);
         }
 
-        //改相对路径：2013.5.14, 支持U盘版本
-        return TQ.RM.toRelative(jsonStr);
+        //相对路径和绝对路径的映射，统一到RM管理
+        return jsonStr;
     };
 
     p.upgradeFont = function (desc) { // R308引入，
