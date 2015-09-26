@@ -290,6 +290,13 @@ angular.module('starter')
         $scope.saveWorks = function () {
             var data = currScene.getData();
             data = new Blob([data], {type: 'text/plain'});
-            FileService.saveFile(TQ.Config.WORKS_CORE_PATH + "nn.wcy", data);
+            var fileName = TQ.Config.WORKS_CORE_PATH + "nn.wcy";
+            FileService.saveFile(fileName, data,
+                function onSuccess(e) {
+                    TQ.Log.info(fileName + " saved");
+                },
+                function onSuccess(e) {
+                    TQ.Log.info(fileName + " saved");
+            });
         };
     });

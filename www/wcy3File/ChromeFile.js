@@ -182,7 +182,11 @@ var ImgCache = {
         filesystem.root.getFile(localPath, { create:true }, function (fileEntry) {
             fileEntry.createWriter(function (writer) {
                 writer.onerror = error_callback;
-                writer.onwriteend = function () { success_callback(fileEntry);  };
+                writer.onwriteend = function () {
+                    if (!!success_callback) {
+                        success_callback(fileEntry);
+                    }
+                };
                 writer.write(data, error_callback);
             }, error_callback);
         }, error_callback);
