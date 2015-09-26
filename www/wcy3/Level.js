@@ -299,12 +299,12 @@ window.TQ = window.TQ || {};
         this.itemCounter = 0;
         var jsonElements = this.elements;
         this.elements = [];
+        this.state = TQBase.LevelState.INITING;
         for (var i = 0; i < ((jsonElements != null) && (jsonElements.length)); i++) {
             if (!!jsonElements[i]) {
                 this.addElementDirect(TQ.Element.build(this, jsonElements[i]));
             }
         }
-        this.state = TQBase.LevelState.INITING;
         // ToDo: 是否应该分多个level, 来启动?
         TQ.SoundMgr.start();
         jsonElements = null;
@@ -339,8 +339,10 @@ window.TQ = window.TQ || {};
         }
 
         var jsonElements = this.elements;
-        for (var i = 0; i < ((jsonElements != null) && (jsonElements.length)); i++) {
-            TQ.RM.addElementDesc(jsonElements[i]);
+        if (!!jsonElements) {
+            for (var i = 0; i < jsonElements.length; i++) {
+                TQ.RM.addElementDesc(jsonElements[i]);
+            }
         }
     };
 
@@ -532,8 +534,7 @@ window.TQ = window.TQ || {};
 
     p.onItemLoaded = function (item) {
         this.itemCounter++;
-        if ((this.state == TQBase.LevelState.EDITING) ||
-            (this.state == TQBase.LevelState.RUNNING)) {
+        if (this.isStageReady()) {
             assertTrue("应该只在临时添加的时候, 才调用", !TQ.StageBuffer.isBatchMode);
             item.addItemToStage();
         } else {
@@ -570,6 +571,11 @@ window.TQ = window.TQ || {};
     p.getTime = function() { return this.tMaxFrame;};
     p.setT0 = function(t0) { this.t0 = t0;};
     p.getT0 = function(t0) { return this.t0;};
+    p.isStageReady = function() {
+        return ((this.state === TQBase.LevelState.INITING)||
+        (this.state === TQBase.LevelState.EDITING) ||
+        (this.state === TQBase.LevelState.RUNNING));
+    };
 
     TQ.Level = Level;
 }());

@@ -961,8 +961,7 @@ window.TQ = window.TQ || {};
             this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
         }
         this.animeTrack = this.jsonObj.animeTrack;
-        if ((this.level.state == TQBase.LevelState.EDITING) ||
-            (this.level.state == TQBase.LevelState.RUNNING)) {
+        if (this.level.isStageReady()) {
             if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
                 if (!this.jsonObj.isVis) {
                     TQ.AnimeTrack.hide(this, this.jsonObj.t0); // 适合于3D视图，长期隐藏
