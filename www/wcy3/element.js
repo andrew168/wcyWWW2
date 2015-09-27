@@ -141,6 +141,7 @@ window.TQ = window.TQ || {};
         this.children = [];
         // 调入 json文件, 取其中的 elements
         (function (pt) {
+            TQ.Assert.isTrue(false, "先准备好资源， 再创建元素");
             netOpen(jsonFiledesc.src, function (jqResponse) {
                 try {
                     var desc = JSON.parse(jqResponse);
@@ -605,34 +606,12 @@ window.TQ = window.TQ || {};
         var jsonObj = this.jsonObj;
         assertTrue("must has image name", jsonObj.src !== "");
         var item = TQ.RM.getResource(jsonObj.src);
-        // item = null;
-        TQ.Log.warn("ToDo: to preload local resource, file:///...,  item = null!");
-        if (!item) {
-            var img3 = new Image();   // 由他调入图像资源！！
-            (function (pt) {
-                img3.onload = function () {
-                    // 创建Bitmap
-                    pt.loaded = true;
-                    var resource = pt.getImageResource(item, jsonObj);
-                    // var resource = jsonObj.src;
-                    pt.displayObj = new createjs.Bitmap(resource);
-                    jsonObj.img = null;
-                    pt._afterItemLoaded();
-                    pt.setTRSAVZ();
-                }
-            })(this);
-
-            // 为了在callback中引用父容器，临时增加一个属性， 记录当前class的指针，
-            // img3.obj = jsonObj;
-            img3.src = jsonObj.src;
-            jsonObj.img = img3;
-        } else {
-            this.loaded = true;
-            var resource = this.getImageResource(item, jsonObj);
-            this.displayObj = new createjs.Bitmap(resource);
-            this._afterItemLoaded();
-            this.setTRSAVZ();
-        }
+        TQ.Assert.isNotNull(item, "先准备好资源， 再创建元素");
+        this.loaded = true;
+        var resource = this.getImageResource(item, jsonObj);
+        this.displayObj = new createjs.Bitmap(resource);
+        this._afterItemLoaded();
+        this.setTRSAVZ();
     };
 
     p.setTRSAVZ = function () {
