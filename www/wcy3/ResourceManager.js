@@ -107,6 +107,10 @@ this.TQ = this.TQ || {};
         });
 
         RM.preloader.addEventListener("complete",  function(event) {
+            // 下载没有完成， 但是预加载的已经完成了。
+            if (!TQ.DownloadManager.hasCompleted()) {
+                return;
+            }
             TQ.Log.info(event.toString());
             RM.dataReady = true;
             var num = RM.completeOnceHandlers.length; // 防止动态添加的函数

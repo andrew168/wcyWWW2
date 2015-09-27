@@ -8,6 +8,7 @@ this.TQ = this.TQ || {};
     }
     var p = DownloadManager;
     p.DOWNLOAD_EVENT = "download-to-cache";
+    var _tasks = 0;
     var _files = {};
     p.hasCached = function (name) {
         var item = _files[name];
@@ -23,6 +24,7 @@ this.TQ = this.TQ || {};
             item.callback.push(callback);
         }
 
+        _tasks ++;
         TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {name: name, cacheName:cacheName});
     };
 
@@ -34,6 +36,7 @@ this.TQ = this.TQ || {};
             for (var i = 0; i < callbacks.length; i++) {
                 if (callbacks[i]) {
                     callbacks[i]();
+                    _tasks--;
                 }
             }
         }
@@ -50,6 +53,10 @@ this.TQ = this.TQ || {};
                 }
             }
         }
+    };
+
+    p.hasCompleted = function() {
+        return (_tasks===0);
     };
 
     TQ.DownloadManager = DownloadManager;
