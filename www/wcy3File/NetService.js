@@ -5,7 +5,8 @@ angular.module('starter')
 .factory("NetService", function ($cordovaFileTransfer, DeviceService) {
         var baseUrl = "http://bone.udoido.cn/";
 
-        function get(path) {
+        function get(path, onSuccess, onError) {
+            path = TQ.RM.toRelative(path);
             var url = baseUrl + path;
             console.log("get from : " + url);
 
@@ -17,8 +18,10 @@ angular.module('starter')
                 $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
                     .then(function (result) {
                         console.log(result);
+                        onSuccess(result);
                     }, function (err) {
                         console.log(err);
+                        onError(err);
                     }, function (progress) {
                         var ratio = progress.loaded / progress.total;
                         console.log(ratio + ": " + progress);
@@ -27,7 +30,7 @@ angular.module('starter')
                         // })
                     });
             } else {
-                ImgCache.cacheFile(url);
+                ImgCache.cacheFile(url, onSuccess, onError);
             }
         }
 

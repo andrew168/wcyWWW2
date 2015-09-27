@@ -27,6 +27,7 @@ angular.module('starter')
 
         function _init() {
             document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
+            document.addEventListener(TQ.DownloadManager.DOWNLOAD_EVENT, onDownload, false);
             DeviceService.initialize();
         }
 
@@ -200,13 +201,23 @@ angular.module('starter')
             // insertImage("mcImages/p10324.png", x, y);
             // insertSound("mcSounds/p8574.wav", x, y);
             // TQ.TextInputMgr.start();
+
             insertText("Hello 世界！", x, y);
         };
 
         $scope.insertLocalImage = function() {
             var path = "p12504.png";
-            path = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
-            insertImage(path, x, y);
+            var server1File = "http://bone.udoido.cn/mcImages/" + path;
+            var server2File = "http://www.udoido.com/mcImages/" + path;
+            var albumFile ="";
+            var cachedFile = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
+            var localFile = "/mcImages/" + path;
+
+            // insertImage(cachedFile, x+=50, y+=50);
+            // insertImage(localFile, x+=50, y+=50);
+            insertImage(server1File, x+=50, y+=50);
+            // insertImage(server2File, x+=50, y+=50);
+            // insertImage(albumFile, x+=50, y+=50);
         };
 
         function insertImage(filename, x, y) {
@@ -269,6 +280,21 @@ angular.module('starter')
             $scope.localImage1 = DeviceService.getRootFolder() + 'mcImages/p12504.png';
             $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p1.png';
         };
+
+        function onDownload(evt) {
+            var data = evt.data;
+            function onSuccess() {
+                TQ.DownloadManager.onCompleted(data.name, data.cacheName);
+            }
+
+            function onError() {
+                TQ.DownloadManager.onError(data.name, data.cacheName);
+            }
+
+            if (evt.data) {
+                NetService.get(evt.data.name, onSuccess, onError);
+            }
+        }
 
         $scope.testShowWCY = function() {
             GetWcy.test();

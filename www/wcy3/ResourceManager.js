@@ -256,11 +256,27 @@ this.TQ = this.TQ || {};
 
         // RM.preloader.loadFile("assets/image0.jpg");
         RM.dataReady = false;
-         RM.preloader.loadManifest([{
-            src : resourceID,
-            id : resourceID,   // Sound资源的id是字符串, 不是数字
-            data : 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
-        }]);
+
+        function makeCallback(cacheName, resourceID) {
+            return function() {
+                addToPreloader(cacheName, resourceID);
+            }
+        }
+
+        function addToPreloader(cacheName, resourceID){
+            RM.preloader.loadManifest([{
+                src : cacheName,
+                id : resourceID,   // Sound资源的id是字符串, 不是数字
+                data : 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
+            }]);
+        }
+
+        var cacheName = _toCachePath(resourceID);
+        if (_isLocalFileSystem(resourceID) || TQ.DownloadManager.hasCached(cacheName)) {
+            addToPreloader(cacheName, resourceID);
+        } else {
+            TQ.DownloadManager.download(_toFullPath(resourceID), cacheName, makeCallback(cacheName, resourceID));
+        }
 
         RM.isEmpty = false;
     };
@@ -436,8 +452,8 @@ this.TQ = this.TQ || {};
 
     function _toCorePath(path) {
         // return _toFullPath(path);
-        // return RM.toRelative(path);
-        return _toCachePath(path);
+        return RM.toRelative(path);
+        // return _toCachePath(path);
     }
 
     TQ.RM = RM;
