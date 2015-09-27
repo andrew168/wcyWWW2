@@ -42,6 +42,21 @@ TQ.Base = TQ.Base || {};
         return protocol+"//" + host + parser.pathname;
     };
 
+    function _isSeperator(ch) {
+      return ((ch === '/') || ( ch === '\\'));
+    }
+    Utility.urlConcat = function(path1, path2) {
+        var middle = '/';
+        if ( _isSeperator(path1[path1.length - 1])) {
+            middle = '';
+        }
+
+        if (_isSeperator(path2[0])) {
+            path2 = path2.substr(1);
+        }
+        return path1 + middle + path2;
+    };
+
     TQ.Base.Utility = Utility;
 }());
 
