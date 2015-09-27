@@ -32,6 +32,7 @@ this.TQ = this.TQ || {};
     }
 
     var urlParser = TQ.Base.Utility.urlParser;
+    var urlConcat = TQ.Base.Utility.urlConcat;
     var RM = ResourceManager;
     // var FAST_SERVER = "http://bone.udoido.cn";
     // var FAST_SERVER = "http://www.udoido.com";
@@ -59,8 +60,8 @@ this.TQ = this.TQ || {};
         RM.BASE_PATH = FAST_SERVER;
         // RM.NOPIC = _toFullPath(RM.NOPIC);
         // RM.NOSOUND = _toFullPath(RM.NOSOUND);
-        RM.FULLPATH_NOPIC = TQ.Config.getResourceHost() + "/" + (TQ.Config.IMAGES_CORE_PATH + RM.NOPIC);
-        RM.FULLPATH_NOSOUND = TQ.Config.getResourceHost() + "/" + (TQ.Config.SOUNDS_PATH + RM.NOSOUND);
+        RM.FULLPATH_NOPIC = urlConcat(TQ.Config.getResourceHost(), TQ.Config.IMAGES_CORE_PATH + RM.NOPIC);
+        RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.getResourceHost(), TQ.Config.SOUNDS_PATH + RM.NOSOUND);
         createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3
             TQ.Base.Utility.isMobileDevice()) {
@@ -394,7 +395,7 @@ this.TQ = this.TQ || {};
             return path;
         }
 
-        return TQ.Config.CacheRootFolder + RM.toRelative(path);
+        return urlConcat(TQ. Config.getResourceHost(), RM.toRelative(path));
     }
 
     function _isFullPath(name) {
