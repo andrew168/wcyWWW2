@@ -4,10 +4,11 @@
 angular.module('starter')
 .factory("NetService", function ($cordovaFileTransfer, DeviceService) {
         var baseUrl = "http://bone.udoido.cn/";
+        var urlConcat = TQ.Base.Utility.urlConcat;
 
         function get(path, onSuccess, onError) {
             path = TQ.RM.toRelative(path);
-            var url = baseUrl + path;
+            var url = urlConcat(baseUrl, path);
             console.log("get from : " + url);
 
             var targetPath = DeviceService.getFullPath(path);
@@ -35,17 +36,17 @@ angular.module('starter')
         }
 
         function put(path) {
-            var url = baseUrl + path;
+            var url = urlConcat(baseUrl, path);
             console.log("put " + path + " to ===> " + url);
         }
 
         function update(path) {
-            var url = baseUrl + path;
+            var url = urlConcat(baseUrl, path);
             console.log("update: " + path + " to ==> " + url);
         }
 
         function del(path) {  // delete is reserved key word!!!
-            var url = baseUrl + path;
+            var url = urlConcat(baseUrl, path);
             console.log("delete: " + url);
         }
 
