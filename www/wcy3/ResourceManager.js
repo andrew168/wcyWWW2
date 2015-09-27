@@ -238,7 +238,7 @@ this.TQ = this.TQ || {};
     }
     RM.addItem = function(resourceID, _callback) {
         TQ.Assert.isTrue(RM.hasDefaultResource, "没有初始化RM！");
-        resourceID = _toFullPath(resourceID);
+        resourceID = _toCorePath(resourceID);
         if (this.hasResource(resourceID)) {
             assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
             _addReference(resourceID, _callback);
@@ -327,16 +327,16 @@ this.TQ = this.TQ || {};
     };
 
     RM.hasResource = function(id) {  // registered, may not loaded
-        return !(!RM.items[_toFullPath(id)]);
+        return !(!RM.items[_toCorePath(id)]);
     };
 
     RM.hasResourceReady = function(id) {
-        var res = RM.items[_toFullPath(id)];
+        var res = RM.items[_toCorePath(id)];
         return (!!res  && !!res.res);
     };
 
     RM.getResource = function(id) {
-        id = _toFullPath(id);
+        id = _toCorePath(id);
         if (!RM.items[id]) {// 没有发现， 需要调入
             TQ.Log.info(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
             // 添加到预加载列表中
@@ -389,6 +389,14 @@ this.TQ = this.TQ || {};
         return urlParser(str).pathname;
     };
 
+    function _toCachePath(path) {
+        if (_isLocalFileSystem(path)) {
+            return path;
+        }
+
+        return TQ.Config.CacheRootFolder + RM.toRelative(path);
+    }
+
     function _isFullPath(name) {
         var protocols = ['filesystem:', 'file:', 'http://', 'https://'];
         for (var i = 0; i < protocols.length; i++) {
@@ -423,6 +431,12 @@ this.TQ = this.TQ || {};
             TQ.Assert.isTrue(RM.BASE_PATH === urlParser(fullpath).hostname, "hostname 不一致");
         }
         return fullpath;
+    }
+
+    function _toCorePath(path) {
+        // return _toFullPath(path);
+        // return RM.toRelative(path);
+        return _toCachePath(path);
     }
 
     TQ.RM = RM;

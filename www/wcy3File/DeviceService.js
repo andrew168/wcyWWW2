@@ -40,6 +40,7 @@ angular.module('starter')
                     rootFolder += "/";
                 }
             }
+            TQ.Config.CacheRootFolder = rootFolder;
             _isReady = true;
             TQ.Base.Utility.triggerEvent(document, TQ.EVENT.FILE_SYSTEM_READY);
         }
