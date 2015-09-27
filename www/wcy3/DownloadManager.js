@@ -1,7 +1,7 @@
 /**
  * Created by admin on 9/26/2015.
  */
-this.TQ = this.TQ || {};
+var TQ = TQ || {};
 
 (function () {
     function DownloadManager() {
@@ -19,7 +19,7 @@ this.TQ = this.TQ || {};
         TQ.Assert.isFalse(p.hasCached(cacheName), "已经cached！！");
         var item = _files[name];
         if (!item) {
-            item = _files[name] = {callback: [callback], cacheName:null};
+            _files[name] = {callback: [callback], cacheName:null};
         } else {
             item.callback.push(callback);
         }
@@ -32,6 +32,7 @@ this.TQ = this.TQ || {};
         var item = _files[name];
         item.cacheName = cacheName;
         var callbacks = item.callback;
+        p.save();
         if (callbacks) {
             for (var i = 0; i < callbacks.length; i++) {
                 if (callbacks[i]) {
@@ -44,6 +45,7 @@ this.TQ = this.TQ || {};
 
     p.onError = function(error, name, cacheName) {
         var item = _files[name];
+        TQ.Assert.isTrue(false, '下载文件出错'+name);
         item.cacheName = cacheName;
         var callbacks = item.callback;
         if (callbacks) {
@@ -57,6 +59,17 @@ this.TQ = this.TQ || {};
 
     p.hasCompleted = function() {
         return (_tasks===0);
+    };
+
+    p.save = function() {
+        localStorage.setItem('fileList', JSON.stringify(_files));
+    };
+
+    p.initialize = function() {
+        var str = localStorage.getItem('fileList');
+        if (!!str) {
+            _files = JSON.parse(str);
+        }
     };
 
     TQ.DownloadManager = DownloadManager;

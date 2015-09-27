@@ -54,6 +54,7 @@ this.TQ = this.TQ || {};
             return;
         }
 
+        TQ.DownloadManager.initialize();
         RM._hasCreated = true;
         RM.hasDefaultResource = false;
         // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
@@ -276,10 +277,11 @@ this.TQ = this.TQ || {};
         }
 
         var cacheName = _toCachePath(resourceID);
-        if (_isLocalFileSystem(resourceID) || TQ.DownloadManager.hasCached(cacheName)) {
+        var fullPath = _toFullPath(resourceID);
+        if (_isLocalFileSystem(resourceID) || TQ.DownloadManager.hasCached(fullPath)) {
             addToPreloader(cacheName, resourceID);
         } else {
-            TQ.DownloadManager.download(_toFullPath(resourceID), cacheName, makeCallback(cacheName, resourceID));
+            TQ.DownloadManager.download(fullPath, cacheName, makeCallback(cacheName, resourceID));
         }
 
         RM.isEmpty = false;
