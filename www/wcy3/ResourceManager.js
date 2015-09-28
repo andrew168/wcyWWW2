@@ -61,8 +61,9 @@ this.TQ = this.TQ || {};
         RM.BASE_PATH = FAST_SERVER;
         // RM.NOPIC = _toFullPath(RM.NOPIC);
         // RM.NOSOUND = _toFullPath(RM.NOSOUND);
-        RM.FULLPATH_NOPIC = urlConcat(TQ.Config.getResourceHost(), TQ.Config.IMAGES_CORE_PATH + RM.NOPIC);
-        RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.getResourceHost(), TQ.Config.SOUNDS_PATH + RM.NOSOUND);
+        // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
+        RM.FULLPATH_NOPIC = _toFullPath(urlConcat("/" + TQ.Config.IMAGES_CORE_PATH, RM.NOPIC));
+        RM.FULLPATH_NOSOUND = _toFullPath(urlConcat("/" + TQ.Config.SOUNDS_PATH, RM.NOSOUND));
         createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3
             TQ.Base.Utility.isMobileDevice()) {
@@ -277,7 +278,7 @@ this.TQ = this.TQ || {};
         }
 
         var cacheName = _toCachePath(resourceID);
-        var fullPath = _toFullPath(resourceID);
+        var fullPath = _toFastServerFullPath(resourceID);
         if (_isLocalFileSystem(resourceID) || TQ.DownloadManager.hasCached(fullPath)) {
             addToPreloader(cacheName, resourceID);
         } else {
@@ -437,7 +438,8 @@ this.TQ = this.TQ || {};
     }
 
     function _isLocalFileSystem(name) {
-        return (name.indexOf("filesystem:") === 0);
+        return ((name.indexOf("filesystem:") === 0)
+                || (name.indexOf("file:///") === 0));
     }
 
     function _toFullPath(name) {
@@ -454,6 +456,18 @@ this.TQ = this.TQ || {};
             TQ.Assert.isTrue(RM.BASE_PATH === urlParser(fullpath).hostname, "hostname 不一致");
         }
         return fullpath;
+    }
+
+    function _toFastServerFullPath(name) {
+        if (_isLocalFileSystem(name)) {
+            return name;
+        }
+
+        if (_isFullPath(name)) {
+            return name;
+        }
+
+        return urlConcat(FAST_SERVER, urlParser(name).pathname);
     }
 
     function _toCorePath(path) {

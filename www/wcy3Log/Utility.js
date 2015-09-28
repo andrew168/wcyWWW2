@@ -37,6 +37,11 @@ TQ.Base = TQ.Base || {};
         var parser = Utility.urlParser(path);
         if (!host) {
             host = parser.host;
+
+            if (ionic.Platform.isAndroid()) {
+                TQ.Assert.isTrue(host==="", "android app的host为空！")
+                host = '/android_asset/www';
+            }
         }
 
         if (!protocol) {

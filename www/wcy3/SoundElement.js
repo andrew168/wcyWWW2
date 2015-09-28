@@ -185,12 +185,22 @@ TQ = TQ || {};
     };
 
     p.pause = function() {
-        if (!this.instance) {
+        var instance = this.instance;
+        if (!instance) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             return;
         }
-        this.instance.pause();
-    }
+
+        if (!!instance.pause) {
+            instance.pause();
+        } else if (!!instance.stop) {
+            instance.stop();
+        } else if (!!instance.setPaused){
+            instance.setPaused(true);
+        } else {
+            TQ.Assert.isTrue(false, "无法pause声音！！");
+        }
+    };
 
     p.isPlaying = function() {
         if (!this.instance) {
