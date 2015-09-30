@@ -318,7 +318,7 @@ angular.module('starter')
             data = data.replace(/^data:image\/\w+;base64,/, "");
             data = new Blob([Base64Binary.decodeArrayBuffer(data)], {type: 'image/png', encoding: 'utf-8'});
             screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + "nn" + screenshotCounter + ".png";
-            FileService.saveFile(screenshotName, data, onSuccess, null);
+            FileService.saveFile(screenshotName, data, onSuccess, onError);
             screenshotCounter++;
         };
 
@@ -326,6 +326,11 @@ angular.module('starter')
             $timeout(function () {
                 $scope.localImage2 = DeviceService.getFullPath(screenshotName);
             });
+        }
+
+        function onError(e) {
+            TQ.Log.error("截图保持出错了！");
+            TQ.Log.error(e);
         }
 
         $scope.saveWorks = function () {
