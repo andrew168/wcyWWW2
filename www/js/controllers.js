@@ -1,7 +1,7 @@
 angular.module('starter')
     .controller('DashCtrl', function(
         $scope, $state, $timeout, GetWcy, $cordovaImagePicker,
-        $cordovaProgress,
+        $cordovaProgress, $cordovaSocialSharing,
         FileService, NetService, DeviceService, Setup) {
 
         $scope.localImage1 = null;
@@ -346,4 +346,34 @@ angular.module('starter')
                     TQ.Log.info(fileName + " saved");
             });
         };
+
+        var message = "人人动画";
+        var image = "http://bone.udoido.cn/mcImages/" + "p12504.png";
+        var link = "http://bone.udoido.cn";
+        var subject = "title etc";
+        var file = "this is file";
+
+        $scope.share = function() {
+            $cordovaSocialSharing
+                .share(message, subject, file, link) // Share via native share sheet
+                .then(function (result) {
+                    console.log('fb success!');
+                    console.log(result);
+                }, function (err) {
+                    console.log('fb error!');
+                    console.log(err);
+                });
+        };
+
+        $scope.shareFB = function(){
+            $cordovaSocialSharing
+                .shareViaFacebook(message, image, link)
+                .then(function(result) {
+                    console.log('fb success!');
+                    console.log(result);
+                }, function(err) {
+                    console.log('fb error!');
+                    console.log(err);
+                });
+        }
     });
