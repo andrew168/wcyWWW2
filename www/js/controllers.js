@@ -6,6 +6,12 @@ angular.module('starter')
 
         $scope.localImage1 = null;
         $scope.localImage2 = null;
+        $scope.data = {};
+        // $scope.data.sceneID = 12853
+        // $scope.data.sceneID = 12585; // Bear
+        $scope.data.sceneID = 14959; // straw berry
+        // $scope.data.sceneID = 14961;  // 比例变换测试
+        // $scope.data.sceneID = 15089; // 投票
 
         if (!DeviceService.isReady()) {
             // $cordovaProgress.showSimple(true);
@@ -43,7 +49,8 @@ angular.module('starter')
             assertTrue("device要先ready", DeviceService.isReady());
             // $scope.testDownload();
             // GetWcy.testCreateScene();
-            GetWcy.test();
+            GetWcy.test($scope.data.sceneID);
+            // $timeout(function() { $scope.insertLocalImage();}, 100);
             // $cordovaProgress.hide();
         }
 
@@ -213,8 +220,8 @@ angular.module('starter')
             var cachedFile = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
             var localFile = "/mcImages/" + path;
 
-            // insertImage(cachedFile, x+=50, y+=50);
-            // insertImage(localFile, x+=50, y+=50);
+            insertImage(cachedFile, x+=50, y+=50);
+            insertImage(localFile, x+=50, y+=50);
             insertImage(server1File, x+=50, y+=50);
             // insertImage(server2File, x+=50, y+=50);
             // insertImage(albumFile, x+=50, y+=50);
@@ -297,7 +304,7 @@ angular.module('starter')
         }
 
         $scope.testShowWCY = function() {
-            GetWcy.test();
+            GetWcy.test($scope.data.sceneID);
         };
 
         $scope.testClearAll = function() {

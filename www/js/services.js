@@ -1,18 +1,20 @@
 angular.module('starter')
     .factory("GetWcy", function($http, $localStorage) {
-        function test() {
-            // var filename = "p12853.wdm";
-            // var filename = "p12585.wdm"; // Bear
-            // var filename = "p14959.wdm"; // straw berry
-            var filename = "p14961.wdm"; // 比例变换测试
+        function test(sceneID) {
+            var filename = "p14959.wdm"; // straw berry
             var content = null;
+
+            if (sceneID) {
+                filename = 'p' + sceneID + '.wdm';
+            }
+
             var url = 'http://bone.udoido.cn/wcy/wdmOpen?filename=' + filename;
-            content = $localStorage.testScene;
+            content = $localStorage[filename];
             if (!content) {
                 $http.get(url, {})
                     .success(function (data, status, headers, config) {
                         console.log(data);
-                        content = $localStorage.testScene = JSON.stringify(data);
+                        content = $localStorage[filename] = JSON.stringify(data);
                         var fileInfo = {name: filename, content: content};
                         showWcy(fileInfo);
                     }).error(function (data, status, headers, config) {

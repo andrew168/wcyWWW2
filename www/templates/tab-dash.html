@@ -12,10 +12,11 @@
         </div>
 
         <div class="float-tool">
+            <input type="text" id="sceneID" name='sceneID' ng-model="data.sceneID" required>
+            <button class="button button-positive" ng-click="testShowWCY()">播放作品</button>
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
             <button class="button button-positive" ng-click="onEndInputText()">EndInputText</button>
             <button class="button button-positive" ng-click="testDownload()">下载资源</button>
-            <button class="button button-positive" ng-click="testShowWCY()">播放作品</button>
             <button class="button button-positive" ng-click="testClearAll()">清空</button>
             <button class="button button-positive" ng-click="insertLocalImage()">+本地图片</button>
             <button class="button button-positive" ng-click="insertAlbum()">+图册</button>
@@ -25,6 +26,8 @@
             <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
             <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
             <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
+            <button class="button button-positive" ng-click="share()">分享1</button>
+            <button class="button button-positive" ng-click="shareFB()">分享FB</button>
             <label>{{params}}{{getTextMsg()}} </label>
             <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
         </div>
