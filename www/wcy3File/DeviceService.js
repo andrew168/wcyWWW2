@@ -15,7 +15,7 @@ angular.module('starter')
         }
 
         function initialize() {
-            if (TQ.Base.Utility.isMobileDevice()) {
+            if (TQ.Base.Utility.isMobileDevice() && (typeof cordova !== "undefined")) {
                 onFileSystemReady();
             } else { // for Chrome Desktop
                 ImgCache.options.debug = true;
@@ -28,7 +28,7 @@ angular.module('starter')
         function onFileSystemReady() {
             if (TQ.Base.Utility.isMobileDevice()) {
                 if ((typeof cordova == "undefined") || (typeof cordova.file === "undefined")) {// for Chrome simulator
-                    rootFolder = "";
+                    rootFolder = ImgCache.getRoot();
                 } else {
                     rootFolder = cordova.file.dataDirectory;
                 }
