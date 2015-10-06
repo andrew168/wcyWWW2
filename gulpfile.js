@@ -1,52 +1,137 @@
-var gulp = require('gulp');
-var gutil = require('gulp-util');
-var bower = require('bower');
-var concat = require('gulp-concat');
-var sass = require('gulp-sass');
-var minifyCss = require('gulp-minify-css');
-var rename = require('gulp-rename');
-var sh = require('shelljs');
+/* jshint node:true */
 
-var paths = {
-  sass: ['./scss/**/*.scss']
+'use strict';
+
+var gulp = require('gulp');
+
+var $ = require('gulp-load-plugins')(); //jshint ignore:line
+
+var uglifyjs = require("uglify-js");
+
+var fs = require('fs');
+
+var del = require('del');
+
+var crypto = require('crypto');
+
+var args = require('yargs').argv;
+
+JSON.minify = JSON.minify || require("node-json-minify");
+
+
+
+var config = {
+
+    header: null,
+
+    version: null,
+
+    hash: null
+
 };
 
-gulp.task('default', ['sass']);
 
-gulp.task('sass', function(done) {
-  gulp.src('./scss/ionic.app.scss')
-    .pipe(sass({
-      errLogToConsole: true
-    }))
-    .pipe(gulp.dest('./www/css/'))
-    .pipe(minifyCss({
-      keepSpecialComments: 0
-    }))
-    .pipe(rename({ extname: '.min.css' }))
-    .pipe(gulp.dest('./www/css/'))
-    .on('end', done);
+
+gulp.task('config', ['clean'], function () {
+
+    //ver info
+
+    config.header = "/*! ionic " + new Date().toLocaleString() + " */\n";
+
+    config.version = require('./package.json').version;
+
+    config.hash = config.version + "." + crypto.createHash('md5').update(config.header).digest('hex').slice(0, 8);
+
+
+
+    //container files
+
+    config.app_js = "/all." + config.hash + ".js";
+
+    config.app_min_js = "/all." + config.hash + ".min.js";
+
+    config.app_min_js_map = "all." + config.hash + ".min.map";
+
+    config.app_min_css = "/all." + config.hash + ".min.css";
+
 });
 
-gulp.task('watch', function() {
-  gulp.watch(paths.sass, ['sass']);
+
+
+gulp.task('ps_mobile', function () {
+
+    var assets_mobile = $.useref.assets({searchPath: '{,www,www/js, www/wcy3}'});
+
+    return gulp.src('www/index.html')
+
+        .pipe(assets_mobile)
+
+        .pipe($.if('*.css', $.rename(config.app_min_css)))
+
+        .pipe($.if(/all\.js/ && args.remove_logs, $.replace(/AuxLog\.log\(.*\);/gm, "")))
+
+        .pipe($.if(/all\.js/, $.rename(config.app_js)))
+
+        .pipe($.if(/all\.js/, $.header(config.header)))
+
+        .pipe(assets_mobile.restore())
+
+        .pipe($.useref())
+
+        .pipe($.if('*.html', $.replace(/app\.js/g, config.app_js)))
+
+        .pipe($.if('*.css', $.minifyCss()))
+
+        //.pipe($.if('*.html', $.minifyHtml()))
+
+        .pipe(gulp.dest('dist'));
+
 });
 
-gulp.task('install', ['git-check'], function() {
-  return bower.commands.install()
-    .on('log', function(data) {
-      gutil.log('bower', gutil.colors.cyan(data.id), data.message);
+
+
+gulp.task('ps_minify', ['ps_mobile'], function () {
+
+    var result = uglifyjs.minify(["dist/" + config.app_js], {
+
+        outSourceMap: config.app_min_js_map,
+
+        sourceRoot: "",
+
+        compress: {
+
+            warnings: false
+
+        }
+
     });
+
+    fs.writeFileSync('dist/' + config.app_min_js, result.code);
+
 });
 
-gulp.task('git-check', function(done) {
-  if (!sh.which('git')) {
-    console.log(
-      '  ' + gutil.colors.red('Git is not installed.'),
-      '\n  Git, the version control system, is required to download Ionic.',
-      '\n  Download git here:', gutil.colors.cyan('http://git-scm.com/downloads') + '.',
-      '\n  Once git is installed, run \'' + gutil.colors.cyan('gulp install') + '\' again.'
-    );
-    process.exit(1);
-  }
-  done();
+
+
+gulp.task('clean', del.bind(null, ['dist', 'src/tmp']));
+
+
+
+gulp.task('build', ['ps_minify'], function () {
+
+    return gulp.src('dist/**/*')
+
+        .pipe($.size({title: 'build', gzip: true}))
+
+        .pipe($.zip('ionic' + config.version + '.zip'))
+
+        .pipe(gulp.dest('dist'));
+
+});
+
+
+
+gulp.task('default', ['config'], function () {
+
+    gulp.start('build');
+
 });
