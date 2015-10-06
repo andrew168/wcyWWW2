@@ -1,5 +1,6 @@
 angular.module('starter')
-    .factory("GetWcy", function($http, $localStorage) {
+    .factory("GetWcy", ['$http', '$localStorage',
+        function($http, $localStorage) {
         function test(sceneID) {
             var filename = "p14959.wdm"; // straw berry
             var content = null;
@@ -45,4 +46,4 @@ angular.module('starter')
             testCreateScene: testCreateScene,
             showWcy: showWcy
         };
-    })
+    }]);

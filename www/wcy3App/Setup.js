@@ -4,7 +4,8 @@
  * ToDo：避免重复建立
  */
 angular.module('starter')
-.factory('Setup', function(FileService, NetService, DeviceService) {
+.factory('Setup', ['FileService', 'NetService', 'DeviceService',
+        function(FileService, NetService, DeviceService) {
         var dirCounter = 0;
         var dirs = [TQ.Config.IMAGES_CORE_PATH,
             TQ.Config.SOUNDS_PATH,
@@ -60,4 +61,4 @@ angular.module('starter')
         return {
             initialize: initialize
         }
-    });
+    }]);

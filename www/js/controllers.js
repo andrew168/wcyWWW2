@@ -1,5 +1,7 @@
 angular.module('starter')
-    .controller('DashCtrl', function(
+    .controller('DashCtrl', ['$scope', '$state', '$timeout', 'GetWcy', '$cordovaImagePicker',
+        '$cordovaProgress', '$cordovaSocialSharing',
+        'FileService', 'NetService', 'DeviceService', 'Setup', function(
         $scope, $state, $timeout, GetWcy, $cordovaImagePicker,
         $cordovaProgress, $cordovaSocialSharing,
         FileService, NetService, DeviceService, Setup) {
@@ -376,4 +378,4 @@ angular.module('starter')
                     console.log(err);
                 });
         }
-    });
+    }]);

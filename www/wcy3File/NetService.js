@@ -2,7 +2,8 @@
  * Created by admin on 9/11/2015.
  */
 angular.module('starter')
-.factory("NetService", function ($cordovaFileTransfer, DeviceService) {
+.factory("NetService", ['$cordovaFileTransfer', 'DeviceService',
+        function ($cordovaFileTransfer, DeviceService) {
         var baseUrl = "http://bone.udoido.cn/";
         var urlConcat = TQ.Base.Utility.urlConcat;
 
@@ -56,4 +57,4 @@ angular.module('starter')
             update: update,
             del: del
         }
-    });
+    }]);
