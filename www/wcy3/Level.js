@@ -39,7 +39,7 @@ window.TQ = window.TQ || {};
     p.onSelected = function()
     {
         TQ.FrameCounter.initialize(this._t, this.FPS, this);
-        TQ.TimerUI.initialize();
+        //ToDo:@UI  TQ.TimerUI.initialize();
   //      this.state = TQBase.LevelState.NOT_INIT;
 //        this.dataReady = false;
     };

@@ -30,7 +30,7 @@ angular.module('starter')
             $("#Container").css("width", TQ.Config.validPageWidth.toString() + "px");
             // setStageSize(600, 480);
             TQ.WCY.isPlayOnly = true;
-            initCreateEnvironment(TQ.WCY.isPlayOnly);
+            //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
             TQ.SceneEditor.showWcy(fileinfo);
             TQ.floatToolbar.initialize();
             TQ.floatToolbar.isVisible();

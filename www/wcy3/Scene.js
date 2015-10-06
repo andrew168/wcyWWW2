@@ -48,7 +48,7 @@ TQ = TQ || {};
 
         this.isUpdating = true;
         TQ.FrameCounter.update();  // 前进一帧, 只有play和播放的时候, 才移动Frame
-        TQ.TimerUI.update();  // 必须先更新数据, 在更新UI
+        //ToDo:@UI  TQ.TimerUI.update();  // 必须先更新数据, 在更新UI
         this.update(TQ.FrameCounter.t());
         if (this.overlay) {
             this.overlay.update(TQ.FrameCounter.t());
@@ -94,7 +94,7 @@ TQ = TQ || {};
                 TQ.FrameCounter.max += BLOCK_SIZE;
                 this.currentLevel.setTime(TQ.FrameCounter.v);
                 $('#maxTimeValue').text(TQ.FrameCounter.max);
-                TQ.TimerUI.body.slider("option", "max", TQ.FrameCounter.max);
+                //ToDo:@UI  TQ.TimerUI.body.slider("option", "max", TQ.FrameCounter.max);
             } // 同时也要更新计时器的最大值
         } else {
             TQ.FrameCounter.max = this.currentLevel.getTime();
@@ -280,7 +280,7 @@ TQ = TQ || {};
         //   $('#stop').trigger('click');
         this.setEditor();
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
-        initMenu(); // 重新设置菜单
+        //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
         if (!((this.currentLevel == undefined) || (this.currentLevel == null))) {

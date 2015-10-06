@@ -119,9 +119,10 @@ TQ = TQ || {};
 
         if (SelectSet.getElementUnderMouse() == null) {
             TQ.floatToolbar.show(false);
-            if (TQ.TabsMenu.closeDiv) {
-                TQ.TabsMenu.closeDiv();
-            }
+            //ToDo:@UI
+            // if (TQ.TabsMenu.closeDiv) {
+            //    TQ.TabsMenu.closeDiv();
+            // }
         }
 
         SelectSet.members.splice(0); // 删除全部选中的物体;
