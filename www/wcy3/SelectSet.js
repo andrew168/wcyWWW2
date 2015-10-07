@@ -196,6 +196,7 @@ TQ = TQ || {};
     };
 
     SelectSet.getElementUnderMouse = function() {
+        TQ.Assert.isTrue(!!stage, "没有初始化stage！");
         var target = stage.selectedItem;
         var element = (target == null)? null: currScene.findAtom(target);  //包括点击菜单, 此函数也会响应
         if (element != null) {

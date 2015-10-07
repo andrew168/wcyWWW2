@@ -47,7 +47,7 @@ angular.module('starter')
 
         //对于Android，处理速度慢，不能使用for循环连续发出命令，必须使用这种 回调方式
         function onDirCreated() {
-            if (dirCounter === dirs.length) {
+            if (dirCounter >= dirs.length) {
                 TQ.Base.Utility.triggerEvent(document, TQ.EVENT.DIR_READY);
             } else {
                 FileService.createDir(dirs[dirCounter], onSuccess, onError);
