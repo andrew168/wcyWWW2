@@ -410,7 +410,12 @@ this.TQ = this.TQ || {};
             return str;
         }
 
-        return urlParser(str).pathname;
+        var pathname = urlParser(str).pathname;
+        if (pathname.indexOf('/android_asset/www') === 0) {
+            pathname = "file://" + pathname;
+        }
+
+        return pathname;
     };
 
     function _toCachePath(path) {
