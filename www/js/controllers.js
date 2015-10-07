@@ -49,35 +49,39 @@ angular.module('starter')
         function onDirReady() {
             document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
             assertTrue("device要先ready", DeviceService.isReady());
+            // _initGesture();
             // $scope.testDownload();
             // GetWcy.testCreateScene();
-            GetWcy.test($scope.data.sceneID);
+            // GetWcy.test($scope.data.sceneID);
             // $timeout(function() { $scope.insertLocalImage();}, 100);
             // $cordovaProgress.hide();
         }
 
         // GetWcy.test();
         var isDithering = false;
-        var canvas = document.getElementById("testCanvas");
-        ionic.EventController.onGesture('touch', onStart, canvas);
-        ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
-        ionic.EventController.onGesture('release', onRelease, canvas);
-        ionic.EventController.onGesture('rotate', onRotate, canvas);
-        function onShowToucInfo(e) {
-            console.log(e.type);
-        }
-        // 'scale': not work
-        //
-        // ionic.EventController.onGesture('pinchin', onPinch, canvas);
-        // ionic.EventController.onGesture('pinchout', onPinch, canvas);
-        ionic.EventController.onGesture('pinch', onPinch, canvas);
-        ionic.EventController.onGesture('drag', onMove, canvas);
         var ele = null;
         var ang = 0, scale = 1;
         var dAngle = 0, dScale = 1;
         var pos = {x:0, y:0};
         var isMultiTouching = false;
 
+            function _initGesture() {
+                var canvas = document.getElementById("testCanvas");
+                ionic.EventController.onGesture('touch', onStart, canvas);
+                ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
+                ionic.EventController.onGesture('release', onRelease, canvas);
+                ionic.EventController.onGesture('rotate', onRotate, canvas);
+                function onShowToucInfo(e) {
+                    console.log(e.type);
+                }
+
+                // 'scale': not work
+                //
+                // ionic.EventController.onGesture('pinchin', onPinch, canvas);
+                // ionic.EventController.onGesture('pinchout', onPinch, canvas);
+                ionic.EventController.onGesture('pinch', onPinch, canvas);
+                ionic.EventController.onGesture('drag', onMove, canvas);
+            }
         $scope.params = 0;
         $scope.getTextMsg = function () {
             var msg = (( !currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name)) ?
