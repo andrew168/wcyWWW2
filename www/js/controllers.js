@@ -1,10 +1,10 @@
 angular.module('starter')
     .controller('DashCtrl', ['$scope', '$state', '$timeout', 'GetWcy', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
-        'FileService', 'NetService', 'DeviceService', 'Setup', function(
+        'FileService', 'NetService', 'DeviceService', 'Setup', 'TouchService', function(
         $scope, $state, $timeout, GetWcy, $cordovaImagePicker,
         $cordovaProgress, $cordovaSocialSharing,
-        FileService, NetService, DeviceService, Setup) {
+        FileService, NetService, DeviceService, Setup, TouchService) {
 
         $scope.localImage1 = null;
         $scope.localImage2 = null;
@@ -17,7 +17,7 @@ angular.module('starter')
 
         if (!DeviceService.isReady()) {
             // $cordovaProgress.showSimple(true);
-            ionic.Platform.ready(_init);
+        ionic.Platform.ready(_init);
         } else {
             _init();
         }
@@ -49,138 +49,22 @@ angular.module('starter')
         function onDirReady() {
             document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
             assertTrue("device要先ready", DeviceService.isReady());
-            // _initGesture();
+            TouchService.initGesture();
             // $scope.testDownload();
-            // GetWcy.testCreateScene();
+            GetWcy.testCreateScene();
             // GetWcy.test($scope.data.sceneID);
             // $timeout(function() { $scope.insertLocalImage();}, 100);
             // $cordovaProgress.hide();
         }
 
         // GetWcy.test();
-        var isDithering = false;
-        var ele = null;
-        var ang = 0, scale = 1;
-        var dAngle = 0, dScale = 1;
-        var pos = {x:0, y:0};
-        var isMultiTouching = false;
+            $scope.params = 0;
+            $scope.getTextMsg = function () {
+                var msg = (( !currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name)) ?
+                    "": currScene.currentLevel.name;
 
-            function _initGesture() {
-                var canvas = document.getElementById("testCanvas");
-                ionic.EventController.onGesture('touch', onStart, canvas);
-                ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
-                ionic.EventController.onGesture('release', onRelease, canvas);
-                ionic.EventController.onGesture('rotate', onRotate, canvas);
-                function onShowToucInfo(e) {
-                    console.log(e.type);
-                }
-
-                // 'scale': not work
-                //
-                // ionic.EventController.onGesture('pinchin', onPinch, canvas);
-                // ionic.EventController.onGesture('pinchout', onPinch, canvas);
-                ionic.EventController.onGesture('pinch', onPinch, canvas);
-                ionic.EventController.onGesture('drag', onMove, canvas);
-            }
-        $scope.params = 0;
-        $scope.getTextMsg = function () {
-            var msg = (( !currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name)) ?
-                "": currScene.currentLevel.name;
-
-            return msg + ": " + TQ.FrameCounter.t();
-        };
-
-        function onStart() {
-            ele = TQ.SelectSet.getSelectedElement();
-            if (!ele) {
-                ele = currScene.currentLevel.elements[0];
-            }
-
-            if (!ele) {
-                console.error("No Element selected");
-                return;
-            }
-
-            ang = ele.getRotation();
-            scale = ele.getScale().sx;
-            pos = ele.getPosition();
-
-            if (isNaN(scale)) {
-                scale = 1;
-            }
-            console.log("start");
-        }
-
-        function ditherStart() {
-            isDithering = true;
-            $timeout(ditherEnd, 300);
-        }
-
-        function ditherEnd() {
-            isDithering = false;
-        }
-
-        function onTouchEnd(e) {
-            isMultiTouching = false;
-            ditherStart();
-        }
-
-        function onRelease() {
-            isMultiTouching = false;
-            isDithering = false;
-        }
-
-        function onMove(e) {
-            if (isMultiTouching || isDithering) {
-                return;
-            }
-            if (!ele) {
-                console.log("Move...");
-            } else {
-                // ele = currScene.currentLevel.elements[0];
-                var deltaX = e.gesture.deltaX;
-                var deltaY = - e.gesture.deltaY;
-                ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
-            }
-        }
-
-        function onRotate(e) {
-            if (isDithering) {
-                return;
-            }
-
-            if (!ele) {
-                console.log("Rotete...");
-            } else {
-                // ele = currScene.currentLevel.elements[0];
-                dAngle = e.gesture.rotation;
-                ele.rotateTo(ang - dAngle);
-                isMultiTouching = true;
-            }
-        }
-
-        function onPinch(e) {
-            if (isDithering) {
-                return;
-            }
-
-            if (!ele) {
-                console.log("pinch...");
-            } else {
-                // ele = currScene.currentLevel.elements[0];
-                dScale = e.gesture.scale;
-                var newScale = scale * dScale;
-                $scope.params = Math.round(newScale *100) / 100;
-                if (!isNaN(newScale)) {
-                    if (Math.abs(newScale) < 0.001) {
-                        console.warn("Too small");
-                    } else {
-                        ele.scaleTo({sx:newScale, sy:newScale});
-                        isMultiTouching = true;
-                    }
-                }
-            }
-        }
+                return msg + ": " + TQ.FrameCounter.t();
+            };
 
         $scope.testCreateLevel = function() {
             var id = currScene.currentLevelId;
@@ -224,11 +108,11 @@ angular.module('starter')
             var server2File = "http://www.udoido.com/mcImages/" + path;
             var albumFile ="";
             var cachedFile = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
-            var localFile = "/mcImages/" + path;
+            var localFile = "mcImages/" + path;
 
-            insertImage(cachedFile, x+=50, y+=50);
+            // insertImage(cachedFile, x+=50, y+=50);
             insertImage(localFile, x+=50, y+=50);
-            insertImage(server1File, x+=50, y+=50);
+            // insertImage(server1File, x+=50, y+=50);
             // insertImage(server2File, x+=50, y+=50);
             // insertImage(albumFile, x+=50, y+=50);
         };
