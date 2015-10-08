@@ -1,5 +1,5 @@
 angular.module('starter')
-    .factory('TouchService', function($timeout) {
+    .factory('TouchService', ['$timeout', function($timeout) {
         var isDithering = false;
         var ele = null;
         var ang = 0, scale = 1;
@@ -136,4 +136,4 @@ angular.module('starter')
         return {
             initGesture: initGesture
         }
-    });
+    }]);
