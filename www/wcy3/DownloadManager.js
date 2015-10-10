@@ -15,13 +15,14 @@ var TQ = TQ || {};
         return (!!item  && !!item.cacheName);
     };
 
-    p.download = function(name, cacheName, callback) {
-        TQ.Assert.isFalse(p.hasCached(cacheName), "已经cached！！");
+    p.download = function(name, cacheName, onSuccess, onError) {
+        TQ.Assert.isFalse(p.hasCached(name), "已经cached！！");
         var item = _files[name];
         if (!item) {
-            _files[name] = {callback: [callback], cacheName:null};
+            _files[name] = {onSuccess: [onSuccess], onError:[onError], cacheName:null};
         } else {
-            item.callback.push(callback);
+            item.onSuccess.push(onSuccess);
+            item.onError.push(onError);
         }
 
         _tasks ++;
@@ -31,12 +32,12 @@ var TQ = TQ || {};
     p.onCompleted = function(name, cacheName) {
         var item = _files[name];
         item.cacheName = cacheName;
-        var callbacks = item.callback;
+        var onSuccess = item.onSuccess;
         p.save();
-        if (callbacks) {
-            for (var i = 0; i < callbacks.length; i++) {
-                if (callbacks[i]) {
-                    callbacks[i]();
+        if (onSuccess) {
+            for (var i = 0; i < onSuccess.length; i++) {
+                if (onSuccess[i]) {
+                    onSuccess[i]();
                     _tasks--;
                 }
             }
@@ -45,13 +46,14 @@ var TQ = TQ || {};
 
     p.onError = function(error, name, cacheName) {
         var item = _files[name];
-        TQ.Assert.isTrue(false, '下载文件出错'+name);
+        TQ.Log.error('下载文件出错'+name);
         item.cacheName = cacheName;
-        var callbacks = item.callback;
-        if (callbacks) {
-            for (var i = 0; i < callbacks.length; i++) {
-                if (callbacks[i]) {
-                    callbacks[i]();
+        var onError = item.onError;
+        if (onError) {
+            for (var i = 0; i < onError.length; i++) {
+                if (onError[i]) {
+                    onError[i]();
+                    _tasks--;
                 }
             }
         }
@@ -59,6 +61,13 @@ var TQ = TQ || {};
 
     p.hasCompleted = function() {
         return (_tasks===0);
+    };
+
+    p.clearCache = function() {
+        _files = {};
+        p.save();
+
+        //ToDo: remove file from cache
     };
 
     p.save = function() {

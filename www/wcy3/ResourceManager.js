@@ -34,10 +34,10 @@ this.TQ = this.TQ || {};
     var urlParser = TQ.Base.Utility.urlParser;
     var urlConcat = TQ.Base.Utility.urlConcat;
     var RM = ResourceManager;
-    // var FAST_SERVER = "http://bone.udoido.cn";
+    var FAST_SERVER = "http://bone.udoido.cn";
     // var FAST_SERVER = "http://www.udoido.com";
     // var FAST_SERVER = "http://localhost:63342/eCard/www";
-    var FAST_SERVER = "";
+    // var FAST_SERVER = "";
     RM.NOSOUND = "p1.wav";
     RM.NOPIC = "p1.png";
     RM.NOSOUND_FULL = "p1.wav";
@@ -59,11 +59,9 @@ this.TQ = this.TQ || {};
         RM.hasDefaultResource = false;
         // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
         RM.BASE_PATH = FAST_SERVER;
-        // RM.NOPIC = _toFullPath(RM.NOPIC);
-        // RM.NOSOUND = _toFullPath(RM.NOSOUND);
         // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
-        RM.FULLPATH_NOPIC = _toFullPath(urlConcat("/" + TQ.Config.IMAGES_CORE_PATH, RM.NOPIC));
-        RM.FULLPATH_NOSOUND = _toFullPath(urlConcat("/" + TQ.Config.SOUNDS_PATH, RM.NOSOUND));
+        RM.FULLPATH_NOPIC = _toFullPathLs(urlConcat("/" + TQ.Config.IMAGES_CORE_PATH, RM.NOPIC));
+        RM.FULLPATH_NOSOUND = _toFullPathLs(urlConcat("/" + TQ.Config.SOUNDS_PATH, RM.NOSOUND));
         createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3
             TQ.Base.Utility.isMobileDevice()) {
@@ -245,8 +243,8 @@ this.TQ = this.TQ || {};
     }
     RM.addItem = function(resourceID, _callback) {
         TQ.Assert.isTrue(RM.hasDefaultResource, "没有初始化RM！");
-        resourceID = _toCorePath(resourceID);
-        if (this.hasResource(resourceID)) {
+        resourceID = _toShortPath(resourceID);
+        if (_hasResource(resourceID)) {
             assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
             _addReference(resourceID, _callback);
           return;
@@ -278,11 +276,27 @@ this.TQ = this.TQ || {};
         }
 
         var cacheName = _toCachePath(resourceID);
-        var fullPath = _toFastServerFullPath(resourceID);
-        if (_isLocalFileSystem(resourceID) || TQ.DownloadManager.hasCached(fullPath)) {
+        var fullPathFs = _toFullPathFs(resourceID);
+        var fullPathLs = _toFullPathLs(resourceID);
+
+        // 先从本App的服务器下载， 没有的话， 在从File Server下载
+        if (_isLocalFileSystem(resourceID) ||
+            TQ.DownloadManager.hasCached(fullPathLs) ||
+            TQ.DownloadManager.hasCached(fullPathFs)) {
             addToPreloader(cacheName, resourceID);
         } else {
-            TQ.DownloadManager.download(fullPath, cacheName, makeCallback(cacheName, resourceID));
+            var onSuccess = makeCallback(cacheName, resourceID);
+            var onError = makeLsOnError(cacheName, resourceID, fullPathFs, onSuccess);
+            TQ.DownloadManager.download(fullPathLs, cacheName, onSuccess, onError);
+        }
+
+        function makeLsOnError(cacheName, resourceID, fullPathFs, onSuccess) {
+            return function() {
+                TQ.Assert.isFalse(_isLocalFileSystem(resourceID) ||
+                    TQ.DownloadManager.hasCached(fullPathFs),
+                    "已经cache了！");
+                TQ.DownloadManager.download(fullPathFs, cacheName, onSuccess, null);
+            }
         }
 
         RM.isEmpty = false;
@@ -350,17 +364,18 @@ this.TQ = this.TQ || {};
         return result;
     };
 
-    RM.hasResource = function(id) {  // registered, may not loaded
-        return !(!RM.items[_toCorePath(id)]);
-    };
+    function _hasResource(id) {  // registered, may not loaded
+        TQ.Assert.isTrue(!_isFullPath(id), '是相对路径');
+        return !(!RM.items[id]);
+    }
 
     RM.hasResourceReady = function(id) {
-        var res = RM.items[_toCorePath(id)];
+        var res = RM.items[_toShortPath(id)];
         return (!!res  && !!res.res);
     };
 
     RM.getResource = function(id) {
-        id = _toCorePath(id);
+        id = _toShortPath(id);
         if (!RM.items[id]) {// 没有发现， 需要调入
             TQ.Log.info(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
             // 添加到预加载列表中
@@ -463,7 +478,20 @@ this.TQ = this.TQ || {};
         return fullpath;
     }
 
-    function _toFastServerFullPath(name) {
+    function _toFullPathLs(name) {  //Local Server: the server I'm running
+        if (_isLocalFileSystem(name)) {
+            return name;
+        }
+
+        if (_isFullPath(name)) {
+            return name;
+        }
+
+        var fullpath = TQ.Base.Utility.urlComposer(name);
+        return fullpath;
+    }
+
+    function _toFullPathFs(name) { //File Server, such as udoido.com
         if (_isLocalFileSystem(name)) {
             return name;
         }
@@ -475,10 +503,8 @@ this.TQ = this.TQ || {};
         return urlConcat(FAST_SERVER, urlParser(name).pathname);
     }
 
-    function _toCorePath(path) {
-        // return _toFullPath(path);
+    function _toShortPath(path) {
         return RM.toRelative(path);
-        // return _toCachePath(path);
     }
 
     TQ.RM = RM;

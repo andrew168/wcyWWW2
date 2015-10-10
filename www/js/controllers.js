@@ -26,6 +26,7 @@ angular.module('starter')
             $('#clear_cache').click(function(e) {
                 e.preventDefault();
                 ImgCache.clearCache();
+                TQ.DownloadManager.clearCache();
             });
             $('#cache_folder').click(function(e) {
                 e.preventDefault();
@@ -170,12 +171,12 @@ angular.module('starter')
         };
 
         $scope.testDownload = function() {
-            NetService.get(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
-            NetService.get(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
-            NetService.get(TQ.Config.IMAGES_CORE_PATH + "p1.png");
-            NetService.get(TQ.Config.SOUNDS_PATH + "p1.wav");
+            TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
+            TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
+            TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
+            TQ.RM.addItem("/img/ionic.png");
             $scope.localImage1 = DeviceService.getRootFolder() + 'mcImages/p12504.png';
-            $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p1.png';
+            $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p10324.png';
         };
 
         function onDownload(evt) {
@@ -184,8 +185,8 @@ angular.module('starter')
                 TQ.DownloadManager.onCompleted(data.name, data.cacheName);
             }
 
-            function onError() {
-                TQ.DownloadManager.onError(data.name, data.cacheName);
+            function onError(error) {
+                TQ.DownloadManager.onError(error, data.name, data.cacheName);
             }
 
             if (evt.data) {
