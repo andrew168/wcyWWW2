@@ -99,7 +99,7 @@ window.TQ = window.TQ || {};
     Utility.isComponent = function() {
         return ($("#tab_right_panel").tabs( "option", "active" ) == 1 );
     };
-    
+
     Utility.isScene = function() { return ($("#tab_right_panel").tabs( "option", "active" ) == 0 );};
     Utility.getEmptyScene = function () {
       return {"levels":[{"jsonElements":null, "FPS":20, "elements":null, "name":"0"}],
@@ -113,24 +113,52 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, obj);
     };
 
+    Utility.getExtension = function(path) {
+        var start = path.lastIndexOf('.');
+        if (start > 0) {
+            return path.substr(start);
+        }
+
+        return path;
+    };
+
     // adm: animation for dong man 超市
     Utility.isAnimationDesc = function (url) {
-        return (url.lastIndexOf(".adm") > 0 );
+        var formats = [".adm"];
+        var str = Utility.getExtension(url).toLowerCase();
+        for (var i = 0; i < formats.length; i++) {
+            if ((str === formats[i] )) {
+                return true;
+            }
+        }
+    };
+
+    Utility.isVideo= function (url) {
+        var formats = [".mp4"];
+        var str = Utility.getExtension(url).toLowerCase();
+        for (var i = 0; i < formats.length; i++) {
+            if ((str === formats[i] )) {
+                return true;
+            }
+        }
     };
 
     Utility.isSoundResource = function (url) {
-      var soundExtension = [".wav", ".mp3", ".ogg"];
-      for (var i=0; i<soundExtension.length; i++) {
-        if (url.lastIndexOf(soundExtension[i]) > 0) return true;
-      }
-      return false;
+        var formats = [".wav", ".mp3", ".ogg"];
+        var str = Utility.getExtension(url).toLowerCase();
+        for (var i = 0; i < formats.length; i++) {
+            if ((str === formats[i] )) {
+                return true;
+            }
+        }
+        return false;
     };
 
     Utility.isImage = function (url) {
-        var str = url.toLowerCase();
+        var str = Utility.getExtension(url).toLowerCase();
         var formats = [".png", ".jpg", ".bmp", ".gif"];
         for (var i = 0; i < formats.length; i++) {
-            if ((str.lastIndexOf(formats[i]) >0 ) ) {
+            if ((str === formats[i] ) ) {
                 return true;
             }
         }
