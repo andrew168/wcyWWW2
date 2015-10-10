@@ -420,15 +420,27 @@ this.TQ = this.TQ || {};
     }
 
     RM.toRelative = function(str) {
+        if (!_isFullPath(str)) {
+            TQ.Assert.isTrue((str[0] !== '\\') && (str[0] !== '/'),
+                "相对路径，开头不能是\\或者/");
+            return str;
+        }
+
         var pathname = urlParser(str).pathname;
         var ANDROID_LOCALHOST = '/android_asset/www';
         if (pathname.indexOf(ANDROID_LOCALHOST) === 0) {
             pathname = pathname.substr(ANDROID_LOCALHOST.length);
         }
 
-        return pathname;
+        return _removeFirstSeperator(pathname);
     };
 
+    function _removeFirstSeperator(path) {
+        if ((path[0] !== '\\') || (path[0] !== '/')) {
+            return path.substr(1);
+        }
+        return path;
+    }
     function toCachePath(path) {
         if (_isLocalFileSystem(path)) {
             return path;
@@ -443,16 +455,24 @@ this.TQ = this.TQ || {};
         var std_folder;
 
         if (TQ.Utility.isImage(path)) {
-            std_folder = TQ.Config.IMAGES_CORE_PATH;
+            std_folder = TQ.Config.SCREENSHOT_CORE_PATH;
+            if (path.indexOf(std_folder) === 0) {
+            } else {
+                std_folder = TQ.Config.IMAGES_CORE_PATH;
+                if (path.indexOf(std_folder) >= 0) {
+                }
+            }
         } else if (TQ.Utility.isSoundResource(path)) {
             std_folder = TQ.Config.SOUNDS_PATH;
         } else if (TQ.Utility.isVideo(path)) {
             std_folder = TQ.Config.VIDEOS_CORE_PATH;
+        } else if (TQ.Utility.isWCY(path)) {
+            std_folder = TQ.Config.WORKS_CORE_PATH;
         } else {
             TQ.Assert.isTrue(false, "未处理的文件类别!");
         }
 
-        if (path.indexOf(std_folder) === 1) {
+        if (path.indexOf(std_folder) === 0) {
             return path;
         }
 
@@ -504,11 +524,7 @@ this.TQ = this.TQ || {};
     }
 
     function _toFullPathLs(name) {  //Local Server: the server I'm running
-        if (_isLocalFileSystem(name)) {
-            return name;
-        }
-
-        if (_isFullPath(name)) {
+        if (_isLocalFileSystem(name) || _isFullPath(name)) {
             return name;
         }
 
@@ -517,15 +533,11 @@ this.TQ = this.TQ || {};
     }
 
     function _toFullPathFs(name) { //File Server, such as udoido.com
-        if (_isLocalFileSystem(name)) {
+        if (_isLocalFileSystem(name) || _isFullPath(name)) {
             return name;
         }
 
-        if (_isFullPath(name)) {
-            return name;
-        }
-
-        return urlConcat(FAST_SERVER, urlParser(name).pathname);
+        return urlConcat(FAST_SERVER, name);
     }
 
     function _toShortPath(path) {

@@ -27,8 +27,8 @@ angular.module('starter')
             }
         }
 
-        function saveFile(fullPath, cachePath, data, onSuccess, onError) {
-            TQ.Assert.isTrue(false, "ToDo: cachePath 是新添加的， 需要支持!");
+        function saveFile(fullPath, data, onSuccess, onError) {
+            cachePath = TQ.RM.toCachePath(fullPath);
             // WRITE
             if (!TQ.Base.Utility.isMobileDevice()) {
                 return ImgCache.WriteFile(fullPath, cachePath, data, onSuccess, onError);

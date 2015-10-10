@@ -133,6 +133,16 @@ window.TQ = window.TQ || {};
         }
     };
 
+    Utility.isWCY= function (url) {
+        var formats = [".wcy"];
+        var str = Utility.getExtension(url).toLowerCase();
+        for (var i = 0; i < formats.length; i++) {
+            if ((str === formats[i] )) {
+                return true;
+            }
+        }
+    };
+
     Utility.isVideo= function (url) {
         var formats = [".mp4"];
         var str = Utility.getExtension(url).toLowerCase();
