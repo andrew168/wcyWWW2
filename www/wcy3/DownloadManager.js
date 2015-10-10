@@ -26,7 +26,7 @@ var TQ = TQ || {};
         }
 
         _tasks ++;
-        TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {name: name, cacheName:cacheName});
+        TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {source: name, target:cacheName});
     };
 
     p.onCompleted = function(name, cacheName) {

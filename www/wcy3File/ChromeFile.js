@@ -309,7 +309,7 @@ var ImgCache = {
 
     // this function will not check if the image is already cached or not => it will overwrite existing data
     // on_progress callback follows this spec: http://www.w3.org/TR/2014/REC-progress-events-20140211/ -- see #54
-    ImgCache.cacheFile = function (img_src, success_callback, error_callback, on_progress) {
+    ImgCache.cacheFile = function (img_src, img_cache, success_callback, error_callback, on_progress) {
 
         if (!Private.isImgCacheLoaded() || !img_src) {
             return;
@@ -317,7 +317,7 @@ var ImgCache = {
 
         img_src = Helpers.sanitizeURI(img_src);
 
-        var filePath = Private.getCachedFileFullPath(img_src);
+        var filePath = _toCacheRelative(img_cache); // Private.getCachedFileFullPath(img_src);
 
         var fileTransfer = new Private.FileTransferWrapper(ImgCache.attributes.filesystem);
         fileTransfer.download(
@@ -469,8 +469,9 @@ var ImgCache = {
         return Helpers.EntryGetURL(ImgCache.attributes.dirEntry);
     };
 
-    ImgCache.WriteFile = function(filename, data, success_callback, error_callback) {
-        var localPath = Private.getCachedFileFullPath(filename);
+    ImgCache.WriteFile = function(filename, target, data, success_callback, error_callback) {
+        //var localPath = Private.getCachedFileFullPath(filename);
+        var localPath = _toCacheRelative(target);
         Private.WriteFile(localPath, data, success_callback, error_callback);
     };
 
@@ -510,6 +511,12 @@ var ImgCache = {
     }
     else {
         window.ImgCache = ImgCache;
+    }
+
+    function _toCacheRelative(path) {
+        var start = path.lastIndexOf(ImgCache.options.localCacheFolder);
+        TQ.Assert.isTrue(start > 0, "target路径错误");
+        return path.substr(start-1);
     }
 
 })(window.jQuery || window.Zepto || function () { throw "jQuery is not available"; } );

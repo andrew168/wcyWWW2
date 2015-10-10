@@ -27,10 +27,11 @@ angular.module('starter')
             }
         }
 
-        function saveFile(fullPath, data, onSuccess, onError) {
+        function saveFile(fullPath, cachePath, data, onSuccess, onError) {
+            TQ.Assert.isTrue(false, "ToDo: cachePath 是新添加的， 需要支持!");
             // WRITE
             if (!TQ.Base.Utility.isMobileDevice()) {
-                return ImgCache.WriteFile(fullPath, data, onSuccess, onError);
+                return ImgCache.WriteFile(fullPath, cachePath, data, onSuccess, onError);
             }
 
             $cordovaFile.writeFile(DeviceService.getRootFolder(), fullPath, data, true)

@@ -275,7 +275,7 @@ this.TQ = this.TQ || {};
             }]);
         }
 
-        var cacheName = _toCachePath(resourceID);
+        var cacheName = toCachePath(resourceID);
         var fullPathFs = _toFullPathFs(resourceID);
         var fullPathLs = _toFullPathLs(resourceID);
 
@@ -365,7 +365,7 @@ this.TQ = this.TQ || {};
     };
 
     function _hasResource(id) {  // registered, may not loaded
-        TQ.Assert.isTrue(!_isFullPath(id), '是相对路径');
+        TQ.Assert.isTrue(_isKeyPath(id), '应该是Key路径');
         return !(!RM.items[id]);
     }
 
@@ -429,12 +429,41 @@ this.TQ = this.TQ || {};
         return pathname;
     };
 
-    function _toCachePath(path) {
+    function toCachePath(path) {
         if (_isLocalFileSystem(path)) {
             return path;
         }
 
-        return urlConcat(TQ. Config.getResourceHost(), RM.toRelative(path));
+        var cachePath = _toStdFolder(RM.toRelative(path));
+        return urlConcat(TQ. Config.getResourceHost(), cachePath);
+    }
+
+    function _toStdFolder(path) {
+        var MAX_FILE_NAME = 50;
+        var std_folder;
+
+        if (TQ.Utility.isImage(path)) {
+            std_folder = TQ.Config.IMAGES_CORE_PATH;
+        } else if (TQ.Utility.isSoundResource(path)) {
+            std_folder = TQ.Config.SOUNDS_PATH;
+        } else if (TQ.Utility.isVideo(path)) {
+            std_folder = TQ.Config.VIDEOS_CORE_PATH;
+        } else {
+            TQ.Assert.isTrue(false, "未处理的文件类别!");
+        }
+
+        if (path.indexOf(std_folder) === 1) {
+            return path;
+        }
+
+        //ToDo: get unique file ID, like p123456.png;
+        path = path.replace(/\//g,'_');
+        var start = path.length - MAX_FILE_NAME;
+        if (start > 0) {
+            path = path.substr(start);
+        }
+
+        return urlConcat(std_folder, path);
     }
 
     function _isFullPath(name) {
@@ -449,7 +478,7 @@ this.TQ = this.TQ || {};
             return false;
         }
 
-        assertTrue("BASE_PATH是空，",  RM.BASE_PATH != "");
+        TQ.Assert.isTrue(RM.BASE_PATH != "", "BASE_PATH是空，");
         return (name.indexOf(RM.BASE_PATH) >= 0);
     }
 
@@ -500,9 +529,21 @@ this.TQ = this.TQ || {};
     }
 
     function _toShortPath(path) {
+        if (_isLocalFileSystem(path)) {
+            return path;
+        }
         return RM.toRelative(path);
     }
 
+    function _isKeyPath(path) {
+        if (_isLocalFileSystem(path)) {
+            return true;
+        }
+
+        return !_isFullPath(path);
+    }
+
+    RM.toCachePath = toCachePath;
     TQ.RM = RM;
     TQ.ResourceManager = RM;
 }());

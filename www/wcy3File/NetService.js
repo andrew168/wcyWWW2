@@ -8,15 +8,20 @@ angular.module('starter')
         var urlConcat = TQ.Base.Utility.urlConcat;
 
         function get(url, onSuccess, onError) {
-            var path = TQ.RM.toRelative(url);
-            console.log("get from : " + url);
-
-            var targetPath = DeviceService.getFullPath(path);
+            var urlSource, urlTarget;
             var trustHosts = true;
             var options = {};
 
+            if (typeof url === "string") {
+                urlSource = url;
+                urlTarget = TQ.RM.toCachePath(urlSource);
+            } else {
+                urlSource = url.source;
+                urlTarget = url.target;
+            }
+
             if (TQ.Base.Utility.isMobileDevice() && TQ.Base.Utility.isCordovaDevice()) {
-                $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
+                $cordovaFileTransfer.download(urlSource, urlTarget, options, trustHosts)
                     .then(function (result) {
                         console.log(result);
                         onSuccess(result);
@@ -31,7 +36,7 @@ angular.module('starter')
                         // })
                     });
             } else {
-                ImgCache.cacheFile(url, onSuccess, onError);
+                ImgCache.cacheFile(urlSource, urlTarget, onSuccess, onError);
             }
         }
 

@@ -182,15 +182,15 @@ angular.module('starter')
         function onDownload(evt) {
             var data = evt.data;
             function onSuccess() {
-                TQ.DownloadManager.onCompleted(data.name, data.cacheName);
+                TQ.DownloadManager.onCompleted(data.source, data.target);
             }
 
             function onError(error) {
-                TQ.DownloadManager.onError(error, data.name, data.cacheName);
+                TQ.DownloadManager.onError(error, data.source, data.target);
             }
 
-            if (evt.data) {
-                NetService.get(evt.data.name, onSuccess, onError);
+            if (data) {
+                NetService.get(data, onSuccess, onError);
             }
         }
 
