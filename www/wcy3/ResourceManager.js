@@ -420,14 +420,10 @@ this.TQ = this.TQ || {};
     }
 
     RM.toRelative = function(str) {
-        if (_isLocalFileSystem(str)) {
-            TQ.Log.warn("Local file to Relative??");
-            return str;
-        }
-
         var pathname = urlParser(str).pathname;
-        if (pathname.indexOf('/android_asset/www') === 0) {
-            pathname = "file://" + pathname;
+        var ANDROID_LOCALHOST = '/android_asset/www';
+        if (pathname.indexOf(ANDROID_LOCALHOST) === 0) {
+            pathname = pathname.substr(ANDROID_LOCALHOST.length);
         }
 
         return pathname;
