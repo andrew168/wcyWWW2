@@ -360,17 +360,19 @@ var ImgCache = {
                 if (success_callback) { success_callback(); }
             },
             function (error) {
-                var msg = "下载文件出错";
-                if (error.source) {
-                    msg += "，找不到文件：" + error.source;
-                }
+                if ((!error.http_status) || (error.http_status !== 404)) {
+                    var msg = "下载文件出错";
+                    if (error.source) {
+                        msg += "，找不到文件：" + error.source;
+                    }
 
-                if (!error.target) {
-                    msg += "，Cache中没有相应的目录！" + filePath;
-                }
+                    if (!error.target) {
+                        msg += "，Cache中没有相应的目录！" + filePath;
+                    }
 
-                msg += '， error code = ' + error.code;
-                TQ.Log.error(msg);
+                    msg += '， error code = ' + error.code;
+                    TQ.Log.error(msg);
+                } // else 由http系统报错
                 error.handled = true;
                 if (error_callback) { error_callback(error); }
             },
