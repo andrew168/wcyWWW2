@@ -7,16 +7,15 @@ angular.module('starter')
         var baseUrl = "http://bone.udoido.cn/";
         var urlConcat = TQ.Base.Utility.urlConcat;
 
-        function get(path, onSuccess, onError) {
-            path = TQ.RM.toRelative(path);
-            var url = urlConcat(baseUrl, path);
+        function get(url, onSuccess, onError) {
+            var path = TQ.RM.toRelative(url);
             console.log("get from : " + url);
 
             var targetPath = DeviceService.getFullPath(path);
             var trustHosts = true;
             var options = {};
 
-            if (TQ.Base.Utility.isMobileDevice()) {
+            if (TQ.Base.Utility.isMobileDevice() && TQ.Base.Utility.isCordovaDevice()) {
                 $cordovaFileTransfer.download(url, targetPath, options, trustHosts)
                     .then(function (result) {
                         console.log(result);

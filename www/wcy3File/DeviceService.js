@@ -27,7 +27,7 @@ angular.module('starter')
 
         function onFileSystemReady() {
             if (TQ.Base.Utility.isMobileDevice()) {
-                if (!_isCordovaDevice()) {// for Chrome simulator
+                if (!TQ.Base.Utility.isCordovaDevice()) {// for Chrome simulator
                     rootFolder = ImgCache.getRoot();
                 } else {
                     rootFolder = cordova.file.dataDirectory;
@@ -46,10 +46,6 @@ angular.module('starter')
         }
 
         // private function:
-        function _isCordovaDevice() {
-            return (typeof cordova !== "undefined");
-            // (typeof cordova.file === "undefined") /// ???  for Chrome simulator
-        }
 
         return {
             initialize: initialize,

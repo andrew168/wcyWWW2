@@ -16,6 +16,11 @@ TQ.Base = TQ.Base || {};
             ionic.Platform.isWindowsPhone());
     };
 
+    Utility.isCordovaDevice = function() {
+        return (typeof cordova !== "undefined");
+        // (typeof cordova.file === "undefined") /// ???  for Chrome simulator
+    };
+
     Utility.triggerEvent = function (DomElement, eventName, data) {
         var evt = new CustomEvent(eventName);
         if (!!data) {

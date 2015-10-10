@@ -156,7 +156,7 @@ var ImgCache = {
     Private.createCacheDir = function (success_callback, error_callback) {
         var _fail = function (error) {
             ImgCache.overridables.log('Failed to get/create local cache directory: ' + error.code, LOG_LEVEL_ERROR);
-            if (error_callback) { error_callback(); }
+            if (error_callback) { error_callback(error); }
         };
         var _getDirSuccess = function (dirEntry) {
             ImgCache.attributes.dirEntry = dirEntry;
@@ -266,7 +266,7 @@ var ImgCache = {
         };
         var _fail = function (error) {
             ImgCache.overridables.log('Failed to initialise LocalFileSystem ' + error.code, LOG_LEVEL_ERROR);
-            if (error_callback) { error_callback(); }
+            if (error_callback) { error_callback(error); }
         };
 
             //CHROME
@@ -289,7 +289,7 @@ var ImgCache = {
                 function (error) {
                     /* error*/
                     ImgCache.overridables.log('Failed to request quota: ' + error.message, LOG_LEVEL_ERROR);
-                    if (error_callback) { error_callback(); }
+                    if (error_callback) { error_callback(error); }
                 }
             );
 
@@ -354,10 +354,18 @@ var ImgCache = {
                 if (success_callback) { success_callback(); }
             },
             function (error) {
-                if (error.source) { ImgCache.overridables.log('Download error source: ' + error.source, LOG_LEVEL_ERROR); }
-                if (error.target) { ImgCache.overridables.log('Download error target: ' + error.target, LOG_LEVEL_ERROR); }
-                ImgCache.overridables.log('Download error code: ' + error.code, LOG_LEVEL_ERROR);
-                if (error_callback) { error_callback(); }
+                if (error.source) {
+                    TQ.Log.error("下载文件出错，可能是找不到文件：" + error.source);
+                }
+
+                if (error.target) {
+                    ImgCache.overridables.log('target: ' + error.target, LOG_LEVEL_ERROR);
+                } else {
+                    TQ.Log.error('下载文件出错，可能是Cache中没有相应的目录！' + filePath);
+                }
+
+                TQ.Log.error('下载文件出错，error code: ' + error.code);
+                if (error_callback) { error_callback(error); }
             },
             on_progress
         );
@@ -425,7 +433,7 @@ var ImgCache = {
             },
             function (error) {
                 ImgCache.overridables.log('Failed to remove directory or its contents: ' + error.code, LOG_LEVEL_ERROR);
-                if (error_callback) { error_callback(); }
+                if (error_callback) { error_callback(error); }
             }
         );
     };
@@ -437,7 +445,7 @@ var ImgCache = {
         var filePath = Private.getCachedFilePath(img_src);
         var _fail = function (error) {
             ImgCache.overridables.log('Failed to remove file due to ' + error.code, LOG_LEVEL_ERROR);
-            if (error_callback) { error_callback(); }
+            if (error_callback) { error_callback(error); }
         };
         ImgCache.attributes.filesystem.root.getFile(filePath, { create: false }, function (fileEntry) {
             fileEntry.remove(
