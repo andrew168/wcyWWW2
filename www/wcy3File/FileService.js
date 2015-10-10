@@ -2,7 +2,9 @@
  * Created by admin on 9/9/2015.
  */
 angular.module('starter')
-    .factory("FileService", function ($cordovaFileTransfer, $cordovaFile, DeviceService) {
+    .factory("FileService", ['$cordovaFileTransfer',
+        '$cordovaFile', 'DeviceService',
+        function ($cordovaFileTransfer, $cordovaFile, DeviceService) {
         var rootFolder = "";
         function createDir(dir, onSuccess, onError) {
             // 确保建立， 避免重复建立
@@ -12,7 +14,7 @@ angular.module('starter')
                 dir = dir.substr(0, dir.length - 1);
             }
 
-            if (TQ.Base.Utility.isMobileDevice()) {
+            if (TQ.Base.Utility.isMobileDevice() && TQ.Base.Utility.isCordovaDevice()) {
                 $cordovaFile.checkDir(rootFolder, dir)
                     .then(function (success) {
                         if (!!onSuccess) onSuccess(success);
@@ -180,11 +182,10 @@ angular.module('starter')
  */
         }
 
-
         return {
             createDir: createDir,
             saveFile: saveFile,
             readFile: readFile,
             testFilePathOP: testFilePathOP
         }
-    });
+    }]);
