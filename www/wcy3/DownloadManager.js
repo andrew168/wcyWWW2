@@ -46,14 +46,16 @@ var TQ = TQ || {};
 
     p.onError = function(error, name, cacheName) {
         var item = _files[name];
-        if (typeof error.http_status !== 'undefined') {
-            if (error.http_status == 404) {
-                TQ.Log.error('找不到文件：'+name);
+        if (!error.handled) {
+            if (typeof error.http_status !== 'undefined') {
+                if (error.http_status == 404) {
+                    TQ.Log.error('找不到文件：' + name);
+                } else {
+                    TQ.Log.error('下载文件出错: target目录缺失？ 或者无空间：' + name);
+                }
             } else {
-                TQ.Log.error('下载文件出错: target目录缺失？ 或者无空间：'+name);
+                TQ.Log.error('下载文件出错: ' + name);
             }
-        } else {
-            TQ.Log.error('下载文件出错'+name);
         }
         item.cacheName = cacheName;
         var onError = item.onError;

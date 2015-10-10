@@ -204,12 +204,16 @@ var ImgCache = {
         }
 
         // CHROME - browsers
-        var _fail = function (str, level, error_callback) {
-            ImgCache.overridables.log(str, level);
+        var _fail = function (error, error_callback) {
             // mock up FileTransferError, so at least caller knows there was a problem.
             // Normally, the error.code in the callback is a FileWriter error, we return 0 if the error was an XHR error
             if (error_callback) {
-                error_callback({code: 0, source: uri, target: localPath});
+                error.code = 0;
+                error.source = uri;
+                error.target = localPath;
+                error_callback(error);
+            } else {
+                ImgCache.overridables.log(error, level);
             }
         };
         var xhr = new XMLHttpRequest();
@@ -225,11 +229,13 @@ var ImgCache = {
             if (xhr.response && (xhr.status === 200 || xhr.status === 0)) {
                 Private.WriteFile(localPath, xhr.response, success_callback, error_callback);
             } else {
-                _fail('Image ' + uri + ' could not be downloaded - status: ' + xhr.status, 3, error_callback);
+                _fail({msg: 'Image could not be downloaded', http_status:xhr.status},
+                    error_callback);
             }
         };
         xhr.onerror = function () {
-            _fail('XHR error - Image ' + uri + ' could not be downloaded - status: ' + xhr.status, 3, error_callback);
+            _fail({msg: 'XHR error, could not be downloaded', http_status:xhr.status},
+                error_callback);
         };
         xhr.send();
     };
@@ -354,17 +360,18 @@ var ImgCache = {
                 if (success_callback) { success_callback(); }
             },
             function (error) {
+                var msg = "下载文件出错";
                 if (error.source) {
-                    TQ.Log.error("下载文件出错，可能是找不到文件：" + error.source);
+                    msg += "，找不到文件：" + error.source;
                 }
 
-                if (error.target) {
-                    ImgCache.overridables.log('target: ' + error.target, LOG_LEVEL_ERROR);
-                } else {
-                    TQ.Log.error('下载文件出错，可能是Cache中没有相应的目录！' + filePath);
+                if (!error.target) {
+                    msg += "，Cache中没有相应的目录！" + filePath;
                 }
 
-                TQ.Log.error('下载文件出错，error code: ' + error.code);
+                msg += '， error code = ' + error.code;
+                TQ.Log.error(msg);
+                error.handled = true;
                 if (error_callback) { error_callback(error); }
             },
             on_progress
