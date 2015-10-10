@@ -174,7 +174,7 @@ angular.module('starter')
             TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
             TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
             TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
-            TQ.RM.addItem("/img/ionic.png");
+            TQ.RM.addItem("img/ionic.png");
             $scope.localImage1 = DeviceService.getRootFolder() + 'mcImages/p12504.png';
             $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p10324.png';
         };
@@ -233,8 +233,8 @@ angular.module('starter')
                     TQ.Log.info(fileName + " saved");
                     currScene.isSaved = true;
                 },
-                function onSuccess(e) {
-                    TQ.Log.info(fileName + " saved");
+                function onError(e) {
+                    TQ.Log.error("出错：无法保存文件: " + fileName + error);
             });
         };
 
