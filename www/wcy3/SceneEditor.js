@@ -97,6 +97,7 @@ window.TQ = window.TQ || {};
 var canvas;
 var messageBoard;
 var stage = null;
+var stageContainer = null;
 
 function init(fileInfo) {
     if ((typeof fileInfo) === "string") {
@@ -107,6 +108,8 @@ function init(fileInfo) {
     // addHammer(canvas);
     // create a new stage and point it at our canvas:
     stage = new createjs.Stage(canvas);
+    stageContainer = new createjs.Container();
+    stage.addChild(stageContainer);
     //stage.enableMouseOver();
     messageBoard = new TQ.MessageBox(canvas);
     TQ.SoundMgr.initialize();

@@ -710,7 +710,7 @@ window.TQ = window.TQ || {};
     p._doRemoveFromStage = function () {
         TQ.TraceMgr.removeFromStage(this);
         if (this.displayObj) {
-            stage.removeChild(this.displayObj);
+            stageContainer.removeChild(this.displayObj);
         }
         this.clearFlag(Element.IN_STAGE);
     };
@@ -723,7 +723,7 @@ window.TQ = window.TQ || {};
         if (!this.displayObj) {
             this.jsonObj.zIndex = -1;
         } else {
-            this.jsonObj.zIndex = stage.getChildIndex(this.displayObj);
+            this.jsonObj.zIndex = stageContainer.getChildIndex(this.displayObj);
         }
         for (var i = 0; i < this.children.length; i++) {
             this.children[i].persist();
@@ -814,15 +814,15 @@ window.TQ = window.TQ || {};
         { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
             this.setFlag(Element.IN_STAGE);
             if ((!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
-                stage.addChild(item);
+                stageContainer.addChild(item);
             } else {
-                var z = stage.getChildIndex(upperEle.displayObj);
+                var z = stageContainer.getChildIndex(upperEle.displayObj);
                 if (z < 0) { // 是 group， 或者其它不可显示的物体
-                    stage.addChild(item);
+                    stageContainer.addChild(item);
                 } else {
                     assertTrue(TQ.Dictionary.INVALID_PARAMETER, z >= 0); // 第一个元素的z = 0
-                    assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < stage.getNumChildren());
-                    stage.addChildAt(item, z);  // 把upperEle 顶起来
+                    assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < stageContainer.getNumChildren());
+                    stageContainer.addChildAt(item, z);  // 把upperEle 顶起来
                 }
             }
 
@@ -857,7 +857,7 @@ window.TQ = window.TQ || {};
                             return;
                         }
                         TQ.floatToolbar.show(false);
-                        // TQBase.Trsa.do(ele2, thislevel, offset, ev, stage.selectedItem);
+                        // TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
                     };
                     evt.onMouseUp = function (evt) {
                         showFloatToolbar(evt);
@@ -941,7 +941,7 @@ window.TQ = window.TQ || {};
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
             TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
             if ((this.jsonObj.zIndex != null) && (this.jsonObj.zIndex >= 0)) { // 原来是group, 没有皮肤, 所以是-1;
-                stage.setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
+                stageContainer.setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
             }
             this._isNewSkin = false;
         } else {
@@ -1546,7 +1546,7 @@ window.TQ = window.TQ || {};
     p.getZ = function () { //如果是没有Z值的(例如:Group,等), 则返回其首个有Z值孩子的值
         // 只是被 moveLayer命令的undo使用, 没有用于物体顺序的保存
         var target = this.displayObj;
-        var z = (!target) ? -1 : stage.getChildIndex(target);
+        var z = (!target) ? -1 : stageContainer.getChildIndex(target);
         if (z >= 0) {
             return z
         }

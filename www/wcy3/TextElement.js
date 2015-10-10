@@ -33,9 +33,25 @@ window.TQ = window.TQ || {};
             txt.textAlign = "left";
         }
         this.displayObj = txt;
+
+        // hitArea 会随宿主物体的变换而变换， 所以，可以重用
+        var shape2 = _createHitArea(0, 0, txt.rotation, txt.getMeasuredWidth(), txt.getMeasuredHeight());
+        txt.hitArea = shape2;
+
         this._afterItemLoaded();
         this.setTRSAVZ();
+
+        // stageContainer.addChild(shape2);
     };
+
+    function _createHitArea(x, y, rotation, w, h) {
+        var shape = new createjs.Shape();
+        // shape.x = x;
+        // shape.y = y;
+        shape.rotation = rotation;
+        shape.graphics.beginFill("#F00").drawRect(0, 0, w , h);
+        return shape;
+    }
 
     TQ.TextElement = TextElement;
 }());
