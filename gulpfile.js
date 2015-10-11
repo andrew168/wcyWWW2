@@ -60,29 +60,20 @@ gulp.task('ps_mobile', function () {
     var assets_mobile = $.useref.assets({searchPath: '{,www,www/js, www/wcy3}'});
 
     return gulp.src('www/index.html')
-
         .pipe(assets_mobile)
-
         .pipe($.if('*.css', $.rename(config.app_min_css)))
-
         .pipe($.if(/wcy3all\.js/ && args.remove_logs, $.replace(/AuxLog\.log\(.*\);/gm, "")))
-
         .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
-
         .pipe($.if(/wcy3all\.js/, $.header(config.header)))
-
         .pipe(assets_mobile.restore())
-
         .pipe($.useref())
-
         .pipe($.if('*.html', $.replace(/wcy3all\.js/g, config.app_js)))
-
         .pipe($.if('*.css', $.minifyCss()))
-
         //.pipe($.if('*.html', $.minifyHtml()))
 
-        .pipe(gulp.dest('dist'));
-
+        .pipe(gulp.dest('dist'))
+        .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
+        .pipe(gulp.dest('E:\\projects\\cardforvote\\www\\lib'));
 });
 
 
