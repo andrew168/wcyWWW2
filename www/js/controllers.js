@@ -36,7 +36,6 @@ angular.module('starter')
 
         function _init() {
             document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
-            document.addEventListener(TQ.DownloadManager.DOWNLOAD_EVENT, onDownload, false);
             DeviceService.initialize();
         }
 
@@ -45,6 +44,7 @@ angular.module('starter')
             document.addEventListener(TQ.EVENT.DIR_READY, onDirReady, false);
             document.removeEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady);
             Setup.initialize();
+            NetService.initialize();
         }
 
         function onDirReady() {
@@ -130,9 +130,9 @@ angular.module('starter')
 
         function insertText(message, x, y) {
             var desc = {src: null, text: message, type:"Text", x:x, y:y};
-            // TQ.SceneEditor.addItem(desc);
-            TQ.TextEditor.initialize();
-            TQ.TextEditor.addText(TQ.Dictionary.defaultText);
+            TQ.SceneEditor.addItem(desc);
+            // TQ.TextEditor.initialize();
+            // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
         }
 
         $scope.onEndInputText = function () {
@@ -179,22 +179,8 @@ angular.module('starter')
             $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p10324.png';
         };
 
-        function onDownload(evt) {
-            var data = evt.data;
-            function onSuccess() {
-                TQ.DownloadManager.onCompleted(data.source, data.target);
-            }
-
-            function onError(error) {
-                TQ.DownloadManager.onError(error, data.source, data.target);
-            }
-
-            if (data) {
-                NetService.get(data, onSuccess, onError);
-            }
-        }
-
         $scope.testShowWCY = function() {
+            // GetWcy.testCreateScene();
             GetWcy.test($scope.data.sceneID);
         };
 
