@@ -57,7 +57,7 @@ var TQ = TQ || {};
                 TQ.Log.error('下载文件出错: ' + name);
             }
         }
-        item.cacheName = cacheName;
+        item.cacheName = null;  // no cache file
         var onError = item.onError;
         if (onError) {
             for (var i = 0; i < onError.length; i++) {

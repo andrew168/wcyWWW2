@@ -421,6 +421,7 @@ this.TQ = this.TQ || {};
 
     RM.toRelative = function(str) {
         if (!_isFullPath(str)) {
+            str = _removeFirstSeperator(str);
             TQ.Assert.isTrue((str[0] !== '\\') && (str[0] !== '/'),
                 "相对路径，开头不能是\\或者/");
             return str;
@@ -436,7 +437,7 @@ this.TQ = this.TQ || {};
     };
 
     function _removeFirstSeperator(path) {
-        if ((path[0] !== '\\') || (path[0] !== '/')) {
+        if ((path[0] === '\\') || (path[0] === '/')) {
             return path.substr(1);
         }
         return path;
