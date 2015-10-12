@@ -49,18 +49,19 @@ TQ.Base = TQ.Base || {};
         if (!host) {
             host = parser.host;
             if (ionic.Platform.isAndroid()) {
-                TQ.Assert.isTrue(host==="", "android app的host为空！");
+                if (TQ.Base.Utility.isCordovaDevice()) {
+                    TQ.Assert.isTrue(host==="", "android app的host为空！");
 
-                // ANDROID_PATH_PREFIX: 只在相对路径时候自动添加前缀，
-                // 若是‘/'开头（即：绝对路径），则不自动添加前缀
-                if (!(parser.pathname.indexOf(ANDROID_PATH_PREFIX) === 0)) {
-                    host = ANDROID_PATH_PREFIX;
-                } else {
-                    TQ.Assert.isTrue((parser.pathname.indexOf(ANDROID_PATH_PREFIX) === 0),
-                        "android prefix是会自动加前缀到pathname中");
-                    TQ.Log.info(path);
+                    // ANDROID_PATH_PREFIX: 只在相对路径时候自动添加前缀，
+                    // 若是‘/'开头（即：绝对路径），则不自动添加前缀
+                    if (!(parser.pathname.indexOf(ANDROID_PATH_PREFIX) === 0)) {
+                        host = ANDROID_PATH_PREFIX;
+                    } else {
+                        TQ.Assert.isTrue((parser.pathname.indexOf(ANDROID_PATH_PREFIX) === 0),
+                            "android prefix是会自动加前缀到pathname中");
+                        TQ.Log.info(path);
+                    }
                 }
-
             } else if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
                 TQ.Assert(false, 'ToDo: 处理IOS/IPad!');
             }
