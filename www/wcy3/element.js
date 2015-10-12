@@ -290,12 +290,6 @@ window.TQ = window.TQ || {};
         if (desc.type == "Text") {
             desc.pivotX = (desc.pivotX == undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
             desc.pivotY = (desc.pivotY == undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
-            if (desc.font) {
-                this.upgradeFont(desc);
-            }
-            if (!desc.fontFace)  desc.fontFace = TQ.Config.fontFace;
-            if (!desc.fontSize)  desc.fontSize = TQ.Config.fontSize;
-            if (!desc.color)  desc.color = TQ.Config.color;
         } else {
             desc.pivotX = (desc.pivotX == undefined) ? TQ.Config.pivotX : desc.pivotX;
             desc.pivotY = (desc.pivotY == undefined) ? TQ.Config.pivotY : desc.pivotY;
@@ -1377,34 +1371,9 @@ window.TQ = window.TQ || {};
         return jsonStr;
     };
 
-    p.upgradeFont = function (desc) { // R308引入，
-        var str = desc.font.replace("px", "");
-        var arr = str.split(" ");
-        if (arr.length >= 1) {
-            if (!desc.fontFace)  desc.fontFace = arr[1];
-            if (!desc.fontSize)  desc.fontSize = arr[0];
-        }
-        if (!desc.fontFace)  desc.fontFace = TQ.Config.fontFace;
-        if (!desc.fontSize)  desc.fontSize = TQ.Config.fontSize;
-        if (!desc.color)  desc.color = TQ.Config.color;
-    };
-
     // 小函数区域: has, is, 这些函数容易理解, 放到最后, 让重要的函数, 需要经常看的函数,放到前面
     p.setText = function (htmlStr) {
-        assertDepreciated(TQ.Dictionary.isDepreciated);
-    };
-
-    p.setText = function (str, fontFamily, fontSize, fontColor) {
-        assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText()); //应该是Text元素
-        // 此处不用再检验, 因为他不直接对用户, 只要那些直接对用户的函数, 把好关就行.
-        // 但是一定要断言, 确信: 外围站岗的尽责了.
-        if (this.displayObj != null) {
-            this.displayObj.text = this.jsonObj.text = str;
-            this.displayObj.color = this.jsonObj.color = fontColor;
-            this.jsonObj.fontSize = fontSize;
-            this.jsonObj.fontFace = fontFamily;
-            this.displayObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
-        }
+        assertDepreciated(TQ.Dictionary.isDepreciated + "， 移到了text元素中！");
     };
 
     p.hasAnimation = function () {
@@ -1413,25 +1382,6 @@ window.TQ = window.TQ || {};
 
     p.isLoaded = function () {
         return this.loaded;
-    };
-
-    // 样例： <font color="#f74107" size="6" face="隶书">用克隆键</font>
-    p.toHtmlStr = function () {
-        return '<font color="' + this.jsonObj.color + '" size="' +
-            ((this.jsonObj.fontSize - 6) / 5) + '" face="' +
-            this.jsonObj.fontFace + '">' +
-            this.jsonObj.text + '</font>';
-    };
-
-    Element.parseHtmlStr = function (jsonObj, htmlStr) {
-        jsonObj.text = TQ.Utility.extractTag("font", htmlStr, jsonObj.text);
-        var oldSize = jsonObj.fontSize;
-        jsonObj.fontSize = TQ.Utility.extractAttr("font", "size", htmlStr, jsonObj.fontSize);
-        if (oldSize != jsonObj.fontSize) {
-            jsonObj.fontSize = jsonObj.fontSize * 5 + 6;
-        }
-        jsonObj.fontFace = TQ.Utility.extractAttr("font", "face", htmlStr, jsonObj.fontFace);
-        jsonObj.color = TQ.Utility.extractAttr("font", "color", htmlStr, jsonObj.color);
     };
 
     p.isClipPoint = function () {
