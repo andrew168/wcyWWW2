@@ -9,15 +9,11 @@ angular.module('starter')
         $scope.localImage1 = null;
         $scope.localImage2 = null;
         $scope.data = {};
-        // $scope.data.sceneID = 12853
-        // $scope.data.sceneID = 12585; // Bear
+        // 12853, 12585; // Bear，  14961;  // 比例变换测试， 15089; // 投票
         $scope.data.sceneID = 14959; // straw berry
-        // $scope.data.sceneID = 14961;  // 比例变换测试
-        // $scope.data.sceneID = 15089; // 投票
-
         if (!DeviceService.isReady()) {
             // $cordovaProgress.showSimple(true);
-        ionic.Platform.ready(_init);
+            ionic.Platform.ready(_init);
         } else {
             _init();
         }
