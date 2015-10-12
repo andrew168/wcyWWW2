@@ -26,18 +26,15 @@ window.TQ = window.TQ || {};
         return this.jsonObj.text;
     };
 
-    p.setText = function(str) {
-        this.jsonObj.text = str;
-    };
-
     p.setText = function (str, fontFamily, fontSize, fontColor) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText()); //应该是Text元素
         // 此处不用再检验, 因为他不直接对用户, 只要那些直接对用户的函数, 把好关就行.
         // 但是一定要断言, 确信: 外围站岗的尽责了.
         if (this.displayObj != null) {
-            this.displayObj.text = this.jsonObj.text = str;
+            var txtObj = this.displayObj;
+            txtObj.text = this.jsonObj.text = str;
             if (fontColor) {
-                this.displayObj.color = this.jsonObj.color = fontColor;
+                txtObj.color = this.jsonObj.color = fontColor;
             }
             if (fontSize) {
                 this.jsonObj.fontSize = fontSize;
@@ -45,36 +42,33 @@ window.TQ = window.TQ || {};
             if (fontFamily){
                 this.jsonObj.fontFace = fontFamily;
             }
-            this.displayObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
+            txtObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
+
+            // hitArea 不会根据str内容来更新， 所以：
+            txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), txtObj.getMeasuredHeight());
         }
     };
 
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
         var jsonObj = this.jsonObj;
-        var txt = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
+        var txtObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
         this.loaded = true;
         if (jsonObj.textAlign == null) {
-            txt.textAlign = jsonObj.textAlign;
+            txtObj.textAlign = jsonObj.textAlign;
         } else {
-            txt.textAlign = "left";
+            txtObj.textAlign = "left";
         }
-        this.displayObj = txt;
 
         // hitArea 会随宿主物体的变换而变换， 所以，可以重用
-        var shape2 = _createHitArea(0, 0, txt.rotation, txt.getMeasuredWidth(), txt.getMeasuredHeight());
-        txt.hitArea = shape2;
-
+        txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), txtObj.getMeasuredHeight());
+        this.displayObj = txtObj;
         this._afterItemLoaded();
         this.setTRSAVZ();
-
-        // stageContainer.addChild(shape2);
     };
 
-    function _createHitArea(x, y, rotation, w, h) {
+    function _createHitArea(rotation, w, h) {
         var shape = new createjs.Shape();
-        // shape.x = x;
-        // shape.y = y;
         shape.rotation = rotation;
         shape.graphics.beginFill("#F00").drawRect(0, 0, w , h);
         return shape;
