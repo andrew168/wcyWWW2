@@ -534,10 +534,7 @@ this.TQ = this.TQ || {};
     }
 
     function _toFullPathFs(name) { //File Server, such as udoido.com
-        if (_isLocalFileSystem(name) || _isFullPath(name)) {
-            return name;
-        }
-
+        name = RM.toRelative(name);
         return urlConcat(FAST_SERVER, name);
     }
 
