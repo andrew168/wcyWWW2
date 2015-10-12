@@ -1,4 +1,8 @@
 window.TQ = window.TQ || {};
+var canvas;
+var messageBoard;
+var stage = null;
+var stageContainer = null;
 
 (function () {
 
@@ -91,13 +95,10 @@ window.TQ = window.TQ || {};
         return (SceneEditor.getMode() == TQBase.LevelState.RUNNING);
     };
 
+    SceneEditor.stage = stage;
+    SceneEditor.stageContainer = stageContainer;
     TQ.SceneEditor = SceneEditor;
 }());
-
-var canvas;
-var messageBoard;
-var stage = null;
-var stageContainer = null;
 
 function init(fileInfo) {
     if ((typeof fileInfo) === "string") {
@@ -107,8 +108,8 @@ function init(fileInfo) {
     //ToDo:AZ
     // addHammer(canvas);
     // create a new stage and point it at our canvas:
-    stage = new createjs.Stage(canvas);
-    stageContainer = new createjs.Container();
+    TQ.SceneEditor.stage = stage = new createjs.Stage(canvas);
+    TQ.SceneEditor.stageContainer = stageContainer = new createjs.Container();
     stage.addChild(stageContainer);
     //stage.enableMouseOver();
     messageBoard = new TQ.MessageBox(canvas);
@@ -140,7 +141,8 @@ function initializeControllers() {
     TQ.TrackRecorder.initialize();
     TQ.ActionRecorder.initialize();
     TQ.SelectSet.initialize();
-    TQ.TouchMgr.initialize();
+    TQ.TouchMgr.initialize();  //ToDo: will remove
+    TQ.TouchService.initialize();
 }
 
 function openScene(fileInfo) {

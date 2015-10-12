@@ -1,10 +1,10 @@
 angular.module('starter')
     .controller('DashCtrl', ['$scope', '$state', '$timeout', 'GetWcy', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
-        'FileService', 'NetService', 'DeviceService', 'Setup', 'TouchService', function(
+        'FileService', 'NetService', 'DeviceService', 'Setup', function(
         $scope, $state, $timeout, GetWcy, $cordovaImagePicker,
         $cordovaProgress, $cordovaSocialSharing,
-        FileService, NetService, DeviceService, Setup, TouchService) {
+        FileService, NetService, DeviceService, Setup) {
 
         $scope.localImage1 = null;
         $scope.localImage2 = null;
@@ -50,7 +50,6 @@ angular.module('starter')
         function onDirReady() {
             document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
             assertTrue("device要先ready", DeviceService.isReady());
-            TouchService.initGesture();
             // $scope.testDownload();
             GetWcy.testCreateScene();
             // GetWcy.test($scope.data.sceneID);
