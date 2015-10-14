@@ -21,6 +21,12 @@ var TQ = TQ || {};
         return (!!item  && !!item.cacheName);
     };
 
+    p.getCached = function (name) {
+        var item = _files[name];
+        TQ.Assert.isTrue(!!item, "必须存在");
+        return (item.cacheName);
+    };
+
     p.download = function(name, cacheName, resourceID) {
         TQ.Assert.isTrue(false, "Depreciated");
     };
@@ -47,26 +53,39 @@ var TQ = TQ || {};
         var cacheName = data.target;
         var resourceID = data.key;
         var item = _files[resourceID];
+        if (!item) {
+            TQ.Log.error("找不到callback： for" + resourceID);
+            return;
+        }
+
         item.cacheName = cacheName;
         var onSuccess = item.onSuccess;
-        item.onSuccess = null;
-        item.onError = null;
+        item.onSuccess = [];
+        item.onError = [];
         p.save();
+        var callback;
         if (onSuccess) {
-            var callback = onSuccess.shift();
-            while (callback) {
-                callback();
-                _tasks--;
+            while (onSuccess.length >0) {
                 callback = onSuccess.shift();
+                if (callback) {
+                    callback();
+                }
             }
         }
+        _tasks--;
     };
 
     p.onError = function(error, data) {
         var name = data.source;
         var resourceID = data.key;
         var item = _files[resourceID];
+        if (!item) {
+            TQ.Log.error("找不到callback： for" + resourceID);
+            return;
+        }
+
         _files[resourceID] = null; //  remove old one;
+        p.save();
         if (!error.handled) {
             if (typeof error.http_status !== 'undefined') {
                 if (error.http_status == 404) {
@@ -80,16 +99,18 @@ var TQ = TQ || {};
         }
         item.cacheName = null;  // no cache file
         var onError = item.onError;
-        item.onSuccess = null;
-        item.onError = null;
+        item.onSuccess = [];
+        item.onError = [];
+        var callback;
         if (onError) {
-            var callback = onError.shift();
-            while (callback) {
-                callback();
-                _tasks--;
+            while (onError.length > 0) {
                 callback = onError.shift();
+                if (callback) {
+                    callback();
+                }
             }
         }
+        _tasks--;
     };
 
     p.hasCompleted = function() {
@@ -109,7 +130,7 @@ var TQ = TQ || {};
 
     p.downloadBulk = function(bulk) {
         for (var i = 0; i < bulk.length; i++) {
-            if (typeof bulk[i] === 'array') {
+            if (Array.isArray(bulk[i])) {
                 p.downloadBulk(bulk[i]);
                 continue;
             }
@@ -119,11 +140,16 @@ var TQ = TQ || {};
             }
 
             var resourceID = bulk[i].path;
+            var cacheName = TQ.RM.toCachePath(resourceID);
+
+            var use_cache_file = true;
+            if (use_cache_file) {
+                bulk[i].path = p.getCached(resourceID);
+            }
+
             if (p.hasCached(resourceID)) {
                 continue;
             }
-
-            var cacheName = TQ.RM.toCachePath(resourceID);
             p.downloadAux(resourceID, cacheName);
         }
     };
@@ -148,6 +174,7 @@ var TQ = TQ || {};
         } else {
             item.onSuccess.push(onSuccess);
             item.onError.push(onError);
+            return;
         }
 
         _tasks++;
