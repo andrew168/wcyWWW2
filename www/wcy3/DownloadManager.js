@@ -144,7 +144,7 @@ var TQ = TQ || {};
 
             var use_cache_file = true;
             if (use_cache_file) {
-                bulk[i].path = p.getCached(resourceID);
+                bulk[i].path = cacheName;
             }
 
             if (p.hasCached(resourceID)) {
