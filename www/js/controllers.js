@@ -166,10 +166,32 @@ angular.module('starter')
         };
 
         $scope.testDownload = function() {
-            TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
-            TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
-            TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
-            TQ.RM.addItem("img/ionic.png");
+            // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
+            // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
+            // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
+            // TQ.RM.addItem("img/ionic.png");
+
+            var people_local = [
+/*                {name:"人物", path:'mcImages/p15297.png'},
+                {name:"人物", path:'mcImages/p15303.png'},
+                {name:"人物", path:'mcImages/p15353.png'},
+                {name:"人物", path:'mcImages/p15275.png'},
+                {name:"人物", path:'mcImages/p15291.png'},
+                {name:"人物", path:'mcImages/p15287.png'},
+                {name:"人物", path:'mcImages/p15285.png'},
+                {name:"人物", path:'mcImages/p15283.png'},
+                {name:"人物", path:'mcImages/p15295.png'},
+                {name:"人物", path:'mcImages/p15293.png'},
+                {name:"人物", path:'mcImages/p15289.png'},
+                {name:"人物", path:'mcImages/p15347.png'},
+                {name:"人物", path:'mcImages/p15345.png'},
+                {name:"人物", path:'mcImages/p15349.png'},
+*/
+                {name:"人物", path:'mcImages/p15357.png'},
+                {name:"人物", path:'mcImages/p15343.png'}
+            ];
+            TQ.DownloadManager.downloadBulk(people_local);
+
             $scope.localImage1 = DeviceService.getRootFolder() + 'mcImages/p12504.png';
             $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p10324.png';
         };

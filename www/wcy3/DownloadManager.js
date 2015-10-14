@@ -49,6 +49,8 @@ var TQ = TQ || {};
         var item = _files[resourceID];
         item.cacheName = cacheName;
         var onSuccess = item.onSuccess;
+        item.onSuccess = null;
+        item.onError = null;
         p.save();
         if (onSuccess) {
             var callback = onSuccess.shift();
@@ -78,6 +80,8 @@ var TQ = TQ || {};
         }
         item.cacheName = null;  // no cache file
         var onError = item.onError;
+        item.onSuccess = null;
+        item.onError = null;
         if (onError) {
             var callback = onError.shift();
             while (callback) {
@@ -101,6 +105,27 @@ var TQ = TQ || {};
 
     p.save = function() {
         localStorage.setItem('fileList', JSON.stringify(_files));
+    };
+
+    p.downloadBulk = function(bulk) {
+        for (var i = 0; i < bulk.length; i++) {
+            if (typeof bulk[i] === 'array') {
+                p.downloadBulk(bulk[i]);
+                continue;
+            }
+
+            if (!bulk[i] || !bulk[i].path) {
+                continue;
+            }
+
+            var resourceID = bulk[i].path;
+            if (p.hasCached(resourceID)) {
+                continue;
+            }
+
+            var cacheName = TQ.RM.toCachePath(resourceID);
+            p.downloadAux(resourceID, cacheName);
+        }
     };
 
     p.initialize = function() {
