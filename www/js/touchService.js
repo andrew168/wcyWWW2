@@ -41,8 +41,8 @@ var TQ = TQ || {};
         touchedEle = stage.getObjectsUnderPoint(evt.stageX, evt.stageY);
     }
 
-    function getSelectedElement() {
-        var newEle = TQ.SelectSet.getSelectedElement();
+    function getSelectedElement(evt) {
+        var newEle = _doGetSelectedElement(evt);
         if (!newEle) {
             newEle = touchedEle;
         }
@@ -77,10 +77,10 @@ var TQ = TQ || {};
         }
     }
 
-    function onStart(evt) {
+    function onStart(e) {
         ele = null;
-        getSelectedElement();
-            console.log("start");
+        getSelectedElement(e);
+        console.log("start");
     }
 
     function ditherStart() {
@@ -106,7 +106,7 @@ var TQ = TQ || {};
         if (isMultiTouching || isDithering) {
             return;
         }
-        getSelectedElement();
+        getSelectedElement(e);
 
         if (!ele) {
             console.log("Move...");
@@ -123,7 +123,7 @@ var TQ = TQ || {};
             return;
         }
 
-        getSelectedElement();
+        getSelectedElement(e);
 
         if (!ele) {
             console.log("Rotete...");
@@ -140,7 +140,7 @@ var TQ = TQ || {};
             return;
         }
 
-        getSelectedElement();
+        getSelectedElement(e);
         if (!ele) {
             console.log("pinch...");
         } else {
@@ -156,6 +156,28 @@ var TQ = TQ || {};
                 }
             }
         }
+    }
+
+    // private:
+    function _doGetSelectedElement(evt) {
+        var touchPoint = evt.gesture.srcEvent;
+        if ((!!touchPoint.touches) && (touchPoint.touches.length > 0)) {
+            touchPoint = touchPoint.touches[0];
+        }
+
+        var pageX = touchPoint.pageX;
+        var pageY = touchPoint.pageY;
+
+        var rect = TQ.SceneEditor.stage._getElementRect(TQ.SceneEditor.stage.canvas);
+        pageX -= rect.left;
+        pageY -= rect.top;
+
+        var eles = TQ.SceneEditor.stageContainer.getObjectsUnderPoint(pageX,pageY);
+        if ((!!eles)  && (eles.length > 0)) {
+            return eles[0].ele;
+        }
+
+        console.log(pageX + ", " + pageY) ;
     }
 
     TouchService.initialize = initialize;
