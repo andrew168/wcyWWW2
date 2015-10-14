@@ -106,7 +106,10 @@ var TQ = TQ || {};
         if (isMultiTouching || isDithering) {
             return;
         }
-        getSelectedElement(e);
+
+        if (!ele) {
+            getSelectedElement(e);
+        }
 
         if (!ele) {
             console.log("Move...");
@@ -123,7 +126,9 @@ var TQ = TQ || {};
             return;
         }
 
-        getSelectedElement(e);
+        if (!ele) {
+            getSelectedElement(e);
+        }
 
         if (!ele) {
             console.log("Rotete...");
@@ -140,7 +145,10 @@ var TQ = TQ || {};
             return;
         }
 
-        getSelectedElement(e);
+        if (!ele) {
+            getSelectedElement(e);
+        }
+
         if (!ele) {
             console.log("pinch...");
         } else {
