@@ -63,11 +63,11 @@ angular.module('starter')
             function onDownload(evt) {
                 var data = evt.data;
                 function onSuccess() {
-                    TQ.DownloadManager.onCompleted(data.source, data.target);
+                    TQ.DownloadManager.onCompleted(data);
                 }
 
                 function onError(error) {
-                    TQ.DownloadManager.onError(error, data.source, data.target);
+                    TQ.DownloadManager.onError(error, data);
                 }
 
                 if (data) {

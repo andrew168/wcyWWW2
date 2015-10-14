@@ -34,10 +34,6 @@ this.TQ = this.TQ || {};
     var urlParser = TQ.Base.Utility.urlParser;
     var urlConcat = TQ.Base.Utility.urlConcat;
     var RM = ResourceManager;
-    var FAST_SERVER = "http://bone.udoido.cn";
-    // var FAST_SERVER = "http://www.udoido.com";
-    // var FAST_SERVER = "http://localhost:63342/eCard/www";
-    // var FAST_SERVER = "";
     RM.NOSOUND = "p1.wav";
     RM.NOPIC = "p1.png";
     RM.NOSOUND_FULL = "p1.wav";
@@ -58,7 +54,7 @@ this.TQ = this.TQ || {};
         RM._hasCreated = true;
         RM.hasDefaultResource = false;
         // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
-        RM.BASE_PATH = FAST_SERVER;
+        RM.BASE_PATH = TQ.DownloadManager.FAST_SERVER;
         // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
         RM.FULLPATH_NOPIC = _toFullPathLs(urlConcat("/" + TQ.Config.IMAGES_CORE_PATH, RM.NOPIC));
         RM.FULLPATH_NOSOUND = _toFullPathLs(urlConcat("/" + TQ.Config.SOUNDS_PATH, RM.NOSOUND));
@@ -241,6 +237,7 @@ this.TQ = this.TQ || {};
 
         //ToDo:@@@ 增加和减少 reference Counter
     }
+
     RM.addItem = function(resourceID, _callback) {
         TQ.Assert.isTrue(RM.hasDefaultResource, "没有初始化RM！");
         resourceID = _toShortPath(resourceID);
@@ -261,9 +258,9 @@ this.TQ = this.TQ || {};
         // RM.preloader.loadFile("assets/image0.jpg");
         RM.dataReady = false;
 
-        function makeCallback(cacheName, resourceID) {
+        function makeOnSuccess1(name, ID) {
             return function() {
-                addToPreloader(cacheName, resourceID);
+                addToPreloader(name, ID);
             }
         }
 
@@ -276,27 +273,16 @@ this.TQ = this.TQ || {};
         }
 
         var cacheName = toCachePath(resourceID);
-        var fullPathFs = _toFullPathFs(resourceID);
-        var fullPathLs = _toFullPathLs(resourceID);
 
         // 先从本App的服务器下载， 没有的话， 在从File Server下载
         if (_isLocalFileSystem(resourceID) ||
-            TQ.DownloadManager.hasCached(fullPathLs) ||
-            TQ.DownloadManager.hasCached(fullPathFs)) {
+            TQ.DownloadManager.hasCached(resourceID)) {
             addToPreloader(cacheName, resourceID);
         } else {
-            var onSuccess = makeCallback(cacheName, resourceID);
-            var onError = makeLsOnError(cacheName, resourceID, fullPathFs, onSuccess);
-            TQ.DownloadManager.download(fullPathLs, cacheName, onSuccess, onError);
-        }
-
-        function makeLsOnError(cacheName, resourceID, fullPathFs, onSuccess) {
-            return function() {
-                TQ.Assert.isFalse(_isLocalFileSystem(resourceID) ||
-                    TQ.DownloadManager.hasCached(fullPathFs),
-                    "已经cache了！");
-                TQ.DownloadManager.download(fullPathFs, cacheName, onSuccess, null);
-            }
+            var onSuccess = makeOnSuccess1(cacheName, resourceID);
+            TQ.DownloadManager.downloadAux(resourceID, cacheName, onSuccess, function() {
+                TQ.Log.error(resourceID +"资源加载出错！");
+            });
         }
 
         RM.isEmpty = false;
@@ -533,11 +519,6 @@ this.TQ = this.TQ || {};
         return fullpath;
     }
 
-    function _toFullPathFs(name) { //File Server, such as udoido.com
-        name = RM.toRelative(name);
-        return urlConcat(FAST_SERVER, name);
-    }
-
     function _toShortPath(path) {
         if (_isLocalFileSystem(path)) {
             return path;
@@ -554,6 +535,7 @@ this.TQ = this.TQ || {};
     }
 
     RM.toCachePath = toCachePath;
+    RM.toFullPathLs = _toFullPathLs;
     TQ.RM = RM;
     TQ.ResourceManager = RM;
 }());

@@ -7,6 +7,12 @@ var TQ = TQ || {};
     function DownloadManager() {
     }
     var p = DownloadManager;
+    var urlConcat = TQ.Base.Utility.urlConcat;
+
+    p.FAST_SERVER = "http://bone.udoido.cn";
+    // p.FAST_SERVER = "http://www.udoido.com";
+    // p.FAST_SERVER = "http://localhost:63342/eCard/www";
+    // p.FAST_SERVER = "";
     p.DOWNLOAD_EVENT = "download-to-cache";
     var _tasks = 0;
     var _files = {};
@@ -15,37 +21,50 @@ var TQ = TQ || {};
         return (!!item  && !!item.cacheName);
     };
 
-    p.download = function(name, cacheName, onSuccess, onError) {
-        TQ.Assert.isFalse(p.hasCached(name), "已经cached！！");
-        var item = _files[name];
-        if (!item) {
-            _files[name] = {onSuccess: [onSuccess], onError:[onError], cacheName:null};
-        } else {
-            item.onSuccess.push(onSuccess);
-            item.onError.push(onError);
-        }
-
-        _tasks ++;
-        TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {source: name, target:cacheName});
+    p.download = function(name, cacheName, resourceID) {
+        TQ.Assert.isTrue(false, "Depreciated");
     };
 
-    p.onCompleted = function(name, cacheName) {
-        var item = _files[name];
-        item.cacheName = cacheName;
-        var onSuccess = item.onSuccess;
-        p.save();
-        if (onSuccess) {
-            for (var i = 0; i < onSuccess.length; i++) {
-                if (onSuccess[i]) {
-                    onSuccess[i]();
-                    _tasks--;
-                }
+    p.downloadAux = function(resourceID, cacheName, onSuccess, onError) {
+        TQ.Assert.isFalse(p.hasCached(resourceID), "已经cached！！");
+        var onLsError = makeLsOnError();
+        // server Ls
+        var fullPathLs = TQ.RM.toFullPathLs(resourceID);
+        _download(fullPathLs, cacheName, resourceID, onSuccess, onLsError);
+
+        // server Fs
+        function makeLsOnError() {
+            return function() {
+                var fullPathFs = _toFullPathFs(resourceID);
+                TQ.Assert.isFalse(TQ.DownloadManager.hasCached(resourceID),
+                    "已经cache了！");
+                _download(fullPathFs, cacheName, resourceID, onSuccess, onError);
             }
         }
     };
 
-    p.onError = function(error, name, cacheName) {
-        var item = _files[name];
+    p.onCompleted = function(data) {
+        var cacheName = data.target;
+        var resourceID = data.key;
+        var item = _files[resourceID];
+        item.cacheName = cacheName;
+        var onSuccess = item.onSuccess;
+        p.save();
+        if (onSuccess) {
+            var callback = onSuccess.shift();
+            while (callback) {
+                callback();
+                _tasks--;
+                callback = onSuccess.shift();
+            }
+        }
+    };
+
+    p.onError = function(error, data) {
+        var name = data.source;
+        var resourceID = data.key;
+        var item = _files[resourceID];
+        _files[resourceID] = null; //  remove old one;
         if (!error.handled) {
             if (typeof error.http_status !== 'undefined') {
                 if (error.http_status == 404) {
@@ -60,11 +79,11 @@ var TQ = TQ || {};
         item.cacheName = null;  // no cache file
         var onError = item.onError;
         if (onError) {
-            for (var i = 0; i < onError.length; i++) {
-                if (onError[i]) {
-                    onError[i]();
-                    _tasks--;
-                }
+            var callback = onError.shift();
+            while (callback) {
+                callback();
+                _tasks--;
+                callback = onError.shift();
             }
         }
     };
@@ -90,6 +109,25 @@ var TQ = TQ || {};
             _files = JSON.parse(str);
         }
     };
+
+    // private
+    function _toFullPathFs(name) { //File Server, such as udoido.com
+        name = TQ.RM.toRelative(name);
+        return urlConcat(p.FAST_SERVER, name);
+    }
+
+    function _download(name, cacheName, resourceID, onSuccess, onError) {
+        var item = _files[resourceID];
+        if (!item) {
+            _files[resourceID] = {onSuccess: [onSuccess], onError: [onError], cacheName: null};
+        } else {
+            item.onSuccess.push(onSuccess);
+            item.onError.push(onError);
+        }
+
+        _tasks++;
+        TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {key: resourceID, source: name, target: cacheName});
+    }
 
     TQ.DownloadManager = DownloadManager;
 }());
