@@ -808,7 +808,7 @@ window.TQ = window.TQ || {};
         item.ele = this;
         { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
             this.setFlag(Element.IN_STAGE);
-            if ((item.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
+            if ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
                 stageContainer.addChild(item);
             } else {
                 var z = stageContainer.getChildIndex(upperEle.displayObj);
