@@ -22,6 +22,7 @@ window.TQ = window.TQ || {};
 
     Element.VER1 = "V1";
     Element.VER2 = "V2"; // 从2014-3-2日开始使用
+    Element.TOP = 99999; // zIndex of top element
 
     // 0x01--0x1F是固定结构部分，    需要保存到WDM文件中；之后的高位是动态的
     Element.JOINTED = 0x02;     // 关节体中的所有子物体,不包括根关节自己.
@@ -285,7 +286,7 @@ window.TQ = window.TQ || {};
         }
 
         if (desc.zIndex == undefined) {
-            desc.zIndex = 0;
+            desc.zIndex = Element.TOP;
         }
         if (desc.type == "Text") {
             desc.pivotX = (desc.pivotX == undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
@@ -807,7 +808,7 @@ window.TQ = window.TQ || {};
         item.ele = this;
         { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
             this.setFlag(Element.IN_STAGE);
-            if ((!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
+            if ((item.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
                 stageContainer.addChild(item);
             } else {
                 var z = stageContainer.getChildIndex(upperEle.displayObj);
