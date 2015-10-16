@@ -28,14 +28,18 @@ angular.module('starter')
         }
 
         function saveFile(fullPath, data, onSuccess, onError) {
-            cachePath = TQ.RM.toCachePath(fullPath);
             // WRITE
             if (!TQ.Base.Utility.isMobileDevice()) {
-                return ImgCache.WriteFile(fullPath, cachePath, data, onSuccess, onError);
+                var cachePath = TQ.RM.toCachePath(fullPath);
+                ImgCache.WriteFile(fullPath, cachePath, data, onSuccess, onError);
+                return cachePath;
             }
 
+            var fullname = TQ.Base.Utility.urlConcat(DeviceService.getRootFolder(), fullPath);
             $cordovaFile.writeFile(DeviceService.getRootFolder(), fullPath, data, true)
                 .then(onSuccess, onError);
+
+            return fullname;
         }
 
         function onSuccess(info) {
