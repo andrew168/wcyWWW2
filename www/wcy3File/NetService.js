@@ -2,10 +2,13 @@
  * Created by admin on 9/11/2015.
  */
 angular.module('starter')
-    .factory("NetService", ['$cordovaFileTransfer', 'DeviceService',
-        function ($cordovaFileTransfer, DeviceService) {
+    .factory("NetService", ['$http', '$cordovaFileTransfer', 'DeviceService',
+        function ($http, $cordovaFileTransfer, DeviceService) {
             var baseUrl = "http://bone.udoido.cn/";
             var urlConcat = TQ.Base.Utility.urlConcat;
+            var config_cloud_name = 'eplan';
+            var config_upload_preset = 'vote1015';
+            var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + config_cloud_name + "/upload";
 
             function get(url, onSuccess, onError) {
                 var urlSource, urlTarget;
@@ -45,6 +48,49 @@ angular.module('starter')
                 console.log("put " + path + " to ===> " + url);
             }
 
+            function uploadData(imageData, onSuccess, onError, onProgress) {
+                var options = {
+                    file: imageData,
+                    upload_preset: config_upload_preset,
+                    tags: 'myphotoalbum',
+                    context: 'photo=' + "No"
+                };
+
+                submitImage(options, onSuccess, onError, onProgress);
+            }
+
+            var imageData = {
+                file: "http://upload.wikimedia.org/wikipedia/en/thumb/3/37/Flip_Logo.png/375px-Flip_Logo.png",
+                // api_key: "861131351913735",
+                // signature: "3195b887badcfc0a09484c76eac19cfdf187f38f",
+                // timestamp: "",
+                // url: "http://res.cloudinary.com/hdnznaxnq/image/upload/sample3.jpg",
+                // public_id: "sample3"
+            };
+
+            var submitImage = function (options, onSuccess, onError, onProgress) {
+                // options.timestamp = data.timestamp;
+                // options.signature = data.signature;
+
+                var url = IMAGE_CLOUD_URL;
+                var result = {};
+                $http.post(url, angular.toJson(options)).
+                    success(function (data) {
+                        console.log("Successfully saved to " + data.url);
+                        result.imageUrl = data.url;
+                        if (onSuccess) {
+                            onSuccess(data);
+                        }
+                    }).
+                    error(function (error) {
+                        alert(angular.toJson(error));
+                        result.imageUrl = null;
+                        if (onError) {
+                            onError(error);
+                        }
+                    });
+            };
+
             function update(path) {
                 var url = urlConcat(baseUrl, path);
                 console.log("update: " + path + " to ==> " + url);
@@ -79,6 +125,7 @@ angular.module('starter')
                 initialize : initialize,
                 get: get,
                 put: put,
+                uploadData: uploadData,
                 update: update,
                 del: del
             }

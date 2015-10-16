@@ -207,7 +207,10 @@ angular.module('starter')
 
         var screenshotCounter = 0;
         var screenshotName;
-        $scope.saveScreenShot = function () {
+        $scope.saveScreenShot = function (_onSuccess) {
+            if (!_onSuccess) {
+                _onSuccess = onSuccess;
+            }
             var data = TQ.ScreenShot.getData();
             data = data.replace(/^data:image\/\w+;base64,/, "");
             data = new Blob([Base64Binary.decodeArrayBuffer(data)], {type: 'image/png', encoding: 'utf-8'});
@@ -216,9 +219,21 @@ angular.module('starter')
             screenshotCounter++;
         };
 
-        function onSuccess() {
+            $scope.uploadScreenShot = function (_onSuccess) {
+                if (!_onSuccess) {
+                    _onSuccess = onSuccess;
+                }
+                var data = TQ.ScreenShot.getData();
+                NetService.uploadData(data, onSuccess, onError);
+            };
+
+        function onSuccess(data) {
             $timeout(function () {
-                $scope.localImage2 = DeviceService.getFullPath(screenshotName);
+                if (data.url) {
+                    $scope.localImage2 = data.url;
+                } else {
+                    $scope.localImage2 = DeviceService.getFullPath(screenshotName);
+                }
             });
         }
 
@@ -260,6 +275,8 @@ angular.module('starter')
         };
 
         $scope.shareFB = function(){
+
+
             $cordovaSocialSharing
                 .shareViaFacebook(message, image, link)
                 .then(function(result) {
@@ -271,3 +288,4 @@ angular.module('starter')
                 });
         }
     }]);
+
