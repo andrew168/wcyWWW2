@@ -1,7 +1,15 @@
 angular.module('starter')
     .factory("GetWcy", ['$http', '$localStorage',
         function($http, $localStorage) {
-        function test(sceneID) {
+        function show(sceneID) {
+            TQ.WCY.isPlayOnly = true;
+            return _load(sceneID);
+        }
+        function edit(sceneID) {
+            TQ.WCY.isPlayOnly = false;
+            return _load(sceneID);
+        }
+        function _load(sceneID) {
             var filename = "p14959.wdm"; // straw berry
             var content = null;
 
@@ -17,33 +25,40 @@ angular.module('starter')
                         console.log(data);
                         content = $localStorage[filename] = JSON.stringify(data);
                         var fileInfo = {name: filename, content: content};
-                        showWcy(fileInfo);
+                        _open(fileInfo);
                     }).error(function (data, status, headers, config) {
                         console.log(data);
                     });
             } else {
                 var fileInfo = {name: filename, content: content};
-                showWcy(fileInfo);
+                _open(fileInfo);
             }
         }
 
-        function showWcy(fileinfo) {
+        function _open(fileinfo) {
             $("#Container").css("width", TQ.Config.validPageWidth.toString() + "px");
             // setStageSize(600, 480);
-            TQ.WCY.isPlayOnly = true;
             //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
             TQ.SceneEditor.showWcy(fileinfo);
             TQ.floatToolbar.initialize();
             TQ.floatToolbar.isVisible();
         }
 
-        function testCreateScene() {
+        function create() {
             TQ.SceneEditor.createScene();
         }
 
+        function save() {
+        }
+
         return {
-            test: test,
-            testCreateScene: testCreateScene,
-            showWcy: showWcy
+            create: create,
+            save: save,
+            edit: edit,  // open for edit
+            show: show,  // open for show only
+
+            // old api will be depreciated
+            test: show,
+            testCreateScene: create
         };
     }]);
