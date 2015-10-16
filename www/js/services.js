@@ -1,12 +1,27 @@
 angular.module('starter')
-    .factory("GetWcy", ['$http', '$localStorage',
-        function($http, $localStorage) {
+    .factory("GetWcy", ['$http', 'FileService',
+        function($http, FileService) {
+            var _AUTO_SAVE_NAME = '_auto_save_name_';
+            var _FILENAME = '_filename_';
+
             function create() {
                 TQ.SceneEditor.createScene();
+                startAutoSave();
             }
 
             function save() {
-
+                TQ.Assert.isObject(currScene);
+                var data = currScene.getData();
+                data = new Blob([data], {type: 'text/plain'});
+                var fileName = TQ.Config.WORKS_CORE_PATH + "nn.wcy";
+                FileService.saveFile(fileName, data,
+                    function onSuccess(e) {
+                        TQ.Log.info(fileName + " saved");
+                        currScene.isSaved = true;
+                    },
+                    function onError(e) {
+                        TQ.Log.error("出错：无法保存文件: " + fileName + error);
+                    });
             }
 
             function edit(sceneID) {
@@ -19,6 +34,25 @@ angular.module('starter')
                 return _load(sceneID);
             }
 
+            function readCache(name) {
+                return localStorage.getItem(name);
+            }
+
+            function writeCache(name, value) {
+                return localStorage.setItem(name, value);
+            }
+
+            function start() {
+                var previousSaved = readCache(_AUTO_SAVE_NAME);
+                if (previousSaved) {
+                    var filename = readCache(_FILENAME);
+                    var fileInfo = {name:filename , content: previousSaved};
+                    _open(fileInfo);
+                } else {
+                    create();
+                }
+            }
+
             // private function:
             function _load(sceneID) {
                 var filename = "p14959.wdm"; // straw berry
@@ -29,12 +63,11 @@ angular.module('starter')
                 }
 
                 var url = 'http://bone.udoido.cn/wcy/wdmOpen?filename=' + filename;
-                content = $localStorage[filename];
                 if (!content) {
                     $http.get(url, {})
                         .success(function (data, status, headers, config) {
                             console.log(data);
-                            content = $localStorage[filename] = JSON.stringify(data);
+                            content = JSON.stringify(data);
                             var fileInfo = {name: filename, content: content};
                             _open(fileInfo);
                         }).error(function (data, status, headers, config) {
@@ -53,9 +86,42 @@ angular.module('starter')
                 TQ.SceneEditor.showWcy(fileinfo);
                 TQ.floatToolbar.initialize();
                 TQ.floatToolbar.isVisible();
+                startAutoSave();
+            }
+
+            function _autoSave() {
+                if (_autoSaveStopped || currScene.isSaved) {
+                    return;
+                }
+
+                TQ.Assert.isObject(currScene);
+                var data = currScene.getData();
+                writeCache(_AUTO_SAVE_NAME, data);
+                writeCache(_FILENAME, currScene.filename);
+            }
+
+            var _autoSaveInitialized = false;
+            var _autoSaveStopped = true;
+            var _autoSavingInterval;
+            function startAutoSave() {
+                if (_autoSaveInitialized) {
+                    _stopAutoSave();
+                }
+                _autoSaveInitialized = true;
+                _autoSaveStopped = false;
+                _autoSavingInterval = setInterval(_autoSave, 2000);
+            }
+
+            function _stopAutoSave() {
+                if (_autoSavingInterval) {
+                    _autoSaveStopped = true;
+                    clearInterval(_autoSavingInterval);
+                    _autoSavingInterval = null;
+                }
             }
 
             return {
+                start: start,  // start a new one, or load previous one (edited or played)
                 create: create,
                 save: save,
                 edit: edit,  // open for edit

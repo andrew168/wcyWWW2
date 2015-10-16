@@ -47,7 +47,7 @@ angular.module('starter')
             document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
             assertTrue("device要先ready", DeviceService.isReady());
             // $scope.testDownload();
-            GetWcy.testCreateScene();
+            GetWcy.start();
             // GetWcy.test($scope.data.sceneID);
             // $timeout(function() { $scope.insertLocalImage();}, 100);
             // $cordovaProgress.hide();
@@ -243,17 +243,7 @@ angular.module('starter')
         }
 
         $scope.saveWorks = function () {
-            var data = currScene.getData();
-            data = new Blob([data], {type: 'text/plain'});
-            var fileName = TQ.Config.WORKS_CORE_PATH + "nn.wcy";
-            FileService.saveFile(fileName, data,
-                function onSuccess(e) {
-                    TQ.Log.info(fileName + " saved");
-                    currScene.isSaved = true;
-                },
-                function onError(e) {
-                    TQ.Log.error("出错：无法保存文件: " + fileName + error);
-            });
+            GetWcy.save();
         };
 
         var message = "人人动画";
