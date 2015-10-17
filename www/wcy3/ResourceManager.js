@@ -274,6 +274,7 @@ this.TQ = this.TQ || {};
 
         var cacheName = toCachePath(resourceID);
 
+        TQ.Assert.isTrue(resourceID.indexOf('imgcache') !== 0);
         // 先从本App的服务器下载， 没有的话， 在从File Server下载
         if (_isLocalFileSystem(resourceID) ||
             TQ.DownloadManager.hasCached(resourceID)) {
@@ -408,9 +409,14 @@ this.TQ = this.TQ || {};
     RM.toRelative = function(str) {
         if (!_isFullPath(str)) {
             str = _removeFirstSeperator(str);
+            str = _removeImgCacheString(str);
             TQ.Assert.isTrue((str[0] !== '\\') && (str[0] !== '/'),
                 "相对路径，开头不能是\\或者/");
             return str;
+        }
+
+        if (_isCachePath(str)) {
+            return _removeCacheRoot(str);
         }
 
         var pathname = urlParser(str).pathname;
@@ -428,6 +434,20 @@ this.TQ = this.TQ || {};
         }
         return path;
     }
+
+    function _removeImgCacheString(pathname) {
+        if (_isFullPath(pathname)) {
+            return pathname;
+        }
+
+        var IMG_CACHE = 'imgcache/';
+        if (pathname.indexOf(IMG_CACHE) === 0) {
+            pathname = pathname.substr(IMG_CACHE.length);
+        }
+
+        return pathname;
+    }
+
     function toCachePath(path) {
         if (_isLocalFileSystem(path)) {
             return path;
@@ -435,6 +455,14 @@ this.TQ = this.TQ || {};
 
         var cachePath = _toStdFolder(RM.toRelative(path));
         return urlConcat(TQ. Config.getResourceHost(), cachePath);
+    }
+
+    function _isCachePath(path) {
+        return (path.indexOf(TQ. Config.getResourceHost()) === 0);
+    }
+
+    function _removeCacheRoot(path) {
+        return (path.substr(TQ. Config.getResourceHost().length));
     }
 
     function _toStdFolder(path) {
@@ -520,7 +548,7 @@ this.TQ = this.TQ || {};
     }
 
     function _toShortPath(path) {
-        if (_isLocalFileSystem(path)) {
+        if (_isLocalFileSystem(path) && (!_isCachePath(path))) {
             return path;
         }
         return RM.toRelative(path);
