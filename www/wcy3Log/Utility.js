@@ -6,8 +6,55 @@ TQ.Base = TQ.Base || {};
 
 (function() {
     function Utility() {
-
     }
+
+    Utility.isPC = function () { // including windows and mac
+        return (!window.device && !window.cordova);
+    };
+
+    function isAndroid() {
+        if (!window.device) {
+            return false;
+        }
+        return (window.device.platform.toLowerCase() === 'android');
+    }
+
+    function isIOS() { // only mobile, pad, no mac
+        if (!window.device) {
+            return false;
+        }
+        return (window.device.platform.toLowerCase() === 'ios')
+    }
+
+    function getVersionNumber() {
+        if (!window.device) {
+            return 0;
+        }
+
+        return versionToNum(window.device.version);
+    }
+
+    function versionToNum(version) {
+        var arr = version.split('.');
+        while (arr.length < 2) {
+            arr.push(0);
+        }
+
+        return (arr[0] * 1000 + arr[1]);
+    }
+
+    Utility.isFullySupported = function() {
+        if (isPC()) {
+            return true;
+        } else if (isAndroid()) {
+            return (getVersionNumber() >= versionToNum('4.1'));
+        } else if (isIOS()) {
+            return true;
+        }
+
+        return false;
+    };
+
 
     Utility.isMobileDevice = function() {
         return (ionic.Platform.isAndroid() ||

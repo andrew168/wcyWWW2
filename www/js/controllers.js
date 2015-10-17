@@ -98,6 +98,9 @@ angular.module('starter')
                 insertText("Hello 世界！", x, y);
             };
 
+            $scope.insertFromCamera = function () {
+                TQ.CameraService.insertFromCamera();
+            };
 
             $scope.insertLocalImage = function() {
                 var path = "p12504.png";

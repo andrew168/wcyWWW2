@@ -158,6 +158,18 @@ var TQ = TQ || {};
         var str = localStorage.getItem('fileList');
         if (!!str) {
             _files = JSON.parse(str);
+            if (_files) {
+                for (var i = 0; i <_files.length; i++) {
+                    var item = _files[i];
+                    if (item.onSuccess) {
+                        item.onSuccess.splice(0);
+                    }
+
+                    if (item.onError) {
+                        item.onError.splice(0);
+                    }
+                }
+            }
         }
     };
 
