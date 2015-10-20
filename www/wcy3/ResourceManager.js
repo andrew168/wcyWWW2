@@ -240,7 +240,7 @@ this.TQ = this.TQ || {};
 
     RM.addItem = function(resourceID, _callback) {
         TQ.Assert.isTrue(RM.hasDefaultResource, "没有初始化RM！");
-        resourceID = _toShortPath(resourceID);
+        resourceID = _toKeyPath(resourceID);
         if (_hasResource(resourceID)) {
             assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
             _addReference(resourceID, _callback);
@@ -357,12 +357,12 @@ this.TQ = this.TQ || {};
     }
 
     RM.hasResourceReady = function(id) {
-        var res = RM.items[_toShortPath(id)];
+        var res = RM.items[_toKeyPath(id)];
         return (!!res  && !!res.res);
     };
 
     RM.getResource = function(id) {
-        id = _toShortPath(id);
+        id = _toKeyPath(id);
         if (!RM.items[id]) {// 没有发现， 需要调入
             TQ.Log.info(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
             // 添加到预加载列表中
@@ -407,6 +407,10 @@ this.TQ = this.TQ || {};
     }
 
     RM.toRelative = function(str) {
+        if (_isLocalFileSystem(str)) {
+            return str;
+        }
+
         if (!_isFullPath(str)) {
             str = _removeFirstSeperator(str);
             str = _removeImgCacheString(str);
@@ -420,13 +424,18 @@ this.TQ = this.TQ || {};
         }
 
         var pathname = urlParser(str).pathname;
+        pathname = handleAndroidLocalhost(pathname);
+        return _removeFirstSeperator(pathname);
+    };
+
+    function handleAndroidLocalhost(pathname) {
         var ANDROID_LOCALHOST = '/android_asset/www';
         if (pathname.indexOf(ANDROID_LOCALHOST) === 0) {
             pathname = pathname.substr(ANDROID_LOCALHOST.length);
         }
 
-        return _removeFirstSeperator(pathname);
-    };
+        return pathname;
+    }
 
     function _removeFirstSeperator(path) {
         if ((path[0] === '\\') || (path[0] === '/')) {
@@ -547,8 +556,11 @@ this.TQ = this.TQ || {};
         return fullpath;
     }
 
-    function _toShortPath(path) {
-        if (_isLocalFileSystem(path) && (!_isCachePath(path))) {
+    function _toKeyPath(path) {
+        // 只有两种keypath：
+        //      本地文件（全路径， 不论是否cache的），
+        //      远程文件
+        if (_isLocalFileSystem(path)) {
             return path;
         }
         return RM.toRelative(path);
