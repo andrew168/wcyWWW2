@@ -1,10 +1,10 @@
 angular.module('starter')
     .controller('DashCtrl', ['$scope', '$state', '$timeout', 'GetWcy', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
-        'FileService', 'NetService', 'DeviceService', 'Setup', function(
+        'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', function(
             $scope, $state, $timeout, GetWcy, $cordovaImagePicker,
             $cordovaProgress, $cordovaSocialSharing,
-            FileService, NetService, DeviceService, Setup) {
+            FileService, NetService, DeviceService, Setup, WxService) {
 
             $scope.localImage1 = null;
             $scope.localImage2 = null;
@@ -46,11 +46,13 @@ angular.module('starter')
             function onDirReady() {
                 document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
                 assertTrue("device要先ready", DeviceService.isReady());
-                // $scope.testDownload();
-                GetWcy.start();
-                // GetWcy.test($scope.data.sceneID);
-                // $timeout(function() { $scope.insertLocalImage();}, 100);
-                // $cordovaProgress.hide();
+                $timeout(function() {
+                    // $scope.testDownload();
+                    GetWcy.start();
+                    _wxInit();
+//                    $scope.insertLocalImage();
+                    // $cordovaProgress.hide();
+                }, 100);
             }
 
             // GetWcy.test();
@@ -269,8 +271,6 @@ angular.module('starter')
             };
 
             $scope.shareFB = function(){
-
-
                 $cordovaSocialSharing
                     .shareViaFacebook(message, image, link)
                     .then(function(result) {
@@ -280,5 +280,14 @@ angular.module('starter')
                         console.log('fb error!');
                         console.log(err);
                     });
+            };
+
+            function _wxInit() {
+                WxService.config();
             }
+
+            $scope.shareWx = function() {
+                WxService.shareMessage();
+            };
+
         }]);
