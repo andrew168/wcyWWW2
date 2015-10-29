@@ -9,6 +9,7 @@ TQ.Base = TQ.Base || {};
     }
 
     Utility.isPC = function () { // including windows and mac
+        TQ.Log.depreciated('Utility.isPC');
         return (!window.device && !window.cordova);
     };
 
@@ -64,8 +65,7 @@ TQ.Base = TQ.Base || {};
     };
 
     Utility.isCordovaDevice = function() {
-        return (typeof cordova !== "undefined");
-        // (typeof cordova.file === "undefined") /// ???  for Chrome simulator
+        return (typeof cordova !== "undefined"); //Chrome simulator返回false
     };
 
     Utility.triggerEvent = function (DomElement, eventName, data) {

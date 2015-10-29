@@ -15,7 +15,7 @@ var TQ = TQ ||{};
     };
 
     var _takeStaticImage = function (sourceType, onSuccess, onError, imageWidth, imageHeight) {
-        if (TQ.Base.Utility.isPC()) {
+        if (!TQ.Base.Utility.isCordovaDevice()) {
             TQ.Log.info("isPC!");
         }
 
@@ -64,7 +64,7 @@ var TQ = TQ ||{};
 
     var _takeVideo = function(sourceType, onSuccess, onError) {
 
-        if (TQ.Base.Utility.isPC()) {
+        if (!TQ.Base.Utility.isCordovaDevice()) {
             alert("isPC!");
         }
 
@@ -107,7 +107,9 @@ var TQ = TQ ||{};
         var imageHeight = 1024;
 
         function onSuccess(imageUrl) {
-            var desc = {src: imageUrl, type:"Bitmap"};
+            var xCenter = screen.width/2;
+            var yCenter = screen.height/2;
+            var desc = {src: imageUrl, type:"Bitmap", x: xCenter, y: yCenter};
             TQ.SceneEditor.addItem(desc);
         }
 
