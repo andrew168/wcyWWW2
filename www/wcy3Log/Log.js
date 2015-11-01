@@ -39,12 +39,16 @@ window.TQ = window.TQ || {};
         console.error("this is depreciated. " + str);
     };
 
+    log.debugInfo = function (str) {
+        console.info(str);
+    };
+
     if (Log.level >= Log.INFO_LEVEL) {
         Log.info = Log.out = function(str) {
             console.log(str);
         };
     } else {
-        Log.info = Log.out = function() {};
+        Log.debugInfo = Log.info = Log.out = function() {};
     }
 
     TQ.Log = Log;
