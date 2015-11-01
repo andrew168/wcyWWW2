@@ -56,16 +56,17 @@ TQ.Base = TQ.Base || {};
         return false;
     };
 
-
-    Utility.isMobileDevice = function() {
-        return (ionic.Platform.isAndroid() ||
-            ionic.Platform.isIOS() ||
-            ionic.Platform.isWebView() ||
-            ionic.Platform.isWindowsPhone());
-    };
-
     Utility.isCordovaDevice = function() {
         return (typeof cordova !== "undefined"); //Chrome simulator返回false
+    };
+
+    Utility.isMobileDevice = function() {
+        // 是真正的 mobile设备， 不是 Chrome的仿真
+        return (Utility.isCordovaDevice() &&
+            (ionic.Platform.isAndroid() ||
+            ionic.Platform.isIOS() ||
+            ionic.Platform.isWebView() ||
+            ionic.Platform.isWindowsPhone()));
     };
 
     Utility.triggerEvent = function (DomElement, eventName, data) {

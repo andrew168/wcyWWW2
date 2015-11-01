@@ -20,7 +20,7 @@ angular.module('starter')
                         currScene.isSaved = true;
                     },
                     function onError(e) {
-                        TQ.Log.error("出错：无法保存文件: " + fileName + error);
+                        TQ.Log.error("出错：无法保存文件: " + fileName + JSON.stringify(e));
                     });
             }
 
@@ -83,7 +83,7 @@ angular.module('starter')
                 $("#Container").css("width", TQ.Config.validPageWidth.toString() + "px");
                 // setStageSize(600, 480);
                 //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
-                TQ.SceneEditor.showWcy(fileinfo);
+                TQ.SceneEditor.openWcy(fileinfo);
                 TQ.floatToolbar.initialize();
                 TQ.floatToolbar.isVisible();
                 startAutoSave();
