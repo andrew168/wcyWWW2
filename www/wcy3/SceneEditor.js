@@ -66,7 +66,12 @@ var stageContainer = null;
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             return false;
         }
-        $('#stop').click();
+        var uiStop = $('#stop');
+        if (uiStop.length === 0) {
+            TQ.FrameCounter.stop();
+        } else {
+            uiStop.click();
+        }
         SceneEditor.setMode(TQBase.LevelState.EDITING);
     };
 
