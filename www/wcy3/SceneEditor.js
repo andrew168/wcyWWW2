@@ -17,6 +17,11 @@ var stageContainer = null;
         init(fileInfo, playOnlyFlag);
     };
 
+    SceneEditor.openWcy = function (fileInfo) {
+        var playOnlyFlag = false;
+        init(fileInfo, playOnlyFlag);
+    };
+
     SceneEditor.createScene = function () {
         var playOnlyFlag = false;
         var fileInfo = {filename: TQ.Config.UNNAMED_SCENE,
