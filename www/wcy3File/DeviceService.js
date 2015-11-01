@@ -15,6 +15,7 @@ angular.module('starter')
         }
 
         function initialize() {
+            TQ.Log.debugInfo("device initialize... ");
             if (TQ.Base.Utility.isMobileDevice() && (typeof cordova !== "undefined")) {
                 onFileSystemReady();
             } else { // for Chrome Desktop
@@ -26,6 +27,7 @@ angular.module('starter')
         }
 
         function onFileSystemReady() {
+            TQ.Log.debugInfo("onFileSystemReady .....");
             if (TQ.Base.Utility.isMobileDevice()) {
                 if (!TQ.Base.Utility.isCordovaDevice()) {// for Chrome simulator
                     rootFolder = ImgCache.getRoot();
@@ -35,6 +37,8 @@ angular.module('starter')
             } else {
                 rootFolder = ImgCache.getRoot();
             }
+            TQ.Log.debugInfo("rootFolder = " + rootFolder);
+
             if (rootFolder !== '') {
                 if ((rootFolder[rootFolder.length - 1] !== '/') && (rootFolder[rootFolder.length - 1] !== '\\')) {
                     rootFolder += "/";
@@ -42,11 +46,12 @@ angular.module('starter')
             }
             TQ.Config.CacheRootFolder = rootFolder;
             _isReady = true;
+            TQ.Log.debugInfo("TQ.Config.CacheRootFolder = " + TQ.Config.CacheRootFolder);
             TQ.Base.Utility.triggerEvent(document, TQ.EVENT.FILE_SYSTEM_READY);
+            TQ.Log.debugInfo("onFileSystemReady leave .....");
         }
 
         // private function:
-
         return {
             initialize: initialize,
             isReady: isReady,

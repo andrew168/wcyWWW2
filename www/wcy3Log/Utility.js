@@ -69,11 +69,15 @@ TQ.Base = TQ.Base || {};
     };
 
     Utility.triggerEvent = function (DomElement, eventName, data) {
+        TQ.Log.debugInfo("triggerEvent: " +eventName);
+        TQ.Log.debugInfo("CustomEvent: " + typeof CustomEvent);
         var evt = new CustomEvent(eventName);
         if (!!data) {
             evt.data = data;
         }
+        TQ.Log.debugInfo("event = :" + JSON.stringify(evt));
         DomElement.dispatchEvent(evt);
+        TQ.Log.debugInfo("triggerEvent: " +eventName);
     };
 
     // 下面的情况下，有误：
