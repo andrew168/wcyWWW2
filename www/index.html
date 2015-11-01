@@ -28,7 +28,6 @@
 
     <!-- build:js libs.js -->
     <script type="text/javascript" src="lib/modernizr-latest.js"></script>
-    <script type="text/javascript" src="lib/mobile-polyfill.js"></script>
     <script type="text/javascript" src="lib/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="lib/jquery.cookie.js"></script>
     <script type="text/javascript" src="lib/jQueryRotateCompressed.2.2.js"></script>
@@ -69,7 +68,8 @@
     <!-- 源文件，只供调试用 -->
 
     <!-- build:js wcy3all.js -->
-    <script src="js/services.js"></script>
+    <script type="text/javascript" src="lib/mobile-polyfill.js"></script>
+    <script type="text/javascript" src="js/services.js"></script>
     <script type="text/javascript" src="wcy3Log/Const.js"></script>
     <script type="text/javascript" src="wcy3Log/chaiAssert.js"></script>
     <script type="text/javascript" src="wcy3Log/Utility.js"></script>
