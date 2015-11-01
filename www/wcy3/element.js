@@ -985,7 +985,7 @@ window.TQ = window.TQ || {};
 
         // 保存为相对路径
         if (!!this.jsonObj.src) {
-            this.jsonObj.src = TQ.RM.toRelative(this.jsonObj.src);
+            this.jsonObj.src = TQ.RM.toRelativeWithoutCache(this.jsonObj.src);
         }
 
         this._removeM();

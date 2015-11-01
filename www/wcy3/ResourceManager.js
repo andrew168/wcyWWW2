@@ -428,6 +428,13 @@ this.TQ = this.TQ || {};
         return _removeFirstSeperator(pathname);
     };
 
+    RM.toRelativeWithoutCache = function(str) {
+        if (_isCachePath(str)) {
+            return _removeCacheRoot(str);
+        }
+        return str;
+    };
+
     function handleAndroidLocalhost(pathname) {
         var ANDROID_LOCALHOST = '/android_asset/www';
         if (pathname.indexOf(ANDROID_LOCALHOST) === 0) {
