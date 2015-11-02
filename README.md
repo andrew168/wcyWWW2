@@ -1,2 +1,8 @@
-# eCard
-ÀñÆ·¿¨£¬ºØ¿¨Éè¼ÆÓë·ÖÏí
+eCard ä¸»è¦çš„APIï¼š
+1ï¼‰ TQ.CommandMgrç³»åˆ—ï¼š
+CommandMgr.undoï¼Œ 
+CommandMgr.redoï¼Œ ã€‚ã€‚
+
+2ï¼‰ TQ.WCY
+WCY.rainStopï¼Œ 
+
