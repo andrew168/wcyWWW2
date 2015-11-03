@@ -14,8 +14,8 @@ window.TQ = window.TQ || {};
     IKCtrl._stage = null;
     IKCtrl._scene = null;
     IKCtrl.EObj = null;  // E点在对象空间的坐标值
-    IKCtrl.initialize = function(stage, scene) {
-        IKCtrl._stage = stage;
+    IKCtrl.initialize = function(aStage, scene) {
+        IKCtrl._stage = aStage;
         IKCtrl._scene = scene;
     };
     IKCtrl.isSimpleRotationMode = false; // 切换IK模式 和 单一物体的简单旋转模式。

@@ -52,7 +52,7 @@ HUD.prototype.getNumOfIcons = function () {
 
     HUD.prototype.addIcons = function () {
         for (var i = 0; i < 5; i++) {
-            stage.addChild(this.icons[i]);
+            stageContainer.addChild(this.icons[i]);
         }
 
         // Add Grant to the stage, and add it as a listener to Ticker to get updates each frame.
@@ -62,8 +62,8 @@ HUD.prototype.getNumOfIcons = function () {
 
     HUD.prototype.removeIcons = function () {
         for (var i = 0; i < 5; i++) {
-            if (stage.contains(this.icons[i])) {
-                stage.removeChild(this.icons[i]);
+            if (stageContainer.contains(this.icons[i])) {
+                stageContainer.removeChild(this.icons[i]);
             }
         }
     };

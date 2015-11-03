@@ -15,8 +15,8 @@ window.TQ = window.TQ || {};
     SkinningCtrl._scene = null;
     SkinningCtrl._hostObj = null;
     SkinningCtrl.isWorking = false;
-    SkinningCtrl.initialize = function(stage, scene) {
-        SkinningCtrl._stage = stage;
+    SkinningCtrl.initialize = function(aStage, scene) {
+        SkinningCtrl._stage = aStage;
         SkinningCtrl._scene = scene;
     };
 
@@ -32,7 +32,7 @@ window.TQ = window.TQ || {};
         TQ.InputCtrl.inSubobjectMode = true;
         TQ.SelectSet.getSelectedElement();
         SkinningCtrl._hostObj = TQ.SelectSet.pop();
-        //ToDo: 能够禁止再次进入吗 $("#skinning").button("disable");    
+        //ToDo: 能够禁止再次进入吗 $("#skinning").button("disable");
         $(document).bind("mousedown", SkinningCtrl.getSkin);
     };
 

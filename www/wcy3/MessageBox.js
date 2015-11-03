@@ -14,13 +14,13 @@ window.TQ = window.TQ || {};
         this.messageField.x = canvas.width / 3;
         this.messageField.y = canvas.height / 3;
         this.messageField.visible = false;
-        stage.addChild(this.messageField);
+        stageContainer.addChild(this.messageField);
         // messageField.text = "开始载入。。。";
     }
 
     MessageBox.prototype.show = function(str) {
-        if (!stage.contains(this.messageField)) {
-            stage.addChild(this.messageField);
+        if (!stageContainer.contains(this.messageField)) {
+            stageContainer.addChild(this.messageField);
         }
 
         this.messageField.text = str;
@@ -31,7 +31,7 @@ window.TQ = window.TQ || {};
 
     MessageBox.prototype.hide = function() {
         this.messageField.visible = false;
-        stage.removeChild(this.messageField);
+        stageContainer.removeChild(this.messageField);
     };
 
     TQ.MessageBox = MessageBox;

@@ -119,6 +119,7 @@ TQ = TQ || {};
     };
 
     p.render = function () {
+        TQ.Assert.isNotNull(stage);
         stage.update();
     };
 

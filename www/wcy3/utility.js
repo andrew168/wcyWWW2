@@ -347,7 +347,7 @@ window.TQ = window.TQ || {};
         assertNotNull(currScene.currentLevel, TQ.Dictionary.FoundNull);
         if ((!currScene) || (!currScene.currentLevel)) return 0;
         currScene.currentLevel.persist();
-        return stage.getNumChildren();
+        return stageContainer.getNumChildren();
     };
 
     /*

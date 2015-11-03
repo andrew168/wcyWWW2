@@ -42,8 +42,8 @@ TQ = TQ || {};
     };
 
     p.moveToTop = function() {
-        var id = stage.getNumChildren();
-        stage.setChildIndex(this.displayObj, id - 1);
+        var id = stageContainer.getNumChildren();
+        stageContainer.setChildIndex(this.displayObj, id - 1);
     };
 
     p.createImage = function() {

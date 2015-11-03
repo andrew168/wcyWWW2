@@ -67,16 +67,16 @@ window.TQ = window.TQ || {};
   };
 
   Trace.prototype.addToStage = function() {
-    stage.addChild(this.shape);
+    stageContainer.addChild(this.shape);
   };
 
 
   Trace.prototype.removeFromStage = function() {
-    stage.removeChild(this.shape);
+    stageContainer.removeChild(this.shape);
   };
 
   Trace.prototype.destory = function() {
-    stage.removeChild(this.shape);
+    stageContainer.removeChild(this.shape);
     this.shape = null;
     this.graphics = null;
   };

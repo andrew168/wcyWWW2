@@ -11,8 +11,8 @@ window.TQ = window.TQ || {};
 
     }
     MoveCtrl._stage = null;
-    MoveCtrl.initialize = function(stage) {
-        MoveCtrl._stage = stage;
+    MoveCtrl.initialize = function(aStage) {
+        MoveCtrl._stage = aStage;
         MoveCtrl.queue = [];
         MoveCtrl._direction = 1;
     };

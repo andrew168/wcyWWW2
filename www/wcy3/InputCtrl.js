@@ -33,8 +33,8 @@ window.TQ = window.TQ || {};
     };
 
     InputCtrl.leaveTraceOn = false; // 不绘制运动轨迹
-    InputCtrl.initialize = function(stage) {
-        InputCtrl._stage = stage;
+    InputCtrl.initialize = function(aStage) {
+        InputCtrl._stage = aStage;
         TQ.InputMap.registerAction(TQ.InputMap.C,  function () {
             currScene.currentLevel.cloneElement(TQ.SelectSet.members);
         });

@@ -144,10 +144,10 @@ function initializeControllers() {
     TQ.TaskMgr.initialize();
     TQ.GarbageCollector.initialize();
     TQ.CommandMgr.initialize();
-    TQ.InputCtrl.initialize(stage);
-    TQ.MoveCtrl.initialize(stage);
-    TQ.SkinningCtrl.initialize(stage, currScene);
-    TQ.IKCtrl.initialize(stage, currScene);
+    TQ.InputCtrl.initialize(stageContainer);
+    TQ.MoveCtrl.initialize(stageContainer);
+    TQ.SkinningCtrl.initialize(stageContainer, currScene);
+    TQ.IKCtrl.initialize(stageContainer, currScene);
     TQ.TrackRecorder.initialize();
     TQ.ActionRecorder.initialize();
     TQ.SelectSet.initialize();
@@ -197,14 +197,6 @@ function getDefaultTitle(givenName) {
     return TQ.Utility.forceExt(shortTitle);
 }
 
-function save() {
-    if (TQ.Utility.getUserID() <= 0) {
-        TQ.MessageBubble.show(TQ.Dictionary.LoginPlease);
-        return;
-    }
-    TQ.InputMap.turnOff();
-    TQ.FileDialog.getFilename(getDefaultTitle(null), _doSave);
-}
 
 function deleteScene() {
     var title = currScene.title;

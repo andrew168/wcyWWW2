@@ -61,11 +61,7 @@ this.TQ = this.TQ || {};
     };
 
     p._initCanvas = function () {
-        if (!canvas) {
-            canvas = document.getElementById('testCanvas');
-            context = canvas.getContext("2d");
-            stage = new createjs.Stage(canvas);
-        }
+        TQ.Assert.isNotNull(canvas);
 
         if (!p.emitter) {
             createjs.Ticker.setFPS(30);
@@ -135,7 +131,6 @@ this.TQ = this.TQ || {};
 }());
 
 
-var stage;          // the createjs stage
 // var fpsLabel;       // label to show the current frames per second
 
 function update() {
