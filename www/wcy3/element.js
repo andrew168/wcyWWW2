@@ -435,7 +435,8 @@ window.TQ = window.TQ || {};
             }
             this.jsonObj.children.push(child.jsonObj);
 
-            child.dirty2 = this.dirty2 = this.dirty = true;  // 迫使系统更新child的位置数据位相对坐标
+            TQ.DirtyFlag.setElement(this);
+            child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
             child.setFlag(Element.TO_RELATIVE_POSE);
 
         } else {
@@ -482,7 +483,8 @@ window.TQ = window.TQ || {};
         // 计算相对坐标， 并且录制。
         for (var i = 0; i < worldData.length; i++) {
             var p = worldData[i];
-            child.dirty2 = this.dirty2 = this.dirty = true;  // 迫使系统更新child的位置数据位相对坐标
+            TQ.DirtyFlag.setElement(this);
+            child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
             child.setFlag(p.type);
             Element.copyWorldData(child.jsonObj, p);
             this.update(p.t);
@@ -514,7 +516,8 @@ window.TQ = window.TQ || {};
         }
 
         //迫使元素回到世界坐标系标示
-        child.dirty2 = this.dirty2 = this.dirty = true;  // 迫使系统更新child的位置数据位相对坐标
+        TQ.DirtyFlag.setElement(this);
+        child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
         child.setFlag(Element.TO_RELATIVE_POSE);
         var t = TQ.FrameCounter.t();
         child.update(t);
@@ -607,6 +610,7 @@ window.TQ = window.TQ || {};
         this.displayObj = new createjs.Bitmap(resource);
         this._afterItemLoaded();
         this.setTRSAVZ();
+        TQ.DirtyFlag.setElement(this);
     };
 
     p.setTRSAVZ = function () {
@@ -708,6 +712,7 @@ window.TQ = window.TQ || {};
             stageContainer.removeChild(this.displayObj);
         }
         this.clearFlag(Element.IN_STAGE);
+        TQ.DirtyFlag.setElement(this);
     };
 
     p.persist = function () {
@@ -1274,7 +1279,7 @@ window.TQ = window.TQ || {};
         this.jsonObj.x = point.x;
         this.jsonObj.y = point.y;
         this.setFlag(Element.TRANSLATING);
-        this.dirty = true;
+        TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
     };
 
@@ -1293,7 +1298,7 @@ window.TQ = window.TQ || {};
     p.rotateTo = function (angle) {
         this.jsonObj.rotation = angle;
         this.setFlag(Element.ROTATING);
-        this.dirty = true;
+        TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
     };
 
@@ -1301,7 +1306,7 @@ window.TQ = window.TQ || {};
         this.jsonObj.sx = scale.sx;
         this.jsonObj.sy = scale.sy;
         this.setFlag(Element.SCALING);
-        this.dirty = true;
+        TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
     };
 

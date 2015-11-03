@@ -66,6 +66,7 @@ this.TQ = this.TQ || {};
         TQ.Assert.isNotNull(canvas);
 
         if (!p.emitter) {
+            TQ.Assert.isTrue(false, "必须去除FPS， 否则竞争");
             createjs.Ticker.setFPS(30);
             createjs.Ticker.addListener(update);
             addFPS();

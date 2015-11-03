@@ -148,6 +148,7 @@ window.TQ = window.TQ || {};
                 }
             }
         }
+        TQ.DirtyFlag.setElement(ele);
     };
 
     TQ.MoveCtrl = MoveCtrl;

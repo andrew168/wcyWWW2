@@ -34,6 +34,7 @@ window.TQ = window.TQ || {};
         this.state = TQBase.LevelState.NOT_INIT;
         this.isWaitingForShow = false;
         this.dirtyZ = false;
+        this.isDirty = true;
     };
 
     p.onSelected = function()
@@ -42,6 +43,7 @@ window.TQ = window.TQ || {};
         //ToDo:@UI  TQ.TimerUI.initialize();
   //      this.state = TQBase.LevelState.NOT_INIT;
 //        this.dataReady = false;
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.itemNum = function() {
@@ -70,6 +72,7 @@ window.TQ = window.TQ || {};
             parent.addJoint(elements[i]);
             parent = elements[i];
         }
+        TQ.DirtyFlag.setLevel(this);
     };
 
     /*
@@ -95,6 +98,7 @@ window.TQ = window.TQ || {};
             ele.clearFlag(TQ.Element.JOINTED);
             ele.clearFlag(TQ.Element.ROOT_JOINT);
         }
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.groupIt = function(elements) {
@@ -109,7 +113,7 @@ window.TQ = window.TQ || {};
         }
 
         this.latestElement = ele;
-        this.dirtyZ = true;
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.unGroup = function(elements) {
@@ -132,6 +136,7 @@ window.TQ = window.TQ || {};
             }
         }
 
+        TQ.DirtyFlag.setLevel(this);
         this.dirtyZ = true;
     };
 
@@ -147,6 +152,7 @@ window.TQ = window.TQ || {};
                 elements[i].parent.addChild(desc);
             }
         }
+        TQ.DirtyFlag.setLevel(this);
         this.dirtyZ = true;
     };
 
@@ -158,12 +164,14 @@ window.TQ = window.TQ || {};
                 break;
             }
         }
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.skinning = function (hostElement, skinElement) {
         assertNotNull(TQ.Dictionary.FoundNull, hostElement);
         assertNotNull(TQ.Dictionary.FoundNull, skinElement);
         hostElement.skinning(skinElement);
+        TQ.DirtyFlag.setLevel(this);
     };
 
     // 在整体模式下, 找到根物体； 在零件模式下， 返回子物体本身
@@ -199,11 +207,13 @@ window.TQ = window.TQ || {};
                 parent.removeChild(ele);
             }
         }
+        TQ.DirtyFlag.setLevel(this);
         return ele;
     };
 
     p.addElement = function  (desc) {
         var newItem = TQ.Element.build(this, desc);
+        TQ.DirtyFlag.setLevel(this);
         return this.addElementDirect(newItem);
     };
 
@@ -212,7 +222,7 @@ window.TQ = window.TQ || {};
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       // 记录新创建的元素到elements
       this.elements.push(ele);
-      this.isDirty = true;
+      TQ.DirtyFlag.setLevel(this);
       // ToDo: 暂时关闭， 还需要多调试
       // if (! (ele.isSound() || ele.isGroupFile() || ele.isButton()) ) {
       //    TQ.SelectSet.add(ele);
@@ -230,11 +240,13 @@ window.TQ = window.TQ || {};
 			ele.removeFromStage();
         	TQ.GarbageCollector.add(ele);
 		}
+        TQ.DirtyFlag.setLevel(this);
         return ele;
     };
 
     p.removeElementAt = function(i) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, (i >=0) && (i < this.elements.length) ); // 数组超界
+        TQ.DirtyFlag.setLevel(this);
         return (this.elements.splice(i, 1))[0];
     };
 
@@ -276,6 +288,7 @@ window.TQ = window.TQ || {};
           TQ.Log.info("onLoaded" + this.name);
           this.show();
         }
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.show = function () {
@@ -288,6 +301,7 @@ window.TQ = window.TQ || {};
             TQ.Log.info("data ready: NO");
             this.isWaitingForShow = true;
         }
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.build = function () {
@@ -318,6 +332,7 @@ window.TQ = window.TQ || {};
                 ele.buildLinks();
             }
         }
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.findByDescID = function(descID) {
@@ -355,12 +370,14 @@ window.TQ = window.TQ || {};
         }
         TQ.StageBuffer.close();
         this.state = TQ.SceneEditor.getMode();
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.addLastItems = function () {
         // add到stage， == 显示，show
         assertDepreciated(TQ.Dictionary.isDepreciated);
         assertTrue(TQ.Dictionary.isDepreciated, false); // "应该只在临时添加的时候, 才调用"
+        TQ.DirtyFlag.setLevel(this);
     };
 
     p.hitTest = function () {
@@ -390,6 +407,7 @@ window.TQ = window.TQ || {};
             this.watchRestart();
             this.state = TQ.SceneEditor.getMode();
             if (this.onLevelRunning != null) this.onLevelRunning();
+            TQ.DirtyFlag.setLevel(this);
         } else {
             assertNotHere(TQ.Dictionary.CurrentState + this.state);
         }
@@ -403,6 +421,10 @@ window.TQ = window.TQ || {};
     p.update = function (t) {
         this.updateState();
         if (!this.dataReady) return;
+
+        if (!(this.dirtyZ || this.isDirty || TQ.FrameCounter.isPlaying())) {
+            return;
+        }
 
         this._t = t; // 临时存储,供保留现场, 不对外
         // 如果是播放状态，
@@ -438,6 +460,7 @@ window.TQ = window.TQ || {};
     };
 
     p._removeAllItems = function () {
+        TQ.DirtyFlag.setLevel(this);
         // remove 从stage， 只是不显示， 数据还在
         for (var i = 0; i < this.elements.length; i++) {
             this.elements[i].removeFromStage();
@@ -446,6 +469,7 @@ window.TQ = window.TQ || {};
 
     p.delete = function () {
         // 如果是EXIT， 则已经被exit()函数处理过了，
+        TQ.DirtyFlag.setLevel(this);
         if ((this.state === TQBase.LevelState.EDITING) ||
             (this.state === TQBase.LevelState.RUNNING)) {
             this._removeAllItems();
@@ -455,6 +479,7 @@ window.TQ = window.TQ || {};
     p.deleteElement  = function (ele) {
         // 删除数据， 真删除
         var found = false;
+        TQ.DirtyFlag.setLevel(this);
         for (var i = 0; i < this.elements.length; i++) {
             if (this.elements[i] == ele) {
                 this.deleteElementAt(i);
@@ -486,6 +511,7 @@ window.TQ = window.TQ || {};
     };
 
     p.play = function() {
+        TQ.DirtyFlag.setLevel(this);
         for (var i = 0; i < this.elements.length; i++) {
             this.elements[i].play();
         }
@@ -524,6 +550,7 @@ window.TQ = window.TQ || {};
     p.sort = function()
     {
         // 按照当前物体在显示列表中的顺序, 重新排列elements的数据.
+        TQ.DirtyFlag.setLevel(this);
         assertNotNull(this.elements);
         this.persist();
         this.elements.sort(TQ.Element.compare);
@@ -533,6 +560,7 @@ window.TQ = window.TQ || {};
     };
 
     p.onItemLoaded = function (item) {
+        TQ.DirtyFlag.setLevel(this);
         this.itemCounter++;
         if (this.isStageReady()) {
             assertTrue("应该只在临时添加的时候, 才调用", !TQ.StageBuffer.isBatchMode);

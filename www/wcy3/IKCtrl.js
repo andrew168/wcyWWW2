@@ -128,6 +128,7 @@ window.TQ = window.TQ || {};
         TQ.CommandMgr.directDo(new TQ.RotateCommand(child, angle));
         child.update(TQ.FrameCounter.t()); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
         TQ.Log.info("image: " + child.jsonObj.src + "angle = " + angle);
+        TQ.DirtyFlag.setElement(child);
     };
 
     IKCtrl.do = function (element, offset, ev, isSimpleRotationMode) {

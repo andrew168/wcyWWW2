@@ -5,6 +5,7 @@ TQ = TQ || {};
         this.levels = [];
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
         this.version = Scene.VER2;
+        this.isDirty = true;
     }
 
     Scene.VER1 = "V1";
@@ -49,12 +50,16 @@ TQ = TQ || {};
         this.isUpdating = true;
         TQ.FrameCounter.update();  // 前进一帧, 只有play和播放的时候, 才移动Frame
         //ToDo:@UI  TQ.TimerUI.update();  // 必须先更新数据, 在更新UI
-        this.update(TQ.FrameCounter.t());
-        if (this.overlay) {
-            this.overlay.update(TQ.FrameCounter.t());
+        if (this.isDirty || TQ.FrameCounter.isPlaying()) {
+            this.update(TQ.FrameCounter.t());
+            if (this.overlay) {
+                this.overlay.update(TQ.FrameCounter.t());
+            }
+
+            this.render();
+            this.isDirty = false;
         }
 
-        this.render();
         if (TQ.GifManager.isOpen) {
             TQ.GifManager.addFrame();
         }
@@ -128,6 +133,7 @@ TQ = TQ || {};
         this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
         this.selectLevel(this.currentLevelId);
         this.currentLevel.show();
+        this.isDirty = true;
     };
 
     p.selectLevel = function (id) {
@@ -139,6 +145,7 @@ TQ = TQ || {};
         this.currentLevel.onLevelRunning = function () {
             thisScene.state = TQBase.LevelState.RUNNING;
             thisScene.handleEvent("sceneReady");
+            this.isDirty = true;
         }
     };
 
@@ -174,6 +181,7 @@ TQ = TQ || {};
     // for both image and animation
     p.addItem = function (desc) {
         this.isSaved = false;
+        this.isDirty = false;
         var level = this.currentLevel;
         if ((desc.toOverlay == undefined) || (desc.toOverlay == null)) {
             if (desc.levelID != undefined) {
@@ -205,6 +213,7 @@ TQ = TQ || {};
 
     p.addElementDirect = function (ele) {
         var level = ele.level;
+        this.isDirty = true;
         level.addElementDirect(ele);
         if (ele.hasFlag(TQ.Element.LOADED)) {
             ele.addItemToStage();
@@ -213,11 +222,13 @@ TQ = TQ || {};
 
     p.addText = function (desc) {
         this.isSaved = false;
+        this.isDirty = true;
         return this.currentLevel.addElement(desc);
     };
 
     p.deleteElement = function (ele) {
         this.isSaved = false;
+        this.isDirty = true;
         assertNotNull(TQ.Dictionary.PleaseSelectOne, ele);
         if (ele != null) {
             this.currentLevel.deleteElement(ele);
@@ -244,6 +255,7 @@ TQ = TQ || {};
     };
 
     p.gotoLevel = function (id) {
+        this.isDirty = true;
         id = (id >= this.levelNum()) ? (this.levelNum() - 1) : id;
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
@@ -275,12 +287,14 @@ TQ = TQ || {};
         if (null == this.overlay) {
             this.overlay = new TQ.Overlay({});
         }
+        this.isDirty = true;
     };
 
     p.reset = function () { // 打开文件，或者创建新文件的时候， 重新设置环境
         //   $('#stop').trigger('click');
         this.setEditor();
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
+        this.isDirty = true;
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
@@ -348,6 +362,7 @@ TQ = TQ || {};
         }
         id = TQ.MathExt.range(id, 0, levelNum);
         this.isSaved = false;
+        this.isDirty = true;
         if (!levelContent) {
             var levelName = levelNum; // levelNum只是一个流水号， 暂时没有其它用途
             levelContent = new TQ.Level({name: levelName});
@@ -366,6 +381,7 @@ TQ = TQ || {};
             return;
         }
         this.isSaved = false;
+        this.isDirty = true;
         var deleted = this.levels.splice(id, 1);
         return deleted;
     };
@@ -405,7 +421,8 @@ TQ = TQ || {};
         this.currentLevel.show();
         this.title = TQ.Config.UNNAMED_SCENE;
         this.state = TQBase.LevelState.NOT_INIT;
-        this.isSaved = true;
+        this.isSaved = true; //ToDo: check it is false???
+        this.isDirty = true;
     };
 
     // JQuery Ajax version
@@ -442,6 +459,7 @@ TQ = TQ || {};
                 }
             }
         }
+        this.isDirty = true;
     };
 
     p._fixedUp = function (objJson) {
@@ -506,13 +524,13 @@ TQ = TQ || {};
                 }
                 console.log("All asset loaded!");
 
+                pt.isDirty = true;
                 if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
                     pt.onsceneload();
                 }
             }
 
         })(this);
-
         displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
     };
 
@@ -528,6 +546,7 @@ TQ = TQ || {};
         } else {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
         }
+        this.isDirty = true;
     };
 
     p.startPreloader = function (pt, i, num) {
@@ -653,7 +672,7 @@ TQ = TQ || {};
                     "dataReady": true,
                     "state": 6,
                     "isWaitingForShow": false,
-                    "isDirty": false,
+                    "isDirty": true,
                     "dirty": true
                 }
             ], "overlay": null, "currentLevelId": 0, "currentLevel": null, "state": 4, "isUpdating": false
