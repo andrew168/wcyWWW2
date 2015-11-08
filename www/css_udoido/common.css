@@ -67,7 +67,7 @@ a:hover { text-decoration:none; cursor:pointer; color:#f60; }
 .new-body-bg { }
 .new-body-bg2 { background:url(/public/images/main-bg2.jpg) center top no-repeat; height:800px; }
 .new-body { width:752px; height:597px; display: block; z-index:99; left:50%; /*FF IE7*/ top:50%; /*FF IE7*/ margin-left:-393px!important; /*FF IE7 ��ֵΪ������һ�� */ margin-top:-280px!important; /*FF IE7 ��ֵΪ����ߵ�һ��*/ margin-top:0px; position:fixed!important; /*FF IE7*/ position:absolute; /*IE6*/ }
-.new-left { width:40px; height:673px; display: block; position: absolute; left:-40px; top:0px; }
+.new-left { width:40px; height:673px; display: block; position: absolute; left:40px; top:50px; }
 .new-left-house { height:315px; margin-bottom:10px; width:auto; padding-right:10px; }
 .new-left-li li { }
 .new-left-li li a { display:block; height:40px; width:40px; margin-bottom:1px; text-align:center; border-bottom-left-radius: 6px; border-top-left-radius: 6px; background:#000; border-top:1px solid #fff; border-right:none; }

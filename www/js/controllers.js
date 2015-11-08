@@ -290,4 +290,8 @@ angular.module('starter')
                 WxService.shareMessage();
             };
 
+            $scope.getLocale = function(id) {
+                return TQ.Lang[id];
+            }
+
         }]);

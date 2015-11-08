@@ -84,6 +84,7 @@ angular.module('starter')
                 // setStageSize(600, 480);
                 //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
                 TQ.SceneEditor.openWcy(fileinfo);
+                initToolbar();
                 TQ.floatToolbar.initialize();
                 TQ.floatToolbar.isVisible();
                 startAutoSave();

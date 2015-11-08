@@ -2,6 +2,10 @@
  * Created by admin on 11/2/2015.
  */
 window.TQ= window.TQ || {};
+
+TQ.Init = {};
+TQ.Init.userCategoryId = 9;
+
 $(function(){
     function WdMenu(){
     }
@@ -104,7 +108,7 @@ function utilToolbarItemClick(toolbarItem,callback){
 
 //<!-- Toolbar 的行为 -->
 function initToolbar() {
-    $("#repeat").buttonset();
+    // $("#repeat").buttonset();
     utilToolbarItemClick("#newScene",  function () {
         TQ.WdMenu.newScene();
     });
@@ -278,7 +282,7 @@ function initToolbar() {
     });
 
     // $("#tbDelete").button("disable");  // 默认禁止
-    $("#open").button("disable");  // 默认禁止
+    // $("#open").button("disable");  // 默认禁止
 
     hideButtons();
     //添加动作按钮
