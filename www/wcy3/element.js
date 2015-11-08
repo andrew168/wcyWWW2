@@ -857,7 +857,7 @@ window.TQ = window.TQ || {};
                             return;
                         }
                         TQ.floatToolbar.show(false);
-                        // TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
+                        TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
                     };
                     evt.onMouseUp = function (evt) {
                         showFloatToolbar(evt);

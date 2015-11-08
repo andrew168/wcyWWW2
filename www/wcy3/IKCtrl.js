@@ -11,11 +11,9 @@ window.TQ = window.TQ || {};
 
     }
     // 任何时候, 都是IK动画, 除非是 Break it 进入子物体编辑模式. 默认就是最好的状态, 精锐尽出
-    IKCtrl._stage = null;
     IKCtrl._scene = null;
     IKCtrl.EObj = null;  // E点在对象空间的坐标值
     IKCtrl.initialize = function(aStage, scene) {
-        IKCtrl._stage = aStage;
         IKCtrl._scene = scene;
     };
     IKCtrl.isSimpleRotationMode = false; // 切换IK模式 和 单一物体的简单旋转模式。
@@ -133,13 +131,7 @@ window.TQ = window.TQ || {};
 
     IKCtrl.do = function (element, offset, ev, isSimpleRotationMode) {
         IKCtrl.isSimpleRotationMode = isSimpleRotationMode;
-        var displayObj  = IKCtrl._stage.selectedItem;
-        if (displayObj == null) {
-            displayInfo2(TQ.Dictionary.PleaseSelectOne);
-            return;
-        }
-
-        var target = IKCtrl._scene.findAtom(displayObj);
+        var target  = TQ.SelectSet.peek();
         if (target == null) {
             displayInfo2(TQ.Dictionary.PleaseSelectOne);
             return;
