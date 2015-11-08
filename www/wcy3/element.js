@@ -965,63 +965,58 @@ window.TQ = window.TQ || {};
         this.children.sort(TQ.Element.compare);
     };
 
-    p._removeM = function () {
-        this.jsonObj.IM = null;
-        this.jsonObj.M = null;
-        if (this.children != null) {
-            for (var i = 0; i < this.children.length; i++) {
-                this.children[i]._removeM();
-            }
-        }
-    };
-
     p.toJSON = function () {
         if (!this.jsonObj) {
             return null;
         }
+        var data = _shadowCopy(this.jsonObj);
         //备注：displayObj 本身里面有Cycle， 无法消除。所以必须让他null。
         // JQuery 调用的toJSON， 只需要这个字段即可， 一定不要在这里调用stringify！
         this.highlight(false);
-        this.jsonObj.displayObj = null;
-        this.jsonObj.animeTrack = this.animeTrack;
-        this.jsonObj.animeCtrl = this.animeCtrl;
-        this.jsonObj.viewCtrl = this.viewCtrl;
-        this.jsonObj.state = (this.state & 0x1F); // 去除高位的动态的flag，不会永久存储到wdm文件中。
+        data.displayObj = null;
+        data.animeTrack = this.animeTrack;
+        data.animeCtrl = this.animeCtrl;
+        data.viewCtrl = this.viewCtrl;
+        data.state = (this.state & 0x1F); // 去除高位的动态的flag，不会永久存储到wdm文件中。
 
         // 保存为相对路径
-        if (!!this.jsonObj.src) {
-            this.jsonObj.src = TQ.RM.toRelativeWithoutCache(this.jsonObj.src);
+        if (!!data.src) {
+            data.src = TQ.RM.toRelativeWithoutCache(data.src);
         }
 
-        this._removeM();
-        this.parent = null;
+        data.IM = null;
+        data.M = null;
+
         if (this.trace) {
-            this.jsonObj.trace = this.trace;
+            data.trace = this.trace;
         }
 
         //输出孩子的资源
         if (this.children != null) {
+            data.children = [];
             for (var i = 0; i < this.children.length; i++) {
-                this.jsonObj.children[i] = this.children[i].toJSON();
+                data.children.push(this.children[i].toJSON());
             }
         }
 
         // 如果要输出多个字段， 可以采用下面的方式： 不带字段名称， 用数组； 用{}可以自定义字段显示名称
         // [this.jsonObj, this.animeTrack];
         // {"jsonObj":this.jsonObj, "animeTrack": this.animeTrack};
-        return this.jsonObj;
+        this.jsonData = data;
+        return data;
     };
 
     p.afterToJSON = function () {
+        var data = this.jsonData;
+        this.jsonData = null;
         //  只是为了输出, 才临时赋值给它, 现在收回.
-        this.jsonObj.animeTrack = null;
-        this.jsonObj.animeCtrl = null;
-        this.jsonObj.viewCtrl = null;
-
-        // rebuild 关系
+        data.animeTrack = null;
+        data.animeCtrl = null;
+        data.viewCtrl = null;
+        data.trace = null;
+        data.children.splice(0);
         if (this.children != null) {
             for (var i = 0; i < this.children.length; i++) {
-                this.children[i].parent = this;
                 this.children[i].afterToJSON();
             }
         }
@@ -1518,6 +1513,10 @@ window.TQ = window.TQ || {};
         assertTrue(TQ.INVALID_LOGIC + "没有可见物体的group", false);
         return z;
     };
+
+    function _shadowCopy(obj) { // without reference
+        return jQuery.extend({}, obj);
+    }
 
     TQ.Element = Element;
 }());
