@@ -1,5 +1,11 @@
 /* Empty. Add your own CSS if you like */
 
+.float-tool_new {
+    position: fixed;
+    top: 30px;
+    left: 50px;
+}
+
 .float-tool {
     position: fixed;
 }
