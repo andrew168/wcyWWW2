@@ -40,7 +40,7 @@ window.TQ = window.TQ || {};
     p.onSelected = function()
     {
         TQ.FrameCounter.initialize(this._t, this.FPS, this);
-        //ToDo:@UI  TQ.TimerUI.initialize();
+        TQ.TimerUI.initialize();
   //      this.state = TQBase.LevelState.NOT_INIT;
 //        this.dataReady = false;
         TQ.DirtyFlag.setLevel(this);

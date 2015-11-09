@@ -9,3 +9,10 @@
 .float-tool {
     position: fixed;
 }
+
+.float-tool-3 {
+    position: fixed;
+    top: 330px;
+    left: 150px;
+}
+

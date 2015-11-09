@@ -187,7 +187,7 @@
             <label>{{params}}{{getTextMsg()}} </label>
             <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
         </div>
-        <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="positive-border"></canvas>
+        <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="showcanvas positive-border"></canvas>
         <div id="textEditBoxDiv" style="display:none">
             <input type="text" value="7332058" id="textEditBox"/>
             <div id="anchor">EndOfPageEndOfPageEnd</div>
@@ -281,6 +281,77 @@
 
             <div id="messageBubbleDiv" style="display:none">
                 <label for="bubble" id="bubble"></label>
+            </div>
+
+        </div>
+        <div class="float-tool-3">
+            <div class="new-right-broadcast">
+                <button title="{{getLocale('wcy_gongneng_button_8')}}" class="bn-new-hover" id="beginning">
+                    <span class="ui-icon ui-icon-seek-start"></span>
+                </button>
+                <button title="{{getLocale('wcy_gongneng_button_9')}}" class="bn-new-hover" id="backward">
+                    <span class="ui-icon ui-icon-seek-prev"></span>
+                </button>
+                <button title="{{getLocale('wcy_gongneng_button_10')}}" class="bn-new-hover bn-new-icon-big" id="stop">
+                    <span class="ui-icon ui-icon-stop"></span>
+                </button>
+                <button title="{{getLocale('wcy_gongneng_button_6')}}" class="bn-new-hover bn-new-icon-big" id="play" style="display:none">
+                    <span class="ui-icon ui-icon-play"></span>
+                </button>
+                <button title="{{getLocale('wcy_gongneng_button_11')}}" class="bn-new-hover" id="rewind" >
+                    <span class="ui-icon ui-icon-refresh"></span>
+                </button>
+                <button title="{{getLocale('wcy_gongneng_button_12')}}" class="bn-new-hover" id="forward">
+                    <span class="ui-icon ui-icon-seek-next"></span>
+                </button>
+                <button title="{{getLocale('wcy_gongneng_button_13')}}" class="bn-new-hover" id="end">
+                    <span class="ui-icon ui-icon-seek-end"></span>
+                </button>
+            </div>
+            <div class="border-ft" id="floatToolbarDiv" style="position:absolute;top:0px;">
+                <div>
+                    <button title="放大" class="hb-float-icon" id="doScaleBig">
+                        <span class="ui-icon ui-icon-plus"></span>
+                    </button>
+                    <button title="缩小" class="hb-float-icon" id="doScaleSmall">
+                        <span class="ui-icon ui-icon-minus"></span>
+                    </button>
+                    <button title="左转" class="hb-float-icon" id="rotateLeft">
+                        <span class="ui-icon ui-icon-left"></span>
+                    </button>
+                    <button title="右转" class="hb-float-icon" id="rotateRight">
+                        <span class="ui-icon ui-icon-right"></span>
+                    </button>
+                </div>
+            </div>
+            <div class="new-right-middle" id="timeAxisDiv">
+                <div class="w45">
+                    <button title="{{getLocale('wcy_gongneng_button_5')}}" class="bn-new-icon" id="recorder" status="0">
+                        <span class="luying"></span>
+                    </button>
+                    <button title="{{getLocale('wcy_gongneng_button_6')}}" class="bn-new-icon" id="playRecord" status="start">
+                        <span class="ui-icon ui-icon-viden"></span>
+                    </button>
+                    <button title="{{getLocale('wcy_gongneng_button_7')}}" class="bn-new-icon" id="stopRecord" style="display:none">
+                        <span class="ui-icon ui-icon-redviden"></span>
+                    </button>
+                </div>
+
+                <div class="middle-sjd" id="action_start_end_div" style="display:none">
+                    <div class="middle-progress-new" id="action_start_btn"></div>
+                    <div class="middle-progress-new" id="action_end_btn"></div>
+                </div>
+                <div class="middle-progress"  id="timer-slider" style="position:relative">
+                </div>
+                <div class="fn-left middle-progress-number">
+                    <input class="ipt-2" type="text" value="" id="timeValueInput">
+                        <span>
+                            <label for="timeValueInput"></label>
+                            /
+                            <label id="maxTimeValue">200</label>
+                            <span style="display:none;"> {{getLocale('wcy_index_zhen')}}</span>
+                        </span>
+                </div>
             </div>
         </div>
     </ion-content>
