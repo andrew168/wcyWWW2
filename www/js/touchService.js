@@ -9,9 +9,13 @@ var TQ = TQ || {};
     var dAngle = 0, dScale = 1;
     var pos = {x:0, y:0};
     var isMultiTouching = false;
+    var enableTouchScreen = true;
 
     function initialize() {
         var canvas = document.getElementById("testCanvas");
+        if (!enableTouchScreen) {
+            return;
+        }
         ionic.EventController.onGesture('touch', onStart, canvas);
         ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
         ionic.EventController.onGesture('release', onRelease, canvas);
