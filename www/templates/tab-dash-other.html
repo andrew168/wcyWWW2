@@ -1,0 +1,85 @@
+<div ng-hide="true">
+    <div class="easyDialog_wrapper" id="easydialog_win" rel="rel1" >
+        <div class="easyDialog_content">
+            <h4 id="easyDialogTitle">
+                <a href="javascript:void(0)" title="{{getLocale('guanbi')}}" class="close_btn">&times;</a>
+                &nbsp;
+            </h4>
+            <div class="tytk" id="content" style=" display:block;">
+                <div class="login1 login4 login5" >
+                    <ul>
+                        <li> <label>{{getLocale('wcy_index_action_yiyoudongzuo')}}：</label></li>
+                        <li class="yydz" id="action_btn_win_list">
+                        </li>
+                    </ul>
+                    <ul class="lab">
+                        <li>
+                            <div class="dzgif" id="show_upload_action_img_file"><img src="" id="action_btn_win_action_img" width="51" height="51" title="{{getLocale('wcy_index_action_genghuantupian')}}"></div>
+                            <input id="action_img_file" type="file" name="action_img_file" style="display:none">
+                        </li>
+                        <li>
+                            <label>{{getLocale('wcy_index_action_name2')}}：</label>
+                            <input type="text" id="action_btn_win_action_name" placeholder={{getLocale('wcy_index_action_name2')}} class="ipt-2 w120" >
+                        </li>
+                        <li>
+                            <label>{{getLocale('wcy_index_action_xunhuancishu')}}：</label>
+                            <select class="ipt-2 w120" id="action_btn_win_style_repeat">
+                                <option value="-1">{{getLocale('wcy_index_action_xunhuancishu_wuxian')}}</option>
+                                <option value="1" action_name="pao">1</option>
+                            </select>
+                        </li>
+                        <li>
+                            <label >&nbsp;&nbsp;&nbsp;{{getLocale('wcy_index_action_shijianzhou')}}：</label>
+                            <input class="ipt-2 w80" placeholder="{{getLocale('wcy_index_action_kaishi')}}"  type="text"  id="action_start_val">
+                            {{getLocale('wcy_index_action_zhi')}}
+                            <input class="ipt-2 w80"  placeholder="{{getLocale('wcy_index_action_jieshu')}}" type="text"  id="action_end_val">
+                        </li>
+                        <li style="display:none">
+                        </li>
+                    </ul>
+                </div>
+                <div class="login1 login4" >
+                    <label id="msg" style="color:red"></label>
+                    <ul>
+                        <li><input class="W_btn_b " type="button" value="{{getLocale('queren')}}" id="yesbtn" action_id=""></li>
+                    </ul>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="new-house-nextp" id="page_nav" ng-hide="true">
+        <ul>
+            <li><span class="w38" href="javascript:void(0)" id="page_html" ></span></li>
+            <li class="nextp-bg"><a href="javascript:void(0)" class="nextp up-valid" id="page_up"></a></li>
+            <li class="nextp-bg"><a href="javascript:void(0)" class="nextp next-valid" id="page_next"></a></li>
+            <li style="display:none"><input class="ipt-2" type="text" value="" id="search_keywords"></li>
+            <li style="display:none"><input type="button" value="" class="search-btn-go" id="search_btn" tag_type="1"></li>
+        </ul>
+    </div>
+
+    <div class="new-top-right">
+        <div class="new-tu-minmax">
+        </div>
+        <div class="changj">
+        </div>
+    </div>
+
+    <div class="cat-hd">
+        <a class="tuding" id="tuding_btn" href="javascript:void(0)"></a>
+        <span class=" fn-left rightjt"></span>
+    </div>
+    <div class="new-top-button functionButton TBD" ng-hide="true">
+        <button id="newScene">
+            <span class="ui-icon-xinjian">{{getLocale('wcy_gongneng_button_14')}}</span>
+        </button>
+        <button  id="save" style="display:none">
+            <span class="ui-icon-baocun">____{{getLocale('wcy_gongneng_button_15')}}</span>
+        </button>
+        <button class="ui-icon-fabu"></button>
+        <button id="publish">
+            <span class="ui-icon-fx">___{{getLocale('wcy_gongneng_button_16')}}</span>
+        </button>
+    </div>
+</div>
