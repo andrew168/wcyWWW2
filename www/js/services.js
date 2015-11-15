@@ -42,8 +42,11 @@ angular.module('starter')
                 return localStorage.setItem(name, value);
             }
 
-            function start() {
-                var previousSaved = readCache(_AUTO_SAVE_NAME);
+            function start(wcyCacheName) {
+                if (!wcyCacheName) {
+                    wcyCacheName = _AUTO_SAVE_NAME;
+                }
+                var previousSaved = readCache(wcyCacheName);
                 if (previousSaved) {
                     var filename = readCache(_FILENAME);
                     var fileInfo = {name:filename , content: previousSaved};

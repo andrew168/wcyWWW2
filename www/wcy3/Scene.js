@@ -578,6 +578,11 @@ TQ = TQ || {};
         this.isSaved = true;
     };
 
+    p.saveToLocalStorage = function(filename) {
+        localStorage.setItem(filename, this.getData());
+        this.isSaved = true;
+    };
+
     p.afterToJSON = function () {
         for (var i = 0; i < this.levelNum(); i++) {
             this.levels[i].afterToJSON();
