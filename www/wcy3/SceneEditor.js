@@ -22,9 +22,11 @@ var stageContainer = null;
         init(fileInfo, playOnlyFlag);
     };
 
-    SceneEditor.createScene = function () {
+    SceneEditor.createScene = function (option) {
         var playOnlyFlag = false;
-        var fileInfo = {filename: TQ.Config.UNNAMED_SCENE,
+        var fileInfo = {
+            filename: option.filename || TQ.Config.UNNAMED_SCENE,
+            screenshotName : option.screenshotName,
             content:TQ.Scene.getEmptySceneJSON()};
         init(fileInfo, playOnlyFlag);
     };

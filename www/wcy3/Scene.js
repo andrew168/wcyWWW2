@@ -270,6 +270,7 @@ TQ = TQ || {};
     p.open = function (fileInfo) {
         this.reset();
         this.filename = fileInfo.filename;
+        this.screenshotName = fileInfo.screenshotName;
         this.title = null;
         // 删除 旧的Levels。
         this.onsceneload = this.showLevel;
@@ -471,6 +472,9 @@ TQ = TQ || {};
             objJson.currentLevelId = 0;
         }
 
+        // copy non-object properties
+        TQUtility.shadowCopyWithoutObject(this, objJson);
+
         if (!objJson.version) {
             if (this.filename == TQ.Config.UNNAMED_SCENE) {
                 this.version = Scene.VER2;  // 创建一个新版作品
@@ -492,9 +496,10 @@ TQ = TQ || {};
         }
 
         // create levels
+        var desc = null;
         var num = objJson.levels.length;
         for (var i = 0; i < num; i++) {
-            var desc = objJson.levels[i];
+            desc = objJson.levels[i];
             if (desc.name == null) {
                 desc.name = i.toString();
             }
@@ -503,7 +508,7 @@ TQ = TQ || {};
 
         if (num === 0) { // 纠错
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
-            var desc = null;
+            desc = null;
             this.levels[0] = new TQ.Level(desc);
         }
 
@@ -590,11 +595,11 @@ TQ = TQ || {};
     };
 
     p.toJSON = function () {
-        var scene2 = {};
-        scene2.levels = this.levels;
-        scene2.version = this.version;
-        scene2.currentLevelId = this.currentLevelId;
-        scene2.title = this.title;
+        var scene2 = TQ.Base.Utility.shadowCopy(this);
+        delete(scene2.isUpdating);
+        delete(scene2.isSaved);
+        delete(scene2.onsceneload);
+        delete(scene2.state);
         return scene2;
     };
 

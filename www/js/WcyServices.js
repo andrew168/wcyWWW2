@@ -6,8 +6,8 @@ angular.module('starter')
             var readCache = TQ.Base.Utility.readCache;
             var writeCache = TQ.Base.Utility.writeCache;
 
-            function create() {
-                TQ.SceneEditor.createScene();
+            function create(option) {
+                TQ.SceneEditor.createScene(option);
                 startAutoSave();
             }
 
