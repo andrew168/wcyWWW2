@@ -217,11 +217,8 @@ angular.module('starter')
                 if (!_onSuccess) {
                     _onSuccess = onSuccess;
                 }
-                var data = TQ.ScreenShot.getData();
-                data = data.replace(/^data:image\/\w+;base64,/, "");
-                data = new Blob([Base64Binary.decodeArrayBuffer(data)], {type: 'image/png', encoding: 'utf-8'});
                 screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + "nn" + screenshotCounter + ".png";
-                FileService.saveFile(screenshotName, data, onSuccess, onError);
+                FileService.saveImage64(screenshotName, TQ.ScreenShot.getData(), onSuccess, onError);
                 screenshotCounter++;
             };
 
