@@ -130,6 +130,6 @@ angular.module('starter')
 
                 // old api will be depreciated
                 test: show,
-                testCreateScene: create
+                createScene: create
             };
         }]);

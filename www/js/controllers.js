@@ -203,7 +203,7 @@ angular.module('starter')
             };
 
             $scope.testShowWCY = function() {
-                // GetWcy.testCreateScene();
+                // GetWcy.createScene();
                 GetWcy.test($scope.data.sceneID);
             };
 
