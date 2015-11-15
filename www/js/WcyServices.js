@@ -3,6 +3,8 @@ angular.module('starter')
         function($http, FileService) {
             var _AUTO_SAVE_NAME = '_auto_save_name_';
             var _FILENAME = '_filename_';
+            var readCache = TQ.Base.Utility.readCache;
+            var writeCache = TQ.Base.Utility.writeCache;
 
             function create() {
                 TQ.SceneEditor.createScene();
@@ -32,14 +34,6 @@ angular.module('starter')
             function show(sceneID) {
                 TQ.WCY.isPlayOnly = true;
                 return _load(sceneID);
-            }
-
-            function readCache(name) {
-                return localStorage.getItem(name);
-            }
-
-            function writeCache(name, value) {
-                return localStorage.setItem(name, value);
             }
 
             function start(wcyCacheName) {
