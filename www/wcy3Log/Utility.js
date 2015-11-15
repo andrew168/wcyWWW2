@@ -3,10 +3,15 @@
  */
 var TQ = TQ || {};
 TQ.Base = TQ.Base || {};
+var TQUtility; //
 
 (function() {
     function Utility() {
     }
+
+    Utility.isObject = function(obj) {
+        return (typeof obj === 'object');
+    };
 
     Utility.isPC = function () { // including windows and mac
         TQ.Log.depreciated('Utility.isPC');
@@ -70,15 +75,13 @@ TQ.Base = TQ.Base || {};
     };
 
     Utility.triggerEvent = function (DomElement, eventName, data) {
-        TQ.Log.debugInfo("triggerEvent: " +eventName);
-        TQ.Log.debugInfo("CustomEvent: " + typeof CustomEvent);
+        TQ.Log.debugInfo("triggerEvent,  CustomEvent: " + typeof CustomEvent + ", " + eventName);
         var evt = new CustomEvent(eventName);
         if (!!data) {
             evt.data = data;
         }
         TQ.Log.debugInfo("event = :" + JSON.stringify(evt));
         DomElement.dispatchEvent(evt);
-        TQ.Log.debugInfo("triggerEvent: " +eventName);
     };
 
     // 下面的情况下，有误：
@@ -122,9 +125,6 @@ TQ.Base = TQ.Base || {};
         return protocol+"//" + host + parser.pathname;
     };
 
-    function _isSeperator(ch) {
-      return ((ch === '/') || ( ch === '\\'));
-    }
     Utility.urlConcat = function(path1, path2) {
         var middle = '/';
         if ( _isSeperator(path1[path1.length - 1])) {
@@ -137,6 +137,47 @@ TQ.Base = TQ.Base || {};
         return path1 + middle + path2;
     };
 
-    TQ.Base.Utility = Utility;
-}());
+    // for cache: localStorage, local File, etc,
+    // Don't directly use localStorage in other place
+    Utility.readCache = function(item, defaultValue) {
+        var result = localStorage.getItem(item);
+        return (result ? result : defaultValue);
+    };
 
+    Utility.removeCache = function(item) {
+        localStorage.removeItem(item);
+    };
+
+    Utility.readCacheWithParse = function(item, defaultValue) {
+        var result = localStorage.getItem(item);
+        return (result ? JSON.parse(result): defaultValue);
+    };
+
+    Utility.writeCache = function(name, value) {
+        if (typeof(value) !== 'string') {
+            value = JSON.stringify(value);
+        }
+        return localStorage.setItem(name, value);
+    };
+
+    Utility.shadowCopy = function (obj) { // without reference
+        return jQuery.extend({}, obj);
+    };
+
+    Utility.shadowCopyWithoutObject = function(target, source) {
+        for (var prop in source) {
+            if (!source.hasOwnProperty(prop) || Utility.isObject(source[prop])) {
+                continue;
+            }
+            target[prop] = source[prop];
+        }
+    };
+
+    // private
+    function _isSeperator(ch) {
+        return ((ch === '/') || ( ch === '\\'));
+    }
+
+    TQ.Base.Utility = Utility;
+    TQUtility = Utility;
+}());

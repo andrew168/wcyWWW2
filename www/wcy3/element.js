@@ -969,7 +969,7 @@ window.TQ = window.TQ || {};
         if (!this.jsonObj) {
             return null;
         }
-        var data = _shadowCopy(this.jsonObj);
+        var data = TQ.Base.Utility.shadowCopy(this.jsonObj);
         //备注：displayObj 本身里面有Cycle， 无法消除。所以必须让他null。
         // JQuery 调用的toJSON， 只需要这个字段即可， 一定不要在这里调用stringify！
         this.highlight(false);
@@ -1513,10 +1513,6 @@ window.TQ = window.TQ || {};
         assertTrue(TQ.INVALID_LOGIC + "没有可见物体的group", false);
         return z;
     };
-
-    function _shadowCopy(obj) { // without reference
-        return jQuery.extend({}, obj);
-    }
 
     TQ.Element = Element;
 }());
