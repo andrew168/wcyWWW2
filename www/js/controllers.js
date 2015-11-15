@@ -1,8 +1,8 @@
 angular.module('starter')
-    .controller('DashCtrl', ['$scope', '$state', '$timeout', 'GetWcy', '$cordovaImagePicker',
+    .controller('DashCtrl', ['$scope', '$state', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', function(
-            $scope, $state, $timeout, GetWcy, $cordovaImagePicker,
+            $scope, $state, $timeout, WCY, $cordovaImagePicker,
             $cordovaProgress, $cordovaSocialSharing,
             FileService, NetService, DeviceService, Setup, WxService) {
 
@@ -48,14 +48,14 @@ angular.module('starter')
                 assertTrue("device要先ready", DeviceService.isReady());
                 $timeout(function() {
                     // $scope.testDownload();
-                    GetWcy.start();
+                    WCY.start();
                     _wxInit();
 //                    $scope.insertLocalImage();
                     // $cordovaProgress.hide();
                 }, 100);
             }
 
-            // GetWcy.test();
+            // WCY.test();
             $scope.params = 0;
             $scope.getTextMsg = function () {
                 var msg = (( !currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name)) ?
@@ -203,8 +203,8 @@ angular.module('starter')
             };
 
             $scope.testShowWCY = function() {
-                // GetWcy.createScene();
-                GetWcy.test($scope.data.sceneID);
+                // WCY.createScene();
+                WCY.test($scope.data.sceneID);
             };
 
             $scope.testClearAll = function() {
@@ -246,7 +246,7 @@ angular.module('starter')
             }
 
             $scope.saveWorks = function () {
-                GetWcy.save();
+                WCY.save();
             };
 
             var message = "人人动画";
