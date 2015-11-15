@@ -1,5 +1,5 @@
 angular.module('starter')
-    .factory("GetWcy", ['$http', 'FileService',
+    .factory("WCY", ['$http', 'FileService',
         function($http, FileService) {
             var _AUTO_SAVE_NAME = '_auto_save_name_';
             var _FILENAME = '_filename_';
