@@ -9,6 +9,8 @@ angular.module('starter')
             var config_cloud_name = 'eplan';
             var config_upload_preset = 'vote1015';
             var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + config_cloud_name + "/upload";
+            var C_SIGNATURE_URL = 'http://api.udoido.com/getCSignature';  // Cloudary signature;
+
 
             function get(url, onSuccess, onError) {
                 var urlSource, urlTarget;
@@ -49,9 +51,10 @@ angular.module('starter')
             }
 
             function uploadData(imageData, onSuccess, onError, onProgress) {
+                var filename = getImageName();
                 var options = {
                     file: imageData,
-                    upload_preset: config_upload_preset,
+                    filename:filename,
                     tags: 'myphotoalbum',
                     context: 'photo=' + "No"
                 };
@@ -68,13 +71,36 @@ angular.module('starter')
                 // public_id: "sample3"
             };
 
-            var submitImage = function (options, onSuccess, onError, onProgress) {
+            var counter = 100;
+            function getImageName() {
+                return "p" + (counter++) + ".png";
+            }
+
+            var getSignature = function (option) {
+                return $http.get(C_SIGNATURE_URL + "?filename=" + option.filename);
+            };
+
+            var submitImage = function (option, onSuccess, onError, onProgress) {
                 // options.timestamp = data.timestamp;
                 // options.signature = data.signature;
+                getSignature(option).
+                    success(function (data) {
+                        // option.timestamp = data.timestamp;
+                        // option.signature = data.signature;
+                        console.log(JSON.stringify(data));
+                        data.file = option.file;
+                        data.api_key ="374258662676811";
+                        doSubmitImage(data, onSuccess, onError, onProgress);
+                    }).
+                    error(function (event) {
+                        alert("error" + angular.toJson(event));
+                    });
+            };
 
+            function doSubmitImage(option, onSuccess, onError, onProgress) {
                 var url = IMAGE_CLOUD_URL;
                 var result = {};
-                $http.post(url, angular.toJson(options)).
+                $http.post(url, angular.toJson(option)).
                     success(function (data) {
                         console.log("Successfully saved to " + data.url);
                         result.imageUrl = data.url;
@@ -89,7 +115,7 @@ angular.module('starter')
                             onError(error);
                         }
                     });
-            };
+            }
 
             function update(path) {
                 var url = urlConcat(baseUrl, path);
