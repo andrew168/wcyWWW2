@@ -7,6 +7,9 @@ angular.module('starter')
             var writeCache = TQ.Base.Utility.writeCache;
 
             function create(option) {
+                if (!option) {
+                    option = {};
+                }
                 TQ.SceneEditor.createScene(option);
                 startAutoSave();
             }

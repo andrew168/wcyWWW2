@@ -23,6 +23,7 @@ var stageContainer = null;
     };
 
     SceneEditor.createScene = function (option) {
+        TQ.Assert.isNotNull(option);
         var playOnlyFlag = false;
         var fileInfo = {
             filename: option.filename || TQ.Config.UNNAMED_SCENE,
