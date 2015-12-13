@@ -1,3 +1,7 @@
+/*
+WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
+   提供WCY的自动保存服务
+*/
 angular.module('starter')
     .factory("WCY", ['$http', 'FileService',
         function($http, FileService) {
@@ -108,6 +112,11 @@ angular.module('starter')
                 if (_autoSaveInitialized) {
                     _stopAutoSave();
                 }
+
+                if (!TQ.Config.AutoSaveEnabled) {
+                    return;
+                }
+
                 _autoSaveInitialized = true;
                 _autoSaveStopped = false;
                 _autoSavingInterval = setInterval(_autoSave, 2000);
