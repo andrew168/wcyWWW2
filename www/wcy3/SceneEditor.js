@@ -155,7 +155,7 @@ function initializeControllers() {
     TQ.ActionRecorder.initialize();
     TQ.SelectSet.initialize();
     TQ.TouchMgr.initialize();  //ToDo: will remove
-    TQ.TouchService.initialize();
+    TQ.TouchManager.initialize();
 }
 
 function openScene(fileInfo) {

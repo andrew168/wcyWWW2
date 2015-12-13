@@ -1,7 +1,7 @@
 var TQ = TQ || {};
 (function() {
 
-    function TouchService() {
+    function TouchManager() {
     }
     var isDithering = false;
     var ele = null;
@@ -205,6 +205,6 @@ var TQ = TQ || {};
         console.log(pageX + ", " + pageY) ;
     }
 
-    TouchService.initialize = initialize;
-    TQ.TouchService = TouchService;
+    TouchManager.initialize = initialize;
+    TQ.TouchManager = TouchManager;
 })();
