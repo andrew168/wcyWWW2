@@ -1,6 +1,16 @@
 /*
 WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
+   统一管理在下面三个地方的存取：app本地文件， LocalStorage和远程服务器
    提供WCY的自动保存服务
+   LocalStorage由于空间有限， 只提供当前文件的自动存储。
+   app本地文件， 可以离线存储多个作品
+   暂时，只有当在线的情况下， 点击“保存”，才上传到远程服务器。
+   (ToDO：会自动找到未上传的WCY， 从app本地文件读取其数据和截屏， 上传到服务器)
+
+   => start
+   => createScene
+   => edit
+   => show
 */
 angular.module('starter')
     .factory("WCY", ['$http', 'FileService',
