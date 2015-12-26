@@ -1,0 +1,1 @@
+call backOffice\release.bat
