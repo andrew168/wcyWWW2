@@ -1,6 +1,6 @@
-rem call release-backOffice-only.bat
-rem call release-wcylib-only.bat
-set src=E:\projects\WcyCore\
+call release-backOffice-only.bat
+call release-wcylib-only.bat
+set src=E\projects\WcyCore\
 set dst=E:\projects\cardforvote\
 
 copy %src%\start.bat   %dst%
