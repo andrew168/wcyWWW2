@@ -1,3 +1,3 @@
-cd E:\projects\eCardCore
+cd E:\projects\WcyCore
 e:
 gulp
