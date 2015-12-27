@@ -77,7 +77,10 @@ router.get('/', function(req, res, next) {
 
 /// private function:
 function responseSign(req, res, next) {
-    var url = req.headers.origin;
+    var url = req.headers.origin || req.headers.referer || req.headers.host;
+    if (url.indexOf("http") <0) {
+        url = "http://" + url;
+    }
     // var url = req.headers.referer;
     var data = {
         jsapi_ticket: jsapiTicket,
@@ -144,8 +147,8 @@ function getToken(cb) {
         res.on('data', function(data) {
             console.log(data);
             var jsonData = JSON.parse(data);
-            accessToken = jsonData['access_token'];
-            accessTokenExpireTime = (jsonData['access_token'] - 10) * 1000 + (new Date()).getTime();
+            accessToken = jsonData.access_token;
+            accessTokenExpireTime = (jsonData.expires_in - 10) * 1000 + (new Date()).getTime();
             console.log("get new token.");
             cb();
         });
