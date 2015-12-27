@@ -57,6 +57,7 @@ window.TQ = window.TQ || {};
     Config.AutoPlay = false; // true;  // release 版 为 false, 第一次打开网址, 就自动播放;
     Config.AutoSaveEnabled = true;  // release 版 为 true, 自动保存WCY作品到LocalStorage
 
+    // 本地缓存的参数
     //private, must use get/set
     var _resourceHost = "";
     Config.getResourceHost = function() {
@@ -66,6 +67,16 @@ window.TQ = window.TQ || {};
     Config.setResourceHost = function(host) {
         _resourceHost = host;
     };
+
+    // 入口服务器配置
+    Config.ENT_HOST = "http://show.udoido.cn";
+
+    // 素材服务器的参数
+    Config.MAT_HOST = "http://bone.udoido.cn";   // for old material(pXXXX), before transfer
+    // Config.MAT_HOST = "http://www.udoido.cn"; // for new material (mXXXX),
+
+    // 作品服务器
+    Config.OPUS_HOST = "http://opus.udoido.cn";
 
     window.TQ.Config = Config;
 }());

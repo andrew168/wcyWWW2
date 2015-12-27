@@ -56,8 +56,8 @@ this.TQ = this.TQ || {};
         // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
         RM.BASE_PATH = TQ.DownloadManager.FAST_SERVER;
         // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
-        RM.FULLPATH_NOPIC = _toFullPathLs(urlConcat("/" + TQ.Config.IMAGES_CORE_PATH, RM.NOPIC));
-        RM.FULLPATH_NOSOUND = _toFullPathLs(urlConcat("/" + TQ.Config.SOUNDS_PATH, RM.NOSOUND));
+        RM.FULLPATH_NOPIC = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.IMAGES_CORE_PATH, RM.NOPIC));
+        RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.SOUNDS_PATH, RM.NOSOUND));
         createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3
             TQ.Base.Utility.isMobileDevice()) {
@@ -547,9 +547,9 @@ this.TQ = this.TQ || {};
             return name;
         }
 
-        var fullpath = TQ.Base.Utility.urlComposer(name);
+        var fullpath = TQ.Base.Utility.urlConcat(TQ.Config.MAT_HOST, name);
         if (RM.BASE_PATH != "") {
-            TQ.Assert.isTrue(RM.BASE_PATH === urlParser(fullpath).hostname, "hostname 不一致");
+            TQ.Assert.isTrue(urlParser(RM.BASE_PATH).hostname === urlParser(fullpath).hostname, "hostname 不一致");
         }
         return fullpath;
     }
@@ -582,7 +582,7 @@ this.TQ = this.TQ || {};
     }
 
     RM.toCachePath = toCachePath;
-    RM.toFullPathLs = _toFullPathLs;
+    RM.toFullPathFs = _toFullPath;
     TQ.RM = RM;
     TQ.ResourceManager = RM;
 }());

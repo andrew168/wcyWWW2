@@ -1,5 +1,16 @@
 /**
  * Created by admin on 9/26/2015.
+ * DownloadManager： 下载素材到本地（app的本地文件，或PC的仿真cache），接口：
+ *  * initialize
+ *  * clearCache
+ *
+ *  * downloadBulk
+ *  * downloadAux
+ *  * onCompleted
+ *  * onError
+ *
+ *  * hasCompleted
+ *  * hasCached
  */
 var TQ = TQ || {};
 
@@ -9,7 +20,7 @@ var TQ = TQ || {};
     var p = DownloadManager;
     var urlConcat = TQ.Base.Utility.urlConcat;
 
-    p.FAST_SERVER = "http://bone.udoido.cn";
+    p.FAST_SERVER = TQ.Config.MAT_HOST; // "http://bone.udoido.cn";
     // p.FAST_SERVER = "http://www.udoido.com";
     // p.FAST_SERVER = "http://localhost:63342/eCard/www";
     // p.FAST_SERVER = "";
@@ -34,9 +45,9 @@ var TQ = TQ || {};
     p.downloadAux = function(resourceID, cacheName, onSuccess, onError) {
         TQ.Assert.isFalse(p.hasCached(resourceID), "已经cached！！");
         var onLsError = makeLsOnError();
-        // server Ls
-        var fullPathLs = TQ.RM.toFullPathLs(resourceID);
-        _download(fullPathLs, cacheName, resourceID, onSuccess, onLsError);
+        // full path in File Server
+        var fullPathFs = TQ.RM.toFullPathFs(resourceID);
+        _download(fullPathFs, cacheName, resourceID, onSuccess, onLsError);
 
         // server Fs
         function makeLsOnError() {
