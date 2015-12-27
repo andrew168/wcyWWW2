@@ -44,7 +44,14 @@ var TQ = TQ || {};
 
     p.downloadAux = function(resourceID, cacheName, onSuccess, onError) {
         TQ.Assert.isFalse(p.hasCached(resourceID), "已经cached！！");
-        var onLsError = makeLsOnError();
+        var onLsError;
+
+        if (TQ.Config.TwoMatServerEnabled) {
+            onLsError = makeLsOnError();
+        } else {
+            onLsError = onError;
+        }
+
         // full path in File Server
         var fullPathFs = TQ.RM.toFullPathFs(resourceID);
         _download(fullPathFs, cacheName, resourceID, onSuccess, onLsError);

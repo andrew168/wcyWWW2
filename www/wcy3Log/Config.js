@@ -68,6 +68,12 @@ window.TQ = window.TQ || {};
         _resourceHost = host;
     };
 
+    //允许使用本地文件系统缓存网络文件， 以便于离线使用， 和 降低网络流量， 提高系统速度。
+    Config.LocalCacheEnabled = false;
+
+    //允许2个素材server， （即：UDOIDO.cn和 本网站）
+    Config.TwoMatServerEnabled = false;
+
     // 入口服务器配置
     Config.ENT_HOST = "http://show.udoido.cn";
 

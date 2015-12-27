@@ -258,32 +258,38 @@ this.TQ = this.TQ || {};
         // RM.preloader.loadFile("assets/image0.jpg");
         RM.dataReady = false;
 
-        function makeOnSuccess1(name, ID) {
+        function makeOnSuccess1(fullPath, ID) {
             return function() {
-                addToPreloader(name, ID);
+                addToPreloader(fullPath, ID);
             }
         }
 
-        function addToPreloader(cacheName, resourceID){
+        function addToPreloader(fullPath, resourceID){
             RM.preloader.loadManifest([{
-                src : cacheName,
+                src : fullPath,
                 id : resourceID,   // Sound资源的id是字符串, 不是数字
                 data : 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
             }]);
         }
 
-        var cacheName = toCachePath(resourceID);
-
         TQ.Assert.isTrue(resourceID.indexOf('imgcache') !== 0);
         // 先从本App的服务器下载， 没有的话， 在从File Server下载
-        if (_isLocalFileSystem(resourceID) ||
-            TQ.DownloadManager.hasCached(resourceID)) {
-            addToPreloader(cacheName, resourceID);
+        if (_isLocalFileSystem(resourceID)) {
+            addToPreloader(resourceID, resourceID);
         } else {
-            var onSuccess = makeOnSuccess1(cacheName, resourceID);
-            TQ.DownloadManager.downloadAux(resourceID, cacheName, onSuccess, function() {
-                TQ.Log.error(resourceID +"资源加载出错！");
-            });
+            if (TQ.Config.LocalCacheEnabled) {
+                var cacheName = toCachePath(resourceID);
+                if (TQ.DownloadManager.hasCached(resourceID)) {
+                    addToPreloader(cacheName, resourceID);
+                } else {
+                    var onSuccess = makeOnSuccess1(cacheName, resourceID);
+                    TQ.DownloadManager.downloadAux(resourceID, cacheName, onSuccess, function () {
+                        TQ.Log.error(resourceID + "资源加载出错！");
+                    });
+                }
+            } else {
+                addToPreloader(_toFullPath(resourceID), resourceID);
+            }
         }
 
         RM.isEmpty = false;
