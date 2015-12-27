@@ -3,10 +3,6 @@ angular.module('starter').
         // ToDo: CORS 无法读取server设置的cookie，
         //     ==> Auth用户统计， 必须和网页一个host
         //  ==> sever的cookie可以是 http读取only， 不让客户端读写它，以便于追踪
-        // var AUTH_HOST = 'http://auth.udoido.cn';
-        var AUTH_HOST = 'http://test.udoido.cn';
-        var WORK_HOST = 'http://show.udoido.cn';
-        var CREATE_HOST = 'http://test.udoido.cn';
         var user = dataService.user;
         var myLogError = myLogInfo = function (str) {
             alert("A__" + str);
@@ -54,9 +50,9 @@ angular.module('starter').
 
         var title = "春节快乐！",
             desc = "阖家欢乐，财源滚滚！",
-            link = WORK_HOST,
-        // imgUrl = WORK_HOST + "/mcImages/p10324.png",
-            imgUrl = WORK_HOST + "/mcImages/animation1.gif",
+            link = TQ.ENT_HOST,
+            imgUrl = TQ.Config.MAT_HOST + "/mcImages/p10324.png",
+            // imgUrl = TQ.Config.MAT_HOST + "/mcImages/animation1.gif",
             imgData = imgUrl;
 
 
@@ -64,8 +60,7 @@ angular.module('starter').
         var getSignature = function () {
             $http({
                 method: 'GET',
-                // url: AUTH_HOST + wechat/sign?url=' + url,
-                url: AUTH_HOST + '/getWSignature?filename=myfile',
+                url:TQ.Config.AUTH_HOST + '/getWSignature?filename=myfile',
                 data: {}
             }).success(doConfig);
         };

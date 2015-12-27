@@ -78,5 +78,8 @@ window.TQ = window.TQ || {};
     // 作品服务器
     Config.OPUS_HOST = "http://opus.udoido.cn";
 
+    // 签名认证服务器
+    Config.AUTH_HOST = "http://auth.udoido.cn";
+
     window.TQ.Config = Config;
 }());
