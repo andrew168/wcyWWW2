@@ -1,5 +1,11 @@
 /**
  * Created by admin on 9/9/2015.
+ * FileService：提供本地文件存取IO，用于WCY文件及其screenshot的保存
+ *     （对App是本地文件， 对PC用cache文件系统来模拟。
+ * 主要接口是
+ *    .saveImage64
+ *    .saveFile
+ * 在WCYService中使用
  */
 angular.module('starter')
     .factory("FileService", ['$cordovaFileTransfer',

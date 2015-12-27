@@ -1,3 +1,10 @@
+/*
+ ImagePreloader: 采用HTML的src参数来load， 应该支持各种文件，包括：
+    * 远程服务器文件，
+    * app本地文件，
+    * cache中的文件，等等
+ 在RM中用于调用image。
+ */
     (function() {
 
         function ImagePreloader(item) {

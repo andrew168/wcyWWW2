@@ -1,6 +1,8 @@
 /*jslint browser:true*/
 /*global console,LocalFileSystem,device,FileTransfer,define,module*/
-
+/*
+ * ChromeFile: 在PC上用Chrome文件系统模拟app的本地文件， 实现离线的编辑和存储
+ */
 
 var ImgCache = {
         version: '1.0rc1',
