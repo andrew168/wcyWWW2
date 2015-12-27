@@ -133,7 +133,7 @@ angular.module('starter').
       wx.onMenuShareAppMessage({
         desc: desc,
         title: title,
-        link: link, // + "?user=" + user.ID + "&timesCalled=" + user.timesShared,
+        link: link + "?user=" + user.ID + "&timesCalled=" + user.timesShared,
         imgUrl: imgUrl,
         trigger:_onTrigger,
         success: _onSuccess,

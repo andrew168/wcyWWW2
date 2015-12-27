@@ -59,7 +59,6 @@ router.get('/', function(req, res, next) {
     timesCalled = getCookie(req, 'timesCalled', 0);
     if (isNewUser()) {
         userID ++;
-
     }
     console.log('userID = ' + userID);
     console.log('timesCalled = ' + timesCalled);
@@ -77,7 +76,7 @@ router.get('/', function(req, res, next) {
 
 /// private function:
 function responseSign(req, res, next) {
-    var url = req.headers.origin || req.headers.referer || req.headers.host;
+    var url = req.headers.referer || req.headers.origin || req.headers.host;
     if (url.indexOf("http") <0) {
         url = "http://" + url;
     }
