@@ -50,7 +50,7 @@ angular.module('starter').
 
         var title = "春节快乐！",
             desc = "阖家欢乐，财源滚滚！",
-            link = TQ.ENT_HOST,
+            link = TQ.Config.ENT_HOST,
             imgUrl = TQ.Config.MAT_HOST + "/mcImages/p10324.png",
             // imgUrl = TQ.Config.MAT_HOST + "/mcImages/animation1.gif",
             imgData = imgUrl;
