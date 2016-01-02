@@ -418,6 +418,7 @@ this.TQ = this.TQ || {};
         }
 
         if (!_isFullPath(str)) {
+            str = _removeMatFolder(str);
             str = _removeFirstSeperator(str);
             str = _removeImgCacheString(str);
             TQ.Assert.isTrue((str[0] !== '\\') && (str[0] !== '/'),
@@ -430,6 +431,7 @@ this.TQ = this.TQ || {};
         }
 
         var pathname = urlParser(str).pathname;
+        pathname = _removeMatFolder(pathname);
         pathname = handleAndroidLocalhost(pathname);
         return _removeFirstSeperator(pathname);
     };
@@ -438,13 +440,24 @@ this.TQ = this.TQ || {};
         if (_isCachePath(str)) {
             return _removeCacheRoot(str);
         }
-        return str;
+        return RM.toRelative(str);
     };
 
     function handleAndroidLocalhost(pathname) {
         var ANDROID_LOCALHOST = '/android_asset/www';
         if (pathname.indexOf(ANDROID_LOCALHOST) === 0) {
             pathname = pathname.substr(ANDROID_LOCALHOST.length);
+        }
+
+        return pathname;
+    }
+
+    function _removeMatFolder(pathname) {
+        if ((TQ.Config.IMAGE_FOLDER != '') && (pathname.indexOf(TQ.Config.IMAGE_FOLDER) >=0)) {
+            pathname = pathname.substr(TQ.Config.IMAGE_FOLDER.length);
+        }
+        if ((TQ.Config.SOUND_FOLDER != '') && (pathname.indexOf(TQ.Config.SOUND_FOLDER) >=0)) {
+            pathname = pathname.substr(TQ.Config.SOUND_FOLDER.length);
         }
 
         return pathname;
@@ -553,7 +566,8 @@ this.TQ = this.TQ || {};
             return name;
         }
 
-        var fullpath = TQ.Base.Utility.urlConcat(TQ.Config.MAT_HOST, name);
+        var folder = (TQ.Utility.isImage(name)) ? TQ.Config.IMAGE_FOLDER : TQ.Config.SOUND_FOLDER;
+        var fullpath = urlConcat(urlConcat(TQ.Config.MAT_HOST, folder), name);
         if (RM.BASE_PATH != "") {
             TQ.Assert.isTrue(urlParser(RM.BASE_PATH).hostname === urlParser(fullpath).hostname, "hostname 不一致");
         }

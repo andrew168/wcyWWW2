@@ -36,14 +36,13 @@ window.TQ = window.TQ || {};
     Config.DEMO_SCENE_NAME="SystemDemo1";
     Config.UNNAMED_SCENE = "wcy01";
     Config.THUMBS_CORE_PATH = "mcThumbs/";
-    Config.IMAGES_CORE_PATH = "mcImages/";
+
     Config.SCENES_CORE_PATH = "mcAssets/";
     Config.WORKS_CORE_PATH = "mcWorks/";
     Config.VIDEOS_CORE_PATH = "mcVideos/";
     Config.TEMP_CORE_PATH = "temp/";
     Config.LOG_CORE_PATH = "log/";
     Config.SCREENSHOT_CORE_PATH = "screenshots/";
-    Config.SOUNDS_PATH ="mcSounds/"; //从 localhost的根目录开始, 不是 E盘的根目录
     Config.SOUND_PLUGIN_PATH = "../soundjs/";
     Config.DefaultUserID = 10000;
 
@@ -86,6 +85,31 @@ window.TQ = window.TQ || {};
 
     // 签名认证服务器
     Config.AUTH_HOST = "http://auth.udoido.cn";
+
+    Config.cloundaryEnabled = true;
+
+    // 素材服务器的参数
+    var matServerCloundary = {
+        MAT_HOST: 'http://res.cloudinary.com', // /eplan/image/upload';
+        IMAGES_CORE_PATH: 'eplan/image/upload/',
+        IMAGE_FOLDER: 'eplan/image/upload/',
+        SOUNDS_PATH: 'eplan/video/upload/', //从 localhost的根目录开始, 不是 E盘的根目录
+        SOUND_FOLDER: 'eplan/video/upload/'
+    };
+
+    var matServerBone = {
+        MAT_HOST: "http://bone.udoido.cn",   // for old material(pXXXX), before transfer
+        IMAGES_CORE_PATH: "mcImages/",
+        IMAGE_FOLDER: "mcImages/",
+        SOUNDS_PATH: "mcSounds/", //从 localhost的根目录开始, 不是 E盘的根目录
+        SOUND_FOLDER: "mcSounds/"
+    };
+
+    if (Config.cloundaryEnabled) {
+        $.extend(Config, matServerCloundary);
+    } else {
+        $.extend(Config, matServerBone);
+    }
 
     window.TQ.Config = Config;
 }());
