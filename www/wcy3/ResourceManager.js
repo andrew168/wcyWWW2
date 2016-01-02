@@ -453,11 +453,11 @@ this.TQ = this.TQ || {};
     }
 
     function _removeMatFolder(pathname) {
-        if ((TQ.Config.IMAGE_FOLDER != '') && (pathname.indexOf(TQ.Config.IMAGE_FOLDER) >=0)) {
-            pathname = pathname.substr(TQ.Config.IMAGE_FOLDER.length);
+        if ((TQ.Config.IMAGES_CORE_PATH != '') && (pathname.indexOf(TQ.Config.IMAGES_CORE_PATH) >=0)) {
+            pathname = pathname.substr(TQ.Config.IMAGES_CORE_PATH.length);
         }
-        if ((TQ.Config.SOUND_FOLDER != '') && (pathname.indexOf(TQ.Config.SOUND_FOLDER) >=0)) {
-            pathname = pathname.substr(TQ.Config.SOUND_FOLDER.length);
+        if ((TQ.Config.SOUNDS_PATH != '') && (pathname.indexOf(TQ.Config.SOUNDS_PATH) >=0)) {
+            pathname = pathname.substr(TQ.Config.SOUNDS_PATH.length);
         }
 
         return pathname;
@@ -566,7 +566,7 @@ this.TQ = this.TQ || {};
             return name;
         }
 
-        var folder = (TQ.Utility.isImage(name)) ? TQ.Config.IMAGE_FOLDER : TQ.Config.SOUND_FOLDER;
+        var folder = (TQ.Utility.isImage(name)) ? TQ.Config.IMAGES_CORE_PATH : TQ.Config.SOUNDS_PATH;
         var fullpath = urlConcat(urlConcat(TQ.Config.MAT_HOST, folder), name);
         if (RM.BASE_PATH != "") {
             TQ.Assert.isTrue(urlParser(RM.BASE_PATH).hostname === urlParser(fullpath).hostname, "hostname 不一致");

@@ -92,17 +92,13 @@ window.TQ = window.TQ || {};
     var matServerCloundary = {
         MAT_HOST: 'http://res.cloudinary.com', // /eplan/image/upload';
         IMAGES_CORE_PATH: 'eplan/image/upload/',
-        IMAGE_FOLDER: 'eplan/image/upload/',
-        SOUNDS_PATH: 'eplan/video/upload/', //从 localhost的根目录开始, 不是 E盘的根目录
-        SOUND_FOLDER: 'eplan/video/upload/'
+        SOUNDS_PATH: 'eplan/video/upload/' //从 localhost的根目录开始, 不是 E盘的根目录
     };
 
     var matServerBone = {
         MAT_HOST: "http://bone.udoido.cn",   // for old material(pXXXX), before transfer
         IMAGES_CORE_PATH: "mcImages/",
-        IMAGE_FOLDER: "mcImages/",
-        SOUNDS_PATH: "mcSounds/", //从 localhost的根目录开始, 不是 E盘的根目录
-        SOUND_FOLDER: "mcSounds/"
+        SOUNDS_PATH: "mcSounds/" //从 localhost的根目录开始, 不是 E盘的根目录
     };
 
     if (Config.cloundaryEnabled) {
