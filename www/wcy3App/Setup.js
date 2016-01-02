@@ -26,8 +26,12 @@ angular.module('starter')
 
             TQ.Config.setResourceHost(DeviceService.getRootFolder());
 
-            dirCounter = 0;
-            FileService.createDir(dirs[dirCounter], onSuccess, onError);
+            if (TQ.Config.LocalCacheEnabled) {
+                dirCounter = 0;
+                FileService.createDir(dirs[dirCounter], onSuccess, onError);
+            } else {
+                _ready();
+            }
         }
 
         function onSuccess(success) {
@@ -36,26 +40,29 @@ angular.module('starter')
         }
 
         function onError(error) {
-            dirCounter++;
-            TQ.Log.error("在创建目录的时候出错！！！");
+            TQ.Log.error("在创建目录的时候出错！！！: " + dirs[dirCounter]);
             if (!!error) {
                 TQ.Log.error(JSON.stringify(error));
             }
 
+            dirCounter++;
             onDirCreated();
         }
 
         //对于Android，处理速度慢，不能使用for循环连续发出命令，必须使用这种 回调方式
         function onDirCreated() {
             if (dirCounter >= dirs.length) {
-                TQ.Base.Utility.triggerEvent(document, TQ.EVENT.DIR_READY);
+                _ready();
             } else {
                 FileService.createDir(dirs[dirCounter], onSuccess, onError);
             }
         }
-
         function initialize() {
             createFolders();
+        }
+
+        function _ready() {
+            TQ.Base.Utility.triggerEvent(document, TQ.EVENT.DIR_READY);
         }
 
         return {
