@@ -70,7 +70,7 @@ this.TQ = this.TQ || {};
         }
 
 		// Instantiate a queue.
-        RM.preloader = new createjs.LoadQueue(true); // , "assets/");
+        RM.preloader = new createjs.LoadQueue(true, null, true); // , "assets/");
         RM.preloader.installPlugin(createjs.FlashAudioPlugin);
         RM.preloader.installPlugin(ImagePreloader);
         RM.preloader.installPlugin(createjs.Sound);

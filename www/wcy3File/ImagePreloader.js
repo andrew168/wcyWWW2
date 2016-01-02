@@ -34,7 +34,9 @@
 
         p.load = function() {
             this.img = new Image();
-            this.img.crossOrigin="anonymous";
+            if (this._item.crossOrigin) {  // _item is defined by preloaderJS
+                this.img.crossOrigin="anonymous";
+            }
             this.img.onload = createjs.proxy(this.handleLoad, this);
             this.img.src = this._item.src;
         };
