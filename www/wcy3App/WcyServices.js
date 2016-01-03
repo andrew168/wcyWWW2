@@ -21,7 +21,7 @@ angular.module('starter')
             var readCache = TQ.Base.Utility.readCache;
             var writeCache = TQ.Base.Utility.writeCache;
 
-            var wcyId = 12345678;
+            var wcyId = 0; // 12345678;
             var SHARE_STRING = user.ID + '_' + wcyId + '_123_1234567890';
 
             function create(option) {
@@ -61,12 +61,10 @@ angular.module('starter')
             }
 
             function _upload() {
+                TQ.Assert.isDefined(wcyId);
                 var jsonWcyData = currScene.getData();
                 var myToken = '1234567890';
-                var params = '';
-                if (!!wcyId) {
-                    params = '?wcyId=' + wcyId;
-                }
+                var params = '?wcyId=' + wcyId;
                 $http({
                     method: 'POST',
                     // url: AUTH_HOST + wechat/sign?url=' + url,

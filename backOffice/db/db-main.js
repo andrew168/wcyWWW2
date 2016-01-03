@@ -37,7 +37,8 @@ function init(app) {
     var dbList = [
         {name:'Show', schema:'../db/show/show-schema.js', ctrl:'../db/show/show-controller.js'},
         {name:'Share', schema:'../db/share/share-schema.js', ctrl:'../db/share/share-controller.js'},
-        {name:'User', schema:'../db/user/user-schema.js', ctrl:'../db/user/user-controller.js'}
+        {name:'User', schema:'../db/user/user-schema.js', ctrl:'../db/user/user-controller.js'},
+        {name:'Opus', schema:'../db/opus/opus-schema.js', ctrl:'../db/opus/opus-controller.js'}
     ];
 
     var i;

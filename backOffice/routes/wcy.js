@@ -7,6 +7,7 @@ var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动
 var fs = require('fs');
 
 var userController = require('../db/user/user-controller');
+var opusController = require('../db/opus/opus-controller');
 
 var userID,
     timesCalled,
@@ -30,25 +31,43 @@ router.post('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
+    //ToDo:@@@
+    var userID = 0;
+    var templateID = 0;
 
-    var wcyId = req.param('wcyId');
     var wcyData = JSON.stringify(req.body);
-    if (!wcyId || !wcyData) {
-        console.log("wrong format: must have wcyId, and wcyData!");
+    if (!wcyData) {
+        var msg = "wrong format: must have wcyId, and wcyData!";
+        console.log(msg);
+        res.send(msg);
     } else {
-        fs.writeFile(wcyId2Filename(wcyId), wcyData, function(err) {
-            var msg;
-            if(err) {
-                msg = err;
-                return console.log(err);
-            } else {
-                msg = "The file was saved!";
+        var wcyId = req.param('wcyId');
+        if (isNewWcy(wcyId)) {
+            // 入库， 并获取新wcyID，
+            function onSavedToDB(_wcyId) {
+                wcyId = _wcyId;
+                _saveWcy(wcyId, wcyData, res);
             }
-            console.log(msg);
-            res.send(msg);
-        });
+            opusController.add(userID, templateID, onSavedToDB, null);
+        } else {
+            _saveWcy(wcyId, wcyData, res);
+        }
     }
 });
+
+function _saveWcy(wcyId, wcyData, res) {
+    fs.writeFile(wcyId2Filename(wcyId), wcyData, function(err) {
+        var msg;
+        if(err) {
+            msg = err;
+            return console.log(err);
+        } else {
+            msg = "The file was saved!";
+        }
+        console.log(msg);
+        res.send(msg);
+    });
+}
 
 function checkUserID(req) {
     userID = getCookie(req, 'userID', defaultUserID);
@@ -107,6 +126,11 @@ function sendBackWcy(res, wcyId) {
         console.log(data);
         res.json(data);
     });
+}
+
+// private functions:
+function isNewWcy(wcyId) {
+    return (wcyId === '0');
 }
 
 module.exports = router;
