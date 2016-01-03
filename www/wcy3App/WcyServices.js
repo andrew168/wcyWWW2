@@ -20,6 +20,9 @@ angular.module('starter')
             var readCache = TQ.Base.Utility.readCache;
             var writeCache = TQ.Base.Utility.writeCache;
 
+            var wcyId = 12345678;
+            var SHARE_STRING = '100_' + wcyId + '_123_1234567890';
+
             function create(option) {
                 if (!option) {
                     option = {};
@@ -41,6 +44,37 @@ angular.module('starter')
                     function onError(e) {
                         TQ.Log.error("出错：无法保存文件: " + fileName + JSON.stringify(e));
                     });
+            }
+            function getWcy() {
+                var url = TQ.Config.OPUS_HOST + '/wcy/' + SHARE_STRING;
+                $http.get(url)
+                    .then(_onSuccess, _onFail);
+            }
+
+            function uploadWcy() {
+                var jsonWcyData = currScene.getData();
+                var myToken = '1234567890';
+                var params = '';
+                if (!!wcyId) {
+                    params = '?wcyId=' + wcyId;
+                }
+                $http({
+                    method: 'POST',
+                    // url: AUTH_HOST + wechat/sign?url=' + url,
+                    url: TQ.Config.OPUS_HOST + '/wcy' + params ,
+                    headers: {
+                        // 'Token' : myToken, // 必须同源，才能用Token
+                        'Content-Type': 'application/json'
+                    },
+                    data: jsonWcyData
+                }).then(_onSuccess, _onFail);
+            }
+
+            //ToDo： 在Server 实现
+            function recordPlaytime() {
+                var url = "/playtime/" + SHARE_STRING;
+                $http.get(url)
+                    .then(_onSuccess, _onFail);
             }
 
             function edit(sceneID) {
@@ -140,12 +174,23 @@ angular.module('starter')
                 }
             }
 
+            function _onSuccess(data) {
+                console.log(data);
+            }
+
+            function _onFail(data) {
+                console.log(data);
+            }
+
             return {
                 start: start,  // start a new one, or load previous one (edited or played)
                 create: create,
                 save: save,
+                uploadWcy: uploadWcy,
                 edit: edit,  // open for edit
+                getWcy: getWcy,
                 show: show,  // open for show only
+                recordPlaytime: recordPlaytime,
 
                 // old api will be depreciated
                 test: show,
