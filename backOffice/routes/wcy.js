@@ -65,7 +65,7 @@ function _saveWcy(wcyId, wcyData, res) {
             msg = "The file was saved!";
         }
         console.log(msg);
-        res.send(msg);
+        res.send({wcyId: wcyId, msg:msg});
     });
 }
 

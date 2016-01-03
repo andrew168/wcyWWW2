@@ -210,6 +210,10 @@ angular.module('starter')
                 WCY.test($scope.data.sceneID);
             };
 
+            $scope.createWcy = function () {
+                WCY.create();
+            };
+
             $scope.testClearAll = function () {
                 TQ.SceneEditor.emptyScene();
             };

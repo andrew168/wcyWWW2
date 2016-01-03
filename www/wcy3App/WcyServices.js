@@ -28,6 +28,7 @@ angular.module('starter')
                 if (!option) {
                     option = {};
                 }
+                wcyId = 0;
                 TQ.SceneEditor.createScene(option);
                 startAutoSave();
             }
@@ -181,7 +182,11 @@ angular.module('starter')
                 }
             }
 
-            function _onSuccess(data) {
+            function _onSuccess(res) {
+                var data = res.data;
+                if (!!data && !!data.wcyId) {
+                    wcyId = data.wcyId;
+                }
                 console.log(data);
             }
 
