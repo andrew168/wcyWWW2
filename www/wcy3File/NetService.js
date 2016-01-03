@@ -1,5 +1,8 @@
 /**
  * Created by admin on 9/11/2015.
+ * NetService： 上传素材（image或者mp3）到clound服务器，主要接口是
+ *     * uploadData
+ * 在controller中直接使用
  */
 angular.module('starter')
     .factory("NetService", ['$http', '$cordovaFileTransfer', 'DeviceService',
@@ -9,8 +12,7 @@ angular.module('starter')
             var config_cloud_name = 'eplan';
             var config_upload_preset = 'vote1015';
             var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + config_cloud_name + "/upload";
-            var C_SIGNATURE_URL = 'http://api.udoido.com/getCSignature';  // Cloudary signature;
-
+            var C_SIGNATURE_URL =TQ.Config.AUTH_HOST +'/getCSignature';  // Cloudary signature;
 
             function get(url, onSuccess, onError) {
                 var urlSource, urlTarget;
@@ -51,7 +53,7 @@ angular.module('starter')
             }
 
             function uploadData(imageData, onSuccess, onError, onProgress) {
-                var filename = getImageName();
+                var filename = getImageNameWithoutExt();
                 var options = {
                     file: imageData,
                     filename:filename,
@@ -72,8 +74,9 @@ angular.module('starter')
             };
 
             var counter = 100;
-            function getImageName() {
-                return "p" + (counter++) + ".png";
+            function getImageNameWithoutExt() {
+                // the Cloundary will automatically add extion '.png'
+                return "p" + (counter++);
             }
 
             var getSignature = function (option) {
