@@ -4,7 +4,7 @@
 var dataService = {};
 
 dataService.user = {
-  ID:0,
+  ID:12345,
   timesShared:0
 };
 

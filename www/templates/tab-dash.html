@@ -177,15 +177,15 @@
             <button class="button button-positive" ng-click="deleteElement()">删除</button>
             <button class="button button-positive" my-click="uploadScreenShot()">截屏上传</button>
             <button class="button button-positive" my-click="saveScreenShot($event)">截屏保存</button>
-            <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage</button>
-            <button class="button button-positive" ng-click="uploadWcy()">保存作品到服务器</button>
+            <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
             <button class="button button-positive" ng-click="getWcy()">从服务器获取作品</button>
             <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
             <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
             <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
             <button class="button button-positive" ng-click="share()">分享1</button>
-            <button class="button button-positive" ng-click="shareFB()">分享FB</button>
-            <button class="button button-positive" ng-click="shareWx()">分享Wx</button>
+            <button class="button button-positive" ng-click="shareFB()">分享到FB</button>
+            <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
+            <button class="button button-positive" ng-click="wxInit()">wx初始化</button>
             <label>{{params}}{{getTextMsg()}} </label>
             <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
         </div>

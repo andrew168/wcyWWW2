@@ -1,11 +1,10 @@
 angular.module('starter')
     .controller('DashCtrl', ['$scope', '$state', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
-        'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', function(
+        'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', '$http', function(
             $scope, $state, $timeout, WCY, $cordovaImagePicker,
             $cordovaProgress, $cordovaSocialSharing,
-            FileService, NetService, DeviceService, Setup, WxService) {
-
+            FileService, NetService, DeviceService, Setup, WxService, $http) {
             $scope.localImage1 = null;
             $scope.localImage2 = null;
             $scope.data = {};
@@ -19,18 +18,19 @@ angular.module('starter')
             }
 
             $(document).ready(function () {
-                $('#clear_cache').click(function(e) {
+                $('#clear_cache').click(function (e) {
                     e.preventDefault();
                     ImgCache.clearCache();
                     TQ.DownloadManager.clearCache();
                 });
-                $('#cache_folder').click(function(e) {
+                $('#cache_folder').click(function (e) {
                     e.preventDefault();
                     window.open(DeviceService.getRootFolder());
                 });
             });
 
             function _init() {
+                _wxInit();
                 document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
                 DeviceService.initialize();
             }
@@ -46,7 +46,7 @@ angular.module('starter')
             function onDirReady() {
                 document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
                 assertTrue("device要先ready", DeviceService.isReady());
-                $timeout(function() {
+                $timeout(function () {
                     // $scope.testDownload();
                     WCY.start();
                     _wxInit();
@@ -59,27 +59,27 @@ angular.module('starter')
             $scope.params = 0;
             $scope.getTextMsg = function () {
                 var msg = (( !currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name)) ?
-                    "": currScene.currentLevel.name;
+                    "" : currScene.currentLevel.name;
 
                 return msg + ": " + TQ.FrameCounter.t();
             };
 
-            $scope.testCreateLevel = function() {
+            $scope.testCreateLevel = function () {
                 var id = currScene.currentLevelId;
                 currScene.addLevel(id);
                 currScene.gotoLevel(id);
             };
 
-            $scope.gotoPreLevel = function() {
+            $scope.gotoPreLevel = function () {
                 currScene.preLevel();
             };
 
-            $scope.gotoNextLevel = function() {
+            $scope.gotoNextLevel = function () {
                 currScene.nextLevel();
             };
 
             $scope.isPlaying = TQ.FrameCounter.isPlaying();
-            $scope.onChange = function() {
+            $scope.onChange = function () {
                 $scope.isPlaying = !$scope.isPlaying;
                 if ($scope.isPlaying) {
                     TQ.FrameCounter.play();
@@ -90,7 +90,7 @@ angular.module('starter')
 
             var x = 300,
                 y = 300;
-            $scope.testInsert = function() {
+            $scope.testInsert = function () {
                 x += 50;
                 y += 50;
                 // insertImage("mcImages/p10324.png", x, y);
@@ -104,33 +104,36 @@ angular.module('starter')
                 TQ.CameraService.insertFromCamera();
             };
 
-            $scope.insertLocalImage = function() {
+            $scope.insertLocalImage = function () {
                 var path = "p12504.png";
                 var server1File = "http://bone.udoido.cn/mcImages/" + path;
                 var server2File = "http://www.udoido.com/mcImages/" + path;
-                var albumFile ="";
+                if (TQ.Config.cloundaryEnabled) {
+                    server1File = 'http://res.cloudinary.com/eplan/image/upload/' + path;
+                }
+                var albumFile = "";
                 var cachedFile = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
                 var localFile = "mcImages/" + path;
 
                 // insertImage(cachedFile, x+=50, y+=50);
-                insertImage(localFile, x+=50, y+=50);
-                // insertImage(server1File, x+=50, y+=50);
+                // insertImage(localFile, x+=50, y+=50);
+                insertImage(server1File, x += 50, y += 50);
                 // insertImage(server2File, x+=50, y+=50);
                 // insertImage(albumFile, x+=50, y+=50);
             };
 
             function insertImage(filename, x, y) {
-                var desc = {src: filename, type:"Bitmap", x:x, y:y};
+                var desc = {src: filename, type: "Bitmap", x: x, y: y};
                 TQ.SceneEditor.addItem(desc);
             }
 
             function insertSound(filename, x, y) {
-                var desc = {src: filename, type:"Sound", x:x, y:y};
+                var desc = {src: filename, type: "Sound", x: x, y: y};
                 TQ.SceneEditor.addItem(desc);
             }
 
             function insertText(message, x, y) {
-                var desc = {src: null, text: message, type:"Text", x:x, y:y};
+                var desc = {src: null, text: message, type: "Text", x: x, y: y};
                 TQ.SceneEditor.addItem(desc);
                 // TQ.TextEditor.initialize();
                 // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
@@ -141,11 +144,11 @@ angular.module('starter')
                 y += 50;
                 TQ.TextEditor.onOK();
                 var message = TQ.TextEditor.inputBox.val();
-                var desc = {src: null, text: message, type:"Text", x:x, y:y};
+                var desc = {src: null, text: message, type: "Text", x: x, y: y};
                 TQ.SceneEditor.addItem(desc);
             };
 
-            $scope.insertAlbum = function() {
+            $scope.insertAlbum = function () {
                 var options = {
                     maximumImagesCount: 10,
                     width: 800,
@@ -161,17 +164,17 @@ angular.module('starter')
                             y += 50;
                             insertImage(results[i], x, y);
                         }
-                    }, function(error) {
+                    }, function (error) {
                         // error getting photos
                     });
 
             };
 
-            $scope.deleteElement = function() {
+            $scope.deleteElement = function () {
                 TQ.SelectSet.delete();
             };
 
-            $scope.testDownload = function() {
+            $scope.testDownload = function () {
                 // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
                 // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
                 // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
@@ -193,8 +196,8 @@ angular.module('starter')
                      {name:"人物", path:'mcImages/p15345.png'},
                      {name:"人物", path:'mcImages/p15349.png'},
                      */
-                    {name:"人物", path:'mcImages/p15357.png'},
-                    {name:"人物", path:'mcImages/p15343.png'}
+                    {name: "人物", path: 'mcImages/p15357.png'},
+                    {name: "人物", path: 'mcImages/p15343.png'}
                 ];
                 TQ.DownloadManager.downloadBulk(people_local);
 
@@ -202,12 +205,12 @@ angular.module('starter')
                 $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p10324.png';
             };
 
-            $scope.testShowWCY = function() {
+            $scope.testShowWCY = function () {
                 // WCY.createScene();
                 WCY.test($scope.data.sceneID);
             };
 
-            $scope.testClearAll = function() {
+            $scope.testClearAll = function () {
                 TQ.SceneEditor.emptyScene();
             };
 
@@ -249,6 +252,10 @@ angular.module('starter')
                 WCY.save();
             };
 
+            $scope.getWcy = function () {
+                WCY.getWcy();
+            };
+
             var message = "人人动画";
             var image = "http://bone.udoido.cn/mcImages/" + "p12504.png";
             var link = "http://bone.udoido.cn";
@@ -285,6 +292,10 @@ angular.module('starter')
 
             $scope.shareWx = function() {
                 WxService.shareMessage();
+            };
+
+            $scope.wxInit = function() {
+                _wxInit();
             };
 
             $scope.getLocale = function(id) {

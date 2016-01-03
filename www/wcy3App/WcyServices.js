@@ -15,13 +15,14 @@ WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
 angular.module('starter')
     .factory("WCY", ['$http', 'FileService',
         function($http, FileService) {
+            var user = dataService.user;
             var _AUTO_SAVE_NAME = '_auto_save_name_';
             var _FILENAME = '_filename_';
             var readCache = TQ.Base.Utility.readCache;
             var writeCache = TQ.Base.Utility.writeCache;
 
             var wcyId = 12345678;
-            var SHARE_STRING = '100_' + wcyId + '_123_1234567890';
+            var SHARE_STRING = user.ID + '_' + wcyId + '_123_1234567890';
 
             function create(option) {
                 if (!option) {
@@ -32,6 +33,14 @@ angular.module('starter')
             }
 
             function save() {
+                if (TQ.Config.LocalCacheEnabled) {
+                    saveToCache();
+                }
+                //ToDo: if (has wifi)
+                _upload();
+            }
+
+            function saveToCache() {
                 TQ.Assert.isObject(currScene);
                 var data = currScene.getData();
                 data = new Blob([data], {type: 'text/plain'});
@@ -51,7 +60,7 @@ angular.module('starter')
                     .then(_onSuccess, _onFail);
             }
 
-            function uploadWcy() {
+            function _upload() {
                 var jsonWcyData = currScene.getData();
                 var myToken = '1234567890';
                 var params = '';
@@ -186,7 +195,6 @@ angular.module('starter')
                 start: start,  // start a new one, or load previous one (edited or played)
                 create: create,
                 save: save,
-                uploadWcy: uploadWcy,
                 edit: edit,  // open for edit
                 getWcy: getWcy,
                 show: show,  // open for show only
