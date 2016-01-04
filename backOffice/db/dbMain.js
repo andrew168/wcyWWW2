@@ -38,7 +38,8 @@ function init(app) {
         {name:'Show', schema:'../db/show/showSchema.js', ctrl:'../db/show/showController.js'},
         {name:'Share', schema:'../db/share/shareSchema.js', ctrl:'../db/share/shareController.js'},
         {name:'User', schema:'../db/user/userSchema.js', ctrl:'../db/user/userController.js'},
-        {name:'Opus', schema:'../db/opus/opusSchema.js', ctrl:'../db/opus/opusController.js'}
+        {name:'Opus', schema:'../db/opus/opusSchema.js', ctrl:'../db/opus/opusController.js'},
+        {name:'PictureMat', schema:'../db/pictureMat/pictureMatSchema.js', ctrl:'../db/pictureMat/pictureMatController.js'}
     ];
 
     var i;
