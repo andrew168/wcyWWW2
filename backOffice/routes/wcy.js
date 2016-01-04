@@ -6,8 +6,8 @@ var router = express.Router();
 var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
 var fs = require('fs');
 
-var userController = require('../db/user/user-controller');
-var opusController = require('../db/opus/opus-controller');
+var userController = require('../db/user/userController');
+var opusController = require('../db/opus/opusController');
 
 var userID,
     timesCalled,
