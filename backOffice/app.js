@@ -43,7 +43,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/getCSignature', getCSignature);
 app.use('/getWSignature', getWSignature);
 //  使用数据库的操作， 都必须在数据库启动之后， 再启动
-require('./db/db-main').init(app);
+require('./db/dbMain').init(app);
 
 var Wcy = require('./routes/wcy');
 app.use('/wcy', Wcy);
