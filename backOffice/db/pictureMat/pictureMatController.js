@@ -10,6 +10,7 @@
 var mongoose = require('mongoose'),
     PictureMat = mongoose.model('PictureMat');
 
+//ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
 function get(userId, callback) {
     PictureMat.find({userId: userId})
         .exec(function (err, data) {
