@@ -237,6 +237,15 @@ angular.module('starter')
                 NetService.uploadData(data, onSuccess, onError);
             };
 
+            $scope.uploadMat = function (_onSuccess) {
+                if (!_onSuccess) {
+                    _onSuccess = onSuccess;
+                }
+
+                var files = document.getElementById('file_input').files;
+                NetService.uploadImages(files, _onSuccess);
+            };
+
             function onSuccess(data) {
                 $timeout(function () {
                     if (data.url) {

@@ -5,8 +5,15 @@
  * 在controller中直接使用
  */
 angular.module('starter')
-    .factory("NetService", ['$http', '$cordovaFileTransfer', 'DeviceService',
-        function ($http, $cordovaFileTransfer, DeviceService) {
+    .factory("NetService", ['$http', '$cordovaFileTransfer', 'Upload', 'DeviceService',
+        function ($http, $cordovaFileTransfer, Upload, DeviceService) {
+            var cloudinaryConfig = {};
+            cloudinaryConfig.cloud_name = 'eplan';
+            cloudinaryConfig.upload_preset = 'vote1015';
+            var d = new Date();
+            var $scope_title = "Image (" + d.getDate() + " - " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ")";
+            var $rootScope_photos = [];
+
             var baseUrl = "http://bone.udoido.cn/";
             var urlConcat = TQ.Base.Utility.urlConcat;
             var config_cloud_name = 'eplan';
@@ -14,11 +21,37 @@ angular.module('starter')
             var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + config_cloud_name + "/upload";
             var C_SIGNATURE_URL =TQ.Config.AUTH_HOST +'/getCSignature';  // Cloudary signature;
 
+            function uploadImages(files, onSuccess){
+                if (!files) return;
+                angular.forEach(files, function(file){
+                    if (file && !file.$error) {
+                        file.upload = Upload.upload({
+                            url: "https://api.cloudinary.com/v1_1/" + cloudinaryConfig.cloud_name + "/upload",
+                            fields: {
+                                upload_preset: cloudinaryConfig.upload_preset,
+                                tags: 'myphotoalbum',
+                                context: 'photo=' + $scope_title
+                            },
+                            file: file
+                        }).progress(function (e) {
+                            file.progress = Math.round((e.loaded * 100.0) / e.total);
+                            file.status = "Uploading... " + file.progress + "%";
+                        }).success(function (data, status, headers, config) {
+                            $rootScope_photos = $rootScope_photos || [];
+                            data.context = {custom: {photo: $scope_title}};
+                            file.result = data;
+                            $rootScope_photos.push(data);
+                        }).error(function (data, status, headers, config) {
+                            file.result = data;
+                        });
+                    }
+                });
+            };
+
             function get(url, onSuccess, onError) {
                 var urlSource, urlTarget;
                 var trustHosts = true;
                 var options = {};
-
                 if (typeof url === "string") {
                     urlSource = url;
                     urlTarget = TQ.RM.toCachePath(urlSource);
@@ -39,7 +72,7 @@ angular.module('starter')
                             var ratio = progress.loaded / progress.total;
                             console.log(ratio + ": " + progress);
                             // $timeout(function () {
-                            // $scope.downloadProgress = (progress.loaded / progress.total) * 100;
+                            // $scope_downloadProgress = (progress.loaded / progress.total) * 100;
                             // })
                         });
                 } else {
@@ -63,6 +96,7 @@ angular.module('starter')
 
                 submitImage(options, onSuccess, onError, onProgress);
             }
+
 
             var imageData = {
                 file: "http://upload.wikimedia.org/wikipedia/en/thumb/3/37/Flip_Logo.png/375px-Flip_Logo.png",
@@ -155,6 +189,7 @@ angular.module('starter')
                 get: get,
                 put: put,
                 uploadData: uploadData,
+                uploadImages: uploadImages,
                 update: update,
                 del: del
             }

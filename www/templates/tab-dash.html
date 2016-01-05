@@ -1,6 +1,10 @@
 <ion-view>
     <ion-content scroll="false">
         <div>
+            <input type="file" id='file_input' multiple>
+        </div>
+
+        <div>
             <a href="#" id="clear_cache">Clear the local filesystem cache</a>
             <a href="#" id="cache_folder" target="new">Navigate into local cache folder</a>
         </div>
@@ -10,7 +14,6 @@
             <img ng-src={{localImage1}} height="100" width="100">
             <img ng-src={{localImage2}} width="120" height="82">
         </div>
-
         <div class="float-tool">
             <div class="new-left-button functionButton">
                 <div class="fn-left">
@@ -179,6 +182,7 @@
             <button class="button button-positive" my-click="saveScreenShot($event)">截屏保存</button>
             <button class="button button-positive" ng-click="createWcy()">新建</button>
             <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
+            <button class="button button-positive" ng-click="uploadMat()">上传照片</button>
             <button class="button button-positive" ng-click="getWcy()">从服务器获取作品</button>
             <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
             <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
