@@ -25,28 +25,48 @@ angular.module('starter')
                 if (!files) return;
                 angular.forEach(files, function(file){
                     if (file && !file.$error) {
-                        file.upload = Upload.upload({
-                            url: "https://api.cloudinary.com/v1_1/" + cloudinaryConfig.cloud_name + "/upload",
-                            fields: {
-                                upload_preset: cloudinaryConfig.upload_preset,
-                                tags: 'myphotoalbum',
-                                context: 'photo=' + $scope_title
-                            },
-                            file: file
-                        }).progress(function (e) {
-                            file.progress = Math.round((e.loaded * 100.0) / e.total);
-                            file.status = "Uploading... " + file.progress + "%";
-                        }).success(function (data, status, headers, config) {
-                            $rootScope_photos = $rootScope_photos || [];
-                            data.context = {custom: {photo: $scope_title}};
-                            file.result = data;
-                            $rootScope_photos.push(data);
-                        }).error(function (data, status, headers, config) {
-                            file.result = data;
-                        });
+                        var filename = getImageNameWithoutExt();
+                        var option = {
+                            filename:filename,
+                            tags: 'myphotoalbum',
+                            context: 'photo=' + "No"
+                        };
+
+                        getSignature(option).
+                            success(function (data) {
+                                // option.timestamp = data.timestamp;
+                                // option.signature = data.signature;
+                                console.log(JSON.stringify(data));
+                                data.file = option.file;
+                                data.api_key ="374258662676811";
+                                uploadOne(file, data);
+                            })
+                            .error(function (event) {
+                                alert("error" + angular.toJson(event));
+                            });
+
+
                     }
                 });
-            };
+            }
+
+            function uploadOne(file, data) {
+                file.upload = Upload.upload({
+                    url: "https://api.cloudinary.com/v1_1/" + cloudinaryConfig.cloud_name + "/upload",
+                    fields: data,
+                    file: file
+                }).progress(function (e) {
+                    file.progress = Math.round((e.loaded * 100.0) / e.total);
+                    file.status = "Uploading... " + file.progress + "%";
+                }).success(function (data, status, headers, config) {
+                    $rootScope_photos = $rootScope_photos || [];
+                    data.context = {custom: {photo: $scope_title}};
+                    file.result = data;
+                    $rootScope_photos.push(data);
+                }).error(function (data, status, headers, config) {
+                    file.result = data;
+                });
+            }
 
             function get(url, onSuccess, onError) {
                 var urlSource, urlTarget;
