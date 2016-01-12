@@ -3,7 +3,7 @@
  */
 var express = require('express');
 var router = express.Router();
-var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
+var cSignature = require('../common/cSignature'); // 后缀.js可以省略，Node会自动查找，
 
 var createNonceStr = function () {
     return Math.random().toString(36).substr(2, 15);
