@@ -28,7 +28,7 @@ router.post('/', function(req, res, next) {
     //ToDo:@@@
     var userID = 0;
     var originalFilename = req.query.filename || "no_filename";
-    getMatId(originalFilename, res);
+    createMatId(originalFilename, res);
 });
 
 router.get('/', function(req, res, next) {
@@ -38,10 +38,10 @@ router.get('/', function(req, res, next) {
     //ToDo:@@@
     var userID = 0;
     var originalFilename = req.query.filename || "no_filename";
-    getMatId(originalFilename, res);
+    createMatId(originalFilename, res);
 });
 
-function getMatId(originalFilename, res) {
+function createMatId(originalFilename, res) {
     if (!originalFilename) {
         var msg = "wrong format: must have filename!";
         console.log(msg);

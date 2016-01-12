@@ -33,7 +33,7 @@ angular.module('starter')
                             context: 'photo=' + "No"
                         };
 
-                        getMatId(option).
+                        createMatId(option).
                             success(function (data) {
                                 // option.timestamp = data.timestamp;
                                 // option.signature = data.signature;
@@ -137,8 +137,8 @@ angular.module('starter')
                 return $http.get(C_SIGNATURE_URL + "?filename=" + option.filename);
             };
 
-            var getMatId = function (option) {
-                return $http.get(C_MAN_URL + "?filename=" + option.filename);
+            var createMatId = function (option) {
+                return $http.post(C_MAN_URL, angular.toJson(option));
             };
 
             var submitImage = function (option, onSuccess, onError, onProgress) {
