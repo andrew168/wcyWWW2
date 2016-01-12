@@ -10,9 +10,6 @@ angular.module('starter')
             var cloudinaryConfig = {};
             cloudinaryConfig.cloud_name = 'eplan';
             cloudinaryConfig.upload_preset = 'vote1015';
-            var d = new Date();
-            var $scope_title = "Image (" + d.getDate() + " - " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds() + ")";
-            var $rootScope_photos = [];
 
             var baseUrl = "http://bone.udoido.cn/";
             var urlConcat = TQ.Base.Utility.urlConcat;
@@ -35,8 +32,6 @@ angular.module('starter')
 
                         createMatId(option).
                             success(function (data) {
-                                // option.timestamp = data.timestamp;
-                                // option.signature = data.signature;
                                 console.log(JSON.stringify(data));
                                 data.api_key ="374258662676811";
                                 uploadOne(file, data);
@@ -59,10 +54,8 @@ angular.module('starter')
                     file.progress = Math.round((e.loaded * 100.0) / e.total);
                     file.status = "Uploading... " + file.progress + "%";
                 }).success(function (data, status, headers, config) {
-                    $rootScope_photos = $rootScope_photos || [];
-                    data.context = {custom: {photo: $scope_title}};
                     file.result = data;
-                    $rootScope_photos.push(data);
+                    console.log(data);
                 }).error(function (data, status, headers, config) {
                     file.result = data;
                 });
@@ -117,7 +110,6 @@ angular.module('starter')
                 submitImage(options, onSuccess, onError, onProgress);
             }
 
-
             var imageData = {
                 file: "http://upload.wikimedia.org/wikipedia/en/thumb/3/37/Flip_Logo.png/375px-Flip_Logo.png",
                 // api_key: "861131351913735",
@@ -142,12 +134,8 @@ angular.module('starter')
             };
 
             var submitImage = function (option, onSuccess, onError, onProgress) {
-                // options.timestamp = data.timestamp;
-                // options.signature = data.signature;
                 getSignature(option).
                     success(function (data) {
-                        // option.timestamp = data.timestamp;
-                        // option.signature = data.signature;
                         console.log(JSON.stringify(data));
                         data.file = option.file;
                         data.api_key ="374258662676811";
