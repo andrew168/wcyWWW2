@@ -20,7 +20,14 @@ function get(userId, callback) {
         }
 
         if (callback) {
-            callback(err, data);
+            var result = [];
+            var num = data.length,
+                i;
+
+            for (i= 0; i < num; i++) {
+                result.push(data[i].path);
+            }
+            callback(result);
         }
     });
 }

@@ -89,7 +89,9 @@ function updateMatId(public_id, path, res) {
 
 function getMatIds(res) {
     // ToDo:
-    pictureMatController.get(null, null);
+    pictureMatController.get(null, function(data) {
+        res.json(data);
+    });
 }
 
 function sendBack(data, res) {
