@@ -23,11 +23,8 @@ angular.module('starter')
                 if (!files) return;
                 angular.forEach(files, function(file){
                     if (file && !file.$error) {
-                        var filename = getImageNameWithoutExt();
                         var option = {
-                            filename:filename,
-                            tags: 'myphotoalbum',
-                            context: 'photo=' + "No"
+                            filename: file.name
                         };
 
                         createMatId(option).
