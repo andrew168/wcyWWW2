@@ -76,6 +76,9 @@ window.TQ = window.TQ || {};
     // 入口服务器配置
     Config.ENT_HOST = "http://show.udoido.cn";
 
+    // 管理和控制服务器的参数
+    Config.MAN_HOST = "http://man.udoido.cn";   // 素材管理， 分配素材id
+
     // 素材服务器的参数
     Config.MAT_HOST = "http://bone.udoido.cn";   // for old material(pXXXX), before transfer
     // Config.MAT_HOST = "http://www.udoido.cn"; // for new material (mXXXX),

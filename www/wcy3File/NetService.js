@@ -20,6 +20,7 @@ angular.module('starter')
             var config_upload_preset = 'vote1015';
             var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + config_cloud_name + "/upload";
             var C_SIGNATURE_URL =TQ.Config.AUTH_HOST +'/getCSignature';  // Cloudary signature;
+            var C_MAN_URL = TQ.Config.MAN_HOST + '/material';
 
             function uploadImages(files, onSuccess){
                 if (!files) return;
@@ -32,12 +33,11 @@ angular.module('starter')
                             context: 'photo=' + "No"
                         };
 
-                        getSignature(option).
+                        getMatId(option).
                             success(function (data) {
                                 // option.timestamp = data.timestamp;
                                 // option.signature = data.signature;
                                 console.log(JSON.stringify(data));
-                                data.file = option.file;
                                 data.api_key ="374258662676811";
                                 uploadOne(file, data);
                             })
@@ -135,6 +135,10 @@ angular.module('starter')
 
             var getSignature = function (option) {
                 return $http.get(C_SIGNATURE_URL + "?filename=" + option.filename);
+            };
+
+            var getMatId = function (option) {
+                return $http.get(C_MAN_URL + "?filename=" + option.filename);
             };
 
             var submitImage = function (option, onSuccess, onError, onProgress) {

@@ -10,6 +10,7 @@ var users = require('./routes/users');
 var getCSignature = require('./routes/getCSignature');
 var getWSignature = require('./routes/getWSignature');
 
+
 var app = express();
 
 // view engine setup
@@ -46,7 +47,10 @@ app.use('/getWSignature', getWSignature);
 require('./db/dbMain').init(app);
 
 var Wcy = require('./routes/wcy');
+var material = require('./routes/material');
+
 app.use('/wcy', Wcy);
+app.use('/material', material);
 
 app.use('/', express.static('www'));
 // catch 404 and forward to error handler
