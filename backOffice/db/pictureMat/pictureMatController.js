@@ -12,18 +12,17 @@ var mongoose = require('mongoose'),
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
 function get(userId, callback) {
-    PictureMat.find({userId: userId})
-        .exec(function (err, data) {
-            if (!data) {
-                console.error(404, {msg: 'not found!' + id});
-            } else {
-                console.log(data);
-            }
+    PictureMat.find({uploaded: true}).exec(function (err, data) {
+        if (!data) {
+            console.error(404, {msg: 'not found!' + id});
+        } else {
+            console.log(data);
+        }
 
-            if (callback){
-                callback(err, data);
-            }
-        });
+        if (callback) {
+            callback(err, data);
+        }
+    });
 }
 
 function add(userID, picName, ip, isShared, onSuccess, onError) {
@@ -39,18 +38,19 @@ function add(userID, picName, ip, isShared, onSuccess, onError) {
     });
 }
 
-function update(id, uploaded, callback) {
-    PictureMat.find({_id: id})
+function update(id, path, callback) {
+    PictureMat.findOne({_id: id})
         .exec(function (err, data) {
             if (!data) {
                 console.error(404, {msg: 'not found!' + id});
             } else {
                 console.log(data);
                 data.set('uploaded', true);
+                data.set('path', path);
                 data.save(function (err, data) {
                     if (!err) {
                         if (callback){
-                            callback(err, data);
+                            callback(data._id);
                         }
                     } else {
                         console.error("error in save update picture mat!");
@@ -79,3 +79,4 @@ function showDocument(err, doc) {
 
 exports.get = get;
 exports.add = add;
+exports.update = update;

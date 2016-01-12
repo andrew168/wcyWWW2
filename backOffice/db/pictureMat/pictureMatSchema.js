@@ -12,6 +12,7 @@ var pictureMatSchema = new Schema({
     timestamp:{type:Date, default: Date.now},
     userId:Schema.ObjectId,
     ip: String,
+    path: String,  // 素材在Server上的相对路径，去除host和MatFolder之后
     isShared: {type:Boolean, default:false},
     uploaded: {type:Boolean, default:false}
 });

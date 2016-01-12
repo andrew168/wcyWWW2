@@ -56,6 +56,7 @@ angular.module('starter')
                 }).success(function (data, status, headers, config) {
                     file.result = data;
                     console.log(data);
+                    updateMat(data);
                 }).error(function (data, status, headers, config) {
                     file.result = data;
                 });
@@ -94,6 +95,7 @@ angular.module('starter')
             }
 
             function put(path) {
+                console.error('depreciated??? replace by post??');
                 var url = urlConcat(baseUrl, path);
                 console.log("put " + path + " to ===> " + url);
             }
@@ -132,6 +134,15 @@ angular.module('starter')
             var createMatId = function (option) {
                 return $http.post(C_MAN_URL, angular.toJson(option));
             };
+
+            function updateMat(data) {
+                var data2 = {
+                    'path': TQ.RM.toRelative(data.url),
+                    'public_id': data.public_id
+                };
+
+                return $http.post(C_MAN_URL, angular.toJson(data2));
+            }
 
             var submitImage = function (option, onSuccess, onError, onProgress) {
                 getSignature(option).

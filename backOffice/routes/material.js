@@ -27,8 +27,15 @@ router.post('/', function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     //ToDo:@@@
     var userID = 0;
-    var originalFilename = req.query.filename || "no_filename";
-    createMatId(originalFilename, res);
+    var public_id = req.param('public_id') || null;
+
+    if (!public_id) {
+        var originalFilename = req.param('filename') || "no_filename";
+        createMatId(originalFilename, res);
+    } else {
+        var path = req.param('path') || null;
+        updateMatId(public_id, path, res);
+    }
 });
 
 router.get('/', function(req, res, next) {
@@ -37,8 +44,7 @@ router.get('/', function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     //ToDo:@@@
     var userID = 0;
-    var originalFilename = req.query.filename || "no_filename";
-    createMatId(originalFilename, res);
+    getMatIds(res);
 });
 
 function createMatId(originalFilename, res) {
@@ -67,6 +73,23 @@ function createMatId(originalFilename, res) {
         }
 
     }
+}
+
+function updateMatId(public_id, path, res) {
+    // 入库， 并获取新material ID，
+    function onSavedToDB(_matId) {
+        var data = {
+            public_id: _matId
+        };
+        sendBack(data, res);
+    }
+
+    pictureMatController.update(public_id, path, onSavedToDB);
+}
+
+function getMatIds(res) {
+    // ToDo:
+    pictureMatController.get(null, null);
 }
 
 function sendBack(data, res) {
