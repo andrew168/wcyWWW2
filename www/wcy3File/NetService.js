@@ -5,17 +5,13 @@
  * 在controller中直接使用
  */
 angular.module('starter')
-    .factory("NetService", ['$http', '$cordovaFileTransfer', 'Upload', 'DeviceService',
-        function ($http, $cordovaFileTransfer, Upload, DeviceService) {
+    .factory("NetService", ['$http', '$cordovaFileTransfer', 'Upload',
+        function ($http, $cordovaFileTransfer, Upload) {
             var cloudinaryConfig = {};
             cloudinaryConfig.cloud_name = 'eplan';
-            cloudinaryConfig.upload_preset = 'vote1015';
-
             var baseUrl = "http://bone.udoido.cn/";
             var urlConcat = TQ.Base.Utility.urlConcat;
-            var config_cloud_name = 'eplan';
-            var config_upload_preset = 'vote1015';
-            var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + config_cloud_name + "/upload";
+            var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + cloudinaryConfig.cloud_name + "/upload";
             var C_SIGNATURE_URL =TQ.Config.AUTH_HOST +'/getCSignature';  // Cloudary signature;
             var C_MAN_URL = TQ.Config.MAN_HOST + '/material';
 
@@ -36,8 +32,6 @@ angular.module('starter')
                             .error(function (event) {
                                 alert("error" + angular.toJson(event));
                             });
-
-
                     }
                 });
             }
