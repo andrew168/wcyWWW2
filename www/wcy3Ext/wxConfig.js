@@ -3,7 +3,7 @@ angular.module('starter').
         // ToDo: CORS 无法读取server设置的cookie，
         //     ==> Auth用户统计， 必须和网页一个host
         //  ==> sever的cookie可以是 http读取only， 不让客户端读写它，以便于追踪
-        var user = dataService.user;
+        var user = userProfile.user;
         var myLogError = myLogInfo = function (str) {
             alert("A__" + str);
         };

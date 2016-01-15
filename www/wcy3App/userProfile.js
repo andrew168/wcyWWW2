@@ -1,9 +1,9 @@
 /**
  * Created by admin on 11/29/2015.
  */
-var dataService = {};
+var userProfile = {};
 
-dataService.user = {
+userProfile.user = {
   ID:12345,
   timesShared:0
 };

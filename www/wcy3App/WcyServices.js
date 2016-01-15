@@ -15,7 +15,7 @@ WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
 angular.module('starter')
     .factory("WCY", ['$http', 'FileService',
         function($http, FileService) {
-            var user = dataService.user;
+            var user = userProfile.user;
             var _AUTO_SAVE_NAME = '_auto_save_name_';
             var _FILENAME = '_filename_';
             var readCache = TQ.Base.Utility.readCache;
