@@ -1,7 +1,7 @@
 /* jshint node:true */
 
 'use strict';
-
+var dstPath = 'E:\\projects\\cardforvote';
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')(); //jshint ignore:line
 var uglifyjs = require("uglify-js");
@@ -55,17 +55,17 @@ gulp.task('config', ['clean'], function () {
 
 
 
-gulp.task('ps_mobile', function () {
+gulp.task('wcylib_concat', function () {
 
-    var assets_mobile = $.useref.assets({searchPath: '{,www,www/js, www/wcy3}'});
+    var wcylib_assets = $.useref.assets({searchPath: '{,www,www/js, www/wcy3}'});
 
     return gulp.src('www/index.html')
-        .pipe(assets_mobile)
+        .pipe(wcylib_assets)
         .pipe($.if('*.css', $.rename(config.app_min_css)))
         .pipe($.if(/wcy3all\.js/ && args.remove_logs, $.replace(/AuxLog\.log\(.*\);/gm, "")))
         .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
         .pipe($.if(/wcy3all\.js/, $.header(config.header)))
-        .pipe(assets_mobile.restore())
+        .pipe(wcylib_assets.restore())
         .pipe($.useref())
         .pipe($.if('*.html', $.replace(/wcy3all\.js/g, config.app_js)))
         .pipe($.if('*.css', $.minifyCss()))
@@ -73,12 +73,12 @@ gulp.task('ps_mobile', function () {
 
         .pipe(gulp.dest('dist'))
         .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
-        .pipe(gulp.dest('E:\\projects\\cardforvote\\www\\lib'));
+        .pipe(gulp.dest(dstPath + '\\www\\lib'));
 });
 
 
 
-gulp.task('ps_minify', ['ps_mobile'], function () {
+gulp.task('wcylib_minify', ['wcylib_concat'], function () {
 
     var result = uglifyjs.minify(["dist/" + config.app_js], {
 
@@ -94,25 +94,21 @@ gulp.task('ps_minify', ['ps_mobile'], function () {
 
     });
 
-    fs.writeFileSync('E:\\projects\\cardforvote\\www\\lib\\' + config.app_min_js, result.code);
+    fs.writeFileSync(dstPath + '\\www\\lib\\' + config.app_min_js, result.code);
 });
 
 
 
 gulp.task('clean', del.bind(null, ['dist', 'src/tmp']));
 
-gulp.task('build', ['ps_minify'], function () {
+gulp.task('build', ['wcylib_minify'], function () {
 
     return gulp.src('dist/**/*')
         .pipe($.size({title: 'build', gzip: true}))
         .pipe($.zip('ionic' + config.version + '.zip'))
-        .pipe(gulp.dest('E:\\projects\\cardforvote\\www\\lib'));
+        .pipe(gulp.dest(dstPath + '\\www\\lib'));
 });
 
-
-
 gulp.task('default', ['config'], function () {
-
     gulp.start('build');
-
 });
