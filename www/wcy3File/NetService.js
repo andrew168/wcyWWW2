@@ -7,11 +7,9 @@
 angular.module('starter')
     .factory("NetService", ['$http', '$cordovaFileTransfer', 'Upload',
         function ($http, $cordovaFileTransfer, Upload) {
-            var cloudinaryConfig = {};
-            cloudinaryConfig.cloud_name = 'eplan';
             var baseUrl = "http://bone.udoido.cn/";
             var urlConcat = TQ.Base.Utility.urlConcat;
-            var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + cloudinaryConfig.cloud_name + "/upload";
+            var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + TQ.Config.Cloudinary.name + "/upload";
             var C_SIGNATURE_URL =TQ.Config.AUTH_HOST +'/getCSignature';  // Cloudary signature;
             var C_MAN_URL = TQ.Config.MAN_HOST + '/material';
 
@@ -26,7 +24,7 @@ angular.module('starter')
                         createMatId(option).
                             success(function (data) {
                                 console.log(JSON.stringify(data));
-                                data.api_key ="374258662676811";
+                                data.api_key = TQ.Config.Cloudinary.api_key;
                                 uploadOne(file, data);
                             })
                             .error(function (event) {
@@ -38,7 +36,7 @@ angular.module('starter')
 
             function uploadOne(file, data) {
                 file.upload = Upload.upload({
-                    url: "https://api.cloudinary.com/v1_1/" + cloudinaryConfig.cloud_name + "/upload",
+                    url: "https://api.cloudinary.com/v1_1/" + TQ.Config.Cloudinary.name + "/upload",
                     fields: data,
                     file: file
                 }).progress(function (e) {
@@ -140,7 +138,7 @@ angular.module('starter')
                     success(function (data) {
                         console.log(JSON.stringify(data));
                         data.file = option.file;
-                        data.api_key ="374258662676811";
+                        data.api_key = TQ.Config.Cloudinary.api_key;
                         doSubmitImage(data, onSuccess, onError, onProgress);
                     }).
                     error(function (event) {

@@ -90,6 +90,10 @@ window.TQ = window.TQ || {};
     Config.AUTH_HOST = "http://auth.udoido.cn";
 
     Config.cloundaryEnabled = true;
+    Config.Cloudinary = {
+        name : 'eplan',
+        api_key : "374258662676811"
+    };
 
     // 素材服务器的参数
     var matServerCloundary = {
