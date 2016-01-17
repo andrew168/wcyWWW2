@@ -15,28 +15,39 @@ angular.module('starter')
 
             function uploadImages(files, onSuccess){
                 if (!files) return;
-                angular.forEach(files, function(file){
-                    if (file && !file.$error) {
-                        var option = {
-                            filename: file.name
-                        };
-
-                        createMatId(option).
-                            success(function (data) {
-                                console.log(JSON.stringify(data));
-                                data.api_key = TQ.Config.Cloudinary.api_key;
-                                uploadOne(file, data);
-                            })
-                            .error(function (event) {
-                                alert("error" + angular.toJson(event));
-                            });
+                var surplus = files.length;
+                function _onSuccess() {
+                    if ((--surplus) == 0) {
+                        onSuccess();
                     }
+                }
+
+                angular.forEach(files, function(file){
+                    uploadOneImage(file, _onSuccess);
                 });
             }
 
-            function uploadOne(file, data) {
+            function uploadOneImage(file, onSuccess) {
+                if (file && !file.$error) {
+                    var option = {
+                        filename: file.name
+                    };
+
+                    createMatId(option).
+                        success(function (data) {
+                            console.log(JSON.stringify(data));
+                            data.api_key = TQ.Config.Cloudinary.api_key;
+                            doUploadOne(file, data);
+                        })
+                        .error(function (event) {
+                            alert("error" + angular.toJson(event));
+                        });
+                }
+            }
+
+            function doUploadOne(file, data) {
                 file.upload = Upload.upload({
-                    url: "https://api.cloudinary.com/v1_1/" + TQ.Config.Cloudinary.name + "/upload",
+                    url: IMAGE_CLOUD_URL,
                     fields: data,
                     file: file
                 }).progress(function (e) {
@@ -100,15 +111,6 @@ angular.module('starter')
 
                 submitImage(options, onSuccess, onError, onProgress);
             }
-
-            var imageData = {
-                file: "http://upload.wikimedia.org/wikipedia/en/thumb/3/37/Flip_Logo.png/375px-Flip_Logo.png",
-                // api_key: "861131351913735",
-                // signature: "3195b887badcfc0a09484c76eac19cfdf187f38f",
-                // timestamp: "",
-                // url: "http://res.cloudinary.com/hdnznaxnq/image/upload/sample3.jpg",
-                // public_id: "sample3"
-            };
 
             var counter = 100;
             function getImageNameWithoutExt() {
@@ -202,6 +204,7 @@ angular.module('starter')
                 put: put,
                 uploadData: uploadData,
                 uploadImages: uploadImages,
+                uploadOneImage: uploadOneImage,
                 update: update,
                 del: del
             }
