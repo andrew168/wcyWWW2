@@ -1,10 +1,11 @@
 angular.module('starter')
     .controller('DashCtrl', ['$scope', '$state', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
-        'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', '$http', function(
+        'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', '$http', 'EditorService',
+        function(
             $scope, $state, $timeout, WCY, $cordovaImagePicker,
             $cordovaProgress, $cordovaSocialSharing,
-            FileService, NetService, DeviceService, Setup, WxService, $http) {
+            FileService, NetService, DeviceService, Setup, WxService, $http, EditorService) {
             $scope.localImage1 = null;
             $scope.localImage2 = null;
             $scope.data = {};
@@ -244,6 +245,10 @@ angular.module('starter')
 
                 var files = document.getElementById('file_input').files;
                 NetService.uploadImages(files, _onSuccess);
+            };
+
+            $scope.insertLocalImage2 = function () {
+                EditorService.insertLocalImage();
             };
 
             function onSuccess(data) {

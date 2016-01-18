@@ -5,8 +5,8 @@
  * 在controller中直接使用
  */
 angular.module('starter')
-    .factory("NetService", ['$http', '$cordovaFileTransfer', 'Upload',
-        function ($http, $cordovaFileTransfer, Upload) {
+    .factory("NetService", ['$q', '$http', '$cordovaFileTransfer', 'Upload',
+        function ($q, $http, $cordovaFileTransfer, Upload) {
             var baseUrl = "http://bone.udoido.cn/";
             var urlConcat = TQ.Base.Utility.urlConcat;
             var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + TQ.Config.Cloudinary.name + "/upload";
@@ -27,7 +27,8 @@ angular.module('starter')
                 });
             }
 
-            function uploadOneImage(file, onSuccess) {
+            function uploadOneImage(file) {
+                var q = $q.defer();
                 if (file && !file.$error) {
                     var option = {
                         filename: file.name
@@ -37,28 +38,32 @@ angular.module('starter')
                         success(function (data) {
                             console.log(JSON.stringify(data));
                             data.api_key = TQ.Config.Cloudinary.api_key;
-                            doUploadOne(file, data);
+                            doUploadOne(file, data).progress(function (e) {
+                                file.progress = Math.round((e.loaded * 100.0) / e.total);
+                                file.status = "Uploading... " + file.progress + "%";
+                            }).success(function (data, status, headers, config) {
+                                file.result = data;
+                                console.log(data);
+                                updateMat(data);
+                                q.resolve(data);
+                            }).error(function (data, status, headers, config) {
+                                file.result = data;
+                                q.reject(data);
+                            });
                         })
                         .error(function (event) {
                             alert("error" + angular.toJson(event));
+                            q.reject(event);
                         });
                 }
+                return q.promise;
             }
 
             function doUploadOne(file, data) {
-                file.upload = Upload.upload({
+                return Upload.upload({
                     url: IMAGE_CLOUD_URL,
                     fields: data,
                     file: file
-                }).progress(function (e) {
-                    file.progress = Math.round((e.loaded * 100.0) / e.total);
-                    file.status = "Uploading... " + file.progress + "%";
-                }).success(function (data, status, headers, config) {
-                    file.result = data;
-                    console.log(data);
-                    updateMat(data);
-                }).error(function (data, status, headers, config) {
-                    file.result = data;
                 });
             }
 
