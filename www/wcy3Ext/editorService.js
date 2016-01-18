@@ -13,24 +13,27 @@ angular.module('starter').
             if (!_initialized) {
                 _initialized = true;
                 fileElement = $('#file_input');
-                fileElement.change(function () {
-                    console.log('changed');
-                    var files = document.getElementById('file_input').files;
-                    if (files.length > 0 ) {
-                        uploadOneFile(files[0]).
-                            then(function(data){
-                                console.log(data);
-                                var desc = {src: data.url, type: "Bitmap"};
-                                TQ.SceneEditor.addItem(desc);
-                            }, function(err) {
-                                console.log(err);
-                            });
-                    }
-                });
             }
 
-            fileElement[0].value = null;
+            fileElement.unbind('change'); // remove old handler
+            fileElement[0].value = null;  // remove old selections
+            fileElement.change(onSelectOne);
             fileElement.click();
+        }
+
+        function onSelectOne() {
+            console.log('changed');
+            var files = document.getElementById('file_input').files;
+            if (files.length > 0 ) {
+                uploadOneFile(files[0]).
+                    then(function(data){
+                        console.log(data);
+                        var desc = {src: data.url, type: "Bitmap"};
+                        TQ.SceneEditor.addItem(desc);
+                    }, function(err) {
+                        console.log(err);
+                    });
+            }
         }
 
         function uploadOneFile(file) {
