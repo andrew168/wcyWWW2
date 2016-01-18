@@ -30,6 +30,7 @@ angular.module('starter').
                         console.log(data);
                         var desc = {src: data.url, type: "Bitmap"};
                         TQ.SceneEditor.addItem(desc);
+                        fileElement.unbind('change'); // remove old handler
                     }, function(err) {
                         console.log(err);
                     });
