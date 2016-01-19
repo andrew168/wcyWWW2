@@ -627,7 +627,7 @@ window.TQ = window.TQ || {};
         var desc = this.jsonObj;
         desc.x = TQ.Config.workingRegionWidth / 2;
         desc.y = TQ.Config.workingRegionHeight / 2;
-        desc.sx = desc.sy = Math.min(scaleX, scaleY);
+        desc.sx = desc.sy = Math.max(scaleX, scaleY);
         this.scaleTo(desc);
         this.moveTo(desc);
         // desc.pivotX = desc.pivotY = 0.5;
