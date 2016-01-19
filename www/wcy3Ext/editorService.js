@@ -7,12 +7,19 @@
 
 angular.module('starter').
     factory('EditorService', ['NetService', function (NetService) {
-        var _initialized = false;
-        var fileElement = null;
+        var _initialized = false,
+            fileElement = null,
+            domEle = null;
+
         function insertLocalImage() {
             if (!_initialized) {
                 _initialized = true;
-                fileElement = $('#file_input');
+                domEle = document.createElement('input');
+                domEle.setAttribute('id', '---input-file-test');
+                domEle.setAttribute('type', 'file');
+                domEle.setAttribute('multiple', true);
+                document.body.appendChild(domEle);
+                fileElement = $(domEle);
             }
 
             fileElement.unbind('change'); // remove old handler
@@ -23,7 +30,7 @@ angular.module('starter').
 
         function onSelectOne() {
             console.log('changed');
-            var files = document.getElementById('file_input').files;
+            var files = domEle.files;
             if (files.length > 0 ) {
                 uploadOneFile(files[0]).
                     then(function(data){
