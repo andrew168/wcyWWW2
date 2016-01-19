@@ -5,6 +5,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
+    var _autoFitFlag = false;
     function Element(level, desc) {
         if (level != null) {  // 适用于 子类的定义, 不做任何初始化,只需要prototype
             this.level = level;
@@ -16,6 +17,8 @@ window.TQ = window.TQ || {};
             this.viewCtrl = null;
             this.state = (desc.state == undefined) ? 0 : desc.state;
             this.dirty = this.dirty2 = false;
+            _autoFitFlag = !!desc.autoFit;
+            delete(desc.autoFit);
             this.initialize(desc);
         }
     }
@@ -607,10 +610,27 @@ window.TQ = window.TQ || {};
         TQ.Assert.isNotNull(item, "先准备好资源， 再创建元素");
         this.loaded = true;
         var resource = this.getImageResource(item, jsonObj);
+        if (_autoFitFlag) {
+            this.autoFit(resource);
+        }
         this.displayObj = new createjs.Bitmap(resource);
         this._afterItemLoaded();
         this.setTRSAVZ();
         TQ.DirtyFlag.setElement(this);
+    };
+
+    p.autoFit = function(img) {
+        // 自动充满整个画面
+        var scaleX = TQ.Config.workingRegionWidth / img.naturalWidth,
+            scaleY = TQ.Config.workingRegionHeight / img.naturalHeight;
+
+        var desc = this.jsonObj;
+        desc.x = TQ.Config.workingRegionWidth / 2;
+        desc.y = TQ.Config.workingRegionHeight / 2;
+        desc.sx = desc.sy = Math.min(scaleX, scaleY);
+        this.scaleTo(desc);
+        this.moveTo(desc);
+        // desc.pivotX = desc.pivotY = 0.5;
     };
 
     p.setTRSAVZ = function () {

@@ -28,7 +28,7 @@ angular.module('starter').
                 uploadOneFile(files[0]).
                     then(function(data){
                         console.log(data);
-                        var desc = {src: data.url, type: "Bitmap"};
+                        var desc = {src: data.url, type: "Bitmap", autoFit: true};
                         TQ.SceneEditor.addItem(desc);
                         fileElement.unbind('change'); // remove old handler
                     }, function(err) {

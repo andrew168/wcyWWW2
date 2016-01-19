@@ -107,9 +107,11 @@ angular.module('starter')
 
             $scope.insertLocalImage = function () {
                 var path = "p12504.png";
+
                 var server1File = "http://bone.udoido.cn/mcImages/" + path;
                 var server2File = "http://www.udoido.com/mcImages/" + path;
                 if (TQ.Config.cloundaryEnabled) {
+                    path = 'v1453179217/51.png';
                     server1File = 'http://res.cloudinary.com/eplan/image/upload/' + path;
                 }
                 var albumFile = "";
@@ -124,7 +126,7 @@ angular.module('starter')
             };
 
             function insertImage(filename, x, y) {
-                var desc = {src: filename, type: "Bitmap", x: x, y: y};
+                var desc = {src: filename, type: "Bitmap",  x: x, y: y, autoFit: true};
                 TQ.SceneEditor.addItem(desc);
             }
 
