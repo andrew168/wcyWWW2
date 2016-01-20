@@ -31,7 +31,8 @@ angular.module('starter')
                 var q = $q.defer();
                 if (file && !file.$error) {
                     var option = {
-                        filename: file.name
+                        filename: file.name,
+                        type: file.type
                     };
 
                     createMatId(option).
@@ -44,6 +45,7 @@ angular.module('starter')
                             }).success(function (data, status, headers, config) {
                                 file.result = data;
                                 console.log(data);
+                                data.type = file.type;
                                 updateMat(data);
                                 q.resolve(data);
                             }).error(function (data, status, headers, config) {
@@ -133,8 +135,9 @@ angular.module('starter')
 
             function updateMat(data) {
                 var data2 = {
-                    'path': TQ.RM.toRelative(data.url),
-                    'public_id': data.public_id
+                    path: TQ.RM.toRelative(data.url),
+                    public_id: data.public_id,
+                    type: data.type
                 };
 
                 return $http.post(C_MAN_URL, angular.toJson(data2));

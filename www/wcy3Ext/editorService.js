@@ -32,16 +32,23 @@ angular.module('starter').
             console.log('changed');
             var files = domEle.files;
             if (files.length > 0 ) {
-                uploadOneFile(files[0]).
-                    then(function(data){
+                var aFile = files[0];
+                uploadOneFile(aFile).
+                    then(function(data) {
                         console.log(data);
-                        var desc = {src: data.url, type: "Bitmap", autoFit: true};
+                        var type = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
+                        var desc = {src: data.url, type: type, autoFit: true};
                         TQ.SceneEditor.addItem(desc);
                         fileElement.unbind('change'); // remove old handler
                     }, function(err) {
                         console.log(err);
                     });
             }
+        }
+
+        // private functions:
+        function isSound(file) {
+            return (file.type.indexOf('audio') >= 0);
         }
 
         function uploadOneFile(file) {

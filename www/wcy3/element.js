@@ -1534,5 +1534,14 @@ window.TQ = window.TQ || {};
         return z;
     };
 
+    TQ.ElementType = {
+        BITMAP: "Bitmap",
+        SOUND: "SOUND",
+        TEXT: "Text",
+        GROUP: "Group",
+        GROUP_FILE: "GroupFile",
+        BITMAP_ANIMATION: "BitmapAnimation"
+    };
+
     TQ.Element = Element;
 }());
