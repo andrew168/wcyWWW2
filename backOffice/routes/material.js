@@ -15,11 +15,16 @@ var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省�
 
 var fs = require('fs');
 
-var pictureMatController = require('../db/pictureMat/pictureMatController');
+var pictureMatController = require('./pictureMatController');
+var audioMatController = require('./audioMatController');
+
+var TYPE_IMAGE = 'image',
+    TYPE_AUDIO = 'audio';
 
 var userID,
     timesCalled,
     defaultUserID = 1000;
+
 
 router.post('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
@@ -27,14 +32,15 @@ router.post('/', function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     //ToDo:@@@
     var userID = 0;
-    var public_id = req.param('public_id') || null;
+    var public_id = req.param('public_id') || null,
+        matType = getMatType(req);
 
     if (!public_id) {
         var originalFilename = req.param('filename') || "no_filename";
-        createMatId(originalFilename, res);
+        createMatId(matType, originalFilename, res);
     } else {
         var path = req.param('path') || null;
-        updateMatId(public_id, path, res);
+        updateMatId(matType, public_id, path, res);
     }
 });
 
@@ -42,12 +48,13 @@ router.get('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
+
     //ToDo:@@@
     var userID = 0;
-    getMatIds(res);
+    getMatIds(getMatType(req), res);
 });
 
-function createMatId(originalFilename, res) {
+function createMatId(matType, originalFilename, res) {
     if (!originalFilename) {
         var msg = "wrong format: must have filename!";
         console.log(msg);
@@ -67,7 +74,7 @@ function createMatId(originalFilename, res) {
             // ToDo:
             var ip = null;
             var isShared = false;
-            pictureMatController.add(userID, originalFilename, ip, isShared, onSavedToDB, null);
+            getMatController(matType).add(userID, originalFilename, ip, isShared, onSavedToDB, null);
         } else {
             console.log("must be new material");
         }
@@ -75,7 +82,7 @@ function createMatId(originalFilename, res) {
     }
 }
 
-function updateMatId(public_id, path, res) {
+function updateMatId(matType, public_id, path, res) {
     // 入库， 并获取新material ID，
     function onSavedToDB(_matId) {
         var data = {
@@ -84,12 +91,12 @@ function updateMatId(public_id, path, res) {
         sendBack(data, res);
     }
 
-    pictureMatController.update(public_id, path, onSavedToDB);
+    getMatController(matType).update(public_id, path, onSavedToDB);
 }
 
-function getMatIds(res) {
+function getMatIds(matType, res) {
     // ToDo:
-    pictureMatController.get(null, function(data) {
+    getMatController(matType).get(null, function(data) {
         res.json(data);
     });
 }
@@ -104,4 +111,12 @@ function isNewMaterial(mat_id) {
     return true;
 }
 
+function getMatType(req) {
+    var matType = req.param('type') || TYPE_IMAGE;
+    return matType.split('/')[0];
+}
+
+function getMatController(type) {
+    return (type === TYPE_IMAGE) ? pictureMatController : audioMatController;
+}
 module.exports = router;
