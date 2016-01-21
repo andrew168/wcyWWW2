@@ -8,6 +8,7 @@
 
 
 var mongoose = require('mongoose'),
+    utils = require('../dbUtils'),
     PictureMat = mongoose.model('PictureMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
@@ -41,7 +42,7 @@ function add(userID, picName, ip, isShared, onSuccess, onError) {
     });
 
     aDoc.save(function(err, doc) {
-        onSave(err, doc, onSuccess, onError);
+        utils.onSave(err, doc, onSuccess, onError);
     });
 }
 
@@ -66,24 +67,6 @@ function update(id, path, callback) {
             }
         });
 }
-function onSave(err, doc, onSuccess, onError) {
-    showDocument(err, doc);
-    if (!err) {
-        onSuccess(doc._id);
-    } else {
-        onError(err);
-    }
-}
-
-function notFound(res) {
-    res.json(404, {msg: 'not found'});
-}
-
-function showDocument(err, doc) {
-    console.log("result: " + err);
-    console.log("saved doc is: ", doc);
-}
-
 exports.get = get;
 exports.add = add;
 exports.update = update;

@@ -4,6 +4,7 @@
 // 实现数据库的增删改查
 // 只有一条记录， 就是最新的 ticket，token，及其时间戳
 var mongoose = require('mongoose'),
+    utils = require('../dbUtils'),
     WxTickets = mongoose.model('WxTickets');
 
 var defaultRecord ={jsapiTicket: null,
@@ -27,7 +28,7 @@ function get(callback) {
 function insert(newData) {
     var newDoc = new WxTickets(newData);
     newDoc.save(function(err, doc) {
-        onSave(err, doc, res);
+        utils.onResSave(err, doc, res);
     });
 }
 
@@ -42,22 +43,9 @@ function update(newData) {
                     jsapiTicketExpireTime: newData.jsapiTicketExpireTime,
                     accessToken:  newData.accessToken,
                     accessTokenExpireTime: newData.accessTokenExpireTime}});
-                query2.exec(onSave);
+                query2.exec(utils.dumpDocument);
             }
         });
-}
-
-function onSave(err, doc) {
-    showDocument(err, doc);
-}
-
-function notFound(res) {
-    res.json(404, {msg: 'not found'});
-}
-
-function showDocument(err, doc) {
-    console.log("result: " + err);
-    console.log("saved doc is: ", doc);
 }
 
 exports.get = get;
