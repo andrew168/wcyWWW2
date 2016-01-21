@@ -40,7 +40,7 @@ function init(app) {
         {name:'User', schema:'../db/user/userSchema.js', ctrl:'../db/user/userController.js'},
         {name:'Opus', schema:'../db/opus/opusSchema.js', ctrl:'../db/opus/opusController.js'},
         {name:'PictureMat', schema:'../db/material/pictureMatSchema.js', ctrl:'../db/material/pictureMatController.js'},
-        {name:'AudioMat', schema:'../db/audioMat/audioMatSchema.js', ctrl:'../db/audioMat/audioMatController.js'}
+        {name:'AudioMat', schema:'../db/material/audioMatSchema.js', ctrl:'../db/material/audioMatController.js'}
     ];
 
     var i;

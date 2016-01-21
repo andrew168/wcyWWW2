@@ -15,8 +15,8 @@ var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省�
 
 var fs = require('fs');
 
-var pictureMatController = require('./pictureMatController');
-var audioMatController = require('./audioMatController');
+var pictureMatController = require('../db/material/pictureMatController');
+var audioMatController = require('../db/material/audioMatController');
 
 var TYPE_IMAGE = 'image',
     TYPE_AUDIO = 'audio';
