@@ -3,7 +3,7 @@
  */
 // 实现数据库的增删改查
 var mongoose = require('mongoose'),
-    utils = require('../dbUtils'),
+    utils = require('../../common/utils'),
     Share = mongoose.model('Share');
 
 function get(id) {

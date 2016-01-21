@@ -8,7 +8,7 @@
 
 
 var mongoose = require('mongoose'),
-    utils = require('../dbUtils'),
+    utils = require('../../common/utils'),
     PictureMat = mongoose.model('PictureMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作

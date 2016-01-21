@@ -3,7 +3,7 @@
  */
 // 实现数据库的增删改查
 var mongoose = require('mongoose'),
-    utils = require('../dbUtils'),
+    utils = require('../../common/utils'),
     Opus = mongoose.model('Opus');
 
 function get(id) {

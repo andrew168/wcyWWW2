@@ -3,7 +3,7 @@
  */
 // 实现数据库user的增删改查
 var mongoose = require('mongoose'),
-    utils = require('../dbUtils'),
+    utils = require('../../common/utils'),
     User = mongoose.model('User');
 
 function get(id) {

@@ -4,7 +4,7 @@
 // 实现数据库的增删改查
 // 只有一条记录， 就是最新的 ticket，token，及其时间戳
 var mongoose = require('mongoose'),
-    utils = require('../dbUtils'),
+    utils = require('../../common/utils'),
     WxTickets = mongoose.model('WxTickets');
 
 var defaultRecord ={jsapiTicket: null,
