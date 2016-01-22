@@ -6,12 +6,15 @@
  */
 
 angular.module('starter').
-    factory('EditorService', ['NetService', function (NetService) {
+    factory('EditorService', ['NetService', 'WxService', function (NetService, WxService) {
+        var TYPE_IMAGE = 'image',
+            TYPE_AUDIO = 'audio';
+
         var _initialized = false,
             fileElement = null,
             domEle = null;
 
-        function insertLocalImage() {
+        function insertLocalMat() {
             if (!_initialized) {
                 _initialized = true;
                 domEle = document.createElement('input');
@@ -32,30 +35,37 @@ angular.module('starter').
             console.log('changed');
             var files = domEle.files;
             if (files.length > 0 ) {
-                var aFile = files[0];
-                uploadOneFile(aFile).
-                    then(function(data) {
-                        console.log(data);
-                        var type = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
-                        var desc = {src: data.url, type: type, autoFit: true};
-                        TQ.SceneEditor.addItem(desc);
-                        fileElement.unbind('change'); // remove old handler
-                    }, function(err) {
-                        console.log(err);
-                    });
+                processOneMat(files[0]);
             }
+        }
+
+        function processOneMat(aFile) {
+            uploadOneFile(aFile).
+                then(function (data) {
+                    console.log(data);
+                    var type = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
+                    var desc = {src: data.url, type: type, autoFit: true};
+                    TQ.SceneEditor.addItem(desc);
+                    // fileElement.unbind('change'); // remove old handler
+                }, function (err) {
+                    console.log(err);
+                });
         }
 
         // private functions:
         function isSound(file) {
+            if (!file.type) {  // for Wx
+                return false;
+            }
+
             return (file.type.indexOf('audio') >= 0);
         }
 
         function uploadOneFile(file) {
-            return NetService.uploadOneImage(file);
+            return NetService.uploadOne(file);
         }
 
         return {
-            insertLocalImage: insertLocalImage
+            insertLocalImage: insertLocalMat
         };
 }]);

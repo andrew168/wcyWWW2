@@ -23,11 +23,11 @@ angular.module('starter')
                 }
 
                 angular.forEach(files, function(file){
-                    uploadOneImage(file, _onSuccess);
+                    uploadOneLocalFile(file, _onSuccess);
                 });
             }
 
-            function uploadOneImage(file) {
+            function uploadOneLocalFile(file) {
                 var q = $q.defer();
                 if (file && !file.$error) {
                     var option = {
@@ -212,7 +212,7 @@ angular.module('starter')
                 put: put,
                 uploadData: uploadData,
                 uploadImages: uploadImages,
-                uploadOneImage: uploadOneImage,
+                uploadOne: uploadOneLocalFile,
                 update: update,
                 del: del
             }

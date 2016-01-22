@@ -7,6 +7,7 @@ angular.module('starter').
         var myLogError = myLogInfo = function (str) {
             alert("A__" + str);
         };
+        var _isReady = false;
 
         //在本应用中用到的API，（白名单）
         // 1) 白名单之外的API， 将无法使用
@@ -66,11 +67,12 @@ angular.module('starter').
         };
 
         wx.ready(function (msg) {
-            myLogInfo("Wx Ready! " + JSON.stringify(msg));
+            // myLogInfo("Wx Ready! " + JSON.stringify(msg));
             // 对于注册型的API，在此调用
-            checkAPI();
+            // checkAPI();
             shareMessage(); // 其实，只是预制内容而已， 并非直接发送，
                             // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
+            _isReady = true;
         });
 
         wx.error(function (error) {
@@ -91,7 +93,7 @@ angular.module('starter').
             user.timesShared = $cookies.get('timesCalled');
             user.ID = $cookies.get('userID');
 
-            myLogInfo(JSON.stringify(wechat_sign));
+            //myLogInfo(JSON.stringify(wechat_sign));
             var appId = 'wx9a9eb662dd97612f';
             wx.config({
                 debug: true, // false,
@@ -169,17 +171,37 @@ angular.module('starter').
         }
 
         function chooseImage() {
+            var q = $q.defer();
+
             wx.chooseImage({
-                success: function (res) {
-                    images.localId = res.localIds;
-                    alert('已选择 ' + res.localIds.length + ' 张图片');
+                count: 2, // 默认9
+                sizeType: ['original', 'compressed'],
+                sourceType: ['album', 'camera'],
+                success11: function (res) {
+                   var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
+                   myLogInfo('已选择 ' + localIds + ' 张图片');
+                   myLogInfo('已选择 ' + 222 + ' 张图片');
+                },
+
+                success : function (res) {
+                    var localId = res.localIds[0];
+                    myLogInfo('已选择 ' + res.localIds.length + ' 张图片');
+                    q.resolve(localId);
                 }
             });
+
+            return q.promise;
         }
+
+        function isReady() {
+            return _isReady;
+        }
+
         return {
             config: getSignature,
             shareMessage: shareMessage,
             checkAPI: checkAPI,
-            chooseImage: chooseImage
+            chooseImage: chooseImage,
+            isReady: isReady
         };
     });
