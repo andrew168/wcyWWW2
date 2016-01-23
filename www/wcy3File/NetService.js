@@ -1,7 +1,7 @@
 /**
  * Created by admin on 9/11/2015.
  * NetService： 上传素材（image或者mp3）到clound服务器，主要接口是
- *     * uploadData
+ *     * uploadOne
  * 在controller中直接使用
  */
 angular.module('starter')
@@ -135,27 +135,11 @@ angular.module('starter')
                 console.log("put " + path + " to ===> " + url);
             }
 
-            function uploadData(imageData, onSuccess, onError, onProgress) {
-                var filename = getImageNameWithoutExt();
-                var options = {
-                    file: imageData,
-                    filename:filename,
-                    tags: 'myphotoalbum',
-                    context: 'photo=' + "No"
-                };
-
-                return submitImage(options, onSuccess, onError, onProgress);
-            }
-
             var counter = 100;
             function getImageNameWithoutExt() {
                 // the Cloundary will automatically add extion '.png'
                 return "p" + (counter++);
             }
-
-            var getSignature = function (option) {
-                return $http.get(C_SIGNATURE_URL + "?filename=" + option.filename);
-            };
 
             var createMatId = function (option) {
                 return $http.post(C_MAN_URL, angular.toJson(option));
@@ -170,45 +154,6 @@ angular.module('starter')
 
                 return $http.post(C_MAN_URL, angular.toJson(data2));
             }
-
-            var submitImage = function (option, onSuccess, onError, onProgress) {
-                var q = $q.defer();
-                getSignature(option).
-                    success(function (data) {
-                        console.log(JSON.stringify(data));
-                        data.file = option.file;
-                        data.api_key = TQ.Config.Cloudinary.api_key;
-                        doSubmitImage(data, onSuccess, onError, onProgress);
-                        return q.resolve("AAA");
-                    }).
-                    error(function (event) {
-                        alert("error" + angular.toJson(event));
-                        return q.reject("BBB");
-                    });
-
-                return q.promise;
-            };
-
-            function doSubmitImage(option, onSuccess, onError, onProgress) {
-                var url = IMAGE_CLOUD_URL;
-                var result = {};
-                $http.post(url, angular.toJson(option)).
-                    success(function (data) {
-                        console.log("Successfully saved to " + data.url);
-                        result.imageUrl = data.url;
-                        if (onSuccess) {
-                            onSuccess(data);
-                        }
-                    }).
-                    error(function (error) {
-                        alert(angular.toJson(error));
-                        result.imageUrl = null;
-                        if (onError) {
-                            onError(error);
-                        }
-                    });
-            }
-
 
             function update(path) {
                 var url = urlConcat(baseUrl, path);
@@ -250,7 +195,6 @@ angular.module('starter')
                 initialize : initialize,
                 get: get,
                 put: put,
-                uploadData: uploadData,
                 uploadImages: uploadImages,
                 uploadOne: uploadOneLocalFile,
                 update: update,
