@@ -65,7 +65,7 @@ function createMatId(matType, originalFilename, res) {
             function onSavedToDB(_matId) {
                 mat_id = _matId;
                 var data = {
-                    public_id: mat_id
+                    public_id: "c" + mat_id
                 };
                 cSignature.sign(data);
                 sendBack(data, res);

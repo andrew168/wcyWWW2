@@ -13,6 +13,9 @@ angular.module('starter')
             var C_SIGNATURE_URL =TQ.Config.AUTH_HOST +'/getCSignature';  // Cloudary signature;
             var C_MAN_URL = TQ.Config.MAN_HOST + '/material';
 
+            var TYPE_IMAGE = 'image',
+                TYPE_AUDIO = 'audio';
+
             function uploadImages(files, onSuccess){
                 if (!files) return;
                 var surplus = files.length;
@@ -37,18 +40,33 @@ angular.module('starter')
                         type: file.type
                     };
                 } else {
-
+                    var filename = getImageNameWithoutExt();
+                    option = {
+                        filename: filename,
+                        type: TYPE_IMAGE,
+                        tags: 'myphotoalbum',
+                        context: 'photo=' + "No"
+                    };
                 }
 
                 createMatId(option).
                     success(function (data) {
                         console.log(JSON.stringify(data));
                         data.api_key = TQ.Config.Cloudinary.api_key;
-                        var res = doUploadLocalFile(file, data);
-                        res.progress(function (e) {
-                            file.progress = Math.round((e.loaded * 100.0) / e.total);
-                            file.status = "Uploading... " + file.progress + "%";
-                        }).success(function (data, status, headers, config) {
+                        var res;
+                        if (isLocalFile(file)) {
+                            data.file = file;
+                            res = doUploadLocalFile(data);
+                            res.progress(function (e) {
+                                file.progress = Math.round((e.loaded * 100.0) / e.total);
+                                file.status = "Uploading... " + file.progress + "%";
+                            });
+                        } else {
+                            data.file = file;
+                            res = doSubmitImage64(data);
+                        }
+
+                        res.success(function (data, status, headers, config) {
                             file.result = data;
                             console.log(data);
                             data.type = file.type;
@@ -67,12 +85,16 @@ angular.module('starter')
                 return q.promise;
             }
 
-            function doUploadLocalFile(file, data) {
+            function doUploadLocalFile(data) {
                 return Upload.upload({
                     url: IMAGE_CLOUD_URL,
-                    fields: data,
-                    file: file
+                    fields: data
                 });
+            }
+
+            function doSubmitImage64(data) {
+                var url = IMAGE_CLOUD_URL;
+                return $http.post(url, angular.toJson(data));
             }
 
             function get(url, onSuccess, onError) {
@@ -187,6 +209,7 @@ angular.module('starter')
                     });
             }
 
+
             function update(path) {
                 var url = urlConcat(baseUrl, path);
                 console.log("update: " + path + " to ==> " + url);
@@ -222,6 +245,8 @@ angular.module('starter')
             }
 
             return {
+                TYPE_IMAGE : TYPE_IMAGE,
+                TYPE_AUDIO : TYPE_AUDIO,
                 initialize : initialize,
                 get: get,
                 put: put,
@@ -230,5 +255,5 @@ angular.module('starter')
                 uploadOne: uploadOneLocalFile,
                 update: update,
                 del: del
-            }
+        }
         }]);

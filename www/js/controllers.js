@@ -237,7 +237,9 @@ angular.module('starter')
                     _onSuccess = onSuccess;
                 }
                 var data = TQ.ScreenShot.getData();
-                NetService.uploadData(data, onSuccess, onError);
+                NetService.uploadOne(data).then(
+                    onSuccess,
+                    onError);
             };
 
             $scope.uploadMat = function (_onSuccess) {
