@@ -29,39 +29,45 @@ angular.module('starter')
 
             function uploadOneLocalFile(file) {
                 var q = $q.defer();
-                if (file && !file.$error) {
-                    var option = {
+                TQ.Assert.isTrue(!!file, "文件不能为null");
+                var option;
+                if (isLocalFile(file)) {
+                    option = {
                         filename: file.name,
                         type: file.type
                     };
+                } else {
 
-                    createMatId(option).
-                        success(function (data) {
-                            console.log(JSON.stringify(data));
-                            data.api_key = TQ.Config.Cloudinary.api_key;
-                            doUploadOne(file, data).progress(function (e) {
-                                file.progress = Math.round((e.loaded * 100.0) / e.total);
-                                file.status = "Uploading... " + file.progress + "%";
-                            }).success(function (data, status, headers, config) {
-                                file.result = data;
-                                console.log(data);
-                                data.type = file.type;
-                                updateMat(data);
-                                q.resolve(data);
-                            }).error(function (data, status, headers, config) {
-                                file.result = data;
-                                q.reject(data);
-                            });
-                        })
-                        .error(function (event) {
-                            alert("error" + angular.toJson(event));
-                            q.reject(event);
-                        });
                 }
+
+                createMatId(option).
+                    success(function (data) {
+                        console.log(JSON.stringify(data));
+                        data.api_key = TQ.Config.Cloudinary.api_key;
+                        var res = doUploadLocalFile(file, data);
+                        res.progress(function (e) {
+                            file.progress = Math.round((e.loaded * 100.0) / e.total);
+                            file.status = "Uploading... " + file.progress + "%";
+                        }).success(function (data, status, headers, config) {
+                            file.result = data;
+                            console.log(data);
+                            data.type = file.type;
+                            updateMat(data);
+                            q.resolve(data);
+                        }).error(function (data, status, headers, config) {
+                            file.result = data;
+                            q.reject(data);
+                        });
+                    })
+                    .error(function (event) {
+                        alert("error" + angular.toJson(event));
+                        q.reject(event);
+                    });
+
                 return q.promise;
             }
 
-            function doUploadOne(file, data) {
+            function doUploadLocalFile(file, data) {
                 return Upload.upload({
                     url: IMAGE_CLOUD_URL,
                     fields: data,
@@ -116,7 +122,7 @@ angular.module('starter')
                     context: 'photo=' + "No"
                 };
 
-                submitImage(options, onSuccess, onError, onProgress);
+                return submitImage(options, onSuccess, onError, onProgress);
             }
 
             var counter = 100;
@@ -144,16 +150,21 @@ angular.module('starter')
             }
 
             var submitImage = function (option, onSuccess, onError, onProgress) {
+                var q = $q.defer();
                 getSignature(option).
                     success(function (data) {
                         console.log(JSON.stringify(data));
                         data.file = option.file;
                         data.api_key = TQ.Config.Cloudinary.api_key;
                         doSubmitImage(data, onSuccess, onError, onProgress);
+                        return q.resolve("AAA");
                     }).
                     error(function (event) {
                         alert("error" + angular.toJson(event));
+                        return q.reject("BBB");
                     });
+
+                return q.promise;
             };
 
             function doSubmitImage(option, onSuccess, onError, onProgress) {
@@ -190,7 +201,7 @@ angular.module('starter')
                 document.addEventListener(TQ.DownloadManager.DOWNLOAD_EVENT, onDownload, false);
             }
 
-            // private
+            // private functions:
             function onDownload(evt) {
                 var data = evt.data;
                 function onSuccess() {
@@ -204,6 +215,10 @@ angular.module('starter')
                 if (data) {
                     get(data, onSuccess, onError);
                 }
+            }
+
+            function isLocalFile(file) {
+                return ((typeof file === 'object') && (!!file.type))
             }
 
             return {
