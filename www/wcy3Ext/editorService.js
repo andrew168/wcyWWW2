@@ -13,7 +13,8 @@ angular.module('starter').
 
 		function insertLocalMat() {
             if (WxService.isReady()) {
-                return insertLocalMatWx();
+                alert("请在浏览器中打开，以便于使用所有功能");
+                // return insertLocalMatWx();
             }
 
             return insertLocalMatWeb();

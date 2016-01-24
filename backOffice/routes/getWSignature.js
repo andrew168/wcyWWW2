@@ -148,17 +148,4 @@ function isValidAccessToken() {
     return ((new Date()).getTime() < accessTokenExpireTime);
 }
 
-function getCookie(req, name, defaultValue)
-{
-    var para;
-    if (!req.cookies[name]) {
-        para = defaultValue;
-    } else {
-        para = req.cookies[name];
-        para = parseInt(para);
-    }
-
-    return para;
-}
-
 module.exports = router;
