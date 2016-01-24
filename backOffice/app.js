@@ -48,11 +48,20 @@ require('./db/dbMain').init(app);
 
 var Wcy = require('./routes/wcy');
 var material = require('./routes/material');
+var status = require('../common/status');
+
+app.use('/', express.static('www'));
+// 以上的路径，排除在外
+
+app.use(function(req, res, next) {
+    console.log("I'm first!!! for any path, 除了以上的路径");
+    status.checkUser(req, res);
+    next();
+});
 
 app.use('/wcy', Wcy);
 app.use('/material', material);
 
-app.use('/', express.static('www'));
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   var err = new Error('Not Found');
