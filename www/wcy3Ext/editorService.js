@@ -7,14 +7,20 @@
 
 angular.module('starter').
     factory('EditorService', ['NetService', 'WxService', function (NetService, WxService) {
-        var TYPE_IMAGE = 'image',
-            TYPE_AUDIO = 'audio';
-
         var _initialized = false,
             fileElement = null,
             domEle = null;
 
-        function insertLocalMat() {
+		function insertLocalMat() {
+            if (WxService.isReady()) {
+                return insertLocalMatWx();
+            }
+
+            return insertLocalMatWeb();
+
+        }
+
+        function insertLocalMatWeb() {
             if (!_initialized) {
                 _initialized = true;
                 domEle = document.createElement('input');
@@ -40,9 +46,21 @@ angular.module('starter').
         }
 
         function processOneMat(aFile) {
+            var wxAbility = {
+                FileAPI: !!window.FileAPI,
+                FileReader: !!window.FileReader,
+                URL: !!window.URL,
+                XMLHttpRequest: !!window.XMLHttpRequest,
+                Blob: !!window.Blob,
+                ArrayBuffer: !!window.ArrayBuffer,
+                webkitURL: !!window.webkitURL,
+                atob: !!window.atob
+            };
+
+            TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
             uploadOneFile(aFile).
                 then(function (data) {
-                    console.log(data);
+                    TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
                     var type = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
                     var desc = {src: data.url, type: type, autoFit: true};
                     TQ.SceneEditor.addItem(desc);
@@ -59,6 +77,22 @@ angular.module('starter').
             }
 
             return (file.type.indexOf('audio') >= 0);
+        }
+
+        function insertLocalMatWx() {
+            WxService.chooseImage().then(function(filePath) {
+                var aFile = {
+                    path: filePath,
+                    type: NetService.TYPE_IMAGE,
+                    isWx: true
+                };
+
+                TQ.Log.alertInfo("微信InsertLocal：" + JSON.stringify(aFile));
+                processOneMat(aFile);
+            }, function(err) {
+                console.log(err);
+            });
+
         }
 
         function uploadOneFile(file) {

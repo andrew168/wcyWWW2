@@ -26,11 +26,11 @@ angular.module('starter')
                 }
 
                 angular.forEach(files, function(file){
-                    uploadOneLocalFile(file, _onSuccess);
+                    uploadOne(file, _onSuccess);
                 });
             }
 
-            function uploadOneLocalFile(file) {
+            function uploadOne(file) {
                 var q = $q.defer();
                 TQ.Assert.isTrue(!!file, "文件不能为null");
                 var option;
@@ -39,6 +39,12 @@ angular.module('starter')
                         filename: file.name,
                         type: file.type
                     };
+
+                    if (!!file.isWx) {
+                        TQ.Log.alertInfo("isWx");
+                        TQ.Log.alertInfo(JSON.stringify(file));
+                        get(file.path);
+                    }
                 } else {
                     var filename = getImageNameWithoutExt();
                     option = {
@@ -78,7 +84,7 @@ angular.module('starter')
                         });
                     })
                     .error(function (event) {
-                        alert("error" + angular.toJson(event));
+                        TQ.Log.alertInfo("error" + angular.toJson(event));
                         q.reject(event);
                     });
 
@@ -97,7 +103,30 @@ angular.module('starter')
                 return $http.post(url, angular.toJson(data));
             }
 
+            function getByXHR(uri) {
+                // CHROME - browsers
+                var xhr = new XMLHttpRequest();
+                TQ.Log.alertInfo("X1: " + uri);
+                xhr.open('GET', uri, true);
+                xhr.responseType = 'blob';
+                var headers = {};
+                xhr.onload = function () {
+                    TQ.Log.alertInfo("X2");
+                    TQ.Log.alertInfo(xhr.response.size + ",  " +  xhr.response.type);
+                    if (xhr.response && (xhr.status === 200 || xhr.status === 0)) {
+                        TQ.Log.alertInfo("X2.5");
+                    } else {
+                        TQ.Log.alertInfo('Image could not be downloaded: ' + xhr.status);
+                    }
+                };
+                xhr.onerror = function () {
+                    TQ.Log.alertInfo("X3 : " + xhr.status);
+                };
+                xhr.send();
+            }
+
             function get(url, onSuccess, onError) {
+                TQ.Log.alertInfo("Get 1 : " + url);
                 var urlSource, urlTarget;
                 var trustHosts = true;
                 var options = {};
@@ -110,6 +139,7 @@ angular.module('starter')
                 }
 
                 if (TQ.Base.Utility.isMobileDevice() && TQ.Base.Utility.isCordovaDevice()) {
+                    TQ.Log.alertInfo("Get 3");
                     $cordovaFileTransfer.download(urlSource, urlTarget, options, trustHosts)
                         .then(function (result) {
                             console.log(result);
@@ -125,6 +155,7 @@ angular.module('starter')
                             // })
                         });
                 } else {
+                    TQ.Log.alertInfo(" 4 ImageCache OK??");
                     ImgCache.cacheFile(urlSource, urlTarget, onSuccess, onError);
                 }
             }
@@ -185,8 +216,8 @@ angular.module('starter')
                 }
             }
 
-            function isLocalFile(file) {
-                return ((typeof file === 'object') && (!!file.type))
+            function isLocalFile(data) {
+                return ((typeof data === 'object') && (!!data.type))
             }
 
             return {
@@ -196,7 +227,7 @@ angular.module('starter')
                 get: get,
                 put: put,
                 uploadImages: uploadImages,
-                uploadOne: uploadOneLocalFile,
+                uploadOne: uploadOne,
                 update: update,
                 del: del
         }
