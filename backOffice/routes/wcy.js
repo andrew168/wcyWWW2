@@ -92,9 +92,15 @@ function filename2WcyId(filename) {
 function sendBackWcy(req, res, wcyId) {
     fs.readFile(wcyId2Filename(wcyId), 'utf8', function (err, data) {
         if (err) throw err;
-        console.log(data);
+        // console.log(data);
         // res.json(data);
-        response(req, res, data);
+        if (res.isRegisteredUser) {
+            response(req, res, data);
+        } else {
+            status.setExtraCallback(function() {
+                response(req, res, data);
+            })
+        }
     });
 }
 

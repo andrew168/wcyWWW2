@@ -17,14 +17,14 @@ function get(id) {
         });
 }
 
-function add(req, res) {
+function add(req, onSuccess) {
     var aDoc = new User({
         name:'andrew' + new Date().getTime(),
         score: 100 //多余的字段， 将被忽略
     });
 
     aDoc.save(function(err, doc) {
-        utils.onResSave(err, doc, res);
+        onSuccess(doc);
     });
 }
 

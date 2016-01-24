@@ -5,13 +5,15 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+var app = express();
+//  使用数据库的操作， 都必须在数据库启动之后， 再启动
+require('./db/dbMain').init(app);
+
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var getCSignature = require('./routes/getCSignature');
 var getWSignature = require('./routes/getWSignature');
 
-
-var app = express();
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -43,8 +45,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 // app.use('/users', users);
 app.use('/getCSignature', getCSignature);
 app.use('/getWSignature', getWSignature);
-//  使用数据库的操作， 都必须在数据库启动之后， 再启动
-require('./db/dbMain').init(app);
 
 var Wcy = require('./routes/wcy');
 var material = require('./routes/material');

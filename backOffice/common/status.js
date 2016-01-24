@@ -1,33 +1,53 @@
 /**
  * Created by Andrewz on 1/24/2016.
  */
-var defaultUserID = 102;
-
+var userController = require('../db/user/userController');
+var defaultUserID = 10;
 var user = {
     ID:0,
     name: "anonymouse",
     timesCalled: 0
 };
 
+var extraCallback = null;
+
 function checkUser(req, res) {
     user.timesCalled = getCookie(req, 'timesCalled', 0);
     user.timesCalled++;
-    user.ID = checkUserID(req);
-    console.log("userID : " + user.ID + ",  timesCalled: " + user.timesCalled);
-
-    res.cookie('userID', user.ID.toString(), { maxAge: 900000, httpOnly: true });
-    res.cookie('timesCalled', user.timesCalled.toString(), { maxAge: 900000, httpOnly: true });
-    res.clearCookie('oldCookie1');
+    checkUserID(req, res, function(){
+        console.log("userID : " + user.ID + ",  timesCalled: " + user.timesCalled);
+        res.cookie('userID', user.ID.toString(), { maxAge: 900000, httpOnly: true });
+        res.cookie('timesCalled', user.timesCalled.toString(), { maxAge: 900000, httpOnly: true });
+        res.clearCookie('oldCookie1');
+    });
 }
 
-function checkUserID(req) {
-    user.ID = getCookie(req, 'userID', defaultUserID);
-    if (isNewUser()) {
-        //        userController.addDirect(req);
-        userID ++;
+function checkUserID(req, res, callback) {
+    if (!!req.checkUserPassed) {
+        return;
     }
 
-    return user.ID;
+    res.userChecked = true;
+    user.ID = getCookie(req, 'userID', defaultUserID);
+    if (isNewUser()) {
+        user.timesCalled = 0;
+        userController.add(req, function(doc) {
+            res.isRegisteredUser = true;
+            user.ID = doc._id;
+            if (callback) {
+                callback();
+            }
+            if (extraCallback) {
+                extraCallback();
+                extraCallback = null;
+            }
+        });
+    } else {
+        res.isRegisteredUser = true;
+        if (callback) {
+            callback();
+        }
+    }
 }
 
 function getCookie(req, name, defaultValue)
@@ -44,8 +64,13 @@ function getCookie(req, name, defaultValue)
 }
 
 function isNewUser() {
-    return  ((user.timesCalled === 0) && (user.ID === defaultUserID));
+    return  (user.ID === defaultUserID);
+}
+
+function setExtraCallback(callback) {
+    extraCallback = callback;
 }
 
 exports.user = user;
 exports.checkUser = checkUser;
+exports.setExtraCallback = setExtraCallback;
