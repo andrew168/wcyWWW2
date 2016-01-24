@@ -25,7 +25,6 @@ router.post('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
-    status.checkUser(req, res);
     var public_id = req.param('public_id') || null,
         matType = getMatType(req);
 

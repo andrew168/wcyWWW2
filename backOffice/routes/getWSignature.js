@@ -50,7 +50,6 @@ var jsapiTicketExpireTime = 0;
 var accessToken;
 var accessTokenExpireTime  = 0;
 router.get('/', function(req, res, next) {
-    status.checkUser(req, res);
     if (isValidJsapiTicket()) {
         responseSign(req, res, next);
     } else {

@@ -16,7 +16,6 @@ router.param('shareCode', function (req, res, next, id) {
 });
 
 router.get('/:shareCode', function(req, res, next) {
-    status.checkUser(req, res);
     var shareCode = req.param('shareCode');
     var wcyId = utils.decomposeShareCode(shareCode).wcyId;
     sendBackWcy(req, res, wcyId);

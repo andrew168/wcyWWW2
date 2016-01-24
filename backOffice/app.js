@@ -48,7 +48,7 @@ require('./db/dbMain').init(app);
 
 var Wcy = require('./routes/wcy');
 var material = require('./routes/material');
-var status = require('../common/status');
+var status = require('./common/status');
 
 app.use('/', express.static('www'));
 // 以上的路径，排除在外

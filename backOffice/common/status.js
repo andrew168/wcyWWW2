@@ -44,7 +44,7 @@ function getCookie(req, name, defaultValue)
 }
 
 function isNewUser() {
-    return  ((timesCalled === 0) && (user.ID === defaultUserID));
+    return  ((user.timesCalled === 0) && (user.ID === defaultUserID));
 }
 
 exports.user = user;
