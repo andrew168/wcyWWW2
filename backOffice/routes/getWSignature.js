@@ -4,13 +4,11 @@
 var express = require('express');
 var router = express.Router();
 var https = require('https');
+var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
+var status = require('../common/status');
 
 var createNonceStr = function () {
     return Math.random().toString(36).substr(2, 15);
-};
-
-var createTimestamp = function () {
-    return parseInt(new Date().getTime() / 1000) + '';
 };
 
 var raw = function (args) {
@@ -51,22 +49,8 @@ var jsapiTicket = "bxLdikRXVbTPdHSM05e5u6sMAbQ-4wKaZjQssNrkbxe6fIV1i6BJ_as-MOtj7
 var jsapiTicketExpireTime = 0;
 var accessToken;
 var accessTokenExpireTime  = 0;
-var userID = 0;
-var timesCalled = 0;
-var defaultUserID = 101;
 router.get('/', function(req, res, next) {
-    userID = getCookie(req, 'userID', defaultUserID);
-    timesCalled = getCookie(req, 'timesCalled', 0);
-    if (isNewUser()) {
-        userID ++;
-    }
-    console.log('userID = ' + userID);
-    console.log('timesCalled = ' + timesCalled);
-    timesCalled ++;
-    res.cookie('userID', userID.toString(), { maxAge: 900000, httpOnly: true });
-    res.cookie('timesCalled', timesCalled.toString(), { maxAge: 900000, httpOnly: true });
-    res.clearCookie('oldCookie1');
-
+    status.checkUser(req, res);
     if (isValidJsapiTicket()) {
         responseSign(req, res, next);
     } else {
@@ -84,12 +68,12 @@ function responseSign(req, res, next) {
     var data = {
         jsapi_ticket: jsapiTicket,
         nonceStr: createNonceStr(),
-        timestamp: createTimestamp(),
+        timestamp: utils.createTimestamp(),
         url: url
         // tag: 'tag'
     };
 
-    console.log(req);
+    // console.log(req);
     sign(data);  //data.s = signature;
     // res.header("Access-Control-Allow-Origin", "*");
     // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
@@ -176,10 +160,6 @@ function getCookie(req, name, defaultValue)
     }
 
     return para;
-}
-
-function isNewUser() {
-    return  ((timesCalled === 0) && (userID === defaultUserID));
 }
 
 module.exports = router;

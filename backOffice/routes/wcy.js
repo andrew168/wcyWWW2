@@ -4,14 +4,11 @@
 var express = require('express');
 var router = express.Router();
 var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
+var status = require('../common/status');
 var fs = require('fs');
 
 var userController = require('../db/user/userController');
 var opusController = require('../db/opus/opusController');
-
-var userID,
-    timesCalled,
-    defaultUserID = 1000;
 
 router.param('shareCode', function (req, res, next, id) {
     console.log('CALLED ONLY ONCE');
@@ -19,12 +16,10 @@ router.param('shareCode', function (req, res, next, id) {
 });
 
 router.get('/:shareCode', function(req, res, next) {
-    timesCalled = getCookie(req, 'timesCalled', 0);
-    timesCalled ++;
-    checkUserID(req);
+    status.checkUser(req, res);
     var shareCode = req.param('shareCode');
     var wcyId = utils.decomposeShareCode(shareCode).wcyId;
-    sendBackWcy(res, wcyId);
+    sendBackWcy(req, res, wcyId);
 });
 
 router.post('/', function(req, res, next) {
@@ -69,46 +64,21 @@ function _saveWcy(wcyId, wcyData, res) {
     });
 }
 
-function checkUserID(req) {
-    userID = getCookie(req, 'userID', defaultUserID);
-    if (userID === defaultUserID) {
-  //        userController.addDirect(req);
-    }
-}
-
 /// private function:
-function response(req, res, next) {
+function response(req, res, data) {
     var url = req.headers.origin;
     // var url = req.headers.referer;
     var data = {
         timestamp: utils.createTimestamp(),
         url: 'url' + url,
         referer: 'url' + req.headers.referer,
-        timesCalled: timesCalled
+        timesCalled: status.timesCalled,
+        data: data
     };
 
-    res.cookie('userID', userID.toString(), { maxAge: 900000, httpOnly: true });
-    res.cookie('timesCalled', timesCalled.toString(), { maxAge: 900000, httpOnly: true });
-    console.log(req);
+    // console.log(req);
     res.json(data);
 }
-
-function getCookie(req, name, defaultValue)
-{
-    var para;
-    if (!req.cookies[name]) {
-        para = defaultValue;
-    } else {
-        para = req.cookies[name];
-        para = parseInt(para);
-    }
-
-    return para;
-}
-
-var createTimestamp = function () {
-    return parseInt(new Date().getTime() / 1000) + '';
-};
 
 var WCY_DEPOT = "d:/wcyDepot/";
 function wcyId2Filename(wcyId) {
@@ -120,11 +90,12 @@ function filename2WcyId(filename) {
     return parseInt(filename.substr(rootLen, filename.length - 4 - rootLen));
 }
 
-function sendBackWcy(res, wcyId) {
+function sendBackWcy(req, res, wcyId) {
     fs.readFile(wcyId2Filename(wcyId), 'utf8', function (err, data) {
         if (err) throw err;
         console.log(data);
-        res.json(data);
+        // res.json(data);
+        response(req, res, data);
     });
 }
 

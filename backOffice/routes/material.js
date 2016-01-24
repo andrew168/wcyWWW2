@@ -12,7 +12,7 @@ var express = require('express');
 var router = express.Router();
 var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
 var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
-
+var status = require('../common/status');
 var fs = require('fs');
 
 var pictureMatController = require('../db/material/pictureMatController');
@@ -21,17 +21,11 @@ var audioMatController = require('../db/material/audioMatController');
 var TYPE_IMAGE = 'image',
     TYPE_AUDIO = 'audio';
 
-var userID,
-    timesCalled,
-    defaultUserID = 1000;
-
-
 router.post('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
-    //ToDo:@@@
-    var userID = 0;
+    status.checkUser(req, res);
     var public_id = req.param('public_id') || null,
         matType = getMatType(req);
 
@@ -50,7 +44,6 @@ router.get('/', function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
 
     //ToDo:@@@
-    var userID = 0;
     getMatIds(getMatType(req), res);
 });
 
@@ -74,7 +67,7 @@ function createMatId(matType, originalFilename, res) {
             // ToDo:
             var ip = null;
             var isShared = false;
-            getMatController(matType).add(userID, originalFilename, ip, isShared, onSavedToDB, null);
+            getMatController(matType).add(status.userID, originalFilename, ip, isShared, onSavedToDB, null);
         } else {
             console.log("must be new material");
         }

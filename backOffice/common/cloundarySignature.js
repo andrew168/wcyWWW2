@@ -1,9 +1,7 @@
 /**
  * Created by Andrewz on 1/11/2016.
  */
-var createTimestamp = function () {
-    return parseInt(new Date().getTime() / 1000) + '';
-};
+var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
 
 var raw = function (args) {
     var keys = Object.keys(args);
@@ -31,7 +29,7 @@ var raw = function (args) {
  */
 var sign = function (ret) {
     if (!ret.timestamp) {
-        ret.timestamp = createTimestamp();
+        ret.timestamp = utils.createTimestamp();
     }
     var rawString = raw(ret);
     jsSHA = require('jssha');
