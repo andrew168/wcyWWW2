@@ -4,9 +4,6 @@ angular.module('starter').
         //     ==> Auth用户统计， 必须和网页一个host
         //  ==> sever的cookie可以是 http读取only， 不让客户端读写它，以便于追踪
         var user = userProfile.user;
-        var myLogError = myLogInfo = function (str) {
-            alert("A__" + str);
-        };
         var _isReady = false;
 
         //在本应用中用到的API，（白名单）
@@ -67,7 +64,7 @@ angular.module('starter').
         };
 
         wx.ready(function (msg) {
-            // myLogInfo("Wx Ready! " + JSON.stringify(msg));
+            // TQ.Log.alertInfo("Wx Ready! " + JSON.stringify(msg));
             // 对于注册型的API，在此调用
             // checkAPI();
             shareMessage(); // 其实，只是预制内容而已， 并非直接发送，
@@ -76,7 +73,7 @@ angular.module('starter').
         });
 
         wx.error(function (error) {
-            myLogError("Wx Error " + JSON.stringify(error));
+            TQ.Log.alertError("Wx Error " + JSON.stringify(error));
         });
 
         function doConfig (wechat_sign) {
@@ -93,7 +90,7 @@ angular.module('starter').
             user.timesShared = $cookies.get('timesCalled');
             user.ID = $cookies.get('userID');
 
-            //myLogInfo(JSON.stringify(wechat_sign));
+            //TQ.Log.alertInfo(JSON.stringify(wechat_sign));
             var appId = 'wx9a9eb662dd97612f';
             wx.config({
                 debug: true, // false,
@@ -113,10 +110,10 @@ angular.module('starter').
             wx.checkJsApi({
                 jsApiList: ApiList,
                 success: function (res) {
-                    myLogInfo("All is supported!");
+                    TQ.Log.alertInfo("All is supported!");
                 },
                 fail: function(res) {
-                    MyLogInfo("不支持"+JSON.stringify(res));
+                    TQ.Log.alertInfo("不支持"+JSON.stringify(res));
                 },
                 complete: _onComplete,
                 cancel: _onCancel
@@ -141,11 +138,11 @@ angular.module('starter').
 
         // private function:
         function _onSuccess(data) {
-            myLogInfo("onSuccess：成功。" + data.errMsg + "\nData: \n" + JSON.stringify(data));
+            TQ.Log.alertInfo("onSuccess：成功。" + data.errMsg + "\nData: \n" + JSON.stringify(data));
         }
 
         function _onFail(data) {
-            myLogInfo("onFail：失败。" + data.errMsg + "\nData \n" + JSON.stringify(data));
+            TQ.Log.alertInfo("onFail：失败。" + data.errMsg + "\nData \n" + JSON.stringify(data));
 
             /*
              以上几个函数都带有一个参数，类型为对象，其中除了每个接口本身返回的数据之外，还有一个通用属性errMsg，其值格式如下：
@@ -156,15 +153,15 @@ angular.module('starter').
         }
 
         function _onComplete(data) {
-            myLogInfo("onComplete：无论成功与否");
-            myLogInfo(data.errMsg);
-            myLogInfo(JSON.stringify(data));
+            TQ.Log.alertInfo("onComplete：无论成功与否");
+            TQ.Log.alertInfo(data.errMsg);
+            TQ.Log.alertInfo(JSON.stringify(data));
         }
         function _onCancel(data) {
-            myLogInfo("_onCancel：。" + data.errMsg + "\n Data:" + JSON.stringify(data));
+            TQ.Log.alertInfo("_onCancel：。" + data.errMsg + "\n Data:" + JSON.stringify(data));
         }
         function _onTrigger(data) {
-            myLogInfo("trigger: XX 菜单按钮被触发" + data.errMsg + "\n Data: " + JSON.stringify(data));
+            TQ.Log.alertInfo("trigger: XX 菜单按钮被触发" + data.errMsg + "\n Data: " + JSON.stringify(data));
             /*
              备注：不要尝试在trigger中使用ajax异步请求修改本次分享的内容，因为客户端分享操作是一个同步操作，这时候使用ajax的回包会还没有返回。
              */
@@ -179,13 +176,13 @@ angular.module('starter').
                 sourceType: ['album', 'camera'],
                 success11: function (res) {
                    var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-                   myLogInfo('已选择 ' + localIds + ' 张图片');
-                   myLogInfo('已选择 ' + 222 + ' 张图片');
+                   TQ.Log.alertInfo('已选择 ' + localIds + ' 张图片');
+                   TQ.Log.alertInfo('已选择 ' + 222 + ' 张图片');
                 },
 
                 success : function (res) {
                     var localId = res.localIds[0];
-                    myLogInfo('已选择 ' + res.localIds.length + ' 张图片');
+                    TQ.Log.alertInfo('已选择 ' + res.localIds.length + ' 张图片');
                     q.resolve(localId);
                 }
             });

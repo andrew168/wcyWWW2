@@ -51,5 +51,13 @@ window.TQ = window.TQ || {};
         Log.debugInfo = Log.info = Log.out = function() {};
     }
 
+    Log.alertError = Log.alertInfo = function (str) {
+        // 主要是 debug 微信的程序使用
+        if (typeof str != "string") {
+            str = JSON.stringify(str);
+        }
+        alert("wx调试__" + str);
+    };
+
     TQ.Log = Log;
 }) ();
