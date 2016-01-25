@@ -35,7 +35,11 @@ function checkUserID(req, res, callback) {
             res.isRegisteredUser = true;
             user.ID = doc._id;
             if (callback) {
-                callback();
+                if (!res.finished) {
+                    callback();
+                } else {
+                    console.log("to late!!!");
+                }
             }
             if (extraCallback) {
                 extraCallback();
