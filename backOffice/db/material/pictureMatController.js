@@ -26,6 +26,9 @@ function get(userId, callback) {
                 i;
 
             for (i= 0; i < num; i++) {
+                if (!data[i].path) {
+                    continue;
+                }
                 result.push(data[i].path);
             }
             callback(result);
