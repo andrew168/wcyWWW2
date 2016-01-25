@@ -33,9 +33,9 @@ function get(userId, callback) {
     });
 }
 
-function add(userID, picName, ip, isShared, onSuccess, onError) {
+function add(userId, picName, ip, isShared, onSuccess, onError) {
     var aDoc = new PictureMat({
-        // userId: userID,
+        userId: userId,
         name: picName,
         ip: ip,
         isShared: isShared

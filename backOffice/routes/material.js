@@ -27,13 +27,13 @@ router.post('/', function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     var public_id = req.param('public_id') || null,
         matType = getMatType(req);
-
+    status.checkUser(req, res);
     if (!public_id) {
         var originalFilename = req.param('filename') || "no_filename";
-        createMatId(matType, originalFilename, res);
+        createMatId(req, res, matType, originalFilename);
     } else {
         var path = req.param('path') || null;
-        updateMatId(matType, public_id, path, res);
+        updateMatId(req, res, matType, public_id, path);
     }
 });
 
@@ -43,10 +43,10 @@ router.get('/', function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
 
     //ToDo:@@@
-    getMatIds(getMatType(req), res);
+    getMatIds(req, res, getMatType(req));
 });
 
-function createMatId(matType, originalFilename, res) {
+function createMatId(req, res, matType, originalFilename) {
     if (!originalFilename) {
         var msg = "wrong format: must have filename!";
         console.log(msg);
@@ -66,7 +66,7 @@ function createMatId(matType, originalFilename, res) {
             // ToDo:
             var ip = null;
             var isShared = false;
-            getMatController(matType).add(status.userID, originalFilename, ip, isShared, onSavedToDB, null);
+            getMatController(matType).add(status.user.ID, originalFilename, ip, isShared, onSavedToDB, null);
         } else {
             console.log("must be new material");
         }
@@ -74,7 +74,7 @@ function createMatId(matType, originalFilename, res) {
     }
 }
 
-function updateMatId(matType, public_id, path, res) {
+function updateMatId(req, res, matType, public_id, path) {
     // 入库， 并获取新material ID，
     function onSavedToDB(_matId) {
         var data = {
@@ -86,7 +86,7 @@ function updateMatId(matType, public_id, path, res) {
     getMatController(matType).update(public_id, path, onSavedToDB);
 }
 
-function getMatIds(matType, res) {
+function getMatIds(req, res, matType) {
     // ToDo:
     getMatController(matType).get(null, function(data) {
         res.json(data);
