@@ -33,7 +33,7 @@ router.post('/', function(req, res, next) {
         createMatId(req, res, matType, originalFilename);
     } else {
         var path = req.param('path') || null;
-        updateMatId(req, res, matType, public_id, path);
+        updateMatId(req, res, matType, utils.matName2Id(public_id), path);
     }
 });
 
@@ -57,7 +57,7 @@ function createMatId(req, res, matType, originalFilename) {
             function onSavedToDB(_matId) {
                 mat_id = _matId;
                 var data = {
-                    public_id: "c" + mat_id
+                    public_id: utils.matId2Name(mat_id)
                 };
                 cSignature.sign(data);
                 sendBack(data, res);
@@ -74,21 +74,21 @@ function createMatId(req, res, matType, originalFilename) {
     }
 }
 
-function updateMatId(req, res, matType, public_id, path) {
+function updateMatId(req, res, matType, matId, path) {
     // 入库， 并获取新material ID，
-    function onSavedToDB(_matId) {
+    function onSavedToDB(docId) {
         var data = {
-            public_id: _matId
+            public_id: utils.matId2Name(docId)
         };
         sendBack(data, res);
     }
 
-    getMatController(matType).update(public_id, path, onSavedToDB);
+    getMatController(matType).update(matId, path, onSavedToDB);
 }
 
 function getMatIds(req, res, matType) {
     // ToDo:
-    getMatController(matType).get(null, function(data) {
+    getMatController(matType).get(status.user.ID, function(data) {
         res.json(data);
     });
 }

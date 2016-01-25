@@ -54,6 +54,13 @@ function showDocument(err, doc) {
     console.log("saved doc is: ", doc);
 }
 
+function matId2name(id) {
+    return "c" + id;
+}
+
+function matName2Id(name) {
+    return Number(name.substr(1));
+}
 
 // 这个文件的名字就是类的名字，exports的所有输出都是这个类的公共接口函数
 // 所有， 不需要在额外建立一个同名的Object，（因为， Node已经自动为我们做了）
@@ -64,3 +71,5 @@ exports.notFound = notFound;
 exports.dumpDocument = showDocument;
 exports.onSave = onSave;
 exports.onResSave = onResSave;
+exports.matName2Id = matName2Id;
+exports.matId2Name = matId2name;
