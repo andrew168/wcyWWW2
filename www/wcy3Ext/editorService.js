@@ -18,7 +18,6 @@ angular.module('starter').
             }
 
             return insertLocalMatWeb();
-
         }
 
         function insertLocalMatWeb() {
@@ -59,15 +58,21 @@ angular.module('starter').
             };
 
             TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
-            uploadOneFile(aFile).
-                then(function (data) {
-                    TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
-                    var type = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
-                    var desc = {src: data.url, type: type, autoFit: true};
-                    TQ.SceneEditor.addItem(desc);
-                    // fileElement.unbind('change'); // remove old handler
-                }, function (err) {
-                    console.log(err);
+
+            var options = {};
+            var processor = new TQ.ImageProcess();
+            processor.start(aFile, options,
+                function (buffer) {
+                    uploadOneFile(aFile).
+                        then(function (data) {
+                            TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
+                            var type = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
+                            var desc = {src: data.url, type: type, autoFit: true};
+                            TQ.SceneEditor.addItem(desc);
+                            // fileElement.unbind('change'); // remove old handler
+                        }, function (err) {
+                            console.log(err);
+                        });
                 });
         }
 
