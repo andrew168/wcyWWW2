@@ -18,19 +18,17 @@ var TQ = TQ || {};
         (window.webkitURL && webkitURL);
 
     p.start = function(file, options, callback) {
-        var url = p.toUrl(file, options, callback);
-        if (!!url) {
-
-            loadImage.parseMetaData(file, function (data) {
-                if (data.exif) {
-                    options.orientation = data.exif.get('Orientation');
-                }
-                p.loadData(url, options, callback);
-            });
-        }
+        var url = p.toUrl(file, options);
+        loadImage.parseMetaData(file, function (data) {
+            if (data.exif) {
+                options.orientation = data.exif.get('Orientation');
+            }
+            p.loadData(url, options, callback);
+        });
     };
 
-    p.toUrl = function(file, options, callback) {
+    p.toUrl = function(file, options) {
+        // convert blob, local file, to  url
         var url, oUrl;
         if (_isInstanceOf('Blob', file) ||
             _isInstanceOf('File', file)) {
@@ -46,7 +44,8 @@ var TQ = TQ || {};
                 // img.crossOrigin = options.crossOrigin;
             }
         } else {
-            return false;
+            TQ.Log.error("未知的文件信息");
+            url = file;
         }
 
         return url;

@@ -61,13 +61,14 @@ angular.module('starter').
 
             var options = {};
             var processor = new TQ.ImageProcess();
+            var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
+
             processor.start(aFile, options,
                 function (buffer) {
-                    uploadOneFile(aFile).
+                    uploadOneFile(buffer).
                         then(function (data) {
                             TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
-                            var type = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
-                            var desc = {src: data.url, type: type, autoFit: true};
+                            var desc = {src: data.url, type: matType, autoFit: true};
                             TQ.SceneEditor.addItem(desc);
                             // fileElement.unbind('change'); // remove old handler
                         }, function (err) {
