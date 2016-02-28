@@ -9,7 +9,6 @@ var createNonceStr = function () {
     return Math.random().toString(36).substr(2, 15);
 };
 
-var app = require('../app');
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     var data = {
@@ -21,7 +20,6 @@ router.get('/', function(req, res, next) {
     cSignature.sign(data);  //data.s = signature;
 
     console.log(req);
-    // app.set('json spaces', 4);
     res.header("Access-Control-Allow-Origin", "*");
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
