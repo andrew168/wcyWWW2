@@ -7,6 +7,9 @@ var assert = require('assert');
 //var url = 'mongodb://localhost:27017/test'; //XX, 在断网的情况下,不能使用
 var url = 'mongodb://127.0.0.1/test'; //  本机ip，在断网的情况下也可以使用
 var Users;
+var logger = require('./../common/logger');
+logger.config("udoido.log");
+
 var autoIncrement = require('mongoose-auto-increment');
 
 var ObjectId = require('mongodb').ObjectID;
@@ -17,18 +20,40 @@ function DBMain() {
 
 DBMain.initialized = false;
 DBMain.app = null;
-function init(app) {
+var launchCounter = 0;
+function init(app, callback) {
+    // must delay, because data base is not ready
+    setTimeout(function() {
+        doInit(app, callback);
+    }, 0);
+}
+
+function doInit(app, callback) {
     if (DBMain.initialized) {
         assert.ok(false, "需要先initialization！");
         return;
     }
 
+    console.log(launchCounter + "time launch....");
+    function onErrorExt(e) {
+        onError(e);
+        if (launchCounter < 3) {
+            launchCounter ++;
+            setTimeout(function() {
+                doInit(app, callback);
+            }, 2000);
+        }
+    }
+
     var db = mongoose.connection;
-    db.on('error', onError);
-    db.once('error', onError);
-    db.once('open', function (callback) {
+    db.on('error', onErrorExt);
+    db.once('error', onErrorExt);
+    db.once('open', function () {
         DBMain.initialized = true;
-        console.log("Connected correctly to server.");
+        console.log("Database is opened successfully.");
+        if (!!callback) {
+            callback();
+        }
     });
 
     var connection = mongoose.connect(url);
@@ -50,6 +75,7 @@ function init(app) {
         item = dbList[i];
         // 绑定Schema
         require(item.schema).setup(autoIncrement); // 注意文件名带 。js
+        console.info("setup schema:  " + item.schema);
 
         // 链接数据库读写组件
         ctrl = require(item.ctrl);
