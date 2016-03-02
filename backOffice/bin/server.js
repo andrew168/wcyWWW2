@@ -2,13 +2,8 @@ var debug = require('debug')('iCardSvr2:server');
 var http = require('http');
 var server;
 var _config = {};
-
 var logger = require('./../common/logger');
 logger.config("udoido.log");
-
-console.log("//////////////////////////////");
-console.log("///      start new server  ///");
-console.log("//////////////////////////////");
 
 var express = require('express');
 var path = require('path');
@@ -16,11 +11,21 @@ var favicon = require('serve-favicon');
 var loggerMorgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
-
-var app = express();
-//  使用数据库的操作， 都必须在数据库启动之后， 再启动
-require('./../db/dbMain').init(app, onDbStarted);
 var status = null;
+var app;
+
+function start() {
+    console.log("//////////////////////////////");
+    console.log("///      start new server  ///");
+    console.log("//////////////////////////////");
+
+    app = express();
+    start2();
+
+//  使用数据库的操作， 都必须在数据库启动之后， 再启动
+ //   require('./../db/dbMain').init(app, onDbStarted);
+    start3();
+}
 
 function onDbStarted() {
     console.info("onDbStarted...");
@@ -38,47 +43,56 @@ function onDbStarted() {
 
     app.use('/wcy', Wcy);
     app.use('/material', material);
- console.log("exit at onDbStarted!");
+    console.log("exit at onDbStarted!");
 
     app.use('/index55', routes);
+    start3();
+}
+
+function start3() {
     init();
     setupBaseiRoutes();
 }
 
+function start2() {
 // view engine setup
-app.set('views', path.join(__dirname, './../views'));
-app.set('view engine', 'jade');
+    app.set('views', path.join(__dirname, './../views'));
+    app.set('view engine', 'jade');
 
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(loggerMorgan('dev'));
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-app.use(cookieParser());
+    app.use(loggerMorgan('dev'));
+    app.use(bodyParser.json());
+    app.use(bodyParser.urlencoded({ extended: false }));
+    app.use(cookieParser());
 
 //CORS middleware
-var allowCrossDomain = function(req, res, next) {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    var allowCrossDomain = function(req, res, next) {
+        res.header("Access-Control-Allow-Origin", "*");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-  // res.header('Access-Control-Allow-Origin', 'example.com');
-  res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
-  //res.header('Access-Control-Allow-Headers', 'Content-Type');
+        // res.header('Access-Control-Allow-Origin', 'example.com');
+        res.header('Access-Control-Allow-Methods', 'GET,PUT,POST,DELETE');
+        //res.header('Access-Control-Allow-Headers', 'Content-Type');
 
-  next();
-};
+        next();
+    };
 
-app.use(allowCrossDomain);
+    app.use(allowCrossDomain);
+}
 
 function setupBaseiRoutes() {
-    app.use(express.static(path.join(__dirname, './../public')));
+    console.log(__dirname);
+    console.log(path.join(__dirname, './../../www'));
+    console.log(path.join(__dirname, './../public'));
 
-    app.use('/static', express.static('./www'));
+    app.use(express.static(path.join(__dirname, './../../www')));
+    app.use('/static', express.static(path.join(__dirname, './../public')));
 // 以上的路径，排除在外
 
     app.use(function(req, res, next) {
         console.log("I'm first!!! for any path, 除了以上的路径");
-        status.checkUser(req, res);
+        // status.checkUser(req, res);
         next();
     });
 
@@ -123,7 +137,7 @@ function init() {
      */
 
     console.info("process.env.PORT = " + process.env.PORT);
-    _config.port = normalizePort(process.env.PORT || 3000);
+    _config.port = normalizePort(process.env.PORT || 80);
     app.set('port', _config.port);
 
     /**
@@ -199,3 +213,5 @@ function onListening() {
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
 }
+
+start();
