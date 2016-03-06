@@ -23,8 +23,9 @@ function start() {
     start2();
 
 //  使用数据库的操作， 都必须在数据库启动之后， 再启动
- //   require('./../db/dbMain').init(app, onDbStarted);
-    start3();
+    require('./../db/dbMain').init(app, onDbStarted);
+    // start3();
+    // init();
 }
 
 function onDbStarted() {
@@ -92,7 +93,7 @@ function setupBaseiRoutes() {
 
     app.use(function(req, res, next) {
         console.log("I'm first!!! for any path, 除了以上的路径");
-        // status.checkUser(req, res);
+//        status.checkUser(req, res);
         next();
     });
 

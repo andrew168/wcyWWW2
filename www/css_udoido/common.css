@@ -86,7 +86,7 @@ a:hover { text-decoration:none; cursor:pointer; color:#f60; }
 .new-left-button .bn-new-hover { background:#62c6c7; }
 .ui-icon, .ui-icon-fff { background-repeat: no-repeat; display: block; overflow: hidden; text-indent: -99999px; }
 /* =B icon*/
-.bn-new-icon .ui-icon { background-image:url(../images/ui-icons-ffffff.png); width:28px; height:28px; margin: 2px 0 0 2px; }
+.bn-new-icon .ui-icon { background-image:url(/public/images/ui-icons-ffffff.png); width:28px; height:28px; margin: 2px 0 0 2px; }
 .bn-new-hover .ui-icon, .bn-new-focus .ui-icon { background-image: url(/public/images/ui-icons-ffffff.png); width:28px; height:28px; }
 .ui-icon-document { background-position: 0px 0px; }
 .ui-icon-disk { background-position: 0px -38px; }
@@ -733,7 +733,7 @@ a:hover .biaotidong { background:url(/public/images/top-bt.png) }
 .center-mar { width:auto; height:auto; }
 .showcanvas { margin:0 auto; display:block; }
 .hb-float-icon { background:#fdd035; border-radius:20px; height:40px; width:40px; box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3); margin-right: 4px; }
-.hb-float-icon .ui-icon { background-image:url(../images/ui-icons-ffffff.png); height:28px; width:28px; margin:3px;}
+.hb-float-icon .ui-icon { background-image:url(/public/images/ui-icons-ffffff.png); height:28px; width:28px; margin:3px;}
 .header-inner { background:#000; }
 .header-inner-2 { width:960px; margin:0 auto; height:79px; }
 .logo { float: left; width: auto; position: relative; margin-right: 10px; z-index: 100; }

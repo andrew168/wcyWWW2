@@ -49,7 +49,7 @@ var logger = logger|| {};
     };
 
     var log2File = function(entry) {
-        fs.appendFileSync(logFolder + logger.logFilename, new Date().toISOString() + ' - ' + entry + '\r\n');
+        fs.appendFileSync(logFolder + logger.logFilename, new Date().toLocaleString() + ' - ' + entry + '\r\n');
     };
 
     logger.info = function(entry) {
