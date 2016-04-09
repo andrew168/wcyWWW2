@@ -89,6 +89,11 @@ function setupBaseiRoutes() {
 
     app.use(express.static(path.join(__dirname, './../../www')));
     app.use('/static', express.static(path.join(__dirname, './../public')));
+
+    if (Config.useCloundServerSimulator) {
+        startLocalSimulator();
+    }
+
 // 以上的路径，排除在外
 
     app.use(function(req, res, next) {
@@ -216,3 +221,16 @@ function onListening() {
 }
 
 start();
+
+// helper
+
+var Config = {
+    useCloundServerSimulator: true
+};
+
+function startLocalSimulator() {
+    // 在没有网络的情况下， 模仿 cloud图片服务器，
+    app.use('/eplan/image/upload/mcImages', express.static(path.join(__dirname, './../../www/mcImages')));
+    app.use('/eplan/image/upload/v1456716657', express.static(path.join(__dirname, './../../www/mcImages')));
+    app.use('/eplan/image/upload', express.static(path.join(__dirname, './../../www/mcImages')));
+}
