@@ -19,10 +19,10 @@ angular.module('starter')
             if (TQ.Base.Utility.isMobileDevice() && (typeof cordova !== "undefined")) {
                 onFileSystemReady();
             } else { // for Chrome Desktop
+                document.addEventListener(ImgCache.FILE_SYSTEM_READY, onFileSystemReady, false);
                 ImgCache.options.debug = true;
                 ImgCache.options.usePersistentCache = true;
                 ImgCache.init();
-                document.addEventListener(ImgCache.FILE_SYSTEM_READY, onFileSystemReady, false);
             }
         }
 

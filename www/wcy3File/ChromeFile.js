@@ -246,6 +246,11 @@ var ImgCache = {
     ImgCache.FILE_SYSTEM_READY = 'imgCache ready';
 
     ImgCache.init = function (success_callback, error_callback) {
+        if (!TQ.Config.ChromeFileEnabled) {
+            TQ.Base.Utility.triggerEvent(document, ImgCache.FILE_SYSTEM_READY);
+            return;
+        }
+
         ImgCache.jQuery = (window.jQuery || window.Zepto) ? true : false;        /* using jQuery if it's available otherwise the DOM API */
 
         ImgCache.attributes.init_callback = success_callback;
@@ -501,6 +506,9 @@ var ImgCache = {
     };
 
     ImgCache.getRoot =function() {
+        if (!TQ.Config.ChromeFileEnabled) {
+            return "";
+        }
         return Helpers.EntryGetURL(ImgCache.attributes.dirEntry);
     };
 
