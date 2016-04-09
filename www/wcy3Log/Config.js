@@ -17,8 +17,8 @@ window.TQ = window.TQ || {};
     Config.BACKGROUND_COLOR = "#FFF"; // HTML5的#系列颜色只有#FFF,不是#FFFFFF.
     Config.workingRegionX0 = 160; // ToDo: 1)初始化, 按照分辨率来. 2)响应窗口尺寸变化 (window.screen.width - 960) /2;
     Config.workingRegionY0 = 63;
-    Config.workingRegionWidth = 662;
-    Config.workingRegionHeight = 485;
+    Config.workingRegionWidth = 900; //600;
+    Config.workingRegionHeight = 500; // 400;
     Config.zoomX = 1; // 缩放系数
     Config.zoomY = 1;
     Config.validPageWidth = 960;
@@ -67,6 +67,10 @@ window.TQ = window.TQ || {};
         _resourceHost = host;
     };
 
+    //
+    Config.ChromeFileEnabled = true;
+    Config.useCloundServerSimulator = true;
+
     //允许使用本地文件系统缓存网络文件， 以便于离线使用， 和 降低网络流量， 提高系统速度。
     Config.LocalCacheEnabled = false;
 
@@ -74,22 +78,26 @@ window.TQ = window.TQ || {};
     Config.TwoMatServerEnabled = false;
 
     // 入口服务器配置
-    Config.ENT_HOST = "http://show.udoido.cn";
+    Config.ENT_HOST = 'http://show.udoido.cn';
 
     // 管理和控制服务器的参数
-    Config.MAN_HOST = "http://man.udoido.cn";   // 素材管理， 分配素材id
+    //Config.MAN_HOST = "http://man.udoido.cn";   // 素材管理， 分配素材id
+    Config.MAN_HOST = 'http://show.udoido.cn';   // 素材管理， 分配素材id
 
     // 素材服务器的参数
-    Config.MAT_HOST = "http://bone.udoido.cn";   // for old material(pXXXX), before transfer
     // Config.MAT_HOST = "http://www.udoido.cn"; // for new material (mXXXX),
+    // Config.MAT_HOST = "http://bone.udoido.cn";   // for old material(pXXXX), before transfer
+    Config.MAT_HOST = 'http://show.udoido.cn';   // for old material(pXXXX), before transfer
 
     // 作品服务器
-    Config.OPUS_HOST = "http://opus.udoido.cn";
+    // Config.OPUS_HOST = "http://opus.udoido.cn";
+    Config.OPUS_HOST = 'http://show.udoido.cn';
 
     // 签名认证服务器
-    Config.AUTH_HOST = "http://auth.udoido.cn";
+    // Config.AUTH_HOST = "http://auth.udoido.cn";
+    Config.AUTH_HOST = 'http://show.udoido.cn';
 
-    Config.cloundaryEnabled = true;
+    Config.cloundaryEnabled = false;
     Config.Cloudinary = {
         name : 'eplan',
         api_key : "374258662676811"
@@ -103,7 +111,7 @@ window.TQ = window.TQ || {};
     };
 
     var matServerBone = {
-        MAT_HOST: "http://bone.udoido.cn",   // for old material(pXXXX), before transfer
+        MAT_HOST: "http://test.udoido.cn",   // for old material(pXXXX), before transfer
         IMAGES_CORE_PATH: "mcImages/",
         SOUNDS_PATH: "mcSounds/" //从 localhost的根目录开始, 不是 E盘的根目录
     };
