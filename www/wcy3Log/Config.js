@@ -88,6 +88,7 @@ window.TQ = window.TQ || {};
     // Config.MAT_HOST = "http://www.udoido.cn"; // for new material (mXXXX),
     // Config.MAT_HOST = "http://bone.udoido.cn";   // for old material(pXXXX), before transfer
     Config.MAT_HOST = 'http://show.udoido.cn';   // for old material(pXXXX), before transfer
+    Config.MAT_UPLOAD_API;  // 上传mats所用的url，具体取值，见下面的 两种配置
 
     // 作品服务器
     // Config.OPUS_HOST = "http://opus.udoido.cn";
@@ -97,7 +98,8 @@ window.TQ = window.TQ || {};
     // Config.AUTH_HOST = "http://auth.udoido.cn";
     Config.AUTH_HOST = 'http://show.udoido.cn';
 
-    Config.cloundaryEnabled = false;
+
+    Config.cloundaryEnabled = true; // 选择使用哪一种配置： Cloundary云 或者阿里云的bone，
     Config.Cloudinary = {
         name : 'eplan',
         api_key : "374258662676811"
@@ -105,12 +107,14 @@ window.TQ = window.TQ || {};
 
     // 素材服务器的参数
     var matServerCloundary = {
+        MAT_UPLOAD_API: "https://api.cloudinary.com/v1_1/" + Config.Cloudinary.name + "/upload",
         MAT_HOST: 'http://res.cloudinary.com', // /eplan/image/upload';
         IMAGES_CORE_PATH: 'eplan/image/upload/',
         SOUNDS_PATH: 'eplan/video/upload/' //从 localhost的根目录开始, 不是 E盘的根目录
     };
 
     var matServerBone = {
+        MAT_UPLOAD_API: "http://test.udoido.cn/getWSignature",
         MAT_HOST: "http://test.udoido.cn",   // for old material(pXXXX), before transfer
         IMAGES_CORE_PATH: "mcImages/",
         SOUNDS_PATH: "mcSounds/" //从 localhost的根目录开始, 不是 E盘的根目录
