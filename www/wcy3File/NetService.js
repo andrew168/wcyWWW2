@@ -9,8 +9,7 @@ angular.module('starter')
         function ($q, $http, $cordovaFileTransfer, Upload) {
             var baseUrl = "http://bone.udoido.cn/";
             var urlConcat = TQ.Base.Utility.urlConcat;
-            var IMAGE_CLOUD_URL = "https://api.cloudinary.com/v1_1/" + TQ.Config.Cloudinary.name + "/upload";
-            var C_SIGNATURE_URL =TQ.Config.AUTH_HOST +'/getCSignature';  // Cloudary signature;
+            var IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API;
             var C_MAN_URL = TQ.Config.MAN_HOST + '/material';
 
             var TYPE_IMAGE = 'image',
