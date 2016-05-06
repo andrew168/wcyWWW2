@@ -161,8 +161,15 @@ this.TQ = this.TQ || {};
             RM.items[resID] = { ID: resID, res:result, type:item.type};
             if (result == null) {
                 RM.addItem(altResID, function() {
-                    RM.items[resID].res = RM.items[altResID].res;
-                    RM.items[resID].altResID = RM.items[altResID].ID;
+                    var item = RM.items[resID],
+                        altItem = RM.items[altResID];
+
+                    if (item && altItem) {
+                        item.res = altItem.res;
+                        item.altResID = altItem.ID;
+                    } else {
+                        TQ.Log.error("RM.items error: resID = " + resID + " altResID=" + altResID);
+                    }
                 });
 
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
