@@ -10,6 +10,8 @@ var fs = require('fs');
 var userController = require('../db/user/userController');
 var opusController = require('../db/opus/opusController');
 
+var WCY_DEPOT = "/data/wcydepot/";
+
 router.param('shareCode', function (req, res, next, id) {
     console.log('CALLED ONLY ONCE');
     next();
@@ -79,8 +81,10 @@ function response(req, res, data) {
     res.json(data);
 }
 
-var WCY_DEPOT = "d:/wcyDepot/";
 function wcyId2Filename(wcyId) {
+    if (typeof wcyId != "number") {
+        wcyId = parseFloat(wcyId);
+    }
     return WCY_DEPOT + wcyId + ".wcy";
 }
 
@@ -97,7 +101,11 @@ function sendBackWcy(req, res, wcyId) {
         if (res.isRegisteredUser) {
             response(req, res, data);
         } else {
+            response(req, res, data);
+            console.log("对于非注册用户， 如何处理？");
+
             status.setExtraCallback(function() {
+
                 response(req, res, data);
             })
         }

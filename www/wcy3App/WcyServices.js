@@ -55,10 +55,10 @@ angular.module('starter')
                         TQ.Log.error("出错：无法保存文件: " + fileName + JSON.stringify(e));
                     });
             }
-            function getWcy() {
-                var url = TQ.Config.OPUS_HOST + '/wcy/' + SHARE_STRING;
+            function getWcy(shareString) {
+                var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
                 $http.get(url)
-                    .then(_onSuccess, _onFail);
+                    .then(_onReceivedWcyData, _onFail);
             }
 
             function _upload() {
@@ -124,8 +124,7 @@ angular.module('starter')
                         .success(function (data, status, headers, config) {
                             console.log(data);
                             content = JSON.stringify(data);
-                            var fileInfo = {name: filename, content: content};
-                            _open(fileInfo);
+                            _openInJson(data);
                         }).error(function (data, status, headers, config) {
                             console.log(data);
                         });
@@ -192,6 +191,28 @@ angular.module('starter')
 
             function _onFail(data) {
                 console.log(data);
+            }
+
+            function _onReceivedWcyData(res) {
+                var data = res.data;
+                if (!!data && !!data.wcyId) {
+                    wcyId = data.wcyId;
+                }
+
+                _openInJson(data.data);
+            }
+
+            function _openInJson(content) {
+                var filename = _findFileName(content),
+                    fileInfo = {name: filename, content: content};
+
+                _open(fileInfo);
+            }
+
+            function _findFileName(data) {
+                var content = JSON.parse(data);
+                if (content.filename) return content.filename;
+                return TQ.Config.UNNAMED_SCENE;
             }
 
             return {

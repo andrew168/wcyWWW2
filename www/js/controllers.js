@@ -49,8 +49,12 @@ angular.module('starter')
                 assertTrue("device要先ready", DeviceService.isReady());
                 $timeout(function () {
                     // $scope.testDownload();
-                    WCY.start();
-                    _wxInit();
+
+                    // WCY.start();
+                    // WCY.getWcy("100_12345678_123_1234567890");
+                    //   WCY.getWcy("100_00000016_123_1234567890");
+                    WCY.getWcy("100_00000020_123_1234567890");
+                    //_wxInit();
 //                    $scope.insertLocalImage();
                     // $cordovaProgress.hide();
                 }, 100);
@@ -177,7 +181,7 @@ angular.module('starter')
                 TQ.SelectSet.delete();
             };
 
-            $scope.testDownload = function () {
+            $scope.testDownloadBulk = function () {
                 // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
                 // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
                 // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
@@ -206,6 +210,12 @@ angular.module('starter')
 
                 $scope.localImage1 = DeviceService.getRootFolder() + 'mcImages/p12504.png';
                 $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p10324.png';
+            };
+
+            $scope.testDownload = function() {
+                var path = "p12504.png";
+                var server1File = "http://bone.udoido.cn/mcImages/" + path;
+                NetService.get(server1File);
             };
 
             $scope.testShowWCY = function () {
@@ -275,7 +285,7 @@ angular.module('starter')
             };
 
             $scope.getWcy = function () {
-                WCY.getWcy();
+                WCY.getWcy("100_12345678_123_1234567890");
             };
 
             var message = "人人动画";
