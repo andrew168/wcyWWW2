@@ -50,7 +50,7 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
         $stateProvider
             .state('dash', {
                 url: '/dash',
-                templateUrl: 'templates/tab-dash.html',
+                templateUrl: '/templates/tab-dash.html',
                 controller: 'DashCtrl'
             })
         ;
