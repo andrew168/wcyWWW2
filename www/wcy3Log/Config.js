@@ -98,12 +98,15 @@ window.TQ = window.TQ || {};
     // Config.AUTH_HOST = "http://auth.udoido.cn";
     Config.AUTH_HOST = 'http://show.udoido.cn';
 
-
     Config.cloundaryEnabled = true; // 选择使用哪一种配置： Cloundary云 或者阿里云的bone，
     Config.Cloudinary = {
         name : 'eplan',
         api_key : "374258662676811"
     };
+
+    // NOPIC 和 NOSOUND，从app code服务器直接获取，节省流量
+    Config.APP_SERVER_IMAGES_CORE_PATH = "mcImages/";
+    Config.APP_SERVER_SOUNDS_PATH = "mcSounds/";
 
     // 素材服务器的参数
     var matServerCloundary = {

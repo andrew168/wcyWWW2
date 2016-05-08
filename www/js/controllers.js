@@ -32,21 +32,32 @@ angular.module('starter')
 
             function _init() {
                 _wxInit();
-                document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
-                DeviceService.initialize();
+                if (TQ.Config.LocalCacheEnabled) {
+                    document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
+                    DeviceService.initialize();
+                } {
+                    onFileSystemReady();
+                }
             }
 
             // 三个阶段： DeveiceReady, DOM ready, ImageCacheReady, DirReady
             function onFileSystemReady() {
-                document.addEventListener(TQ.EVENT.DIR_READY, onDirReady, false);
-                document.removeEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady);
-                Setup.initialize();
-                NetService.initialize();
+                if (TQ.Config.LocalCacheEnabled) {
+                    document.addEventListener(TQ.EVENT.DIR_READY, onDirReady, false);
+                    document.removeEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady);
+                    Setup.initialize();
+                    NetService.initialize();
+                } else {
+                    NetService.initialize();
+                    onDirReady();
+                }
             }
 
             function onDirReady() {
-                document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
-                assertTrue("device要先ready", DeviceService.isReady());
+                if (TQ.Config.LocalCacheEnabled) {
+                    document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
+                    assertTrue("device要先ready", DeviceService.isReady());
+                }
                 $timeout(function () {
                     // $scope.testDownload();
 

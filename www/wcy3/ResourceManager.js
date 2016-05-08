@@ -56,8 +56,8 @@ this.TQ = this.TQ || {};
         // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
         RM.BASE_PATH = TQ.DownloadManager.FAST_SERVER;
         // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
-        RM.FULLPATH_NOPIC = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.IMAGES_CORE_PATH, RM.NOPIC));
-        RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.SOUNDS_PATH, RM.NOSOUND));
+        RM.FULLPATH_NOPIC = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.APP_SERVER_IMAGES_CORE_PATH, RM.NOPIC));
+        RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.APP_SERVER_SOUNDS_PATH, RM.NOSOUND));
         createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3
             TQ.Base.Utility.isMobileDevice()) {
@@ -433,7 +433,7 @@ this.TQ = this.TQ || {};
             return str;
         }
 
-        if (_isCachePath(str)) {
+        if (TQ.Config.LocalCacheEnabled && _isCachePath(str)) {
             return _removeCacheRoot(str);
         }
 
@@ -444,7 +444,7 @@ this.TQ = this.TQ || {};
     };
 
     RM.toRelativeWithoutCache = function(str) {
-        if (_isCachePath(str)) {
+        if (TQ.Config.LocalCacheEnabled && _isCachePath(str)) {
             return _removeCacheRoot(str);
         }
         return RM.toRelative(str);
@@ -571,6 +571,14 @@ this.TQ = this.TQ || {};
 
         if (_isFullPath(name)) {
             return name;
+        }
+
+        if (RM.FULLPATH_NOPIC.indexOf(name) > -1) {
+            return RM.FULLPATH_NOPIC;
+        }
+
+        if (RM.FULLPATH_NOSOUND.indexOf(name) > -1) {
+            return RM.FULLPATH_NOSOUND;
         }
 
         var folder = (TQ.Utility.isImage(name)) ? TQ.Config.IMAGES_CORE_PATH : TQ.Config.SOUNDS_PATH;
