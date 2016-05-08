@@ -18,17 +18,21 @@ angular.module('starter')
                 _init();
             }
 
-            $(document).ready(function () {
-                $('#clear_cache').click(function (e) {
-                    e.preventDefault();
-                    ImgCache.clearCache();
-                    TQ.DownloadManager.clearCache();
+
+            if (TQ.Config.TECH_TEST1_LOCAL_CACHE_ON) {
+                $(document).ready(function () {
+                    $('#clear_cache').click(function (e) {
+                        e.preventDefault();
+                        ImgCache.clearCache();
+                        TQ.DownloadManager.clearCache();
+                    });
+                    $('#cache_folder').click(function (e) {
+                        e.preventDefault();
+                        window.open(DeviceService.getRootFolder());
+                    });
                 });
-                $('#cache_folder').click(function (e) {
-                    e.preventDefault();
-                    window.open(DeviceService.getRootFolder());
-                });
-            });
+            }
+
 
             function _init() {
                 _wxInit();

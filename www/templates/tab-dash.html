@@ -1,15 +1,19 @@
 <ion-view>
     <ion-content scroll="false">
+        <!-- BEGIN OF Config.TECH_TEST1_LOCAL_CACHE_ON -->
+        <!--
         <div>
             <a href="#" id="clear_cache">Clear the local filesystem cache</a>
             <a href="#" id="cache_folder" target="new">Navigate into local cache folder</a>
         </div>
         <div>Image from cache: </div>
         <div>
-            <!-- local file -->
             <img ng-src={{localImage1}} height="100" width="100">
             <img ng-src={{localImage2}} width="120" height="82">
         </div>
+        -->
+        <!-- END OF Config.TECH_TEST1_LOCAL_CACHE_ON -->
+
         <div class="float-tool">
             <div class="new-left-button functionButton">
                 <div class="fn-left">
@@ -164,14 +168,17 @@
             <input type="text" id="sceneID" name='sceneID' ng-model="data.sceneID" required>
             </div>
 
-        <div class="float-tool_new">
+        <div style="display: none" class="float-tool_new">
             <button  class="button button-positive" ng-click="testShowWCY()">播放作品</button>
+            <button class="button button-positive" ng-click="insertLocalImage2()">插入本地图片</button>
+
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
             <button class="button button-positive" ng-click="onEndInputText()">EndInputText</button>
             <button class="button button-positive" ng-click="testDownload()">下载资源</button>
             <button class="button button-positive" ng-click="testDownloadBulk()">下载资源Bulk</button>
             <button class="button button-positive" ng-click="testClearAll()">清空</button>
             <button class="button button-positive" ng-click="insertLocalImage()">+本地图片</button>
+            <button class="button button-positive" ng-click="insertLocalImageWithOrientation()">+朝向测试</button>
             <button class="button button-positive" ng-click="insertAlbum()">+图册</button>
             <button class="button button-positive" ng-click="insertFromCamera()">+相机</button>
             <button class="button button-positive" ng-click="deleteElement()">删除</button>
