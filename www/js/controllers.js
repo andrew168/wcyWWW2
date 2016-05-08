@@ -50,10 +50,15 @@ angular.module('starter')
                 $timeout(function () {
                     // $scope.testDownload();
 
-                    // WCY.start();
-                    // WCY.getWcy("100_12345678_123_1234567890");
-                    //   WCY.getWcy("100_00000016_123_1234567890");
-                    WCY.getWcy("100_00000020_123_1234567890");
+                    var opus = TQ.Utility.getUrlParam('opus');
+                    // opus = "100_12345678_123_1234567890";
+                    // opus = "100_00000016_123_1234567890";
+                    // opus = "100_00000025_123_1234567890";
+                    if (opus) {
+                        WCY.getWcy(opus);
+                    } else {
+                        WCY.start();
+                    }
                     //_wxInit();
 //                    $scope.insertLocalImage();
                     // $cordovaProgress.hide();
