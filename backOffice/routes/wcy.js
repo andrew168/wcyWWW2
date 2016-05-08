@@ -104,10 +104,10 @@ function sendBackWcy(req, res, wcyId) {
             response(req, res, data);
             console.log("对于非注册用户， 如何处理？");
 
-            status.setExtraCallback(function() {
-
+/*          status.setExtraCallback(function() {
                 response(req, res, data);
             })
+*/
         }
     });
 }
