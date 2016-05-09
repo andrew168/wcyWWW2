@@ -2,10 +2,11 @@ angular.module('starter')
     .controller('DashCtrl', ['$scope', '$state', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', '$http', 'EditorService',
+        'AppService',
         function(
             $scope, $state, $timeout, WCY, $cordovaImagePicker,
             $cordovaProgress, $cordovaSocialSharing,
-            FileService, NetService, DeviceService, Setup, WxService, $http, EditorService) {
+            FileService, NetService, DeviceService, Setup, WxService, $http, EditorService, AppService) {
             $scope.localImage1 = null;
             $scope.localImage2 = null;
             $scope.data = {};
@@ -13,11 +14,10 @@ angular.module('starter')
             $scope.data.sceneID = 14959; // straw berry
             if (!DeviceService.isReady()) {
                 // $cordovaProgress.showSimple(true);
-                ionic.Platform.ready(_init);
+                ionic.Platform.ready( AppService.init);
             } else {
-                _init();
+                AppService.init();
             }
-
 
             if (TQ.Config.TECH_TEST1_LOCAL_CACHE_ON) {
                 $(document).ready(function () {
@@ -31,53 +31,6 @@ angular.module('starter')
                         window.open(DeviceService.getRootFolder());
                     });
                 });
-            }
-
-
-            function _init() {
-                _wxInit();
-                if (TQ.Config.LocalCacheEnabled) {
-                    document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
-                    DeviceService.initialize();
-                } {
-                    onFileSystemReady();
-                }
-            }
-
-            // 三个阶段： DeveiceReady, DOM ready, ImageCacheReady, DirReady
-            function onFileSystemReady() {
-                if (TQ.Config.LocalCacheEnabled) {
-                    document.addEventListener(TQ.EVENT.DIR_READY, onDirReady, false);
-                    document.removeEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady);
-                    Setup.initialize();
-                    NetService.initialize();
-                } else {
-                    NetService.initialize();
-                    onDirReady();
-                }
-            }
-
-            function onDirReady() {
-                if (TQ.Config.LocalCacheEnabled) {
-                    document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
-                    assertTrue("device要先ready", DeviceService.isReady());
-                }
-                $timeout(function () {
-                    // $scope.testDownload();
-
-                    var opus = TQ.Utility.getUrlParam('opus');
-                    // opus = "100_12345678_123_1234567890";
-                    // opus = "100_00000016_123_1234567890";
-                    // opus = "100_00000025_123_1234567890";
-                    if (opus) {
-                        WCY.getWcy(opus);
-                    } else {
-                        WCY.start();
-                    }
-                    //_wxInit();
-//                    $scope.insertLocalImage();
-                    // $cordovaProgress.hide();
-                }, 100);
             }
 
             // WCY.test();
@@ -338,16 +291,12 @@ angular.module('starter')
                     });
             };
 
-            function _wxInit() {
-                WxService.config();
-            }
-
             $scope.shareWx = function() {
                 WxService.shareMessage();
             };
 
             $scope.wxInit = function() {
-                _wxInit();
+                WxService.init();
             };
 
             $scope.getLocale = function(id) {

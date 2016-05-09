@@ -194,7 +194,12 @@ angular.module('starter').
             return _isReady;
         }
 
+        function init() {
+            return getSignature();
+        }
+
         return {
+            init: init,
             config: getSignature,
             shareMessage: shareMessage,
             checkAPI: checkAPI,
