@@ -12,6 +12,9 @@ angular.module('starter')
             $scope.data = {};
             // 12853, 12585; // Bear，  14961;  // 比例变换测试， 15089; // 投票
             $scope.data.sceneID = 14959; // straw berry
+
+            // AppService.onAppStarting(onAppStaring);
+            // AppService.onAppStarted(onAppStarted);
             if (!DeviceService.isReady()) {
                 // $cordovaProgress.showSimple(true);
                 ionic.Platform.ready( AppService.init);

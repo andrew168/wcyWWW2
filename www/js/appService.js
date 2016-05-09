@@ -6,13 +6,28 @@ angular.module('starter').
         'Setup',
     function ($http, $cookies, $q, WxService, $timeout, WCY, NetService, DeviceService,
               Setup) {
+
+        var _initialized = false,
+            _onAppStarting = null,
+            _onAppStarted = onAppStartDefault;
+
         function _init() {
+            if (_initialized) {
+                TQ.Log.error("Duplicated call in _init");
+                return;
+            }
+            _initialized = true;
+            TQ.Log.debugInfo("_init");
             WxService.init();
             if (TQ.Config.LocalCacheEnabled) {
                 document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
                 DeviceService.initialize();
             } {
                 onFileSystemReady();
+            }
+
+            if (_onAppStarting) {
+                _onAppStarting();
             }
         }
 
@@ -34,12 +49,14 @@ angular.module('starter').
                 document.removeEventListener(TQ.EVENT.DIR_READY, onDirReady);
                 assertTrue("device要先ready", DeviceService.isReady());
             }
-            $timeout(function () {
-                appStart();
-            }, 100);
+            if (_onAppStarted) {
+                $timeout(function () {
+                    _onAppStarted();
+                });
+            }
         }
 
-        function appStart() {
+        function onAppStartDefault() {
             // $scope.testDownload();
 
             var opus = TQ.Utility.getUrlParam('opus');
@@ -56,7 +73,17 @@ angular.module('starter').
             // $cordovaProgress.hide();
         }
 
+        function setOnAppStarted(fn) {
+            _onAppStarted = fn;
+        }
+
+        function setOnAppStarting(fn) {
+            _onAppStarting = fn;
+        }
+
         return {
-            init: _init
+            init: _init,
+            onAppStarting: setOnAppStarting,
+            onAppStarted: setOnAppStarted
         }
     }]);

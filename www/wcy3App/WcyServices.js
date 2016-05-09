@@ -23,6 +23,8 @@ angular.module('starter')
 
             var wcyId = 0; // 12345678;
             var SHARE_STRING = user.ID + '_' + wcyId + '_123_1234567890';
+            var _onStarted = null;
+
 
             function create(option) {
                 if (!option) {
@@ -143,6 +145,9 @@ angular.module('starter')
                 TQ.floatToolbar.initialize();
                 TQ.floatToolbar.isVisible();
                 startAutoSave();
+                if (_onStarted) {
+                    _onStarted();
+                }
             }
 
             function _autoSave() {
@@ -215,7 +220,12 @@ angular.module('starter')
                 return TQ.Config.UNNAMED_SCENE;
             }
 
+            function setOnStarted(fn) {
+                _onStarted = fn;
+            }
+
             return {
+                setOnStarted: setOnStarted,
                 start: start,  // start a new one, or load previous one (edited or played)
                 create: create,
                 save: save,
