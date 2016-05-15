@@ -46,7 +46,6 @@ window.TQ = window.TQ || {};
     Config.SOUND_PLUGIN_PATH = "../soundjs/";
     Config.DefaultUserID = 10000;
 
-
     // utilities tools
     Config.REMOVE_EMPTY_LEVEL_ON = true;
 
@@ -67,7 +66,9 @@ window.TQ = window.TQ || {};
         _resourceHost = host;
     };
 
+
     //
+    Config.hasWx = true;  // 支持微信服务器绑定，绑定到 udoido
     Config.ChromeFileEnabled = true;
     Config.useCloundServerSimulator = true;
 

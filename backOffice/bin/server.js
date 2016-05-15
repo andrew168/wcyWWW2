@@ -34,10 +34,14 @@ function onDbStarted() {
     var users = require('./../routes/users');
     var getCSignature = require('./../routes/getCSignature');
     var getWSignature = require('./../routes/getWSignature');
+    var isWx = require('./../routes/isWx');
 
     app.use('/users', users);
     app.use('/getCSignature', getCSignature);
     app.use('/getWSignature', getWSignature);
+    app.use('/isWx', isWx);
+    app.use('/wechat', isWx);
+
     var Wcy = require('./../routes/wcy');
     var material = require('./../routes/material');
     status = require('./../common/status');
