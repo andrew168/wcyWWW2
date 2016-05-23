@@ -79,7 +79,7 @@ a:hover { text-decoration:none; cursor:pointer; color:#f60; }
 .new-house-main-sound { background:url(/public/images/new-sound.png) no-repeat; height:32px; width:32px; }
 .new-house-main li { float:left; }
 .new-right { width:751px; height:auto; }
-.new-left-button { position:absolute; bottom:9px; height:auto; width:919px; }
+.new-left-button { position:absolute; top:0; height:auto; width:919px; }
 .new-left-button button { }
 .new-left-button .bn-new-icon, .new-left-button .bn-new-icon, .new-left-button .bn-new-hover, .bn-float-icon { background:url(/public/images/new-f-bg.png) repeat-x #010101; border-bottom-left-radius: 6px; border-bottom-right-radius: 6px; height:38px; width:35px; border:1px solid #000; border-top:none; text-align:center; float:left; margin-right:2px; }
 .new-top-button .bn-new-icon, .bn-new-publish { background:url(/public/images/new-f-bg.png) repeat-y #c5e4fe; border-top-left-radius: 6px; border-top-right-radius: 6px; height:34px; width:34px; border:1px solid #0493d9; border-bottom:none; text-align:center; }

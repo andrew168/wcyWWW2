@@ -94,7 +94,7 @@
 
             <div class="fn-left new-left functionButton">
                 <ul class="new-left-li">
-                    <li class="tabmenu_left_ajax_btn" cate_id="3" tag_type="2">
+                    <li class="tabmenu_left_ajax_btn" cate_id="3" tag_type="2" id="add-local-photo" ng-click="insertLocalImage2()">
                         <a href="javascript:void(0)" title={{getLocale('wcy_menu_beijing')}} etype="1">
                             <span class="left-top bj"></span>
                         </a>
@@ -169,7 +169,7 @@
             </div>
 
         <!-- ** style="display: none" -->
-        <div class="float-tool_new">
+        <div class="float-tool_new" style="display: none">
             <!-- 作品 -->
             <div style="display: block">
             <button  class="button button-positive" ng-click="testShowWCY()">播放作品</button>
@@ -193,7 +193,6 @@
             <!-- 材质 -->
             <div style="display: block">
                 <button class="button button-positive" ng-click="uploadMat()">上传照片</button>
-                <button class="button button-positive" ng-click="insertLocalImage2()">插入本地图片</button>
                 <button class="button button-positive" ng-click="getWcy()">从服务器获取作品</button>
                 <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
                 <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
