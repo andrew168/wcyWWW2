@@ -87,12 +87,14 @@ function start2() {
 }
 
 function setupBaseiRoutes() {
-    console.log(__dirname);
-    console.log(path.join(__dirname, './../../www'));
-    console.log(path.join(__dirname, './../public'));
+    var clientPath = path.join(__dirname,       './../../www');
+    var clientPathStatic = path.join(__dirname, './../public');
+    console.log("current path:" + __dirname);
+    console.log("client path (dynamic): " + clientPath);
+    console.log("client path (static): " + clientPathStatic);
 
-    app.use(express.static(path.join(__dirname, './../../www')));
-    app.use('/static', express.static(path.join(__dirname, './../public')));
+    app.use(express.static(clientPath));
+    app.use('/static', express.static(clientPathStatic));
 
     if (Config.useCloundServerSimulator) {
         startLocalSimulator();
@@ -108,6 +110,7 @@ function setupBaseiRoutes() {
 
 // catch 404 and forward to error handler
     app.use(function(req, res, next) {
+        console.log("body: " + JSON.stringify(req.body));
         var err = new Error('Not Found');
         err.status = 404;
         next(err);

@@ -1,0 +1,30 @@
+1) 确认关闭无管的服务和应用，例如：
+  mysql (改用mongod）
+  httpd (它占用80口）
+  varnish (它占用80口）
+  redis???
+
+  $chkconfig --list
+  $chkconfig httpd off
+
+2） 确认不自动启动下面的服务，例如：
+  mongod
+  node
+  nodesvr
+
+3) 把sh_script目录下的脚步复制到 linux服务器的/data/shell/目录下
+
+4) 编辑root用户的定时任务， 内容与文件crontab_setting.txt 一致
+   $crontab -e
+
+
+5）确保下面的目录人人可以读写：
+  /data/wwwz/card2
+  /data/wcydepot  （数据库）
+  /logs/udoido
+
+
+
+
+
+

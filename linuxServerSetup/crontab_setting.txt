@@ -1,0 +1,23 @@
+[root@AY130205075328dd96905 guopengch]# crontab -e
+
+#55 2 * * *  sh /data/shell/backup_mysql_ed.sh
+#55 2 * * *  sh /data/shell/backup_mysql_ex1db.sh
+#55 2 * * *  sh /data/shell/backup_mysql_bone.sh
+#* * * * *  /bin/sh /data/shell/unisonsync.sh > /dev/null 2>&1 &
+
+#*/5 * * * * /usr/bin/curl http://test.udoido.cn/tools/video_cron
+#*/5 * * * * /usr/bin/curl http://bone.udoido.cn/tools/video_cron
+
+#*/50 * * * * rm -rf /data/shell/nohup.out
+#*/50 * * * * rm -rf /root/nohup.out
+
+
+#new node project
+@reboot echo "hi" > /logs/udoido/reboot.log 2>&1
+#@reboot sh /data/shell/start_node_server.sh
+#@reboot sh /data/shell/start_mongo_db.sh
+@reboot sh /data/shell/start_udoido.sh
+
+
+#0,10,20,30,40,50 * * * *  sh /data/shell/start_node_server.sh
+0,10,20,30,40,50 * * * *  sh /data/shell/start_udoido.sh
