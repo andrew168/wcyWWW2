@@ -168,7 +168,10 @@
             <input type="text" id="sceneID" name='sceneID' ng-model="data.sceneID" required>
             </div>
 
-        <div style="display: none" class="float-tool_new">
+        <!-- ** style="display: none" -->
+        <div class="float-tool_new">
+            <!-- 作品 -->
+            <div style="display: block">
             <button  class="button button-positive" ng-click="testShowWCY()">播放作品</button>
             <button class="button button-positive" ng-click="insertLocalImage2()">插入本地图片</button>
 
@@ -184,18 +187,27 @@
             <button class="button button-positive" ng-click="deleteElement()">删除</button>
             <button class="button button-positive" my-click="uploadScreenShot()">截屏上传</button>
             <button class="button button-positive" my-click="saveScreenShot($event)">截屏保存</button>
+            </div>
             <button class="button button-positive" ng-click="createWcy()">新建</button>
             <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
-            <button class="button button-positive" ng-click="uploadMat()">上传照片</button>
-            <button class="button button-positive" ng-click="insertLocalImage2()">插入本地图片</button>
-            <button class="button button-positive" ng-click="getWcy()">从服务器获取作品</button>
-            <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
-            <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
-            <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
-            <button class="button button-positive" ng-click="share()">分享1</button>
-            <button class="button button-positive" ng-click="shareFB()">分享到FB</button>
-            <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
-            <button class="button button-positive" ng-click="wxInit()">wx初始化</button>
+            <!-- 材质 -->
+            <div style="display: block">
+                <button class="button button-positive" ng-click="uploadMat()">上传照片</button>
+                <button class="button button-positive" ng-click="insertLocalImage2()">插入本地图片</button>
+                <button class="button button-positive" ng-click="getWcy()">从服务器获取作品</button>
+                <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
+                <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
+                <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
+            </div>
+
+            <!-- 微信 -->
+            <div>
+                <button class="button button-positive" ng-click="share()">分享1</button>
+                <button class="button button-positive" ng-click="shareFB()">分享到FB</button>
+                <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
+                <button class="button button-positive" ng-click="wxInit()">wx初始化</button>
+
+            </div>
             <label>{{params}}{{getTextMsg()}} </label>
             <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
         </div>
