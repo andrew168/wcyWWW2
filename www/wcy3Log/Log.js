@@ -56,7 +56,9 @@ window.TQ = window.TQ || {};
         if (typeof str != "string") {
             str = JSON.stringify(str);
         }
-        alert("wx调试__" + str);
+        if (TQ.Config.WX_DEBUG_ENABLED) {
+            alert("wx调试__" + str);
+        }
     };
 
     TQ.Log = Log;
