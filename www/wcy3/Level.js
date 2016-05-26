@@ -571,9 +571,11 @@ window.TQ = window.TQ || {};
     };
 
     p.setupTimer = function () {
-        if (TQ.FrameCounter.isPlaying()) {
+        if (TQ.FrameCounter.isPlaying()) {  // play mode
             this._t = 0;
             TQ.FrameCounter.gotoBeginning();
+        } else {                            // edit mode
+            TQ.FrameCounter.goto(this._t);
         }
     };
 
