@@ -8,17 +8,40 @@ window.TQ = window.TQ || {};
 (function () {
     function Config() {
     }
+    // 陈永添加的配置， begin ---
+    var host=window.location.host;
+    status=host.indexOf("udoido.cn");
+    var api_domain='';
+    if(status!='-1'){
+        api_domain='api.udoido.cn';
+    }else{
+        api_domain='api.udoido.com';
+    }
+
+    status=host.indexOf("test.udoido.cn");
+    if(status!='-1'){
+        api_domain='testapi.udoido.cn';
+    }
+
+    //ToDo:AZ mobile
+    // var api_domain=api_domain+'/'+getcookie('select_lang');
+    api_domain=api_domain+'/' + 'en';
+    Config.API_DOMAIN_NAME=api_domain;
+    Config.attachmentPath='attachment/';
+    Config.actionImgPath= Config.attachmentPath+'action_img/';
+    // 陈永添加的配置， --- end
+
     //Config.DOMAIN_NAME="localhost";
      Config.DOMAIN_NAME=window.location.host;
     Config.EXTENSION = "";  // JS 不要后缀, 只有PHP自添加后缀
     Config.color = "#0000FF";
     Config.fontFace = window.TQ.Dictionary.fontFace;
-    Config.fontSize = "128"; // px是合成函数自动加的
+    Config.fontSize = "36"; // px是合成函数自动加的
     Config.BACKGROUND_COLOR = "#FFF"; // HTML5的#系列颜色只有#FFF,不是#FFFFFF.
     Config.workingRegionX0 = 160; // ToDo: 1)初始化, 按照分辨率来. 2)响应窗口尺寸变化 (window.screen.width - 960) /2;
     Config.workingRegionY0 = 63;
-    Config.workingRegionWidth = 900; //600;
-    Config.workingRegionHeight = 500; // 400;
+    Config.workingRegionWidth = 751;
+    Config.workingRegionHeight = 550;
     Config.ORIENTATION_PORTRAIT = "portrait";
     Config.ORIENTATION_LANDSCAPE = "landscape";
     Config.orientation = Config.ORIENTATION_PORTRAIT;
