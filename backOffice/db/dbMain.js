@@ -2,10 +2,10 @@
  * Created by admin on 12/1/2015.
  */
 // getting-started.js
-var mongoose = require('mongoose');
+var mongoose = require('mongoose');//加载mongoose需要花很多时间，导致server启动的慢
 var assert = require('assert');
-//var url = 'mongodb://localhost:27017/test'; //XX, 在断网的情况下,不能使用
-var url = 'mongodb://127.0.0.1/test'; //  本机ip，在断网的情况下也可以使用
+var configSvr = require('./../common/configSvr'),
+    url = configSvr.dbServer;
 var Users;
 var logger = require('./../common/logger');
 logger.config("udoido.log");

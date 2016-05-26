@@ -23,7 +23,8 @@ function start() {
     start2();
 
 //  使用数据库的操作， 都必须在数据库启动之后， 再启动
-    require('./../db/dbMain').init(app, onDbStarted);
+    var dbMain = require('./../db/dbMain');
+    dbMain.init(app, onDbStarted);
     // start3();
     // init();
 }
