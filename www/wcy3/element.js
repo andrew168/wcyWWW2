@@ -872,17 +872,19 @@ window.TQ = window.TQ || {};
                     // this will be active until the user releases the mouse button:
                     showFloatToolbar(evt);
                     TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
-                    evt.onMouseMove = function (ev) {
-                        if (TQ.SceneEditor.isPlayMode()) {
-                            return;
-                        }
-                        TQ.floatToolbar.show(false);
-                        TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
-                    };
-                    evt.onMouseUp = function (evt) {
-                        showFloatToolbar(evt);
-                        evt.onMouseUp = null;
-                    };
+                    if (TQ.Config.useCreateJsTouch) {
+                        evt.onMouseMove = function (ev) {
+                            if (TQ.SceneEditor.isPlayMode()) {
+                                return;
+                            }
+                            TQ.floatToolbar.show(false);
+                            TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
+                        };
+                        evt.onMouseUp = function (evt) {
+                            showFloatToolbar(evt);
+                            evt.onMouseUp = null;
+                        };
+                    }
 
                     if (TQ.displayUI && TQ.displayUI.displayMenu && TQ.displayUI.displayActionSet) {
                         TQ.displayUI.displayMenu(ele2, ele2.geteType());
