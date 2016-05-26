@@ -30,6 +30,10 @@ angular.module('starter').
                 canvas.width = TQ.Config.workingRegionWidth;
             }
 
+            if (currScene) {
+                currScene.isDirty = true;
+            }
+
             TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight +")"
                 + "orientation = " + TQ.Config.orientation);
         }
