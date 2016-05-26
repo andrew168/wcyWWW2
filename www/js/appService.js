@@ -11,6 +11,29 @@ angular.module('starter').
             _onAppStarting = null,
             _onAppStarted = onAppStartDefault;
 
+        function configCanvas() {
+            if ((TQ.Config.workingRegionHeight === screen.height) &&
+                (TQ.Config.workingRegionWidth = screen.width)) {  // no change
+                return;
+            }
+
+            TQ.Config.workingRegionHeight = screen.height;
+            TQ.Config.workingRegionWidth = screen.width;
+            if (TQ.Config.workingRegionHeight > TQ.Config.workingRegionWidth) {
+                TQ.Config.orientation = TQ.Config.ORIENTATION_PORTRAIT;
+            } else {
+                TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
+            }
+
+            if (canvas) {
+                canvas.height = TQ.Config.workingRegionHeight;
+                canvas.width = TQ.Config.workingRegionWidth;
+            }
+
+            TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight +")"
+                + "orientation = " + TQ.Config.orientation);
+        }
+
         function _init() {
             if (_initialized) {
                 TQ.Log.error("Duplicated call in _init");
@@ -19,6 +42,8 @@ angular.module('starter').
             _initialized = true;
             TQ.Log.debugInfo("_init");
             WxService.init();
+            window.addEventListener("resize", configCanvas);
+            configCanvas();
             if (TQ.Config.LocalCacheEnabled) {
                 document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
                 DeviceService.initialize();
