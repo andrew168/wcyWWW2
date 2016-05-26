@@ -169,9 +169,9 @@
             </div>
 
         <!-- ** style="display: none" -->
-        <div class="float-tool_new" style="display: none">
+        <div class="float-tool_new" style="display: block">
             <!-- 作品 -->
-            <div style="display: block">
+            <div style="display: none">
             <button  class="button button-positive" ng-click="testShowWCY()">播放作品</button>
             <button class="button button-positive" ng-click="insertLocalImage2()">插入本地图片</button>
 
@@ -191,7 +191,7 @@
             <button class="button button-positive" ng-click="createWcy()">新建</button>
             <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
             <!-- 材质 -->
-            <div style="display: block">
+            <div style="display: none">
                 <button class="button button-positive" ng-click="uploadMat()">上传照片</button>
                 <button class="button button-positive" ng-click="getWcy()">从服务器获取作品</button>
                 <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
@@ -200,15 +200,17 @@
             </div>
 
             <!-- 微信 -->
-            <div>
+            <div style="display: none">
                 <button class="button button-positive" ng-click="share()">分享1</button>
                 <button class="button button-positive" ng-click="shareFB()">分享到FB</button>
                 <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
                 <button class="button button-positive" ng-click="wxInit()">wx初始化</button>
 
             </div>
-            <label>{{params}}{{getTextMsg()}} </label>
-            <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
+            <div style="display: none">
+                <label>{{params}}{{getTextMsg()}} </label>
+                <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
+            </div>
         </div>
         <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="showcanvas positive-border"></canvas>
         <div id="textEditBoxDiv" style="display:none">
@@ -307,7 +309,7 @@
             </div>
 
         </div>
-        <div class="float-tool-3">
+        <div class="float-tool-3" style="display:none">
             <div class="new-right-broadcast">
                 <button title="{{getLocale('wcy_gongneng_button_8')}}" class="bn-new-hover" id="beginning">
                     <span class="ui-icon ui-icon-seek-start"></span>
