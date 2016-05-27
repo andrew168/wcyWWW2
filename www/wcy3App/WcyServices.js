@@ -13,16 +13,19 @@ WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
    => show
 */
 angular.module('starter')
-    .factory("WCY", ['$http', 'FileService',
-        function($http, FileService) {
+    .factory("WCY", ['$http', 'FileService', 'WxService',
+        function($http, FileService, WxService) {
+            // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
             var user = userProfile.user;
             var _AUTO_SAVE_NAME = '_auto_save_name_';
             var _FILENAME = '_filename_';
             var readCache = TQ.Base.Utility.readCache;
             var writeCache = TQ.Base.Utility.writeCache;
 
-            var wcyId = 0; // 12345678;
-            var SHARE_STRING = user.ID + '_' + wcyId + '_123_1234567890';
+            var _wcyId = -1, // 缺省-1， 表示没有保存的作品。，12345678;
+                _shareCode;
+
+            var SHARE_STRING = user.ID + '_' + _wcyId + '_123_1234567890';
             var _onStarted = null;
 
 
@@ -30,7 +33,7 @@ angular.module('starter')
                 if (!option) {
                     option = {};
                 }
-                wcyId = 0;
+                _wcyId = 0;
                 TQ.SceneEditor.createScene(option);
                 startAutoSave();
             }
@@ -64,10 +67,11 @@ angular.module('starter')
             }
 
             function _upload() {
-                TQ.Assert.isDefined(wcyId);
+                TQ.Assert.isDefined(_wcyId);
+                TQ.Assert.isTrue(_wcyId >= 0);
                 var jsonWcyData = currScene.getData();
                 var myToken = '1234567890';
-                var params = '?wcyId=' + wcyId;
+                var params = '?wcyId=' + _wcyId;
                 $http({
                     method: 'POST',
                     // url: AUTH_HOST + wechat/sign?url=' + url,
@@ -189,9 +193,19 @@ angular.module('starter')
             function _onSuccess(res) {
                 var data = res.data;
                 if (!!data && !!data.wcyId) {
-                    wcyId = data.wcyId;
+                    _wcyId = _getWcyId(data);
+                    _shareCode = data.shareCode;
+                    if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
+                        WxService.shareMessage(_shareCode);
+                    }
                 }
                 console.log(data);
+            }
+
+            function _getWcyId(resData) {
+                if (resData && resData.wcyId) {
+                    return parseInt(resData.wcyId);
+                }
             }
 
             function _onFail(data) {
@@ -201,7 +215,7 @@ angular.module('starter')
             function _onReceivedWcyData(res) {
                 var data = res.data;
                 if (!!data && !!data.wcyId) {
-                    wcyId = data.wcyId;
+                    _wcyId = _getWcyId(data);
                 }
 
                 _openInJson(data.data);

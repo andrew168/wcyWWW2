@@ -61,12 +61,16 @@ function _saveWcy(wcyId, wcyData, res) {
             msg = "The file was saved!";
         }
         console.log(msg);
-        res.send({wcyId: wcyId, msg:msg});
+        var shareId = 0,
+            userId = 0,
+            timestamp = (new Date()).getTime();
+        var shareCode = utils.composeShareCode(shareId, wcyId, userId, timestamp);
+        res.send({wcyId: wcyId, shareCode:shareCode, msg:msg});
     });
 }
 
 /// private function:
-function response(req, res, data) {
+function response(req, res, data, wcyId) {
     var url = req.headers.origin;
     // var url = req.headers.referer;
     var data = {
@@ -74,6 +78,7 @@ function response(req, res, data) {
         url: 'url' + url,
         referer: 'url' + req.headers.referer,
         timesCalled: status.timesCalled,
+        wcyId: wcyId,
         data: data
     };
 
@@ -99,13 +104,13 @@ function sendBackWcy(req, res, wcyId) {
         // console.log(data);
         // res.json(data);
         if (res.isRegisteredUser) {
-            response(req, res, data);
+            response(req, res, data, wcyId);
         } else {
-            response(req, res, data);
+            response(req, res, data, wcyId);
             console.log("对于非注册用户， 如何处理？");
 
 /*          status.setExtraCallback(function() {
-                response(req, res, data);
+                response(req, res, data, wcyId);
             })
 */
         }
