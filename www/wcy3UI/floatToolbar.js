@@ -6,35 +6,47 @@ window.TQ = window.TQ || {};
 (function () {
     /// 以下是接口部分
     var floatToolbar = {};
+    var _initialized = false,
+        _barEle,
+        _isVisible;
 
-    floatToolbar.obj=function(){
-        return $('#floatToolbarDiv');
-    };
     /*
        初始化工具条
        */
     floatToolbar.initialize = function() {
-        TQ.floatToolbar.selectedElement = null;  
-        floatToolbar.obj().css('display','none');
-        floatToolbar.setupButtons();
+        if (_initialized) {
+            return;
+        }
+
+        _initialized = true;
+        TQ.floatToolbar.selectedElement = null;
+        _barEle = TQ.DomUtil.getElementById('floatToolbarDiv');
+        _setupButtons();
+        floatToolbar.show(false);
     };
 
     /*
        显示（true）和隐藏（false）此工具条：
        */
     floatToolbar.show = function(flag) {
-        var display_str='none';
-        if(flag==true){
-            display_str='block';
+        if (!_initialized) {
+            return;
         }
-        floatToolbar.obj().css('display',display_str);
+
+        if(flag==true){
+            TQ.DomUtil.show(_barEle);
+        } else {
+            TQ.DomUtil.close(_barEle);
+        }
+
+        _isVisible = flag;
     };
 
     /*
        在位置（x,y) 显示工具条
        */
     floatToolbar.setPosition = function(x,y) {
-        floatToolbar.obj().css('left', x - 100).css('top',y + 30);
+        // _barEle.css('left', x - 100).css('top',y + 30);
     };
 
     /*
@@ -42,17 +54,11 @@ window.TQ = window.TQ || {};
        */
     floatToolbar.isVisible = function()
     {
-        status=floatToolbar.obj().css('display');
-        if(status=='block'){
-            return true;
-        }else{
-            return false;
-        }
-        //return false; // true: 可见， false: 不可见;
+        return _isVisible;
     };
 
     /// 以下是内部代码
-    floatToolbar.setupButtons = function() {
+    function _setupButtons() {
         //放大
         $('#doScaleBig').bind('touchstart click', function(evt){
             evt.stopPropagation();
@@ -131,7 +137,7 @@ window.TQ = window.TQ || {};
             TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
             TQ.InputCtrl.mirrorY(TQ.floatToolbar.selectedElement);
         });
-    };
+    }
 
     TQ.floatToolbar = floatToolbar;
 }());
