@@ -46,6 +46,7 @@ window.TQ = window.TQ || {};
 
             // hitArea 不会根据str内容来更新， 所以：
             txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), txtObj.getMeasuredHeight());
+            TQ.DirtyFlag.setElement(this);
         }
     };
 
@@ -71,6 +72,7 @@ window.TQ = window.TQ || {};
         var shape = new createjs.Shape();
         shape.rotation = rotation;
         shape.graphics.beginFill("#F00").drawRect(0, 0, w , h);
+        TQ.DirtyFlag.setElement(this);
         return shape;
     }
 

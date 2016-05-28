@@ -31,7 +31,7 @@ angular.module('starter').
             }
 
             if (currScene) {
-                currScene.isDirty = true;
+                TQ.DirtyFlag.setAll();
             }
 
             TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight +")"

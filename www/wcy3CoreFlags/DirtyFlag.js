@@ -9,17 +9,27 @@ var TQ = TQ || {};
 
     function setElement(ele) {
         // ele.isDirty = true;
-        ele.dirty = true;
+        if (!!ele) {
+            ele.dirty = true;
+        }
         currScene.isDirty = true;
         currScene.currentLevel.isDirty = true;
     }
 
     function setLevel(level) {
-        level.isDirty = true;
+        if (!!level) {
+            level.isDirty = true;
+        }
         currScene.isDirty = true;
     }
 
-    TQ.DirtyFlag = DirtyFlag;
+    function setAll() {
+        return setElement();
+    }
+
     DirtyFlag.setElement = setElement;
     DirtyFlag.setLevel = setLevel;
+    DirtyFlag.setAll = setAll;
+
+    TQ.DirtyFlag = DirtyFlag;
 }());
