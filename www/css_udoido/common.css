@@ -1,4 +1,29 @@
 ﻿@charset "utf-8";
+.top-right-bar {
+    position: absolute;
+    top: 2rem;
+    right:0;
+    width: 100%;
+    min-width: 300px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right:auto;
+    display: none;
+    float: right;
+}
+
+.inline-btn {
+    display:inline;
+    float: right;
+    background: #fdd035;
+    border-radius: 20px;
+    height: 40px;
+    width: 40px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+    margin-right: 4px;
+}
+
+
 /* ��ֹ�û��Զ��屳����ɫ����ҳ��Ӱ�� */
 body, html { width:100%; height:100%; zoom:1}
 html { color:#888; }
