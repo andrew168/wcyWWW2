@@ -851,28 +851,29 @@ window.TQ = window.TQ || {};
             }
 
             // wrapper function to provide scope for the event handlers:
-            (function (ele) {
-                var showFloatToolbar = function (evt) {
-                    if ((TQ.floatToolbar != undefined) && TQ.floatToolbar.setPosition && TQ.floatToolbar.show) {
-                        TQ.floatToolbar.setPosition(evt.stageX, evt.stageY);
-                        TQ.floatToolbar.show(true);
-                    }
-                };
+            if (TQ.Config.useCreateJsTouch) {
 
-                item.onPress = function (evt) {
-                    if (TQ.SceneEditor.isPlayMode()) {
-                        return;
-                    }
-                    var ele2 = TQ.SelectSet.getEditableEle(ele);
-                    TQ.SelectSet.add(ele2);
-                    var target = ele2.displayObj;
-                    if (target == null) return; // 防止 刚刚被删除的物体.
-                    var offset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
-                    // add a handler to the event object's onMouseMove callback
-                    // this will be active until the user releases the mouse button:
-                    showFloatToolbar(evt);
-                    TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
-                    if (TQ.Config.useCreateJsTouch) {
+                (function (ele) {
+                    var showFloatToolbar = function (evt) {
+                        if ((TQ.floatToolbar != undefined) && TQ.floatToolbar.setPosition && TQ.floatToolbar.show) {
+                            TQ.floatToolbar.setPosition(evt.stageX, evt.stageY);
+                            TQ.floatToolbar.show(true);
+                        }
+                    };
+
+                    item.onPress = function (evt) {
+                        if (TQ.SceneEditor.isPlayMode()) {
+                            return;
+                        }
+                        var ele2 = TQ.SelectSet.getEditableEle(ele);
+                        TQ.SelectSet.add(ele2);
+                        var target = ele2.displayObj;
+                        if (target == null) return; // 防止 刚刚被删除的物体.
+                        var offset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
+                        // add a handler to the event object's onMouseMove callback
+                        // this will be active until the user releases the mouse button:
+                        showFloatToolbar(evt);
+                        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
                         evt.onMouseMove = function (ev) {
                             if (TQ.SceneEditor.isPlayMode()) {
                                 return;
@@ -884,23 +885,24 @@ window.TQ = window.TQ || {};
                             showFloatToolbar(evt);
                             evt.onMouseUp = null;
                         };
-                    }
 
-                    if (TQ.displayUI && TQ.displayUI.displayMenu && TQ.displayUI.displayActionSet) {
-                        TQ.displayUI.displayMenu(ele2, ele2.geteType());
-                        TQ.displayUI.displayActionSet(ele2, ele2.geteType());
+
+                        if (TQ.displayUI && TQ.displayUI.displayMenu && TQ.displayUI.displayActionSet) {
+                            TQ.displayUI.displayMenu(ele2, ele2.getEType());
+                            TQ.displayUI.displayActionSet(ele2, ele2.getEType());
+                        }
+                    };
+                    item.onMouseOver = function () {
+                        ele.highlight(true);
+                        thislevel.dirty = true;
+                    };
+                    item.onMouseOut = function () {
+                        if (!TQ.SelectSet.isSelected(ele)) {
+                            ele.highlight(false);
+                        }
                     }
-                };
-                item.onMouseOver = function () {
-                    ele.highlight(true);
-                    thislevel.dirty = true;
-                };
-                item.onMouseOut = function () {
-                    if (!TQ.SelectSet.isSelected(ele)) {
-                        ele.highlight(false);
-                    }
-                }
-            })(this);
+                })(this);
+            }
         }
     };
 
@@ -1495,7 +1497,7 @@ window.TQ = window.TQ || {};
     p.getType = function () {
         return (this.jsonObj.type);
     };
-    p.geteType = function () {
+    p.getEType = function () {
         return (this.jsonObj.eType);
     };
     p.setFlag = function (flag) {

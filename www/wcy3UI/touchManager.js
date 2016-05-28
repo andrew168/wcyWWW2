@@ -54,6 +54,7 @@ var TQ = TQ || {};
 
         if (!newEle) {
             console.error("No Obj touched!");
+            TQ.floatToolbar.show(false);
             return;
         }
 
@@ -61,15 +62,19 @@ var TQ = TQ || {};
             return;
         }
 
-        console.log("element changed!");
-
         ele = newEle;
-        if (!ele) {
+        if (ele) {
+            console.log("element selected: " + ele.getType() + ", Id=" + ele.id);
+            _highlight(ele);
+            _showFloatToolbar();
+        } else {
+            TQ.Log.warn("No Element selected, fake to first element of this level!");
             ele = currScene.currentLevel.elements[0];
+            TQ.floatToolbar.show(false);
         }
 
         if (!ele) {
-            console.error("No Element selected");
+            TQ.Log.error("No Element selected");
             return;
         }
 
@@ -203,6 +208,21 @@ var TQ = TQ || {};
         }
 
         console.log(pageX + ", " + pageY) ;
+    }
+
+    var _showFloatToolbar = function () {
+        if ((TQ.floatToolbar != undefined) && TQ.floatToolbar.setPosition && TQ.floatToolbar.show) {
+            TQ.floatToolbar.setPosition(0, 0);
+            TQ.floatToolbar.show(true);
+        }
+    };
+
+    function _highlight(ele) {
+        if (TQ.SceneEditor.isPlayMode()) {
+            return;
+        }
+        var ele2 = TQ.SelectSet.getEditableEle(ele);
+        TQ.SelectSet.add(ele2);
     }
 
     TouchManager.initialize = initialize;
