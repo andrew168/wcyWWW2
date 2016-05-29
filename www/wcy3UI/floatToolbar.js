@@ -34,6 +34,18 @@ window.TQ = window.TQ || {};
         }
 
         if (_barEle) {
+            switch(eleType) {
+                case TQ.ElementType.TEXT:
+                    _closeButtons(_imageOnlyButtons);
+                    _showButtons(_textOnlyButtons);
+                    break;
+
+                case TQ.ElementType.BITMAP:
+                default :
+                    _showButtons(_imageOnlyButtons);
+                    _closeButtons(_textOnlyButtons);
+
+            }
             TQ.DomUtil.show(_barEle);
             _isVisible = true;
         }
@@ -66,8 +78,29 @@ window.TQ = window.TQ || {};
     };
 
     /// 以下是内部代码
+    var _mouseOnlyButtons = ['doScaleBig', 'doScaleSmall', 'rotateLeft', 'rotateRight'];
+    var _textOnlyButtons = ['doScaleBig', 'doScaleSmall'];
+    var _imageOnlyButtons = ['rotateLeft', 'rotateRight'];
+
+
     function _setupButtons() {
-        //放大
+        // _setupMouseOnlyButtons();
+        _setupCommonButtons();
+    }
+
+    function _showButtons(buttons) {
+        buttons.forEach(function(item){
+            TQ.DomUtil.showById(item);
+        }, buttons);
+    }
+
+    function _closeButtons(buttons) {
+        buttons.forEach(function(item){
+            TQ.DomUtil.closeById(item);
+        }, buttons);
+    }
+
+    function _setupMouseOnlyButtons() {//放大
         $('#doScaleBig').bind('touchstart click', function(evt){
             evt.stopPropagation();
             evt.preventDefault();
@@ -95,7 +128,9 @@ window.TQ = window.TQ || {};
             TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
             TQ.IKCtrl.rotate(TQ.FloatToolbar.selectedElement, -10);
         });
-        //移动到上一层
+    }
+
+    function _setupCommonButtons() {//移动到上一层
         $('#moveLayerPrev').bind('touchstart click', function(evt){
             evt.stopPropagation();
             evt.preventDefault();
