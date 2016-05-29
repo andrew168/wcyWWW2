@@ -178,7 +178,7 @@ function openScene(fileInfo) {
         TQ.FrameCounter.reset();
         TQ.CommandMgr.clear();
         TQ.SkinningCtrl.end();
-        TQ.floatToolbar.show(false);
+        TQ.FloatToolbar.close();
         TQ.WCY.currentScene = currScene;
     } else {
         TQ.Log.warn("请先保存作品！");

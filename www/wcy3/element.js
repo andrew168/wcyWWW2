@@ -855,9 +855,9 @@ window.TQ = window.TQ || {};
 
                 (function (ele) {
                     var showFloatToolbar = function (evt) {
-                        if ((TQ.floatToolbar != undefined) && TQ.floatToolbar.setPosition && TQ.floatToolbar.show) {
-                            TQ.floatToolbar.setPosition(evt.stageX, evt.stageY);
-                            TQ.floatToolbar.show(true);
+                        if ((TQ.FloatToolbar != undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
+                            TQ.FloatToolbar.setPosition(evt.stageX, evt.stageY);
+                            TQ.FloatToolbar.show(this.getType());
                         }
                     };
 
@@ -878,7 +878,7 @@ window.TQ = window.TQ || {};
                             if (TQ.SceneEditor.isPlayMode()) {
                                 return;
                             }
-                            TQ.floatToolbar.show(false);
+                            TQ.FloatToolbar.close();
                             TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
                         };
                         evt.onMouseUp = function (evt) {

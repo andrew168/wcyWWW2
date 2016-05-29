@@ -146,8 +146,8 @@ angular.module('starter')
                 //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
                 TQ.SceneEditor.openWcy(fileinfo);
                 initToolbar();
-                TQ.floatToolbar.initialize();
-                TQ.floatToolbar.isVisible();
+                TQ.FloatToolbar.initialize();
+                // TQ.FloatToolbar.isVisible();
                 startAutoSave();
                 if (_onStarted) {
                     _onStarted();

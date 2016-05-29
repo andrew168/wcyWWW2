@@ -84,9 +84,9 @@ TQ = TQ || {};
             //    如果是“移动关节”： 则选中的是子关节
             //    如果是floatToolbar上的操作，缩放、旋转，等， 则是整体
             if (!TQ.InputCtrl.inSubobjectMode && element.isJoint()) {
-                TQ.floatToolbar.selectedElement = element;
+                TQ.FloatToolbar.selectedElement = element;
             } else {
-                TQ.floatToolbar.selectedElement = element;
+                TQ.FloatToolbar.selectedElement = element;
             }
         }
     };
@@ -118,7 +118,7 @@ TQ = TQ || {};
         }
 
         if (SelectSet.getElementUnderMouse() == null) {
-            TQ.floatToolbar.show(false);
+            TQ.FloatToolbar.close();
             //ToDo:@UI
             // if (TQ.TabsMenu.closeDiv) {
             //    TQ.TabsMenu.closeDiv();
@@ -171,7 +171,9 @@ TQ = TQ || {};
     };
 
     SelectSet.doShow = function(eles, allowIndividual) {
-        var isVisible = false;
+        var isVisible = false,
+            target = null;
+
         for (var i=0; i< eles.length; i++) {
             var ele = eles[i];
             if (!allowIndividual) {
@@ -181,9 +183,14 @@ TQ = TQ || {};
             }
             isVisible = ele.isVisible();
             ele.toggleVisibility();
+            target = ele;
         }
 
-        TQ.floatToolbar.show(!isVisible);
+        if (target && isVisible) {
+            TQ.FloatToolbar.show(target.getType());
+        } else {
+            TQ.FloatToolbar.close();
+        }
     };
 
     SelectSet.eraseAnimeTrack = function() {
@@ -214,7 +221,7 @@ TQ = TQ || {};
             if (!TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL]) {
                 SelectSet.clear();
             }
-            TQ.floatToolbar.show(false);
+            TQ.FloatToolbar.close();
         }
 
         return TQ.SelectSet.peek();

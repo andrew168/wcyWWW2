@@ -54,7 +54,7 @@ var TQ = TQ || {};
 
         if (!newEle) {
             console.error("No Obj touched!");
-            TQ.floatToolbar.show(false);
+            TQ.FloatToolbar.close();
             return;
         }
 
@@ -66,11 +66,11 @@ var TQ = TQ || {};
         if (ele) {
             console.log("element selected: " + ele.getType() + ", Id=" + ele.id);
             _highlight(ele);
-            _showFloatToolbar();
+            _showFloatToolbar(ele.getType());
         } else {
             TQ.Log.warn("No Element selected, fake to first element of this level!");
             ele = currScene.currentLevel.elements[0];
-            TQ.floatToolbar.show(false);
+            TQ.FloatToolbar.close();
         }
 
         if (!ele) {
@@ -90,7 +90,7 @@ var TQ = TQ || {};
     function onStart(e) {
         ele = null;
         getSelectedElement(e);
-        console.log("start");
+        console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
     }
 
     function ditherStart() {
@@ -210,10 +210,10 @@ var TQ = TQ || {};
         console.log(pageX + ", " + pageY) ;
     }
 
-    var _showFloatToolbar = function () {
-        if ((TQ.floatToolbar != undefined) && TQ.floatToolbar.setPosition && TQ.floatToolbar.show) {
-            TQ.floatToolbar.setPosition(0, 0);
-            TQ.floatToolbar.show(true);
+    var _showFloatToolbar = function (type) {
+        if ((TQ.FloatToolbar != undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
+            TQ.FloatToolbar.setPosition(0, 0);
+            TQ.FloatToolbar.show(type);
         }
     };
 

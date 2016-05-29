@@ -259,7 +259,7 @@ TQ = TQ || {};
         id = (id >= this.levelNum()) ? (this.levelNum() - 1) : id;
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
-            TQ.floatToolbar.show(false);
+            TQ.FloatToolbar.close();
             this.currentLevel.exit();
             this.currentLevelId = id;
         }
@@ -653,7 +653,7 @@ TQ = TQ || {};
     };
 
     p.play = function () {
-        TQ.floatToolbar.show(false);
+        TQ.FloatToolbar.close();
         TQ.FrameCounter.play();
         TQ.SoundMgr.resume();
         if (this.currentLevel) {
