@@ -662,13 +662,33 @@ window.TQ = window.TQ || {};
         }
         visSum = visSum || Element.showHidenObjectFlag;
         this.doShow(visSum);
-    };
+    },
+
+    p.setNdc = function(obj) {
+        obj.x = 0.5;
+        obj.y = 0.5;
+        obj.sx = 1 / this.getWidth();
+        obj.sy = 1 / this.getHeight();
+    },
+
+    p.ndc2Pdc = function(obj) {
+        var sx = TQ.Config.workingRegionWidth,
+            sy = TQ.Config.workingRegionHeight;
+
+        obj.x = obj.x * sx;
+        obj.y = obj.y * sy;
+
+        obj.sx = obj.sx * sx;
+        obj.sy = obj.sy * sy;
+    },
 
     p.doShow = function (visSum) {
         if (!this.displayObj) {
             this.visibleTemp = visSum;
         } else {
             this.displayObj.visible = visSum;
+//            this.setNdc(this.jsonObj);
+//            this.ndc2Pdc(this.jsonObj);
             this.toDeviceCoord(this.displayObj, this.jsonObj);
         }
     };
