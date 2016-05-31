@@ -675,33 +675,43 @@ window.TQ = window.TQ || {};
         var sx = TQ.Config.workingRegionWidth,
             sy = TQ.Config.workingRegionHeight;
 
-        obj.x = obj.x * sx;
-        obj.y = obj.y * sy;
+        var obj_pdc = {
+            x: obj.x * sx,
+            y: obj.y * sy,
+            sx: obj.sx * sx,
+            sy: obj.sy * sy,
+            rotation : obj.rotation,
+            pivotX : obj.pivotX,
+            pivotY : obj.pivotY
+        };
 
-        obj.sx = obj.sx * sx;
-        obj.sy = obj.sy * sy;
-    },
+        return obj_pdc;
+    };
 
     p.doShow = function (visSum) {
         if (!this.displayObj) {
             this.visibleTemp = visSum;
         } else {
             this.displayObj.visible = visSum;
-//            this.setNdc(this.jsonObj);
-//            this.ndc2Pdc(this.jsonObj);
             this.toDeviceCoord(this.displayObj, this.jsonObj);
         }
     };
 
     p.toDeviceCoord = function (displayObj, jsonObj) {
+        this.setNdc(this.jsonObj);
+        var obj_pdc = this.ndc2Pdc(this.jsonObj);
+        this.pdc2dc(displayObj, obj_pdc);
+    };
+
+    p.pdc2dc = function(displayObj, obj_pdc) {
         assertValid(TQ.Dictionary.FoundNull, displayObj); // "应有显示数据
-        assertValid(TQ.Dictionary.FoundNull, jsonObj); // 应有显示数据
+        assertValid(TQ.Dictionary.FoundNull, obj_pdc); // 应有显示数据
         //从 用户使用的世界坐标和物体坐标，转换为可以绘制用的设备坐标
         if (!displayObj) {
             return;
         }
-        displayObj.x = TQ.Config.zoomX * jsonObj.x;
-        displayObj.y = TQ.Utility.toDeviceCoord(TQ.Config.zoomY * jsonObj.y);
+        displayObj.x = TQ.Config.zoomX * obj_pdc.x;
+        displayObj.y = TQ.Utility.toDeviceCoord(TQ.Config.zoomY * obj_pdc.y);
         if (this.isMarker() || this.isSound()) { // marker 永远是一样的大小, 圆的, 没有旋转, 定位在圆心.
             displayObj.scaleX = displayObj.scaleY = 1;
             displayObj.regX = displayObj.regY = 0;
@@ -709,16 +719,16 @@ window.TQ = window.TQ || {};
             return;
         }
         if (!this.isMarker()) {
-            displayObj.regX = jsonObj.pivotX * this.getWidth();
-            displayObj.regY = TQ.Utility.toDevicePivot(jsonObj.pivotY) * this.getHeight();
+            displayObj.regX = obj_pdc.pivotX * this.getWidth();
+            displayObj.regY = TQ.Utility.toDevicePivot(obj_pdc.pivotY) * this.getHeight();
         } else {
             displayObj.regX = 0;
             displayObj.regY = 0
         }
 
-        displayObj.rotation = TQ.Utility.toDeviceRotation(jsonObj.rotation);
-        displayObj.scaleX = TQ.Config.zoomX * jsonObj.sx;
-        displayObj.scaleY = TQ.Config.zoomY * jsonObj.sy;
+        displayObj.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
+        displayObj.scaleX = TQ.Config.zoomX * obj_pdc.sx;
+        displayObj.scaleY = TQ.Config.zoomY * obj_pdc.sy;
     };
 
     p._loadActor = function () {
