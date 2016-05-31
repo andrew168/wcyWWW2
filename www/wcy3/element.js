@@ -5,7 +5,6 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    var _autoFitFlag = false;
     function Element(level, desc) {
         if (level != null) {  // 适用于 子类的定义, 不做任何初始化,只需要prototype
             this.level = level;
@@ -17,7 +16,11 @@ window.TQ = window.TQ || {};
             this.viewCtrl = null;
             this.state = (desc.state == undefined) ? 0 : desc.state;
             this.dirty = this.dirty2 = false;
-            _autoFitFlag = !!desc.autoFit;
+            if (!!desc.autoFit) {
+                this.autoFitFlag = desc.autoFit;
+            } else {
+                this.autoFitFlag = false;
+            }
             delete(desc.autoFit);
             this.initialize(desc);
         }
@@ -610,7 +613,7 @@ window.TQ = window.TQ || {};
         TQ.Assert.isNotNull(item, "先准备好资源， 再创建元素");
         this.loaded = true;
         var resource = this.getImageResource(item, jsonObj);
-        if (_autoFitFlag) {
+        if (this.autoFitFlag) {
             this.autoFit(resource);
         }
         this.displayObj = new createjs.Bitmap(resource);
@@ -620,16 +623,24 @@ window.TQ = window.TQ || {};
     };
 
     p.autoFit = function(img) {
-        // 自动充满整个画面
-        var scaleX = TQ.Config.workingRegionWidth / img.naturalWidth,
-            scaleY = TQ.Config.workingRegionHeight / img.naturalHeight;
-
+        // 自动充满整个画面 或者 保持物体的原始大小
+        var scaleX = 1 / img.naturalWidth,
+            scaleY = 1 / img.naturalHeight;
         var desc = this.jsonObj;
-        desc.x = TQ.Config.workingRegionWidth / 2;
-        desc.y = TQ.Config.workingRegionHeight / 2;
-        desc.sx = desc.sy = Math.max(scaleX, scaleY);
-        this.scaleTo(desc);
-        this.moveTo(desc);
+        desc.x = 0.5;
+        desc.y = 0.5;
+        desc.sx = scaleX;
+        desc.sy = scaleY;
+        desc.rotation = 0;
+        desc.pivotX = 0.5;
+        desc.pivotY = 0.5;
+        var obj_pdc = this.ndc2Pdc(desc);
+        if (this.autoFitFlag === Element.FitFlag.KEEP_SIZE) {
+            obj_pdc.sx = 1;
+            obj_pdc.sy = 1;
+        }
+        this.scaleTo(obj_pdc);
+        this.moveTo(obj_pdc);
         // desc.pivotX = desc.pivotY = 0.5;
     };
 
@@ -688,6 +699,24 @@ window.TQ = window.TQ || {};
         return obj_pdc;
     };
 
+    p.pdc2Ndc = function(obj) {
+        this.justMoved = true;
+        var sx = 1/TQ.Config.workingRegionWidth,
+            sy = 1/TQ.Config.workingRegionHeight;
+
+        var obj_ndc = {
+            x: (!obj.x)? Number.NaN : obj.x * sx,
+            y: (!obj.y)? Number.NaN : obj.y * sy,
+            sx: (!obj.sx)? 1: obj.sx * sx,
+            sy: (!obj.sy)? 1: obj.sy * sy,
+            rotation : (!obj.rotation)? 0: obj.rotation,
+            pivotX : (!obj.pivotX)? 0: obj.pivotX,
+            pivotY : (!obj.pivotY)? 0:obj.pivotY
+        };
+
+        return obj_ndc;
+    };
+
     p.doShow = function (visSum) {
         if (!this.displayObj) {
             this.visibleTemp = visSum;
@@ -698,7 +727,10 @@ window.TQ = window.TQ || {};
     };
 
     p.toDeviceCoord = function (displayObj, jsonObj) {
-        this.setNdc(this.jsonObj);
+        if (!this.justMoved) {
+            // this.setNdc(this.jsonObj);
+        }
+        this.justMoved = false;
         var obj_pdc = this.ndc2Pdc(this.jsonObj);
         this.pdc2dc(displayObj, obj_pdc);
     };
@@ -1325,23 +1357,28 @@ window.TQ = window.TQ || {};
     };
 
     p.moveTo = function (point) {
-        this.jsonObj.x = point.x;
-        this.jsonObj.y = point.y;
+        var obj_ndc = this.pdc2Ndc(point);
+
+        this.jsonObj.x = obj_ndc.x;
+        this.jsonObj.y = obj_ndc.y;
         this.setFlag(Element.TRANSLATING);
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
     };
 
     p.getScale = function () {
-        return {sx: this.jsonObj.sx, sy: this.jsonObj.sy};
+        var obj_pdc = this.ndc2Pdc(this.jsonObj);
+        return {sx: obj_pdc.sx, sy: obj_pdc.sy};
     };
 
     p.getRotation = function () {
-        return this.jsonObj.rotation;
+        var obj_pdc = this.ndc2Pdc(this.jsonObj);
+        return obj_pdc.rotation;
     };
 
     p.getPosition = function () {
-        return {x: this.jsonObj.x, y: this.jsonObj.y};
+        var obj_pdc = this.ndc2Pdc(this.jsonObj);
+        return {x: obj_pdc.x, y: obj_pdc.y};
     };
 
     p.rotateTo = function (angle) {
@@ -1352,8 +1389,9 @@ window.TQ = window.TQ || {};
     };
 
     p.scaleTo = function (scale) {
-        this.jsonObj.sx = scale.sx;
-        this.jsonObj.sy = scale.sy;
+        var obj_ndc = this.pdc2Ndc(scale);
+        this.jsonObj.sx = obj_ndc.sx;
+        this.jsonObj.sy = obj_ndc.sy;
         this.setFlag(Element.SCALING);
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
@@ -1575,6 +1613,11 @@ window.TQ = window.TQ || {};
         GROUP: "Group",
         GROUP_FILE: "GroupFile",
         BITMAP_ANIMATION: "BitmapAnimation"
+    };
+
+    Element.FitFlag = {
+        KEEP_SIZE: 1,
+        FULL_SCREEN: 2
     };
 
     TQ.Element = Element;

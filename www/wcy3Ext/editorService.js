@@ -9,9 +9,15 @@ angular.module('starter').
     factory('EditorService', ['NetService', 'WxService', function (NetService, WxService) {
         var _initialized = false,
             fileElement = null,
+            _alowBkgImage = false,
             domEle = null;
 
-		function insertLocalMat() {
+        function insertLocalBkgMat() {
+            _alowBkgImage = true;
+            return insertLocalMat(_alowBkgImage);
+        }
+		function insertLocalMat(alowBkgImage) {
+            _alowBkgImage = !!alowBkgImage;
             if (WxService.isReady()) {
                 alert("请在浏览器中打开，以便于使用所有功能");
                 // return insertLocalMatWx();
@@ -60,11 +66,14 @@ angular.module('starter').
             TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
             var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
+            var fitFlag = (_alowBkgImage && matType === TQ.ElementType.BITMAP) ?
+                TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE;
+
             function uploadData(buffer) {
                 uploadOneFile(buffer).
                     then(function (data) {
                         TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
-                        var desc = {src: data.url, type: matType, autoFit: true};
+                        var desc = {src: data.url, type: matType, autoFit: fitFlag};
                         TQ.SceneEditor.addItem(desc);
                         // fileElement.unbind('change'); // remove old handler
                     }, function (err) {
@@ -111,6 +120,7 @@ angular.module('starter').
         }
 
         return {
+            insertLocalBkgImage: insertLocalBkgMat,
             insertLocalImage: insertLocalMat
         };
 }]);
