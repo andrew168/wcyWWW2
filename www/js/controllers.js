@@ -74,18 +74,18 @@ angular.module('starter')
             $scope.testInsert = function () {
                 x += 50;
                 y += 50;
-                // insertImage("mcImages/p10324.png", x, y);
-                // insertSound("mcSounds/p8574.wav", x, y);
+                // EditorService.insertImage("mcImages/p10324.png", x, y);
+                // EditorService.insertSound("mcSounds/p8574.wav", x, y);
                 // TQ.TextInputMgr.start();
 
-                insertText("Hello 世界！", x, y);
+                EditorService.insertText("Hello 世界！", x, y);
             };
 
             $scope.insertFromCamera = function () {
                 TQ.CameraService.insertFromCamera();
             };
 
-            $scope.insertLocalImage = function () {
+            $scope.insertImageFromLocal = function () {
                 var path = "p12504.png";
 
                 var server1File = "http://bone.udoido.cn/mcImages/" + path;
@@ -98,37 +98,19 @@ angular.module('starter')
                 var cachedFile = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
                 var localFile = "mcImages/" + path;
 
-                // insertImage(cachedFile, x+=50, y+=50);
-                // insertImage(localFile, x+=50, y+=50);
-                insertImage(server1File, x += 50, y += 50);
-                // insertImage(server2File, x+=50, y+=50);
-                // insertImage(albumFile, x+=50, y+=50);
+                // EditorService.insertImage(cachedFile, x+=50, y+=50);
+                // EditorService.insertImage(localFile, x+=50, y+=50);
+                EditorService.insertImage(server1File, x += 50, y += 50);
+                // EditorService.insertImage(server2File, x+=50, y+=50);
+                // EditorService.insertImage(albumFile, x+=50, y+=50);
             };
-
-            function insertImage(filename, x, y) {
-                var desc = {src: filename, type: "Bitmap",  x: x, y: y, autoFit: true};
-                TQ.SceneEditor.addItem(desc);
-            }
-
-            function insertSound(filename, x, y) {
-                var desc = {src: filename, type: "Sound", x: x, y: y};
-                TQ.SceneEditor.addItem(desc);
-            }
-
-            function insertText(message, x, y) {
-                var desc = {src: null, text: message, type: "Text", x: x, y: y};
-                TQ.SceneEditor.addItem(desc);
-                // TQ.TextEditor.initialize();
-                // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
-            }
 
             $scope.onEndInputText = function () {
                 x += 50;
                 y += 50;
                 TQ.TextEditor.onOK();
                 var message = TQ.TextEditor.inputBox.val();
-                var desc = {src: null, text: message, type: "Text", x: x, y: y};
-                TQ.SceneEditor.addItem(desc);
+                EditorService.insertText(message, x, y);
             };
 
             $scope.insertAlbum = function () {
@@ -145,7 +127,7 @@ angular.module('starter')
                             console.log('Image URI: ' + results[i]);
                             x += 50;
                             y += 50;
-                            insertImage(results[i], x, y);
+                            EditorService.insertImage(results[i], x, y);
                         }
                     }, function (error) {
                         // error getting photos
@@ -237,8 +219,12 @@ angular.module('starter')
                 NetService.uploadImages(files, _onSuccess);
             };
 
-            $scope.insertLocalImage2 = function () {
-                EditorService.insertLocalImage();
+            $scope.insertImageFromLocal2 = function () {
+                EditorService.insertImageFromLocal();
+            };
+
+            $scope.insertBkImageFromLocal = function () {
+                EditorService.insertBkImageFromLocal();
             };
 
             function onSuccess(data) {

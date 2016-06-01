@@ -9,15 +9,15 @@ angular.module('starter').
     factory('EditorService', ['NetService', 'WxService', function (NetService, WxService) {
         var _initialized = false,
             fileElement = null,
-            _alowBkgImage = false,
+            _isBkMat = false,
             domEle = null;
 
-        function insertLocalBkgMat() {
-            _alowBkgImage = true;
-            return insertLocalMat(_alowBkgImage);
+        function insertBkMatFromLocal() {
+            _isBkMat = true;
+            return insertMatFromLocal(_isBkMat);
         }
-		function insertLocalMat(alowBkgImage) {
-            _alowBkgImage = !!alowBkgImage;
+		function insertMatFromLocal(isBkMat) {
+            _isBkMat = !!isBkMat;
             if (WxService.isReady()) {
                 alert("请在浏览器中打开，以便于使用所有功能");
                 // return insertLocalMatWx();
@@ -66,7 +66,7 @@ angular.module('starter').
             TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
             var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
-            var fitFlag = (_alowBkgImage && matType === TQ.ElementType.BITMAP) ?
+            var fitFlag = (_isBkMat && matType === TQ.ElementType.BITMAP) ?
                 TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE;
 
             function uploadData(buffer) {
@@ -119,8 +119,28 @@ angular.module('starter').
             return NetService.uploadOne(file);
         }
 
+        function insertImage(filename, x, y) {
+            var desc = {src: filename, type: "Bitmap", x: x, y: y};
+            TQ.SceneEditor.addItem(desc);
+        }
+
+        function insertText(message, x, y) {
+            var desc = {src: null, text: message, type: "Text", x: x, y: y};
+            TQ.SceneEditor.addItem(desc);
+            // TQ.TextEditor.initialize();
+            // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
+        }
+
+        function insertSound(filename, x, y) {
+            var desc = {src: filename, type: "Sound", x: x, y: y};
+            TQ.SceneEditor.addItem(desc);
+        }
+
         return {
-            insertLocalBkgImage: insertLocalBkgMat,
-            insertLocalImage: insertLocalMat
+            insertBkImageFromLocal: insertBkMatFromLocal,
+            insertImageFromLocal: insertMatFromLocal,
+            insertImage : insertImage,  // i.e. insertImageFromUrl:
+            insertText : insertText,
+            insertSound : insertSound
         };
 }]);

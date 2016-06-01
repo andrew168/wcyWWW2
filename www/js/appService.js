@@ -98,7 +98,7 @@ angular.module('starter').
                 WCY.start();
             }
             //WxService.init();
-//                    $scope.insertLocalImage();
+//                    $scope.insertImageFromLocal();
             // $cordovaProgress.hide();
         }
 
