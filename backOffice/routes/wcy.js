@@ -119,7 +119,7 @@ function sendBackWcy(req, res, wcyId) {
 
 // private functions:
 function isNewWcy(wcyId) {
-    return (wcyId === '0');
+    return ((wcyId === '0') || (wcyId === '-1'));
 }
 
 module.exports = router;
