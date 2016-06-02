@@ -68,6 +68,7 @@ angular.module('starter')
 
             function _upload() {
                 TQ.Assert.isDefined(_wcyId);
+                _wcyId = (_wcyId === -1) ? 0 : _wcyId;
                 TQ.Assert.isTrue(_wcyId >= 0);
                 var jsonWcyData = currScene.getData();
                 var myToken = '1234567890';
