@@ -107,9 +107,7 @@ var TQ = TQ ||{};
         var imageHeight = 1024;
 
         function onSuccess(imageUrl) {
-            var xCenter = screen.width/2;
-            var yCenter = screen.height/2;
-            var desc = {src: imageUrl, type:"Bitmap", x: xCenter, y: yCenter};
+            var desc = {src: imageUrl, type:"Bitmap",  autoFit: TQ.Element.FitFlag.FULL_SCREEN};
             TQ.SceneEditor.addItem(desc);
         }
 

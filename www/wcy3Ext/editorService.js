@@ -65,16 +65,11 @@ angular.module('starter').
 
             TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
-            var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
-            var fitFlag = (_isBkMat && matType === TQ.ElementType.BITMAP) ?
-                TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE;
-
             function uploadData(buffer) {
                 uploadOneFile(buffer).
                     then(function (data) {
                         TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
-                        var desc = {src: data.url, type: matType, autoFit: fitFlag};
-                        TQ.SceneEditor.addItem(desc);
+                        addMatFromLocal(aFile, data, _isBkMat);
                         // fileElement.unbind('change'); // remove old handler
                     }, function (err) {
                         console.log(err);
@@ -120,7 +115,12 @@ angular.module('starter').
         }
 
         function insertImage(filename, x, y) {
-            var desc = {src: filename, type: "Bitmap", x: x, y: y};
+            var desc = {src: filename, type: "Bitmap",  autoFit: TQ.Element.FitFlag.KEEP_SIZE, x: x, y: y};
+            TQ.SceneEditor.addItem(desc);
+        }
+
+        function insertBkImage(filename, x, y) {
+            var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y};
             TQ.SceneEditor.addItem(desc);
         }
 
@@ -136,10 +136,19 @@ angular.module('starter').
             TQ.SceneEditor.addItem(desc);
         }
 
+        function addMatFromLocal(aFile, data, isBkMat) {
+            var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
+            var fitFlag = (isBkMat && matType === TQ.ElementType.BITMAP) ?
+                TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE;
+            var desc = {src: data.url, type: matType, autoFit: fitFlag};
+            TQ.SceneEditor.addItem(desc);
+        }
+
         return {
-            insertBkImageFromLocal: insertBkMatFromLocal,
             insertImageFromLocal: insertMatFromLocal,
-            insertImage : insertImage,  // i.e. insertImageFromUrl:
+            insertBkImageFromLocal: insertBkMatFromLocal,
+            insertImage : insertImage,  // i.e. FromUrl:
+            insertBkImage : insertBkImage,
             insertText : insertText,
             insertSound : insertSound
         };
