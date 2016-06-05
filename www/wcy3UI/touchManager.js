@@ -201,13 +201,21 @@ var TQ = TQ || {};
 
         var eles = TQ.SceneEditor.stageContainer.getObjectsUnderPoint(pageX,pageY);
         if ((!!eles)  && (eles.length > 0)) {
-            var ele = eles[0].ele;
-            var ele2 = TQ.SelectSet.getEditableEle(ele);
-            TQ.SelectSet.add(ele2);
-            return TQ.SelectSet.peek();
+            for (var i = 0; i < eles.length; i++ ) {
+                if (!eles[i].ele) {
+                    continue;
+                }
+
+                var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
+                if (!!ele2) {
+                    TQ.SelectSet.add(ele2);
+                    return TQ.SelectSet.peek();
+                }
+            }
         }
 
         console.log(pageX + ", " + pageY) ;
+        return null;
     }
 
     var _showFloatToolbar = function (type) {
