@@ -21,7 +21,7 @@ TQ = TQ || {};
             this.t0 = 0;
         }
         this.version = jsonObj.version;
-        this.isMultiScene = (this.version == TQ.Element.VER2) ? true: false;
+        this.isMultiScene = (this.isVer2plus()) ? true: false;
         this.initialize(jsonObj);
     }
 

@@ -28,6 +28,7 @@ window.TQ = window.TQ || {};
 
     Element.VER1 = "V1";
     Element.VER2 = "V2"; // 从2014-3-2日开始使用
+    Element.VER3 = 3; // 从2016-6-1日开始使用
     Element.TOP = 99999; // zIndex of top element
 
     // 0x01--0x1F是固定结构部分，    需要保存到WDM文件中；之后的高位是动态的
@@ -284,11 +285,11 @@ window.TQ = window.TQ || {};
         }
 
         if (desc.x == undefined) { // 区别： 如果 desc.x 是 0， 则不会重新被赋值
-            desc.x = 100;
+            desc.x = 0;
         }
 
         if (desc.y == undefined) {
-            desc.y = 200;
+            desc.y = 0;
         }
 
         if (desc.zIndex == undefined) {
@@ -691,6 +692,7 @@ window.TQ = window.TQ || {};
             y: obj.y * sy,
             sx: obj.sx * sx,
             sy: obj.sy * sy,
+            fontSize : (!obj.fontSize)? 0 : obj.fontSize * sx,
             rotation : obj.rotation,
             pivotX : obj.pivotX,
             pivotY : obj.pivotY
@@ -709,6 +711,7 @@ window.TQ = window.TQ || {};
             y: (!obj.y)? Number.NaN : obj.y * sy,
             sx: (!obj.sx)? 1: obj.sx * sx,
             sy: (!obj.sy)? 1: obj.sy * sy,
+            fontSize : (!obj.fontSize)? 0:obj.fontSize * sx,
             rotation : (!obj.rotation)? 0: obj.rotation,
             pivotX : (!obj.pivotX)? 0: obj.pivotX,
             pivotY : (!obj.pivotY)? 0:obj.pivotY
@@ -1541,6 +1544,11 @@ window.TQ = window.TQ || {};
             // assertTrue("如果非空, 必须有元素", this.children.length > 0);
         }
         return ((this.parent != null) || (this.children != null));
+    };
+
+    p.isVer2plus = function() {
+        return ((this.version === TQ.Element.VER2) ||
+                ((typeof this.version === 'number') && (this.version >= Element.VER3)));
     };
 
     p.getRoot = function () {  // 任何时候, 都是root, 唯一化

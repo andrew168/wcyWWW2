@@ -72,8 +72,8 @@ angular.module('starter')
             var x = 300,
                 y = 300;
             $scope.testInsert = function () {
-                x += 50;
-                y += 50;
+                x = 0.5; // += 50;
+                y = 0.2; // += 50;
                 // EditorService.insertImage("mcImages/p10324.png", x, y);
                 // EditorService.insertSound("mcSounds/p8574.wav", x, y);
                 // TQ.TextInputMgr.start();

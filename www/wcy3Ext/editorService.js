@@ -125,7 +125,7 @@ angular.module('starter').
         }
 
         function insertText(message, x, y) {
-            var desc = {src: null, text: message, type: "Text", x: x, y: y};
+            var desc = {src: null, text: message, type: "Text", autoFit: TQ.Element.FitFlag.KEEP_SIZE, x: x, y: y};
             TQ.SceneEditor.addItem(desc);
             // TQ.TextEditor.initialize();
             // TQ.TextEditor.addText(TQ.Dictionary.defaultText);

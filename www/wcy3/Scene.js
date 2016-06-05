@@ -10,6 +10,7 @@ TQ = TQ || {};
 
     Scene.VER1 = "V1";
     Scene.VER2 = "V2";
+    Scene.VER3 = "V3"; // 采用归一化的坐标，记录保存wcy，以适应各种屏幕。
     var p = Scene.prototype;
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
     p.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号

@@ -6,19 +6,11 @@ window.TQ = window.TQ || {};
 
 (function () {
     function TextElement(level, desc) {
-      if (level != null ) {  // 适用于 子类的定义, 不做任何初始化,只需要prototype
-        this.level = level;
-        this.children = [];
-        this.decorations = null;
-        this._isNewSkin = false;
-        this._isHighlighting = false;
-        this.animeCtrl = null;
-        this.viewCtrl = null;
-        this.state = (desc.state == undefined) ? 0 : desc.state;
-        this.dirty = this.dirty2 = false;
-        this.initialize(desc);
-      }
+        TQ.Element.call(this, level, desc);
     }
+
+    TextElement.prototype = Object.create(TQ.Element.prototype);
+    TextElement.prototype.constructor = TextElement;
 
     var p = TextElement.prototype = new TQ.Element(null, null);
 
@@ -52,6 +44,10 @@ window.TQ = window.TQ || {};
 
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
+        if (this.autoFitFlag) {
+            this.autoFit();
+        }
+
         var jsonObj = this.jsonObj;
         var txtObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
         this.loaded = true;
@@ -77,6 +73,7 @@ window.TQ = window.TQ || {};
     }
 
     p.parent_fillGap = p.fillGap;
+    p.parent_autoFit = p.autoFit;
     p.fillGap = function(desc) {
         if (desc.font) {
             _upgradeFont(desc);
@@ -85,6 +82,25 @@ window.TQ = window.TQ || {};
         if (!desc.fontSize)  desc.fontSize = TQ.Config.fontSize;
         if (!desc.color)  desc.color = TQ.Config.color;
         return this.parent_fillGap(desc);
+    };
+
+    p.autoFit = function() {
+        TQ.Assert(this.autoFitFlag === TQ.Element.FitFlag.KEEP_SIZE, "text只能是keepSize!");
+        TQ.Assert(this.jsonObj.fontSize !== undefined, "必须先定义fontSize！");
+        var desc = this.jsonObj;
+        desc.sx = 1;
+        desc.sy = 1;
+        desc.rotation = 0;
+        desc.pivotX = 0.5;
+        desc.pivotY = 0.5;
+        var obj_pdc = this.ndc2Pdc(desc);
+        if (this.autoFitFlag === TQ.Element.FitFlag.KEEP_SIZE) {
+            obj_pdc.sx = 1;
+            obj_pdc.sy = 1;
+            obj_pdc.fontSIze = desc.fontSize;
+        }
+        this.scaleTo(obj_pdc);
+        this.moveTo(obj_pdc);
     };
 
     // 样例： <font color="#f74107" size="6" face="隶书">用克隆键</font>

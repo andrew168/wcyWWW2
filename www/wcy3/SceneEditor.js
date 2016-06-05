@@ -33,7 +33,7 @@ var stageContainer = null;
     };
 
     SceneEditor.addItem = function(desc) {
-        desc.version = TQ.Element.VER2;  // 新增加的元素都是2.0
+        desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
 
         // "Groupfile" 暂时还没有纳入RM的管理范畴
         if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
