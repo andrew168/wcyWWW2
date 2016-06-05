@@ -296,8 +296,8 @@ window.TQ = window.TQ || {};
             desc.zIndex = Element.TOP;
         }
         if (desc.type == "Text") {
-            desc.pivotX = (desc.pivotX == undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
-            desc.pivotY = (desc.pivotY == undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
+            desc.pivotX = 0;// (desc.pivotX == undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
+            desc.pivotY = 1; // (desc.pivotY == undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
         } else {
             desc.pivotX = (desc.pivotX == undefined) ? TQ.Config.pivotX : desc.pivotX;
             desc.pivotY = (desc.pivotY == undefined) ? TQ.Config.pivotY : desc.pivotY;
@@ -735,35 +735,44 @@ window.TQ = window.TQ || {};
         }
         this.justMoved = false;
         var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        this.pdc2dc(displayObj, obj_pdc);
+        var obj_dc = this.pdc2dc(obj_pdc);
+        displayObj.x = obj_dc.x;
+        displayObj.y = obj_dc.y;
+        displayObj.scaleX = obj_dc.scaleX;
+        displayObj.scaleY = obj_dc.scaleY;
+        displayObj.regX = obj_dc.regX;
+        displayObj.regY = obj_dc.regY;
+        displayObj.rotation = obj_dc.rotation;
     };
 
-    p.pdc2dc = function(displayObj, obj_pdc) {
-        assertValid(TQ.Dictionary.FoundNull, displayObj); // "应有显示数据
+    p.pdc2dc = function(obj_pdc) {
         assertValid(TQ.Dictionary.FoundNull, obj_pdc); // 应有显示数据
+
+        var obj_dc = {};
         //从 用户使用的世界坐标和物体坐标，转换为可以绘制用的设备坐标
-        if (!displayObj) {
+        if (!obj_pdc) {
             return;
         }
-        displayObj.x = TQ.Config.zoomX * obj_pdc.x;
-        displayObj.y = TQ.Utility.toDeviceCoord(TQ.Config.zoomY * obj_pdc.y);
+        obj_dc.x = TQ.Config.zoomX * obj_pdc.x;
+        obj_dc.y = TQ.Utility.toDeviceCoord(TQ.Config.zoomY * obj_pdc.y);
         if (this.isMarker() || this.isSound()) { // marker 永远是一样的大小, 圆的, 没有旋转, 定位在圆心.
-            displayObj.scaleX = displayObj.scaleY = 1;
-            displayObj.regX = displayObj.regY = 0;
-            displayObj.rotation = 0;
+            obj_dc.scaleX = obj_dc.scaleY = 1;
+            obj_dc.regX = obj_dc.regY = 0;
+            obj_dc.rotation = 0;
             return;
         }
         if (!this.isMarker()) {
-            displayObj.regX = obj_pdc.pivotX * this.getWidth();
-            displayObj.regY = TQ.Utility.toDevicePivot(obj_pdc.pivotY) * this.getHeight();
+            obj_dc.regX = obj_pdc.pivotX * this.getWidth();
+            obj_dc.regY = TQ.Utility.toDevicePivot(obj_pdc.pivotY) * this.getHeight();
         } else {
-            displayObj.regX = 0;
-            displayObj.regY = 0
+            obj_dc.regX = 0;
+            obj_dc.regY = 0
         }
 
-        displayObj.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
-        displayObj.scaleX = TQ.Config.zoomX * obj_pdc.sx;
-        displayObj.scaleY = TQ.Config.zoomY * obj_pdc.sy;
+        obj_dc.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
+        obj_dc.scaleX = TQ.Config.zoomX * obj_pdc.sx;
+        obj_dc.scaleY = TQ.Config.zoomY * obj_pdc.sy;
+        return obj_dc;
     };
 
     p._loadActor = function () {
@@ -982,10 +991,18 @@ window.TQ = window.TQ || {};
 
         this._isHighlighting = enable;
         if (this._isHighlighting) {
-            this.displayObj.shadow = Element.getShadow();
+            this.createHighlighter();
         } else {
-            this.displayObj.shadow = null;
+            this.deleteHighlighter();
         }
+    };
+
+    p.createHighlighter = function() {
+        this.displayObj.shadow = Element.getShadow();
+    };
+
+    p.deleteHighlighter = function() {
+        this.displayObj.shadow = null;
     };
 
     p.pinIt = function () {
@@ -1382,6 +1399,12 @@ window.TQ = window.TQ || {};
     p.getPosition = function () {
         var obj_pdc = this.ndc2Pdc(this.jsonObj);
         return {x: obj_pdc.x, y: obj_pdc.y};
+    };
+
+    p.getPositionInDc = function () {
+        var obj_pdc = this.ndc2Pdc(this.jsonObj);
+        var obj_dc = this.pdc2dc(obj_pdc);
+        return {x: obj_dc.x, y: obj_dc.y};
     };
 
     p.rotateTo = function (angle) {

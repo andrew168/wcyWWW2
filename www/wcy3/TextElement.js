@@ -37,7 +37,8 @@ window.TQ = window.TQ || {};
             txtObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
 
             // hitArea 不会根据str内容来更新， 所以：
-            txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), txtObj.getMeasuredHeight());
+            txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+
             TQ.DirtyFlag.setElement(this);
         }
     };
@@ -49,7 +50,7 @@ window.TQ = window.TQ || {};
         }
 
         var jsonObj = this.jsonObj;
-        var txtObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
+        var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
         this.loaded = true;
         if (jsonObj.textAlign == null) {
             txtObj.textAlign = jsonObj.textAlign;
@@ -58,8 +59,7 @@ window.TQ = window.TQ || {};
         }
 
         // hitArea 会随宿主物体的变换而变换， 所以，可以重用
-        txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), txtObj.getMeasuredHeight());
-        this.displayObj = txtObj;
+        txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
         this._afterItemLoaded();
         this.setTRSAVZ();
     };
@@ -71,6 +71,49 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setElement(this);
         return shape;
     }
+
+    p.getBBoxHeight = function() {
+        var factor = 1.4; // the measured height is not exact cover the full font.
+        return factor * this.displayObj.getMeasuredHeight();
+    };
+
+    p.createHighlighter = function() {
+        var txtObj = this.displayObj;
+        txtObj.text = this.jsonObj.text;
+        this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+        stageContainer.addChild(this.highter);
+    };
+
+    p.createBBox = function(sx, sy, rotation, w, h) {
+        var shape = new createjs.Shape();
+        shape.rotation = rotation;
+        var pos = this.getPositionInDc();
+        var graph = shape.graphics; //
+        // graph.beginFill("#F00").drawRect(pos.x, pos.y, w , h);
+
+
+        var x1 = pos.x,
+            y1 = pos.y,
+            x2 = x1 + w * sx,
+            y2 = y1 + 1.3 * h * sy;
+        graph.clear();
+        graph.beginStroke("#F00");
+        graph.moveTo(x1, y1);
+        graph.lineTo(x2, y1);
+        graph.lineTo(x2, y2);
+        graph.lineTo(x1, y2);
+        graph.lineTo(x1, y1);
+        return shape;
+    };
+
+    p.deleteHighlighter = function() {
+        if (!this.highter) {
+            return;
+        }
+
+        stageContainer.removeChild(this.highter);
+        this.highter = null;
+    };
 
     p.parent_fillGap = p.fillGap;
     p.parent_autoFit = p.autoFit;
@@ -91,8 +134,8 @@ window.TQ = window.TQ || {};
         desc.sx = 1;
         desc.sy = 1;
         desc.rotation = 0;
-        desc.pivotX = 0.5;
-        desc.pivotY = 0.5;
+        // desc.pivotX = 0.5;
+        // desc.pivotY = 0.5;
         var obj_pdc = this.ndc2Pdc(desc);
         if (this.autoFitFlag === TQ.Element.FitFlag.KEEP_SIZE) {
             obj_pdc.sx = 1;
@@ -109,6 +152,15 @@ window.TQ = window.TQ || {};
             ((this.jsonObj.fontSize - 6) / 5) + '" face="' +
             this.jsonObj.fontFace + '">' +
             this.jsonObj.text + '</font>';
+    };
+
+    p.parent_update = p.update;
+    p.update = function (t) {
+        this.parent_update(t);
+        if (this._isHighlighting) {
+            this.deleteHighlighter();
+            this.createHighlighter();
+        }
     };
 
     Element.parseHtmlStr = function (jsonObj, htmlStr) {
