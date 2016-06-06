@@ -84,51 +84,6 @@ window.TQ = window.TQ || {};
         stageContainer.addChild(this.highter);
     };
 
-    p.createBBox = function(sx, sy, rotation, w, h) {
-        var shape = new createjs.Shape();
-        shape.rotation = rotation;
-        var pos = this.getPositionInDc();
-        var graph = shape.graphics;
-        var x1 = 0,
-            y1 = 0,
-            x2 = w,
-            y2 = h;
-
-        var pts = [
-            [x1, y1],
-            [x2, y1],
-            [x2, y2],
-            [x1, y2],
-            [x1, y1]
-        ];
-
-        var m_trans = TQ.Matrix2D.translation(-x1, -y1),
-            m_rotate = TQ.Matrix2D.transformation(0, 0, rotation, sx, sy),
-            m_trans2 = TQ.Matrix2D.translation(x1, y1),
-            m_all;
-        // m_all = m_trans.multiply(m_rotate);
-        // m_all = m_all.multiply(m_trans2);
-
-        m_all = m_trans2.multiply(m_rotate);
-        m_all = m_all.multiply(m_trans);
-        graph.clear();
-        graph.beginStroke("#F00");
-        graph.moveTo(pts[0][0], pts[0][1]);
-        for (i = 0; i < pts.length; i++) {
-            var dp = m_all.multiply($V([pts[i][0], pts[i][1], 1])).elements;
-            var x = pos.x + dp[0],
-                y = pos.y + dp[1];
-
-            if (i === 0) {
-                graph.moveTo(x, y);
-            } else {
-                graph.lineTo(x, y);
-            }
-        }
-
-        return shape;
-    };
-
     p.deleteHighlighter = function() {
         if (!this.highter) {
             return;
@@ -180,10 +135,6 @@ window.TQ = window.TQ || {};
     p.parent_update = p.update;
     p.update = function (t) {
         this.parent_update(t);
-        if (this._isHighlighting) {
-            this.deleteHighlighter();
-            this.createHighlighter();
-        }
     };
 
     Element.parseHtmlStr = function (jsonObj, htmlStr) {
