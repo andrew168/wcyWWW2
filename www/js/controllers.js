@@ -72,13 +72,27 @@ angular.module('starter')
             var x = 300,
                 y = 300;
             $scope.testInsert = function () {
-                x = 0.5; // += 50;
-                y = 0.2; // += 50;
+                x = 0.2; // += 50;
+                y = 0.5; // += 50;
                 // EditorService.insertImage("mcImages/p10324.png", x, y);
                 // EditorService.insertSound("mcSounds/p8574.wav", x, y);
                 // TQ.TextInputMgr.start();
 
-                EditorService.insertText("Hello 世界！", x, y);
+                EditorService.insertText("国hello", x, y);
+            };
+
+            $scope.setBigFont = function () {
+                var ele = TQ.SelectSet.peek();
+                if (ele && ele.isText()) {
+                    ele.setSize(200);
+                }
+            };
+
+            $scope.setColor = function () {
+                var ele = TQ.SelectSet.peek();
+                if (ele && ele.isText()) {
+                    ele.setColor("#F00");
+                }
             };
 
             $scope.insertFromCamera = function () {

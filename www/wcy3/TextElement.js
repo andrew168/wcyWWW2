@@ -18,22 +18,40 @@ window.TQ = window.TQ || {};
         return this.jsonObj.text;
     };
 
+    p.setColor = function(fontColor) {
+        this.setText(null, null, null, fontColor);
+    };
+
+    p.setSize = function(fontSize) {
+        this.setText(null, null, fontSize);
+    };
+
+    p.setFont = function(fontFamily) {
+        this.setText(null, fontFamily);
+    };
+
     p.setText = function (str, fontFamily, fontSize, fontColor) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText()); //应该是Text元素
         // 此处不用再检验, 因为他不直接对用户, 只要那些直接对用户的函数, 把好关就行.
         // 但是一定要断言, 确信: 外围站岗的尽责了.
         if (this.displayObj != null) {
             var txtObj = this.displayObj;
-            txtObj.text = this.jsonObj.text = str;
+            if (str) {
+                txtObj.text = this.jsonObj.text = str;
+            }
+
             if (fontColor) {
                 txtObj.color = this.jsonObj.color = fontColor;
             }
+
             if (fontSize) {
                 this.jsonObj.fontSize = fontSize;
             }
+
             if (fontFamily){
                 this.jsonObj.fontFace = fontFamily;
             }
+
             txtObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
 
             // hitArea 不会根据str内容来更新， 所以：
