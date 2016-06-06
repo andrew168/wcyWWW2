@@ -37,7 +37,7 @@ window.TQ = window.TQ || {};
             txtObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
 
             // hitArea 不会根据str内容来更新， 所以：
-            txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+            txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
 
             TQ.DirtyFlag.setElement(this);
         }
@@ -59,18 +59,18 @@ window.TQ = window.TQ || {};
         }
 
         // hitArea 会随宿主物体的变换而变换， 所以，可以重用
-        txtObj.hitArea = _createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+        txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
         this._afterItemLoaded();
         this.setTRSAVZ();
     };
 
-    function _createHitArea(rotation, w, h) {
+    p.createHitArea = function(rotation, w, h) {
         var shape = new createjs.Shape();
         shape.rotation = rotation;
         shape.graphics.beginFill("#F00").drawRect(0, 0, w , h);
         TQ.DirtyFlag.setElement(this);
         return shape;
-    }
+    };
 
     p.getBBoxHeight = function() {
         var factor = 1.4; // the measured height is not exact cover the full font.
@@ -88,21 +88,44 @@ window.TQ = window.TQ || {};
         var shape = new createjs.Shape();
         shape.rotation = rotation;
         var pos = this.getPositionInDc();
-        var graph = shape.graphics; //
-        // graph.beginFill("#F00").drawRect(pos.x, pos.y, w , h);
+        var graph = shape.graphics;
+        var x1 = 0,
+            y1 = 0,
+            x2 = w,
+            y2 = h;
 
+        var pts = [
+            [x1, y1],
+            [x2, y1],
+            [x2, y2],
+            [x1, y2],
+            [x1, y1]
+        ];
 
-        var x1 = pos.x,
-            y1 = pos.y,
-            x2 = x1 + w * sx,
-            y2 = y1 + 1.3 * h * sy;
+        var m_trans = TQ.Matrix2D.translation(-x1, -y1),
+            m_rotate = TQ.Matrix2D.transformation(0, 0, rotation, sx, sy),
+            m_trans2 = TQ.Matrix2D.translation(x1, y1),
+            m_all;
+        // m_all = m_trans.multiply(m_rotate);
+        // m_all = m_all.multiply(m_trans2);
+
+        m_all = m_trans2.multiply(m_rotate);
+        m_all = m_all.multiply(m_trans);
         graph.clear();
         graph.beginStroke("#F00");
-        graph.moveTo(x1, y1);
-        graph.lineTo(x2, y1);
-        graph.lineTo(x2, y2);
-        graph.lineTo(x1, y2);
-        graph.lineTo(x1, y1);
+        graph.moveTo(pts[0][0], pts[0][1]);
+        for (i = 0; i < pts.length; i++) {
+            var dp = m_all.multiply($V([pts[i][0], pts[i][1], 1])).elements;
+            var x = pos.x + dp[0],
+                y = pos.y + dp[1];
+
+            if (i === 0) {
+                graph.moveTo(x, y);
+            } else {
+                graph.lineTo(x, y);
+            }
+        }
+
         return shape;
     };
 
