@@ -124,8 +124,18 @@ angular.module('starter').
             TQ.SceneEditor.addItem(desc);
         }
 
-        function insertText(message, x, y) {
-            var desc = {src: null, text: message, type: "Text", autoFit: TQ.Element.FitFlag.KEEP_SIZE, x: x, y: y};
+        function insertText(message, x, y, size, color) {
+            var desc = {
+                src: null,
+                text: message,
+                type: "Text",
+                autoFit: TQ.Element.FitFlag.KEEP_SIZE,
+                x: x,
+                y: y,
+                fontSize: size,
+                color : color
+            };
+
             TQ.SceneEditor.addItem(desc);
             // TQ.TextEditor.initialize();
             // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
