@@ -15,7 +15,7 @@ angular.module('starter').
 
         var state = { // editor 的各种当前值， 用户选择的
             fontLevel : '' + (parseInt(TQ.Config.fontSize) / FONT_LEVEL_UNIT) ,
-            fontColor : TQ.Config.color
+            color : TQ.Config.color
         };
 
         function insertBkMatFromLocal() {
@@ -139,7 +139,7 @@ angular.module('starter').
                 x: x,
                 y: y,
                 fontSize: getFontSize(),
-                color : state.fontColor
+                color : state.color
             };
 
             TQ.SceneEditor.addItem(desc);
@@ -161,7 +161,7 @@ angular.module('starter').
         }
 
         function getFontSize() {
-            return state.fontLevel * FONT_LEVEL_UNIT;
+            return parseInt(state.fontLevel) * FONT_LEVEL_UNIT;
         }
 
         return {
