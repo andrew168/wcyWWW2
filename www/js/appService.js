@@ -47,6 +47,7 @@ angular.module('starter').
             TQ.Log.debugInfo("_init");
             WxService.init();
             window.addEventListener("resize", configCanvas);
+            jscolor.installByClassName('jscolor');
             configCanvas();
             if (TQ.Config.LocalCacheEnabled) {
                 document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);

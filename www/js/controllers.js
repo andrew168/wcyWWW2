@@ -88,12 +88,15 @@ angular.module('starter')
                 }
             };
 
-            $scope.setColor = function () {
+            $scope.setColor = function (colorPicker) {
                 var ele = TQ.SelectSet.peek();
                 if (ele && ele.isText()) {
-                    ele.setColor("#F00");
+                    var color = '#' + colorPicker.toString();
+                    ele.setColor(color);
                 }
             };
+
+            window.tqSetFontColor = $scope.setColor;
 
             $scope.insertFromCamera = function () {
                 TQ.CameraService.insertFromCamera();
