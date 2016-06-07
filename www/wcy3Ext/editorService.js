@@ -7,10 +7,16 @@
 
 angular.module('starter').
     factory('EditorService', ['NetService', 'WxService', function (NetService, WxService) {
+        var FONT_LEVEL_UNIT = 16 * 2;
         var _initialized = false,
             fileElement = null,
             _isBkMat = false,
             domEle = null;
+
+        var state = { // editor 的各种当前值， 用户选择的
+            fontLevel : '' + (parseInt(TQ.Config.fontSize) / FONT_LEVEL_UNIT) ,
+            fontColor : TQ.Config.color
+        };
 
         function insertBkMatFromLocal() {
             _isBkMat = true;
@@ -124,7 +130,7 @@ angular.module('starter').
             TQ.SceneEditor.addItem(desc);
         }
 
-        function insertText(message, x, y, size, color) {
+        function insertText(message, x, y) {
             var desc = {
                 src: null,
                 text: message,
@@ -132,8 +138,8 @@ angular.module('starter').
                 autoFit: TQ.Element.FitFlag.KEEP_SIZE,
                 x: x,
                 y: y,
-                fontSize: size,
-                color : color
+                fontSize: getFontSize(),
+                color : state.fontColor
             };
 
             TQ.SceneEditor.addItem(desc);
@@ -154,7 +160,13 @@ angular.module('starter').
             TQ.SceneEditor.addItem(desc);
         }
 
+        function getFontSize() {
+            return state.fontLevel * FONT_LEVEL_UNIT;
+        }
+
         return {
+            state: state,
+            getFontSize : getFontSize,
             insertImageFromLocal: insertMatFromLocal,
             insertBkImageFromLocal: insertBkMatFromLocal,
             insertImage : insertImage,  // i.e. FromUrl:

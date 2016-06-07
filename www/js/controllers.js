@@ -10,6 +10,7 @@ angular.module('starter')
             $scope.localImage1 = null;
             $scope.localImage2 = null;
             $scope.data = {};
+            $scope.state = EditorService.state;
             // 12853, 12585; // Bear，  14961;  // 比例变换测试， 15089; // 投票
             $scope.data.sceneID = 14959; // straw berry
 
@@ -84,7 +85,9 @@ angular.module('starter')
             $scope.setBigFont = function () {
                 var ele = TQ.SelectSet.peek();
                 if (ele && ele.isText()) {
-                    ele.setSize(200);
+                    var fontLevel = '7';
+                    EditorService.state.fontLevel = fontLevel;
+                    ele.setSize(EditorService.state.getFontSize());
                 }
             };
 
@@ -92,6 +95,7 @@ angular.module('starter')
                 var ele = TQ.SelectSet.peek();
                 if (ele && ele.isText()) {
                     var color = '#' + colorPicker.toString();
+                    EditorService.state.fontColor = color;
                     ele.setColor(color);
                 }
             };
