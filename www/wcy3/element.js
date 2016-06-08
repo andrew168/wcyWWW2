@@ -1435,7 +1435,15 @@ window.TQ = window.TQ || {};
         this.setFlag(Element.TRANSLATING);
     };
 
+    p.snapIt = function (point) {
+        return {x: Math.round(point.x/TQ.Config.snapDX) * TQ.Config.snapDX,
+            y: Math.round(point.y/TQ.Config.snapDY) * TQ.Config.snapDY};
+    };
+
     p.moveTo = function (point) {
+        if (TQ.Config.snapOn) {
+            point = this.snapIt(point);
+        }
         var obj_ndc = this.pdc2Ndc(point);
 
         this.jsonObj.x = obj_ndc.x;

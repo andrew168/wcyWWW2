@@ -7,14 +7,13 @@
 
 angular.module('starter').
     factory('EditorService', ['NetService', 'WxService', function (NetService, WxService) {
-        var FONT_LEVEL_UNIT = 16 * 2;
         var _initialized = false,
             fileElement = null,
             _isBkMat = false,
             domEle = null;
 
         var state = { // editor 的各种当前值， 用户选择的
-            fontLevel : '' + (parseInt(TQ.Config.fontSize) / FONT_LEVEL_UNIT) ,
+            fontLevel : '' + (parseInt(TQ.Config.fontSize) / TQ.Config.FONT_LEVEL_UNIT) ,
             color : TQ.Config.color
         };
 
@@ -161,7 +160,7 @@ angular.module('starter').
         }
 
         function getFontSize() {
-            return parseInt(state.fontLevel) * FONT_LEVEL_UNIT;
+            return parseInt(state.fontLevel) * TQ.Config.FONT_LEVEL_UNIT;
         }
 
         return {
