@@ -156,7 +156,6 @@ function initializeControllers() {
     TQ.TrackRecorder.initialize();
     TQ.ActionRecorder.initialize();
     TQ.SelectSet.initialize();
-    TQ.TouchMgr.initialize();  //ToDo: will remove
     TQ.TouchManager.initialize();
 }
 
