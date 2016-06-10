@@ -53,7 +53,7 @@ var TQ = TQ || {};
         }
 
         if (!newEle) {
-            console.error("No Obj touched!");
+            // console.error("No Obj touched!");
             TQ.SelectSet.clear();
             TQ.FloatToolbar.close();
             return;
@@ -105,6 +105,10 @@ var TQ = TQ || {};
 
     function onTouchEnd(e) {
         isMultiTouching = false;
+        var ele = TQ.SelectSet.peek();
+        if (ele && ele.snapIt) {
+            ele.snapIt();
+        }
         ditherStart();
     }
 
@@ -123,7 +127,7 @@ var TQ = TQ || {};
         }
 
         if (!ele) {
-            console.log("Move...");
+            // console.log("Move...");
         } else {
             // ele = currScene.currentLevel.elements[0];
             var deltaX = e.gesture.deltaX;
@@ -215,7 +219,7 @@ var TQ = TQ || {};
             }
         }
 
-        console.log(pageX + ", " + pageY) ;
+        // console.log(pageX + ", " + pageY) ;
         return null;
     }
 
