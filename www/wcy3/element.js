@@ -1435,15 +1435,16 @@ window.TQ = window.TQ || {};
         this.setFlag(Element.TRANSLATING);
     };
 
-    p.snapIt = function (point) {
-        return {x: Math.round(point.x/TQ.Config.snapDX) * TQ.Config.snapDX,
-            y: Math.round(point.y/TQ.Config.snapDY) * TQ.Config.snapDY};
+    p.snapIt = function () {
+        if (TQ.Config.snapOn) {
+            obj_pdc = this.ndc2Pdc(this.jsonObj);
+            obj_pdc.x = Math.round(obj_pdc.x / TQ.Config.snapDX) * TQ.Config.snapDX;
+            obj_pdc.y = Math.round(obj_pdc.y / TQ.Config.snapDY) * TQ.Config.snapDY;
+            this.moveTo(obj_pdc);
+        }
     };
 
     p.moveTo = function (point) {
-        if (TQ.Config.snapOn) {
-            point = this.snapIt(point);
-        }
         var obj_ndc = this.pdc2Ndc(point);
 
         this.jsonObj.x = obj_ndc.x;
