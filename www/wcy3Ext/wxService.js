@@ -6,6 +6,7 @@ function WxService($http, $cookies, $q) {
     //  ==> sever的cookie可以是 http读取only， 不让客户端读写它，以便于追踪
     var user = userProfile.user;
     var _isReady = false;
+    var urlConcat = TQ.Base.Utility.urlConcat;
 
     //在本应用中用到的API，（白名单）
     // 1) 白名单之外的API， 将无法使用
@@ -50,7 +51,8 @@ function WxService($http, $cookies, $q) {
     var title = "春节快乐！",
         desc = "阖家欢乐，财源滚滚！",
         link = TQ.Config.ENT_HOST,
-            imgUrl = TQ.Config.MAT_HOST + "/mcImages/p10324.png",
+        imgUrl = urlConcat(urlConcat(TQ.Config.MAT_HOST, TQ.Config.IMAGES_CORE_PATH), "v1453298300/67.jpg");
+    // TQ.Config.MAT_HOST + "v1453298300/67.jpg"; // "/mcImages/p10324.png",
     // imgUrl = TQ.Config.MAT_HOST + "/mcImages/animation1.gif",
     imgData = imgUrl;
 
@@ -65,7 +67,7 @@ function WxService($http, $cookies, $q) {
     };
 
     wx.ready(function (msg) {
-            // TQ.Log.alertInfo("Wx Ready! " + JSON.stringify(msg));
+        TQ.Log.alertInfo("Wx Ready! " + JSON.stringify(msg));
         // 对于注册型的API，在此调用
         // checkAPI();
         shareMessage(); // 其实，只是预制内容而已， 并非直接发送，
@@ -91,7 +93,7 @@ function WxService($http, $cookies, $q) {
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
 
-            //TQ.Log.alertInfo(JSON.stringify(wechat_sign));
+        TQ.Log.alertInfo(JSON.stringify(wechat_sign));
         var appId = 'wx9a9eb662dd97612f';
         wx.config({
             debug: true, // false,
@@ -121,20 +123,38 @@ function WxService($http, $cookies, $q) {
         });
     }
 
-
-        function shareMessage() {
+    // http://show.udoido.cn/index.html?opus=100_00000025_123_1234567890
+    function shareMessage(shareCode) {
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
-            wx.onMenuShareAppMessage({
-                desc: desc,
+
+        if (!shareCode) {
+            shareCode = '100_00000020_123_1234567890';
+        }
+
+        shareCode = '100_00000020_123_1234567890';
+        var param = {
             title: title,
-                link: link + "?user=" + user.ID + "&timesCalled=" + user.timesShared,
+            desc: desc,
+            link: link + "?opus=" + shareCode,
             imgUrl: imgUrl,
+            type: 'link', // 分享类型,music、video或link，不填默认为link
             trigger: _onTrigger,
-                success: _onSuccess,
-                fail: _onFail,
+            // success: _onSuccess,
+            // fail: _onFail,
             complete: _onComplete,
-                cancel: _onCancel});
+
+            success: function (res) {
+                TQ.Log.alertInfo("Share, All is supported!");
+            },
+            fail: function (res) {
+                TQ.Log.alertInfo("Share: 不支持" + JSON.stringify(res));
+            },
+
+            cancel: _onCancel
+        };
+        TQ.Log.alertError(param);
+        wx.onMenuShareAppMessage(param);
     }
 
     // private function:
@@ -158,9 +178,11 @@ function WxService($http, $cookies, $q) {
         TQ.Log.alertInfo(data.errMsg);
         TQ.Log.alertInfo(JSON.stringify(data));
     }
+
     function _onCancel(data) {
         TQ.Log.alertInfo("_onCancel：。" + data.errMsg + "\n Data:" + JSON.stringify(data));
     }
+
     function _onTrigger(data) {
         TQ.Log.alertInfo("trigger: XX 菜单按钮被触发" + data.errMsg + "\n Data: " + JSON.stringify(data));
         /*
