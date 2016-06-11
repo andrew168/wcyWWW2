@@ -1,10 +1,12 @@
 /**
  * Created by Andrewz on 5/8/2016.
  */
-angular.module('starter').
-    factory('AppService', ['$http', '$cookies', '$q', 'WxService', '$timeout', 'WCY', 'NetService', 'DeviceService',
-        'Setup',
-    function ($http, $cookies, $q, WxService, $timeout, WCY, NetService, DeviceService,
+angular.module('starter').factory('AppService', AppService);
+
+AppService.$injection = ['$http', '$cookies', '$q', 'WxService', '$timeout', 'WCY', 'NetService', 'DeviceService',
+        'Setup'];
+
+function AppService($http, $cookies, $q, WxService, $timeout, WCY, NetService, DeviceService,
               Setup) {
 
         var _initialized = false,
@@ -116,4 +118,4 @@ angular.module('starter').
             onAppStarting: setOnAppStarting,
             onAppStarted: setOnAppStarted
         }
-    }]);
+}
