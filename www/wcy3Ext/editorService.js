@@ -300,28 +300,33 @@ function EditorService(NetService, WxService) {
         return currScene.levelNum();
     }
 
-    function doStop() {
+    function stop() {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
         if (currScene != null) {
             currScene.stop();
         }
     }
-    function doPlay() {
+    function play() {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
         if (currScene != null) {
             currScene.play();
         }
     }
-    function doPlayRecord() {TQ.SceneEditor.setEditMode(); }
-    function doStopRecord() {TQ.SceneEditor.setPlayMode(); }
+
+    function replay() {
+       TQ.Scene.doReplay();
+    }
+
+    function startRecord() {TQ.SceneEditor.setEditMode(); }
+    function stopRecord() {TQ.SceneEditor.setPlayMode(); }
     function emptyScene() {TQ.SceneEditor.emptyScene(); }
 
     function doPlayStop() {
         if (isPlayOnly) {
             if (TQ.FrameCounter.isPlaying()) {
-                doStop();
+                stop();
             } else {
-                doPlay();
+                play();
             }
         } else {
             if (TQ.FrameCounter.isPlaying()) {
@@ -343,7 +348,7 @@ function EditorService(NetService, WxService) {
         TQ.Config.zoomY = height / TQ.Config.workingRegionHeight;
         TQ.Config.workingRegionWidth = width;
         TQ.Config.workingRegionHeight = height;
-        doPlay();
+        play();
     }
 
     function eixtFullscreen() {
@@ -417,8 +422,11 @@ function EditorService(NetService, WxService) {
 
     return {
         state: state,
-        play: doPlay,
-        stop: doStop,
+        play: play,
+        stop: stop,
+        replay: replay,
+        startRecord: startRecord,
+        stopRecord: stopRecord,
         // pause: doPause,
         addLevel: addLevel,
         addLevelAt: addLevelAt,

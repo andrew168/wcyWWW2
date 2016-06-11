@@ -54,12 +54,24 @@ function DashCtrl(
         currScene.gotoLevel(id);
     };
 
-    $scope.gotoPreLevel = function () {
-        currScene.preLevel();
+    $scope.addLevel = function() {
+        EditorService.addLevel();
     };
 
-    $scope.gotoNextLevel = function () {
-        currScene.nextLevel();
+    $scope.deleteLevel = function(id) {
+        EditorService.deleteLevel(id);
+    };
+
+    $scope.deleteCurrentLevel = function() {
+        EditorService.deleteCurrentLevel();
+    };
+
+    $scope.gotoPreLevel = function () {
+        EditorService.gotoPreviousLevel();
+    };
+
+    $scope.gotoNextLevel = function() {
+        EditorService.gotoNextLevel();
     };
 
     $scope.isPlaying = TQ.FrameCounter.isPlaying();
@@ -87,39 +99,24 @@ function DashCtrl(
         // EditorService.insertImage('v1462412871/c961.jpg');
     };
 
-    $scope.addLevel = function() {
-        EditorService.addLevel();
-    }
-    $scope.addLevel = function() {
-        EditorService.addLevel();
-    };
-
-    $scope.addLevel = function() {
-        EditorService.addLevel();
-    };
-
-    $scope.deleteLevel = function(id) {
-        EditorService.deleteLevel(id);
-    };
-
-    $scope.deleteCurrentLevel = function() {
-        EditorService.deleteCurrentLevel();
-    };
-
-    $scope.gotoPreviousLevel = function() {
-        EditorService.gotoPreviousLevel();
-    };
-
-    $scope.gotoNextLevel = function() {
-        EditorService.gotoNextLevel();
-    };
-
     $scope.play = function() {
         EditorService.play();
     };
 
     $scope.stop = function() {
         EditorService.stop();
+    };
+
+    $scope.replay = function() {
+        EditorService.replay();
+    };
+
+    $scope.startRecord = function() {
+        EditorService.startRecord();
+    };
+
+    $scope.stopRecord = function() {
+        EditorService.stopRecord();
     };
 
     $scope.setBigFont = function () {
