@@ -22,6 +22,7 @@ function EditorService(NetService, WxService) {
         _isBkMat = true;
         return insertMatFromLocal(_isBkMat);
     }
+
     function insertMatFromLocal(isBkMat) {
         _isBkMat = !!isBkMat;
         if (WxService.isReady()) {
@@ -75,7 +76,7 @@ function EditorService(NetService, WxService) {
             uploadOneFile(buffer).
                 then(function (data) {
                     TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
-                        addMatFromLocal(aFile, data, _isBkMat);
+                    addMatFromData(aFile, data, _isBkMat);
                     // fileElement.unbind('change'); // remove old handler
                 }, function (err) {
                     console.log(err);
@@ -147,12 +148,12 @@ function EditorService(NetService, WxService) {
         // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
     }
 
-        function insertSound(filename, x, y) {
-            var desc = {src: filename, type: "Sound", x: x, y: y};
+    function insertSound(filename) {
+        var desc = {src: filename, type: "SOUND"};
         TQ.SceneEditor.addItem(desc);
-    }
+     }
 
-        function addMatFromLocal(aFile, data, isBkMat) {
+    function addMatFromData(aFile, data, isBkMat) {
         var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
         var fitFlag = (isBkMat && matType === TQ.ElementType.BITMAP) ?
             TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE;
