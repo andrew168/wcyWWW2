@@ -87,6 +87,41 @@ function DashCtrl(
         // EditorService.insertImage('v1462412871/c961.jpg');
     };
 
+    $scope.addLevel = function() {
+        EditorService.addLevel();
+    }
+    $scope.addLevel = function() {
+        EditorService.addLevel();
+    };
+
+    $scope.addLevel = function() {
+        EditorService.addLevel();
+    };
+
+    $scope.deleteLevel = function(id) {
+        EditorService.deleteLevel(id);
+    };
+
+    $scope.deleteCurrentLevel = function() {
+        EditorService.deleteCurrentLevel();
+    };
+
+    $scope.gotoPreviousLevel = function() {
+        EditorService.gotoPreviousLevel();
+    };
+
+    $scope.gotoNextLevel = function() {
+        EditorService.gotoNextLevel();
+    };
+
+    $scope.play = function() {
+        EditorService.play();
+    };
+
+    $scope.stop = function() {
+        EditorService.stop();
+    };
+
     $scope.setBigFont = function () {
         var ele = TQ.SelectSet.peek();
         if (ele && ele.isText()) {

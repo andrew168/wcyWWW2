@@ -75,7 +75,7 @@
 
             <div class="fn-left new-left functionButton">
                 <ul class="new-left-li">
-                    <li class="tabmenu_left_ajax_btn" cate_id="3" tag_type="2" id="add-local-photo" ng-click="insertLocalImage2()">
+                    <li class="tabmenu_left_ajax_btn" cate_id="3" tag_type="2" id="add-local-photo" ng-click="insertBkImageFromLocal()">
                         <a href="javascript:void(0)" title={{getLocale('wcy_menu_beijing')}} etype="1">
                             <span class="left-top bj"></span>
                         </a>
@@ -100,7 +100,7 @@
                             <span class="left-top rw"></span>
                         </a>
                     </li>
-                    <li id="addText">
+                    <li id="addText" ng-click="setColor()">
                         <a  href="javascript:void(0)" title={{getLocale('wcy_menu_charuwenben')}}>
                             <span class="left-top wz"></span>
                         </a>
@@ -152,16 +152,16 @@
         <!-- ** style="display: none" -->
         <div class="float-tool_new" style="display: block">
             <!-- 作品 -->
-            <div style="display: none">
+            <div style="display: block">
             <button  class="button button-positive" ng-click="testShowWCY()">播放作品</button>
-            <button class="button button-positive" ng-click="insertLocalImage2()">插入本地图片</button>
+            <button class="button button-positive" ng-click="insertImageFromLocal2()">插入本地图片</button>
 
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
             <button class="button button-positive" ng-click="onEndInputText()">EndInputText</button>
             <button class="button button-positive" ng-click="testDownload()">下载资源</button>
             <button class="button button-positive" ng-click="testDownloadBulk()">下载资源Bulk</button>
             <button class="button button-positive" ng-click="testClearAll()">清空</button>
-            <button class="button button-positive" ng-click="insertLocalImage()">+本地图片</button>
+            <button class="button button-positive" ng-click="insertImageFromLocal()">+本地图片</button>
             <button class="button button-positive" ng-click="insertLocalImageWithOrientation()">+朝向测试</button>
             <button class="button button-positive" ng-click="insertAlbum()">+图册</button>
             <button class="button button-positive" ng-click="insertFromCamera()">+相机</button>
@@ -169,8 +169,18 @@
             <button class="button button-positive" my-click="uploadScreenShot()">截屏上传</button>
             <button class="button button-positive" my-click="saveScreenShot($event)">截屏保存</button>
             </div>
+            <button class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}">
+                Pick text color
+            </button>
             <button class="button button-positive" ng-click="createWcy()">新建</button>
             <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
+            <button class="button button-positive" ng-click="addLevel()">建立新level </button>
+            <button class="button button-positive" ng-click="deleteCurrentLevel()">删除当前level </button>
+            <button class="button button-positive" ng-click="deleteLevel(2)">删除level 2 </button>
+            <button class="button button-positive" ng-click="gotoPreviousLevel()">前一个level </button>
+            <button class="button button-positive" ng-click="gotoNextLevel()">后一个level </button>
+            <button class="button button-positive" ng-click="play()">播放 </button>
+            <button class="button button-positive" ng-click="stop()">stop</button>
             <!-- 材质 -->
             <div style="display: none">
                 <button class="button button-positive" ng-click="uploadMat()">上传照片</button>
@@ -292,7 +302,7 @@
         </div>
         <div class="border-ft top-right-bar" id="floatToolbarDiv">
             <div>
-                <button id="moveToTop" class="inline-btn bn-new-icon inline" title={{getLocale('wcy_gongneng_button_19')}}>
+                <button id="moveToTop" title={{getLocale('wcy_gongneng_button_19')}}>
                     <span class="ui-icon ui-icon-mup"></span>
                 </button>
                 <button id="moveLayerPrev" class="inline-btn bn-new-icon inline" title={{getLocale('wcy_gongneng_button_20')}}>
