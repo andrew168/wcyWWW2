@@ -119,25 +119,24 @@ TQ = TQ || {};
         }
 
         if ((!TQ.FrameCounter.isPlaying() || TQ.FrameCounter.isRequestedToStop())) return;
-        if (this.isPaused() || this.isFinished()) { //  在FAILED情况下， 重新开始播放
-            var t = TQ.FrameCounter.t();
-            if (this.isMultiScene) {
-                t = currScene.toGlobalTime(t);
-            }
-            this.resume(t);
-            return;
-        }
 
         if (this.isPlaying()) return;
-
         if (this.isFirstTimePlay) {
             this.isFirstTimePlay = false;
             if (!this.t0) {
                 this.t0 = TQ.FrameCounter.t();   // ToDo:这个t0计算方法有误， 需要根据编辑时插入点的位置， 来计算； 如果播放时，跳开一个位移，则不是播放时的开始位置。
             }
-            this.instance.play();
+            return this.instance.play();
         }
-   };
+
+        if (this.isPaused() || this.isFinished()) { //  在FAILED情况下， 重新开始播放
+            var t = TQ.FrameCounter.t();
+            if (this.isMultiScene) {
+                t = currScene.toGlobalTime(t);
+            }
+            return this.resume(t);
+        }
+    };
 
     // 计算元素插入点的绝对时刻（与当前level无关， 只与元素所在level有关），
     p.toGlobalTime = function(t) {
