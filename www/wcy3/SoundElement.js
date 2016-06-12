@@ -146,15 +146,16 @@ TQ = TQ || {};
     // t： 对于简单声音，只是本level中的相对时间；
     //     对于跨场景的声音，是全局时间
     p.resume = function(t) { //
+        var ts;
         if (!this.instance) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             TQ.Log.info(TQ.Dictionary.INVALID_LOGIC + "in SoundElement.resume");
             return;
         } else {
             if (this.isMultiScene) {
-                var ts = this.toGlobalTime(this.t0);  // VER2版本引入的跨场景的声音
+                ts = this.toGlobalTime(this.t0);  // VER2版本引入的跨场景的声音
             } else {
-                var ts = this.t0;  // 兼容VER1版本中的 单一场景的声音。
+                ts = this.t0;  // 兼容VER1版本中的 单一场景的声音。
             }
 
             if (this.isFirstTimePlay) {
