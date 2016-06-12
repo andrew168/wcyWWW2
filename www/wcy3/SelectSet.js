@@ -8,6 +8,8 @@ TQ = TQ || {};
 
 (function () {
     var SelectSet = {};
+    SelectSet.SELECTION_NEW_EVENT = "selected new element";
+    SelectSet.SELECTION_EMPTY_EVENT = "selection empty";
     SelectSet.members = [];
     SelectSet.decorations = [];  //  decorations ready to use
     SelectSet.workingDecorations = []; // decorations is using.
@@ -89,6 +91,8 @@ TQ = TQ || {};
                 TQ.FloatToolbar.selectedElement = element;
             }
         }
+
+        TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_NEW_EVENT, {element: element});
     };
 
     /*
@@ -246,6 +250,15 @@ TQ = TQ || {};
     SelectSet.isSelected = function(ele) {
         return ((SelectSet.members.indexOf(ele) >= 0) ||
             (SelectSet.selectedMarkers.indexOf(ele) >= 0));
+    };
+
+    SelectSet.empty = function() {
+        SelectSet.clear();
+        TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+    };
+
+    SelectSet.isEmpty = function() {
+        return (SelectSet.members.length === 0);
     };
 
     /*

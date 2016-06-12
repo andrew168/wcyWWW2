@@ -6,8 +6,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$injection = ['NetService', 'WxService'];
-function EditorService(NetService, WxService) {
+EditorService.$injection = ['$timeout', 'NetService', 'WxService'];
+function EditorService($timeout, NetService, WxService) {
     var _initialized = false,
         fileElement = null,
         _isBkMat = false,
@@ -15,8 +15,15 @@ function EditorService(NetService, WxService) {
 
     var state = { // editor 的各种当前值， 用户选择的
         fontLevel: '' + (parseInt(TQ.Config.fontSize) / TQ.Config.FONT_LEVEL_UNIT),
-        color: TQ.Config.color
-    }
+        color: TQ.Config.color,
+        isAddMode: null,
+        isModifyMode:null,
+        isPreviewMode:null,
+        isPlayMode:null
+    };
+
+    document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, updateMode);
+    document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, updateMode);
 
     function insertBkMatFromLocal() {
         _isBkMat = true;
@@ -68,7 +75,7 @@ function EditorService(NetService, WxService) {
             ArrayBuffer: !!window.ArrayBuffer,
             webkitURL: !!window.webkitURL,
             atob: !!window.atob
-        }
+        };
 
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
@@ -86,7 +93,7 @@ function EditorService(NetService, WxService) {
         if (isSound(aFile)) {
             uploadData(aFile);
         } else {
-            var options = {}
+            var options = {};
             var processor = new TQ.ImageProcess();
             processor.start(aFile, options, uploadData);
         }
@@ -107,14 +114,13 @@ function EditorService(NetService, WxService) {
                 path: filePath,
                 type: NetService.TYPE_IMAGE,
                 isWx: true
-            }
+            };
 
             TQ.Log.alertInfo("微信InsertLocal：" + JSON.stringify(aFile));
             processOneMat(aFile);
         }, function (err) {
             console.log(err);
         });
-
     }
 
     function uploadOneFile(file) {
@@ -141,7 +147,7 @@ function EditorService(NetService, WxService) {
             y: y,
             fontSize: getFontSize(),
             color: state.color
-        }
+        };
 
         TQ.SceneEditor.addItem(desc);
         // TQ.TextEditor.initialize();
@@ -418,6 +424,45 @@ function EditorService(NetService, WxService) {
     // 设置零件标志的大小， 默认是10：
     function setMarkerSize(radius) {
         TQ.Marker.RADIUS = radius;
+    }
+
+    // private
+    function initialized() {
+        return  (currScene && currScene.currentLevel !== undefined);
+    }
+
+    function isEditMode() {
+        return (initialized() && TQ.SceneEditor.isEditMode());
+    }
+
+    function updateMode() {
+        var value = null,
+            hasChanged = false;
+
+        if (state.isAddMode != (value = (isEditMode() && TQ.SelectSet.isEmpty()))) {
+            state.isAddMode = value;
+            hasChanged = true;
+        }
+
+        if (state.isModifyMode !=( value = (isEditMode() && !TQ.SelectSet.isEmpty()))) {
+            state.isModifyMode= value;
+            hasChanged = true;
+        }
+
+        if (state.isPlayMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
+            state.isPlayMode = value;
+            hasChanged = true;
+        }
+
+        if (state.isPreviewMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
+            state.isPreviewMode = value;
+            hasChanged = true;
+        }
+
+        //  force angular to update UI
+        if (hasChanged) {
+            $timeout(null);
+        }
     }
 
     return {

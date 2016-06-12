@@ -54,7 +54,7 @@ var TQ = TQ || {};
 
         if (!newEle) {
             // console.error("No Obj touched!");
-            TQ.SelectSet.clear();
+            TQ.SelectSet.empty();
             TQ.FloatToolbar.close();
             return;
         }
