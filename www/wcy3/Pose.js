@@ -33,6 +33,16 @@ window.TQ = window.TQ || {};
         var M = TQ.Matrix2D.transformation(Pose.x, Pose.y, Pose.rotation, Pose.sx, Pose.sy);
         poseWorld.M = parentPoseWorld.M.multiply(M);
         poseWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
+        if (Pose.x === null) {
+            TQ.Log.error("this opus has valid Pose.x: null");
+            Pose.x = 0;
+        }
+
+        if (Pose.y === null) {
+            TQ.Log.error("this opus has valid Pose.y: null");
+            Pose.y = 0;
+        }
+
         var Vjw = parentPoseWorld.M.multiply($V([Pose.x, Pose.y, 1]));
         poseWorld.x = Vjw.elements[0];
         poseWorld.y = Vjw.elements[1];
