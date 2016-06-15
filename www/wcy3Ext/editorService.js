@@ -17,6 +17,7 @@ function EditorService($timeout, NetService, WxService) {
         fontLevel: '' + (parseInt(TQ.Config.fontSize) / TQ.Config.FONT_LEVEL_UNIT),
         color: TQ.Config.color,
         isAddMode: null,
+        isRecording:null, // must be in AddMode
         isModifyMode:null,
         isPreviewMode:null,
         isPlayMode:null
@@ -311,17 +312,27 @@ function EditorService($timeout, NetService, WxService) {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
         if (currScene != null) {
             currScene.stop();
+            updateMode();
         }
     }
+
+    function preview () {
+        state.isPreviewMode = true;
+        play();
+        forceToRefreshUI();
+    }
+
     function play() {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
         if (currScene != null) {
             currScene.play();
+            updateMode();
         }
     }
 
     function replay() {
        TQ.Scene.doReplay();
+        updateMode();
     }
 
     function startRecord() {TQ.SceneEditor.setEditMode(); }
@@ -457,7 +468,7 @@ function EditorService($timeout, NetService, WxService) {
     }
 
     // for bottom bar;
-    function empty () {
+    function emptySelectSet () {
         TQ.SelectSet.empty();
         TQ.DirtyFlag.setScene();
     }
@@ -471,44 +482,67 @@ function EditorService($timeout, NetService, WxService) {
         return (initialized() && TQ.SceneEditor.isEditMode());
     }
 
-    function updateMode() {
-        var value = null,
-            hasChanged = false;
+    function toAddMode() {
+        TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
+        TQ.SelectSet.empty();
+        state.isPreviewMode = false;
+        updateMode(true);
+    }
 
-        if (state.isAddMode != (value = (isEditMode() && TQ.SelectSet.isEmpty()))) {
-            state.isAddMode = value;
+    function updateMode(hasChanged) {
+        var value = null;
+
+        if (!state.isPreviewMode) {
+            if (state.isAddMode != (value = (isEditMode() && TQ.SelectSet.isEmpty()))) {
+                state.isAddMode = value;
+                hasChanged = true;
+            }
+
+            if (state.isModifyMode !=( value = (isEditMode() && !TQ.SelectSet.isEmpty()))) {
+                state.isModifyMode= value;
+                hasChanged = true;
+            }
+
+            if (state.isPlayMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
+                state.isPlayMode = value;
+                hasChanged = true;
+            }
+        } else {
+            state.isAddMode = false;
+            state.isModifyMode = false;
+            state.isPlayMode = false;
             hasChanged = true;
         }
 
-        if (state.isModifyMode !=( value = (isEditMode() && !TQ.SelectSet.isEmpty()))) {
-            state.isModifyMode= value;
-            hasChanged = true;
-        }
-
-        if (state.isPlayMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
-            state.isPlayMode = value;
-            hasChanged = true;
-        }
-
-        if (state.isPreviewMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
-            state.isPreviewMode = value;
-            hasChanged = true;
+        if (!state.isAddMode) {
+            state.isRecording = false;  // 只有在add mode 下，才允许录音
         }
 
         //  force angular to update UI
         if (hasChanged) {
-            $timeout(null);
+            forceToRefreshUI();
         }
+    }
+
+    function forceToRefreshUI()
+    {
+        $timeout(null);
     }
 
     return {
         state: state,
+
+        // play & preview
+        preview: preview,
         play: play,
         stop: stop,
         replay: replay,
         startRecord: startRecord,
         stopRecord: stopRecord,
+
         // pause: doPause,
+
+        // level
         addLevel: addLevel,
         addLevelAt: addLevelAt,
         deleteLevel: deleteLevel,
@@ -516,20 +550,29 @@ function EditorService($timeout, NetService, WxService) {
         gotoPreviousLevel: gotoPreviousLevel,
         gotoNextLevel: gotoNextLevel,
         gotoLevel: gotoLevel,
+
+        // element modification (text, sound, image...)
         getFontSize: getFontSize,
         setSize: setSize,
         setColor: setColor,
         eraseAnimeTrack:eraseAnimeTrack,
         deleteElement:deleteElement,
-        empty:empty,
         hideOrShow :hideOrShow ,
         pinIt:pinIt,
 
+        // element insert (text, sound, image...)
         insertImageFromLocal: insertMatFromLocal,
         insertBkImageFromLocal: insertBkMatFromLocal,
         insertImage: insertImage,  // i.e. FromUrl:
         insertBkImage: insertBkImage,
         insertText: insertText,
-        insertSound: insertSound
+        insertSound: insertSound,
+
+        // select set
+        emptySelectSet:emptySelectSet,
+
+        // editor
+        toAddMode: toAddMode
+
     }
 }
