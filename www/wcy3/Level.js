@@ -240,13 +240,13 @@ window.TQ = window.TQ || {};
 			ele.removeFromStage();
         	TQ.GarbageCollector.add(ele);
 		}
-        TQ.DirtyFlag.setLevel(this);
+        TQ.DirtyFlag.setElement(this);
         return ele;
     };
 
     p.removeElementAt = function(i) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, (i >=0) && (i < this.elements.length) ); // 数组超界
-        TQ.DirtyFlag.setLevel(this);
+        TQ.DirtyFlag.setElement(this);
         return (this.elements.splice(i, 1))[0];
     };
 
@@ -477,6 +477,10 @@ window.TQ = window.TQ || {};
     };
 
     p.deleteElement  = function (ele) {
+        if (ele.isPinned()) {
+            return;
+        }
+
         // 删除数据， 真删除
         var found = false;
         TQ.DirtyFlag.setLevel(this);

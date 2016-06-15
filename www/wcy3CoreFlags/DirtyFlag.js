@@ -7,6 +7,10 @@ var TQ = TQ || {};
     function DirtyFlag() {
     }
 
+    DirtyFlag.setElement = setElement;
+    DirtyFlag.setLevel = setLevel;
+    DirtyFlag.setScene = setAll;
+
     function setElement(ele) {
         // ele.isDirty = true;
         if (!!ele) {
@@ -26,10 +30,6 @@ var TQ = TQ || {};
     function setAll() {
         return setElement();
     }
-
-    DirtyFlag.setElement = setElement;
-    DirtyFlag.setLevel = setLevel;
-    DirtyFlag.setAll = setAll;
 
     TQ.DirtyFlag = DirtyFlag;
 }());

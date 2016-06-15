@@ -7,7 +7,7 @@ TQ = TQ || {};
         this.version = Scene.VER2;
         this.isDirty = true;
     }
-
+    Scene.EVENT_READY = "sceneReady";
     Scene.VER1 = "V1";
     Scene.VER2 = "V2";
     Scene.VER3 = "V3"; // 采用归一化的坐标，记录保存wcy，以适应各种屏幕。
@@ -22,6 +22,14 @@ TQ = TQ || {};
     p.stage = null;
     p.isSaved = false; // 用于提醒是否保存修改的内容，在close之前。
     p.state = TQBase.LevelState.NOT_INIT;
+
+    // static APIs:
+    Scene.doReplay = doReplay;
+    Scene.removeEmptyLevel = removeEmptyLevel;
+    Scene.stopAux = stopAux;
+    Scene.getEmptySceneJSON = getEmptySceneJSON;
+
+    // dynamic APIs
     p.shooting = function () {
         this.state = TQBase.LevelState.SHOOTING;
     };
@@ -114,7 +122,7 @@ TQ = TQ || {};
         }
     };
 
-    Scene.doReplay = function () {
+    function doReplay() {
         if (!currScene) {
             return;
         }
@@ -122,7 +130,7 @@ TQ = TQ || {};
         currScene.gotoLevel(0);
         TQ.FrameCounter.gotoBeginning();
         currScene.play();
-    };
+    }
 
     p.render = function () {
         TQ.Assert.isNotNull(stage);
@@ -145,7 +153,8 @@ TQ = TQ || {};
         var thisScene = this;
         this.currentLevel.onLevelRunning = function () {
             thisScene.state = TQBase.LevelState.RUNNING;
-            thisScene.handleEvent("sceneReady");
+            thisScene.handleEvent(Scene.EVENT_READY);
+            TQ.Base.Utility.triggerEvent(document, Scene.EVENT_READY);
             this.isDirty = true;
         }
     };
@@ -451,7 +460,7 @@ TQ = TQ || {};
         pt._fixedUp(objJson);
     };
 
-    Scene.removeEmptyLevel = function (jsonObj) {
+    function removeEmptyLevel(jsonObj) {
         for (var i = jsonObj.levels.length - 1; i >= 0; i--) {
             var desc = jsonObj.levels[i];
             if ((desc.elements == null) || (desc.elements.length <= 0)) {
@@ -462,7 +471,7 @@ TQ = TQ || {};
             }
         }
         this.isDirty = true;
-    };
+    }
 
     p._fixedUp = function (objJson) {
         if (TQ.Config.REMOVE_EMPTY_LEVEL_ON) {
@@ -662,13 +671,13 @@ TQ = TQ || {};
         }
     };
 
-    Scene.stopAux = function () {
+    function stopAux() {
         if (TQ.FrameCounter.isPlaying()) {
             $("#stop").click();
         }
-    };
+    }
 
-    Scene.getEmptySceneJSON = function () {
+    function getEmptySceneJSON() {
         // this equals to the WCY01.WDM
         // it is provided to prevent loading WCY01.WDM from server
         var empty = {
@@ -690,7 +699,7 @@ TQ = TQ || {};
         };
 
         return JSON.stringify(empty);
-    };
+    }
 
     TQ.Scene = Scene;
 }());

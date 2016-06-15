@@ -37,7 +37,7 @@ function assertValid(msg, obj)
     assertNotNull(msg +"null", obj);
 }
 
-function assertDepreciated(msg)
+function assertDepreciated(name)
 {
-    assertTrue(msg, false);
+    assertTrue("depreciated: " + name, false);
 }

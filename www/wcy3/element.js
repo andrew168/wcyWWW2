@@ -93,7 +93,11 @@ window.TQ = window.TQ || {};
     };
 
     p.toggleVisibility = function () {
+        if (this.isPinned()) {
+            return;
+        }
         this.show(!this.jsonObj.isVis);
+        TQ.DirtyFlag.setElement(this);
     };
 
     // Add image item
@@ -512,6 +516,9 @@ window.TQ = window.TQ || {};
     };
 
     p.removeChild = function (child) {
+        if (this.isPinned()) {
+            return null;
+        }
         assertNotNull(TQ.Dictionary.FoundNull, this.children); // "应该有孩子"
         var id = this.children.indexOf(child);
         assertTrue(TQ.Dictionary.INVALID_LOGIC, id >= 0); //"应该能够找到孩子"
@@ -801,6 +808,10 @@ window.TQ = window.TQ || {};
     };
 
     p._doRemoveFromStage = function () {
+        if (this.isPinned()) {
+            return;
+        }
+
         TQ.TraceMgr.removeFromStage(this);
         if (this.displayObj) {
             stageContainer.removeChild(this.displayObj);
@@ -852,6 +863,10 @@ window.TQ = window.TQ || {};
     };
 
     p.eraseAnimeTrack = function () {
+        if (this.isPinned()) {
+            return;
+        }
+
         if (this.children != null) {
             for (var i = 0; i < this.children.length; i++) {
                 this.children[i].eraseAnimeTrack();
@@ -859,9 +874,14 @@ window.TQ = window.TQ || {};
         }
 
         TQ.TrackRecorder.erase(this);
+        TQ.DirtyFlag.setElement(this);
     };
 
     p.deleteChild = function (ele) {
+        if (this.isPinned()) {
+            return;
+        }
+
         if (this.children == null) {
             return false;
         }
@@ -1066,6 +1086,7 @@ window.TQ = window.TQ || {};
             this.jsonObj.isPinned = false;
         }
 
+        TQ.DirtyFlag.setElement(this);
         if (this.jsonObj.type == "Group") {
             for (var i = 0; i < this.children.length; i++) {
                 var ele = this.children[i];
@@ -1445,6 +1466,10 @@ window.TQ = window.TQ || {};
     };
 
     p.moveTo = function (point) {
+        if (this.isPinned()) {
+            return;
+        }
+
         var obj_ndc = this.pdc2Ndc(point);
 
         this.jsonObj.x = obj_ndc.x;
@@ -1476,6 +1501,10 @@ window.TQ = window.TQ || {};
     };
 
     p.rotateTo = function (angle) {
+        if (this.isPinned()) {
+            return;
+        }
+
         this.jsonObj.rotation = angle;
         this.setFlag(Element.ROTATING);
         TQ.DirtyFlag.setElement(this);
@@ -1483,6 +1512,10 @@ window.TQ = window.TQ || {};
     };
 
     p.scaleTo = function (scale) {
+        if (this.isPinned()) {
+            return;
+        }
+
         var obj_ndc = this.pdc2Ndc(scale);
         this.jsonObj.sx = obj_ndc.sx;
         this.jsonObj.sy = obj_ndc.sy;

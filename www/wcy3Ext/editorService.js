@@ -24,6 +24,7 @@ function EditorService($timeout, NetService, WxService) {
 
     document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, updateMode);
     document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, updateMode);
+    document.addEventListener(TQ.Scene.EVENT_READY, updateMode);
 
     function insertBkMatFromLocal() {
         _isBkMat = true;
@@ -363,8 +364,8 @@ function EditorService($timeout, NetService, WxService) {
         TQ.Config.zoomX = TQ.Config.zoomY = 1;
     }
 
-    function deleteElement(ele) {
-        currScene.deleteElement(ele);
+    function deleteElement () {
+        TQ.SelectSet.delete(); // 通过undo系统调用了currScene.deleteElement()
     }
 
     //只用于插入录音，
@@ -426,6 +427,41 @@ function EditorService($timeout, NetService, WxService) {
         TQ.Marker.RADIUS = radius;
     }
 
+    function setSize() {
+        var selectedElement = TQ.SelectSet.peek();
+        if (selectedElement  && selectedElement.isText()) {
+            selectedElement.setSize(getFontSize());
+            // TQ.DirtyFlag.setElement(this); // called in setText
+        }
+    }
+
+    function setColor(colorPicker) {
+        state.color = '#' + colorPicker.toString();
+        var selectedElement = TQ.SelectSet.peek();
+        if (selectedElement && selectedElement.isText()) {
+            selectedElement.setColor(state.color);
+            // TQ.DirtyFlag.setElement(this); // called in setText
+        }
+    }
+
+    function pinIt() {
+        TQ.SelectSet.pinIt();
+    }
+
+    function hideOrShow () {
+        TQ.SelectSet.show(false);
+    }
+
+    function eraseAnimeTrack() {
+        TQ.SelectSet.eraseAnimeTrack();
+    }
+
+    // for bottom bar;
+    function empty () {
+        TQ.SelectSet.empty();
+        TQ.DirtyFlag.setScene();
+    }
+
     // private
     function initialized() {
         return  (currScene && currScene.currentLevel !== undefined);
@@ -481,6 +517,14 @@ function EditorService($timeout, NetService, WxService) {
         gotoNextLevel: gotoNextLevel,
         gotoLevel: gotoLevel,
         getFontSize: getFontSize,
+        setSize: setSize,
+        setColor: setColor,
+        eraseAnimeTrack:eraseAnimeTrack,
+        deleteElement:deleteElement,
+        empty:empty,
+        hideOrShow :hideOrShow ,
+        pinIt:pinIt,
+
         insertImageFromLocal: insertMatFromLocal,
         insertBkImageFromLocal: insertBkMatFromLocal,
         insertImage: insertImage,  // i.e. FromUrl:

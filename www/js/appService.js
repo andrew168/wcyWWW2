@@ -33,7 +33,7 @@ function AppService($http, $cookies, $q, WxService, $timeout, WCY, NetService, D
             }
 
             if (currScene) {
-                TQ.DirtyFlag.setAll();
+                TQ.DirtyFlag.setScene();
             }
 
             TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight +")"

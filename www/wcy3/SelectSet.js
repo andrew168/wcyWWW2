@@ -100,6 +100,7 @@ TQ = TQ || {};
      */
     SelectSet.delete = function() {
         SelectSet.clear(true);
+        TQ.DirtyFlag.setScene();
     };
 
     SelectSet.clear = function(withDelete) {
@@ -254,6 +255,7 @@ TQ = TQ || {};
 
     SelectSet.empty = function() {
         SelectSet.clear();
+        TQ.DirtyFlag.setScene();
         TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
     };
 
