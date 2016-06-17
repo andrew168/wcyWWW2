@@ -2,6 +2,31 @@
  * 对 谷歌 assert的扩充， 适合于 jsTestDriver
  * 可以比较任意的对象，数组对象， 等等
  * */
+// extending ChaiAssert
+var TQ = TQ || {};
+(function() {
+    function AssertExt() {
+    }
+
+    AssertExt.depreciated = depreciated;
+    AssertExt.invalidLogic = invalidLogic;
+    AssertExt.isNotNull = isNotNull;
+
+    function depreciated(name) {
+        TQ.Assert.isTrue(false, "depreciated: " + name);
+    }
+
+    function invalidLogic(exp, str) {
+        TQ.Assert.isTrue(exp, str + ': ' + TQ.Dictionary.INVALID_LOGIC );
+    }
+
+    function isNotNull(exp) {
+        TQ.Assert.isNotNull(exp, TQ.Dictionary.INVALID_LOGIC );
+    }
+
+    TQ.AssertExt = AssertExt;
+}());
+
 // 比较任意的对象，
 function assertEqualsObject(msg, expected, actual) {
     var v1 = prettyPrintEntity_(expected);
@@ -39,5 +64,6 @@ function assertValid(msg, obj)
 
 function assertDepreciated(name)
 {
-    assertTrue("depreciated: " + name, false);
+    TQ.AssertExt.depreciated(name);
 }
+
