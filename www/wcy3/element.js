@@ -1407,6 +1407,10 @@ window.TQ = window.TQ || {};
             this.deleteHighlighter();
             this.createHighlighter();
         }
+
+        if (this.hookInMove) {
+            this.hookInMove.call(this, this);
+        }
     };
 
     // Marker 专用部分

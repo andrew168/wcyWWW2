@@ -10,6 +10,7 @@ EditorService.$injection = ['$timeout', 'NetService', 'WxService'];
 function EditorService($timeout, NetService, WxService) {
     var _initialized = false,
         _colorPanel = null,
+        _lastSelected = null,
         fileElement = null,
         _isBkMat = false,
         domEle = null;
@@ -28,11 +29,10 @@ function EditorService($timeout, NetService, WxService) {
         isRecording:null, // must be in AddMode
         isModifyMode:null,
         isPreviewMode:null,
-        isPlayMode:null
+        isPlayMode:null,
+        isPlaying: false
     };
 
-    document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
-    document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
     document.addEventListener(TQ.Scene.EVENT_READY, onSceneReady);
 
     function onSelectSetChange() {
@@ -40,7 +40,10 @@ function EditorService($timeout, NetService, WxService) {
     }
 
     function onSceneReady() {
+        document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
+        document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
         updateMode();
+        updateColorPanel();
     }
 
     function insertBkMatFromLocal() {
@@ -540,11 +543,13 @@ function EditorService($timeout, NetService, WxService) {
             if (state.isPlayMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
                 state.isPlayMode = value;
                 hasChanged = true;
+                state.isPlaying = TQ.FrameCounter.isPlaying();
             }
         } else {
             state.isAddMode = false;
             state.isModifyMode = false;
             state.isPlayMode = false;
+            state.isPlaying = TQ.FrameCounter.isPlaying();
             hasChanged = true;
         }
 
@@ -555,7 +560,7 @@ function EditorService($timeout, NetService, WxService) {
         // 对sceneReady 事件， SelectSet是空
         if (!TQ.SelectSet.isEmpty()) {
             hasChanged = updateElementState() || hasChanged;
-        }
+        } 
 
         //  force angular to update UI
         if (hasChanged) {
@@ -563,16 +568,39 @@ function EditorService($timeout, NetService, WxService) {
         }
     }
 
-    function updateElementState() {
+    function updatePosition(ele) {
+        if ((ele !== _lastSelected) || (_lastSelected === null)) {
+            if (_lastSelected && !!_lastSelected.hookInMove) {
+                _lastSelected.hookInMove = null;
+            }
+            _lastSelected = ele;
+            if (_lastSelected){
+                _lastSelected.hookInMove = updatePosition;
+            }
+        }
 
+        if (ele) {
+            var pos = ele.getPositionInNdc();
+            state.x = pos.x;
+            state.y = pos.y;
+        }
+    }
+
+    function getTextCursor() {
+        var y = state.y;
+        if (_lastSelected && _lastSelected.isText()) {
+            y -= (getFontSize() / TQ.Config.workingRegionHeight);
+        }
+
+        return {x: state.x, y: y};
+    }
+
+    function updateElementState() {
         var hasChanged = false,
             ele = TQ.SelectSet.peek();
         TQ.AssertExt.isNotNull(ele);
-        var pos = ele.getPositionInNdc();
-        state.x = pos.x;
-        state.y = pos.y;
+        updatePosition(ele);
         if (ele && state.isModifyMode) {
-
             if (state.isLocked !== ele.isPinned()) {
                 state.isLocked = ele.isPinned();
                 hasChanged = true;
@@ -649,6 +677,7 @@ function EditorService($timeout, NetService, WxService) {
         emptySelectSet:emptySelectSet,
 
         // editor
+        getTextCursor: getTextCursor,
         setColorPanel: setColorPanel,
         toAddMode: toAddMode
     }
