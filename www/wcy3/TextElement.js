@@ -18,6 +18,10 @@ window.TQ = window.TQ || {};
         return this.jsonObj.text;
     };
 
+    p.getFontSize = function() {
+        return this.jsonObj.fontSize;
+    };
+
     p.setColor = function(fontColor) {
         this.setText(null, null, null, fontColor);
     };

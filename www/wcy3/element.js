@@ -1489,9 +1489,13 @@ window.TQ = window.TQ || {};
         return obj_pdc.rotation;
     };
 
-    p.getPosition = function () {
+    p.getPosition = function () { // in PDC
         var obj_pdc = this.ndc2Pdc(this.jsonObj);
         return {x: obj_pdc.x, y: obj_pdc.y};
+    };
+
+    p.getPositionInNdc = function () {
+        return {x: this.jsonObj.x, y: this.jsonObj.y};
     };
 
     p.getPositionInDc = function () {
@@ -1736,6 +1740,10 @@ window.TQ = window.TQ || {};
 
         assertTrue(TQ.INVALID_LOGIC + "没有可见物体的group", false);
         return z;
+    };
+
+    p.getColor = function() {
+        return (this.jsonObj.color === undefined) ? TQ.Config.color : this.jsonObj.color;
     };
 
     TQ.ElementType = {

@@ -177,7 +177,7 @@ var jsc = {
 					document.detachEvent('onreadystatechange', arguments.callee);
 					fireOnce();
 				}
-			})
+			});
 
 			// Fallback
 			window.attachEvent('onload', fireOnce);
@@ -1062,18 +1062,18 @@ var jsc = {
 					if (!this.refine) {
 						if (!this.fromString(this.valueElement.value, jsc.leaveValue)) {
 							if (this.styleElement) {
-								this.styleElement.style.backgroundImage = this.styleElement._jscOrigStyle.backgroundImage;
-								this.styleElement.style.backgroundColor = this.styleElement._jscOrigStyle.backgroundColor;
-								this.styleElement.style.color = this.styleElement._jscOrigStyle.color;
+								// this.styleElement.style.backgroundImage = this.styleElement._jscOrigStyle.backgroundImage;
+								// this.styleElement.style.backgroundColor = this.styleElement._jscOrigStyle.backgroundColor;
+								// this.styleElement.style.color = this.styleElement._jscOrigStyle.color;
 							}
 							this.exportColor(jsc.leaveValue | jsc.leaveStyle);
 						}
 					} else if (!this.required && /^\s*$/.test(this.valueElement.value)) {
 						this.valueElement.value = '';
 						if (this.styleElement) {
-							this.styleElement.style.backgroundImage = this.styleElement._jscOrigStyle.backgroundImage;
-							this.styleElement.style.backgroundColor = this.styleElement._jscOrigStyle.backgroundColor;
-							this.styleElement.style.color = this.styleElement._jscOrigStyle.color;
+							// this.styleElement.style.backgroundImage = this.styleElement._jscOrigStyle.backgroundImage;
+							// this.styleElement.style.backgroundColor = this.styleElement._jscOrigStyle.backgroundColor;
+							// this.styleElement.style.color = this.styleElement._jscOrigStyle.color;
 						}
 						this.exportColor(jsc.leaveValue | jsc.leaveStyle);
 
@@ -1104,9 +1104,9 @@ var jsc = {
 			}
 			if (!(flags & jsc.leaveStyle)) {
 				if (this.styleElement) {
-					this.styleElement.style.backgroundImage = 'none';
-					this.styleElement.style.backgroundColor = '#' + this.toString();
-					this.styleElement.style.color = this.isLight() ? '#000' : '#FFF';
+					// this.styleElement.style.backgroundImage = 'none';
+					// this.styleElement.style.backgroundColor = '#' + this.toString();
+					// this.styleElement.style.color = this.isLight() ? '#000' : '#FFF';
 				}
 			}
 			if (!(flags & jsc.leavePad) && isPickerOwner()) {
@@ -1453,7 +1453,7 @@ var jsc = {
 			p.boxB.style.position = 'relative';
 			p.boxB.style.border = THIS.borderWidth + 'px solid';
 			p.boxB.style.borderColor = THIS.borderColor;
-			p.boxB.style.background = THIS.backgroundColor;
+			// p.boxB.style.background = THIS.backgroundColor;
 			jsc.setBorderRadius(p.boxB, borderRadius + 'px');
 
 			// IE hack:
@@ -1794,9 +1794,9 @@ var jsc = {
 		// styleElement
 		if (this.styleElement) {
 			this.styleElement._jscOrigStyle = {
-				backgroundImage : this.styleElement.style.backgroundImage,
-				backgroundColor : this.styleElement.style.backgroundColor,
-				color : this.styleElement.style.color
+				// backgroundImage : this.styleElement.style.backgroundImage,
+				// backgroundColor : this.styleElement.style.backgroundColor,
+				// color : this.styleElement.style.color
 			};
 		}
 

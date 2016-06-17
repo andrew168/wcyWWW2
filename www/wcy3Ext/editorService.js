@@ -9,13 +9,21 @@ angular.module('starter').factory('EditorService', EditorService);
 EditorService.$injection = ['$timeout', 'NetService', 'WxService'];
 function EditorService($timeout, NetService, WxService) {
     var _initialized = false,
+        _colorPanel = null,
         fileElement = null,
         _isBkMat = false,
         domEle = null;
 
     var state = { // editor 的各种当前值， 用户选择的
-        fontLevel: '' + (parseInt(TQ.Config.fontSize) / TQ.Config.FONT_LEVEL_UNIT),
+        // element's state
+        x: 0.5, // in NDC space
+        y: 0.5,
+        fontLevel: fontSize2Level(TQ.Config.fontSize),
         color: TQ.Config.color,
+        isVisible: true,
+        isLocked: false,
+
+        // editor's mode
         isAddMode: null,
         isRecording:null, // must be in AddMode
         isModifyMode:null,
@@ -23,9 +31,17 @@ function EditorService($timeout, NetService, WxService) {
         isPlayMode:null
     };
 
-    document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, updateMode);
-    document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, updateMode);
-    document.addEventListener(TQ.Scene.EVENT_READY, updateMode);
+    document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
+    document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
+    document.addEventListener(TQ.Scene.EVENT_READY, onSceneReady);
+
+    function onSelectSetChange() {
+        updateMode();
+    }
+
+    function onSceneReady() {
+        updateMode();
+    }
 
     function insertBkMatFromLocal() {
         _isBkMat = true;
@@ -130,12 +146,12 @@ function EditorService($timeout, NetService, WxService) {
     }
 
     function insertImage(filename, x, y) {
-        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.KEEP_SIZE, x: x, y: y}
+        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.KEEP_SIZE, x: x, y: y};
         TQ.SceneEditor.addItem(desc);
     }
 
     function insertBkImage(filename, x, y) {
-        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y}
+        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y};
         TQ.SceneEditor.addItem(desc);
     }
 
@@ -171,6 +187,10 @@ function EditorService($timeout, NetService, WxService) {
 
     function getFontSize() {
         return parseInt(state.fontLevel) * TQ.Config.FONT_LEVEL_UNIT;
+    }
+
+    function fontSize2Level(size) {
+        return '' + (parseInt(size) / TQ.Config.FONT_LEVEL_UNIT);
     }
 
     /*
@@ -446,8 +466,15 @@ function EditorService($timeout, NetService, WxService) {
         }
     }
 
+    function updateColorPanel() {
+        if (_colorPanel) {
+            _colorPanel.style.color = state.color;
+        }
+    }
+
     function setColor(colorPicker) {
         state.color = '#' + colorPicker.toString();
+        updateColorPanel();
         var selectedElement = TQ.SelectSet.peek();
         if (selectedElement && selectedElement.isText()) {
             selectedElement.setColor(state.color);
@@ -457,10 +484,12 @@ function EditorService($timeout, NetService, WxService) {
 
     function pinIt() {
         TQ.SelectSet.pinIt();
+        updateMode();
     }
 
     function hideOrShow () {
         TQ.SelectSet.show(false);
+        updateMode();
     }
 
     function eraseAnimeTrack() {
@@ -471,6 +500,7 @@ function EditorService($timeout, NetService, WxService) {
     function emptySelectSet () {
         TQ.SelectSet.empty();
         TQ.DirtyFlag.setScene();
+        updateMode();
     }
 
     // private
@@ -487,6 +517,10 @@ function EditorService($timeout, NetService, WxService) {
         TQ.SelectSet.empty();
         state.isPreviewMode = false;
         updateMode(true);
+    }
+
+    function setColorPanel(panel){
+        _colorPanel = panel;
     }
 
     function updateMode(hasChanged) {
@@ -518,10 +552,53 @@ function EditorService($timeout, NetService, WxService) {
             state.isRecording = false;  // 只有在add mode 下，才允许录音
         }
 
+        // 对sceneReady 事件， SelectSet是空
+        if (!TQ.SelectSet.isEmpty()) {
+            hasChanged = updateElementState() || hasChanged;
+        }
+
         //  force angular to update UI
         if (hasChanged) {
             forceToRefreshUI();
         }
+    }
+
+    function updateElementState() {
+
+        var hasChanged = false,
+            ele = TQ.SelectSet.peek();
+        TQ.AssertExt.isNotNull(ele);
+        var pos = ele.getPositionInNdc();
+        state.x = pos.x;
+        state.y = pos.y;
+        if (ele && state.isModifyMode) {
+
+            if (state.isLocked !== ele.isPinned()) {
+                state.isLocked = ele.isPinned();
+                hasChanged = true;
+            }
+
+            if (state.isVisible !== ele.isVisible()) {
+                state.isVisible = ele.isVisible();
+                hasChanged = true;
+            }
+
+            if (state.color !== ele.getColor()) {
+                state.color = ele.getColor();
+                updateColorPanel(state.color);
+                hasChanged = true;
+            }
+
+            if (ele.getType() === TQ.ElementType.TEXT) {
+                var level = fontSize2Level(ele.getFontSize());
+                if (state.fontLevel !== level) {
+                    state.fontLevel = level;
+                    hasChanged = true;
+                }
+            }
+        }
+
+        return hasChanged;
     }
 
     function forceToRefreshUI()
@@ -572,7 +649,7 @@ function EditorService($timeout, NetService, WxService) {
         emptySelectSet:emptySelectSet,
 
         // editor
+        setColorPanel: setColorPanel,
         toAddMode: toAddMode
-
     }
 }
