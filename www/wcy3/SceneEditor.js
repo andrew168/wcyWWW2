@@ -38,14 +38,17 @@ var stageContainer = null;
         // "Groupfile" 暂时还没有纳入RM的管理范畴
         if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
             && (!TQ.RM.hasElementDesc(desc))) {
-            TQ.RM.addElementDesc(desc, function () {
-                currScene.addItem(desc)
-            });
-
-            return null;
+            TQ.RM.addElementDesc(desc, doAdd);
+        } else {
+            doAdd();
         }
 
-        return currScene.addItem(desc);
+        function doAdd() {
+            var ele = currScene.addItem(desc);
+            if (!ele.isSound()) {
+                TQ.SelectSet.add(ele);
+            }
+        }
     };
 
     SceneEditor.loadScene = function (fileInfo) {

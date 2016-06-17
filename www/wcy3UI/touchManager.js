@@ -65,11 +65,11 @@ var TQ = TQ || {};
 
         ele = newEle;
         if (ele) {
-            console.log("element selected: " + ele.getType() + ", Id=" + ele.id);
+            // console.log("element selected: " + ele.getType() + ", Id=" + ele.id);
             _highlight(ele);
             _showFloatToolbar(ele.getType());
         } else {
-            TQ.Log.warn("No Element selected, fake to first element of this level!");
+            // TQ.Log.warn("No Element selected, fake to first element of this level!");
             ele = currScene.currentLevel.elements[0];
             TQ.FloatToolbar.close();
         }
@@ -91,7 +91,7 @@ var TQ = TQ || {};
     function onStart(e) {
         ele = null;
         getSelectedElement(e);
-        console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
+        // console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
     }
 
     function ditherStart() {
@@ -132,7 +132,8 @@ var TQ = TQ || {};
             // ele = currScene.currentLevel.elements[0];
             var deltaX = e.gesture.deltaX;
             var deltaY = - e.gesture.deltaY;
-            ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
+            // ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
+            TQ.CommandMgr.directDo(new TQ.MoveCommand(ele, {x: deltaX + pos.x, y: deltaY + pos.y}));
         }
     }
 
@@ -151,6 +152,7 @@ var TQ = TQ || {};
             // ele = currScene.currentLevel.elements[0];
             dAngle = e.gesture.rotation;
             ele.rotateTo(ang - dAngle);
+            TQ.CommandMgr.directDo(new TQ.RotateCommand(ele, ang - dAngle));
             isMultiTouching = true;
         }
     }
