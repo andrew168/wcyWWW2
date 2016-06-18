@@ -266,7 +266,18 @@ function EditorService($timeout, NetService, WxService) {
         assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
         if (!currScene || (currScene.currentLevelId === undefined)) return;
 
-        currScene.deleteLevel(currScene.currentLevelId);
+        var id = currScene.currentLevelId;
+        var nextLevel = id + 1;
+        if (nextLevel >= currScene.levelNum()) {
+            nextLevel = id - 1;
+        }
+        if (nextLevel < 0) {
+            nextLevel = 0;
+            id = 1;
+            addLevelAt(0);
+        }
+        currScene.gotoLevel(nextLevel);
+        currScene.deleteLevel(id);
     }
 
     ////////////////////
@@ -543,13 +554,13 @@ function EditorService($timeout, NetService, WxService) {
             if (state.isPlayMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
                 state.isPlayMode = value;
                 hasChanged = true;
-                state.isPlaying = TQ.FrameCounter.isPlaying();
+                updatePlayingState();
             }
         } else {
             state.isAddMode = false;
             state.isModifyMode = false;
             state.isPlayMode = false;
-            state.isPlaying = TQ.FrameCounter.isPlaying();
+            updatePlayingState();
             hasChanged = true;
         }
 
@@ -560,12 +571,18 @@ function EditorService($timeout, NetService, WxService) {
         // 对sceneReady 事件， SelectSet是空
         if (!TQ.SelectSet.isEmpty()) {
             hasChanged = updateElementState() || hasChanged;
-        } 
+        }
 
         //  force angular to update UI
         if (hasChanged) {
             forceToRefreshUI();
         }
+    }
+
+    function updatePlayingState() {
+        $timeout(function() {
+            state.isPlaying = TQ.FrameCounter.isPlaying();
+        }, 300);
     }
 
     function updatePosition(ele) {
@@ -634,6 +651,15 @@ function EditorService($timeout, NetService, WxService) {
         $timeout(null);
     }
 
+    function onDelete(evt) {
+        if (TQ.SelectSet.isEmpty()) {
+            // TQ.MessageBox.show("确认要删除这个场景？", deleteCurrentLevel);
+            deleteCurrentLevel();
+        } else {
+            TQ.FloatToolbar.onDelete(evt);  // 删除当前选中的元素
+        }
+    }
+
     return {
         state: state,
 
@@ -655,6 +681,9 @@ function EditorService($timeout, NetService, WxService) {
         gotoPreviousLevel: gotoPreviousLevel,
         gotoNextLevel: gotoNextLevel,
         gotoLevel: gotoLevel,
+
+        // level and element
+        onDelete: onDelete,
 
         // element modification (text, sound, image...)
         getFontSize: getFontSize,

@@ -117,7 +117,7 @@ window.TQ = window.TQ || {};
 
     function MoveCommand(ele, pos) {
         this.receiver = ele;
-        this.oldValue = {x: ele.jsonObj.x, y:ele.jsonObj.y};
+        this.oldValue = ele.getPosition();
         this.newValue = pos;
     }
 
@@ -142,7 +142,9 @@ window.TQ = window.TQ || {};
         this.receiver = ele;
         this.receiver2 = marker;
         var oldPivot = {pivotX: Math.truncate6(ele.jsonObj.pivotX), pivotY:Math.truncate6(ele.jsonObj.pivotY)};
-        var oldPos = {x: Math.truncate6(ele.jsonObj.x), y:Math.truncate6(ele.jsonObj.y)};
+        var oldPos = ele.getPosition();
+        oldPos.x = Math.truncate6(oldPos.x);
+        oldPos.y = Math.truncate6(oldPos.y);
         this.oldValue = {pivot: oldPivot, pos:oldPos};
         pivot.pivotX = Math.truncate6(pivot.pivotX);
         pivot.pivotY = Math.truncate6(pivot.pivotY);

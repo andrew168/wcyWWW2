@@ -394,6 +394,10 @@ TQ = TQ || {};
         this.isSaved = false;
         this.isDirty = true;
         var deleted = this.levels.splice(id, 1);
+
+        if (this.currentLevelId > id) {
+            this.currentLevelId --;
+        }
         return deleted;
     };
 
