@@ -153,7 +153,11 @@
         <div class="float-tool_new" style="display: block">
             <!-- 作品 -->
             <div style="display: block">
-            <button  class="button button-positive" ng-click="testShowWCY()">播放作品</button>
+                <button class="button button-positive" ng-click="replay()">重播</button>
+                <button class="button button-positive" ng-click="play()">播放</button>
+                <button class="button button-positive" ng-click="stop()">stop</button>
+                <button class="button button-positive" ng-click="startRecord()">开启录制 </button>
+                <button class="button button-positive" ng-click="stopRecord()">停止录制 </button>
             <button class="button button-positive" ng-click="insertImageFromLocal2()">插入本地图片</button>
 
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
@@ -179,11 +183,6 @@
             <button class="button button-positive" ng-click="deleteLevel(2)">删除level 2 </button>
             <button class="button button-positive" ng-click="gotoPreLevel()">前一个level </button>
             <button class="button button-positive" ng-click="gotoNextLevel()">后一个level </button>
-            <button class="button button-positive" ng-click="replay()">重播</button>
-            <button class="button button-positive" ng-click="play()">播放</button>
-            <button class="button button-positive" ng-click="stop()">stop</button>
-            <button class="button button-positive" ng-click="startRecord()">开启录制 </button>
-            <button class="button button-positive" ng-click="stopRecord()">停止录制 </button>
             <!-- 材质 -->
             <div style="display: none">
                 <button class="button button-positive" ng-click="uploadMat()">上传照片</button>
@@ -201,6 +200,18 @@
                 <button class="button button-positive" ng-click="wxInit()">wx初始化</button>
 
             </div>
+
+
+
+            <div class="toolbar-layer">
+                <label id="time-slider-min-value" >0</label>
+                <span>--</span>
+                <label id="time-slider-max-value" >0</label>
+                <div id="timer-slider-2"></div>
+                <div id="maxTimeValue-2" >0</div>
+                <label>time</label><input type="number" id="timeValueInput-2" >
+            </div>
+
             <div style="display: none">
                 <label>{{params}}{{getTextMsg()}} </label>
                 <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>

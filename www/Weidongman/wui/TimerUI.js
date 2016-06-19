@@ -4,18 +4,22 @@
 
 window.TQ = window.TQ || {};
 
-(function (){
+(function () {
     /// UI 部分
-    function TimerUI(){
+    function TimerUI() {
     }
 
     TimerUI.isUserControlling = false;
     TimerUI.t = 0;
-    TimerUI.initialize = function() {
-        var tStart = TQ.FrameCounter.v;
-        var tMin = 0;
-        var tMaxFrame = TQ.FrameCounter.max;
-        TimerUI.body = $( "#timer-slider" );
+    var tStart = 0;
+    var tMin = 0;
+    var tMaxFrame = 0;
+
+    TimerUI.initialize = function () {
+        tStart = TQ.FrameCounter.v;
+        tMin = 0;
+        tMaxFrame = TQ.FrameCounter.max;
+        TimerUI.body = $("#timer-slider-2");
         TimerUI.body.slider({
             orientation: "horizontal",
             range: "min",
@@ -27,23 +31,28 @@ window.TQ = window.TQ || {};
             change: TimerUI.onChange,
             stop: TimerUI.onMouseStop
         });
-        $('#maxTimeValue').text(tMaxFrame);
+        $('#maxTimeValue-2').text(tMaxFrame);
+        displayRange();
         TimerUI.displayTime(tStart);
     };
 
-    TimerUI.onMouseStart = function() { TimerUI.isUserControlling = true; };
+    TimerUI.onMouseStart = function () {
+        TimerUI.isUserControlling = true;
+    };
 
-    TimerUI.onMouseStop = function() {
-        TimerUI.t = TimerUI.body.slider( "value" );
+    TimerUI.onMouseStop = function () {
+        TimerUI.t = TimerUI.body.slider("value");
         TQ.CommandMgr.directDo(new TQ.SetTimeCommand(TimerUI.t));
+        TQ.DirtyFlag.setScene();
         TimerUI.isUserControlling = false;
     };
 
-    TimerUI.onMouseAction = function (event,ui) {
+    TimerUI.onMouseAction = function (event, ui) {
         TimerUI.displayTime(ui.value);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        TimerUI.t = TimerUI.body.slider( "value" );
+        TimerUI.t = TimerUI.body.slider("value");
         TQ.CommandMgr.directDo(new TQ.SetTimeCommand(TimerUI.t));
+        TQ.DirtyFlag.requestToUpdateAll();
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
     };
 
@@ -57,13 +66,18 @@ window.TQ = window.TQ || {};
         if (!TimerUI.isUserControlling) {
             if (TQ.FrameCounter.isNew) {
                 TimerUI.t = TQ.FrameCounter.v;
-                TimerUI.body.slider( "value", TimerUI.t);
+                TimerUI.body.slider("value", TimerUI.t);
             }
         }
     };
-  
-    TimerUI.displayTime = function(t) {
-        $("#timeValueInput").val(t.toString());
+
+    TimerUI.displayTime = function (t) {
+        $("#timeValueInput-2").val(t.toString());
+    };
+
+    displayRange = function () {
+        $("#time-slider-min-value").val(tMin);
+        $("#time-slider-max-value").val(tMaxFrame);
     };
 
     TQ.TimerUI = TimerUI;

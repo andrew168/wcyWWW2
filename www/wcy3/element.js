@@ -85,6 +85,7 @@ window.TQ = window.TQ || {};
         }
         //ToDo: 留给显示函数做, 不能一竿子插到底,  this.displayObj.visible = isVisible;
         this.dirty2 = true;
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.VISIBLE_CHANGED);
 
         // show命令， 只是改变这个实体本身的可见性标志，不能直接传遍所有孩子。
@@ -420,6 +421,7 @@ window.TQ = window.TQ || {};
             ele.state = 0;
         }
 
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         ele.setFlag(Element.JOINTED);
         this.addChild(ele);
         this.dirty2 = true;
@@ -1449,6 +1451,7 @@ window.TQ = window.TQ || {};
         // marker.moveTo(0, 0);
         marker.jsonObj.x = 0;
         marker.jsonObj.y = 0;
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         marker.setFlag(Element.TRANSLATING); // 要求重新记录新的（x,y), 而不是用老的值计算
         marker.dirty = true;
         // marker.dirty2 = true; // 不能设dirty2！！
@@ -1478,6 +1481,7 @@ window.TQ = window.TQ || {};
 
         this.jsonObj.x = obj_ndc.x;
         this.jsonObj.y = obj_ndc.y;
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.TRANSLATING);
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
@@ -1514,6 +1518,7 @@ window.TQ = window.TQ || {};
         }
 
         this.jsonObj.rotation = angle;
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.ROTATING);
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
@@ -1527,6 +1532,7 @@ window.TQ = window.TQ || {};
         var obj_ndc = this.pdc2Ndc(scale);
         this.jsonObj.sx = obj_ndc.sx;
         this.jsonObj.sy = obj_ndc.sy;
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.SCALING);
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;

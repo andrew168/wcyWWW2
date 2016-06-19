@@ -1,0 +1,14 @@
+
+#timer-slider-2 {
+    position: fixed;
+    top: 80%;
+    height: 20px;
+    width: 80%;
+    color: yellow;
+    background-color: red;
+}
+
+#maxTimeValue-2 {
+    font-size: 2rem;
+    color: white;
+}

@@ -537,6 +537,19 @@ function EditorService($timeout, NetService, WxService) {
         _colorPanel = panel;
     }
 
+    function setAddMode() {
+        state.isModifyMode = false;
+        state.isAddMode = true;
+        state.isPreviewMode = false;
+        forceToRefreshUI();
+    }
+
+    function setModifyMode() {
+        state.isModifyMode = true;
+        state.isAddMode = false;
+        state.isPreviewMode = false;
+        forceToRefreshUI();
+    }
     function updateMode(hasChanged) {
         var value = null;
 
@@ -604,12 +617,17 @@ function EditorService($timeout, NetService, WxService) {
     }
 
     function getTextCursor() {
+        var x = TQ.MathExt.range(state.x, 0, 0.9);
         var y = state.y;
         if (_lastSelected && _lastSelected.isText()) {
             y -= (getFontSize() / TQ.Config.workingRegionHeight);
         }
 
-        return {x: state.x, y: y};
+        if (y < 0.1) {
+            y = 1;  // go to top again;
+        }
+
+        return {x: x, y: y};
     }
 
     function updateElementState() {
@@ -706,6 +724,8 @@ function EditorService($timeout, NetService, WxService) {
         emptySelectSet:emptySelectSet,
 
         // editor
+        setAddMode: setAddMode,
+        setModifyMode: setModifyMode,
         getTextCursor: getTextCursor,
         setColorPanel: setColorPanel,
         toAddMode: toAddMode

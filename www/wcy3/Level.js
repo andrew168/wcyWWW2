@@ -17,6 +17,12 @@ window.TQ = window.TQ || {};
     p.isDirty = false;  //  变量赋值应该放在最前面, 确保在使用之前已经赋值. 小函数放在最后, 很少看.
     p.isPreloading = false;
 
+    p.requestToUpdateAll = function () {
+        this.elements.forEach(function (ele) {
+            ele.isDirty = true;
+        });
+    };
+
     p.initialize = function (description) {
         //initialize with defaults
         // 防止没有数据
