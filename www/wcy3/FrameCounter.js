@@ -79,13 +79,11 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.gotoBeginning = function() {
-        FrameCounter.gotoFrame(0);
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.v));
+        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(0));
     };
 
     FrameCounter.gotoEnd = function() {
-        FrameCounter.gotoFrame(FrameCounter.max);
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.v));
+        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.max));
     };
 
     FrameCounter.gotoFrame = function(v) {
