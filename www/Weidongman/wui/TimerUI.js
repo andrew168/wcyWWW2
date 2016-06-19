@@ -2,83 +2,87 @@
  * 图强动漫引擎, 专利产品, 大众动画
  */
 
-window.TQ = window.TQ || {};
+var TQ = TQ || {};
+TQ.TimerUI = (function () {
+    var isUserControlling = false,
+        t = 0,
+        tMin = 0,
+        tMaxFrame = 0,
+        tEle = null,
+        tMinEle = null,
+        tMaxEle = null,
+        bodyEle = null;
 
-(function () {
-    /// UI 部分
-    function TimerUI() {
-    }
+    return {
+        initialize: initialize
+    };
 
-    TimerUI.isUserControlling = false;
-    TimerUI.t = 0;
-    var tStart = 0;
-    var tMin = 0;
-    var tMaxFrame = 0;
-
-    TimerUI.initialize = function () {
-        tStart = TQ.FrameCounter.v;
+    function initialize () {
+        t = TQ.FrameCounter.v;
         tMin = 0;
         tMaxFrame = TQ.FrameCounter.max;
-        TimerUI.body = $("#timer-slider-2");
-        TimerUI.body.slider({
+        bodyEle = $("#timer-slider-2");
+        tEle = $("#timeValueInput-2");
+        tMinEle = $("#time-slider-min-value");
+        tMaxEle = $("#time-slider-max-value");
+
+        bodyEle.slider({
             orientation: "horizontal",
             range: "min",
             min: tMin,
             max: tMaxFrame,
-            value: tStart,
-            start: TimerUI.onMouseStart,
-            slide: TimerUI.onMouseAction,
-            change: TimerUI.onChange,
-            stop: TimerUI.onMouseStop
+            value: t,
+            start: onMouseStart,
+            slide: onMouseAction,
+            change: onChange,
+            stop: onMouseStop
         });
-        $('#maxTimeValue-2').text(tMaxFrame);
+
+        tEle.text(tMaxFrame);
         displayRange();
-        TimerUI.displayTime(tStart);
-    };
+        displayTime(t);
+        TQ.FrameCounter.addHook(update);
+    }
 
-    TimerUI.onMouseStart = function () {
-        TimerUI.isUserControlling = true;
-    };
+    function onMouseStart () {
+        isUserControlling = true;
+    }
 
-    TimerUI.onMouseStop = function () {
-        TimerUI.t = TimerUI.body.slider("value");
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(TimerUI.t));
+    function onMouseStop () {
+        t = bodyEle.slider("value");
+        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(t));
         TQ.DirtyFlag.setScene();
-        TimerUI.isUserControlling = false;
-    };
+        isUserControlling = false;
+    }
 
-    TimerUI.onMouseAction = function (event, ui) {
-        TimerUI.displayTime(ui.value);
+    function onMouseAction (event, ui) {
+        displayTime(ui.value);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        TimerUI.t = TimerUI.body.slider("value");
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(TimerUI.t));
+        t = bodyEle.slider("value");
+        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(t));
         TQ.DirtyFlag.requestToUpdateAll();
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
-    };
+    }
 
-    TimerUI.onChange = function () {
-        TimerUI.displayTime(TimerUI.t);
-        // $("#action_end_btn").slider("option", "max", TQ.FrameCounter.max);
-        // $("#action_start_btn").slider("option", "max", TQ.FrameCounter.max);
-    };
+    function onChange () {
+        displayTime(t);
+    }
 
-    TimerUI.update = function () {
-        if (!TimerUI.isUserControlling) {
+    function update () {
+        if (!isUserControlling) {
             if (TQ.FrameCounter.isNew) {
-                TimerUI.t = TQ.FrameCounter.v;
-                TimerUI.body.slider("value", TimerUI.t);
+                t = TQ.FrameCounter.v;
+                bodyEle.slider("value", t);
             }
         }
-    };
+    }
 
-    TimerUI.displayTime = function (t) {
-        $("#timeValueInput-2").val(t.toString());
-    };
+    function displayTime (t) {
+        tEle.val(t.toString());
+    }
 
-    displayRange = function () {
-        $("#time-slider-min-value").val(tMin);
-        $("#time-slider-max-value").val(tMaxFrame);
-    };
-
-    TQ.TimerUI = TimerUI;
+    function displayRange() {
+        tMinEle.val(tMin);
+        tMinEle.val(tMaxFrame);
+    }
 }());

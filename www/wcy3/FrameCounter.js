@@ -33,6 +33,13 @@ window.TQ = window.TQ || {};
     FrameCounter._autoRewind = false;
     FrameCounter._level = null;
 
+    FrameCounter.addHook = addHook;
+
+    var _hooks = [];
+    function addHook(hook) {
+        _hooks.push(hook);
+    }
+
     /*  FrameCounter 是一个控制器, 不是存储器, 所以它不保留任何值,
      * 也不复制这些值, 以避免数据的不一致.
      * 而Level是存储器, (也可能带有执行器的功能, 复合型的), 保有 FPS, fileLength等值.
@@ -123,7 +130,15 @@ window.TQ = window.TQ || {};
 
         TQ.FrameCounter.isNew = true;
         assertTrue(TQ.Dictionary.CounterValidation, FrameCounter.v >= 0);
+
+        if (_hooks.length > 0) {
+            _hooks.forEach(updateHook);
+        }
     };
+
+    function updateHook(hook) {
+       hook();
+    }
 
     FrameCounter.updateState = function() {
         switch (FrameCounter._requestState) {
