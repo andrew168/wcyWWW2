@@ -13,6 +13,15 @@ TQ.TimerUI = (function () {
         tMaxEle = null,
         bodyEle = null;
 
+    var htmlStr = '<div class="toolbar-layer">' +
+        '<label id="time-slider-min-value" >0</label>' +
+        '<span>--</span>' +
+        '<label id="time-slider-max-value" >0</label>' +
+        '<div id="timer-slider-2"></div>' +
+        '<div id="maxTimeValue-2" >0</div>' +
+        '<label>time</label><input type="number" id="timeValueInput-2" >' +
+        '</div>';
+
     return {
         initialize: initialize
     };
@@ -21,6 +30,9 @@ TQ.TimerUI = (function () {
         t = TQ.FrameCounter.v;
         tMin = 0;
         tMaxFrame = TQ.FrameCounter.max;
+        var containerDiv = document.getElementById("play-bar-div");
+        TQ.AssertExt.isNotNull(containerDiv);
+        containerDiv.innerHTML = htmlStr;
         bodyEle = $("#timer-slider-2");
         tEle = $("#timeValueInput-2");
         tMinEle = $("#time-slider-min-value");
