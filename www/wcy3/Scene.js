@@ -28,6 +28,9 @@ TQ = TQ || {};
     Scene.removeEmptyLevel = removeEmptyLevel;
     Scene.stopAux = stopAux;
     Scene.getEmptySceneJSON = getEmptySceneJSON;
+    Scene.localT2Global = localT2Global;
+    Scene.globalT2local = globalT2local;
+    Scene.getTMax = getTMax;
 
     // dynamic APIs
     p.shooting = function () {
@@ -97,6 +100,8 @@ TQ = TQ || {};
                 }
             }
         }
+
+        this.updateLevelRange();
     };
 
     p.updateTimeTable = function () {
@@ -703,6 +708,77 @@ TQ = TQ || {};
         };
 
         return JSON.stringify(empty);
+    }
+
+    var _levelTs = [],
+        _levelTe = [],
+        _tMax = 200;
+    p.updateLevelRange = function() {
+        var i = 0,
+            ts = 0,
+            te = 0,
+            level = null;
+
+        for (i = 0; i < this.levels.length; i++) {
+            level = this.levels[i];
+            ts = te;
+            te = ts + level.tMaxFrame;
+
+            if (i  < _levelTs.length) {
+                _levelTs[i] = ts;
+                _levelTe[i] = te;
+            } else {
+                _levelTs.push(ts);
+                _levelTe.push(te);
+            }
+        }
+
+        if (_levelTe.length > this.levels.length ) {
+            _levelTe.splice(_levelTe.length);
+            _levelTs.splice(_levelTe.length);
+        }
+        _tMax = te;
+    };
+
+    function localT2Global(t) {
+        console.log("1111: " + t);
+        return  (t + _levelTs[currScene.currentLevelId]);
+    }
+
+    function findLevel(t) {
+        if (t < _levelTs[0]) {
+            return 0;
+        }
+
+        if (t > _levelTe[_levelTe.length - 1]) {
+            return _levelTe.length - 1;
+        }
+
+        for (i = 0; i < _levelTe.length; i++ ) {
+            if ((t >= _levelTs[i]) && (t <= _levelTe[i])) {
+                return i;
+            }
+        }
+
+        TQ.AssertExt.invalidLogic(i < _levelTe.length);
+        return 0;
+    }
+
+    function globalT2local(t) {
+        var id = currScene.currentLevelId;
+        var i;
+        if ((t < _levelTs[id]) || (t > _levelTe[id])) {
+            id = findLevel(t);
+            if (id != currScene.currentLevelId) {
+                currScene.gotoLevel(id);
+            }
+        }
+
+        return t - _levelTs[id];
+    }
+
+    function getTMax() {
+        return _tMax;
     }
 
     TQ.Scene = Scene;

@@ -27,9 +27,9 @@ TQ.TimerUI = (function () {
     };
 
     function initialize () {
-        t = TQ.FrameCounter.v;
+        t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
         tMin = 0;
-        tMaxFrame = TQ.FrameCounter.max;
+        tMaxFrame = TQ.Scene.getTMax();
         var containerDiv = document.getElementById("play-bar-div");
         TQ.AssertExt.isNotNull(containerDiv);
         containerDiv.innerHTML = htmlStr;
@@ -50,7 +50,6 @@ TQ.TimerUI = (function () {
             stop: onMouseStop
         });
 
-        tEle.text(tMaxFrame);
         displayRange();
         displayTime(t);
         TQ.FrameCounter.addHook(update);
@@ -60,19 +59,22 @@ TQ.TimerUI = (function () {
         isUserControlling = true;
     }
 
-    function onMouseStop () {
-        t = bodyEle.slider("value");
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(t));
-        TQ.DirtyFlag.setScene();
+    function onMouseStop (event, ui) {
+        t = ui.value;
+        syncToCounter();
         isUserControlling = false;
     }
 
-    function onMouseAction (event, ui) {
-        displayTime(ui.value);
+    function syncToCounter() {
+        // t = bodyEle.slider("value");
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        t = bodyEle.slider("value");
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(t));
+        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(TQ.Scene.globalT2local(t)));
         TQ.DirtyFlag.requestToUpdateAll();
+    }
+    function onMouseAction (event, ui) {
+        t = ui.value;
+        displayTime(t);
+        syncToCounter();
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
     }
 
@@ -83,7 +85,7 @@ TQ.TimerUI = (function () {
     function update () {
         if (!isUserControlling) {
             if (TQ.FrameCounter.isNew) {
-                t = TQ.FrameCounter.v;
+                t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
                 bodyEle.slider("value", t);
             }
         }
