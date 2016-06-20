@@ -157,7 +157,7 @@ function WCY($http, FileService, WxService) {
     }
 
     function _autoSave() {
-        if (_autoSaveStopped || currScene.isSaved) {
+        if (_autoSaveStopped || currScene.hasSavedToCache) {
             return;
         }
 
@@ -165,6 +165,7 @@ function WCY($http, FileService, WxService) {
         var data = currScene.getData();
         writeCache(_AUTO_SAVE_NAME, data);
         writeCache(_FILENAME, currScene.filename);
+        currScene.hasSavedToCache = true;
     }
 
     var _autoSaveInitialized = false;
@@ -181,7 +182,7 @@ function WCY($http, FileService, WxService) {
 
         _autoSaveInitialized = true;
         _autoSaveStopped = false;
-        _autoSavingInterval = setInterval(_autoSave, 2000);
+        _autoSavingInterval = setInterval(_autoSave, 30000); // 30s
     }
 
     function _stopAutoSave() {

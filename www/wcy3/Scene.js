@@ -21,6 +21,7 @@ TQ = TQ || {};
     p.overlay = null;
     p.stage = null;
     p.isSaved = false; // 用于提醒是否保存修改的内容，在close之前。
+    p.hasSavedToCache = false;
     p.state = TQBase.LevelState.NOT_INIT;
 
     // static APIs:
@@ -69,7 +70,11 @@ TQ = TQ || {};
             }
 
             this.render();
-            this.isDirty = false;
+            if (this.isDirty) {
+                this.isSaved = false;
+                this.hasSavedToCache = false;
+                this.isDirty = false;
+            }
         }
 
         if (TQ.GifManager.isOpen) {
@@ -195,8 +200,7 @@ TQ = TQ || {};
 
     // for both image and animation
     p.addItem = function (desc) {
-        this.isSaved = false;
-        this.isDirty = false;
+        this.isDirty = true;
         var level = this.currentLevel;
         if ((desc.toOverlay == undefined) || (desc.toOverlay == null)) {
             if (desc.levelID != undefined) {
@@ -236,13 +240,11 @@ TQ = TQ || {};
     };
 
     p.addText = function (desc) {
-        this.isSaved = false;
         this.isDirty = true;
         return this.currentLevel.addElement(desc);
     };
 
     p.deleteElement = function (ele) {
-        this.isSaved = false;
         this.isDirty = true;
         assertNotNull(TQ.Dictionary.PleaseSelectOne, ele);
         if (ele != null) {
@@ -377,7 +379,6 @@ TQ = TQ || {};
             id = levelNum;
         }
         id = TQ.MathExt.range(id, 0, levelNum);
-        this.isSaved = false;
         this.isDirty = true;
         if (!levelContent) {
             var levelName = levelNum; // levelNum只是一个流水号， 暂时没有其它用途
@@ -396,7 +397,6 @@ TQ = TQ || {};
             assertTrue(TQ.Dictionary.INVALID_PARAMETER, false);
             return;
         }
-        this.isSaved = false;
         this.isDirty = true;
         var deleted = this.levels.splice(id, 1);
 
@@ -474,7 +474,7 @@ TQ = TQ || {};
             var desc = jsonObj.levels[i];
             if ((desc.elements == null) || (desc.elements.length <= 0)) {
                 if ((i != 0) || (jsonObj.levels.length > 1)) { //至少保留一个level, 不论空白与否。
-                    this.isSaved = false;
+                    this.isDirty = true;
                     jsonObj.levels.splice(i, 1);
                 }
             }
@@ -599,11 +599,6 @@ TQ = TQ || {};
         this.overlay = bak_overlay;
         this.afterToJSON();
         this.showLevel();
-        this.isSaved = true;
-    };
-
-    p.saveToLocalStorage = function(filename) {
-        localStorage.setItem(filename, this.getData());
         this.isSaved = true;
     };
 
