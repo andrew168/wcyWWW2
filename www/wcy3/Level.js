@@ -18,6 +18,7 @@ window.TQ = window.TQ || {};
     p.isPreloading = false;
 
     p.requestToUpdateAll = function () {
+        this.isDirty = true;
         this.elements.forEach(function (ele) {
             ele.isDirty = true;
         });
