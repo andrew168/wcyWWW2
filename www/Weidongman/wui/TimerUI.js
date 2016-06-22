@@ -30,7 +30,7 @@ TQ.TimerUI = (function () {
         t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
         tMin = 0;
         tMaxFrame = TQ.Scene.getTMax();
-        var containerDiv = document.getElementById("play-bar-div");
+        var containerDiv = document.getElementById("timer-bar-div");
         TQ.AssertExt.isNotNull(containerDiv);
         containerDiv.innerHTML = htmlStr;
         bodyEle = $("#timer-slider-2");
@@ -97,6 +97,6 @@ TQ.TimerUI = (function () {
 
     function displayRange() {
         tMinEle.val(tMin);
-        tMinEle.val(tMaxFrame);
+        tMaxEle.val(tMaxFrame);
     }
 }());
