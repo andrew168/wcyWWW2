@@ -519,8 +519,8 @@ TQ = TQ || {};
         var num = objJson.levels.length;
         for (var i = 0; i < num; i++) {
             desc = objJson.levels[i];
-            if (desc.name == null) {
-                desc.name = i.toString();
+            if (desc.name === null) {
+                desc.name = "level-" + i.toString();
             }
             this.levels[i] = new TQ.Level(desc);
         }
