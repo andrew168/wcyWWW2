@@ -2,15 +2,15 @@
  * Created by admin on 12/1/2015.
  */
 // getting-started.js
-var mongoose = require('mongoose');//加载mongoose需要花很多时间，导致server启动的慢
-var assert = require('assert');
-var configSvr = require('./../common/configSvr'),
-    url = configSvr.dbServer;
-var Users;
-var logger = require('./../common/logger');
-logger.config("udoido.log");
+var mongoose = require('mongoose'),//加载mongoose需要花很多时间，导致server启动的慢
+    assert = require('assert'),
+    configSvr = require('./../common/configSvr'),
+    url = configSvr.dbServer,
+    Users,
+    logger = require('./../common/logger'),
+    autoIncrement = require('mongoose-auto-increment');
 
-var autoIncrement = require('mongoose-auto-increment');
+    logger.config("udoido.log");
 
 var ObjectId = require('mongodb').ObjectID;
 //数据库操作类

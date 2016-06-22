@@ -713,7 +713,7 @@ function EditorService($timeout, NetService, WxService) {
         pinIt:pinIt,
 
         // element insert (text, sound, image...)
-        insertImageFromLocal: insertMatFromLocal,
+        insertImageFromLocal: insertMatFromLocal, // upload
         insertBkImageFromLocal: insertBkMatFromLocal,
         insertImage: insertImage,  // i.e. FromUrl:
         insertBkImage: insertBkImage,
