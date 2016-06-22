@@ -736,7 +736,6 @@ TQ = TQ || {};
     };
 
     function localT2Global(t) {
-        console.log("1111: " + t);
         return  (t + _levelTs[currScene.currentLevelId]);
     }
 

@@ -299,7 +299,7 @@ window.TQ = window.TQ || {};
     };
 
     p.show = function () {
-        TQ.Log.info("show level :" + this.name);
+        TQ.Log.info("show level, name = :" + this.name);
         if (this.dataReady) {
             TQ.Log.info("data ready");
             this.isWaitingForShow = false;

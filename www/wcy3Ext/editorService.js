@@ -176,7 +176,7 @@ function EditorService($timeout, NetService, WxService) {
     }
 
     function insertSound(filename) {
-        var desc = {src: filename, type: "SOUND"}
+        var desc = {src: filename, type: "SOUND"};
         TQ.SceneEditor.addItem(desc);
      }
 
@@ -184,7 +184,7 @@ function EditorService($timeout, NetService, WxService) {
         var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
         var fitFlag = (isBkMat && matType === TQ.ElementType.BITMAP) ?
             TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE;
-        var desc = {src: data.url, type: matType, autoFit: fitFlag}
+        var desc = {src: data.url, type: matType, autoFit: fitFlag};
         TQ.SceneEditor.addItem(desc);
     }
 
