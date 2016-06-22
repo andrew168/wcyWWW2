@@ -9,7 +9,7 @@ var mongoose = require('mongoose'),
 // 作品ID， XX时间，XX用户，创作的，模板作品的ID，
 var opusSchema = new Schema({
     timestamp:{type:Date, default: Date.now},
-    userId:Schema.ObjectId,
+    userId:Number,
     template: Schema.ObjectId
 });
 

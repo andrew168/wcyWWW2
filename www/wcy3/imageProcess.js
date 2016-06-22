@@ -23,7 +23,7 @@ var TQ = TQ || {};
             if (data.exif) {
                 options.orientation = data.exif.get('Orientation');
             }
-            p.loadData(url, options, callback);
+            p.loadData(url, file.name, options, callback);
         });
     };
 
@@ -51,7 +51,7 @@ var TQ = TQ || {};
         return url;
     };
 
-    p.loadData = function (url, options, callback) {
+    p.loadData = function (url, filename, options, callback) {
         var ele = new Image();
         function onload () {
             var ctx, neededHeight, neededWidth;
@@ -72,7 +72,7 @@ var TQ = TQ || {};
             var xc = 0, yc =0;
             ctx.drawImage(ele, xc, yc);
             if (callback) {
-                callback(_canvas.toDataURL("image/jpeg"));
+                callback({name:filename, data: _canvas.toDataURL("image/jpeg")});
             }
         }
 

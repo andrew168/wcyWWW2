@@ -46,7 +46,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
                 get(file.path);
             }
         } else {
-            var filename = getImageNameWithoutExt();
+            var filename = hasFileName(file) ? file.name : getImageNameWithoutExt();
             option = {
                 filename: filename,
                 type: TYPE_IMAGE,
@@ -68,7 +68,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
                         file.status = "Uploading... " + file.progress + "%";
                     });
                 } else {
-                    data.file = file;
+                    data.file = hasFileName(file) ? file.data : file;
                     res = doSubmitImage64(data);
                 }
 
@@ -218,6 +218,10 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function isLocalFile(data) {
         return ((typeof data === 'object') && (!!data.type))
+    }
+
+    function hasFileName(file) {
+        return (!!file.name);
     }
 
     return {

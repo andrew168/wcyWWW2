@@ -35,7 +35,7 @@ function add_old(req, res) {
 
 function add(userID, templateID, onSuccess, onError) {
     var aOpus = new Opus({
-        // userId: userID,
+        userId: userID
         // template: templateID
     });
 

@@ -24,11 +24,11 @@ router.get('/:shareCode', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+    status.checkUser(req, res);
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
     //ToDo:@@@
-    var userID = 0;
     var templateID = 0;
 
     var wcyData = JSON.stringify(req.body);
@@ -44,7 +44,7 @@ router.post('/', function(req, res, next) {
                 wcyId = _wcyId;
                 _saveWcy(wcyId, wcyData, res);
             }
-            opusController.add(userID, templateID, onSavedToDB, null);
+            opusController.add(status.user.ID, templateID, onSavedToDB, null);
         } else {
             _saveWcy(wcyId, wcyData, res);
         }
@@ -62,9 +62,8 @@ function _saveWcy(wcyId, wcyData, res) {
         }
         console.log(msg);
         var shareId = 0,
-            userId = 0,
             timestamp = (new Date()).getTime();
-        var shareCode = utils.composeShareCode(shareId, wcyId, userId, timestamp);
+        var shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID, timestamp);
         res.send({wcyId: wcyId, shareCode:shareCode, msg:msg});
     });
 }
