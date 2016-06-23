@@ -83,16 +83,16 @@ function WCY($http, FileService, WxService) {
                 'Content-Type': 'application/json'
             },
             data: jsonWcyData
-        }).then(_onSuccess, _onFail);
+        }).then(_onUploadedSuccess, _onFail);
     }
 
-    //ToDo： 在Server 实现
-    function recordPlaytime() {
+    //ToDo： 在Server和client 实现, 记录播放的次数
+/*    function recordPlaytime() {
         var url = "/playtime/" + SHARE_STRING;
         $http.get(url)
             .then(_onSuccess, _onFail);
     }
-
+*/
     function edit(sceneID) {
         TQ.WCY.isPlayOnly = false;
         return _load(sceneID);
@@ -193,7 +193,7 @@ function WCY($http, FileService, WxService) {
         }
     }
 
-    function _onSuccess(res) {
+    function _onUploadedSuccess(res) {
         var data = res.data;
         if (!!data && !!data.wcyId) {
             _wcyId = _getWcyId(data);
@@ -202,6 +202,8 @@ function WCY($http, FileService, WxService) {
                 WxService.shareMessage(_shareCode);
             }
         }
+
+        currScene.isSaved = true;
         console.log(data);
     }
 
@@ -249,7 +251,6 @@ function WCY($http, FileService, WxService) {
         edit: edit,  // open for edit
         getWcy: getWcy,
         show: show,  // open for show only
-        recordPlaytime: recordPlaytime,
 
         // old api will be depreciated
         test: show,

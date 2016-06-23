@@ -579,7 +579,7 @@ TQ = TQ || {};
         }
     };
 
-    p.save = function (title, keywords) {
+    p.save_TBD_by_WCY_save = function (title, keywords) {
         // 必须预处理， 切断反向的link，以避免出现Circle，无法生成JSON字串
         Scene.stopAux();
         this.currentLevel.exit();  // 先退出, 保存之后, 再次进入
