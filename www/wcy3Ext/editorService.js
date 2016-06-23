@@ -23,6 +23,7 @@ function EditorService($timeout, NetService, WxService) {
         color: TQ.Config.color,
         isVisible: true,
         isLocked: false,
+        isFont: false,
 
         // editor's mode
         isAddMode: null,
@@ -658,6 +659,16 @@ function EditorService($timeout, NetService, WxService) {
                     state.fontLevel = level;
                     hasChanged = true;
                 }
+
+                if (!state.isFont) {
+                    state.isFont = true;
+                    hasChanged = true;
+                }
+            } else {
+                if (state.isFont) {
+                    state.isFont = false;
+                    hasChanged = true;
+                }
             }
         }
 
@@ -688,8 +699,9 @@ function EditorService($timeout, NetService, WxService) {
         replay: replay,
         startRecord: startRecord,
         stopRecord: stopRecord,
-
         // pause: doPause,
+
+        // opus ==> WCY
 
         // level
         addLevel: addLevel,
