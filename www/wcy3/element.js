@@ -59,7 +59,7 @@ window.TQ = window.TQ || {};
     Element.TYPE_BITMAP = 2; // 图片
     Element.TYPE_COMPONENT = 3; // 元件
     Element.TYPE_BUTTON = 4; // 按钮
-    Element.TYPE_AUDIO = 11; // 声音
+    Element.TYPE_SOUND = 11; // 声音
 
     Element.TO_RELATIVE_POSE = (Element.TRANSLATING | Element.ROTATING | Element.SCALING
         | Element.ZING | Element.ALPHAING);  //  在组成Group, Joint, 显示 Pivot Marker的时候需要.
