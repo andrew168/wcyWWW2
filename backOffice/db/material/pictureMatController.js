@@ -36,8 +36,9 @@ function get(userId, callback) {
     });
 }
 
-function getList(userId, callback) {
-    var condition = (userId === null) ? null : {userId: userId};
+function getList(userId, typeId, callback) {
+    var condition = (userId === null) ? null : {"userId": userId};
+    condition["typeId"] = typeId;
     PictureMat.find(condition)
         .exec(function (err, data) {
             var result = [];
@@ -56,9 +57,10 @@ function getList(userId, callback) {
         });
 }
 
-function add(userId, picName, ip, isShared, onSuccess, onError) {
+function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
     var aDoc = new PictureMat({
         userId: userId,
+        typeId: typeId,
         name: picName,
         ip: ip,
         isShared: isShared

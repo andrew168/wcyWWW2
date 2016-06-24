@@ -12,7 +12,6 @@ function EditorService($timeout, NetService, WxService) {
         _colorPanel = null,
         _lastSelected = null,
         fileElement = null,
-        _isBkMat = false,
         domEle = null;
 
     var state = { // editor 的各种当前值， 用户选择的
@@ -48,21 +47,31 @@ function EditorService($timeout, NetService, WxService) {
     }
 
     function insertBkMatFromLocal() {
-        _isBkMat = true;
-        return insertMatFromLocal(_isBkMat);
+        return insertMatFromLocal(NetService.TYPE_BKG_IMAGE);
     }
 
-    function insertMatFromLocal(isBkMat) {
-        _isBkMat = !!isBkMat;
+    function insertPeopleFromLocal() {
+        return insertMatFromLocal(NetService.TYPE_PEOPLE_IMAGE);
+    }
+
+    function insertPropFromLocal() {
+        return insertMatFromLocal(NetService.TYPE_PROP_IMAGE);
+    }
+
+    function insertSoundFromLocal() {
+        return insertMatFromLocal(NetService.TYPE_SOUND);
+    }
+
+    function insertMatFromLocal(matType) {
         if (WxService.isReady()) {
             alert("请在浏览器中打开，以便于使用所有功能");
-            // return insertLocalMatWx();
+            // return doInsertMatFromLocalWx(matType);
         }
 
-        return insertLocalMatWeb();
+        return doInsertMatFromLocal(matType);
     }
 
-    function insertLocalMatWeb() {
+    function doInsertMatFromLocal(matType) {
         if (!_initialized) {
             _initialized = true;
             domEle = document.createElement('input');
@@ -77,17 +86,17 @@ function EditorService($timeout, NetService, WxService) {
         fileElement[0].value = null;  // remove old selections
         fileElement.change(onSelectOne);
         fileElement.click();
-    }
 
-    function onSelectOne() {
-        console.log('changed');
-        var files = domEle.files;
-        if (files.length > 0) {
-            processOneMat(files[0]);
+        function onSelectOne() {
+            console.log('changed');
+            var files = domEle.files;
+            if (files.length > 0) {
+                processOneMat(files[0], matType);
+            }
         }
     }
 
-    function processOneMat(aFile) {
+    function processOneMat(aFile, matType) {
         var wxAbility = {
             FileAPI: !!window.FileAPI,
             FileReader: !!window.FileReader,
@@ -102,10 +111,10 @@ function EditorService($timeout, NetService, WxService) {
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
         function uploadData(buffer) {
-            uploadOneFile(buffer).
+            NetService.uploadOne(buffer, matType).
                 then(function (data) {
-                    TQ.Log.alertInfo("after uploadOneFIle: " + JSON.stringify(data));
-                    addMatFromData(aFile, data, _isBkMat);
+                    TQ.Log.alertInfo("after uploadOne: " + JSON.stringify(data));
+                    addMatFromData(aFile, data, matType);
                     // fileElement.unbind('change'); // remove old handler
                 }, function (err) {
                     console.log(err);
@@ -113,6 +122,7 @@ function EditorService($timeout, NetService, WxService) {
         }
 
         if (isSound(aFile)) {
+            TQ.Assert.isTrue(matType === NetService.TYPE_SOUND);
             uploadData(aFile);
         } else {
             var options = {};
@@ -130,23 +140,19 @@ function EditorService($timeout, NetService, WxService) {
         return (file.type.indexOf('audio') >= 0);
     }
 
-    function insertLocalMatWx() {
+    function doInsertMatFromLocalWx(matType) {
         WxService.chooseImage().then(function (filePath) {
             var aFile = {
                 path: filePath,
-                type: NetService.TYPE_IMAGE,
+                type: matType,
                 isWx: true
             };
 
             TQ.Log.alertInfo("微信InsertLocal：" + JSON.stringify(aFile));
-            processOneMat(aFile);
+            processOneMat(aFile, matType);
         }, function (err) {
             console.log(err);
         });
-    }
-
-    function uploadOneFile(file) {
-        return NetService.uploadOne(file);
     }
 
     function insertImage(filename, x, y) {
@@ -181,11 +187,12 @@ function EditorService($timeout, NetService, WxService) {
         TQ.SceneEditor.addItem(desc);
      }
 
-    function addMatFromData(aFile, data, isBkMat) {
-        var matType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
-        var fitFlag = (isBkMat && matType === TQ.ElementType.BITMAP) ?
-            TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE;
-        var desc = {src: data.url, type: matType, autoFit: fitFlag};
+    function addMatFromData(aFile, data, matType) {
+        var eleType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
+            fitFlag = (matType === NetService.TYPE_BKG_IMAGE) ?
+                TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE,
+            desc = {src: data.url, type: eleType, autoFit: fitFlag};
+
         TQ.SceneEditor.addItem(desc);
     }
 
@@ -725,8 +732,10 @@ function EditorService($timeout, NetService, WxService) {
         pinIt:pinIt,
 
         // element insert (text, sound, image...)
-        insertImageFromLocal: insertMatFromLocal, // upload
-        insertBkImageFromLocal: insertBkMatFromLocal,
+        insertBkImageFromLocal: insertBkMatFromLocal, // upload
+        insertPeopleFromLocal: insertPeopleFromLocal,
+        insertPropFromLocal: insertPropFromLocal,
+        insertSoundFromLocal: insertSoundFromLocal,
         insertImage: insertImage,  // i.e. FromUrl:
         insertBkImage: insertBkImage,
         insertText: insertText,

@@ -8,13 +8,14 @@ angular.module('starter').factory("NetService", NetService);
 NetService.$injection = ['$q', '$http', '$cordovaFileTransfer', 'Upload'];
 
 function NetService($q, $http, $cordovaFileTransfer, Upload) {
-    var baseUrl = "http://bone.udoido.cn/";
-    var urlConcat = TQ.Base.Utility.urlConcat;
-    var IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API;
-    var C_MAN_URL = TQ.Config.MAN_HOST + '/material';
-
-    var TYPE_IMAGE = 'image',
-        TYPE_AUDIO = 'audio';
+    var baseUrl = "http://bone.udoido.cn/",
+        urlConcat = TQ.Base.Utility.urlConcat,
+        IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API,
+        C_MAN_URL = TQ.Config.MAN_HOST + '/material';
+    var TYPE_BKG_IMAGE = 10, // 'bkgimage',
+        TYPE_PROP_IMAGE = 20, // 'propimage',
+        TYPE_PEOPLE_IMAGE = 30, // 'peopleimage',
+        TYPE_SOUND = 40; //,'audio';
 
     function uploadImages(files, onSuccess) {
         if (!files) return;
@@ -30,14 +31,14 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         });
     }
 
-    function uploadOne(file) {
+    function uploadOne(file, matType) {
         var q = $q.defer();
         TQ.Assert.isTrue(!!file, "文件不能为null");
         var option;
         if (isLocalFile(file)) {
             option = {
                 filename: file.name,
-                type: file.type
+                type: matType
             };
 
             if (!!file.isWx) {
@@ -49,7 +50,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             var filename = hasFileName(file) ? file.name : getImageNameWithoutExt();
             option = {
                 filename: filename,
-                type: TYPE_IMAGE,
+                type: matType,
                 tags: 'myphotoalbum',
                 context: 'photo=' + "No"
             };
@@ -225,8 +226,10 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     return {
-        TYPE_IMAGE: TYPE_IMAGE,
-        TYPE_AUDIO: TYPE_AUDIO,
+        TYPE_BKG_IMAGE: TYPE_BKG_IMAGE,
+        TYPE_PROP_IMAGE: TYPE_PROP_IMAGE,
+        TYPE_PEOPLE_IMAGE: TYPE_PEOPLE_IMAGE,
+        TYPE_SOUND: TYPE_SOUND,
         initialize: initialize,
         get: get,
         put: put,

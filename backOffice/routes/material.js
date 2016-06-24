@@ -18,8 +18,10 @@ var fs = require('fs');
 var pictureMatController = require('../db/material/pictureMatController');
 var audioMatController = require('../db/material/audioMatController');
 
-var TYPE_IMAGE = 'image',
-    TYPE_AUDIO = 'audio';
+var TYPE_BKG_IMAGE = 10, // 'bkgimage',
+    TYPE_PROP_IMAGE = 20, // 'propimage',
+    TYPE_PEOPLE_IMAGE = 30, // 'peopleimage',
+    TYPE_SOUND = 40; //,'audio';
 
 router.post('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
@@ -46,9 +48,16 @@ router.get('/', function(req, res, next) {
     getMatIds(req, res, getMatType(req));
 });
 
-router.get('/list', function(req, res, next) {
+router.param('matType', function (req, res, next, id) {
+    console.log('CALLED ONLY ONCE');
+    next();
+});
+
+router.get('/list/:matType', function(req, res, next) {
+    var matType = req.param('matType');
+    console.log("type = " + matType);
     status.checkUser(req, res);
-    pictureMatController.getList(status.user.ID, onGotList, onFail);
+    pictureMatController.getList(status.user.ID, matType, onGotList, onFail);
     function onGotList(list) {
         console.log(list);
         res.json(list);
@@ -80,7 +89,7 @@ function createMatId(req, res, matType, originalFilename) {
             // ToDo:
             var ip = null;
             var isShared = false;
-            getMatController(matType).add(status.user.ID, originalFilename, ip, isShared, onSavedToDB, null);
+            getMatController(matType).add(status.user.ID, originalFilename, matType, ip, isShared, onSavedToDB, null);
         } else {
             console.log("must be new material");
         }
@@ -118,11 +127,10 @@ function isNewMaterial(mat_id) {
 }
 
 function getMatType(req) {
-    var matType = req.param('type') || TYPE_IMAGE;
-    return matType.split('/')[0];
+    return req.param('type') || TYPE_BKG_IMAGE;
 }
 
 function getMatController(type) {
-    return (type === TYPE_IMAGE) ? pictureMatController : audioMatController;
+    return (type === TYPE_SOUND) ? audioMatController : pictureMatController;
 }
 module.exports = router;
