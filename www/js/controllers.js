@@ -143,7 +143,7 @@ function DashCtrl(
         TQ.CameraService.insertFromCamera();
     };
 
-    $scope.insertImageFromLocal = function () {
+    $scope.insertPropFromLocal = function () {
         var path = "p12504.png";
 
         var server1File = "http://bone.udoido.cn/mcImages/" + path;
@@ -161,14 +161,6 @@ function DashCtrl(
         EditorService.insertImage(server1File, x += 50, y += 50);
         // EditorService.insertImage(server2File, x+=50, y+=50);
         // EditorService.insertImage(albumFile, x+=50, y+=50);
-    };
-
-    $scope.onEndInputText = function () {
-        x += 50;
-        y += 50;
-        TQ.TextEditor.onOK();
-        var message = TQ.TextEditor.inputBox.val();
-        EditorService.insertText(message, x, y);
     };
 
     $scope.insertAlbum = function () {
@@ -278,7 +270,7 @@ function DashCtrl(
     };
 
     $scope.insertImageFromLocal2 = function () {
-        EditorService.insertImageFromLocal();
+        EditorService.insertPropFromLocal();
     };
 
     $scope.insertBkImageFromLocal = function () {
