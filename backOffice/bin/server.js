@@ -43,11 +43,14 @@ function onDbStarted() {
     app.use('/isWx', isWx);
     app.use('/wechat', isWx);
 
-    var Wcy = require('./../routes/wcy');
-    var material = require('./../routes/material');
+    var wcy = require('./../routes/wcy'),
+        wcyList = require('./../routes/wcyList'),
+        material = require('./../routes/material');
+
     status = require('./../common/status');
 
-    app.use('/wcy', Wcy);
+    app.use('/wcy', wcy);
+    app.use('/wcylist', wcyList);
     app.use('/material', material);
     console.log("exit at onDbStarted!");
 

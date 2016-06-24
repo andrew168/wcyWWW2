@@ -67,6 +67,21 @@ function WCY($http, FileService, WxService) {
             .then(_onReceivedWcyData, _onFail);
     }
 
+    function getWcyList() {
+        var url = TQ.Config.OPUS_HOST + '/wcylist/';
+        $http.get(url)
+            .then(_onReceivedWcyList, _onFail);
+
+        function _onReceivedWcyList(res) {
+            var data = res.data;
+            if (data) {
+                console.log(data);
+            } else {
+                TQ.Log.error("wrong logic");
+            }
+        }
+    }
+
     function _upload() {
         TQ.Assert.isDefined(_wcyId);
         _wcyId = (_wcyId === -1) ? 0 : _wcyId;
@@ -250,6 +265,7 @@ function WCY($http, FileService, WxService) {
         save: save,
         edit: edit,  // open for edit
         getWcy: getWcy,
+        getWcyList: getWcyList,
         show: show,  // open for show only
 
         // old api will be depreciated

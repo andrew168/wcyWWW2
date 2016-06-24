@@ -17,22 +17,6 @@ function get(id) {
         });
 }
 
-
-function add_old(req, res) {
-    console.log(req);
-    var aOpus = new Opus({
-        // userId:'user1',
-        code:'safetycode',
-        // opusId:Schema.ObjectId,
-        from: "from:" + req.headers.origin,
-        paras: "original:" + req.originalUrl
-    });
-
-    aOpus.save(function(err, doc) {
-        utils.onResSave(err, doc, res);
-    });
-}
-
 function add(userID, templateID, onSuccess, onError) {
     var aOpus = new Opus({
         userId: userID
@@ -44,5 +28,19 @@ function add(userID, templateID, onSuccess, onError) {
     });
 }
 
+function getList(userId, callback) {
+    var condition = (userId === null) ? null : {userId: userId};
+    Opus.find(condition)
+        .exec(function (err, data) {
+            if (!data) {
+                console.error(404, {msg: 'not found!' + id});
+            } else {
+                console.log(data);
+            }
+            callback(data);
+        });
+}
+
 exports.get = get;
 exports.add = add;
+exports.getList = getList;
