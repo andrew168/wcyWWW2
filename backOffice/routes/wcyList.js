@@ -12,19 +12,14 @@ var opusController = require('../db/opus/opusController');
 router.get('/', function(req, res, next) {
     status.checkUser(req, res);
     opusController.getList(status.user.ID, onGotList, onFail);
-    function onGotList(wcyList) {
-        response(req, res, wcyList)
+    function onGotList(list) {
+        console.log(list);
+        res.json(list);
     }
 
     function onFail(msg) {
         console.error("failed in getWcyList" + msg);
     }
 });
-
-/// private function:
-function response(req, res, wcyList) {
-    console.log(wcyList);
-    res.json(wcyList);
-}
 
 module.exports = router;

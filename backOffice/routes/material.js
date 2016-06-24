@@ -46,6 +46,20 @@ router.get('/', function(req, res, next) {
     getMatIds(req, res, getMatType(req));
 });
 
+router.get('/list', function(req, res, next) {
+    status.checkUser(req, res);
+    pictureMatController.getList(status.user.ID, onGotList, onFail);
+    function onGotList(list) {
+        console.log(list);
+        res.json(list);
+    }
+
+    function onFail(msg) {
+        console.error("failed in get matList" + msg);
+    }
+
+});
+
 function createMatId(req, res, matType, originalFilename) {
     if (!originalFilename) {
         var msg = "wrong format: must have filename!";

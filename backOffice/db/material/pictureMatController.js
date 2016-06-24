@@ -36,6 +36,26 @@ function get(userId, callback) {
     });
 }
 
+function getList(userId, callback) {
+    var condition = (userId === null) ? null : {userId: userId};
+    PictureMat.find(condition)
+        .exec(function (err, data) {
+            var result = [];
+            if (!data) {
+                console.error(404, {msg: 'not found!' + id});
+            } else {
+                data.forEach(copyItem);
+            }
+
+            callback(result);
+            function copyItem(item) {
+                if (item.path) {
+                    result.push(item.path);
+                }
+            }
+        });
+}
+
 function add(userId, picName, ip, isShared, onSuccess, onError) {
     var aDoc = new PictureMat({
         userId: userId,
@@ -73,3 +93,4 @@ function update(id, path, callback) {
 exports.get = get;
 exports.add = add;
 exports.update = update;
+exports.getList = getList;
