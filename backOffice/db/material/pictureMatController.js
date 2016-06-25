@@ -37,7 +37,7 @@ function get(userId, callback) {
 }
 
 function getList(userId, typeId, callback) {
-    var condition = (userId === null) ? null : {"userId": userId};
+    var condition = (userId === null) ? null : '{$or: [{"userId": userId}, {"isShared": true}]}';
     condition["typeId"] = typeId;
     PictureMat.find(condition)
         .exec(function (err, data) {
