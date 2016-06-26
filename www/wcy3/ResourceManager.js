@@ -31,14 +31,20 @@ this.TQ = this.TQ || {};
     function ResourceManager() {
     }
 
-    var urlParser = TQ.Base.Utility.urlParser;
-    var urlConcat = TQ.Base.Utility.urlConcat;
-    var RM = ResourceManager;
+    var urlParser = TQ.Base.Utility.urlParser,
+        urlConcat = TQ.Base.Utility.urlConcat,
+        RM = ResourceManager;
+
     RM.NOSOUND = "p1.wav";
     RM.NOPIC = "p1.png";
     RM.NOSOUND_FULL = "p1.wav";
     RM.NOPIC_FULL = "p1.png";
     RM.BASE_PATH = null;
+    // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
+    RM.BASE_PATH = TQ.DownloadManager.FAST_SERVER;
+    // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
+    RM.FULLPATH_NOPIC = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.APP_SERVER_IMAGES_CORE_PATH, RM.NOPIC));
+    RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.APP_SERVER_SOUNDS_PATH, RM.NOSOUND));
     RM.isEmpty = true;
     RM.items = [];
     RM.preloader = {};
@@ -53,11 +59,6 @@ this.TQ = this.TQ || {};
         TQ.DownloadManager.initialize();
         RM._hasCreated = true;
         RM.hasDefaultResource = false;
-        // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
-        RM.BASE_PATH = TQ.DownloadManager.FAST_SERVER;
-        // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
-        RM.FULLPATH_NOPIC = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.APP_SERVER_IMAGES_CORE_PATH, RM.NOPIC));
-        RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.ENT_HOST, urlConcat("/" + TQ.Config.APP_SERVER_SOUNDS_PATH, RM.NOSOUND));
         createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3
             TQ.Base.Utility.isMobileDevice()) {
