@@ -101,7 +101,6 @@ function AppService($http, $cookies, $q, WxService, $timeout, WCY, NetService, D
                 WCY.start();
             }
             //WxService.init();
-//                    $scope.insertPropFromLocal();
             // $cordovaProgress.hide();
         }
 
