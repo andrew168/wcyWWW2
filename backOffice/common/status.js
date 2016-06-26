@@ -12,7 +12,7 @@ var user = {
 var extraCallback = null;
 
 function checkUser(req, res) {
-    user.timesCalled = getCookie(req, 'timesCalled', 0);
+    user.timesCalled = getCookieNumber(req, 'timesCalled', 0);
     user.timesCalled++;
     checkUserID(req, res, function(){
         console.log("userID : " + user.ID + ",  timesCalled: " + user.timesCalled);
@@ -28,7 +28,7 @@ function checkUserID(req, res, callback) {
     }
 
     res.userChecked = true;
-    user.ID = getCookie(req, 'userID', defaultUserID);
+    user.ID = getCookieNumber(req, 'userID', defaultUserID);
     if (isNewUser()) {
         user.timesCalled = 0;
         userController.add(req, function(doc) {
@@ -54,7 +54,7 @@ function checkUserID(req, res, callback) {
     }
 }
 
-function getCookie(req, name, defaultValue)
+function getCookieNumber(req, name, defaultValue)
 {
     var para;
     if (!req.cookies[name]) {
