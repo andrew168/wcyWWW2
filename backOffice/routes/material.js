@@ -54,7 +54,7 @@ router.param('matType', function (req, res, next, id) {
 });
 
 router.get('/list/:matType', function(req, res, next) {
-    var matType = req.param('matType');
+    var matType = parseInt(req.param('matType'));
     console.log("type = " + matType);
     status.checkUser(req, res);
     pictureMatController.getList(status.user.ID, matType, onGotList, onFail);

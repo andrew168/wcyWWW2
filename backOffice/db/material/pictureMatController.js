@@ -37,8 +37,7 @@ function get(userId, callback) {
 }
 
 function getList(userId, typeId, callback) {
-    var condition = (userId === null) ? null : '{$or: [{"userId": userId}, {"isShared": true}]}';
-    condition["typeId"] = typeId;
+    var condition = (userId === null) ? null : {$and: [{"typeId": typeId}, {$or: [{"userId": userId}, {"isShared": true}]}]};
     PictureMat.find(condition)
         .exec(function (err, data) {
             var result = [];
@@ -51,7 +50,7 @@ function getList(userId, typeId, callback) {
             callback(result);
             function copyItem(item) {
                 if (item.path) {
-                    result.push(item.path);
+                    result.push({name:item.name, path: item.path});
                 }
             }
         });
