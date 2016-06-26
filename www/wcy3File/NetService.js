@@ -76,7 +76,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
                 res.success(function (data, status, headers, config) {
                     file.result = data;
                     console.log(data);
-                    data.type = file.type;
+                    data.type = matType;
                     updateMat(data);
                     q.resolve(data);
                 }).error(function (data, status, headers, config) {
