@@ -12,8 +12,8 @@ var opusController = require('../db/opus/opusController');
 
 var WCY_DEPOT = "/data/wcydepot/";
 
+// 定义RESTFull API（路径）中的参数， 形参
 router.param('shareCode', function (req, res, next, id) {
-    console.log('CALLED ONLY ONCE');
     next();
 });
 

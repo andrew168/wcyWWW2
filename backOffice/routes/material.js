@@ -48,8 +48,8 @@ router.get('/', function(req, res, next) {
     getMatIds(req, res, getMatType(req));
 });
 
+// 定义RESTFull API（路径）中的参数，形参
 router.param('matType', function (req, res, next, id) {
-    console.log('CALLED ONLY ONCE');
     next();
 });
 
@@ -57,7 +57,7 @@ router.get('/list/:matType', function(req, res, next) {
     var matType = parseInt(req.param('matType'));
     console.log("type = " + matType);
     status.checkUser(req, res);
-    pictureMatController.getList(status.user.ID, matType, onGotList, onFail);
+    getMatController(matType).getList(status.user.ID, matType, onGotList, onFail);
     function onGotList(list) {
         console.log(list);
         res.json(list);
@@ -93,7 +93,6 @@ function createMatId(req, res, matType, originalFilename) {
         } else {
             console.log("must be new material");
         }
-
     }
 }
 

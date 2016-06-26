@@ -66,7 +66,7 @@ function DataService(list) {
     }
 
     function updatePageID(step) {
-        if (!!step) {
+        if (!step) {
             step = 0;
         }
 
@@ -86,7 +86,7 @@ function DataService(list) {
                 break;
         }
 
-        currentPageID = TQ.MathExt.clamp(currentPageID, 0, pages.length);
+        currentPageID = TQ.MathExt.clamp(currentPageID, 0, pages.length - 1);
     }
 
     function setList(list) {

@@ -19,7 +19,8 @@
             RESOURCE_CAMERA = 'camera',
             RESOURCE_PEOPLE = 'people',
             RESOURCE_BKG = 'background',
-            RESOURCE_MY_WORK = "mywork";
+            RESOURCE_MY_WORK = "mywork",
+            RESOURCE_SOUND = "sound";
         var READY_BKG_IMAGE = 0x01,
             READY_PROP_IMAGE = 0x02,
             READY_PEOPLE_IMAGE = 0x04,
@@ -116,6 +117,8 @@
 
         function getProps(type, pageStep) {
             switch (type) {
+                case RESOURCE_SOUND:
+                    return sounds.getPage(pageStep);
                 case RESOURCE_LOCAL:
                     return propsLocal.getPage(pageStep);
                 case RESOURCE_ALBUM:
@@ -184,6 +187,7 @@
         }
 
         return {
+            RESOURCE_SOUND: RESOURCE_SOUND,
             RESOURCE_LOCAL: RESOURCE_LOCAL,
             RESOURCE_ALBUM: RESOURCE_ALBUM,
             RESOURCE_CAMERA: RESOURCE_CAMERA,

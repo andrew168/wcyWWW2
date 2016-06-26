@@ -32,9 +32,10 @@ function get(userId, callback) {
     });
 }
 
-function add(userID, audioName, ip, isShared, onSuccess, onError) {
+function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
     var aDoc = new AudioMat({
-        // userId: userID,
+        userId: userId,
+        typeId: typeId,
         name: audioName,
         ip: ip,
         isShared: isShared
@@ -43,6 +44,26 @@ function add(userID, audioName, ip, isShared, onSuccess, onError) {
     aDoc.save(function(err, doc) {
         utils.onSave(err, doc, onSuccess, onError);
     });
+}
+
+function getList(userId, typeId, callback) {
+    var condition = (userId === null) ? null : {$and: [{"typeId": typeId}, {$or: [{"userId": userId}, {"isShared": true}]}]};
+    AudioMat.find(condition).exec(onSeachResult);
+    function onSeachResult(err, data) {
+        var result = [];
+        if (!data) {
+            console.error(404, {msg: 'not found!' + err});
+        } else {
+            data.forEach(copyItem);
+        }
+
+        callback(result);
+        function copyItem(item) {
+            if (item.path) {
+                result.push({name:item.name, path: item.path});
+            }
+        }
+    }
 }
 
 function update(id, path, callback) {
@@ -68,5 +89,6 @@ function update(id, path, callback) {
 }
 
 exports.get = get;
+exports.getList = getList;
 exports.add = add;
 exports.update = update;
