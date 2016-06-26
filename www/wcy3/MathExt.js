@@ -11,16 +11,17 @@ window.TQ = window.TQ || {};
 
     }
 
-    MathExt.range = function(v, vmin, vmax) {
+    MathExt.clamp = function(v, vmin, vmax) {
         if (v <= vmin) return vmin;
         if (v >= vmax) return vmax;
         return v;
     };
+    MathExt.range = MathExt.clamp;
 
     // 把1-10的规范数字映射到[vmin,vmax]区间，
     MathExt.unifyValue10 = function(v, vmin, vmax) {
         var result = (vmin + v * (vmax-vmin)/10);
-        result = MathExt.range(result, vmin, vmax);
+        result = MathExt.clamp(result, vmin, vmax);
         return result;
     };
 
