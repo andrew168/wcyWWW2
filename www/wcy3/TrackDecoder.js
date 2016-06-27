@@ -19,6 +19,7 @@ window.TQ = window.TQ || {};
      *  jsonObj 是世界坐标系下的绝对运动数据，（可以直接送给绘图设备变换系统）
      *
      */
+    //ToDo: 是否 参数 JSONObj可以省略？
     TrackDecoder.calculate = function (track, jsonObj, t) {
         // 计算本物体坐标系下的值
         TQ.Pose.rotation = ((track.rotation == undefined) || (track.rotation == null)) ?
@@ -26,9 +27,11 @@ window.TQ = window.TQ || {};
 
         TQ.Pose.x = ((track.x == undefined) || (track.x == null)) ?
             TQ.poseDefault.x : TrackDecoder.calOneTrack(track.x, t);
+        TQ.Assert.isTrue(!isNaN(TQ.Pose.x),  "x 为 NaN！！！");
 
         TQ.Pose.y = ((track.y == undefined) || (track.y == null)) ?
             TQ.poseDefault.y : TrackDecoder.calOneTrack(track.y, t);
+        TQ.Assert.isTrue(!isNaN(TQ.Pose.y),  "y 为 NaN！！！");
 
         TQ.Pose.sx = ((track.sx == undefined) || (track.sx == null)) ?
             TQ.poseDefault.sx : TrackDecoder.calOneTrack(track.sx, t);
