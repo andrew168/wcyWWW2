@@ -93,6 +93,8 @@ function EditorService($timeout, NetService, WxService) {
             if (files.length > 0) {
                 processOneMat(files[0], matType);
             }
+            fileElement.unbind('change'); // remove old handler
+            fileElement.change(null);
         }
     }
 
@@ -110,24 +112,25 @@ function EditorService($timeout, NetService, WxService) {
 
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
-        function uploadData(buffer) {
-            NetService.uploadOne(buffer, matType).
-                then(function (data) {
-                    TQ.Log.alertInfo("after uploadOne: " + JSON.stringify(data));
-                    addMatFromData(aFile, data, matType);
-                    // fileElement.unbind('change'); // remove old handler
-                }, function (err) {
-                    console.log(err);
-                });
-        }
-
-        if (isSound(aFile)) {
-            TQ.Assert.isTrue(matType === NetService.TYPE_SOUND);
+        //ToDo: 检查合法的文件类别
+        if (matType === NetService.TYPE_SOUND) {
+            TQ.Assert.isTrue(isSound(aFile));
             uploadData(aFile);
         } else {
             var options = {};
             var processor = new TQ.ImageProcess();
             processor.start(aFile, options, uploadData);
+        }
+
+        function uploadData(buffer) {
+            NetService.uploadOne(buffer, matType).
+                then(function (res) {
+                    TQ.Log.alertInfo("after uploadOne: " + JSON.stringify(res));
+                    TQ.Log.debugInfo("mat url: " + res.url);
+                    addItemByUrl(res.url, matType);
+                }, function (err) {
+                    console.log(err);
+                });
         }
     }
 
@@ -187,11 +190,11 @@ function EditorService($timeout, NetService, WxService) {
         TQ.SceneEditor.addItem(desc);
      }
 
-    function addMatFromData(aFile, data, matType) {
-        var eleType = isSound(aFile) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
+    function addItemByUrl(url, matType) {
+        var eleType = (matType === NetService.TYPE_SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
             fitFlag = (matType === NetService.TYPE_BKG_IMAGE) ?
                 TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE,
-            desc = {src: data.url, type: eleType, autoFit: fitFlag};
+            desc = {src: url, type: eleType, autoFit: fitFlag};
 
         TQ.SceneEditor.addItem(desc);
     }

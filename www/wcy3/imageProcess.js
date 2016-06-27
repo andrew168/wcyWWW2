@@ -53,6 +53,12 @@ var TQ = TQ || {};
 
     p.loadData = function (url, filename, options, callback) {
         var ele = new Image();
+        ele.onload = onload;
+        if (!!options.crossOrigin) {
+            ele.crossOrigin = options.crossOrigin;
+        }
+        ele.src = url;
+
         function onload () {
             var ctx, neededHeight, neededWidth;
             neededHeight = ele.height;
@@ -75,12 +81,6 @@ var TQ = TQ || {};
                 callback({name:filename, data: _canvas.toDataURL("image/jpeg")});
             }
         }
-
-        ele.onload = onload;
-        if (!!options.crossOrigin) {
-            ele.crossOrigin = options.crossOrigin;
-        }
-        ele.src = url;
     };
 
     // helper
