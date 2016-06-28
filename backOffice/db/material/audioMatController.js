@@ -38,7 +38,7 @@ function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
         typeId: typeId,
         name: audioName,
         ip: ip,
-        isShared: isShared
+        isShared: true // isShared//ToDo:@@test only
     });
 
     aDoc.save(function(err, doc) {

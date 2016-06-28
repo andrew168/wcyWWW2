@@ -62,7 +62,7 @@ function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
         typeId: typeId,
         name: picName,
         ip: ip,
-        isShared: isShared
+        isShared: true // isShared//ToDo:@@test only
     });
 
     aDoc.save(function(err, doc) {
@@ -91,7 +91,8 @@ function update(id, path, callback) {
             }
         });
 }
-exports.get = get;
 exports.add = add;
-exports.update = update;
+exports.get = get;
 exports.getList = getList;
+exports.update = update;
+
