@@ -10,7 +10,7 @@
   position: absolute;
   top: 0;
   width: 100%;
-  z-index: 998;
+  z-index: 91000;
 }
 
 #modal-container {
@@ -22,7 +22,7 @@
   font-family: arial,sans-serif;
   font-size: 14px;
   position: absolute;
-  z-index: 998;
+  z-index: 92000;
 }
 
 #modal-header {
@@ -55,7 +55,7 @@
 #modal-content {
   display: block;
   padding: 0 20px 10px 20px;
-  z-index: 999;
+  z-index: 80000;
 }
 
 #modal-container.modal-loading {

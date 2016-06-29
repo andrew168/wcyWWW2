@@ -38,7 +38,7 @@ TQ.MessageBox = (function() {
     }
 
     function showWaiting(msg) {
-        var htmlStr = '<img src="/public/images/loading.gif"> msg';
+        var htmlStr = '<img src="/public/images/loading.gif"> ' + msg;
         show(htmlStr);
     }
 })();
