@@ -31,6 +31,11 @@ function WCY($http, FileService, WxService) {
 
 
     function create(option) {
+        if (currScene && !currScene.isSaved) {
+            save();
+            currScene.isSaved = true; // 数据已经保存，到内存， 网络上传还需要时间
+        }
+
         if (!option) {
             option = {};
         }
