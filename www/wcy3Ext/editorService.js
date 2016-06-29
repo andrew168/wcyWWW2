@@ -110,6 +110,7 @@ function EditorService($timeout, NetService, WxService) {
             atob: !!window.atob
         };
 
+        TQ.MessageBox.showWaiting("正在上传....");
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
         //ToDo: 检查合法的文件类别
@@ -130,7 +131,8 @@ function EditorService($timeout, NetService, WxService) {
                     addItemByUrl(res.url, matType);
                 }, function (err) {
                     console.log(err);
-                });
+                })
+                .finally(TQ.MessageBox.hide);
         }
     }
 

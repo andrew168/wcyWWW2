@@ -1,16 +1,3 @@
-/*!
- * jsModal - A pure JavaScript modal dialog engine v1.0d
- * http://jsmodal.com/
- *
- * Author: Henry Rune Tang Kai <henry@henrys.se>
- *
- * (c) Copyright 2013 Henry Tang Kai.
- *
- * License: http://www.opensource.org/licenses/mit-license.php
- *
- * Date: 2013-7-11
- */
-
 var Modal = (function () {
         "use strict";
         /*global document: false */

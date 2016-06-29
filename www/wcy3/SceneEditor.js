@@ -1,6 +1,5 @@
 window.TQ = window.TQ || {};
 var canvas;
-var messageBoard;
 var stage = null;
 var stageContainer = null;
 
@@ -130,12 +129,11 @@ function init(fileInfo) {
     TQ.SceneEditor.stageContainer = stageContainer = new createjs.Container();
     stage.addChild(stageContainer);
     //stage.enableMouseOver();
-    messageBoard = new TQ.MessageBox(canvas);
     TQ.SoundMgr.initialize();
     TQ.RM.initialize();
     TQ.SceneEditor.loadScene(fileInfo);
     initializeControllers();
-    // messageBoard.show("Loading 。。。");
+    TQ.MessageBox.showWaiting("Loading 。。。");
     createjs.Ticker.setFPS(20);
 
     // 让Scene来决定处理tick，它可以包括update和render。而stage的自动响应只包括render。
@@ -167,7 +165,7 @@ function openScene(fileInfo) {
         fileInfo = {name: fileInfo, content: null};
     }
     if ((!currScene) || (currScene.isSaved)) {
-        messageBoard.hide();
+        TQ.MessageBox.hide();
         if (!currScene) {
             currScene = new TQ.Scene();
             TQ.WCY.currentScene = currScene;
