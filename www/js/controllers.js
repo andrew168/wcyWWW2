@@ -9,12 +9,25 @@ function DashCtrl(
             $cordovaProgress, $cordovaSocialSharing,
             FileService, NetService, DeviceService, Setup, WxService, $http, EditorService,
             AppService) {
+    var vm = this;
     $scope.localImage1 = null;
     $scope.localImage2 = null;
     $scope.data = {};
     $scope.state = EditorService.state;
     // 12853, 12585; // Bear，  14961;  // 比例变换测试， 15089; // 投票
     $scope.data.sceneID = 14959; // straw berry
+
+    $scope.testShowMsg = testShowMsg;
+    $scope.testPrompt = testPrompt;
+
+    // implementation, abc order
+    function testShowMsg() {
+        TQ.MessageBox.showWaiting("loading...");
+    }
+
+    function testPrompt() {
+        TQ.MessageBox.prompt("Are you sure?");
+    }
 
     // AppService.onAppStarting(onAppStaring);
     // AppService.onAppStarted(onAppStarted);
@@ -94,8 +107,8 @@ function DashCtrl(
         // TQ.TextInputMgr.start();
 
 
-        // EditorService.insertText("国hello", x, y);
-        EditorService.insertSound("v1465523220/c0.mp3");
+        EditorService.insertText("国hello", x, y);
+        // EditorService.insertSound("v1465523220/c0.mp3");
         // EditorService.insertImage('v1462412871/c961.jpg');
     };
 
@@ -144,23 +157,11 @@ function DashCtrl(
     };
 
     $scope.insertPropFromLocal = function () {
-        var path = "p12504.png";
+        EditorService.insertPropFromLocal();
+    };
 
-        var server1File = "http://bone.udoido.cn/mcImages/" + path;
-        var server2File = "http://www.udoido.com/mcImages/" + path;
-        if (TQ.Config.cloundaryEnabled) {
-            path = 'v1453179217/51.png';
-            server1File = 'http://res.cloudinary.com/eplan/image/upload/' + path;
-        }
-        var albumFile = "";
-        var cachedFile = DeviceService.getFullPath(TQ.Config.IMAGES_CORE_PATH + path);
-        var localFile = "mcImages/" + path;
-
-        // EditorService.insertImage(cachedFile, x+=50, y+=50);
-        // EditorService.insertImage(localFile, x+=50, y+=50);
-        EditorService.insertImage(server1File, x += 50, y += 50);
-        // EditorService.insertImage(server2File, x+=50, y+=50);
-        // EditorService.insertImage(albumFile, x+=50, y+=50);
+    $scope.insertSoundFromLocal = function () {
+        EditorService.insertSoundFromLocal();
     };
 
     $scope.insertAlbum = function () {
@@ -267,10 +268,6 @@ function DashCtrl(
 
         var files = document.getElementById('file_input').files;
         NetService.uploadImages(files, _onSuccess);
-    };
-
-    $scope.insertImageFromLocal2 = function () {
-        EditorService.insertPropFromLocal();
     };
 
     $scope.insertBkImageFromLocal = function () {
