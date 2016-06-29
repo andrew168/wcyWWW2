@@ -110,7 +110,7 @@ function EditorService($timeout, NetService, WxService) {
             atob: !!window.atob
         };
 
-        TQ.MessageBox.showWaiting("正在上传....");
+        TQ.MessageBox.showWaiting("努力上传中....");
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
         //ToDo: 检查合法的文件类别

@@ -133,7 +133,7 @@ function init(fileInfo) {
     TQ.RM.initialize();
     TQ.SceneEditor.loadScene(fileInfo);
     initializeControllers();
-    TQ.MessageBox.showWaiting("Loading 。。。");
+    TQ.MessageBox.showWaiting("努力加载中 。。。");
     createjs.Ticker.setFPS(20);
 
     // 让Scene来决定处理tick，它可以包括update和render。而stage的自动响应只包括render。
