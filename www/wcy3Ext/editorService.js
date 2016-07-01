@@ -706,6 +706,7 @@ function EditorService($timeout, NetService, WxService) {
         url = url.replace(window.location.hash, "");
         FB.ui({
             method: 'share',
+            mobile_iframe: true,
             href: url
         }, function(response){
             console.log("Clicked! shared");
