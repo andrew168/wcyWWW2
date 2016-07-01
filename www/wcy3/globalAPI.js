@@ -62,7 +62,7 @@ window.TQ = window.TQ || {};
 
         WCY.currentScene.deleteLevel(id);
     };
-    
+
     /*
      移动序号为srcId的场景，并插入到序号dstId的场景之前，
      注意：srcId和dstId都是在执行此函数之前， 按照场景的顺序来编号的。
@@ -110,8 +110,6 @@ window.TQ = window.TQ || {};
             WCY.currentScene.play();
         }
     };
-    WCY.doPlayRecord = function() {TQ.SceneEditor.setEditMode(); };
-    WCY.doStopRecord = function() {TQ.SceneEditor.setPlayMode(); };
     WCY.emptyScene = function() {TQ.SceneEditor.emptyScene(); };
 
     WCY.doPlayStop = function() {
