@@ -8,8 +8,9 @@ var TQ = TQ || {};
     var ang = 0, scale = 1;
     var dAngle = 0, dScale = 1;
     var pos = {x:0, y:0};
-    var isMultiTouching = false;
-    var enableTouchScreen = true;
+    var isOperating = false,
+        isMultiTouching = false,
+        enableTouchScreen = true;
 
     function initialize() {
         var canvas = document.getElementById("testCanvas");
@@ -91,6 +92,9 @@ var TQ = TQ || {};
     function onStart(e) {
         ele = null;
         getSelectedElement(e);
+        if (TQ.SelectSet.peek()) {
+            isOperating = true;
+        }
         // console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
     }
 
@@ -109,6 +113,7 @@ var TQ = TQ || {};
         if (ele && ele.snapIt) {
             ele.snapIt();
         }
+        isOperating = false;
         ditherStart();
     }
 
@@ -241,5 +246,6 @@ var TQ = TQ || {};
     }
 
     TouchManager.initialize = initialize;
+    TouchManager.isOperating = function() {return isOperating;};
     TQ.TouchManager = TouchManager;
 })();

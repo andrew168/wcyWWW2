@@ -91,7 +91,7 @@ TQ = TQ || {};
         if (this.currentLevel != null) {
             this.currentLevel.update(t);
             if (this.version >= Scene.VER2) { // ToDo: 只在录制状态下才更新， 或者，初次运行的时候的时候才更新
-                this.updateTimeTable();
+                // this.updateTimeTable();
             }
             if (TQ.FrameCounter.finished() && TQ.FrameCounter.isPlaying()) {
                 if (this.isLastLevel()) {
@@ -714,6 +714,11 @@ TQ = TQ || {};
             ts = 0,
             te = 0,
             level = null;
+
+        // for recording
+        if (this.currentLevel && (this.currentLevel.getTime() < TQ.FrameCounter.max)) {
+            this.currentLevel.setTime(TQ.FrameCounter.max);
+        }
 
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];

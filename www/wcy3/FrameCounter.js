@@ -18,6 +18,8 @@ window.TQ = window.TQ || {};
         assertNotHere(TQ.Dictionary.INVALID_LOGIC); // Singleton, 禁止调用
     }
 
+    var _isRecording = false;
+
     // ToDo:
     FrameCounter.GO = 1; // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
     FrameCounter.STOP = 0;
@@ -81,6 +83,7 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.backward = function () {
+        TQ.AssertExt.depreciated("backward: 过时了");
         FrameCounter._step = -2 * FrameCounter.BASE_STEP;
         FrameCounter._state = FrameCounter.GO;
     };
@@ -117,7 +120,11 @@ window.TQ = window.TQ || {};
         var delta = FrameCounter._step;
         FrameCounter.v = FrameCounter.v + delta;
         if(FrameCounter.v > FrameCounter.max) {
-            FrameCounter.v = FrameCounter.max;
+            if (_isRecording) {
+                FrameCounter.max += FrameCounter._step;
+            } else {
+                FrameCounter.v = FrameCounter.max;
+            }
         }
 
         if(FrameCounter.v < 0) {
@@ -187,10 +194,19 @@ window.TQ = window.TQ || {};
         FrameCounter._autoRewind = !FrameCounter._autoRewind;
     };
 
+
+    FrameCounter.startRecord = function() {
+        _isRecording = true;
+    };
+
+    FrameCounter.stopRecord = function() {
+        _isRecording = false;
+    };
+
     FrameCounter.isInverse = function () { return FrameCounter._step < 0;};
     FrameCounter.isPlaying = function () { return (FrameCounter._state == FrameCounter.GO); };
     FrameCounter.isRequestedToStop = function () { return (FrameCounter._requestState == FrameCounter.STOP); };
-    FrameCounter.finished = function () { return (FrameCounter.v >= FrameCounter.max); };
+    FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= FrameCounter.max)); };
     FrameCounter.isAutoRewind = function () { return FrameCounter._autoRewind; };
 
     FrameCounter.maxTime = function () {

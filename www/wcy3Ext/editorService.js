@@ -26,7 +26,7 @@ function EditorService($timeout, NetService, WxService) {
 
         // editor's mode
         isAddMode: null,
-        isRecording:null, // must be in AddMode
+        isRecording:false, // must be in AddMode
         isModifyMode:null,
         isPreviewMode:null,
         isPlayMode:null,
@@ -382,8 +382,8 @@ function EditorService($timeout, NetService, WxService) {
         updateMode();
     }
 
-    function startRecord() {TQ.SceneEditor.setEditMode(); }
-    function stopRecord() {TQ.SceneEditor.setPlayMode(); }
+    function startRecord() {TQ.FrameCounter.startRecord(); TQ.SceneEditor.setPlayMode(); }
+    function stopRecord() {TQ.FrameCounter.stopRecord(); TQ.SceneEditor.setEditMode(); }
     function emptyScene() {TQ.SceneEditor.emptyScene(); }
 
     function doPlayStop() {
@@ -566,6 +566,10 @@ function EditorService($timeout, NetService, WxService) {
     function updateMode(hasChanged) {
         var value = null;
 
+        if (state.isRecording) {
+            return;
+        }
+
         if (!state.isPreviewMode) {
             if (state.isAddMode != (value = (isEditMode() && TQ.SelectSet.isEmpty()))) {
                 state.isAddMode = value;
@@ -588,10 +592,6 @@ function EditorService($timeout, NetService, WxService) {
             state.isPlayMode = false;
             updatePlayingState();
             hasChanged = true;
-        }
-
-        if (!state.isAddMode) {
-            state.isRecording = false;  // 只有在add mode 下，才允许录音
         }
 
         // 对sceneReady 事件， SelectSet是空

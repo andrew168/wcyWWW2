@@ -76,12 +76,7 @@ var stageContainer = null;
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             return false;
         }
-        var uiStop = $('#stop');
-        if (uiStop.length === 0) {
-            TQ.FrameCounter.stop();
-        } else {
-            uiStop.click();
-        }
+        TQ.FrameCounter.stop();
         SceneEditor.setMode(TQBase.LevelState.EDITING);
     };
 
@@ -90,7 +85,7 @@ var stageContainer = null;
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             return false;
         }
-        $('#play').click();
+        TQ.FrameCounter.play();
         SceneEditor.setMode(TQBase.LevelState.RUNNING);
     };
 
