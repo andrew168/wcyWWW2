@@ -316,6 +316,10 @@ function DashCtrl(
     };
 
     $scope.shareFB = function () {
+        EditorService.shareFbWeb();
+    };
+
+    $scope.shareFbApp = function () {
         $cordovaSocialSharing
             .shareViaFacebook(message, image, link)
             .then(function (result) {

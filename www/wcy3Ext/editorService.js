@@ -701,6 +701,17 @@ function EditorService($timeout, NetService, WxService) {
         }
     }
 
+    function shareFbWeb() {
+        var url = window.location.href;
+        url = url.replace(window.location.hash, "");
+        FB.ui({
+            method: 'share',
+            href: url
+        }, function(response){
+            console.log("Clicked! shared");
+        });
+    }
+
     return {
         state: state,
 
@@ -754,6 +765,9 @@ function EditorService($timeout, NetService, WxService) {
         setModifyMode: setModifyMode,
         getTextCursor: getTextCursor,
         setColorPanel: setColorPanel,
-        toAddMode: toAddMode
+        toAddMode: toAddMode,
+
+        // share
+        shareFbWeb: shareFbWeb
     }
 }

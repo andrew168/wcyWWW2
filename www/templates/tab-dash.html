@@ -196,12 +196,19 @@
             </div>
 
             <!-- 微信 -->
-            <div style="display: none">
+            <div style="display: block">
+                <button class="button button-positive" ng-click="shareWeb()">WebShare</button>
                 <button class="button button-positive" ng-click="share()">分享1</button>
                 <button class="button button-positive" ng-click="shareFB()">分享到FB</button>
                 <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
                 <button class="button button-positive" ng-click="wxInit()">wx初始化</button>
 
+                <div
+                    class="fb-like btn-md"
+                    data-share="true"
+                    data-width="450"
+                    data-show-faces="true">
+                </div>
             </div>
 
             <div style="display: none">
