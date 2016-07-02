@@ -6,12 +6,13 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$injection = ['$timeout', 'NetService', 'WxService'];
-function EditorService($timeout, NetService, WxService) {
+EditorService.$injection = ['$timeout', 'NetService', 'WxService', 'WCY'];
+function EditorService($timeout, NetService, WxService, WCY) {
     var _initialized = false,
         _colorPanel = null,
         _lastSelected = null,
         fileElement = null,
+        _tryToSave = false,
         domEle = null;
 
     var state = { // editor 的各种当前值， 用户选择的
@@ -702,15 +703,39 @@ function EditorService($timeout, NetService, WxService) {
     }
 
     function shareFbWeb() {
-        var url = window.location.href;
-        url = url.replace(window.location.hash, "");
-        FB.ui({
-            method: 'share',
-            mobile_iframe: true,
-            href: url
-        }, function(response){
-            console.log("Clicked! shared");
-        });
+        if (!WCY.getShareCode()) {
+            if (!_tryToSave) {
+                _tryToSave = true;
+                return WCY.save().then(shareFbWeb);
+            } else {
+                return TQ.MessageBox.show("需要先保存");
+            }
+        }
+
+        _tryToSave = false;
+
+        var url = TQUtility.urlConcat(TQ.Config.OPUS_HOST, "?opus=" + WCY.getShareCode()),
+            screenshotUrl =  WCY.getScreenshotUrl();
+
+        //ToDo: （需要去掉page中的tag吗？）
+        // "share" 需要page中的tag支持，
+        // "feed", 不需要
+
+        if (!screenshotUrl) {
+            screenshotUrl = "http://res.cloudinary.com/eplan/image/upload/v1462412871/c161.jpg"
+        }
+
+        FB.ui(
+            {
+                method: 'feed',
+                name: 'A Picture is Worth a Thousand Words -- idiom',
+                link: url,
+                picture: screenshotUrl,
+                // picture: "http://res.cloudinary.com/eplan/image/upload/v1462418136/c162.png",
+                description: "If a picture is worth a thousand words...an animation is worth a Million.",
+                caption: "U do I do, it's better and better.   -- UDOIDO",
+                message: "" // not supported by FB?
+            });
     }
 
     return {

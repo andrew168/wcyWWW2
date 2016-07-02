@@ -1,4 +1,9 @@
 /*
+区别：
+  WCY： 提供作品级别的服务
+  EditorService： 综合提供元素级别的服务， 并且调用WCY中的服务
+
+
 WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
    统一管理在下面三个地方的存取：app本地文件， LocalStorage和远程服务器
    提供WCY的自动保存服务
@@ -24,22 +29,25 @@ function WCY($http, FileService, WxService) {
     var writeCache = TQ.Base.Utility.writeCache;
 
     var _wcyId = -1, // 缺省-1， 表示没有保存的作品。，12345678;
-        _shareCode;
-
-    var SHARE_STRING = user.ID + '_' + _wcyId + '_123_1234567890';
-    var _onStarted = null;
+        _shareCode = null,
+        _screenshotUrl = null,
+        _onStarted = null;
 
 
     function create(option) {
         if (currScene && !currScene.isSaved) {
-            save();
-            currScene.isSaved = true; // 数据已经保存，到内存， 网络上传还需要时间
+            return save().then(function() {
+                create(option);
+                currScene.isSaved = true; // 数据已经保存，到内存， 网络上传还需要时间
+            });
         }
 
         if (!option) {
             option = {};
         }
         _wcyId = 0;
+        _shareCode = null;
+        _screenshotUrl = null;
         TQ.SceneEditor.createScene(option);
         startAutoSave();
     }
@@ -49,7 +57,7 @@ function WCY($http, FileService, WxService) {
             saveToCache();
         }
         //ToDo: if (has wifi)
-        _upload();
+        return _upload().then(_onUploadedSuccess, _onFail);
     }
 
     function saveToCache() {
@@ -87,6 +95,14 @@ function WCY($http, FileService, WxService) {
         }
     }
 
+    function getShareCode() {
+        return _shareCode;
+    }
+
+    function getScreenshotUrl() {
+        return _screenshotUrl;
+    }
+
     function _upload() {
         TQ.Assert.isDefined(_wcyId);
         _wcyId = (_wcyId === -1) ? 0 : _wcyId;
@@ -94,7 +110,7 @@ function WCY($http, FileService, WxService) {
         var jsonWcyData = currScene.getData();
         var myToken = '1234567890';
         var params = '?wcyId=' + _wcyId;
-        $http({
+        return $http({
             method: 'POST',
             // url: AUTH_HOST + wechat/sign?url=' + url,
             url: TQ.Config.OPUS_HOST + '/wcy' + params,
@@ -103,16 +119,10 @@ function WCY($http, FileService, WxService) {
                 'Content-Type': 'application/json'
             },
             data: jsonWcyData
-        }).then(_onUploadedSuccess, _onFail);
+        });
     }
 
-    //ToDo： 在Server和client 实现, 记录播放的次数
-/*    function recordPlaytime() {
-        var url = "/playtime/" + SHARE_STRING;
-        $http.get(url)
-            .then(_onSuccess, _onFail);
-    }
-*/
+    //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）
     function edit(sceneID) {
         TQ.WCY.isPlayOnly = false;
         return _load(sceneID);
@@ -271,6 +281,8 @@ function WCY($http, FileService, WxService) {
         edit: edit,  // open for edit
         getWcy: getWcy,
         getWcyList: getWcyList,
+        getShareCode: getShareCode,
+        getScreenshotUrl: getScreenshotUrl,
         show: show,  // open for show only
 
         // old api will be depreciated

@@ -561,12 +561,12 @@ TQ = TQ || {};
 
     p.setEditor = function () {
         if (TQ.SceneEditor.isEditMode()) {
-            $('#playRecord').click();
+            // $('#playRecord').click();
         } else if (TQ.SceneEditor.isPlayMode()) {
             if (TQ.WCY.isPlayOnly) {
                 TQ.WCY.doStopRecord();
             } else {
-                $('#stopRecord').click();
+                // $('#stopRecord').click();
             }
         } else {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
