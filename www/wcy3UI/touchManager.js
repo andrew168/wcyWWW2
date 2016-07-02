@@ -34,7 +34,8 @@ var TQ = TQ || {};
         // ionic.EventController.onGesture('pinchout', onPinch, canvas);
         ionic.EventController.onGesture('pinch', onPinch, canvas);
         ionic.EventController.onGesture('drag', onMove, canvas);
-        ionic.EventController.onGesture('swipeup', onSwipeUp, canvas);
+        // 其余事件： 'swipeup'.
+
     }
 
     var touchedEle;
@@ -188,15 +189,6 @@ var TQ = TQ || {};
         }
     }
 
-    function onSwipeUp(evt) {
-        ditherStart();
-        if (!ele) {
-            getSelectedElement(evt);
-        }
-
-        TQ.SelectSet.add(ele);
-        TQ.SelectSet.delete();
-    }
     // private:
     function _doGetSelectedElement(evt) {
         var touchPoint = evt.gesture.srcEvent;
