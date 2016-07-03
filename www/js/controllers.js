@@ -190,6 +190,15 @@ function DashCtrl(
         TQ.SelectSet.delete();
     };
 
+
+    $scope.undo = function() {
+        TQ.CommandMgr.undo();
+    };
+
+    $scope.redo = function() {
+        TQ.CommandMgr.redo();
+    };
+
     $scope.testDownloadBulk = function () {
         // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
         // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");

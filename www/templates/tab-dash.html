@@ -140,10 +140,6 @@
                         <span class="ui-icon ui-icon-close"></span>
                     </button>
                 </div>
-                <div class="updown" >
-                    <button class="new-up" id="tbUndo" title={{getLocale('MenuUndo')}}></button>
-                    <button class="new-down" id="tbRedo" title={{getLocale('MenuRedo')}}></button>
-                </div>
             </div>
 
             <input type="text" id="sceneID" name='sceneID' ng-model="data.sceneID" required>
@@ -171,6 +167,8 @@
             <button class="button button-positive" ng-click="insertAlbum()">+图册</button>
             <button class="button button-positive" ng-click="insertFromCamera()">+相机</button>
             <button class="button button-positive" ng-click="deleteElement()">删除</button>
+            <button class="button button-positive" ng-click="undo()">undo</button>
+            <button class="button button-positive" ng-click="redo()">redo</button>
             <button class="button button-positive" my-click="uploadScreenShot()">截屏上传</button>
             <button class="button button-positive" my-click="saveScreenShot($event)">截屏保存</button>
             </div>

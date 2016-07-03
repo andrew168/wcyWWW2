@@ -31,7 +31,11 @@ function EditorService($timeout, NetService, WxService, WCY) {
         isModifyMode:null,
         isPreviewMode:null,
         isPlayMode:null,
-        isPlaying: false
+        isPlaying: false,
+
+        // undo/redo
+        hasUndo: TQ.CommandMgr.hasUndo, // function
+        hasRedo: TQ.CommandMgr.hasUndo // function
     };
 
     document.addEventListener(TQ.Scene.EVENT_READY, onSceneReady);

@@ -8,7 +8,6 @@ window.TQ = window.TQ || {};
     function FloatToolbar() {}
     FloatToolbar.selectedElement = null;
     FloatToolbar.onScaleBig = onScaleBig;
-    FloatToolbar.onScaleBig = onScaleBig;
     FloatToolbar.onScaleSmall = onScaleSmall;
     FloatToolbar.onRotateLeft = onRotateLeft;
     FloatToolbar.onRotateRight = onRotateRight;

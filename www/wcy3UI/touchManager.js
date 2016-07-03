@@ -21,13 +21,6 @@ var TQ = TQ || {};
         ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
         ionic.EventController.onGesture('release', onRelease, canvas);
         ionic.EventController.onGesture('rotate', onRotate, canvas);
-        TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
-        TQ.SceneEditor.stage.addEventListener("touch", onTouchStage);
-
-        function onShowToucInfo(e) {
-            console.log(e.type);
-        }
-
         // 'scale': not work
         //
         // ionic.EventController.onGesture('pinchin', onPinch, canvas);
@@ -35,6 +28,13 @@ var TQ = TQ || {};
         ionic.EventController.onGesture('pinch', onPinch, canvas);
         ionic.EventController.onGesture('drag', onMove, canvas);
         // 其余事件： 'swipeup'.
+
+        TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
+        TQ.SceneEditor.stage.addEventListener("touch", onTouchStage);
+
+        function onShowToucInfo(e) {
+            console.log(e.type);
+        }
 
     }
 
@@ -92,6 +92,7 @@ var TQ = TQ || {};
 
     function onStart(e) {
         ele = null;
+        TQ.CommandMgr.startNewOperation();
         getSelectedElement(e);
         if (TQ.SelectSet.peek()) {
             isOperating = true;
@@ -152,12 +153,13 @@ var TQ = TQ || {};
             getSelectedElement(e);
         }
 
+        console.log("Rotete...");
+
         if (!ele) {
-            console.log("Rotete...");
         } else {
             // ele = currScene.currentLevel.elements[0];
             dAngle = e.gesture.rotation;
-            ele.rotateTo(ang - dAngle);
+            //ele.rotateTo(ang - dAngle);
             TQ.CommandMgr.directDo(new TQ.RotateCommand(ele, ang - dAngle));
             isMultiTouching = true;
         }
@@ -175,14 +177,14 @@ var TQ = TQ || {};
         if (!ele) {
             console.log("pinch...");
         } else {
-            // ele = currScene.currentLevel.elements[0];
             dScale = e.gesture.scale;
             var newScale = scale * dScale;
             if (!isNaN(newScale)) {
                 if (Math.abs(newScale) < 0.001) {
                     console.warn("Too small");
                 } else {
-                    ele.scaleTo({sx:newScale, sy:newScale});
+                    TQ.CommandMgr.directScale(ele, {sx:newScale, sy:newScale});
+                    console.warn("pinch");
                     isMultiTouching = true;
                 }
             }
