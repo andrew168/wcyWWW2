@@ -48,3 +48,14 @@ window.TQ = window.TQ || {};
 
     TQ.GenCommand = GenCommand;
 }());
+
+
+// extensions:
+(function () {
+
+    TQ.CommandMgr.directScale = function(ele, newScale) {
+        var cmd = new TQ.GenCommand(TQ.GenCommand.SCALE, ele, newScale, ele.getScale());
+        return TQ.CommandMgr.directDo(cmd);
+    };
+
+}());
