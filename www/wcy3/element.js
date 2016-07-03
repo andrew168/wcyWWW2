@@ -715,18 +715,16 @@ window.TQ = window.TQ || {};
         var sx = 1/TQ.Config.workingRegionWidth,
             sy = 1/TQ.Config.workingRegionHeight;
 
-        var obj_ndc = {
-            x: (!obj.x)? Number.NaN : obj.x * sx,
-            y: (!obj.y)? Number.NaN : obj.y * sy,
-            sx: (!obj.sx)? 1: obj.sx * sx,
-            sy: (!obj.sy)? 1: obj.sy * sy,
-            fontSize : (!obj.fontSize)? 0:obj.fontSize * sx,
-            rotation : (!obj.rotation)? 0: obj.rotation,
-            pivotX : (!obj.pivotX)? 0: obj.pivotX,
-            pivotY : (!obj.pivotY)? 0:obj.pivotY
+        return {
+            x: (obj.x === undefined)? Number.NaN : obj.x * sx,
+            y: (obj.y === undefined)? Number.NaN : obj.y * sy,
+            sx: (obj.sx === undefined)? 1: obj.sx * sx,
+            sy: (obj.sy === undefined)? 1: obj.sy * sy,
+            fontSize : (obj.fontSize === undefined)? 0:obj.fontSize * sx,
+            rotation : (obj.rotation === undefined)? 0: obj.rotation,
+            pivotX : (obj.pivotX === undefined)? 0: obj.pivotX,
+            pivotY : (obj.pivotY === undefined)? 0:obj.pivotY
         };
-
-        return obj_ndc;
     };
 
     p.doShow = function (visSum) {
@@ -1341,6 +1339,8 @@ window.TQ = window.TQ || {};
                 }
                 //  不能在此记录, 因为, Move, Rotate操作的时候, 不调用它update
                 TQ.Pose.worldToObjectExt(this.jsonObj, parentPose);
+                TQ.Assert.isTrue(!isNaN(TQ.Pose.x),  "x 为 NaN！！！");
+                TQ.Assert.isTrue(!isNaN(TQ.Pose.y),  "y 为 NaN！！！");
                 // 记录修改值
                 TQ.TrackRecorder.record(this, t);
                 justRecorded = true;
@@ -1478,9 +1478,12 @@ window.TQ = window.TQ || {};
         }
 
         var obj_ndc = this.pdc2Ndc(point);
+        TQ.Assert.isTrue(!isNaN(obj_ndc.x),  "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(obj_ndc.y),  "y 为 NaN！！！");
 
         this.jsonObj.x = obj_ndc.x;
         this.jsonObj.y = obj_ndc.y;
+
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.TRANSLATING);
         TQ.DirtyFlag.setElement(this);
@@ -1530,6 +1533,9 @@ window.TQ = window.TQ || {};
         }
 
         var obj_ndc = this.pdc2Ndc(scale);
+        TQ.Assert.isTrue(!isNaN(obj_ndc.sx),  "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(obj_ndc.sy),  "y 为 NaN！！！");
+
         this.jsonObj.sx = obj_ndc.sx;
         this.jsonObj.sy = obj_ndc.sy;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);

@@ -78,6 +78,8 @@ window.TQ = window.TQ || {};
         var V = parentPoseWorld.IM.multiply($V([poseWorld.x, poseWorld.y, 1]));
         Pose.x = V.elements[0];
         Pose.y = V.elements[1];
+        TQ.Assert.isTrue(!isNaN(Pose.x),  "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(Pose.y),  "y 为 NaN！！！");
         if ((V.elements[2]< 0.99) || (V.elements[2]> 1.01) )
         {
             assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, V.elements[2], 0.01);  //齐次分量应该近似为1
