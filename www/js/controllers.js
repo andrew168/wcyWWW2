@@ -270,15 +270,6 @@ function DashCtrl(
             onError);
     };
 
-    $scope.uploadMat = function (_onSuccess) {
-        if (!_onSuccess) {
-            _onSuccess = onSuccess;
-        }
-
-        var files = document.getElementById('file_input').files;
-        NetService.uploadImages(files, _onSuccess);
-    };
-
     $scope.insertBkImageFromLocal = function () {
         EditorService.insertBkImageFromLocal();
     };
