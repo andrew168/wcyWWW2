@@ -20,12 +20,12 @@ var TQ = TQ || {};
         ionic.EventController.onGesture('touch', onStart, canvas);
         ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
         ionic.EventController.onGesture('release', onRelease, canvas);
-        ionic.EventController.onGesture('rotate', onRotate, canvas);
+        ionic.EventController.onGesture('rotate', onPinchAndRotate, canvas);
         // 'scale': not work
         //
         // ionic.EventController.onGesture('pinchin', onPinch, canvas);
         // ionic.EventController.onGesture('pinchout', onPinch, canvas);
-        ionic.EventController.onGesture('pinch', onPinch, canvas);
+        ionic.EventController.onGesture('pinch', onPinchAndRotate, canvas);
         ionic.EventController.onGesture('drag', onMove, canvas);
         // 其余事件： 'swipeup'.
 
@@ -144,28 +144,7 @@ var TQ = TQ || {};
         }
     }
 
-    function onRotate(e) {
-        if (isDithering) {
-            return;
-        }
-
-        if (!ele) {
-            getSelectedElement(e);
-        }
-
-        console.log("Rotete...");
-
-        if (!ele) {
-        } else {
-            // ele = currScene.currentLevel.elements[0];
-            dAngle = e.gesture.rotation;
-            //ele.rotateTo(ang - dAngle);
-            TQ.CommandMgr.directDo(new TQ.RotateCommand(ele, ang - dAngle));
-            isMultiTouching = true;
-        }
-    }
-
-    function onPinch(e) {
+    function onPinchAndRotate(e) {
         if (isDithering) {
             return;
         }
@@ -183,8 +162,8 @@ var TQ = TQ || {};
                 if (Math.abs(newScale) < 0.001) {
                     console.warn("Too small");
                 } else {
-                    TQ.CommandMgr.directScale(ele, {sx:newScale, sy:newScale});
-                    console.warn("pinch");
+                    dAngle = e.gesture.rotation;
+                    TQ.CommandMgr.directScaleAndRotate(ele, {sx:newScale, sy:newScale}, ang - dAngle);
                     isMultiTouching = true;
                 }
             }

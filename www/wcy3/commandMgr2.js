@@ -15,7 +15,7 @@ window.TQ = window.TQ || {};
     var CommandMgr = {};
 
     var _queue = [],
-        _MAX_UNDO_STEP = 1000,
+        _MAX_UNDO_STEP = 100,
         _lastCmd = null,
         _undoStack = [],
         _redoStack = [],

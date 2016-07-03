@@ -1538,6 +1538,13 @@ window.TQ = window.TQ || {};
         this.dirty2 = true;
     };
 
+    p.scaleAndRotateTo = function (scaleAndRotate) {
+        TQ.Assert.isTrue((scaleAndRotate.angle !== undefined) &&
+            (scaleAndRotate.scale != undefined), "参数取值错误");
+        this.rotateTo(scaleAndRotate.angle);
+        this.scaleTo(scaleAndRotate.scale);
+    };
+
     p.scale = function (scale) {
         var scaleTo = {};
         scaleTo.sx = scale * this.jsonObj.sx;

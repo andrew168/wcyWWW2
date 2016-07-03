@@ -19,6 +19,7 @@ window.TQ = window.TQ || {};
         this.undofn = fns[CMD_SCALE].undofn;
     }
     GenCommand.SCALE = "cmd_scale";
+    GenCommand.SCALE_AND_ROTATE = "cmd_scale_rotate";
     GenCommand.MIN_JOINT_ANGLE = "cmd_min_joint_angle";
     GenCommand.MAX_JOINT_ANGLE = "cmd_max_joint_angle";
     GenCommand.CHANGE_LAYER = "cmd_change_layer";
@@ -28,6 +29,7 @@ window.TQ = window.TQ || {};
     GenCommand.initialize = function () {
         fns = [];
         fns[GenCommand.SCALE] = {dofn: "scaleTo",  undofn: "scaleTo"};
+        fns[GenCommand.SCALE_AND_ROTATE] = {dofn: "scaleAndRotateTo",  undofn: "scaleAndRotateTo"};
         fns[GenCommand.MIN_JOINT_ANGLE] = {dofn: "setMinAngle",  undofn: "setMinAngle"};
         fns[GenCommand.MAX_JOINT_ANGLE] = {dofn: "setMaxAngle",  undofn: "setMaxAngle"};
         fns[GenCommand.CHANGE_LAYER] = {dofn: "moveZ",  undofn: " moveToZ"};
@@ -58,4 +60,18 @@ window.TQ = window.TQ || {};
         return TQ.CommandMgr.directDo(cmd);
     };
 
+
+    TQ.CommandMgr.directScaleAndRotate = function(ele, scale, angle) {
+        var oldValue = {
+                scale: ele.getScale(),
+                angle: Math.truncate6(ele.jsonObj.rotation)
+            },
+
+            newScaleAndRotate = {
+                scale: scale,
+                angle: angle
+            };
+
+        return TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.SCALE_AND_ROTATE, ele, newScaleAndRotate, oldValue));
+    };
 }());
