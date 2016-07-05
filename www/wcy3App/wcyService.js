@@ -4,8 +4,14 @@
   EditorService： 综合提供元素级别的服务， 并且调用WCY中的服务
 
 
-WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
-   统一管理在下面三个地方的存取：app本地文件， LocalStorage和远程服务器
+WCY 服务： 提供wcy及其screenshot的创建、保存、编辑、展示等服务；
+  * 首次保存的时候， 也保存一份截图（当前画面的）
+  * 再次保存的时候， 不再自动保存截图，
+  * 可以单独保存截图（更新， 会替换旧的）
+  * ToDo：想法删除旧的截图， 节省空间， 确保它没有被分享出去， 在替换的时候， 放到待删除库
+  * 保存截图的时候， 必须同时再更新WCY（确保其中的ssPath是最新的）。
+
+   ? 统一管理在下面三个地方的存取：app本地文件， LocalStorage和远程服务器
    提供WCY的自动保存服务
    LocalStorage由于空间有限， 只提供当前文件的自动存储。
    app本地文件， 可以离线存储多个作品
@@ -263,11 +269,16 @@ function WCY($http, FileService, WxService, NetService) {
             }
 
             if (!!data.ssPath) {
-                currScene.ssPath = data.ssPath;
+                if (!currScene.ssPath) {
+                    currScene.ssPath = data.ssPath;
+                    save();
+                } else {
+                    currScene.ssPath = data.ssPath;
+                }
             }
 
             if ((!currScene.ssPath) && (!!data.ssSign)) {
-                // uploadScreenShot();
+                uploadScreenshot(); // 自动触发首次截屏上传
             }
         }
 
