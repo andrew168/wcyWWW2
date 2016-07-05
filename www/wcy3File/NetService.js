@@ -31,7 +31,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         });
     }
 
-    function uploadOne(file, matType) {
+    function uploadOne(file, matType) { // upload one material
         var q = $q.defer();
         TQ.Assert.isTrue(!!file, "文件不能为null");
         var option;
@@ -56,40 +56,45 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             };
         }
 
-        createMatId(option).
-            success(function (data) {
-                console.log(JSON.stringify(data));
-                data.api_key = TQ.Config.Cloudinary.api_key;
-                var res;
-                if (isLocalFile(file)) {
-                    data.file = file;
-                    res = doUploadLocalFile(data);
-                    res.progress(function (e) {
-                        file.progress = Math.round((e.loaded * 100.0) / e.total);
-                        file.status = "Uploading... " + file.progress + "%";
-                    });
-                } else {
-                    data.file = hasFileName(file) ? file.data : file;
-                    res = doSubmitImage64(data);
-                }
-
-                res.success(function (data, status, headers, config) {
-                    file.result = data;
-                    console.log(data);
-                    data.type = matType;
-                    updateMat(data);
-                    q.resolve(data);
-                }).error(function (data, status, headers, config) {
-                    file.result = data;
-                    q.reject(data);
-                });
-            })
-            .error(function (event) {
+        createMatId(option)
+            .then(doUploadMat)
+            .then(onLoadedSuccess, function (event, status, headers, config) {
                 TQ.Log.alertInfo("error" + angular.toJson(event));
                 q.reject(event);
             });
 
+        function doUploadMat(signData) {
+            return doUploadImage(signData, file);
+        }
+
+        function onLoadedSuccess(data, status, headers, config) {
+            file.result = data;
+            console.log(data);
+            data.type = matType;
+            updateMat(data);
+            q.resolve(data);
+        }
+
         return q.promise;
+    }
+
+    function doUploadImage(signData, fileOrBuffer) {
+        console.log(JSON.stringify(signData));
+        signData.api_key = TQ.Config.Cloudinary.api_key;
+        var res;
+        if (isLocalFile(fileOrBuffer)) {
+            signData.file = fileOrBuffer;
+            res = doUploadLocalFile(signData);
+            res.progress(function (e) {
+                fileOrBuffer.progress = Math.round((e.loaded * 100.0) / e.total);
+                fileOrBuffer.status = "Uploading... " + fileOrBuffer.progress + "%";
+            });
+        } else {
+            signData.file = hasFileName(fileOrBuffer) ? fileOrBuffer.data : fileOrBuffer;
+            res = doSubmitImage64(signData);
+        }
+
+        return res;
     }
 
     function doUploadLocalFile(data) {
@@ -100,8 +105,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     function doSubmitImage64(data) {
-        var url = IMAGE_CLOUD_URL;
-        return $http.post(url, angular.toJson(data));
+        return $http.post(IMAGE_CLOUD_URL, angular.toJson(data));
     }
 
     function getByXHR(uri) {
@@ -235,6 +239,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         put: put,
         uploadImages: uploadImages,
         uploadOne: uploadOne,
+        doUploadImage: doUploadImage,
         update: update,
         del: del
     }

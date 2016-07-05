@@ -10,6 +10,7 @@ var mongoose = require('mongoose'),
 var opusSchema = new Schema({
     timestamp:{type:Date, default: Date.now},
     userId:Number,
+    ssPath: {type: String, default:""},
     template: Schema.ObjectId
 });
 

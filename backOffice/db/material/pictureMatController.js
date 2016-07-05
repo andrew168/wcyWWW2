@@ -85,7 +85,7 @@ function update(id, path, callback) {
                             callback(data._id);
                         }
                     } else {
-                        console.error("error in save update picture mat!");
+                        console.error("error in update picture mat!");
                     }
                 });
             }

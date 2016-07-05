@@ -4,11 +4,11 @@
 var express = require('express');
 var router = express.Router();
 var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
+var imageUtils = require('../common/imageUtils'); // 后缀.js可以省略，Node会自动查找，
 var status = require('../common/status');
 var fs = require('fs');
-
-var userController = require('../db/user/userController');
 var opusController = require('../db/opus/opusController');
+var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
 
 var WCY_DEPOT = "/data/wcydepot/";
 
@@ -21,6 +21,11 @@ router.get('/:shareCode', function(req, res, next) {
     var shareCode = req.param('shareCode');
     var wcyId = utils.decomposeShareCode(shareCode).wcyId;
     sendBackWcy(req, res, wcyId);
+});
+
+router.get('/sspath', function(req, res, next) {
+    var wcyId = req.param('wcyId');
+    resWcySaved(res, wcyId, null, "ssId is generated!");
 });
 
 router.post('/', function(req, res, next) {
@@ -40,19 +45,30 @@ router.post('/', function(req, res, next) {
         var wcyId = req.param('wcyId');
         if (isNewWcy(wcyId)) {
             // 入库， 并获取新wcyID，
-            function onSavedToDB(_wcyId) {
+            function onSavedToDB(_wcyId, ssPath) {
                 wcyId = _wcyId;
-                _saveWcy(wcyId, wcyData, res);
+                _saveWcy(wcyId, ssPath, wcyData, res);
             }
             opusController.add(status.user.ID, templateID, onSavedToDB, null);
         } else {
-            _saveWcy(wcyId, wcyData, res);
+            var ssPath = null;
+            _saveWcy(wcyId, ssPath, wcyData, res);
         }
     }
 });
 
-function _saveWcy(wcyId, wcyData, res) {
-    fs.writeFile(wcyId2Filename(wcyId), wcyData, function(err) {
+router.post('/sspath', function(req, res, next) {
+    var wcyId = req.param('wcyId') || null;
+    var ssPath = req.param('ssPath') || null;
+    opusController.updateScreenshot(wcyId, ssPath, onUpdated);
+    function onUpdated(wcyId, ssPath) {
+        resWcySaved(res, wcyId, ssPath, "ssPath updated!");
+    }
+});
+
+function _saveWcy(wcyId, ssPath, wcyData, res) {
+    fs.writeFile(wcyId2Filename(wcyId), wcyData, onWriteCompleted);
+    function onWriteCompleted(err) {
         var msg;
         if(err) {
             msg = err;
@@ -61,11 +77,20 @@ function _saveWcy(wcyId, wcyData, res) {
             msg = "The file was saved!";
         }
         console.log(msg);
-        var shareId = 0,
-            timestamp = (new Date()).getTime();
-        var shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID, timestamp);
-        res.send({wcyId: wcyId, shareCode:shareCode, msg:msg});
-    });
+        resWcySaved(res, wcyId, ssPath, msg);
+    }
+}
+
+function resWcySaved(res, wcyId, ssPath, msg) {
+    var shareId = 0,
+        timestamp = (new Date()).getTime();
+    var shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID, timestamp);
+    // ssPath可能为null，(如果本次没有截屏的话）
+    var data = {
+        public_id: imageUtils.screenshotId2Name(wcyId)
+    };
+    cSignature.sign(data);
+    res.send({wcyId: wcyId, ssPath: ssPath, ssSign: data, shareCode:shareCode, msg:msg});
 }
 
 /// private function:
@@ -107,11 +132,6 @@ function sendBackWcy(req, res, wcyId) {
         } else {
             response(req, res, data, wcyId);
             console.log("对于非注册用户， 如何处理？");
-
-/*          status.setExtraCallback(function() {
-                response(req, res, data, wcyId);
-            })
-*/
         }
     });
 }

@@ -24,8 +24,21 @@ function add(userID, templateID, onSuccess, onError) {
     });
 
     aOpus.save(function(err, doc) {
-        utils.onSave(err, doc, onSuccess, onError);
+        onSaveOpus(err, doc, onSuccess, onError);
     });
+}
+
+function onSaveOpus(err, doc, onSuccess, onError) {
+    if (!err) {
+        if (onSuccess) {
+            onSuccess(doc._id, doc.ssPath);
+        }
+    } else {
+        console.error("error in save/update opus!");
+        if (onError) {
+            onError(err);
+        }
+    }
 }
 
 function getList(userId, callback) {
@@ -41,6 +54,24 @@ function getList(userId, callback) {
         });
 }
 
+function updateScreenshot(id, path, onSuccess, onError) {
+    Opus.findOne({_id: id})
+        .exec(function (err, data) {
+            if (!data) {
+                console.error(404, {msg: 'not found!' + id});
+            } else {
+                console.log(data);
+                data.set('ssPath', path);
+                data.save(onSaved);
+            }
+        });
+
+    function onSaved (err, data) {
+        onSaveOpus(err, data, onSuccess, onError);
+    }
+}
+
 exports.get = get;
 exports.add = add;
 exports.getList = getList;
+exports.updateScreenshot = updateScreenshot;

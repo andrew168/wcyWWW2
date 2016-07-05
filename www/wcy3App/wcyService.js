@@ -18,9 +18,9 @@ WCY 服务： 提供wcy的创建、保存、编辑、展示等服务；
    => show
 */
 angular.module('starter').factory("WCY", WCY);
-WCY.$injection = ['$http', 'FileService', 'WxService'];
+WCY.$injection = ['$http', 'FileService', 'WxService', 'NetService'];
 
-function WCY($http, FileService, WxService) {
+function WCY($http, FileService, WxService, NetService) {
     // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
     var user = userProfile.user;
     var _AUTO_SAVE_NAME = '_auto_save_name_';
@@ -30,7 +30,7 @@ function WCY($http, FileService, WxService) {
 
     var _wcyId = -1, // 缺省-1， 表示没有保存的作品。，12345678;
         _shareCode = null,
-        _screenshotUrl = null,
+        _ssSign = null,
         _onStarted = null;
 
 
@@ -47,7 +47,6 @@ function WCY($http, FileService, WxService) {
         }
         _wcyId = 0;
         _shareCode = null;
-        _screenshotUrl = null;
         TQ.SceneEditor.createScene(option);
         startAutoSave();
     }
@@ -100,7 +99,7 @@ function WCY($http, FileService, WxService) {
     }
 
     function getScreenshotUrl() {
-        return _screenshotUrl;
+        return (!currScene.ssPath) ? null: currScene.ssPath;
     }
 
     function _upload() {
@@ -120,6 +119,28 @@ function WCY($http, FileService, WxService) {
             },
             data: jsonWcyData
         });
+    }
+
+    function uploadScreenshot() {
+        var data = TQ.ScreenShot.getData();
+        TQ.AssertExt.invalidLogic(!!_ssSign);
+        NetService.doUploadImage(_ssSign, data).
+            then(updateSsPath).
+            then(_onUploadedSuccess, function (err){
+                TQ.Log.error("error in update ssPath!" + err);
+            });
+    }
+
+    function updateSsPath(pkg) {
+        TQ.AssertExt.invalidLogic(pkg.status === 200);
+
+        var data2 = {
+            ssPath: TQ.RM.toRelative(pkg.data.url),
+            wcyId: _wcyId
+        };
+
+        var url = TQ.Config.OPUS_HOST + '/wcy/ssPath';
+        return $http.post(url, angular.toJson(data2));
     }
 
     //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）
@@ -225,11 +246,28 @@ function WCY($http, FileService, WxService) {
 
     function _onUploadedSuccess(res) {
         var data = res.data;
-        if (!!data && !!data.wcyId) {
-            _wcyId = _getWcyId(data);
-            _shareCode = data.shareCode;
-            if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
-                WxService.shareMessage(_shareCode);
+        if (!!data) {
+            if (!!data.wcyId) {
+                _wcyId = _getWcyId(data);
+            }
+
+            if (!!data.shareCode) {
+                _shareCode = data.shareCode;
+                if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
+                    WxService.shareMessage(_shareCode);
+                }
+            }
+
+            if (!!data.ssSign) {
+                _ssSign = data.ssSign;
+            }
+
+            if (!!data.ssPath) {
+                currScene.ssPath = data.ssPath;
+            }
+
+            if ((!currScene.ssPath) && (!!data.ssSign)) {
+                // uploadScreenShot();
             }
         }
 
@@ -278,6 +316,7 @@ function WCY($http, FileService, WxService) {
         start: start,  // start a new one, or load previous one (edited or played)
         create: create,
         save: save,
+        uploadScreenshot: uploadScreenshot,
         edit: edit,  // open for edit
         getWcy: getWcy,
         getWcyList: getWcyList,

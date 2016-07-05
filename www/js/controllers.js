@@ -261,13 +261,7 @@ function DashCtrl(
     };
 
     $scope.uploadScreenShot = function (_onSuccess) {
-        if (!_onSuccess) {
-            _onSuccess = onSuccess;
-        }
-        var data = TQ.ScreenShot.getData();
-        NetService.uploadOne(data).then(
-            onSuccess,
-            onError);
+        WCY.uploadScreenshot();
     };
 
     $scope.insertBkImageFromLocal = function () {
