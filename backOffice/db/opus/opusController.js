@@ -43,15 +43,33 @@ function onSaveOpus(err, doc, onSuccess, onError) {
 
 function getList(userId, callback) {
     var condition = (userId === null) ? null : {userId: userId};
-    Opus.find(condition)
+    Opus.find(condition).sort({timestamp: -1})
         .exec(function (err, data) {
             if (!data) {
                 console.error(404, {msg: 'not found!' + id});
             } else {
                 console.log(data);
             }
-            callback(data);
+            var result = getLatest2(data);
+            if (result.length === 0) {
+                if (userId) {
+                    return getList(null, callback);
+                }
+            }
+            callback(result);
         });
+
+    function getLatest2(data) {
+        var i,
+            result = [],
+            num = Math.min(2, data.length);
+
+        for (i = 0; i < num; i++ ) {
+            result.push(data[i]);
+        }
+
+        return result;
+    }
 }
 
 function updateScreenshot(id, path, onSuccess, onError) {
@@ -62,6 +80,7 @@ function updateScreenshot(id, path, onSuccess, onError) {
             } else {
                 console.log(data);
                 data.set('ssPath', path);
+                data.set('lastModified', Date.now());
                 data.save(onSaved);
             }
         });

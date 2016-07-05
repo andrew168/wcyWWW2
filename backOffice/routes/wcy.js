@@ -12,6 +12,18 @@ var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省�
 
 var WCY_DEPOT = "/data/wcydepot/";
 
+router.get('/sspath', function(req, res, next) {
+    var wcyId = req.param('wcyId');
+    resWcySaved(res, wcyId, null, "ssId is generated!");
+});
+
+router.get('/mylist', function(req, res, next) {
+    status.checkUser(req, res);
+    opusController.getList(status.user.ID, function(data) {
+        res.json(data);
+    })
+});
+
 // 定义RESTFull API（路径）中的参数， 形参
 router.param('shareCode', function (req, res, next, id) {
     next();
@@ -21,11 +33,6 @@ router.get('/:shareCode', function(req, res, next) {
     var shareCode = req.param('shareCode');
     var wcyId = utils.decomposeShareCode(shareCode).wcyId;
     sendBackWcy(req, res, wcyId);
-});
-
-router.get('/sspath', function(req, res, next) {
-    var wcyId = req.param('wcyId');
-    resWcySaved(res, wcyId, null, "ssId is generated!");
 });
 
 router.post('/', function(req, res, next) {
