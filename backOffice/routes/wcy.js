@@ -18,7 +18,7 @@ router.get('/sspath', function(req, res, next) {
     resWcySaved(res, wcyId, null, "ssId is generated!");
 });
 
-router.get('/mylist', function(req, res, next) {
+router.get('/list', function(req, res, next) {
     status.checkUser(req, res);
     opusController.getList(status.user.ID, function(data) {
         res.json(data);

@@ -67,6 +67,9 @@ function getList(userId, callback) {
             num = Math.min(LATEST_OPUS_NUM, data.length);
 
         for (i = 0; i < num; i++ ) {
+            if (!data[i].ssPath) {
+                continue;
+            }
             result.push(data[i]);
         }
 

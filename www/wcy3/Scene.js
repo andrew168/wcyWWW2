@@ -313,6 +313,7 @@ TQ = TQ || {};
         //   $('#stop').trigger('click');
         this.setEditor();
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
+        this.ssPath = null; // 初始化， 没有此值
         this.isDirty = true;
         //ToDo:@UI   initMenu(); // 重新设置菜单
 

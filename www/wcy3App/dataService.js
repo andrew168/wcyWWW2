@@ -25,7 +25,8 @@
             READY_PROP_IMAGE = 0x02,
             READY_PEOPLE_IMAGE = 0x04,
             READY_SOUND = 0x08,
-            READ_ALL = 0x0f;
+            READY_OPUS = 0x10,
+            READ_ALL = 0x1f;
         var state = 0,
             workCounter = 0;
 
@@ -150,6 +151,7 @@
             getMatList(propsLocal, NetService.TYPE_PROP_IMAGE, READY_PROP_IMAGE);
             getMatList(propsPeople, NetService.TYPE_PEOPLE_IMAGE, READY_PEOPLE_IMAGE);
             getMatList(sounds, NetService.TYPE_SOUND, READY_SOUND);
+            getOpusList(propsMyWork, READY_OPUS);
         }
 
         function getMatList(mats, matType, stateType) {
@@ -168,22 +170,30 @@
             }
         }
 
+        function getOpusList(mats, stateType) {
+            $http({
+                method: 'GET',
+                url: TQ.Config.OPUS_HOST + '/wcy/list/'
+            }).then(onSuccess);
+
+            function onSuccess(response) {
+                var data = (response.status === 200) ? response.data : [],
+                    selected = [];
+
+                data.forEach(function(item) {
+                    selected.push({wcyId: item._id, path: item.ssPath});
+                });
+                mats.setList(selected);
+                state |= stateType;
+                if (state === READ_ALL) {
+                    onDataReady();
+                }
+            }
+        }
+
         function onDataReady() {
             propsMyWork1 = readCacheWithParse(MY_WORKS, []);
             workCounter = readCacheWithParse("workCounter", 0);
-/*            if (TQ.Config.LocalCacheEnabled) {
-                TQ.DownloadManager.downloadBulk(propsAlbum);
-                TQ.DownloadManager.downloadBulk(propsCamera);
-            } else {
-                fixup(propsAlbum);
-                fixup(propsCamera);
-            }
-
-            // 把图片数据准备成3*N数组，不足的填null
-            propsAlbum = _prepareColumn(propsAlbum, IMAGE_COLUMN_NUMBER);
-            propsCamera = _prepareColumn(propsCamera, IMAGE_COLUMN_NUMBER);
-            propsMyWork = _prepareColumn(propsMyWork1, IMAGE_COLUMN_NUMBER);
-*/
         }
 
         return {
