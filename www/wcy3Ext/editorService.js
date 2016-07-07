@@ -49,6 +49,9 @@ function EditorService($timeout, NetService, WxService, WCY) {
         document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
         updateMode();
         updateColorPanel();
+
+        // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
+        // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
     }
 
     function insertBkMatFromLocal() {
@@ -123,7 +126,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
             TQ.Assert.isTrue(isSound(aFile));
             uploadData(aFile);
         } else {
-            var options = {};
+            var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
             var processor = new TQ.ImageProcess();
             processor.start(aFile, options, uploadData);
         }

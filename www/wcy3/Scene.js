@@ -574,6 +574,13 @@ TQ = TQ || {};
         this.isDirty = true;
     };
 
+    p.setSsPath = function (ssPath) {
+        if ((!this.ssPath) || (this.ssPath !== ssPath)) {
+            this.ssPath = ssPath;
+            this.isDirty = true;
+        }
+    };
+
     p.startPreloader = function (pt, i, num) {
         for (; i < num; i++) {
             pt.levels[i].setupPreloader();

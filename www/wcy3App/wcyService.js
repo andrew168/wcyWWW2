@@ -269,12 +269,7 @@ function WCY($http, FileService, WxService, NetService) {
             }
 
             if (!!data.ssPath) {
-                if (!currScene.ssPath) {
-                    currScene.ssPath = data.ssPath;
-                    save();
-                } else {
-                    currScene.ssPath = data.ssPath;
-                }
+                currScene.setSsPath(data.ssPath);
             }
 
             if ((!currScene.ssPath) && (!!data.ssSign)) {

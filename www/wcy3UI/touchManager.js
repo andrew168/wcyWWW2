@@ -12,6 +12,11 @@ var TQ = TQ || {};
         isMultiTouching = false,
         enableTouchScreen = true;
 
+    function addHandler(gesture, handler) {
+        var canvas = document.getElementById("testCanvas");
+        ionic.EventController.onGesture(gesture, handler, canvas);
+    }
+
     function initialize() {
         var canvas = document.getElementById("testCanvas");
         if (!enableTouchScreen) {
@@ -218,6 +223,7 @@ var TQ = TQ || {};
         TQ.SelectSet.add(ele2);
     }
 
+    TouchManager.addHandler = addHandler;
     TouchManager.initialize = initialize;
     TouchManager.isOperating = function() {return isOperating;};
     TQ.TouchManager = TouchManager;
