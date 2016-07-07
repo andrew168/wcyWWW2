@@ -2,6 +2,7 @@
  * Created by admin on 12/4/2015.
  */
 // 实现数据库的增删改查
+var LATEST_OPUS_NUM = 10;
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
     Opus = mongoose.model('Opus');
@@ -41,16 +42,17 @@ function onSaveOpus(err, doc, onSuccess, onError) {
     }
 }
 
+// 获取最新的10个作品， 有ssPath的， 无论是否我的，
 function getList(userId, callback) {
-    var condition = (userId === null) ? null : {userId: userId};
+    var condition = null; // (userId === null) ? null : {userId: userId};
     Opus.find(condition).sort({timestamp: -1})
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found!' + id});
+                console.error(404, {msg: 'not found!' + userId});
             } else {
                 console.log(data);
             }
-            var result = getLatest2(data);
+            var result = getLatest(data);
             if (result.length === 0) {
                 if (userId) {
                     return getList(null, callback);
@@ -59,10 +61,10 @@ function getList(userId, callback) {
             callback(result);
         });
 
-    function getLatest2(data) {
+    function getLatest(data) {
         var i,
             result = [],
-            num = Math.min(2, data.length);
+            num = Math.min(LATEST_OPUS_NUM, data.length);
 
         for (i = 0; i < num; i++ ) {
             result.push(data[i]);
