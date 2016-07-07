@@ -145,7 +145,7 @@ function WCY($http, FileService, WxService, NetService) {
             wcyId: _wcyId
         };
 
-        var url = TQ.Config.OPUS_HOST + '/wcy/ssPath';
+        var url = TQ.Config.OPUS_HOST + '/wcy/sspath';
         return $http.post(url, angular.toJson(data2));
     }
 
