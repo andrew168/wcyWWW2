@@ -85,6 +85,11 @@ function WCY($http, FileService, WxService, NetService) {
             .then(_onReceivedWcyData, _onFail);
     }
 
+    function getWcyById(wcyId) {
+        var shareCode = "0_" + wcyId + "_0_0";
+        return getWcy(shareCode);
+    }
+
     function getWcyList() {
         var url = TQ.Config.OPUS_HOST + '/wcylist/';
         $http.get(url)
@@ -273,7 +278,7 @@ function WCY($http, FileService, WxService, NetService) {
             }
 
             if ((!currScene.ssPath) && (!!data.ssSign)) {
-                uploadScreenshot(); // 自动触发首次截屏上传
+                // uploadScreenshot(); // 自动触发首次截屏上传
             }
         }
 
@@ -325,6 +330,7 @@ function WCY($http, FileService, WxService, NetService) {
         uploadScreenshot: uploadScreenshot,
         edit: edit,  // open for edit
         getWcy: getWcy,
+        getWcyById: getWcyById,
         getWcyList: getWcyList,
         getShareCode: getShareCode,
         getScreenshotUrl: getScreenshotUrl,
