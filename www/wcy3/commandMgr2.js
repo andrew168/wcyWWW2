@@ -90,8 +90,8 @@ window.TQ = window.TQ || {};
     CommandMgr.mergeCommand = function (last, cmd) {
         if ((last != null) &&
             (_lastCmdGroupID === _cmdGroupID) &&
-            (last.receiver.id === cmd.receiver.id) &&
-            (last.constructor.name === cmd.constructor.name)) {
+            (last.constructor.name === cmd.constructor.name) &&
+            (last.receiver.id === cmd.receiver.id)) {
             if ((last.constructor.name == "DeleteEleCommand") ||
                 (last.constructor.name == "CompositeCommand")) {
                 return null;
