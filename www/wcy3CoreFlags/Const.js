@@ -3,9 +3,10 @@
  */
 var TQ = TQ || {};
 
-(function() {
-    var EVENT = {};
-    EVENT.FILE_SYSTEM_READY = "file system ready";
-    EVENT.DIR_READY = "directory ready";
-    TQ.EVENT = EVENT;
+TQ.EVENT = (function() {
+    return {
+        FILE_SYSTEM_READY: "file system ready",
+        DIR_READY: "directory ready",
+        MAT_CHANGED: "material or opus uploaded (created, updated, or deteled"
+    }
 })();

@@ -282,6 +282,8 @@ function WCY($http, FileService, WxService, NetService) {
             if ((!currScene.ssPath) && (!!data.ssSign)) {
                 // uploadScreenshot(); // 自动触发首次截屏上传
             }
+
+            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS} );
         }
 
         currScene.isSaved = true;

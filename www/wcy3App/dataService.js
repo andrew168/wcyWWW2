@@ -142,11 +142,38 @@
                 return;
             }
             initialized = true;
-            getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
-            getMatList(propsLocal, TQ.MatType.PROP, READY_PROP_IMAGE);
-            getMatList(propsPeople, TQ.MatType.PEOPLE, READY_PEOPLE_IMAGE);
-            getMatList(sounds, TQ.MatType.SOUND, READY_SOUND);
-            getOpusList(propsMyWork, READY_OPUS);
+            document.addEventListener(TQ.EVENT.MAT_CHANGED, onMatChanged, false);
+            onMatChanged();
+        }
+
+        function onMatChanged(event) {
+            var matType = null;
+            if (!!event && event.data && event.data.matType) {
+                matType = event.data.matType;
+            }
+
+            if (!matType || (matType === TQ.MatType.BKG)) {
+                state &= (~READY_BKG_IMAGE);
+                getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
+            }
+
+            if (!matType || (matType === TQ.MatType.PROP)) {
+                state &= (~READY_PROP_IMAGE);
+                getMatList(propsLocal, TQ.MatType.PROP, READY_PROP_IMAGE);
+            }
+
+            if (!matType || (matType === TQ.MatType.PEOPLE)) {
+                state &= (~READY_PEOPLE_IMAGE);
+                getMatList(propsPeople, TQ.MatType.PEOPLE, READY_PEOPLE_IMAGE);
+            }
+            if (!matType || (matType === TQ.MatType.SOUND)) {
+                state &= (~READY_SOUND);
+                getMatList(sounds, TQ.MatType.SOUND, READY_SOUND);
+            }
+            if (!matType || (matType === TQ.MatType.OPUS)) {
+                state &= (~READY_OPUS);
+                getOpusList(propsMyWork, READY_OPUS);
+            }
         }
 
         function getMatList(mats, matType, stateType) {

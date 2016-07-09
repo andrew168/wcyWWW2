@@ -36,6 +36,9 @@ window.TQ = window.TQ || {};
     };
 
     Log.depreciated = function (str) {
+        if (!str) {
+            str = "";
+        }
         console.error("this is depreciated. " + str);
     };
 

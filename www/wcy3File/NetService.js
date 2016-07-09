@@ -189,7 +189,11 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             type: data.type
         };
 
-        return $http.post(C_MAN_URL, angular.toJson(data2));
+        return $http.post(C_MAN_URL, angular.toJson(data2)).
+            then(function (data) {
+                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.type});
+            });
+
     }
 
     function update(path) {
