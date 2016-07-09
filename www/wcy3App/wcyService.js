@@ -133,13 +133,15 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function uploadScreenshot() {
+        if (!_ssSign) {
+            return save().then(uploadScreenshot);
+        }
+
         var data = TQ.ScreenShot.getData();
         TQ.AssertExt.invalidLogic(!!_ssSign);
-        NetService.doUploadImage(_ssSign, data).
+        return NetService.doUploadImage(_ssSign, data).
             then(updateSsPath).
-            then(_onUploadedSuccess, function (err){
-                TQ.Log.error("error in update ssPath!" + err);
-            });
+            then(_onUploadedSuccess);
     }
 
     function updateSsPath(pkg) {

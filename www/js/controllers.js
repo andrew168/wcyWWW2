@@ -260,7 +260,7 @@ function DashCtrl(
         screenshotCounter++;
     };
 
-    $scope.uploadScreenShot = function (_onSuccess) {
+    $scope.uploadScreenShot = function () {
         WCY.uploadScreenshot();
     };
 
