@@ -8,8 +8,8 @@ var TQ = TQ || {};
 
 (function(lib){
     function ImageProcess() {
-
     }
+    var IMAGE_MAX_LENGTH = 1280;
     var p = ImageProcess.prototype;
     var _canvas = null;
 
@@ -59,10 +59,27 @@ var TQ = TQ || {};
         }
         ele.src = url;
 
+        function determineScale(img) {
+            var scale = 1;
+
+            if (img.height > img.width) {
+                if (img.height > IMAGE_MAX_LENGTH) {
+                    scale = IMAGE_MAX_LENGTH / img.height;
+                }
+            } else {
+                if (img.width > IMAGE_MAX_LENGTH) {
+                    scale = IMAGE_MAX_LENGTH / img.width;
+                }
+            }
+            return scale;
+        }
+
         function onload () {
-            var ctx, neededHeight, neededWidth;
-            neededHeight = ele.height;
-            neededWidth = ele.width;
+            var scale = determineScale(ele),
+                ctx,
+                neededHeight = Math.round(ele.height * scale / 8) * 8,
+                neededWidth = Math.round(ele.width * scale / 8) * 8;
+
             if (!_canvas) {
                 _canvas = document.createElement("canvas");
             }
