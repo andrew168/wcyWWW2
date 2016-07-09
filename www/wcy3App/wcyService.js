@@ -62,7 +62,7 @@ function WCY($http, FileService, WxService, NetService) {
             saveToCache();
         }
         //ToDo: if (has wifi)
-        return _upload().then(_onUploadedSuccess, _onFail);
+        return upload().then(onUploadedSuccess, _onFail);
     }
 
     function saveToCache() {
@@ -113,7 +113,7 @@ function WCY($http, FileService, WxService, NetService) {
         return (!currScene.ssPath) ? null: currScene.ssPath;
     }
 
-    function _upload() {
+    function upload() {
         TQ.Assert.isDefined(_wcyId);
         _wcyId = (_wcyId === -1) ? 0 : _wcyId;
         TQ.Assert.isTrue(_wcyId >= 0);
@@ -141,7 +141,7 @@ function WCY($http, FileService, WxService, NetService) {
         TQ.AssertExt.invalidLogic(!!_ssSign);
         return NetService.doUploadImage(_ssSign, data).
             then(updateSsPath).
-            then(_onUploadedSuccess);
+            then(onUploadedSuccess);
     }
 
     function updateSsPath(pkg) {
@@ -257,7 +257,7 @@ function WCY($http, FileService, WxService, NetService) {
         }
     }
 
-    function _onUploadedSuccess(res) {
+    function onUploadedSuccess(res) {
         var data = res.data;
         if (!!data) {
             if (!!data.wcyId) {
