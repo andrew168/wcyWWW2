@@ -14,13 +14,6 @@
         var initialized = false;
         var MY_WORKS = "_myWorks_";
         var IMAGE_COLUMN_NUMBER = 3;
-        var RESOURCE_LOCAL = 'local',
-            RESOURCE_ALBUM = 'album',
-            RESOURCE_CAMERA = 'camera',
-            RESOURCE_PEOPLE = 'people',
-            RESOURCE_BKG = 'background',
-            RESOURCE_MY_WORK = "mywork",
-            RESOURCE_SOUND = "sound";
         var READY_BKG_IMAGE = 0x01,
             READY_PROP_IMAGE = 0x02,
             READY_PEOPLE_IMAGE = 0x04,
@@ -118,19 +111,21 @@
 
         function getProps(type, pageStep) {
             switch (type) {
-                case RESOURCE_SOUND:
+                case TQ.MatType.SOUND:
                     return sounds.getPage(pageStep);
-                case RESOURCE_LOCAL:
+                case TQ.MatType.PROP:
                     return propsLocal.getPage(pageStep);
-                case RESOURCE_ALBUM:
+                case TQ.MatType.ALBUM:
+                    TQ.AssertExt.depreciated("ALBUM");
                     return propsAlbum.getPage(pageStep);
-                case RESOURCE_CAMERA:
+                case TQ.MatType.CAMERA:
+                    TQ.AssertExt.depreciated("CAMERA");
                     return propsCamera.getPage(pageStep);
-                case RESOURCE_PEOPLE:
+                case TQ.MatType.PEOPLE:
                     return propsPeople.getPage(pageStep);
-                case RESOURCE_BKG:
+                case TQ.MatType.BKG:
                     return propsBackground.getPage(pageStep);
-                case RESOURCE_MY_WORK:
+                case TQ.MatType.OPUS:
                     return propsMyWork.getPage(pageStep);
                 default :
                     console.error('资源类别参数错误');
@@ -147,10 +142,10 @@
                 return;
             }
             initialized = true;
-            getMatList(propsBackground, NetService.TYPE_BKG_IMAGE, READY_BKG_IMAGE);
-            getMatList(propsLocal, NetService.TYPE_PROP_IMAGE, READY_PROP_IMAGE);
-            getMatList(propsPeople, NetService.TYPE_PEOPLE_IMAGE, READY_PEOPLE_IMAGE);
-            getMatList(sounds, NetService.TYPE_SOUND, READY_SOUND);
+            getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
+            getMatList(propsLocal, TQ.MatType.PROP, READY_PROP_IMAGE);
+            getMatList(propsPeople, TQ.MatType.PEOPLE, READY_PEOPLE_IMAGE);
+            getMatList(sounds, TQ.MatType.SOUND, READY_SOUND);
             getOpusList(propsMyWork, READY_OPUS);
         }
 
@@ -197,14 +192,6 @@
         }
 
         return {
-            RESOURCE_SOUND: RESOURCE_SOUND,
-            RESOURCE_LOCAL: RESOURCE_LOCAL,
-            RESOURCE_ALBUM: RESOURCE_ALBUM,
-            RESOURCE_CAMERA: RESOURCE_CAMERA,
-            RESOURCE_PEOPLE: RESOURCE_PEOPLE,
-            RESOURCE_BKG: RESOURCE_BKG,
-            RESOURCE_MY_WORK: RESOURCE_MY_WORK,
-
             initialize: initialize,
             getProps: getProps,
             getSounds: getSounds,

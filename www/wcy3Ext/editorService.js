@@ -55,19 +55,19 @@ function EditorService($timeout, NetService, WxService, WCY) {
     }
 
     function insertBkMatFromLocal() {
-        return insertMatFromLocal(NetService.TYPE_BKG_IMAGE);
+        return insertMatFromLocal(TQ.MatType.BKG);
     }
 
     function insertPeopleFromLocal() {
-        return insertMatFromLocal(NetService.TYPE_PEOPLE_IMAGE);
+        return insertMatFromLocal(TQ.MatType.PEOPLE);
     }
 
     function insertPropFromLocal() {
-        return insertMatFromLocal(NetService.TYPE_PROP_IMAGE);
+        return insertMatFromLocal(TQ.MatType.PROP);
     }
 
     function insertSoundFromLocal() {
-        return insertMatFromLocal(NetService.TYPE_SOUND);
+        return insertMatFromLocal(TQ.MatType.SOUND);
     }
 
     function insertMatFromLocal(matType) {
@@ -122,7 +122,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
         //ToDo: 检查合法的文件类别
-        if (matType === NetService.TYPE_SOUND) {
+        if (matType === TQ.MatType.SOUND) {
             TQ.Assert.isTrue(isSound(aFile));
             uploadData(aFile);
         } else {
@@ -201,8 +201,8 @@ function EditorService($timeout, NetService, WxService, WCY) {
      }
 
     function addItemByUrl(url, matType) {
-        var eleType = (matType === NetService.TYPE_SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
-            fitFlag = (matType === NetService.TYPE_BKG_IMAGE) ?
+        var eleType = (matType === TQ.MatType.SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
+            fitFlag = (matType === TQ.MatType.BKG) ?
                 TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE,
             desc = {src: url, type: eleType, autoFit: fitFlag};
 

@@ -12,10 +12,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         urlConcat = TQ.Base.Utility.urlConcat,
         IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API,
         C_MAN_URL = TQ.Config.MAN_HOST + '/material';
-    var TYPE_BKG_IMAGE = 10, // 'bkgimage',
-        TYPE_PROP_IMAGE = 20, // 'propimage',
-        TYPE_PEOPLE_IMAGE = 30, // 'peopleimage',
-        TYPE_SOUND = 40; //,'audio';
 
     function uploadImages(files, onSuccess) {
         if (!files) return;
@@ -235,10 +231,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     return {
-        TYPE_BKG_IMAGE: TYPE_BKG_IMAGE,
-        TYPE_PROP_IMAGE: TYPE_PROP_IMAGE,
-        TYPE_PEOPLE_IMAGE: TYPE_PEOPLE_IMAGE,
-        TYPE_SOUND: TYPE_SOUND,
         initialize: initialize,
         get: get,
         put: put,
