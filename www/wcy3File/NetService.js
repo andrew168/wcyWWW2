@@ -57,14 +57,19 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         }
 
         createMatId(option)
-            .then(doUploadMat)
-            .then(onLoadedSuccess, function (event, status, headers, config) {
-                TQ.Log.alertInfo("error" + angular.toJson(event));
-                q.reject(event);
-            });
+            .success(doUploadMat)
+            .error(onError);
+
+        function onError(event, status, headers, config) {
+            TQ.Log.alertInfo("error" + angular.toJson(event));
+            q.reject(event);
+        }
 
         function doUploadMat(signData) {
-            return doUploadImage(signData, file);
+            var res = doUploadImage(signData, file);
+            res
+                .success(onLoadedSuccess)
+                .error(onError);
         }
 
         function onLoadedSuccess(data, status, headers, config) {
