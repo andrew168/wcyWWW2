@@ -131,7 +131,27 @@ function filename2WcyId(filename) {
 }
 
 function sendBackWcy(req, res, wcyId) {
-    fs.readFile(wcyId2Filename(wcyId), 'utf8', onCompleted);
+    var userReady = false,
+        error = null,
+        wcyData = null;
+    status.checkUser(req, res, onUserReady);
+    fs.readFile(wcyId2Filename(wcyId), 'utf8', onDataReady);
+    function onDataReady(err, data) {
+        if (userReady) {
+            onCompleted(err, data);
+        } else {
+            error = err;
+            wcyData = data;
+        }
+    }
+
+    function onUserReady() {
+        userReady = true;
+        if (wcyData) {
+            onCompleted(error, wcyData);
+        }
+    }
+
     function onCompleted(err, data) {
         if (err) {
             console.log("找不到作品文件，wcyId = " + wcyId);
