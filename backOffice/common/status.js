@@ -52,9 +52,15 @@ function checkUserID(req, res, callback) {
     }
 }
 
-function getCookieNumber(req, name, defaultValue)
-{
-    var para = req.cookies.hasOwnProperty(name) ? parseInt(req.cookies[name]) : defaultValue;
+function getCookieNumber(req, name, defaultValue) {
+    var para = null;
+    if (req.cookies && req.cookies[name]) {
+        para = parseInt(req.cookies[name]);
+    } else {
+        console.error("not fond: " + name);
+        para = defaultValue;
+    }
+
     if (isNaN(para)) {
         para = defaultValue;
     }
