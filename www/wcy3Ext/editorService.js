@@ -131,13 +131,17 @@ function EditorService($timeout, NetService, WxService, WCY) {
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
         //ToDo: 检查合法的文件类别
-        if (matType === TQ.MatType.SOUND) {
-            TQ.Assert.isTrue(isSound(aFile));
-            uploadData(aFile);
-        } else {
-            var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
-            var processor = new TQ.ImageProcess();
-            processor.start(aFile, options, uploadData);
+        switch (matType) {
+            case TQ.MatType.BKG:
+                var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
+                var processor = new TQ.ImageProcess();
+                processor.start(aFile, options, uploadData);
+                break;
+            default:
+                if (matType === TQ.MatType.SOUND) {
+                    TQ.Assert.isTrue(isSound(aFile));
+                }
+                uploadData(aFile);
         }
 
         function uploadData(buffer) {
