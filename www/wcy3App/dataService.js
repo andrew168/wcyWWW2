@@ -6,9 +6,9 @@
 
 (function() {
     angular.module('starter').factory('DataService', DataService);
-    DataService.$injection = ['$http', 'NetService'];
+    DataService.$injection = ['$http'];
 
-    function DataService($http, NetService) {
+    function DataService($http) {
         var readCacheWithParse = TQ.Base.Utility.readCacheWithParse;
         var writeCache = TQ.Base.Utility.writeCache;
         var initialized = false;
