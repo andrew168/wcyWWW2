@@ -14,31 +14,40 @@ function EditorService($timeout, NetService, WxService, WCY) {
         fileElement = null,
         _tryToSave = false,
         domEle = null;
+    var isPlayOnly = false;
+    var canvas;
 
-    var state = { // editor 的各种当前值， 用户选择的
-        // element's state
-        x: 0.5, // in NDC space
-        y: 0.5,
-        fontLevel: fontSize2Level(TQ.Config.fontSize),
-        color: TQ.Config.color,
-        isVisible: true,
-        isLocked: false,
-        isFont: false,
-
-        // editor's mode
-        isAddMode: null,
-        isRecording:false, // must be in AddMode
-        isModifyMode:null,
-        isPreviewMode:null,
-        isPlayMode:null,
-        isPlaying: false,
-
-        // undo/redo
+    var state = {            // undo/redo
         hasUndo: TQ.CommandMgr.hasUndo, // function
         hasRedo: TQ.CommandMgr.hasUndo // function
     };
 
-    document.addEventListener(TQ.Scene.EVENT_READY, onSceneReady);
+    initialize();
+
+    function reset() {
+        // editor 的各种当前值， 用户选择的
+        // element's state
+        state.x = 0.1; // in NDC space
+        state.y = 0.9;
+        state.fontLevel = fontSize2Level(TQ.Config.fontSize);
+        state.color = TQ.Config.color;
+        state.isVisible = true;
+        state.isLocked = false;
+        state.isFont = false;
+
+        // editor's mode
+        state.isAddMode = null;
+        state.isRecording = false; // must be in AddMode
+        state.isModifyMode = null;
+        state.isPreviewMode = null;
+        state.isPlayMode = null;
+        state.isPlaying = false;
+    }
+
+    function initialize() {
+        reset();
+        document.addEventListener(TQ.Scene.EVENT_READY, onSceneReady);
+    }
 
     function onSelectSetChange() {
         updateMode();
@@ -319,7 +328,6 @@ function EditorService($timeout, NetService, WxService, WCY) {
 
     function emptyScene() {TQ.SceneEditor.emptyScene(); }
 
-    var isPlayOnly = false;
     function getCurrentScene() {
         return currScene;
     }
@@ -410,7 +418,6 @@ function EditorService($timeout, NetService, WxService, WCY) {
         }
     }
 
-    var canvas;
     // 进入/退出 全屏模式
     function fullscreenPlay (width, height){ // 屏幕分辨率的大小
         canvas = document.getElementById("testCanvas");
@@ -799,6 +806,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         getTextCursor: getTextCursor,
         setColorPanel: setColorPanel,
         toAddMode: toAddMode,
+        reset: reset,
 
         // share
         shareFbWeb: shareFbWeb
