@@ -62,10 +62,9 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         }
 
         function doUploadMat(signData) {
-            var res = doUploadImage(signData, file);
-            res
-                .success(onLoadedSuccess)
-                .error(onError);
+            doUploadImage(signData, file).
+                success(onLoadedSuccess).
+                error(onError);
         }
 
         function onLoadedSuccess(data, status, headers, config) {
