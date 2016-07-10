@@ -3,10 +3,10 @@
  */
 angular.module('starter').factory('AppService', AppService);
 
-AppService.$injection = ['$http', '$cookies', '$q', 'WxService', '$timeout', 'WCY', 'NetService', 'DeviceService',
+AppService.$injection = ['$http', '$stateParams', '$cookies', '$q', 'WxService', '$timeout', 'WCY', 'NetService', 'DeviceService',
         'Setup'];
 
-function AppService($http, $cookies, $q, WxService, $timeout, WCY, NetService, DeviceService,
+function AppService($http, $stateParams, $cookies, $q, WxService, $timeout, WCY, NetService, DeviceService,
               Setup) {
 
         var _initialized = false,
@@ -92,6 +92,9 @@ function AppService($http, $cookies, $q, WxService, $timeout, WCY, NetService, D
             // $scope.testDownload();
 
             var opus = TQ.Utility.getUrlParam('opus');
+            if (!opus && $stateParams.shareCode) {
+                opus = $stateParams.shareCode;
+            }
             // opus = "100_12345678_123_1234567890";
             // opus = "100_00000016_123_1234567890";
             // opus = "100_00000025_123_1234567890";

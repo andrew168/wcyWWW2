@@ -48,6 +48,11 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
         $stateProvider
+            .state('opus', {
+                url: '/opus/:shareCode',
+                templateUrl: '/templates/tab-dash.html',
+                controller: 'DashCtrl'
+            })
             .state('dash', {
                 url: '/dash',
                 templateUrl: '/templates/tab-dash.html',
@@ -56,5 +61,5 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
         ;
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/dash');
+        $urlRouterProvider.otherwise('/opus');
     });
