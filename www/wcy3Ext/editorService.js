@@ -2,7 +2,6 @@
  * Created by Andrewz on 1/17/2016.
  * EditorExt service 是 SceneEditor的扩展，
  * * 可以调用更多的模块（比editor）， 比如图片上传模块
- * *
  */
 
 angular.module('starter').factory('EditorService', EditorService);
@@ -23,6 +22,66 @@ function EditorService($timeout, NetService, WxService, WCY) {
     };
 
     initialize();
+
+    return {
+        state: state,
+
+        // play & preview
+        preview: preview,
+        play: play,
+        stop: stop,
+        replay: replay,
+        startRecord: startRecord,
+        stopRecord: stopRecord,
+        // pause: doPause,
+
+        // opus ==> WCY
+
+        // level
+        addLevel: addLevel,
+        addLevelAt: addLevelAt,
+        deleteLevel: deleteLevel,
+        deleteCurrentLevel: deleteCurrentLevel,
+        gotoPreviousLevel: gotoPreviousLevel,
+        gotoNextLevel: gotoNextLevel,
+        gotoLevel: gotoLevel,
+
+        // level and element
+        onDelete: onDelete,
+
+        // element modification (text, sound, image...)
+        getFontSize: getFontSize,
+        setSize: setSize,
+        setColor: setColor,
+        eraseAnimeTrack:eraseAnimeTrack,
+        deleteElement:deleteElement,
+        hideOrShow :hideOrShow ,
+        pinIt:pinIt,
+
+        // element insert (text, sound, image...)
+        insertBkImageFromLocal: insertBkMatFromLocal, // upload
+        insertPeopleFromLocal: insertPeopleFromLocal,
+        insertPropFromLocal: insertPropFromLocal,
+        insertSoundFromLocal: insertSoundFromLocal,
+        insertImage: insertImage,  // i.e. FromUrl:
+        insertBkImage: insertBkImage,
+        insertText: insertText,
+        insertSound: insertSound,
+
+        // select set
+        emptySelectSet:emptySelectSet,
+
+        // editor
+        setAddMode: setAddMode,
+        setModifyMode: setModifyMode,
+        getTextCursor: getTextCursor,
+        setColorPanel: setColorPanel,
+        toAddMode: toAddMode,
+        reset: reset,
+
+        // share
+        shareFbWeb: shareFbWeb
+    };
 
     function reset() {
         // editor 的各种当前值， 用户选择的
@@ -756,63 +815,4 @@ function EditorService($timeout, NetService, WxService, WCY) {
             });
     }
 
-    return {
-        state: state,
-
-        // play & preview
-        preview: preview,
-        play: play,
-        stop: stop,
-        replay: replay,
-        startRecord: startRecord,
-        stopRecord: stopRecord,
-        // pause: doPause,
-
-        // opus ==> WCY
-
-        // level
-        addLevel: addLevel,
-        addLevelAt: addLevelAt,
-        deleteLevel: deleteLevel,
-        deleteCurrentLevel: deleteCurrentLevel,
-        gotoPreviousLevel: gotoPreviousLevel,
-        gotoNextLevel: gotoNextLevel,
-        gotoLevel: gotoLevel,
-
-        // level and element
-        onDelete: onDelete,
-
-        // element modification (text, sound, image...)
-        getFontSize: getFontSize,
-        setSize: setSize,
-        setColor: setColor,
-        eraseAnimeTrack:eraseAnimeTrack,
-        deleteElement:deleteElement,
-        hideOrShow :hideOrShow ,
-        pinIt:pinIt,
-
-        // element insert (text, sound, image...)
-        insertBkImageFromLocal: insertBkMatFromLocal, // upload
-        insertPeopleFromLocal: insertPeopleFromLocal,
-        insertPropFromLocal: insertPropFromLocal,
-        insertSoundFromLocal: insertSoundFromLocal,
-        insertImage: insertImage,  // i.e. FromUrl:
-        insertBkImage: insertBkImage,
-        insertText: insertText,
-        insertSound: insertSound,
-
-        // select set
-        emptySelectSet:emptySelectSet,
-
-        // editor
-        setAddMode: setAddMode,
-        setModifyMode: setModifyMode,
-        getTextCursor: getTextCursor,
-        setColorPanel: setColorPanel,
-        toAddMode: toAddMode,
-        reset: reset,
-
-        // share
-        shareFbWeb: shareFbWeb
-    }
 }
