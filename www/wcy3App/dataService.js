@@ -195,7 +195,7 @@
         function getOpusList(mats, stateType) {
             $http({
                 method: 'GET',
-                url: TQ.Config.OPUS_HOST + '/wcy/list/'
+                url: TQ.Config.OPUS_HOST + '/wcyList/'
             }).then(onSuccess);
 
             function onSuccess(response) {

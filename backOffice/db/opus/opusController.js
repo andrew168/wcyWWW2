@@ -2,7 +2,7 @@
  * Created by admin on 12/4/2015.
  */
 // 实现数据库的增删改查
-var LATEST_OPUS_NUM = 10;
+var LATEST_OPUS_NUM = 100;
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
     Opus = mongoose.model('Opus');

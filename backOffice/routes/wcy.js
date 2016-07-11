@@ -13,17 +13,6 @@ var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省�
 var WCY_DEPOT = "/data/wcydepot/";
 
 var defaultWcyData = '{"levels":[{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true}],"version":"V2","isDirty":false,"filename":"wcy01","title":"wcy01","currentLevelId":0,"alias":"gameScene","remote":true,"isPreloading":false,"overlay":{"elements":[],"FPS":20,"tMaxFrame":200,"_t":0,"name":"overlay","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false},"currentLevel":{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true},"stage":null}';
-router.get('/sspath', function(req, res, next) {
-    var wcyId = req.param('wcyId');
-    resWcySaved(res, wcyId, null, "ssId is generated!");
-});
-
-router.get('/list', function(req, res, next) {
-    status.checkUser(req, res);
-    opusController.getList(status.user.ID, function(data) {
-        res.json(data);
-    })
-});
 
 // 定义RESTFull API（路径）中的参数， 形参
 router.param('shareCode', function (req, res, next, id) {
