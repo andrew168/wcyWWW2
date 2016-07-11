@@ -21,10 +21,13 @@ function DataService(list) {
     }
 
     // implementations (按照字母顺序排列，升序)
-    function fixup(props_local) {
+    function fixup(items) {
         var i;
-        for (i = 0; i < props_local.length; i++) {
-            props_local[i].path = TQ.RM.toFullPathFs(toThumbNail(props_local[i].path));
+        for (i = 0; i < items.length; i++) {
+            if (!items[i].isProxy) {
+                items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(items[i].path));
+                items[i].path = TQ.RM.toFullPathFs(items[i].path);
+            }
         }
     }
 

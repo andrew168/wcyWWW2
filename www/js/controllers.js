@@ -2,13 +2,13 @@ angular.module('starter').controller('DashCtrl', DashCtrl);
 DashCtrl.$injection = ['$scope', '$state', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaProgress', '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', '$http', 'EditorService',
-        'AppService'];
+        'AppService', 'MatLibService'];
 
 function DashCtrl(
             $scope, $state, $timeout, WCY, $cordovaImagePicker,
             $cordovaProgress, $cordovaSocialSharing,
             FileService, NetService, DeviceService, Setup, WxService, $http, EditorService,
-            AppService) {
+            AppService, MatLibService) {
     var vm = this;
     $scope.localImage1 = null;
     $scope.localImage2 = null;
@@ -19,6 +19,8 @@ function DashCtrl(
 
     $scope.testShowMsg = testShowMsg;
     $scope.testPrompt = testPrompt;
+
+    MatLibService.search("food");
 
     // implementation, abc order
     function testShowMsg() {
@@ -102,14 +104,7 @@ function DashCtrl(
     $scope.testInsert = function () {
         x = 0.2; // += 50;
         y = 0.5; // += 50;
-        // EditorService.insertImage("mcImages/p10324.png", x, y);
-        // EditorService.insertSound("mcSounds/p8574.wav", x, y);
-        // TQ.TextInputMgr.start();
-
-
         EditorService.insertText("国hello", x, y);
-        // EditorService.insertSound("v1465523220/c0.mp3");
-        // EditorService.insertImage('v1462412871/c961.jpg');
     };
 
     $scope.play = function() {
@@ -178,7 +173,7 @@ function DashCtrl(
                     console.log('Image URI: ' + results[i]);
                     x += 50;
                     y += 50;
-                    EditorService.insertImage(results[i], x, y);
+                    EditorService.insertBkImage(results[i], x, y);
                 }
             }, function (error) {
                 // error getting photos

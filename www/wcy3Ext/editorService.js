@@ -63,7 +63,8 @@ function EditorService($timeout, NetService, WxService, WCY) {
         insertPeopleFromLocal: insertPeopleFromLocal,
         insertPropFromLocal: insertPropFromLocal,
         insertSoundFromLocal: insertSoundFromLocal,
-        insertImage: insertImage,  // i.e. FromUrl:
+        insertPeopleImage: insertPeopleImage, // i.e. FromUrl:
+        insertPropImage: insertPropImage,
         insertBkImage: insertBkImage,
         insertText: insertText,
         insertSound: insertSound,
@@ -82,6 +83,22 @@ function EditorService($timeout, NetService, WxService, WCY) {
         // share
         shareFbWeb: shareFbWeb
     };
+
+    function addItem(desc, matType) {
+        if (isProxyMat(desc.src)) {
+            NetService.uploadOne(desc.src, matType).
+                then(function (res) {
+                    TQ.Log.alertInfo("uploaded " + desc.src + " to " + res.url);
+                    desc.src = res.url;
+                    TQ.SceneEditor.addItem(desc);
+                }, function (err) {
+                    console.log(err);
+                })
+                .finally(TQ.MessageBox.hide);
+        } else {
+            TQ.SceneEditor.addItem(desc);
+        }
+    }
 
     function reset() {
         // editor 的各种当前值， 用户选择的
@@ -186,7 +203,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
             atob: !!window.atob
         };
 
-        TQ.MessageBox.showWaiting("努力上传中....");
+        TQ.MessageBox.showWaiting("预处理文件....");
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
         //ToDo: 检查合法的文件类别
@@ -240,14 +257,29 @@ function EditorService($timeout, NetService, WxService, WCY) {
         });
     }
 
-    function insertImage(filename, x, y) {
+    function isProxyMat(url) {
+        return (url && (url.indexOf(TQ.Config.MAT_HOST) < 0));
+    }
+
+    function insertImage(filename, x, y, matType) {
+        if (!matType) {
+            matType = TQ.MatType.PROP;
+        }
         var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.KEEP_SIZE, x: x, y: y};
-        TQ.SceneEditor.addItem(desc);
+        addItem(desc, matType);
+    }
+
+    function insertPeopleImage(filename, x, y) {
+        insertImage(filename, x, y, TQ.MatType.PEOPLE);
+    }
+
+    function insertPropImage(filename, x, y) {
+        insertImage(filename, x, y, TQ.MatType.PROP);
     }
 
     function insertBkImage(filename, x, y) {
         var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y};
-        TQ.SceneEditor.addItem(desc);
+        addItem(desc, TQ.MatType.BKG);
     }
 
     function insertText(message, x, y) {
@@ -269,7 +301,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
 
     function insertSound(filename) {
         var desc = {src: filename, type: "SOUND"};
-        TQ.SceneEditor.addItem(desc);
+        addItem(desc, TQ.MatType.SOUND);
      }
 
     function addItemByUrl(url, matType) {
