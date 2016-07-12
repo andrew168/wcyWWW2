@@ -13,6 +13,16 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API,
         C_MAN_URL = TQ.Config.MAN_HOST + '/material';
 
+    function isFullPath(url) {
+        var protocols = ['http://', 'https://'];
+        for (var i = 0; i < protocols.length; i++) {
+            if (url.indexOf(protocols[i]) === 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     function uploadImages(files, onSuccess) {
         if (!files) return;
         var surplus = files.length;
@@ -43,7 +53,8 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
                 get(file.path);
             }
         } else {
-            var filename = hasFileName(file) ? file.name : getImageNameWithoutExt();
+            var filename = hasFileName(file) ? file.name :
+                (isFullPath(file) ? file : getImageNameWithoutExt());
             option = {
                 filename: filename,
                 type: matType,
@@ -53,12 +64,21 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         }
 
         createMatId(option)
-            .success(doUploadMat)
+            .success(onMatIdCreated)
             .error(onError);
 
         function onError(event, status, headers, config) {
             TQ.Log.alertInfo("error" + angular.toJson(event));
             q.reject(event);
+        }
+
+        function onMatIdCreated(pkg) {
+            if (pkg.existPath) {
+                pkg.url = pkg.existPath;
+                q.resolve(pkg);
+            } else {
+                return doUploadMat(pkg);
+            }
         }
 
         function doUploadMat(signData) {

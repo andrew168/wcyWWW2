@@ -77,12 +77,15 @@ function createMatId(req, res, matType, originalFilename) {
     } else {
         if (isNewMaterial(originalFilename)) {
             // 入库， 并获取新material ID，
-            function onSavedToDB(_matId) {
+            function onSavedToDB(_matId, path) {
                 mat_id = _matId;
                 var data = {
                     public_id: utils.matId2Name(mat_id)
                 };
                 cSignature.sign(data);
+                if (path) {
+                    data.existPath = path;
+                }
                 sendBack(data, res);
             }
 

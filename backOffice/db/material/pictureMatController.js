@@ -57,6 +57,24 @@ function getList(userId, typeId, callback) {
 }
 
 function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
+    var condition = null;
+    if (isFullPath(picName)) {
+        condition = {"typeId": typeId, "name": picName};
+        PictureMat.find(condition).exec(onSeachResult);
+    } else {
+        doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError);
+    }
+
+    function onSeachResult(err, data) {
+        if (!data || (data.length < 1)) {
+            doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError);
+        } else {
+            onSuccess(data[0]._id, data[0].path);
+        }
+    }
+}
+
+function doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError) {
     var aDoc = new PictureMat({
         userId: userId,
         typeId: typeId,
@@ -68,6 +86,16 @@ function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
     aDoc.save(function(err, doc) {
         utils.onSave(err, doc, onSuccess, onError);
     });
+}
+
+function isFullPath(url) {
+    var protocols = ['http://', 'https://'];
+    for (var i = 0; i < protocols.length; i++) {
+        if (url.indexOf(protocols[i]) === 0) {
+            return true;
+        }
+    }
+    return false;
 }
 
 function update(id, path, callback) {
