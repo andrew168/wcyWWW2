@@ -324,10 +324,6 @@ function DashCtrl(
         WxService.shareMessage();
     };
 
-    $scope.wxInit = function () {
-        WxService.init();
-    };
-
     $scope.getLocale = function (id) {
         return TQ.Lang[id];
     }

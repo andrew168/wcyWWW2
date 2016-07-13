@@ -3,10 +3,10 @@
  */
 angular.module('starter').factory('AppService', AppService);
 
-AppService.$injection = ['$http', '$stateParams', '$cookies', '$q', 'WxService', '$timeout', 'WCY', 'NetService', 'DeviceService',
+AppService.$injection = ['$http', '$stateParams', '$cookies', '$q', '$timeout', 'WCY', 'NetService', 'DeviceService',
         'Setup'];
 
-function AppService($http, $stateParams, $cookies, $q, WxService, $timeout, WCY, NetService, DeviceService,
+function AppService($http, $stateParams, $cookies, $q, $timeout, WCY, NetService, DeviceService,
               Setup) {
 
         var _initialized = false,
@@ -47,7 +47,6 @@ function AppService($http, $stateParams, $cookies, $q, WxService, $timeout, WCY,
             }
             _initialized = true;
             TQ.Log.debugInfo("_init");
-            WxService.init();
             window.addEventListener("resize", configCanvas);
             jscolor.installByClassName('jscolor');
             configCanvas();
