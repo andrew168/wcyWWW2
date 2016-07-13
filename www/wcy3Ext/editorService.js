@@ -5,8 +5,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$injection = ['$timeout', 'NetService', 'WxService', 'WCY'];
-function EditorService($timeout, NetService, WxService, WCY) {
+EditorService.$injection = ['$timeout', 'statService', 'NetService', 'WxService', 'WCY'];
+function EditorService($timeout, statService, NetService, WxService, WCY) {
     var _initialized = false,
         _colorPanel = null,
         _lastSelected = null,
@@ -135,6 +135,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         updateMode();
         updateColorPanel();
         WxService.init();
+        statService.startToShow();
         TQ.LazyLoading.start();
 
         // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
