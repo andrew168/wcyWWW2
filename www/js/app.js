@@ -61,5 +61,5 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
         ;
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/opus');
+        $urlRouterProvider.otherwise('/dash');
     });
