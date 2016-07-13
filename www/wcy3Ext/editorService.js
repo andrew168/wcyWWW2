@@ -134,6 +134,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
         updateMode();
         updateColorPanel();
+        TQ.LazyLoading.start();
 
         // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
         // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
