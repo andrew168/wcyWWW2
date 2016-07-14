@@ -5,7 +5,7 @@
  * 在controller中直接使用
  */
 angular.module('starter').factory("NetService", NetService);
-NetService.$injection = ['$q', '$http', '$cordovaFileTransfer', 'Upload'];
+NetService.$inject = ['$q', '$http', '$cordovaFileTransfer', 'Upload'];
 
 function NetService($q, $http, $cordovaFileTransfer, Upload) {
     var baseUrl = "http://bone.udoido.cn/",

@@ -5,8 +5,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$injection = ['$timeout', 'statService', 'NetService', 'WxService', 'WCY'];
-function EditorService($timeout, statService, NetService, WxService, WCY) {
+EditorService.$inject = ['$timeout', 'NetService', 'WxService', 'WCY'];
+function EditorService($timeout, NetService, WxService, WCY) {
     var _initialized = false,
         _colorPanel = null,
         _lastSelected = null,

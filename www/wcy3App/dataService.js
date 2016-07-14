@@ -6,7 +6,7 @@
 
 (function() {
     angular.module('starter').factory('DataService', DataService);
-    DataService.$injection = ['$http'];
+    DataService.$inject = ['$http'];
 
     function DataService($http) {
         var readCacheWithParse = TQ.Base.Utility.readCacheWithParse;

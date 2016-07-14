@@ -24,7 +24,7 @@ WCY 服务： 提供wcy及其screenshot的创建、保存、编辑、展示等�
    => show
 */
 angular.module('starter').factory("WCY", WCY);
-WCY.$injection = ['$http', 'FileService', 'WxService', 'NetService'];
+WCY.$inject = ['$http', 'FileService', 'WxService', 'NetService'];
 
 function WCY($http, FileService, WxService, NetService) {
     // 类的私有变量， 全部用_开头， 以区别于函数的局部变量

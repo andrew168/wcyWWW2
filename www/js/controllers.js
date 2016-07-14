@@ -1,13 +1,13 @@
 angular.module('starter').controller('DashCtrl', DashCtrl);
-DashCtrl.$injection = ['$scope', '$state', '$timeout', 'WCY', '$cordovaImagePicker',
-        '$cordovaProgress', '$cordovaSocialSharing',
-        'FileService', 'NetService', 'DeviceService', 'Setup', 'WxService', '$http', 'EditorService',
+DashCtrl.$inject = ['$scope', '$timeout', 'WCY', '$cordovaImagePicker',
+        '$cordovaSocialSharing',
+        'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
         'AppService', 'MatLibService'];
 
 function DashCtrl(
-            $scope, $state, $timeout, WCY, $cordovaImagePicker,
-            $cordovaProgress, $cordovaSocialSharing,
-            FileService, NetService, DeviceService, Setup, WxService, $http, EditorService,
+            $scope, $timeout, WCY, $cordovaImagePicker,
+            $cordovaSocialSharing,
+            FileService, NetService, DeviceService, WxService, EditorService,
             AppService, MatLibService) {
     var vm = this;
     $scope.localImage1 = null;

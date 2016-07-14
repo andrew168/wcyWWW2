@@ -5,11 +5,11 @@
 angular.module('starter')
     .factory('StatService', StatService);
 
-var MINIMUM_DURATION = 10000; // 必须看一段时间（例如：10秒）之后， 才算是一个有效的展示
-
 StatService.$inject = ['$timeout', '$http'];
 
 function StatService($timeout, $http) {
+    var MINIMUM_DURATION = 10000; // 必须看一段时间（例如：10秒）之后， 才算是一个有效的展示
+
     function startToShow() {
         report('start');
         $timeout(validShow, MINIMUM_DURATION);

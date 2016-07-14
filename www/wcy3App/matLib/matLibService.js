@@ -3,7 +3,7 @@
  */
 
 angular.module('starter').factory("MatLibService", MatLibService);
-MatLibService.$injection = ['$http'];
+MatLibService.$inject = ['$http'];
 
 function MatLibService($http) {
     var result = new TQ.DataObject();

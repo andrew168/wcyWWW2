@@ -4,9 +4,9 @@
  * ToDo：避免重复建立
  */
 angular.module('starter').factory('Setup', Setup);
-Setup.$injection = ['FileService', 'NetService', 'DeviceService'];
+Setup.$inject = ['FileService', 'DeviceService'];
 
-function Setup(FileService, NetService, DeviceService) {
+function Setup(FileService, DeviceService) {
     var dirCounter = 0;
     var dirs = [TQ.Config.IMAGES_CORE_PATH,
         TQ.Config.SOUNDS_PATH,

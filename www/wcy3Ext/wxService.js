@@ -1,5 +1,5 @@
 angular.module('starter').factory('WxService', WxService);
-WxService.$injection = ['$http', '$cookies', '$q'];
+WxService.$inject = ['$http', '$cookies', '$q'];
 function WxService($http, $cookies, $q) {
     // ToDo: CORS 无法读取server设置的cookie，
     //     ==> Auth用户统计， 必须和网页一个host

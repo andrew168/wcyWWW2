@@ -8,10 +8,9 @@
  * 在WCYService中使用
  */
 angular.module('starter').factory("FileService", FileService);
-FileService.$injection = ['$cordovaFileTransfer',
-        '$cordovaFile', 'DeviceService'];
+FileService.$inject = ['$cordovaFile', 'DeviceService'];
 
-function FileService($cordovaFileTransfer, $cordovaFile, DeviceService) {
+function FileService($cordovaFile, DeviceService) {
     var rootFolder = "";
 
     function createDir(dir, onSuccess, onError) {

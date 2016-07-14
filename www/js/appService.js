@@ -3,10 +3,10 @@
  */
 angular.module('starter').factory('AppService', AppService);
 
-AppService.$injection = ['$http', '$stateParams', '$cookies', '$q', '$timeout', 'WCY', 'NetService', 'DeviceService',
+AppService.$inject = ['$stateParams', '$timeout', 'WCY', 'NetService', 'DeviceService',
         'Setup'];
 
-function AppService($http, $stateParams, $cookies, $q, $timeout, WCY, NetService, DeviceService,
+function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
               Setup) {
 
         var _initialized = false,
