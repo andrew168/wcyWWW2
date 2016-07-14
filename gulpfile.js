@@ -29,6 +29,9 @@ gulp.task('config', ['clean'], function () {
     config.app_min_js = "/wcy3all" + config.hash + ".min.js";
     config.app_min_js_map = "wcy3all" + config.hash + ".min.map";
     config.app_min_css = "/wcy3all" + config.hash + ".min.css";
+    config.createJsExt_js = "/createJsExt" + config.hash + ".js";
+    config.createJsExt_min_js = "/createJsExt" + config.hash + ".min.js";
+    config.createJsExt_min_js_map = "createJsExt" + config.hash + ".min.map";
 });
 
 gulp.task('wcylib_concat', function () {
@@ -42,11 +45,13 @@ gulp.task('wcylib_concat', function () {
         .pipe(wcylib_assets.restore())
         .pipe($.useref())
         .pipe($.if('*.html', $.replace(/wcy3all\.js/g, config.app_js)))
+        .pipe($.if('*.html', $.replace(/createJsExt\.js/g, config.createJsExt_js)))
         .pipe($.if('*.css', $.minifyCss()))
         //.pipe($.if('*.html', $.minifyHtml()))
 
         .pipe(gulp.dest('dist'))
         .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
+        .pipe($.if(/createJsExt\.js/, $.rename(config.createJsExt_js)))
         .pipe(gulp.dest(dstPath + '\\www\\lib'));
 });
 
@@ -60,6 +65,17 @@ gulp.task('wcylib_minify', ['wcylib_concat'], function () {
     });
 
     fs.writeFileSync(dstPath + '\\www\\lib\\' + config.app_min_js, result.code);
+
+    var resultCreateJs = uglifyjs.minify(["dist/" + config.createJsExt_js], {
+        outSourceMap: config.createJsExt_min_js_map,
+        sourceRoot: "",
+        compress: {
+            warnings: false
+        }
+    });
+
+    fs.writeFileSync(dstPath + '\\www\\lib\\' + config.createJsExt_min_js, result.code);
+
 });
 
 gulp.task('clean', del.bind(null, ['dist', 'src/tmp']));
