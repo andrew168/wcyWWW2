@@ -1,11 +1,12 @@
 
 #timer-slider-2 {
     position: fixed;
+    left: 10%;
     top: 80%;
     height: 20px;
     width: 80%;
-    color: yellow;
-    background-color: red;
+    color: lightgrey;
+    background-color: lightcyan;
 }
 
 #maxTimeValue-2 {
