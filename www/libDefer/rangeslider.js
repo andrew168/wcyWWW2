@@ -286,7 +286,7 @@
             this.onInit();
         }
     };
-
+    Plugin.prototype.isUserControlling = false;
     Plugin.prototype.update = function(updateAttributes, triggerSlide) {
         updateAttributes = updateAttributes || false;
 
@@ -316,7 +316,7 @@
     Plugin.prototype.handleDown = function(e) {
         this.$document.on(this.moveEvent, this.handleMove);
         this.$document.on(this.endEvent, this.handleEnd);
-
+        this.isUserControlling = true;
         // If we click on the handle don't set the new position
         if ((' ' + e.target.className + ' ').replace(/[\n\t]/g, ' ').indexOf(this.options.handleClass) > -1) {
             return;
@@ -338,6 +338,7 @@
         e.preventDefault();
         var pos = this.getRelativePosition(e);
         var setPos = (this.orientation === 'vertical') ? (this.maxHandlePos - (pos - this.grabPos)) : (pos - this.grabPos);
+        this.isUserControlling = true;
         this.setPosition(setPos);
     };
 
@@ -345,12 +346,16 @@
         e.preventDefault();
         this.$document.off(this.moveEvent, this.handleMove);
         this.$document.off(this.endEvent, this.handleEnd);
+        var self = this;
+        setTimeout(function() {
+            self.isUserControlling = false;
+        }, 200);
 
         // Ok we're done fire the change event
         this.$element.trigger('change', { origin: this.identifier });
 
         if (this.onSlideEnd && typeof this.onSlideEnd === 'function') {
-            this.onSlideEnd(this.position, this.value);
+            this.onSlideEnd(this.position, this.value, this.isUserControlling);
         }
     };
 
@@ -381,7 +386,7 @@
         this.value = value;
 
         if (triggerSlide && this.onSlide && typeof this.onSlide === 'function') {
-            this.onSlide(newPos, value);
+            this.onSlide(newPos, value, this.isUserControlling);
         }
     };
 

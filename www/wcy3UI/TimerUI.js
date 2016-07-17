@@ -4,8 +4,7 @@
 
 var TQ = TQ || {};
 TQ.TimerUI = (function () {
-    var t = 0,
-        tMinFrame = 0,
+    var tMinFrame = 0,
         tMaxFrame = 0,
         tEle = null;
 
@@ -16,7 +15,7 @@ TQ.TimerUI = (function () {
         '</div>';
 
     function initialize () {
-        t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        var t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
         tMinFrame = 0;
         tMaxFrame = TQ.Scene.getTMax();
         var containerDiv = document.getElementById("timer-bar-div");
@@ -29,33 +28,19 @@ TQ.TimerUI = (function () {
         TQ.FrameCounter.addHook(update);
     }
 
-    function onMouseStart () {
-    }
-
-    function onMouseStop2 (value) {
-        t = value;
-        syncToCounter();
-    }
-
-    function syncToCounter() {
-        // t = bodyEle.slider("value");
+    function syncToCounter(t) {
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
         TQ.CommandMgr.directDo(new TQ.SetTimeCommand(TQ.Scene.globalT2local(t)));
         TQ.DirtyFlag.requestToUpdateAll();
     }
 
-    function onMouseAction2 (value) {
-        t = value;
-        displayTime(t);
-        syncToCounter();
-        //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
-    }
-
     function update () { // called by FrameCounter,
-            if (TQ.FrameCounter.isNew) {
-                t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        if (TQ.FrameCounter.isNew) {
+            var t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+            if (!axis.isUserControlling) {
                 axis.setValue(t);
             }
+        }
     }
 
     function displayTime (t) {
@@ -127,16 +112,18 @@ TQ.TimerUI = (function () {
                 displayTimeByEle(this.$element[0]);
             }
 
-            function onSliderEnd(position, value) {
-                onMouseStop2(value);
+            function onSliderEnd(position, value, isUserControlling) {
+                if (isUserControlling) {
+                    syncToCounter(value);
+                }
                 console.log('onSlideEnd');
                 console.log('position: ' + position, 'value: ' + value);
             }
 
-            function onSlideValueChanged(position, value) {
-                // onMouseStart(value);
-                // onMouseAction2(value);
-
+            function onSlideValueChanged(position, value, isUserControlling) {
+                if (isUserControlling) {
+                    syncToCounter(value);
+                }
                 console.log('onSlide');
                 console.log('position: ' + position, 'value: ' + value);
             }
