@@ -48,7 +48,11 @@ window.TQ = window.TQ || {};
     p.onSelected = function()
     {
         TQ.FrameCounter.initialize(this._t, this.FPS, this);
-        TQ.TimerUI.initialize();
+        if (!TQBase.LevelState.isOperatingTimerUI()) {
+            TQ.TimerUI.initialize();
+        } else {
+            this._t = TQ.FrameCounter.t();
+        }
   //      this.state = TQBase.LevelState.NOT_INIT;
 //        this.dataReady = false;
         TQ.DirtyFlag.setLevel(this);

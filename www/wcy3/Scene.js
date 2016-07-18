@@ -312,6 +312,7 @@ TQ = TQ || {};
     p.reset = function () { // 打开文件，或者创建新文件的时候， 重新设置环境
         //   $('#stop').trigger('click');
         this.setEditor();
+        _tMax = 0;
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
         this.ssPath = null; // 初始化， 没有此值
         this.isDirty = true;

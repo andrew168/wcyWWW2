@@ -1,9 +1,9 @@
 
-#timer-slider-2 {
+#timer-bar-div {
     position: fixed;
     left: 10%;
     top: 80%;
-    height: 20px;
+    height: 1rem;
     width: 80%;
     color: lightgrey;
     background-color: lightcyan;

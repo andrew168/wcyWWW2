@@ -10,16 +10,12 @@ TQ.TimerUI = (function () {
         tMaxFrame = 0,
         tEle = null,
         tMinEle = null,
-        tMaxEle = null,
         bodyEle = null;
 
     var htmlStr = '<div class="toolbar-layer">' +
-        '<label id="time-slider-min-value" >0</label>' +
-        '<span>--</span>' +
-        '<label id="time-slider-max-value" >0</label>' +
         '<div id="timer-slider-2"></div>' +
-        '<div id="maxTimeValue-2" >0</div>' +
-        '<label>time</label><input type="number" id="timeValueInput-2" >' +
+        '<label id="timeValueInput-2" class="ui-font-md inline"></label>' +
+        '<label id="time-slider-min-value" class="ui-font-md inline">0</label>' +
         '</div>';
 
     return {
@@ -34,9 +30,8 @@ TQ.TimerUI = (function () {
         TQ.AssertExt.isNotNull(containerDiv);
         containerDiv.innerHTML = htmlStr;
         bodyEle = $("#timer-slider-2");
-        tEle = $("#timeValueInput-2");
-        tMinEle = $("#time-slider-min-value");
-        tMaxEle = $("#time-slider-max-value");
+        tEle = document.getElementById('timeValueInput-2');
+        tMinEle = document.getElementById('time-slider-min-value');
 
         bodyEle.slider({
             orientation: "horizontal",
@@ -73,6 +68,7 @@ TQ.TimerUI = (function () {
     }
     function onMouseAction (event, ui) {
         t = ui.value;
+        console.log("Mouse Action: t = " + t);
         displayTime(t);
         syncToCounter();
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
@@ -92,11 +88,10 @@ TQ.TimerUI = (function () {
     }
 
     function displayTime (t) {
-        tEle.val(t.toString());
+        tEle.innerText = t.toString();
     }
 
     function displayRange() {
-        tMinEle.val(tMin);
-        tMaxEle.val(tMaxFrame);
+        tMinEle.innerText = " : " + tMin + "--" + tMaxFrame;
     }
 }());

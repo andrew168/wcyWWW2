@@ -22,15 +22,19 @@ window.TQBase = window.TQBase || {};
     LevelState.PLAYING = 17;
     LevelState.PAUSE = 18;
 
-    LevelState.operation = 0;
+    LevelState.OP_NO = 0;
     LevelState.OP_TIMER_UI = 0x101;
     LevelState.OP_TOOLBAR = 0x103;
     LevelState.OP_TABS = 0x107;
     LevelState.OP_CANVAS = 0x10F; //  具体的操作, 及其元素, 见Element
     LevelState.OP_FLOATTOOLBAR = 0x11F;
+    LevelState.operation = LevelState.OP_NO;
     LevelState.saveOperation = function (op) { LevelState.operation = op; };
     LevelState.isOperatingCanvas = function () {return (LevelState.operation == LevelState.OP_CANVAS); };
     LevelState.isOperatingTimerUI = function () {return (LevelState.operation == LevelState.OP_TIMER_UI); }
+    LevelState.reset = function () {
+        LevelState.operation = 0;
+    };
 
     TQBase.LevelState = LevelState;
 }());

@@ -124,6 +124,7 @@ function init(fileInfo) {
     TQ.SceneEditor.stageContainer = stageContainer = new createjs.Container();
     stage.addChild(stageContainer);
     //stage.enableMouseOver();
+    TQBase.LevelState.reset();
     TQ.SoundMgr.initialize();
     TQ.RM.initialize();
     TQ.SceneEditor.loadScene(fileInfo);
