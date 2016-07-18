@@ -14,8 +14,8 @@ TQ.TimerUI = (function () {
 
     var htmlStr = '<div class="toolbar-layer">' +
         '<div id="timer-slider-2"></div>' +
-        '<label id="timeValueInput-2" class="ui-font-md inline"></label>' +
-        '<label id="time-slider-min-value" class="ui-font-md inline">0</label>' +
+        '<label id="timer-axis-value" class="ui-font-md inline"></label>' +
+        // '<label id="time-slider-min-value" class="ui-font-md inline">0</label>' +
         '</div>';
 
     return {
@@ -30,7 +30,7 @@ TQ.TimerUI = (function () {
         TQ.AssertExt.isNotNull(containerDiv);
         containerDiv.innerHTML = htmlStr;
         bodyEle = $("#timer-slider-2");
-        tEle = document.getElementById('timeValueInput-2');
+        tEle = document.getElementById('timer-axis-value');
         tMinEle = document.getElementById('time-slider-min-value');
 
         bodyEle.slider({
@@ -92,6 +92,6 @@ TQ.TimerUI = (function () {
     }
 
     function displayRange() {
-        tMinEle.innerText = " : " + tMin + "--" + tMaxFrame;
+        // tMinEle.innerText = " : " + tMin + "--" + tMaxFrame;
     }
 }());

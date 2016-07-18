@@ -58,3 +58,10 @@
 .ui-slider .ui-slider-range-max {
     right: 0;
 }
+
+#timer-axis-value {
+    position: relative;
+    top: -2rem;
+    left: 100%;
+    margin-left: 10px;
+}
