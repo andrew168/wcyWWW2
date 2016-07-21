@@ -42,8 +42,9 @@ function DataService(list) {
     function prepareColumn(props_local, m) {
         var i,
             result = [],
-            row = [],
-            page = [];
+            row = [], //每行3个
+            page = []; // 每页3行
+        page.parent = vm;
         for (i = 0; i < props_local.length; i += m) {
             for (j = 0; j < m; j++) {
                 if (i + j < props_local.length) {
@@ -58,6 +59,7 @@ function DataService(list) {
             if (page.length >= 3) {
                 result.push(page);
                 page = [];
+                page.parent = vm;
             }
         }
 
