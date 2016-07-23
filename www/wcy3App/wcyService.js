@@ -80,6 +80,12 @@ function WCY($http, FileService, WxService, NetService) {
             });
     }
     function getWcy(shareString) {
+        if (currScene && !currScene.isSaved) {
+            return upload().then(function() {
+                getWcy(shareString);
+            });
+        }
+
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
         $http.get(url)
             .then(_onReceivedWcyData, _onFail);
@@ -129,7 +135,7 @@ function WCY($http, FileService, WxService, NetService) {
                 'Content-Type': 'application/json'
             },
             data: jsonWcyData
-        });
+        }).then(function() {currScene.isSaved = true;});
     }
 
     function uploadScreenshot() {
@@ -168,6 +174,12 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function start(wcyCacheName) {
+        if (currScene && !currScene.isSaved) {
+            return upload().then(function() {
+                start(wcyCacheName);
+            });
+        }
+
         if (!wcyCacheName) {
             wcyCacheName = _AUTO_SAVE_NAME;
         }

@@ -450,6 +450,7 @@ TQ = TQ || {};
 
     // JQuery Ajax version
     p.loadFromJson = function (filename, alias) {
+        TQ.MessageBox.showWaiting("努力加载中 。。。");
         (function (pt) {
             netOpen(filename, function (jqResponse) {
                 pt._jsonStrToScene(pt, jqResponse, alias);
