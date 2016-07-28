@@ -140,9 +140,7 @@ utilToolbarItemClick("#setStage",  function () {
 utilToolbarItemClick("#btn-pin-it",   TQ.SelectSet.pinIt);
 // utilToolbarItem("#uploadImage",  uploadImageWindow);
 // utilToolbarItem("#shooting", "实时拍摄动画", "ui-icon-video",makeAnimationTest);
-utilToolbarItemClick("#preSegment",  backToPreviousLevel);
-utilToolbarItemClick("#nextSegment",   advanceToNextLevel);
-utilToolbarItemClick("#tbAnimation",  editActions);
+// utilToolbarItemClick("#tbAnimation",  editActions);
 utilToolbarItemClick("#tb3Dfy", function() {
     if (Menu.JointStarted) { click_div('#joint'); Menu.JointStarted = false; } //  互斥的操作， 避免同时嵌套使用
     if (Menu.GroupStarted) {click_div('#group'); Menu.GroupStarted = false;}

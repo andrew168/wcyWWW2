@@ -2,6 +2,7 @@ window.TQ = window.TQ || {};
 var canvas;
 var stage = null;
 var stageContainer = null;
+var currScene = null;
 
 (function () {
 
@@ -30,6 +31,18 @@ var stageContainer = null;
             content:TQ.Scene.getEmptySceneJSON()};
         init(fileInfo, playOnlyFlag);
     };
+
+    function createStage() {
+        canvas = document.getElementById("testCanvas");
+        canvas.height = TQ.Config.workingRegionHeight;
+        canvas.width = TQ.Config.workingRegionWidth;
+        //ToDo:AZ
+        // addHammer(canvas);
+        // create a new stage and point it at our canvas:
+        SceneEditor.stage = stage = new createjs.Stage(canvas);
+        SceneEditor.stageContainer = stageContainer = new createjs.Container();
+        stage.addChild(stageContainer);
+    }
 
     SceneEditor.addItem = function(desc) {
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
@@ -108,21 +121,14 @@ var stageContainer = null;
     SceneEditor.stage = stage;
     SceneEditor.stageContainer = stageContainer;
     TQ.SceneEditor = SceneEditor;
-}());
 
 function init(fileInfo) {
     if ((typeof fileInfo) === "string") {
         fileInfo = {name: fileInfo, content: null};
     }
-    canvas = document.getElementById("testCanvas");
-    canvas.height = TQ.Config.workingRegionHeight;
-    canvas.width = TQ.Config.workingRegionWidth;
-    //ToDo:AZ
-    // addHammer(canvas);
-    // create a new stage and point it at our canvas:
-    TQ.SceneEditor.stage = stage = new createjs.Stage(canvas);
-    TQ.SceneEditor.stageContainer = stageContainer = new createjs.Container();
-    stage.addChild(stageContainer);
+    if (!TQ.SceneEditor.stage) {
+        createStage();
+    }
     //stage.enableMouseOver();
     TQBase.LevelState.reset();
     TQ.SoundMgr.initialize();
@@ -137,8 +143,6 @@ function init(fileInfo) {
 
     createjs.Ticker.addListener(window);
 }
-
-var currScene = null;
 
 function initializeControllers() {
     TQ.InputMap.initialize(TQ.WCY.isPlayOnly);
@@ -269,14 +273,6 @@ function addTextTest() {
     TQ.TextEditor.addText(TQ.Dictionary.defaultText);
 }
 
-function backToPreviousLevel() {
-    currScene.preLevel();
-}
-
-function advanceToNextLevel() {
-    currScene.nextLevel();
-}
-
 function create3DElement() {
     if (TQ.SelectSet.groupIt()) { // 返回false肯定不成功, 不要做后续的
         var ele = currScene.currentLevel.latestElement;
@@ -297,3 +293,5 @@ function editActions() {
         TQ.Animation.unitTest(ele);
     }
 }
+
+}());

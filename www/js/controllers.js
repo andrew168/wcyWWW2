@@ -326,5 +326,9 @@ function DashCtrl(
 
     $scope.getLocale = function (id) {
         return TQ.Lang[id];
+    };
+
+    $scope.reloadN = function() {
+        WCY.getWcyById(144);
     }
 }
