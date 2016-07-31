@@ -17,7 +17,7 @@ window.TQ = window.TQ || {};
     };
 
     ScreenShot.take = function () {
-        ScreenShot.imageData = stage.toDataURL(); // 默认生成透明图, 带alpha信息, PNG格式的
+        ScreenShot.imageData = stage.toDataURL("image/png"); // 默认生成透明图, 带alpha信息, PNG格式的
     };
 
     ScreenShot.getData = function() {

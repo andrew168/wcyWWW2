@@ -95,7 +95,7 @@ var TQ = TQ || {};
             var xc = 0, yc =0;
             ctx.drawImage(ele, xc, yc, neededWidth, neededHeight);
             if (callback) {
-                callback({name:filename, data: _canvas.toDataURL("image/jpeg")});
+                callback({name:filename, data: _canvas.toDataURL("image/png")});
             }
         }
     };
