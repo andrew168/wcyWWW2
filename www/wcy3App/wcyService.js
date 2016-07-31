@@ -135,7 +135,7 @@ function WCY($http, FileService, WxService, NetService) {
                 'Content-Type': 'application/json'
             },
             data: jsonWcyData
-        }).then(function() {currScene.isSaved = true;});
+        });
     }
 
     function uploadScreenshot() {
@@ -147,7 +147,7 @@ function WCY($http, FileService, WxService, NetService) {
         TQ.AssertExt.invalidLogic(!!_ssSign);
         return NetService.doUploadImage(_ssSign, data).
             then(updateSsPath).
-            then(onUploadedSuccess);
+            then(onUploadedSuccess, onErrorGeneral);
     }
 
     function updateSsPath(pkg) {
@@ -175,7 +175,7 @@ function WCY($http, FileService, WxService, NetService) {
 
     function start(wcyCacheName) {
         if (currScene && !currScene.isSaved) {
-            return upload().then(function() {
+            return save().then(function() {
                 start(wcyCacheName);
             });
         }
@@ -270,7 +270,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function onUploadedSuccess(res) {
-        var data = res.data;
+        var data = (!res)? null: res.data;
         if (!!data) {
             if (!!data.wcyId) {
                 _wcyId = _getWcyId(data);
@@ -296,10 +296,14 @@ function WCY($http, FileService, WxService, NetService) {
             }
 
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS} );
+            console.log(data);
+            TQ.MessageBox.hide();
         }
 
+        if (!res) {
+            TQ.Log.error("为什么为null？  在save的时候？");
+        }
         currScene.isSaved = true;
-        console.log(data);
     }
 
     function _getWcyId(resData) {
@@ -336,6 +340,11 @@ function WCY($http, FileService, WxService, NetService) {
 
     function setOnStarted(fn) {
         _onStarted = fn;
+    }
+
+    function onErrorGeneral(e) {
+        TQ.Log.error("网络操作出错：" +　JSON.stringify(e).substr(0, 250));
+        TQ.MessageBox.hide();
     }
 
     return {
