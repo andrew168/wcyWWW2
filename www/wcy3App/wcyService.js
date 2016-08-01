@@ -62,7 +62,7 @@ function WCY($http, FileService, WxService, NetService) {
             saveToCache();
         }
         //ToDo: if (has wifi)
-        return upload().then(onUploadedSuccess, _onFail);
+        return upload().then(onSavedSuccess, _onFail);
     }
 
     function saveToCache() {
@@ -81,7 +81,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
     function getWcy(shareString) {
         if (currScene && !currScene.isSaved) {
-            return upload().then(function() {
+            return save().then(function() {
                 getWcy(shareString);
             });
         }
@@ -147,7 +147,7 @@ function WCY($http, FileService, WxService, NetService) {
         TQ.AssertExt.invalidLogic(!!_ssSign);
         return NetService.doUploadImage(_ssSign, data).
             then(updateSsPath).
-            then(onUploadedSuccess, onErrorGeneral);
+            then(onSavedSuccess, onErrorGeneral);
     }
 
     function updateSsPath(pkg) {
@@ -269,8 +269,9 @@ function WCY($http, FileService, WxService, NetService) {
         }
     }
 
-    function onUploadedSuccess(res) {
+    function onSavedSuccess(res) {
         var data = (!res)? null: res.data;
+        currScene.isSaved = true;
         if (!!data) {
             if (!!data.wcyId) {
                 _wcyId = _getWcyId(data);
@@ -291,10 +292,6 @@ function WCY($http, FileService, WxService, NetService) {
                 currScene.setSsPath(data.ssPath);
             }
 
-            if ((!currScene.ssPath) && (!!data.ssSign)) {
-                // uploadScreenshot(); // 自动触发首次截屏上传
-            }
-
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS} );
             console.log(data);
             TQ.MessageBox.hide();
@@ -303,7 +300,6 @@ function WCY($http, FileService, WxService, NetService) {
         if (!res) {
             TQ.Log.error("为什么为null？  在save的时候？");
         }
-        currScene.isSaved = true;
     }
 
     function _getWcyId(resData) {
