@@ -87,6 +87,7 @@ function WCY($http, FileService, WxService, NetService) {
         }
 
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
+        TQ.MessageBox.showWaiting("正在加载....");
         $http.get(url)
             .then(_onReceivedWcyData, _onFail);
     }
@@ -309,10 +310,12 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _onFail(data) {
+        TQ.MessageBox.hide();  // end of loading，no resource yet
         console.log(data);
     }
 
     function _onReceivedWcyData(res) {
+        TQ.MessageBox.hide();  // end of loading，no resource yet
         var data = res.data;
         if (!!data && !!data.wcyId) {
             _wcyId = _getWcyId(data);

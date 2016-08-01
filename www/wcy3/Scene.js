@@ -148,6 +148,7 @@ TQ = TQ || {};
     };
 
     p.showLevel = function () {
+        TQ.MessageBox.hide();
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNum()); //level ID 超界
         this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
         this.selectLevel(this.currentLevelId);
@@ -286,6 +287,7 @@ TQ = TQ || {};
     };
 
     p.open = function (fileInfo) {
+        TQ.MessageBox.showWaiting("正在加载作品...");
         this.reset();
         this.filename = fileInfo.filename;
         this.screenshotName = fileInfo.screenshotName;
