@@ -1,5 +1,4 @@
-set src=E:\projects\WcyCore\backOffice
-set dst=E:\projects\cardforvote\backOffice
-md dst
-xcopy %src%\*.*   %dst% /s/e/v/y
-rem published server to %dst%
+call backOffice\releaseOne.bat backOffice
+call backOffice\releaseOne.bat ksBackOffice
+
+

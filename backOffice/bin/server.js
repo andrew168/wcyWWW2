@@ -1,3 +1,4 @@
+// std module
 var debug = require('debug')('iCardSvr2:server');
 var http = require('http');
 var server;
@@ -11,6 +12,10 @@ var favicon = require('serve-favicon');
 var loggerMorgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
+
+// our own modulev
+var configSvr = require('./../common/configSvr');
+
 var status = null;
 var app;
 
@@ -91,7 +96,7 @@ function start2() {
 }
 
 function setupBaseiRoutes() {
-    var clientPath = path.join(__dirname,       './../../www');
+    var clientPath = path.join(__dirname,       configSvr.wwwRoot);
     var clientPathStatic = path.join(__dirname, './../public');
     console.log("current path:" + __dirname);
     console.log("client path (dynamic): " + clientPath);
