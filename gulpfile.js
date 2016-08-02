@@ -1,7 +1,8 @@
 /* jshint node:true */
 
 'use strict';
-var dstPath = 'E:\\projects\\cardforvote';
+var dstPath1 = 'E:\\projects\\cardforvote\\www',
+    dstPath2 = 'E:\\projects\\cardforvote\\ksWww';
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')(); //jshint ignore:line
 var uglifyjs = require("uglify-js");
@@ -47,7 +48,8 @@ gulp.task('wcylib_concat', function () {
 
         .pipe(gulp.dest('dist'))
         .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
-        .pipe(gulp.dest(dstPath + '\\www\\lib'));
+        .pipe(gulp.dest(dstPath1 + '\\lib'))
+        .pipe(gulp.dest(dstPath2 + '\\lib'));
 });
 
 gulp.task('wcylib_minify', ['wcylib_concat'], function () {
@@ -59,7 +61,8 @@ gulp.task('wcylib_minify', ['wcylib_concat'], function () {
         }
     });
 
-    fs.writeFileSync(dstPath + '\\www\\lib\\' + config.app_min_js, result.code);
+    fs.writeFileSync(dstPath1 + '\\lib\\' + config.app_min_js, result.code);
+    fs.writeFileSync(dstPath2 + '\\lib\\' + config.app_min_js, result.code);
 });
 
 gulp.task('clean', del.bind(null, ['dist', 'src/tmp']));
@@ -68,7 +71,8 @@ gulp.task('build', ['wcylib_minify'], function () {
     return gulp.src('dist/**/*')
         .pipe($.size({title: 'build', gzip: true}))
         .pipe($.zip('ionic' + config.version + '.zip'))
-        .pipe(gulp.dest(dstPath + '\\www\\lib'));
+        .pipe(gulp.dest(dstPath1 + '\\lib'))
+        .pipe(gulp.dest(dstPath2 + '\\lib'));
 });
 
 gulp.task('default', ['config'], function () {
