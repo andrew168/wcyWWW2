@@ -36,30 +36,14 @@ function start() {
 
 function onDbStarted() {
     console.info("onDbStarted...");
-    var routes = require('./../routes/index33');
-    var users = require('./../routes/users');
-    var getCSignature = require('./../routes/getCSignature');
-    var getWSignature = require('./../routes/getWSignature');
-    var isWx = require('./../routes/isWx');
-
-    app.use('/users', users);
-    app.use('/getCSignature', getCSignature);
-    app.use('/getWSignature', getWSignature);
-    app.use('/isWx', isWx);
-    app.use('/wechat', isWx);
-
-    var wcy = require('./../routes/wcy'),
-        wcyList = require('./../routes/wcyList'),
-        material = require('./../routes/material');
-
+    appConfig.routesMap.forEach(setRoutes);
+    function setRoutes(item) {
+        app.use('/' + item.url, require(item.filePath));
+    }
     status = require('./../common/status');
 
-    app.use('/wcy', wcy);
-    app.use('/wcylist', wcyList);
-    app.use('/material', material);
     console.log("exit at onDbStarted!");
 
-    app.use('/index55', routes);
     start3();
 }
 
