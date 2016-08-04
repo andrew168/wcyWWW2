@@ -1,3 +1,4 @@
+//Server.js就是 eCardAppServer.js
 // std module
 var debug = require('debug')('iCardSvr2:server');
 var http = require('http');
@@ -13,9 +14,8 @@ var loggerMorgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
-// our own modulev
-var configSvr = require('./../common/configSvr');
-
+// our own module
+var appConfig = require('./eCardAppConfig.js');
 var status = null;
 var app;
 
@@ -64,7 +64,9 @@ function onDbStarted() {
 }
 
 function start3() {
-    init();
+    if (!appConfig.useVHost) {
+        init();
+    }
     setupBaseiRoutes();
 }
 
@@ -96,7 +98,7 @@ function start2() {
 }
 
 function setupBaseiRoutes() {
-    var clientPath = path.join(__dirname,       configSvr.wwwRoot);
+    var clientPath = path.join(__dirname, appConfig.wwwRoot);
     var clientPathStatic = path.join(__dirname, './../public');
     console.log("current path:" + __dirname);
     console.log("client path (dynamic): " + clientPath);
@@ -250,3 +252,5 @@ function startLocalSimulator() {
     app.use('/eplan/image/upload/v1456716657', express.static(path.join(__dirname, './../../www/mcImages')));
     app.use('/eplan/image/upload', express.static(path.join(__dirname, './../../www/mcImages')));
 }
+
+exports.app = app;
