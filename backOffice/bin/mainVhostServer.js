@@ -12,7 +12,7 @@ app.use(function(req, res, next) {
     next();
 });
 
-app.use(vhost('show.udoido.cn', require('./server').app));
+app.use(vhost('show.udoido.cn', require('./eCardAppServer').app));
 
 init();
 

@@ -15,11 +15,14 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
 // our own module
-var appConfig = require('./eCardAppConfig.js');
+var appConfig = require('./eCardAppConfig.js');  // default
 var status = null;
 var app;
 
-function start() {
+function start(newAppConfig) {
+    if (newAppConfig) {
+        appConfig = newAppConfig;
+    }
     console.log("//////////////////////////////");
     console.log("///      start new server  ///");
     console.log("//////////////////////////////");
@@ -222,7 +225,7 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
-start();
+// start(newAppConfig);
 
 // helper
 
@@ -237,4 +240,9 @@ function startLocalSimulator() {
     app.use('/eplan/image/upload', express.static(path.join(__dirname, './../../www/mcImages')));
 }
 
-exports.app = app;
+function getApp() {
+    return app;
+}
+
+exports.start = start;
+exports.getApp = getApp;
