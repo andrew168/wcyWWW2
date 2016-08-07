@@ -3,9 +3,9 @@
  */
 var appConfig = {
     useVHost: true,
-    wwwRoot: './../../www',
-    routesMap: [{url: 'index55', filePath: './../routes/index33'}
-        // {url: 'users', filePath: './../routes/users'},
+    wwwRoot: './../../wwwks',
+    routesMap: [// {url: 'index55', filePath: './../routes/index33'},
+        {url: 'users', filePath: './../routes/users'}
         // {url: 'material', filePath: './../routes/material'}
     ]
 };

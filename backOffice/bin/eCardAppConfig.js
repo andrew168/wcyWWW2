@@ -5,7 +5,8 @@ var appConfig = {
     useVHost: true,
     wwwRoot: './../../www',
     routesMap: [
-        {url: 'users', filePath: './../routes/users'},
+        {url: 'index55', filePath: './../routes/index33'},
+        // {url: 'users', filePath: './../routes/users'},
         {url: 'getCSignature', filePath: './../routes/getCSignature'},
         {url: 'getWSignature', filePath: './../routes/getWSignature'},
         {url: 'isWx', filePath: './../routes/isWx'},
