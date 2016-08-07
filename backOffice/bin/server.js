@@ -17,7 +17,7 @@ var bodyParser = require('body-parser');
 // our own module
 var appConfig = require('./eCardAppConfig.js');  // default
 var status = null;
-var app;
+var app = express();
 
 function start(newAppConfig) {
     if (newAppConfig) {
@@ -27,7 +27,6 @@ function start(newAppConfig) {
     console.log("///      start new server  ///");
     console.log("//////////////////////////////");
 
-    app = express();
     start2();
 
 //  使用数据库的操作， 都必须在数据库启动之后， 再启动
@@ -246,3 +245,4 @@ function getApp() {
 
 exports.start = start;
 exports.getApp = getApp;
+exports.app = app;

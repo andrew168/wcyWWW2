@@ -12,6 +12,8 @@ app.use(function(req, res, next) {
     next();
 });
 
+app.use(vhost('www.kidsafer.org', require('./kidSaferAppServer').app));
+// app.use(vhost('www.kidsafer.org', require('./vHostTest2AppServer').app));
 app.use(vhost('show.udoido.cn', require('./eCardAppServer').app));
 
 init();
