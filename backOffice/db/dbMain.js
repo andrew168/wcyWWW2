@@ -21,14 +21,14 @@ function DBMain() {
 DBMain.initialized = false;
 DBMain.app = null;
 var launchCounter = 0;
-function init(app, callback) {
+function init(app, appConfig, callback) {
     // must delay, because data base is not ready
     setTimeout(function() {
-        doInit(app, callback);
+        doInit(app, appConfig, callback);
     }, 0);
 }
 
-function doInit(app, callback) {
+function doInit(app, appConfig, callback) {
     var connection;
     if (DBMain.initialized) {
         assert.ok(false, "需要先initialization！");
@@ -68,21 +68,14 @@ function doInit(app, callback) {
             console.log(JSON.stringify(msg));
         }
 
-        onConnected();
+        onConnected(appConfig);
         if (!!callback) {
             callback();
         }
     });
 
-    function onConnected() {
-        var dbList = [
-            {name:'Show', schema:'../db/show/showSchema.js', ctrl:'../db/show/showController.js'},
-            {name:'Share', schema:'../db/share/shareSchema.js', ctrl:'../db/share/shareController.js'},
-            {name:'User', schema:'../db/user/userSchema.js', ctrl:'../db/user/userController.js'},
-            {name:'Opus', schema:'../db/opus/opusSchema.js', ctrl:'../db/opus/opusController.js'},
-            {name:'PictureMat', schema:'../db/material/pictureMatSchema.js', ctrl:'../db/material/pictureMatController.js'},
-            {name:'AudioMat', schema:'../db/material/audioMatSchema.js', ctrl:'../db/material/audioMatController.js'}
-        ];
+    function onConnected(appConfig) {
+        var dbList = appConfig.dbList;
 
         var i;
         var dbAmount = dbList.length;

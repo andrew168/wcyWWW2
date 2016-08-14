@@ -4,12 +4,20 @@
 var appConfig = {
     useVHost: true,
     wwwRoot: './../../wwwks',
+    dbList: [ // 他们在dbMain.js中使用， 所以要以dbMain.js的目录为相对路径
+        {name:'Show', schema:'../db/show/showSchema.js', ctrl:'../db/show/showController.js'},
+        {name:'Share', schema:'../db/share/shareSchema.js', ctrl:'../db/share/shareController.js'},
+        {name:'User', schema:'../db/user/userSchema.js', ctrl:'../db/user/userController.js'},
+        {name:'Opus', schema:'../db/opus/opusSchema.js', ctrl:'../db/opus/opusController.js'},
+        {name:'PictureMat', schema:'../db/material/pictureMatSchema.js', ctrl:'../db/material/pictureMatController.js'},
+        {name:'AudioMat', schema:'../db/material/audioMatSchema.js', ctrl:'../db/material/audioMatController.js'}
+    ],
     routesMap: [// {url: 'index55', filePath: './../routes/index33'},
         {url: 'users', filePath: './../routes/users'}
-        // {url: 'material', filePath: './../routes/material'}
     ]
 };
 
+exports.dbList = appConfig.dbList;
 exports.wwwRoot = appConfig.wwwRoot;
 exports.useVHost = appConfig.useVHost;
 exports.routesMap = appConfig.routesMap;

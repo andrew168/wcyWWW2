@@ -36,7 +36,7 @@
 
 //  使用数据库的操作， 都必须在数据库启动之后， 再启动
         var dbMain = require('./../db/dbMain');
-        dbMain.init(app, function () {
+        dbMain.init(app, appConfig, function () {
             onDbStarted(app, appConfig);
         });
         // start3();
