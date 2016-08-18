@@ -117,7 +117,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function getScreenshotUrl() {
-        return (!currScene.ssPath) ? null: currScene.ssPath;
+        return (!currScene.ssPath) ? null: TQ.RM.toFullPathFs(currScene.ssPath);
     }
 
     function upload() {
