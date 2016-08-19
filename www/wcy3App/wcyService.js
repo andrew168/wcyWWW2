@@ -52,6 +52,7 @@ function WCY($http, FileService, WxService, NetService) {
             option = {};
         }
         _wcyId = 0;
+        _ssSign = null;
         _shareCode = null;
         TQ.SceneEditor.createScene(option);
         startAutoSave();
@@ -120,6 +121,10 @@ function WCY($http, FileService, WxService, NetService) {
         return (!currScene.ssPath) ? null: TQ.RM.toFullPathFs(currScene.ssPath);
     }
 
+    function hasSsPath() {
+        return !!currScene.ssPath;
+    }
+
     function upload() {
         TQ.Assert.isDefined(_wcyId);
         _wcyId = (_wcyId === -1) ? 0 : _wcyId;
@@ -147,8 +152,8 @@ function WCY($http, FileService, WxService, NetService) {
         var data = TQ.ScreenShot.getData();
         TQ.AssertExt.invalidLogic(!!_ssSign);
         return NetService.doUploadImage(_ssSign, data).
-            then(updateSsPath).
-            then(onSavedSuccess, onErrorGeneral);
+            // then(updateSsPath).
+            then(onUploadSsSuccess, onErrorGeneral);
     }
 
     function updateSsPath(pkg) {
@@ -270,6 +275,19 @@ function WCY($http, FileService, WxService, NetService) {
         }
     }
 
+    function onUploadSsSuccess(res) {
+        var data = (!res)? null: res.data;
+        if (!!data) {
+            if (!!data.url) {
+                currScene.setSsPath(data.url);
+            }
+
+            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS} );
+            console.log(data);
+            TQ.MessageBox.hide();
+        }
+    }
+
     function onSavedSuccess(res) {
         var data = (!res)? null: res.data;
         currScene.isSaved = true;
@@ -358,6 +376,7 @@ function WCY($http, FileService, WxService, NetService) {
         getWcyList: getWcyList,
         getShareCode: getShareCode,
         getScreenshotUrl: getScreenshotUrl,
+        hasSsPath: hasSsPath,
         show: show,  // open for show only
 
         // old api will be depreciated

@@ -583,6 +583,7 @@ TQ = TQ || {};
         if ((!this.ssPath) || (this.ssPath !== ssPath)) {
             this.ssPath = ssPath;
             this.isDirty = true;
+            this.isSaved = false;
         }
     };
 
