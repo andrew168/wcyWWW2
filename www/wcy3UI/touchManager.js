@@ -7,8 +7,10 @@ var TQ = TQ || {};
     var ele = null;
     var ang = 0, scale = 1;
     var dAngle = 0, dScale = 1;
-    var pos = {x:0, y:0};
-    var isOperating = false,
+    var pos = {x:0, y:0},
+        deltaX0 = 0,
+        deltaY0 = 0,
+        isOperating = false,
         isMultiTouching = false,
         enableTouchScreen = true;
 
@@ -67,8 +69,8 @@ var TQ = TQ || {};
         touchedEle = stage.getObjectsUnderPoint(evt.stageX, evt.stageY);
     }
 
-    function getSelectedElement(evt) {
-        var newEle = _doGetSelectedElement(evt);
+    function getSelectedElement(e) {
+        var newEle = _doGetSelectedElement(e);
         if (!newEle) {
             newEle = touchedEle;
         }
@@ -103,6 +105,8 @@ var TQ = TQ || {};
         ang = ele.getRotation();
         scale = ele.getScale().sx;
         pos = ele.getPosition();
+        deltaX0 = e.gesture.deltaX;
+        deltaY0 = e.gesture.deltaY;
 
         if (isNaN(scale)) {
             scale = 1;
@@ -168,10 +172,8 @@ var TQ = TQ || {};
         } else {
             e.stopPropagation();
             e.preventDefault();
-
-            // ele = currScene.currentLevel.elements[0];
-            var deltaX = e.gesture.deltaX;
-            var deltaY = - e.gesture.deltaY;
+            var deltaX = e.gesture.deltaX  - deltaX0;
+            var deltaY = - (e.gesture.deltaY - deltaY0) ;
             // ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
             TQ.CommandMgr.directDo(new TQ.MoveCommand(ele, {x: deltaX + pos.x, y: deltaY + pos.y}));
         }
