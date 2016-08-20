@@ -744,12 +744,14 @@ function EditorService($timeout, NetService, WxService, WCY) {
 
     function getTextCursor() {
         var x = TQ.MathExt.range(state.x, 0, 0.9);
-        var y = state.y;
+        var y = state.y,
+            fontHeight = getFontSize() / TQ.Config.workingRegionHeight;
+
         if (_lastSelected && _lastSelected.isText()) {
-            y -= (getFontSize() / TQ.Config.workingRegionHeight);
+            y -= fontHeight;
         }
 
-        if (y < 0.1) {
+        if (y < fontHeight) {
             y = 1;  // go to top again;
         }
 
@@ -815,16 +817,28 @@ function EditorService($timeout, NetService, WxService, WCY) {
     }
 
     function shareFbWeb() {
+        if (_tryToSave) {
+            console.error("系统正在忙。。。。");
+            return;
+        }
+
         if (!WCY.getShareCode()) {
             if (!_tryToSave) {
                 _tryToSave = true;
-                return WCY.save().then(shareFbWeb);
+                if (WCY.hasSsPath()) {
+                    return WCY.save().then(doIt);
+                } else {
+                    return WCY.uploadScreenshot().then(doIt);
+                }
             } else {
                 return TQ.MessageBox.show("需要先保存");
             }
         }
 
-        _tryToSave = false;
+        function doIt() {
+            _tryToSave = false;
+            shareFbWeb();
+        }
 
         var url = TQUtility.urlConcat(TQ.Config.OPUS_HOST, "?opus=" + WCY.getShareCode()),
             screenshotUrl =  WCY.getScreenshotUrl();
