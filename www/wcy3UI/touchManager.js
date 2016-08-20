@@ -40,7 +40,19 @@ var TQ = TQ || {};
         function onShowToucInfo(e) {
             console.log(e.type);
         }
+    }
 
+    function isFirstTouch(e) {
+        return (!started && !isMultiTouching);
+    }
+
+    function isMultiTouch(e) {
+        try {
+            return (e.gesture.touches.length > 1);
+        } catch (err) { // in case touches not exist
+        }
+
+        return false;
     }
 
     var touchedEle;
@@ -96,6 +108,7 @@ var TQ = TQ || {};
     }
 
     function onStart(e) {
+        console.log("touch start" + e.gesture.touches.length);
         ele = null;
         TQ.CommandMgr.startNewOperation();
         getSelectedElement(e);
@@ -122,6 +135,9 @@ var TQ = TQ || {};
         }
         isOperating = false;
         ditherStart();
+        var hasGesture = !!e.gesture;
+        var touchNumber = (hasGesture) ? e.gesture.touches.length : e.touches.length;
+        console.log("touch end " + touchNumber + (hasGesture? " gesture Obj": ""));
     }
 
     function onRelease() {
@@ -139,7 +155,7 @@ var TQ = TQ || {};
         }
 
         if (!ele) {
-            // console.log("Move...");
+            // console.log("Move..." + e.gesture.touches.length);
         } else {
             // ele = currScene.currentLevel.elements[0];
             var deltaX = e.gesture.deltaX;
@@ -159,7 +175,7 @@ var TQ = TQ || {};
         }
 
         if (!ele) {
-            console.log("pinch...");
+            console.log("pinch..." + e.gesture.touches.length);
         } else {
             dScale = e.gesture.scale;
             var newScale = scale * dScale;
