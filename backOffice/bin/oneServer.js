@@ -8,8 +8,6 @@
     var server;
     var _config = {};
     var logger = require('./../common/logger');
-    logger.config("udoido.log");
-
     var express = require('express');
     var path = require('path');
     var favicon = require('serve-favicon');
@@ -26,6 +24,8 @@
         if (!appConfig) {
             appConfig = require('./eCardAppConfig.js');
         }
+        logger.config(getLogFile(appConfig.name));
+
         console.log("//////////////////////////////");
         console.log("///      start new server  ///");
         console.log("//////////////////////////////");
@@ -249,6 +249,12 @@
 
     function getApp() {
         return _app;
+    }
+
+    function getLogFile(appName) {
+        var t = new Date();
+        return "udoido-" + appName + t.getTime() + '-' + t.getFullYear() + '-' + t.getMonth() + '-' + t.getDay() +
+                '-' + t.getHours() + '-' + t.getMinutes() + ".log"
     }
 
     exports.start = start;

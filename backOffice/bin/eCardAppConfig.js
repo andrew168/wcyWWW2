@@ -2,6 +2,7 @@
  * Created by Andrewz on 8/4/2016.
  */
 var appConfig = {
+    name:"eCard",
     useVHost: true,
     wwwRoot: './../../www',
     dbList: [ // 他们在dbMain.js中使用， 所以要以dbMain.js的目录为相对路径
@@ -26,7 +27,8 @@ var appConfig = {
 };
 
 exports.dbList = appConfig.dbList;
-exports.wwwRoot = appConfig.wwwRoot;
-exports.useVHost = appConfig.useVHost;
+exports.name = appConfig.name;
 exports.routesMap = appConfig.routesMap;
+exports.useVHost = appConfig.useVHost;
+exports.wwwRoot = appConfig.wwwRoot;
 
