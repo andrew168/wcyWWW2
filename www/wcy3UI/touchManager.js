@@ -57,6 +57,8 @@ var TQ = TQ || {};
 
     var touchedEle;
     function onTouchStage(evt) {
+        e.stopPropagation();
+        e.preventDefault();
         var result = stage.hitTest(evt.stageX, evt.stageY);
         if (result) {
             console.log("OK!");
@@ -115,6 +117,8 @@ var TQ = TQ || {};
         if (TQ.SelectSet.peek()) {
             isOperating = true;
         }
+        e.stopPropagation();
+        e.preventDefault();
         // console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
     }
 
@@ -146,7 +150,12 @@ var TQ = TQ || {};
     }
 
     function onMove(e) {
-        if (isMultiTouching || isDithering) {
+        if (isDithering) {
+            return;
+        }
+
+        if (isMultiTouch(e)) {
+            console.error("ignore multi touch, in move handler");
             return;
         }
 
@@ -157,6 +166,9 @@ var TQ = TQ || {};
         if (!ele) {
             // console.log("Move..." + e.gesture.touches.length);
         } else {
+            e.stopPropagation();
+            e.preventDefault();
+
             // ele = currScene.currentLevel.elements[0];
             var deltaX = e.gesture.deltaX;
             var deltaY = - e.gesture.deltaY;
@@ -166,6 +178,8 @@ var TQ = TQ || {};
     }
 
     function onPinchAndRotate(e) {
+        e.stopPropagation();
+        e.preventDefault();
         if (isDithering) {
             return;
         }
