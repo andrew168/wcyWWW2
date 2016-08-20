@@ -253,7 +253,7 @@
 
     function getLogFile(appName) {
         var t = new Date();
-        return "udoido-" + appName + t.getTime() + '-' + t.getFullYear() + '-' + t.getMonth() + '-' + t.getDay() +
+        return "udoido-" + appName + t.getTime() + '-' + t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() +
                 '-' + t.getHours() + '-' + t.getMinutes() + ".log"
     }
 
