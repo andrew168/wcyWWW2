@@ -135,7 +135,10 @@ function EditorService($timeout, NetService, WxService, WCY) {
         updateMode();
         updateColorPanel();
         WxService.init();
-        statService.startToShow();
+        if (TQ.Config.Config.statServiceEnabled) {
+            // 此服务无法lazyLoading，因为是ng模块， 暂时停止使用
+            StatService.startToShow();
+        }
         TQ.LazyLoading.start();
 
         // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
