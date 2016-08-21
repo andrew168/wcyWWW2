@@ -9,12 +9,16 @@
     z-index:9000;
 }
 
-.toolbar-layer {
+.dlg-layer {
     z-index:8000;
 }
 
-.content-layer {
+.toolbar-layer {
     z-index:7000;
+}
+
+.content-layer {
+    z-index:5000;
 }
 
 
