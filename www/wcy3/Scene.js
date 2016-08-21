@@ -733,6 +733,11 @@ TQ = TQ || {};
             this.currentLevel.setTime(TQ.FrameCounter.max);
         }
 
+        if (_levelTe.length > this.levels.length ) {
+            _levelTe.splice(this.levels.length);
+            _levelTs.splice(this.levels.length);
+        }
+
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
             ts = te;
@@ -747,11 +752,10 @@ TQ = TQ || {};
             }
         }
 
-        if (_levelTe.length > this.levels.length ) {
-            _levelTe.splice(_levelTe.length);
-            _levelTs.splice(_levelTe.length);
+        if (Math.abs(_tMax - te) > 0.1) {
+            _tMax = te;
+            TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
         }
-        _tMax = te;
     };
 
     function localT2Global(t) {

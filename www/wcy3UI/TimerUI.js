@@ -5,6 +5,7 @@
 var TQ = TQ || {};
 TQ.TimerUI = (function () {
     var isUserControlling = false,
+        initialized = false;
         t = 0,
         tMin = 0,
         tMaxFrame = 0,
@@ -22,7 +23,14 @@ TQ.TimerUI = (function () {
         initialize: initialize
     };
 
+
     function initialize () {
+        if (initialized) {
+            setTimeout(onRangeChanged, 100);
+            return;
+        }
+
+        initialized = true;
         t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
         tMin = 0;
         tMaxFrame = TQ.Scene.getTMax();
@@ -38,7 +46,8 @@ TQ.TimerUI = (function () {
             range: "min",
             min: tMin,
             max: tMaxFrame,
-            value: t,
+            value: t,   // 1个滑块
+            // values: [t, tMaxFrame/2],    // 2个滑块
             start: onMouseStart,
             slide: onMouseAction,
             change: onChange,
@@ -48,6 +57,7 @@ TQ.TimerUI = (function () {
         displayRange();
         displayTime(t);
         TQ.FrameCounter.addHook(update);
+        document.addEventListener(TQ.EVENT.SCENE_TIME_RANGE_CHANGED, onRangeChanged, false);
     }
 
     function onMouseStart () {
@@ -78,9 +88,9 @@ TQ.TimerUI = (function () {
         displayTime(t);
     }
 
-    function update () {
-        if (!isUserControlling) {
-            if (TQ.FrameCounter.isNew) {
+    function update (forceToUpdate) {
+        if (forceToUpdate || !isUserControlling) {
+            if (forceToUpdate || TQ.FrameCounter.isNew) {
                 t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
                 bodyEle.slider("value", t);
             }
@@ -89,6 +99,18 @@ TQ.TimerUI = (function () {
 
     function displayTime (t) {
         tEle.innerText = t.toString();
+    }
+
+    function onRangeChanged() {
+        t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        tMin = 0;
+        tMaxFrame = TQ.Scene.getTMax();
+
+        if (bodyEle) {
+            bodyEle.slider('option', 'min', tMin);
+            bodyEle.slider('option', 'max', tMaxFrame);
+            update (true);
+        }
     }
 
     function displayRange() {
