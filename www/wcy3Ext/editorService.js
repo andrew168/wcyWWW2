@@ -387,10 +387,22 @@ function EditorService($timeout, NetService, WxService, WCY) {
         id = Number(id);
         if (!currScene) return;
 
-        currScene.deleteLevel(id);
+        if (id === currScene.currentLevelId) {
+            deleteCurrentLevel();
+        } else {
+            currScene.deleteLevel(id);
+        }
     }
 
     function deleteCurrentLevel() {
+        if (currScene.levelNum() === 1) {
+            addLevel();
+            $timeout(function() {
+                deleteLevel(0);
+            });
+            return ;
+        }
+
         assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
         if (!currScene || (currScene.currentLevelId === undefined)) return;
 
