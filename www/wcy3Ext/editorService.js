@@ -135,7 +135,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         updateMode();
         updateColorPanel();
         WxService.init();
-        if (TQ.Config.Config.statServiceEnabled) {
+        if (TQ.Config.statServiceEnabled) {
             // 此服务无法lazyLoading，因为是ng模块， 暂时停止使用
             StatService.startToShow();
         }
