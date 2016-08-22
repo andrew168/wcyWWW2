@@ -98,7 +98,7 @@ TQ.TimerUI = (function () {
     }
 
     function displayTime (t) {
-        tEle.innerText = t.toString();
+        tEle.innerText = t.toString() + '/' + tMaxFrame.toString();
     }
 
     function onRangeChanged() {
