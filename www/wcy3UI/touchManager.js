@@ -38,7 +38,7 @@ var TQ = TQ || {};
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.addEventListener("touch", onTouchStage);
-        disbaleScrollInIOS();
+        disableBodyScrollInIOS();
 
         function onShowToucInfo(e) {
             console.log(e.type);
@@ -256,7 +256,7 @@ var TQ = TQ || {};
         TQ.SelectSet.add(ele2);
     }
 
-    function disbaleScrollInIOS() {
+    function disableBodyScrollInIOS() {
         // IOS's page body are scrolling when user touch moving
         document.ontouchstart = disableScroll;
         document.ontouchmove = disableScroll;
