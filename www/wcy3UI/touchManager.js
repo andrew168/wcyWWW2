@@ -261,7 +261,16 @@ var TQ = TQ || {};
         document.ontouchstart = disableScroll;
         document.ontouchmove = disableScroll;
         function disableScroll(e) {
-            e.preventDefault();
+            // console.log(e.type, e.target, e.srcElement, e.currentTarget);
+            var whiteList = ["BUTTON", 'INPUT', 'TEXTAREA'];
+            var tag = "";
+            if (e.target && e.target.tagName) {
+                tag = e.target.tagName.toUpperCase();
+            }
+
+            if (whiteList.indexOf(tag) < 0) {
+                e.preventDefault();
+            }
         }
     }
 
