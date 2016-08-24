@@ -261,11 +261,12 @@ var TQ = TQ || {};
         document.ontouchstart = disableScroll;
         document.ontouchmove = disableScroll;
         function disableScroll(e) {
-            // console.log(e.type, e.target, e.srcElement, e.currentTarget);
+           // console.log(e.type, e.target.tagName, e.srcElement.tagName, e.currentTarget ? e.currentTarget.tagName: 'None',
+           //     e.target.nodeName, e.srcElement.nodeName, e.currentTarget ? e.currentTarget.nodeName: 'None');
             var whiteList = ["BUTTON", 'INPUT', 'TEXTAREA'];
             var tag = "";
-            if (e.target && e.target.tagName) {
-                tag = e.target.tagName.toUpperCase();
+            if (e.target && e.target.nodeName) {
+                tag = e.target.nodeName.toUpperCase();
             }
 
             if (whiteList.indexOf(tag) < 0) {
