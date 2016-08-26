@@ -873,11 +873,16 @@ function EditorService($timeout, NetService, WxService, WCY) {
                 if (WCY.hasSsPath()) {
                     return WCY.save().then(doIt);
                 } else {
-                    return WCY.uploadScreenshot().then(doIt);
+                    return WCY.uploadScreenshot().then(doItAndSave);
                 }
             } else {
                 return TQ.MessageBox.show("需要先保存");
             }
+        }
+
+        function doItAndSave() {
+            WCY.save();
+            doIt();
         }
 
         function doIt() {
