@@ -152,20 +152,7 @@ function WCY($http, FileService, WxService, NetService) {
         var data = TQ.ScreenShot.getData();
         TQ.AssertExt.invalidLogic(!!_ssSign);
         return NetService.doUploadImage(_ssSign, data).
-            // then(updateSsPath).
             then(onUploadSsSuccess, onErrorGeneral);
-    }
-
-    function updateSsPath(pkg) {
-        TQ.AssertExt.invalidLogic(pkg.status === 200);
-
-        var data2 = {
-            ssPath: TQ.RM.toRelative(pkg.data.url),
-            wcyId: _wcyId
-        };
-
-        var url = TQ.Config.OPUS_HOST + '/wcy/sspath';
-        return $http.post(url, angular.toJson(data2));
     }
 
     //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）

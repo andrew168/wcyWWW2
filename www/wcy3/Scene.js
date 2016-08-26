@@ -580,6 +580,7 @@ TQ = TQ || {};
     };
 
     p.setSsPath = function (ssPath) {
+        ssPath = TQ.RM.toRelative(ssPath);
         if ((!this.ssPath) || (this.ssPath !== ssPath)) {
             this.ssPath = ssPath;
             this.isDirty = true;

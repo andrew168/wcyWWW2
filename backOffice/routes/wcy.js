@@ -21,6 +21,7 @@ router.param('shareCode', function (req, res, next, id) {
 
 router.get('/:shareCode', function(req, res, next) {
     var shareCode = req.param('shareCode');
+    console.log("shareCode =", shareCode);
     var wcyId = utils.decomposeShareCode(shareCode).wcyId;
     sendBackWcy(req, res, wcyId);
 });
@@ -31,9 +32,11 @@ router.post('/', function(req, res, next) {
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
     //ToDo:@@@
-    var templateID = 0;
+    var templateID = 0,
+        wcyDataObj = req.body,
+        wcyData = JSON.stringify(wcyDataObj),
+        ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
 
-    var wcyData = JSON.stringify(req.body);
     if (!wcyData) {
         var msg = "wrong format: must have wcyId, and wcyData!";
         console.log(msg);
@@ -46,20 +49,10 @@ router.post('/', function(req, res, next) {
                 wcyId = _wcyId;
                 _saveWcy(wcyId, ssPath, wcyData, res);
             }
-            opusController.add(status.user.ID, templateID, onSavedToDB, null);
+            opusController.add(status.user.ID, ssPath, templateID, onSavedToDB, null);
         } else {
-            var ssPath = null;
-            _saveWcy(wcyId, ssPath, wcyData, res);
+            opusController.updateScreenshot(wcyId, ssPath, onSavedToDB);
         }
-    }
-});
-
-router.post('/sspath', function(req, res, next) {
-    var wcyId = req.param('wcyId') || null;
-    var ssPath = req.param('ssPath') || null;
-    opusController.updateScreenshot(wcyId, ssPath, onUpdated);
-    function onUpdated(wcyId, ssPath) {
-        resWcySaved(res, wcyId, ssPath, "ssPath updated!");
     }
 });
 

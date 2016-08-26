@@ -18,15 +18,18 @@ function get(id) {
         });
 }
 
-function add(userID, templateID, onSuccess, onError) {
+function add(userID, ssPath, templateID, onSuccess, onError) {
     var aOpus = new Opus({
-        userId: userID
+        userId: userID,
+        ssPath: ssPath
         // template: templateID
     });
 
-    aOpus.save(function(err, doc) {
+    aOpus.save(onSave);
+
+    function onSave(err, doc) {
         onSaveOpus(err, doc, onSuccess, onError);
-    });
+    }
 }
 
 function onSaveOpus(err, doc, onSuccess, onError) {
