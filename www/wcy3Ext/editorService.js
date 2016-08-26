@@ -517,7 +517,9 @@ function EditorService($timeout, NetService, WxService, WCY) {
         play();
         forceToRefreshUI();
         TQ.TouchManager.stop();
-        startWatch();
+        $timeout(function() { // 用timeout跳过本次touch的end或mouse的up引起的事件
+            startWatch();
+        }, 100);
     }
 
     function play() {
