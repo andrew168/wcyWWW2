@@ -108,7 +108,7 @@ function DashCtrl(
     };
 
     $scope.play = function() {
-        EditorService.play();
+        EditorService.preview();
     };
 
     $scope.stop = function() {
