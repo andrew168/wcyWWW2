@@ -116,6 +116,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         state.isRecording = false; // must be in AddMode
         state.isModifyMode = null;
         state.isPreviewMode = null;
+        state.isPreviewMenuOn = false;
         state.isPlayMode = null;
         state.isPlaying = false;
     }
@@ -143,6 +144,25 @@ function EditorService($timeout, NetService, WxService, WCY) {
 
         // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
         // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
+    }
+
+    function onPreviewMenuOn(e) {
+        var events = ['touchstart', 'click'];
+        if (state.isPreviewMode && e && (events.indexOf(e.type) >= 0)) {
+            $timeout(function(){
+                state.isPreviewMenuOn = true;
+                stopWatch();
+                TQ.IdleCounter.start(onPreviewMenuOff);
+                TQ.TouchManager.start();
+            });
+        }
+    }
+
+    function onPreviewMenuOff() {
+        $timeout(function() {
+            state.isPreviewMenuOn = false;
+            startWatch();
+        });
     }
 
     function insertBkMatFromLocal() {
@@ -496,6 +516,8 @@ function EditorService($timeout, NetService, WxService, WCY) {
         state.isPreviewMode = true;
         play();
         forceToRefreshUI();
+        TQ.TouchManager.stop();
+        startWatch();
     }
 
     function play() {
@@ -670,7 +692,13 @@ function EditorService($timeout, NetService, WxService, WCY) {
     function toAddMode() {
         TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
         TQ.SelectSet.empty();
-        state.isPreviewMode = false;
+        if (state.isPreviewMode) {
+            state.isPreviewMode = false;
+            TQ.IdleCounter.remove(onPreviewMenuOff);
+            TQ.TouchManager.start();
+            onPreviewMenuOff();
+            stopWatch();
+        }
         updateMode(true);
     }
 
@@ -879,4 +907,13 @@ function EditorService($timeout, NetService, WxService, WCY) {
             });
     }
 
+    function stopWatch() {
+        document.removeEventListener('touchstart', onPreviewMenuOn);
+        document.removeEventListener('click', onPreviewMenuOn);
+    }
+
+    function startWatch() {
+        document.addEventListener('touchstart', onPreviewMenuOn);
+        document.addEventListener('click', onPreviewMenuOn);
+    }
 }

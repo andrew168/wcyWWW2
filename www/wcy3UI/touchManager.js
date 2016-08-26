@@ -3,7 +3,10 @@ var TQ = TQ || {};
 
     function TouchManager() {
     }
-    var isDithering = false;
+    var isDithering = false,
+        started = false,
+        canvas = null;
+
     var ele = null;
     var ang = 0, scale = 1;
     var dAngle = 0, dScale = 1;
@@ -15,15 +18,24 @@ var TQ = TQ || {};
         enableTouchScreen = true;
 
     function addHandler(gesture, handler) {
-        var canvas = document.getElementById("testCanvas");
         ionic.EventController.onGesture(gesture, handler, canvas);
     }
 
     function initialize() {
-        var canvas = document.getElementById("testCanvas");
+        canvas = document.getElementById("testCanvas");
         if (!enableTouchScreen) {
             return;
         }
+        disableBodyScrollInIOS();
+        start();
+    }
+
+    function start() {
+        if (started) {
+            TQ.AssertExt.invalidLogic(true, "重复启动touchManager！");
+            return;
+        }
+        started = true;
         ionic.EventController.onGesture('touch', onStart, canvas);
         ionic.EventController.onGesture('touchend', onTouchEnd, canvas);
         ionic.EventController.onGesture('release', onRelease, canvas);
@@ -38,11 +50,29 @@ var TQ = TQ || {};
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.addEventListener("touch", onTouchStage);
-        disableBodyScrollInIOS();
+    }
 
-        function onShowToucInfo(e) {
-            console.log(e.type);
+    function stop() {
+        if (!started) {
+            TQ.AssertExt.invalidLogic(true, "重复关闭touchManager！");
+            return;
         }
+
+        started = false;
+        ionic.EventController.off('touch', onStart, canvas);
+        ionic.EventController.off('touchend', onTouchEnd, canvas);
+        ionic.EventController.off('release', onRelease, canvas);
+        ionic.EventController.off('rotate', onPinchAndRotate, canvas);
+        // 'scale': not work
+        //
+        // ionic.EventController.off('pinchin', onPinch, canvas);
+        // ionic.EventController.off('pinchout', onPinch, canvas);
+        ionic.EventController.off('pinch', onPinchAndRotate, canvas);
+        ionic.EventController.off('drag', onMove, canvas);
+        // 其余事件： 'swipeup'.
+
+        TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
+        TQ.SceneEditor.stage.removeEventListener("touch", onTouchStage);
     }
 
     function isFirstTouch(e) {
@@ -277,6 +307,8 @@ var TQ = TQ || {};
 
     TouchManager.addHandler = addHandler;
     TouchManager.initialize = initialize;
+    TouchManager.start = start;
+    TouchManager.stop = stop;
     TouchManager.isOperating = function() {return isOperating;};
     TQ.TouchManager = TouchManager;
 })();
