@@ -1009,7 +1009,13 @@ window.TQ = window.TQ || {};
         }
         if (this._isHighlighting == enable) return;
 
-        this._isHighlighting = enable;
+
+        if (TQ.Config.useHighlightBox) {
+            this._isHighlighting = enable;
+        } else {
+            this._isHighlighting = false;
+        }
+
         if (this._isHighlighting) {
             this.createHighlighter();
         } else {
