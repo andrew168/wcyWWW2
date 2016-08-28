@@ -115,6 +115,29 @@ window.TQ = window.TQ || {};
         return("redo rotate" + this.receiver);
     };
 
+    function ScaleCommand(ele, scale) {
+        this.receiver = ele;
+        this.newValue = scale;
+        this.oldValue = ele.getScale(); // {sx:ele.jsonObj.sx, sy: ele.jsonObj.sy};
+    }
+
+    inherit(ScaleCommand, AbstractCommand);
+
+    ScaleCommand.prototype.do = function() {
+        this.receiver.scaleTo(this.newValue);
+        return("scale" + this.receiver);
+    };
+
+    ScaleCommand.prototype.undo = function() {
+        this.receiver.scaleTo(this.oldValue);
+        return("undo scale" + this.receiver);
+    };
+
+    ScaleCommand.prototype.redo = function() {
+        this.receiver.scaleTo(this.newValue);
+        return("redo scale" + this.receiver);
+    };
+
     function MoveCommand(ele, pos) {
         this.receiver = ele;
         this.oldValue = ele.getPosition();
@@ -216,6 +239,7 @@ window.TQ = window.TQ || {};
     TQ.CompositeCommand = CompositeCommand;
     TQ.MoveCommand = MoveCommand;
     TQ.MovePivotCommand = MovePivotCommand;
+    TQ.ScaleCommand = ScaleCommand;
     TQ.RotateCommand = RotateCommand;
     TQ.SetTimeCommand = SetTimeCommand;
     TQ.DeleteEleCommand = DeleteEleCommand;
