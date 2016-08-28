@@ -14,6 +14,10 @@ window.TQ = window.TQ || {};
 
     var p = TextElement.prototype = new TQ.Element(null, null);
 
+    p.getColor = function() {
+        return this.jsonObj.color;
+    };
+
     p.getText = function() {
         return this.jsonObj.text;
     };

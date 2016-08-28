@@ -640,8 +640,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
     function setSize() {
         var selectedElement = TQ.SelectSet.peek();
         if (selectedElement  && selectedElement.isText()) {
-            selectedElement.setSize(getFontSize());
-            // TQ.DirtyFlag.setElement(this); // called in setText
+            TQ.CommandMgr.directDo(new TQ.SetSizeCommand(selectedElement, getFontSize()));
         }
     }
 
@@ -656,8 +655,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         updateColorPanel();
         var selectedElement = TQ.SelectSet.peek();
         if (selectedElement && selectedElement.isText()) {
-            selectedElement.setColor(state.color);
-            // TQ.DirtyFlag.setElement(this); // called in setText
+            TQ.CommandMgr.directDo(new TQ.SetColorCommand(selectedElement, state.color));
         }
     }
 

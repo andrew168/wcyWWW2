@@ -115,6 +115,7 @@ window.TQ = window.TQ || {};
         return("redo rotate" + this.receiver);
     };
 
+    /* scale */
     function ScaleCommand(ele, scale) {
         this.receiver = ele;
         this.newValue = scale;
@@ -138,6 +139,55 @@ window.TQ = window.TQ || {};
         return("redo scale" + this.receiver);
     };
 
+    /* font, setSize */
+    function SetSizeCommand(ele, scale) {
+        this.receiver = ele;
+        this.newValue = scale;
+        this.oldValue = ele.getFontSize();
+    }
+
+    inherit(SetSizeCommand, AbstractCommand);
+
+    SetSizeCommand.prototype.do = function() {
+        this.receiver.setSize(this.newValue);
+        return("setSize" + this.receiver);
+    };
+
+    SetSizeCommand.prototype.undo = function() {
+        this.receiver.setSize(this.oldValue);
+        return("undo setSize" + this.receiver);
+    };
+
+    SetSizeCommand.prototype.redo = function() {
+        this.receiver.setSize(this.newValue);
+        return("redo setSize" + this.receiver);
+    };
+
+    /* font, setColor */
+    function SetColorCommand(ele, scale) {
+        this.receiver = ele;
+        this.newValue = scale;
+        this.oldValue = ele.getColor();
+    }
+
+    inherit(SetColorCommand, AbstractCommand);
+
+    SetColorCommand.prototype.do = function() {
+        this.receiver.setColor(this.newValue);
+        return("setColor" + this.receiver);
+    };
+
+    SetColorCommand.prototype.undo = function() {
+        this.receiver.setColor(this.oldValue);
+        return("undo setColor" + this.receiver);
+    };
+
+    SetColorCommand.prototype.redo = function() {
+        this.receiver.setColor(this.newValue);
+        return("redo setColor" + this.receiver);
+    };
+
+    // Move
     function MoveCommand(ele, pos) {
         this.receiver = ele;
         this.oldValue = ele.getPosition();
@@ -240,6 +290,8 @@ window.TQ = window.TQ || {};
     TQ.MoveCommand = MoveCommand;
     TQ.MovePivotCommand = MovePivotCommand;
     TQ.ScaleCommand = ScaleCommand;
+    TQ.SetColorCommand = SetColorCommand;
+    TQ.SetSizeCommand = SetSizeCommand;
     TQ.RotateCommand = RotateCommand;
     TQ.SetTimeCommand = SetTimeCommand;
     TQ.DeleteEleCommand = DeleteEleCommand;
