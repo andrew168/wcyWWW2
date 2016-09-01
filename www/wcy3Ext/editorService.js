@@ -8,6 +8,7 @@ angular.module('starter').factory('EditorService', EditorService);
 EditorService.$inject = ['$timeout', 'NetService', 'WxService', 'WCY'];
 function EditorService($timeout, NetService, WxService, WCY) {
     var _initialized = false,
+        _sceneReady = false,
         _colorPanel = null,
         _lastSelected = null,
         fileElement = null,
@@ -131,6 +132,11 @@ function EditorService($timeout, NetService, WxService, WCY) {
     }
 
     function onSceneReady() {
+        TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
+        if (_sceneReady) {
+            return;
+        }
+        _sceneReady = true;
         document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
         document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
         updateMode();

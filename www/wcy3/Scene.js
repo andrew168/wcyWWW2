@@ -163,6 +163,9 @@ TQ = TQ || {};
         this.currentLevel.onSelected();
         var thisScene = this;
         this.currentLevel.onLevelRunning = function () {
+            if (thisScene.state === TQBase.LevelState.RUNNING) {
+                return;
+            }
             thisScene.state = TQBase.LevelState.RUNNING;
             thisScene.handleEvent(Scene.EVENT_READY);
             TQ.Base.Utility.triggerEvent(document, Scene.EVENT_READY);
