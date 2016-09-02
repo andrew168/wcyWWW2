@@ -113,7 +113,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         state.isFont = false;
 
         // editor's mode
-        state.isAddMode = null;
+        state.isAddMode = true;
         state.isRecording = false; // must be in AddMode
         state.isModifyMode = null;
         state.isPreviewMode = null;
