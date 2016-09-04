@@ -5,7 +5,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    var DEFAULT_MAX_FRAME = 1;
+    var DEFAULT_MAX_FRAME = 60;
     function Level(description) {
         this.latestElement = null; // 最新生成的复合物体
         this.tMaxFrame = DEFAULT_MAX_FRAME; // 该level的最后一帧动画的时间(单位是: 帧), 以该Level的头为0帧.
