@@ -171,11 +171,11 @@ function openScene(fileInfo) {
         } else {
             currScene.close();
         }
-        TQ.GarbageCollector.clear();
+        TQ.GarbageCollector.reset();
         currScene.open(fileInfo);
         localStorage.setItem("sceneName", fileInfo.name);
         TQ.FrameCounter.reset();
-        TQ.CommandMgr.clear();
+        TQ.CommandMgr.reset();
         TQ.SkinningCtrl.end();
         TQ.FloatToolbar.close();
         TQ.WCY.currentScene = currScene;

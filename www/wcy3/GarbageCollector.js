@@ -30,6 +30,10 @@ window.TQ = window.TQ || {};
         return ele;
     };
 
+    GarbageCollector.reset = function() {
+        GarbageCollector._members.splice(0);
+    };
+
     GarbageCollector.clear = function() {
         for (var i = 0; i< GarbageCollector._members.length; i++) {
             var ele = GarbageCollector._members[i];
@@ -38,7 +42,7 @@ window.TQ = window.TQ || {};
             ele.destroy();
         }
 
-        GarbageCollector._members.splice  (0); // 删除全部选中的物体;
+        GarbageCollector.reset();
     };
 
     TQ.GarbageCollector = GarbageCollector;

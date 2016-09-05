@@ -169,7 +169,7 @@ window.TQ = window.TQ || {};
         return null;
     };
 
-    CommandMgr.clear = function () {
+    CommandMgr.reset = function () {
         CommandMgr.stop();
         _undoStack.splice(0);
         _redoStack.splice(0);
@@ -180,7 +180,7 @@ window.TQ = window.TQ || {};
     };
 
     CommandMgr.initialize = function () {
-        CommandMgr.clear();
+        CommandMgr.reset();
         $(document).mousedown(function () {
             _cmdGroupID++; // 开始一组新命令， 与前一组不能合并同类命令
         });
