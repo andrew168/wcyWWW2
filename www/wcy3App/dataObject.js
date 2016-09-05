@@ -3,9 +3,9 @@
  */
 
 function DataService(list) {
-    var IMAGE_COLUMN_NUMBER = 3;
-    var THUMBAIL_EXP = "w_100,h_100/";
-    var vm = this,
+    var IMAGE_COLUMN_NUMBER = 3,
+        THUMBAIL_EXP = "w_100,h_100/",
+        vm = this,
         currentPageID = 0,
         pages = [];
 
@@ -18,6 +18,26 @@ function DataService(list) {
     // init
     if (list) {
         // setList(list);
+    }
+
+    reset();
+
+    function reset() {
+        var page = createPage(),
+            row = [];
+
+        for (var i = 0; i < IMAGE_COLUMN_NUMBER; i++) {
+            row.push(null);
+        }
+
+        page.push(row);
+    }
+
+    function createPage() {
+        var page = [];
+        page.parent = vm;
+        pages.push(page);
+        return page;
     }
 
     // implementations (按照字母顺序排列，升序)
@@ -34,6 +54,7 @@ function DataService(list) {
     function getPage(step) {
         updatePageID(step);
         if (pages.length < 1) {
+            TQ.AssertExt.invalidLogic(false, "应该有初始值！");
             return null;
         }
         return pages[currentPageID];
@@ -41,33 +62,33 @@ function DataService(list) {
 
     function prepareColumn(props_local, m) {
         var i,
-            result = [],
-            row = [], //每行3个
-            page = []; // 每页3行
-        page.parent = vm;
-        for (i = 0; i < props_local.length; i += m) {
-            for (j = 0; j < m; j++) {
-                if (i + j < props_local.length) {
-                    row.push(props_local[i + j]);
+            page = pages[pages.length - 1],
+            row = page[page.length - 1];
+
+        if (row[0] === null) {
+            row.splice(0);
+        } else if (row[2] === null) {
+            TQ.AssertExt.invalidLogic(false, "已经有了搜索结果， 为什么要再执行到此？");
+            row.splice(0);
+        }
+
+        for (i = 0; i < props_local.length;) {
+            if (row.length >= 3) {
+                row = [];
+                if (page.length >= 3) {
+                    page = createPage();
+                }
+                page.push(row);
+            }
+
+            for (j = 0; j < m; j++, i++) {
+                if (i < props_local.length) {
+                    row.push(props_local[i]);
                 } else {
                     row.push(null);
                 }
             }
-
-            page.push(row);
-            row = [];
-            if (page.length >= 3) {
-                result.push(page);
-                page = [];
-                page.parent = vm;
-            }
         }
-
-        if (page.length > 0) {
-            result.push(page);
-        }
-
-        return result;
     }
 
     function updatePageID(step) {
@@ -100,7 +121,7 @@ function DataService(list) {
         } else {
             fixup(list);
         }
-        pages = prepareColumn(list, IMAGE_COLUMN_NUMBER);
+        prepareColumn(list, IMAGE_COLUMN_NUMBER);
     }
 
     function toThumbNail(path) {

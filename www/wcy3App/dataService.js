@@ -69,6 +69,7 @@
         }
 
         function addWork(tag, wcyName, screenshot) {
+            TQ.AssertExt.depreciated("deleteWork");
             var work = {tag: tag, wcyName: wcyName, path: screenshot, modified: true};
             var id = search(work);
             if (id >= 0) {
@@ -82,6 +83,7 @@
         }
 
         function deleteWork(work) {
+            TQ.AssertExt.depreciated("deleteWork");
             var id = propsMyWork1.indexOf(work);
             if (id >= 0) {
                 propsMyWork1.splice(id, 1);
