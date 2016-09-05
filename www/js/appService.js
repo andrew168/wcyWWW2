@@ -53,7 +53,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             if (TQ.Config.LocalCacheEnabled) {
                 document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
                 DeviceService.initialize();
-            } {
+            } else {
                 onFileSystemReady();
             }
 
