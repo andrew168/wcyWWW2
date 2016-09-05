@@ -23,14 +23,30 @@ function DataService(list) {
     reset();
 
     function reset() {
-        var page = createPage(),
+        var page = null,
+            row = null;
+
+        if (pages.length >= 1 ) {
+            pages.splice(1, pages.length - 1);
+            page = pages[0];
+        } else {
+            page = createPage();
+        }
+
+        if (page.length >= 1) {
+            page.splice(1, page.length - 1);
+            row = page[0];
+            row.splice(0);
+        } else {
             row = [];
+            page.push(row);
+        }
 
         for (var i = 0; i < IMAGE_COLUMN_NUMBER; i++) {
             row.push(null);
         }
 
-        page.push(row);
+        currentPageID = 0;
     }
 
     function createPage() {
@@ -116,6 +132,7 @@ function DataService(list) {
     }
 
     function setList(list) {
+        reset();
         if (TQ.Config.LocalCacheEnabled) {
             TQ.DownloadManager.downloadBulk(list);
         } else {
