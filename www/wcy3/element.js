@@ -633,6 +633,7 @@ window.TQ = window.TQ || {};
     };
 
     p.autoFit = function(img) {
+        // 保持图像长宽比例不失真
         // 自动充满整个画面 或者 保持物体的原始大小
         var scaleX = 1 / img.naturalWidth,
             scaleY = 1 / img.naturalHeight;
@@ -645,10 +646,22 @@ window.TQ = window.TQ || {};
         desc.pivotX = 0.5;
         desc.pivotY = 0.5;
         var obj_pdc = this.ndc2Pdc(desc);
-        if (this.autoFitFlag === Element.FitFlag.KEEP_SIZE) {
+        var minScale = Math.min(obj_pdc.sx, obj_pdc.sy);
+        if ((this.autoFitFlag === Element.FitFlag.KEEP_SIZE) ||
+            ((this.autoFitFlag === Element.FitFlag.WITHIN_FRAME) && (minScale > 1))) { // 框大， 图小，保持原尺寸
             obj_pdc.sx = 1;
             obj_pdc.sy = 1;
+        } else { // 框子小， 图大， 需要缩小
+            // 保持图像长宽比例不失真
+            obj_pdc.sx = minScale;
+            obj_pdc.sy = minScale;
         }
+
+        // 更新 desc
+        var ndc = this.pdc2Ndc(obj_pdc);
+        desc.sx = ndc.sx;
+        desc.sy = ndc.sy;
+
         this.scaleTo(obj_pdc);
         this.moveTo(obj_pdc);
         // desc.pivotX = desc.pivotY = 0.5;
@@ -1786,7 +1799,8 @@ window.TQ = window.TQ || {};
 
     Element.FitFlag = {
         KEEP_SIZE: 1,
-        FULL_SCREEN: 2
+        FULL_SCREEN: 2,
+        WITHIN_FRAME: 3
     };
 
     TQ.Element = Element;

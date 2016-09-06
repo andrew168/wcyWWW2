@@ -297,7 +297,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
         if (!matType) {
             matType = TQ.MatType.PROP;
         }
-        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.KEEP_SIZE, x: x, y: y};
+        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.WITHIN_FRAME, x: x, y: y};
         addItem(desc, matType);
     }
 
@@ -339,7 +339,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
     function addItemByUrl(url, matType) {
         var eleType = (matType === TQ.MatType.SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
             fitFlag = (matType === TQ.MatType.BKG) ?
-                TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.KEEP_SIZE,
+                TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.WITHIN_FRAME,
             desc = {src: url, type: eleType, autoFit: fitFlag};
 
         TQ.SceneEditor.addItem(desc);
