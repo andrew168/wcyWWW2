@@ -9,6 +9,9 @@ var TQUtility; //
     function Utility() {
     }
 
+    Utility.isIOS = isIOS;
+    Utility.isAndroid = isAndroid;
+
     Utility.isObject = function(obj) {
         return (typeof obj === 'object');
     };
@@ -75,12 +78,12 @@ var TQUtility; //
     };
 
     Utility.triggerEvent = function (DomElement, eventName, data) {
-        TQ.Log.debugInfo("triggerEvent,  CustomEvent: " + typeof CustomEvent + ", " + eventName);
+        // TQ.Log.debugInfo("triggerEvent,  CustomEvent: " + typeof CustomEvent + ", " + eventName);
         var evt = new CustomEvent(eventName);
         if (!!data) {
             evt.data = data;
         }
-        TQ.Log.debugInfo("event = :" + JSON.stringify(evt));
+        // TQ.Log.debugInfo("event = :" + JSON.stringify(evt));
         DomElement.dispatchEvent(evt);
     };
 

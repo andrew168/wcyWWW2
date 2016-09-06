@@ -100,7 +100,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function doUploadImage(signData, fileOrBuffer) {
         TQ.MessageBox.showWaiting('努力上传中....');
-        console.log(JSON.stringify(signData));
+        // console.log(JSON.stringify(signData)); // 图像数据太大
         signData.api_key = TQ.Config.Cloudinary.api_key;
         var res;
         if (isLocalFile(fileOrBuffer)) {
@@ -211,10 +211,9 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         };
 
         return $http.post(C_MAN_URL, angular.toJson(data2)).
-            then(function (data) {
+            then(function (pkg) {
                 TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.type});
             });
-
     }
 
     function update(path) {
