@@ -247,6 +247,10 @@ function EditorService($timeout, NetService, WxService, WCY) {
                 break;
             default:
                 if (matType === TQ.MatType.SOUND) {
+                    if (!isSound(aFile)) {
+                        TQ.MessageBox.show("发现不支持的声音格式：" + aFile.type + ". 请选用mp3或wav格式");
+                        return;
+                    }
                     TQ.Assert.isTrue(isSound(aFile));
                 }
                 uploadData(aFile);
