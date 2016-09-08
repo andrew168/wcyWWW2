@@ -7,17 +7,17 @@ window.TQ = window.TQ || {};
     /// 以下是接口部分
     function FloatToolbar() {}
     FloatToolbar.selectedElement = null;
-    FloatToolbar.onScaleBig = onScaleBig;
-    FloatToolbar.onScaleSmall = onScaleSmall;
-    FloatToolbar.onRotateLeft = onRotateLeft;
-    FloatToolbar.onRotateRight = onRotateRight;
-    FloatToolbar.onMoveUpLayer = onMoveUpLayer;
-    FloatToolbar.onMoveDownLayer = onMoveDownLayer;
-    FloatToolbar.onMoveToTop = onMoveToTop;
-    FloatToolbar.onMoveToBottom = onMoveToBottom;
-    FloatToolbar.onDelete = onDelete;
-    FloatToolbar.onMirrorX = onMirrorX;
-    FloatToolbar.onMirrorY = onMirrorY;
+    FloatToolbar.onScaleBig = depreciated;
+    FloatToolbar.onScaleSmall = depreciated;
+    FloatToolbar.onRotateLeft = depreciated;
+    FloatToolbar.onRotateRight = depreciated;
+    FloatToolbar.onMoveUpLayer = depreciated;
+    FloatToolbar.onMoveDownLayer = depreciated;
+    FloatToolbar.onMoveToTop = depreciated;
+    FloatToolbar.onMoveToBottom = depreciated;
+    FloatToolbar.onDelete = depreciated;
+    FloatToolbar.onMirrorX = depreciated;
+    FloatToolbar.onMirrorY = depreciated;
 
     //
     FloatToolbar.initialize = depreciated;

@@ -619,7 +619,7 @@ $(function(){
         }
     });
 
-    $("#floatToolbarDiv").draggable();
+    // $("#floatToolbarDiv").draggable();
 
      $(document).on('click touchmove touchstart touchend taphold hold tap release mouseover',function(evt){
     //    console.log("mc:" + evt.type);
