@@ -20,7 +20,6 @@ function DashCtrl(
     $scope.testShowMsg = testShowMsg;
     $scope.testPrompt = testPrompt;
 
-    MatLibService.search("food");
 
     // implementation, abc order
     function testShowMsg() {
