@@ -5,8 +5,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$inject = ['$timeout', 'NetService', 'WxService', 'WCY'];
-function EditorService($timeout, NetService, WxService, WCY) {
+EditorService.$inject = ['$rootScope', '$timeout', 'NetService', 'WxService', 'WCY'];
+function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
     var _initialized = false,
         _sceneReady = false,
         _colorPanel = null,
@@ -124,7 +124,7 @@ function EditorService($timeout, NetService, WxService, WCY) {
 
     function initialize() {
         reset();
-        document.addEventListener(TQ.Scene.EVENT_READY, onSceneReady);
+        $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
     }
 
     function onSelectSetChange() {

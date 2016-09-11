@@ -112,9 +112,11 @@ var currScene = null;
         SceneEditor._requestMode = mode;
     };
     SceneEditor.isEditMode = function () {
+        SceneEditor.updateMode();
         return (SceneEditor.getMode() == TQBase.LevelState.EDITING);
     };
     SceneEditor.isPlayMode = function () {
+        SceneEditor.updateMode();
         return (SceneEditor.getMode() == TQBase.LevelState.RUNNING);
     };
 
