@@ -254,9 +254,12 @@ TQ = TQ || {};
     };
 
     SelectSet.empty = function() {
-        SelectSet.clear();
-        TQ.DirtyFlag.setScene();
-        TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+        if (SelectSet.members.length > 0) {
+            SelectSet.clear();
+            TQ.DirtyFlag.setScene();
+            TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+        }
+        TQ.AssertExt.invalidLogic(SelectSet.selectedMarkers.length >0);
     };
 
     SelectSet.isEmpty = function() {
