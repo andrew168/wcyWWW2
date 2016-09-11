@@ -101,6 +101,10 @@ var TQ = TQ || {};
     }
 
     function getSelectedElement(e) {
+        TQ.AssertExt.invalidLogic(!!e);
+        if (!e) {
+            return;
+        }
         var newEle = _doGetSelectedElement(e);
         if (!newEle) {
             newEle = touchedEle;

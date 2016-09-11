@@ -767,9 +767,16 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
     }
 
     function updatePlayingState() {
-        $timeout(function() {
+        // 不能用$timeout, 因为DOM的SCENE_READY调用时候， $timeout可能为undefined
+        if (!$timeout) {
+            setTimeout(doUpdate, 300);
+        } else {
+            setTimeout(doUpdate, 300);
+        }
+
+        function doUpdate() {
             state.isPlaying = TQ.FrameCounter.isPlaying();
-        }, 300);
+        }
     }
 
     function updatePosition(ele) {
@@ -852,7 +859,11 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
 
     function forceToRefreshUI()
     {
-        $timeout(null);
+        if (!$timeout) {
+            setTimeout(null);
+        } else {
+            $timeout(null);
+        }
     }
 
     function onDelete(evt) {
