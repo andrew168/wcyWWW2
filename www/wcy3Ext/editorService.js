@@ -55,7 +55,6 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         setSize: setSize,
         setColor: setColor,
         eraseAnimeTrack:eraseAnimeTrack,
-        deleteElement:deleteElement,
         hideOrShow :hideOrShow ,
         pinIt:pinIt,
 
@@ -584,10 +583,6 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         TQ.Config.zoomX = TQ.Config.zoomY = 1;
     }
 
-    function deleteElement () {
-        TQ.SelectSet.delete(); // 通过undo系统调用了currScene.deleteElement()
-    }
-
     //只用于插入录音，
     //    在开始录音的时候，先记录当时场景的id和当时时间t0，以供本函数使用。
     // 在指定的场景levelID，指定的时间t0，插入所制的声音资源,
@@ -865,7 +860,11 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
             // TQ.MessageBox.show("确认要删除这个场景？", deleteCurrentLevel);
             deleteCurrentLevel();
         } else {
-            TQ.FloatToolbar.onDelete(evt);  // 删除当前选中的元素
+            // 删除当前选中的元素
+            evt.stopPropagation();
+            evt.preventDefault();
+            TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
+            TQ.SelectSet.delete();
         }
     }
 
