@@ -259,7 +259,7 @@ TQ = TQ || {};
             TQ.DirtyFlag.setScene();
             TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
         }
-        TQ.AssertExt.invalidLogic(SelectSet.selectedMarkers.length >0);
+        TQ.AssertExt.invalidLogic(SelectSet.selectedMarkers.length === 0);
     };
 
     SelectSet.isEmpty = function() {
