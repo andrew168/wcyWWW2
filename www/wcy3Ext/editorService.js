@@ -123,7 +123,7 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
 
     function initialize() {
         reset();
-        $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
+        document.addEventListener(TQ.Scene.EVENT_READY, onSceneReady);
     }
 
     function onSelectSetChange() {
