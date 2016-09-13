@@ -213,7 +213,8 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
             },
 
             audioFile = {
-                formats: ".wav, .mp3, audio/mpeg, audio/mp3, application/zip, audio/wav, audio/wave, audio/x-wav ",
+                formats: "audio/*",
+                // formats: ".wav, .mp3, audio/mpeg, audio/mp3, application/zip, audio/wav, audio/wave, audio/x-wav ",
                 device: ""
             },
 
