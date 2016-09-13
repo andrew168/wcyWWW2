@@ -170,40 +170,100 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         });
     }
 
-    function insertBkMatFromLocal() {
-        return insertMatFromLocal(TQ.MatType.BKG);
+    function insertBkMatFromLocal(useDevice) {
+        return insertMatFromLocal(TQ.MatType.BKG, useDevice);
     }
 
-    function insertPeopleFromLocal() {
-        return insertMatFromLocal(TQ.MatType.PEOPLE);
+    function insertPeopleFromLocal(useDevice) {
+        return insertMatFromLocal(TQ.MatType.PEOPLE, useDevice);
     }
 
-    function insertPropFromLocal() {
-        return insertMatFromLocal(TQ.MatType.PROP);
+    function insertPropFromLocal(useDevice) {
+        return insertMatFromLocal(TQ.MatType.PROP, useDevice);
     }
 
-    function insertSoundFromLocal() {
-        return insertMatFromLocal(TQ.MatType.SOUND);
+    function insertSoundFromLocal(useDevice) {
+        return insertMatFromLocal(TQ.MatType.SOUND, useDevice);
     }
 
-    function insertMatFromLocal(matType) {
+    function insertMatFromLocal(matType, useDevice) {
         if (WxService.isReady()) {
             alert("请在浏览器中打开，以便于使用所有功能");
             // return doInsertMatFromLocalWx(matType);
         }
 
-        return doInsertMatFromLocal(matType);
+        return doInsertMatFromLocal(matType, useDevice);
     }
 
-    function doInsertMatFromLocal(matType) {
+    function doInsertMatFromLocal(matType, useDevice) {
+        var camera = {
+                // 后缀方法， 和 MIME type方法都要有， 以增强兼容性
+                formats: "image/*", // ;capture=camera",
+                device: "camera"
+            },
+
+            imageFile = {
+                formats: ".bmp, .gif, .jpeg, .png, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/*;capture=camera",
+                device: ""
+            },
+
+            audio = {
+                formats: "audio/*",
+                device: "audio"
+            },
+
+            audioFile = {
+                formats: ".wav, .mp3, audio/mpeg, audio/mp3, application/zip, audio/wav, audio/wave, audio/x-wav ",
+                device: ""
+            },
+
+            validFormat = (matType === TQ.MatType.SOUND) ?
+                ((useDevice) ? audio: audioFile) :
+                ((useDevice) ? camera: imageFile);
+
+    // <input type="file" accept="image/*" capture="camera">
+    // Capture can take values like camera, camcorder and audio.
+
         if (!_initialized) {
             _initialized = true;
             domEle = document.createElement('input');
             domEle.setAttribute('id', '---input-file-test');
             domEle.setAttribute('type', 'file');
-            domEle.setAttribute('multiple', true);
+            setOptions();
             document.body.appendChild(domEle);
             fileElement = $(domEle);
+        } else {
+            setOptions();
+//            domEle.setAttribute("accept", validFormat.formats);
+            // domEle.setAttribute("accept", ".jpg, .bmp");
+            // domEle.setAttribute("accept", ".wav, .mp3");
+            // domEle.setAttribute("accept", ".png, .jpeg, image/png, image/jpeg");
+
+            // capture：指明用设备， 或已有的文件
+  //          if (useDevice) {
+  //              domEle.setAttribute("capture", validFormat.device);
+  //          }
+        }
+
+        function setOptions() {
+            // accept: 指明可接受的media类别
+            // domEle.setAttribute("accept", "image/*");
+            domEle.setAttribute("accept", validFormat.formats);
+            // domEle.setAttribute("accept", ".jpg, .bmp");
+            // domEle.setAttribute("accept", ".wav, .mp3");
+            // domEle.setAttribute("accept", ".png, .jpeg, image/png, image/jpeg");
+
+            // capture：指明用设备， 或已有的文件
+            if (useDevice) {
+                domEle.setAttribute("capture", validFormat.device);
+                domEle.removeAttribute('multiple');
+                // domEle.setAttribute('multiple', false);
+            } else {
+                domEle.removeAttribute("capture"); // 在IOS上， capture值被忽略，
+
+                //选择已有的文件（而不是从device拍照），可以采用多参照！！！
+                domEle.setAttribute('multiple', true); // "multiple" （不论true/false, Safari 都直接打开相册）
+            }
         }
 
         fileElement.unbind('change'); // remove old handler
