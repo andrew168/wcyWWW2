@@ -1,7 +1,8 @@
 /**
  * Created by Andrewz on 2/25/2016.
  */
-var fs = require('fs');
+var fs = require('fs'),
+    callerId = require('caller-id');
 
 var logger = logger|| {};
 (function() {
@@ -52,9 +53,14 @@ var logger = logger|| {};
         fs.appendFile(logFolder + logger.logFilename, new Date().toLocaleString() + ' - ' + entry + '\r\n');
     };
 
-    logger.info = function(entry) {
-        originalConsoleLog(entry);
-        log2File(entry);
+    logger.info = function(msg) {
+        var caller = callerId.getData(),
+            fullPath = caller.filePath.replace(/\\/g,'/'),
+            shortPath = fullPath.substr(fullPath.lastIndexOf('/') + 1),
+            stackTrace = shortPath +", "+ caller.functionName +"(" +  caller.lineNumber + "),  ";
+        msg = stackTrace + msg;
+        originalConsoleLog(msg);
+        log2File(msg);
     };
 
     init();
