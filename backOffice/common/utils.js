@@ -27,6 +27,24 @@ function decomposeShareCode(shareCode) {
 }
 
 
+function getCookie(req, name, defaultValue) {
+    var para = null;
+    if (req.cookies && req.cookies[name]) {
+        para = req.cookies[name];
+    } else {
+        console.error("not fond: " + name);
+        para = defaultValue;
+    }
+
+    return para;
+}
+
+function getCookieNumber(req, name, defaultValue) {
+    var para = getCookie(req, name, defaultValue + '');
+    para = parseInt(para);
+    return (isNaN(para)) ? defaultValue : para;
+}
+
 function onResSave(err, doc, res) {
     showDocument(err, doc);
     if (!err) {
@@ -67,6 +85,8 @@ function matName2Id(name) {
 exports.createTimestamp = createTimestamp;
 exports.composeShareCode = composeShareCode;
 exports.decomposeShareCode = decomposeShareCode;
+exports.getCookieNumber = getCookieNumber;
+exports.getCookie = getCookie;
 exports.notFound = notFound;
 exports.dumpDocument = showDocument;
 exports.onSave = onSave;

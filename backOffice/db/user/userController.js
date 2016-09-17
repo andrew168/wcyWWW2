@@ -23,9 +23,14 @@ function add(req, onSuccess) {
         score: 100 //多余的字段， 将被忽略
     });
 
-    aDoc.save(function(err, doc) {
-        onSuccess(doc);
-    });
+    try {
+        aDoc.save(function(err, doc) {
+            onSuccess(doc);
+        });
+    } catch(e) {
+        console.log("Fatal error: at user doc read/write");
+        console.log(e);
+    }
 }
 
 exports.get = get;
