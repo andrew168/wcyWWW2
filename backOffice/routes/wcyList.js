@@ -13,7 +13,7 @@ router.get('/', function(req, res, next) {
     status.checkUser(req, res);
     opusController.getList(status.user.ID, onGotList, onFail);
     function onGotList(list) {
-        console.log(list);
+        // console.log(list);
         res.json(list);
     }
 
