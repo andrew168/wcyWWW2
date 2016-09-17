@@ -168,7 +168,7 @@ TQ = TQ || {};
             }
             thisScene.state = TQBase.LevelState.RUNNING;
             thisScene.handleEvent(Scene.EVENT_READY);
-            TQ.Base.Utility.triggerEvent(document, Scene.EVENT_READY);
+            TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_READY);
             TQ.MessageBox.hide();
             this.isDirty = true;
         }
