@@ -17,7 +17,7 @@ function get(userId, callback) {
         if (!data) {
             console.error(404, {msg: 'not found!' + id});
         } else {
-            console.log(data);
+            // console.log(data);
         }
 
         if (callback) {

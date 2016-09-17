@@ -11,7 +11,7 @@ function setup(autoIncrement) {
     userSchema.plugin(autoIncrement.plugin, 'User');
     mongoose.model('User', userSchema);
     console.log("required Paths:" + userSchema.requiredPaths());
-    console.log("indexes:" + userSchema.indexes());
+    // console.log("indexes:" + userSchema.indexes());
 }
 
 exports.setup = setup;

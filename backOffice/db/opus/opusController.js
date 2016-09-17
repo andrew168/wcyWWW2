@@ -53,7 +53,7 @@ function getList(userId, callback) {
             if (!data) {
                 console.error(404, {msg: 'not found!' + userId});
             } else {
-                console.log(data);
+                // console.log(data);
             }
             var result = getLatest(data);
             if (result.length === 0) {

@@ -124,7 +124,7 @@ function getToken(cb) {
 
     https.get(getTokenUrl, function(res) {
         console.log("Got response: " + res.statusCode);
-        console.log("Got response: " + res);
+        // console.log("Got response: " + res);
         res.setEncoding('utf8');
         res.on('data', function(data) {
             console.log(data);
