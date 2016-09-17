@@ -139,7 +139,7 @@ function sendBackWcy(req, res, wcyId) {
             data = defaultWcyData;
         }
 
-        if (res.isRegisteredUser) {
+        if (status.isRegisteredUser()) {
             response(req, res, data, wcyId);
         } else {
             response(req, res, data, wcyId);

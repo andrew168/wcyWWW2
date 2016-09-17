@@ -6,6 +6,7 @@ var defaultUserID = 10,
     COOKIE_LIFE = (90*24*60*60*1000); // 90 days
 var user = {
     ID:0,
+    isRegistered: false,
     name: "anonymouse",
     timesCalled: 0
 };
@@ -15,18 +16,19 @@ function logUser(req, res, callback) {
         ip = req.ip,
         url = req.originalUrl || req.path,
         ips = req.ips;
-    console.log("access: user=" + user.ID + ", timesCalled: " + user.timesCalled + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
-    if (callback) {
-        callback();
-    }
+
+    validateUser(req, res, function () {
+        console.log("access: user=" + user.ID + ", timesCalled: " + user.timesCalled + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
+        if (callback) {
+            callback();
+        }
+    })
 }
 
 function checkUser(req, res, callback) {
-    user.timesCalled = getCookieNumber(req, 'timesCalled', 0);
-    user.timesCalled++;
-    checkUserID(req, res, setUserCookie);
-    logUser(req);
+    validateUser(req, res, setUserCookie);
     function setUserCookie() {
+        user.timesCalled++;
         res.cookie('userID', user.ID.toString(), { maxAge: COOKIE_LIFE, httpOnly: true });
         res.cookie('timesCalled', user.timesCalled.toString(), { maxAge: COOKIE_LIFE, httpOnly: true });
         res.clearCookie('oldCookie1');
@@ -36,28 +38,20 @@ function checkUser(req, res, callback) {
     }
 }
 
-function checkUserID(req, res, callback) {
-    if (!!req.checkUserPassed) {
-        return (callback ? callback() : null);
-    }
-
-    res.userChecked = true;
+function validateUser(req, res, callback) {
     user.ID = getCookieNumber(req, 'userID', defaultUserID);
+    user.timesCalled = getCookieNumber(req, 'timesCalled', 0);
     if (isNewUser()) {
         user.timesCalled = 0;
         userController.add(req, function(doc) {
-            res.isRegisteredUser = true;
             user.ID = doc._id;
+            user.isRegistered = true;
             if (callback) {
-                if (!res.finished) {
-                    callback();
-                } else {
-                    console.log("too late!!!");
-                }
+                callback();
             }
         });
     } else {
-        res.isRegisteredUser = true;
+        user.isRegistered = true;
         if (callback) {
             callback();
         }
@@ -81,9 +75,14 @@ function getCookieNumber(req, name, defaultValue) {
 }
 
 function isNewUser() {
-    return  (user.ID === defaultUserID);
+    return ((user.ID === defaultUserID) || (user.ID === 0));
+}
+
+function isRegisteredUser() {
+    return  (user.isRegistered);
 }
 
 exports.user = user;
 exports.checkUser = checkUser;
 exports.logUser = logUser;
+exports.isRegisteredUser = isRegisteredUser;
