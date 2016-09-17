@@ -57,8 +57,8 @@ var logger = logger|| {};
         var caller = callerId.getData(),
             fullPath = caller.filePath.replace(/\\/g,'/'),
             shortPath = fullPath.substr(fullPath.lastIndexOf('/') + 1),
-            stackTrace = shortPath +", "+ caller.functionName +"(" +  caller.lineNumber + "),  ";
-        msg = stackTrace + msg;
+            stackTrace = "--" + shortPath +", "+ caller.functionName +"(" +  caller.lineNumber + ")";
+        msg = msg + stackTrace;
         originalConsoleLog(msg);
         log2File(msg);
     };
