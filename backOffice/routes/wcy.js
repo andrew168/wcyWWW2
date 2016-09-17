@@ -27,33 +27,32 @@ router.get('/:shareCode', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
-    status.checkUser(req, res);
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
-    //ToDo:@@@
-    var templateID = 0,
-        wcyDataObj = req.body,
-        wcyData = JSON.stringify(wcyDataObj),
-        ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
+        //ToDo:@@@
+        var templateID = 0,
+            wcyDataObj = req.body,
+            wcyData = JSON.stringify(wcyDataObj),
+            ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
 
-    if (!wcyData) {
-        var msg = "wrong format: must have wcyId, and wcyData!";
-        console.log(msg);
-        res.send(msg);
-    } else {
-        var wcyId = req.param('wcyId');
-        if (isNewWcy(wcyId)) {
-            // 入库， 并获取新wcyID，
-            function onSavedToDB(_wcyId, ssPath) {
-                wcyId = _wcyId;
-                _saveWcy(wcyId, ssPath, wcyData, res);
-            }
-            opusController.add(status.user.ID, ssPath, templateID, onSavedToDB, null);
+        if (!wcyData) {
+            var msg = "wrong format: must have wcyId, and wcyData!";
+            console.log(msg);
+            res.send(msg);
         } else {
-            opusController.updateScreenshot(wcyId, ssPath, onSavedToDB);
+            var wcyId = req.param('wcyId');
+            if (isNewWcy(wcyId)) {
+                // 入库， 并获取新wcyID，
+                function onSavedToDB(_wcyId, ssPath) {
+                    wcyId = _wcyId;
+                    _saveWcy(wcyId, ssPath, wcyData, res);
+                }
+                opusController.add(status.user.ID, ssPath, templateID, onSavedToDB, null);
+            } else {
+                opusController.updateScreenshot(wcyId, ssPath, onSavedToDB);
+            }
         }
-    }
 });
 
 function _saveWcy(wcyId, ssPath, wcyData, res) {

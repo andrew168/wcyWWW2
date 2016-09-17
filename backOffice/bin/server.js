@@ -8,7 +8,6 @@ var config = {port: 80};
 var app = express();
 
 app.use(function(req, res, next) {
-    console.log("vhost first!");
     next();
 });
 

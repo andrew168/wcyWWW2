@@ -32,7 +32,7 @@
 
         var app = express();
         _app = app;
-        start2(app);
+        start2(app, appConfig);
 
 //  使用数据库的操作， 都必须在数据库启动之后， 再启动
         var dbMain = require('./../db/dbMain');
@@ -60,7 +60,7 @@
         if (!appConfig.useVHost) {
             init();
         }
-        setupBaseiRoutes(app, appConfig);
+        setupBasicRoutes(app, appConfig);
     }
 
     function start2(app, appConfig) {
@@ -88,9 +88,10 @@
         };
 
         app.use(allowCrossDomain);
+        setStaticRoutes(app, appConfig);
     }
 
-    function setupBaseiRoutes(app, appConfig) {
+    function setStaticRoutes(app, appConfig) {
         var clientPath = path.join(__dirname, appConfig.wwwRoot);
         var clientPathStatic = path.join(__dirname, './../public');
         console.log("current path:" + __dirname);
@@ -99,18 +100,18 @@
 
         app.use(express.static(clientPath));
         app.use('/static', express.static(clientPathStatic));
+        // 以上的路径，排除在外
 
+        app.use(function (req, res, next) {
+            // console.log("I'm first!!! for any path, 除了以上的路径");
+            status.logUser(req, res, next);
+        });
+    }
+
+    function setupBasicRoutes(app, appConfig) {
         if (Config.useCloundServerSimulator) {
             startLocalSimulator(app);
         }
-
-// 以上的路径，排除在外
-
-        app.use(function (req, res, next) {
-            console.log("I'm first!!! for any path, 除了以上的路径");
-//        status.checkUser(req, res);
-            next();
-        });
 
 // catch 404 and forward to error handler
         app.use(function (req, res, next) {

@@ -29,7 +29,7 @@ router.post('/', function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     var public_id = req.param('public_id') || null,
         matType = getMatType(req);
-    status.checkUser(req, res);
+    status.logUser(req);
     if (!public_id) {
         var originalFilename = req.param('filename') || "no_filename";
         createMatId(req, res, matType, originalFilename);
@@ -56,7 +56,7 @@ router.param('matType', function (req, res, next, id) {
 router.get('/list/:matType', function(req, res, next) {
     var matType = parseInt(req.param('matType'));
     console.log("type = " + matType);
-    status.checkUser(req, res);
+    status.logUser(req);
     getMatController(matType).getList(status.user.ID, matType, onGotList, onFail);
     function onGotList(list) {
         console.log(list);
