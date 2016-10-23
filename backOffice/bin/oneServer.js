@@ -94,18 +94,36 @@
     function setStaticRoutes(app, appConfig) {
         var clientPath = path.join(__dirname, appConfig.wwwRoot);
         var clientPathStatic = path.join(__dirname, './../public');
+
+        function inWhiteList(ext) {
+            var whiteList = ['.css', '.js'];
+
+            for (var i = 0; i < whiteList.length; i++) {
+                if (ext.indexOf(whiteList[i]) >= 0 ) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        // 以上的路径是静态文件，排除在外,不log访问情况
+        app.use(function (req, res, next) {
+            // console.log("I'm first!!! for any path, 除了以上的路径");
+            var ext = req.url.substr(req.url.length - 5);
+            if (inWhiteList(ext)) {
+                next();
+            } else {
+                status.logUser(req, res, next);
+            }
+        });
+
         console.log("current path:" + __dirname);
         console.log("client path (dynamic): " + clientPath);
         console.log("client path (static): " + clientPathStatic);
 
         app.use(express.static(clientPath));
         app.use('/static', express.static(clientPathStatic));
-        // 以上的路径，排除在外
-
-        app.use(function (req, res, next) {
-            // console.log("I'm first!!! for any path, 除了以上的路径");
-            status.logUser(req, res, next);
-        });
     }
 
     function setupBasicRoutes(app, appConfig) {
