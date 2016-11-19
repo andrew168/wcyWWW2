@@ -37,7 +37,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         });
     }
 
-    function uploadOne(file, matType) { // upload one material
+    function uploadOne(file, matType) { // upload one material, fileOrBuffer
         var q = $q.defer();
         TQ.Assert.isTrue(!!file, "文件不能为null");
         var option;

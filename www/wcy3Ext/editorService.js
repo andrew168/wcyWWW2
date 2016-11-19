@@ -59,6 +59,7 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         pinIt:pinIt,
 
         // element insert (text, sound, image...)
+        insertMat: insertMat,
         insertBkImageFromLocal: insertBkMatFromLocal, // upload
         insertPeopleFromLocal: insertPeopleFromLocal,
         insertPropFromLocal: insertPropFromLocal,
@@ -303,7 +304,8 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
             case TQ.MatType.BKG:
                 var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
                 var processor = new TQ.ImageProcess();
-                processor.start(aFile, options, uploadData);
+                processor.start(aFile, options,
+                    function(buffer) {insertMat(buffer, matType);});
                 break;
             default:
                 if (matType === TQ.MatType.SOUND) {
@@ -313,20 +315,20 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
                     }
                     TQ.Assert.isTrue(isSound(aFile));
                 }
-                uploadData(aFile);
+                insertMat(aFile, matType);
         }
+    }
 
-        function uploadData(buffer) {
-            NetService.uploadOne(buffer, matType).
-                then(function (res) {
-                    TQ.Log.alertInfo("after uploadOne: " + JSON.stringify(res));
-                    TQ.Log.debugInfo("mat url: " + res.url);
-                    addItemByUrl(res.url, matType);
-                }, function (err) {
-                    console.log(err);
-                })
-                .finally(TQ.MessageBox.hide);
-        }
+    function insertMat(fileOrBuffer, matType) {
+        NetService.uploadOne(fileOrBuffer, matType).
+            then(function (res) {
+                TQ.Log.alertInfo("after uploadOne: " + JSON.stringify(res));
+                TQ.Log.debugInfo("mat url: " + res.url);
+                addItemByUrl(res.url, matType);
+            }, function (err) {
+                console.log(err);
+            })
+            .finally(TQ.MessageBox.hide);
     }
 
     // private functions:
