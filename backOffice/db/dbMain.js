@@ -105,7 +105,7 @@ function doInit(app, appConfig, callback) {
 
         connection = mongoose.connect(url + "?autoReconnect=false", options, function (err) {
             if (!err) {
-                console.log("no error");
+                console.log("db started successfully!");
             } else {
                 onErrorExt(err);
             }
@@ -153,7 +153,7 @@ function onError(e) {
     if (!e) {
         console.error("e is not defined in onError");
     } else {
-        console.error('connection error, please 1) start db 2) connect to network!' + JSON.stringify(e));
+        console.error('数据库连接出错：1) 启动数据库 2) 检查网络连接!' + JSON.stringify(e));
     }
 }
 
