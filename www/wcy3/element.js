@@ -638,11 +638,14 @@ window.TQ = window.TQ || {};
         var scaleX = 1 / img.naturalWidth,
             scaleY = 1 / img.naturalHeight;
         var desc = this.jsonObj;
-        desc.x = 0.5;
-        desc.y = 0.5;
-        desc.sx = scaleX;
-        desc.sy = scaleY;
-        desc.rotation = 0;
+        if (this.autoFitFlag != Element.FitFlag.NO) {
+            desc.x = 0.5;
+            desc.y = 0.5;
+            desc.sx = scaleX;
+            desc.sy = scaleY;
+            desc.rotation = 0;
+        }
+
         desc.pivotX = 0.5;
         desc.pivotY = 0.5;
         var obj_pdc = this.ndc2Pdc(desc);
@@ -652,7 +655,7 @@ window.TQ = window.TQ || {};
             obj_pdc.sx = 1;
             obj_pdc.sy = 1;
         } else { // 框子小， 图大， 需要缩小
-            // 保持图像长宽比例不失真
+                // 保持图像长宽比例不失真
             obj_pdc.sx = minScale;
             obj_pdc.sy = minScale;
         }
@@ -1514,6 +1517,10 @@ window.TQ = window.TQ || {};
         return {sx: obj_pdc.sx, sy: obj_pdc.sy};
     };
 
+    p.getScaleInNdc = function () {
+        return {sx: this.jsonObj.sx, sy: this.jsonObj.sy};
+    };
+
     p.getRotation = function () {
         var obj_pdc = this.ndc2Pdc(this.jsonObj);
         return obj_pdc.rotation;
@@ -1800,7 +1807,8 @@ window.TQ = window.TQ || {};
     Element.FitFlag = {
         KEEP_SIZE: 1,
         FULL_SCREEN: 2,
-        WITHIN_FRAME: 3
+        WITHIN_FRAME: 3,
+        NO: 4
     };
 
     TQ.Element = Element;

@@ -319,12 +319,12 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         }
     }
 
-    function insertMat(fileOrBuffer, matType) {
+    function insertMat(fileOrBuffer, matType, option) {
         NetService.uploadOne(fileOrBuffer, matType).
             then(function (res) {
                 TQ.Log.alertInfo("after uploadOne: " + JSON.stringify(res));
                 TQ.Log.debugInfo("mat url: " + res.url);
-                addItemByUrl(res.url, matType);
+                addItemByUrl(res.url, matType, option);
             }, function (err) {
                 console.log(err);
             })
@@ -402,12 +402,16 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         addItem(desc, TQ.MatType.SOUND);
      }
 
-    function addItemByUrl(url, matType) {
+    function addItemByUrl(url, matType, option) {
         var eleType = (matType === TQ.MatType.SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
-            fitFlag = (matType === TQ.MatType.BKG) ?
+            autoFitRule = (matType === TQ.MatType.BKG) ?
                 TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.WITHIN_FRAME,
-            desc = {src: url, type: eleType, autoFit: fitFlag};
-
+            desc = option || {};
+        desc.src = url;
+        desc.type = eleType;
+        if (!desc.hasOwnProperty('autoFit')) {
+            desc.autoFit = autoFitRule;
+        }
         TQ.SceneEditor.addItem(desc);
     }
 
