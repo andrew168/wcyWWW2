@@ -10,7 +10,7 @@ TQ.LazyLoading = (function(){
 
     function loadOne(src, onLoaded) {
         var d = document,
-            s = 'script',
+            s = (src.indexOf(".css") < 0) ? 'script' : 'link',
             id = src.replace(/\W/g, '_');
         var js, fjs = d.getElementsByTagName(s)[0];
         if (d.getElementById(id)) {
@@ -19,8 +19,15 @@ TQ.LazyLoading = (function(){
         js = d.createElement(s);
         js.id = id;
         js.onloaded = onLoaded;
-        js.src = src;
-        fjs.parentNode.insertBefore(js, fjs);
+        if (s === 'link') {
+            js.href = src;
+            js.rel = 'stylesheet';
+            js.type = 'text/css';
+            document.getElementsByTagName('head')[0].appendChild(js);
+        } else {
+            js.src = src;
+            fjs.parentNode.insertBefore(js, fjs);
+        }
     }
 
     function start() {
