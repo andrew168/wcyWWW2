@@ -69,6 +69,7 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         insertBkImage: insertBkImage,
         insertText: insertText,
         insertSound: insertSound,
+        selectLocalFile: selectLocalFile,
 
         // select set
         emptySelectSet:emptySelectSet,
@@ -197,6 +198,12 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
     }
 
     function doInsertMatFromLocal(matType, useDevice) {
+        selectLocalFile(matType, useDevice, function(selectedFile) {
+            processOneMat(selectedFile, matType);
+        });
+    }
+
+    function selectLocalFile(matType, useDevice, onSelected) {
         var camera = {
                 // 后缀方法， 和 MIME type方法都要有， 以增强兼容性
                 formats: "image/*", // ;capture=camera",
@@ -276,8 +283,8 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         function onSelectOne() {
             console.log('changed');
             var files = domEle.files;
-            if (files.length > 0) {
-                processOneMat(files[0], matType);
+            if ((files.length > 0) && onSelected) {
+                onSelected(files[0]);
             }
             fileElement.unbind('change'); // remove old handler
             fileElement.change(null);
