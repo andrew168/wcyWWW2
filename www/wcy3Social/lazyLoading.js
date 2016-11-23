@@ -18,15 +18,19 @@ TQ.LazyLoading = (function(){
         }
         js = d.createElement(s);
         js.id = id;
-        js.onloaded = onLoaded;
+        if (s === 'link') {
+            document.getElementsByTagName('head')[0].appendChild(js);
+        } else {
+            fjs.parentNode.insertBefore(js, fjs);
+        }
+
+        js.onload = onLoaded;
         if (s === 'link') {
             js.href = src;
             js.rel = 'stylesheet';
             js.type = 'text/css';
-            document.getElementsByTagName('head')[0].appendChild(js);
         } else {
             js.src = src;
-            fjs.parentNode.insertBefore(js, fjs);
         }
     }
 
