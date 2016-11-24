@@ -5,8 +5,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$inject = ['$rootScope', '$timeout', 'NetService', 'WxService', 'WCY'];
-function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
+EditorService.$inject = ['$q', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY'];
+function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     var _initialized = false,
         _sceneReady = false,
         _colorPanel = null,
@@ -70,6 +70,7 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         insertText: insertText,
         insertSound: insertSound,
         selectLocalFile: selectLocalFile,
+        uploadMatFromLocal: uploadMatFromLocal,
 
         // select set
         emptySelectSet:emptySelectSet,
@@ -198,12 +199,18 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
     }
 
     function doInsertMatFromLocal(matType, useDevice) {
-        selectLocalFile(matType, useDevice, function(selectedFile) {
-            processOneMat(selectedFile, matType);
-        });
+        return uploadMatFromLocal(matType, useDevice).
+            then(addItemByData, errorReport).
+            finally(TQ.MessageBox.hide);
     }
 
-    function selectLocalFile(matType, useDevice, onSelected) {
+    function uploadMatFromLocal(matType, useDevice) {
+        return selectLocalFile(matType, useDevice).
+            then(processOneMat).
+            then(uploadMat);
+    }
+
+    function selectLocalFile(matType, useDevice) {
         var camera = {
                 // 后缀方法， 和 MIME type方法都要有， 以增强兼容性
                 formats: "image/*", // ;capture=camera",
@@ -280,18 +287,26 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         fileElement.change(onSelectOne);
         fileElement.click();
 
+        var q = $q.defer();
         function onSelectOne() {
             console.log('changed');
             var files = domEle.files;
-            if ((files.length > 0) && onSelected) {
-                onSelected(files[0]);
+            if ((files.length > 0)) {
+                q.resolve({aFile:files[0], matType: matType, useDevice: useDevice});
+            } else {
+                q.reject({error:1, msg: "未选中文件！"});
             }
             fileElement.unbind('change'); // remove old handler
             fileElement.change(null);
         }
+
+        return q.promise;
     }
 
-    function processOneMat(aFile, matType) {
+    function processOneMat(data) {
+        var aFile = data.aFile,
+            matType = data.matType;
+
         var wxAbility = {
             FileAPI: !!window.FileAPI,
             FileReader: !!window.FileReader,
@@ -306,33 +321,57 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
         TQ.MessageBox.showWaiting("预处理文件....");
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
+        var q = $q.defer();
+
         //ToDo: 检查合法的文件类别
         switch (matType) {
             case TQ.MatType.BKG:
                 var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
                 var processor = new TQ.ImageProcess();
                 processor.start(aFile, options,
-                    function(buffer) {insertMat(buffer, matType);});
+                    function(buffer) {
+                        data.fileOrBuffer = buffer;
+                        q.resolve(data);
+                    });
                 break;
             default:
                 if (matType === TQ.MatType.SOUND) {
                     if (!isSound(aFile)) {
                         TQ.MessageBox.show("发现不支持的声音格式：" + aFile.type + ". 请选用mp3或wav格式");
-                        return;
+                        q.reject({error:1, msg: "发现不支持的声音格式：" + aFile.type + ". 请选用mp3或wav格式"});
+                        break;
                     }
                     TQ.Assert.isTrue(isSound(aFile));
                 }
-                insertMat(aFile, matType);
+                data.fileOrBuffer = aFile;
+                q.resolve(data);
         }
+
+        return q.promise;
     }
 
-    function insertMat(fileOrBuffer, matType, option) {
+    function uploadMat(data) {
+        var fileOrBuffer = data.fileOrBuffer,
+            matType = data.matType,
+            q = $q.defer();
+
         NetService.uploadOne(fileOrBuffer, matType).
-            then(function (res) {
-                TQ.Log.alertInfo("after uploadOne: " + JSON.stringify(res));
-                TQ.Log.debugInfo("mat url: " + res.url);
-                addItemByUrl(res.url, matType, option);
-            }, function (err) {
+        then(function(res) {
+                data.url = res.url;
+                q.resolve(data);
+            });
+
+        return q.promise;
+    }
+
+    function addItemByData(data) {
+        TQ.Log.debugInfo("mat url: " + data.url);
+        addItemByUrl(data.url, data.matType, data.option);
+    }
+
+    function insertMat(data) {
+        return uploadMat(data).
+            then(addItemByData, function (err) {
                 console.log(err);
             })
             .finally(TQ.MessageBox.hide);
@@ -1014,5 +1053,11 @@ function EditorService($rootScope, $timeout, NetService, WxService, WCY) {
     function startWatch() {
         document.addEventListener('touchstart', onPreviewMenuOn);
         document.addEventListener('click', onPreviewMenuOn);
+    }
+
+    function errorReport(pkg) {
+        if (pkg && pkg.error && pkg.msg) {
+            TQ.MessageBox.show(pkg.msg);
+        }
     }
 }
