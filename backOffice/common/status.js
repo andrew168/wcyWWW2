@@ -28,12 +28,16 @@ function logUser(req, res, callback) {
 function checkUser(req, res, callback) {
     validateUser(req, res, setUserCookie);
     function setUserCookie() {
-        user.timesCalled++;
-        res.cookie('userID', user.ID.toString(), { maxAge: COOKIE_LIFE, httpOnly: true, path:'/' });
-        res.cookie('timesCalled', user.timesCalled.toString(), { maxAge: COOKIE_LIFE, httpOnly: true, path:'/' });
-        res.clearCookie('oldCookie1');
-        if (callback) {
-            callback();
+        try {
+            user.timesCalled++;
+            res.cookie('userID', user.ID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
+            res.cookie('timesCalled', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
+            res.clearCookie('oldCookie1');
+            if (callback) {
+                callback();
+            }
+        } catch(err) {
+            console.error("checkUser is so slow that response has completed!");
         }
     }
 }

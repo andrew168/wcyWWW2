@@ -16,7 +16,7 @@
     var bodyParser = require('body-parser');
 
 // our own module
-    var status = null;
+    var userStat = null;
     var _app = null;
 
     function start(newAppConfig) {
@@ -49,7 +49,7 @@
         function setRoutes(item) {
             app.use('/' + item.url, require(item.filePath));
         }
-        status = require('./../common/status');
+        userStat = require('./../common/status');
 
         console.log("exit at onDbStarted!");
 
@@ -96,7 +96,7 @@
         var clientPathStatic = path.join(__dirname, './../public');
 
         function inWhiteList(ext) {
-            var whiteList = ['.css', '.js'];
+            var whiteList = ['.css', '.js', '.ttf', '.html'];
 
             for (var i = 0; i < whiteList.length; i++) {
                 if (ext.indexOf(whiteList[i]) >= 0 ) {
@@ -114,7 +114,9 @@
             if (inWhiteList(ext)) {
                 next();
             } else {
-                status.logUser(req, res, next);
+                if (userStat) { // 可能尚未启动userStat, 因为需要启动db的支持，比较慢
+                    userStat.logUser(req, res, next);
+                }
             }
         });
 
