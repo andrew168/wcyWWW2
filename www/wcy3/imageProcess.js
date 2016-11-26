@@ -1,33 +1,32 @@
 /**
  * Created by Andrewz on 1/25/2016.
+ * 纠正手机照片的Orientation
+ * 等比例瘦身到 1024-2048范围，（长边）
+ * callback参数：文件的name, data是image64数据
  */
 var TQ = TQ || {};
-
-// 是否纠正Orientation
-// 等比例瘦身到 1024-2048范围，（长边）
 
 (function(lib){
     function ImageProcess() {
     }
     var IMAGE_MAX_LENGTH = 1280;
-    var p = ImageProcess.prototype;
     var _canvas = null;
 
     var urlAPI = (window.createObjectURL && window) ||
         (window.URL && URL.revokeObjectURL && URL) ||
         (window.webkitURL && webkitURL);
 
-    p.start = function(file, options, callback) {
-        var url = p.toUrl(file, options);
+    function start(file, options, callback) {
+        var url = fileToUrl(file, options);
         loadImage.parseMetaData(file, function (data) {
             if (data.exif) {
                 options.orientation = data.exif.get('Orientation');
             }
-            p.loadData(url, file.name, options, callback);
+            loadData(url, file.name, options, callback);
         });
-    };
+    }
 
-    p.toUrl = function(file, options) {
+    function fileToUrl(file, options) {
         // convert blob, local file, to  url
         var url, oUrl;
         if (_isInstanceOf('Blob', file) ||
@@ -49,9 +48,9 @@ var TQ = TQ || {};
         }
 
         return url;
-    };
+    }
 
-    p.loadData = function (url, filename, options, callback) {
+    function loadData(url, filename, options, callback) {
         var ele = new Image();
         ele.onload = onload;
         if (!!options.crossOrigin) {
@@ -98,7 +97,7 @@ var TQ = TQ || {};
                 callback({name:filename, data: _canvas.toDataURL("image/png")});
             }
         }
-    };
+    }
 
     // helper
     function applyOrientation(ctx, canvas, options) {
@@ -162,5 +161,7 @@ var TQ = TQ || {};
         return urlAPI ? urlAPI.createObjectURL(file) : false;
     }
 
+    ImageProcess.fileToUrl = fileToUrl;
+    ImageProcess.start = start;
     lib.ImageProcess = ImageProcess;
 })(TQ);

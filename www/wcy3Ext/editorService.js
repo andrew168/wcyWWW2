@@ -327,8 +327,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         switch (matType) {
             case TQ.MatType.BKG:
                 var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
-                var processor = new TQ.ImageProcess();
-                processor.start(aFile, options,
+                TQ.ImageProcess.start(aFile, options,
                     function(buffer) {
                         data.fileOrBuffer = buffer;
                         q.resolve(data);
