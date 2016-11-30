@@ -54,10 +54,15 @@ var logger = logger|| {};
     };
 
     logger.info = function(msg) {
-        var caller = callerId.getData(),
-            fullPath = caller.filePath.replace(/\\/g,'/'),
-            shortPath = fullPath.substr(fullPath.lastIndexOf('/') + 1),
-            stackTrace = "--" + shortPath +", "+ caller.functionName +"(" +  caller.lineNumber + ")";
+        var stackTrace;
+        try {
+            var caller = callerId.getData(),
+                fullPath = caller.filePath.replace(/\\/g, '/'),
+                shortPath = fullPath.substr(fullPath.lastIndexOf('/') + 1);
+            stackTrace = "--" + shortPath + ", " + caller.functionName + "(" + caller.lineNumber + ")";
+        } catch (err) {
+            stackTrace = " : @@caller info is not found";
+        }
         msg = msg + stackTrace;
         originalConsoleLog(msg);
         log2File(msg);
