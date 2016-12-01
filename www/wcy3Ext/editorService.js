@@ -28,6 +28,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         state: state,
 
         // play & preview
+        forceToRedraw: forceToRedraw,
         preview: preview,
         play: play,
         stop: stop,
@@ -976,6 +977,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         } else {
             $timeout(null);
         }
+    }
+
+    function forceToRedraw() {
+        currScene.isDirty = true; // 迫使IPad系统重新绘制canvas上的图像， 否则，屏幕上是空白
+        forceToRefreshUI();
     }
 
     function onDelete(evt) {
