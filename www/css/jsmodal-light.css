@@ -15,12 +15,13 @@
 
 #modal-container {
   background: #fff;
+  color: black;
   border: 1px solid #ababab;
   box-shadow: 0px 4px 16px rgba(0, 0, 0, 0.2);
   height: auto;
   padding: 10px;
   font-family: arial,sans-serif;
-  font-size: 14px;
+  font-size: 20px;
   position: absolute;
   z-index: 92000;
 }
