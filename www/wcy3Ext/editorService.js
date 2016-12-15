@@ -197,14 +197,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
                 state.isPreviewMenuOn = true;
                 stopWatch();
                 stop();
-                TQ.IdleCounter.start(onPreviewMenuOff);
                 TQ.TouchManager.start();
             });
         }
     }
 
     function onPreviewMenuOff(e) {
-        if (!isSelectedEvent(e)) {
+        if (e && !isSelectedEvent(e)) {
             return;
         }
 
@@ -683,18 +682,23 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
         if (currScene != null) {
             currScene.play();
-            updateMode();
-            forceToRefreshUI();
-            TQ.TouchManager.stop();
-            $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
-                startWatch();
-            }, 100);
+            _onPlay();
         }
+    }
+
+    function _onPlay() {
+        updateMode();
+        forceToRefreshUI();
+        TQ.TouchManager.stop();
+        $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
+            startWatch();
+        }, 100);
+        TQ.IdleCounter.start(onPreviewMenuOff);
     }
 
     function replay() {
        TQ.Scene.doReplay();
-        updateMode();
+       _onPlay();
     }
 
     function startRecord() {TQ.FrameCounter.startRecord(); TQ.SceneEditor.setPlayMode(); }
