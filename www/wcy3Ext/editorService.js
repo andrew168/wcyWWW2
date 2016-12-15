@@ -153,21 +153,61 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
 
         // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
         // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
+
+        if (TQ.Config.AutoPlay) {
+            preview();
+        }
+    }
+
+    var hasTouch = false,
+        hasMouse = false;
+
+    function isSelectedEvent(e) {
+        if (hasTouch) {
+            if (e.type === 'click') {
+                return false;
+            }
+        }
+
+        if (hasMouse) {
+            if (e.type === 'touchstart') {
+                return false;
+            }
+        }
+
+        if (e.type === 'touchstart') {
+            hasTouch = true;
+        } else if (e.type === 'click') {
+            hasMouse = false;
+        } else {
+            console.error('wrong events: ' + e.type);
+        }
+
+        return true;
     }
 
     function onPreviewMenuOn(e) {
         var events = ['touchstart', 'click'];
+        if (!isSelectedEvent(e)) {
+            return;
+        }
+
         if (state.isPreviewMode && e && (events.indexOf(e.type) >= 0)) {
             $timeout(function(){
                 state.isPreviewMenuOn = true;
                 stopWatch();
+                stop();
                 TQ.IdleCounter.start(onPreviewMenuOff);
                 TQ.TouchManager.start();
             });
         }
     }
 
-    function onPreviewMenuOff() {
+    function onPreviewMenuOff(e) {
+        if (!isSelectedEvent(e)) {
+            return;
+        }
+
         $timeout(function() {
             state.isPreviewMenuOn = false;
             startWatch();
@@ -637,11 +677,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     function preview () {
         state.isPreviewMode = true;
         play();
-        forceToRefreshUI();
-        TQ.TouchManager.stop();
-        $timeout(function() { // 用timeout跳过本次touch的end或mouse的up引起的事件
-            startWatch();
-        }, 100);
     }
 
     function play() {
@@ -649,6 +684,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         if (currScene != null) {
             currScene.play();
             updateMode();
+            forceToRefreshUI();
+            TQ.TouchManager.stop();
+            $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
+                startWatch();
+            }, 100);
         }
     }
 

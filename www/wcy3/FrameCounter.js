@@ -30,7 +30,7 @@ window.TQ = window.TQ || {};
     FrameCounter._FPS = FrameCounter.defaultFPS;  // 下划线是内部变量, 禁止外面引用
     FrameCounter.BASE_STEP = 1;
     FrameCounter._step = FrameCounter.BASE_STEP;
-    FrameCounter._state = (TQ.Config.AutoPlay ? FrameCounter.GO : FrameCounter.STOP);
+    FrameCounter._state = FrameCounter.STOP;
     FrameCounter._requestState = null;
     FrameCounter._autoRewind = false;
     FrameCounter._level = null;
@@ -216,7 +216,7 @@ window.TQ = window.TQ || {};
     FrameCounter.reset = function () {
         FrameCounter._requestState = null;
         FrameCounter.v = 0;
-        FrameCounter._state = (TQ.Config.AutoPlay ? FrameCounter.GO : FrameCounter.STOP);
+        FrameCounter._state = FrameCounter.STOP;
     };
 
     TQ.FrameCounter = FrameCounter;
