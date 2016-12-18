@@ -11,13 +11,13 @@ window.TQ = window.TQ || {};
     FloatToolbar.onScaleSmall = depreciated;
     FloatToolbar.onRotateLeft = depreciated;
     FloatToolbar.onRotateRight = depreciated;
-    FloatToolbar.onMoveUpLayer = depreciated;
-    FloatToolbar.onMoveDownLayer = depreciated;
-    FloatToolbar.onMoveToTop = depreciated;
-    FloatToolbar.onMoveToBottom = depreciated;
+    FloatToolbar.onMoveUpLayer = onMoveUpLayer;
+    FloatToolbar.onMoveDownLayer = onMoveDownLayer;
+    FloatToolbar.onMoveToTop = onMoveToTop;
+    FloatToolbar.onMoveToBottom = onMoveToBottom;
     FloatToolbar.onDelete = depreciated;
-    FloatToolbar.onMirrorX = depreciated;
-    FloatToolbar.onMirrorY = depreciated;
+    FloatToolbar.onMirrorX = onMirrorX;
+    FloatToolbar.onMirrorY = onMirrorY;
 
     //
     FloatToolbar.initialize = depreciated;
