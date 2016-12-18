@@ -48,7 +48,7 @@ function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
 
 function getList(userId, typeId, callback) {
     var condition = (userId === null) ? null : {$and: [{"typeId": typeId}, {$or: [{"userId": userId}, {"isShared": true}]}]};
-    AudioMat.find(condition).exec(onSeachResult);
+    AudioMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
     function onSeachResult(err, data) {
         var result = [];
         if (!data) {

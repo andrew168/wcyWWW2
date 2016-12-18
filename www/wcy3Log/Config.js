@@ -99,6 +99,8 @@ window.TQ = window.TQ || {};
 
 
     Config.useHighlightBox = false;  // 不显示red的亮显box
+    Config.koutuOn = false;  // 不抠图
+
 
     //
     Config.hasWx = true;  // 支持微信服务器绑定，绑定到 udoido

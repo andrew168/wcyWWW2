@@ -38,7 +38,7 @@ function get(userId, callback) {
 
 function getList(userId, typeId, callback) {
     var condition = (userId === null) ? null : {$and: [{"typeId": typeId}, {$or: [{"userId": userId}, {"isShared": true}]}]};
-    PictureMat.find(condition).exec(onSeachResult);
+    PictureMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
     function onSeachResult(err, data) {
         var result = [];
         if (!data) {
@@ -123,4 +123,3 @@ exports.add = add;
 exports.get = get;
 exports.getList = getList;
 exports.update = update;
-
