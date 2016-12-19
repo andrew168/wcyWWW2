@@ -47,7 +47,13 @@ function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
 }
 
 function getList(userId, typeId, callback) {
-    var condition = (userId === null) ? null : {$and: [{"typeId": typeId}, {$or: [{"userId": userId}, {"isShared": true}]}]};
+    var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]};
+    condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
+
+    if (userLimit) {
+        // condition.$and.push(userLimit);
+    }
+
     AudioMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
     function onSeachResult(err, data) {
         var result = [];
@@ -88,7 +94,29 @@ function update(id, path, callback) {
         });
 }
 
+function ban(id, callback) {
+    AudioMat.findOne({_id: id})
+        .exec(function (err, data) {
+            if (!data) {
+                console.error(404, {msg: 'not found!' + id});
+            } else {
+                console.log(data);
+                data.set('isBanned', true);
+                data.save(function (err, data) {
+                    if (!err) {
+                        if (callback) {
+                            callback(data._id);
+                        }
+                    } else {
+                        console.error("error in ban picture mat!");
+                    }
+                });
+            }
+        });
+}
+
 exports.get = get;
 exports.getList = getList;
 exports.add = add;
 exports.update = update;
+exports.ban = ban;

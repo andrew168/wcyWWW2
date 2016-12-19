@@ -27,6 +27,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     return {
         state: state,
 
+        banMat: NetService.banMat,
+
         // play & preview
         forceToRedraw: forceToRedraw,
         preview: preview,

@@ -28,13 +28,22 @@ router.post('/', function(req, res, next) {
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
     var public_id = req.param('public_id') || null,
-        matType = getMatType(req);
+        ban = req.param('ban') || false,
+        matType = getMatType(req),
+        path = req.param('path') || null;
+
     status.logUser(req);
+    if (ban) {
+        if (!public_id) {
+            public_id = utils.path2public_id(path);
+        }
+        return banMatId(req, res, matType, utils.matName2Id(public_id));
+    }
+
     if (!public_id) {
         var originalFilename = req.param('filename') || "no_filename";
         createMatId(req, res, matType, originalFilename);
     } else {
-        var path = req.param('path') || null;
         updateMatId(req, res, matType, utils.matName2Id(public_id), path);
     }
 });
@@ -109,6 +118,17 @@ function updateMatId(req, res, matType, matId, path) {
     }
 
     getMatController(matType).update(matId, path, onSavedToDB);
+}
+
+function banMatId(req, res, matType, matId) {
+    function onSavedToDB(docId) {
+        var data = {
+            public_id: utils.matId2Name(docId)
+        };
+        sendBack(data, res);
+    }
+
+    getMatController(matType).ban(matId, onSavedToDB);
 }
 
 function getMatIds(req, res, matType) {

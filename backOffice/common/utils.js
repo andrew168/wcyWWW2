@@ -80,6 +80,12 @@ function matName2Id(name) {
     return Number(name.substr(1));
 }
 
+function path2public_id(path) {
+    var words = path.split('/'),
+        fullName = words[words.length - 1];
+    return fullName.split('.')[0];
+}
+
 // 这个文件的名字就是类的名字，exports的所有输出都是这个类的公共接口函数
 // 所有， 不需要在额外建立一个同名的Object，（因为， Node已经自动为我们做了）
 exports.createTimestamp = createTimestamp;
@@ -92,4 +98,5 @@ exports.dumpDocument = showDocument;
 exports.onSave = onSave;
 exports.onResSave = onResSave;
 exports.matName2Id = matName2Id;
+exports.path2public_id = path2public_id;
 exports.matId2Name = matId2name;

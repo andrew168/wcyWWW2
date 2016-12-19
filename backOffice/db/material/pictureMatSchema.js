@@ -14,7 +14,8 @@ var pictureMatSchema = new Schema({
     typeId: Number, // 10:背景图， in material.js
     ip: String,
     path: String,  // 素材在Server上的相对路径，去除host和MatFolder之后
-    isShared: {type:Boolean, default:false},
+    isShared: {type:Boolean, default:false}, //个人私有/与众共享
+    isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到
     uploaded: {type:Boolean, default:false}
 });
 

@@ -216,6 +216,14 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             });
     }
 
+    function banMat(data) {
+        data.ban = true;
+        return $http.post(C_MAN_URL, angular.toJson(data)).
+            then(function (pkg) { // 发出event， 好让dataService等更新自己
+                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.type});
+            });
+    }
+
     function update(path) {
         var url = urlConcat(baseUrl, path);
         console.log("update: " + path + " to ==> " + url);
@@ -255,6 +263,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     return {
+        banMat: banMat, // 先ban， 后 delete, 不要急于删除， 以避免有些作品还在使用它们
         initialize: initialize,
         get: get,
         put: put,
