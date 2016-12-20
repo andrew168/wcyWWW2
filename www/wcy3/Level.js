@@ -471,6 +471,17 @@ window.TQ = window.TQ || {};
       }
     };
 
+    p.cleanStage = function () {
+        TQ.DirtyFlag.setLevel(this);
+        for (var i = 0; i < this.elements.length; i++) {
+            this.elements[i].resetStageFlag();
+        }
+
+        if (stageContainer) {
+            stageContainer.children.splice(0);
+        }
+    };
+
     p._removeAllItems = function () {
         TQ.DirtyFlag.setLevel(this);
         // remove 从stage， 只是不显示， 数据还在
@@ -538,7 +549,7 @@ window.TQ = window.TQ || {};
         if ((this.state === TQBase.LevelState.EDITING) ||
             (this.state === TQBase.LevelState.RUNNING)) {
             this.sort(); // 退出本层之前, 必须保存 Z可见性顺序.
-            this._removeAllItems();
+            this.cleanStage();
         } else {
             // is loading
             console.log("is loading, or not loaded!");

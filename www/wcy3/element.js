@@ -836,6 +836,16 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setElement(this);
     };
 
+    p.resetStageFlag = function () {
+        this.clearFlag(Element.IN_STAGE);
+        TQ.DirtyFlag.setElement(this);
+        TQ.TraceMgr.removeFromStage(this);
+        for (var i = 0; i < this.children.length; i++) {
+            var child = this.children[i];
+            child.resetStageFlag();
+        }
+    };
+
     p.persist = function () {
         // 记录当前数据到 json, 以便于存盘和再次切入该场景
         if (!this.jsonObj) {
