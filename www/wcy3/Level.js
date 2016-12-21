@@ -628,6 +628,11 @@ window.TQ = window.TQ || {};
     p.getTime = function() { return this.tMaxFrame;};
     p.setT0 = function(t0) { this.t0 = t0;};
     p.getT0 = function(t0) { return this.t0;};
+
+    p.isEmpty = function() {
+        return (!this.elements || (this.elements.length <= 0));
+    };
+
     p.isStageReady = function() {
         return ((this.state === TQBase.LevelState.INITING)||
         (this.state === TQBase.LevelState.EDITING) ||

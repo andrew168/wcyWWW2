@@ -156,7 +156,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
         // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
 
-        if (TQ.Config.AutoPlay) {
+        if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
             preview();
         }
     }

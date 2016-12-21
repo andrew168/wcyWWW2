@@ -272,6 +272,10 @@ TQ = TQ || {};
         }
     };
 
+    p.isEmpty = function() {
+        return (this.levelNum() <= 2 && this.currentLevel.isEmpty());
+    };
+
     p.isLastLevel = function () {
         return ((this.currentLevelId + 1) >= this.levelNum());
     };
