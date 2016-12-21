@@ -227,19 +227,19 @@ function WCY($http, FileService, WxService, NetService) {
 
     function _autoSave() {
         if (_autoSaveStopped || currScene.hasSavedToCache) {
-            return;
+        } else {
+            TQ.Assert.isObject(currScene);
+            var data = currScene.getData();
+            writeCache(_AUTO_SAVE_NAME, data);
+            writeCache(_FILENAME, currScene.filename);
+            currScene.hasSavedToCache = true;
         }
-
-        TQ.Assert.isObject(currScene);
-        var data = currScene.getData();
-        writeCache(_AUTO_SAVE_NAME, data);
-        writeCache(_FILENAME, currScene.filename);
-        currScene.hasSavedToCache = true;
+        return setTimeout(_autoSave, 30000); // 30s
     }
 
     var _autoSaveInitialized = false;
     var _autoSaveStopped = true;
-    var _autoSavingInterval;
+    var _autoSavingTimeout;
     function startAutoSave() {
         if (_autoSaveInitialized) {
             _stopAutoSave();
@@ -251,14 +251,14 @@ function WCY($http, FileService, WxService, NetService) {
 
         _autoSaveInitialized = true;
         _autoSaveStopped = false;
-        _autoSavingInterval = setInterval(_autoSave, 30000); // 30s
+        _autoSavingTimeout = _autoSave();
     }
 
     function _stopAutoSave() {
-        if (_autoSavingInterval) {
+        if (_autoSavingTimeout) {
             _autoSaveStopped = true;
-            clearInterval(_autoSavingInterval);
-            _autoSavingInterval = null;
+            clearTimeout(_autoSavingTimeout);
+            _autoSavingTimeout = null;
         }
     }
 
