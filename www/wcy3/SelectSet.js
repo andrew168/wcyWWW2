@@ -23,6 +23,7 @@ TQ = TQ || {};
     SelectSet.workingDecorations = []; // decorations is using.
     SelectSet.selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
     SelectSet.multiCmdGroupIt = multiCmdGroupIt;
+    SelectSet.multiCmdJointIt = multiCmdJointIt;
     SelectSet.initialize = function() {
         TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function(){
             if ( (!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
@@ -186,6 +187,10 @@ TQ = TQ || {};
         return multiCmd(groupIt);
     }
 
+    function multiCmdJointIt() {
+        return multiCmd(jointIt);
+    }
+
     function setSubjectModeAndMultiSelect() {
         /*        if (!TQ.InputCtrl.inSubobjectMode) { // 设置 零件模式
          if (!Menu.JointStarted) {  //加关节操作中， 必须是 真的 零件模式， 不能只是 showMarker
@@ -213,11 +218,11 @@ TQ = TQ || {};
         TQ.InputCtrl.vkeyCtrl = false;  // 取消多选
     }
 
-    SelectSet.jointIt = function() {
+    function jointIt() {
         var hasUnjointFlag = TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyUnjoint;
         TQ.CommandMgr.directDo(new TQ.JointCommand(SelectSet.members, hasUnjointFlag));
         SelectSet.clear();
-    };
+    }
 
     SelectSet.pinIt = function() {
         for (var i = 0; i< SelectSet.members.length; i++) {
