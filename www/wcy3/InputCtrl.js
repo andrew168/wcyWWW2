@@ -163,9 +163,11 @@ window.TQ = window.TQ || {};
 
     InputCtrl.setSubobjectMode = function() {
       InputCtrl.inSubobjectMode = true;
-      var btns = $("#subElementMode");
-      btns[0].checked = true;
-      btns.button("refresh");
+
+      //Todo: 让按钮与状态同步
+      // var btns = $("#subElementMode");
+      // btns[0].checked = true;
+      // btns.button("refresh");
     };
     TQ.InputCtrl = InputCtrl;
 }) ();

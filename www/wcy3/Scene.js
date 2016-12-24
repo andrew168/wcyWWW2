@@ -179,7 +179,7 @@ TQ = TQ || {};
             this.currentLevel.unJoint(elements);
         } else {
             if (!TQ.InputCtrl.inSubobjectMode) { // 必须在零件模式下, 才能让录制系统更新子物体的坐标为相对坐标.
-                $("#subElementMode").click();
+                TQ.InputCtrl.setSubobjectMode();
             }
             this.currentLevel.joint(elements);
             clearSubjectModeAndMultiSelect()

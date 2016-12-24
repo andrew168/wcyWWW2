@@ -24,6 +24,8 @@ TQ = TQ || {};
     SelectSet.selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
     SelectSet.multiCmdGroupIt = multiCmdGroupIt;
     SelectSet.multiCmdJointIt = multiCmdJointIt;
+    SelectSet.unJoint = unJoint;
+
     SelectSet.initialize = function() {
         TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function(){
             if ( (!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
@@ -219,8 +221,16 @@ TQ = TQ || {};
     }
 
     function jointIt() {
-        var hasUnjointFlag = TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyUnjoint;
+        // var hasUnjointFlag = TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyUnjoint;
+        var hasUnjointFlag = false;
+        TQ.InputCtrl.setSubobjectMode();
         TQ.CommandMgr.directDo(new TQ.JointCommand(SelectSet.members, hasUnjointFlag));
+        SelectSet.clear();
+    }
+
+    function unJoint() {
+        var unJointFlag = true;
+        TQ.CommandMgr.directDo(new TQ.JointCommand(SelectSet.members, unJointFlag));
         SelectSet.clear();
     }
 
