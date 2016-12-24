@@ -189,7 +189,7 @@ var TQ = TQ || {};
     }
 
     function onMove(e) {
-        if (isDithering) {
+        if (isDithering || TQ.SelectSet.isInMultiCmd()) {
             return;
         }
 
@@ -215,6 +215,10 @@ var TQ = TQ || {};
     }
 
     function onPinchAndRotate(e) {
+        if (TQ.SelectSet.isInMultiCmd()) {
+            return;
+        }
+
         e.stopPropagation();
         e.preventDefault();
         if (isDithering) {

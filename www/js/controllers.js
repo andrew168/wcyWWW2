@@ -68,6 +68,8 @@ function DashCtrl(
         currScene.gotoLevel(id);
     };
 
+    $scope.EditorService = EditorService;
+    $scope.SelectSet = TQ.SelectSet;
     $scope.addLevel = function() {
         EditorService.addLevel();
     };

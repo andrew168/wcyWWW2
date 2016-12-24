@@ -5,15 +5,24 @@
  */
 
 TQ = TQ || {};
-
 (function () {
-    var SelectSet = {};
+    var SelectSet = {},
+    // 需要多重选择的命令， 先开始，连续选择，再点1次，执行并结束
+    // 需要连续选择的， 先开始， 然后选1个，执行1个，再点1次则结束
+    // 需要单一选择的命令，先选择， 再执行。
+    // 同时只能有1个命令在执行（不论是多选，连续选，还是单选） 互斥的操作， 避免同时嵌套使用
+        state = {
+            multiCmdStarted: false,
+            cmd: null
+        };
+
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
     SelectSet.SELECTION_EMPTY_EVENT = "selection empty";
     SelectSet.members = [];
     SelectSet.decorations = [];  //  decorations ready to use
     SelectSet.workingDecorations = []; // decorations is using.
     SelectSet.selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
+    SelectSet.multiCmdGroupIt = multiCmdGroupIt;
     SelectSet.initialize = function() {
         TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function(){
             if ( (!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
@@ -37,7 +46,7 @@ TQ = TQ || {};
         TQ.InputMap.registerAction(TQ.InputMap.D5, function() { SelectSet.playAnimation(keyActionPair[5]);});
     };
 
-    SelectSet.playAnimation = function(actionName) {
+    SelectSet.playAnimation = function (actionName) {
         var ele = SelectSet.peek();
         if (ele != null) {
             ele.playAction(actionName);
@@ -145,7 +154,7 @@ TQ = TQ || {};
         }
     };
 
-    SelectSet.groupIt = function() {
+    function groupIt() {
         var isUnGroup = TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyUngroup;
         if (isUnGroup || (SelectSet.members.length >= 2)) {
             TQ.CommandMgr.directDo(new TQ.GroupCommand(SelectSet.members, isUnGroup));
@@ -154,7 +163,55 @@ TQ = TQ || {};
         }
 
         return false;
-    };
+    }
+
+    function multiCmd(cmd) { // 先开始， 再结束， 必须配对、紧邻，
+        if (state.multiCmdStarted) {
+            if (state.cmd === cmd) {
+                state.multiCmdStarted = false;
+                clearSubjectModeAndMultiSelect();
+                // return groupIt();
+                return cmd();
+            }
+            return TQ.MessageBox.prompt("先结束当前操作！");
+        }
+
+        state.multiCmdStarted = true;
+        state.cmd = cmd;
+        SelectSet.clear();
+        setSubjectModeAndMultiSelect();
+    }
+
+    function multiCmdGroupIt() {
+        return multiCmd(groupIt);
+    }
+
+    function setSubjectModeAndMultiSelect() {
+        /*        if (!TQ.InputCtrl.inSubobjectMode) { // 设置 零件模式
+         if (!Menu.JointStarted) {  //加关节操作中， 必须是 真的 零件模式， 不能只是 showMarker
+         // TQ.InputCtrl.showMarkerOnly = true;
+         }
+         if (Menu.JointStarted) { // 只有加关节才进入零件模式， 以便于修改各个关节的转轴点。
+         $("#subElementMode").click();
+         }
+         }
+         */
+        TQ.InputCtrl.vkeyCtrl = true; // 设置多选
+    }
+
+    function clearSubjectModeAndMultiSelect() {
+        TQ.InputCtrl.showMarkerOnly = false;
+        /*        if (TQ.InputCtrl.inSubobjectMode) {
+         $("#subElementMode").click();
+         }
+
+         if (Menu.tb3Dfy) {
+         $("#tb3Dfy").click();
+         }
+
+         */
+        TQ.InputCtrl.vkeyCtrl = false;  // 取消多选
+    }
 
     SelectSet.jointIt = function() {
         var hasUnjointFlag = TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyUnjoint;
@@ -264,6 +321,10 @@ TQ = TQ || {};
 
     SelectSet.isEmpty = function() {
         return (SelectSet.members.length === 0);
+    };
+
+    SelectSet.isInMultiCmd = function () {
+        return state.multiCmdStarted;
     };
 
     /*
