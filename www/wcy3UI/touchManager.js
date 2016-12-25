@@ -1,6 +1,6 @@
 var TQ = TQ || {};
-(function() {
-
+(function () {
+    'use strict';
     function TouchManager() {
     }
 
@@ -10,6 +10,10 @@ var TQ = TQ || {};
 
     function addHandler(gesture, handler) {
         ionic.EventController.onGesture(gesture, handler, canvas);
+    }
+
+    function detachHandler(gesture, handler) {
+        ionic.EventController.off(gesture, handler, canvas);
     }
 
     function initialize() {
@@ -27,16 +31,16 @@ var TQ = TQ || {};
             return;
         }
         started = true;
-        ionic.EventController.onGesture('touch', TQ.Trsa3.onStart, canvas);
-        ionic.EventController.onGesture('touchend', TQ.Trsa3.onTouchEnd, canvas);
-        ionic.EventController.onGesture('release', TQ.Trsa3.onRelease, canvas);
-        ionic.EventController.onGesture('rotate', TQ.Trsa3.onPinchAndRotate, canvas);
+        addHandler('touch', TQ.Trsa3.onTouchStart);
+        addHandler('touchend', TQ.Trsa3.onTouchEnd);
+        addHandler('release', TQ.Trsa3.onRelease);
+        addHandler('rotate', TQ.Trsa3.onPinchAndRotate);
+        addHandler('pinch', TQ.Trsa3.onPinchAndRotate);
         // 'scale': not work
         //
-        // ionic.EventController.onGesture('pinchin', onPinch, canvas);
-        // ionic.EventController.onGesture('pinchout', onPinch, canvas);
-        ionic.EventController.onGesture('pinch', TQ.Trsa3.onPinchAndRotate, canvas);
-        ionic.EventController.onGesture('drag', TQ.Trsa3.onMove, canvas);
+        // addHandler('pinchin', onPinch);
+        // addHandler('pinchout', onPinch);
+        addHandler('drag', TQ.Trsa3.onDrag);
         // 其余事件： 'swipeup'.
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
@@ -50,16 +54,16 @@ var TQ = TQ || {};
         }
 
         started = false;
-        ionic.EventController.off('touch', TQ.Trsa3.onStart, canvas);
-        ionic.EventController.off('touchend', TQ.Trsa3.onTouchEnd, canvas);
-        ionic.EventController.off('release', TQ.Trsa3.onRelease, canvas);
-        ionic.EventController.off('rotate', TQ.Trsa3.onPinchAndRotate, canvas);
+        detachHandler('touch', TQ.Trsa3.onTouchStart);
+        detachHandler('touchend', TQ.Trsa3.onTouchEnd);
+        detachHandler('release', TQ.Trsa3.onRelease);
+        detachHandler('rotate', TQ.Trsa3.onPinchAndRotate);
+        detachHandler('pinch', TQ.Trsa3.onPinchAndRotate);
         // 'scale': not work
         //
-        // ionic.EventController.off('pinchin', onPinch, canvas);
-        // ionic.EventController.off('pinchout', onPinch, canvas);
-        ionic.EventController.off('pinch', TQ.Trsa3.onPinchAndRotate, canvas);
-        ionic.EventController.off('drag', TQ.Trsa3.onMove, canvas);
+        // detachHandler('pinchin', onPinch);
+        // detachHandler('pinchout', onPinch);
+        detachHandler('drag', TQ.Trsa3.onDrag);
         // 其余事件： 'swipeup'.
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");

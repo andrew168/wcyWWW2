@@ -3,15 +3,16 @@
  */
 var TQ = TQ || {};
 (function () {
+    'use strict';
     function Trsa3() {
     }
 
-    Trsa3.onStart = onStart;
+    Trsa3.onTouchStart = onTouchStart;
     Trsa3.onPinchAndRotate = onPinchAndRotate;
     Trsa3.onTouchStage = onTouchStage;
     Trsa3.onTouchEnd = onTouchEnd;
     Trsa3.onRelease = onRelease;
-    Trsa3.onMove = onMove;
+    Trsa3.onDrag = onDrag;
     Trsa3.onPinchAndRotate = onPinchAndRotate;
     Trsa3.isOperating = isOperating;
 
@@ -99,7 +100,7 @@ var TQ = TQ || {};
         }
     }
 
-    function onStart(e) {
+    function onTouchStart(e) {
         console.log("touch start" + e.gesture.touches.length);
         ele = null;
         TQ.CommandMgr.startNewOperation();
@@ -139,7 +140,7 @@ var TQ = TQ || {};
         isDithering = false;
     }
 
-    function onMove(e) {
+    function onDrag(e) {
         if (isDithering || TQ.SelectSet.isInMultiCmd()) {
             return;
         }
