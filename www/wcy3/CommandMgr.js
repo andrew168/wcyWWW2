@@ -31,6 +31,19 @@ window.TQ = window.TQ || {};
         this.commands = [];
     }
 
+    var __openedComposite = false;
+    CompositeCommand.isOpen = function() {
+        return __openedComposite;
+    };
+
+    CompositeCommand.addCommand = function (cmd) {
+        if (!__openedComposite) {
+            return TQ.Assert(!__openedComposite, "没有opened的compositeCommand");
+        }
+
+        return __openedComposite.addCommand(cmd);
+    };
+
     inherit(CompositeCommand, AbstractCommand);
     CompositeCommand.prototype.do = function() {
         for (var i=0; i < this.commands.length; i++) {
@@ -78,18 +91,18 @@ window.TQ = window.TQ || {};
 
     // 以下open和close是为了让 Joint的移动可以快速undo
     CompositeCommand.open = function() {
-        if (!CommandMgr.__openedComposite) {
-            CommandMgr.__openedComposite = new CompositeCommand();
-            $(document).mouseup(CompositeCommand.close);
+        if (!__openedComposite) {
+            __openedComposite = new CompositeCommand();
+            // $(document).mouseup(CompositeCommand.close);
         }
     };
 
     CompositeCommand.close = function() {
-        if (!CommandMgr.__openedComposite) {
+        if (!__openedComposite) {
             return;
         }
-        CommandMgr.addToUndoStack(CommandMgr.__openedComposite);
-        CommandMgr.__openedComposite = null;
+        TQ.CommandMgr.addToUndoStack(__openedComposite);
+        __openedComposite = null;
     };
 
     function RotateCommand(ele, angle) {

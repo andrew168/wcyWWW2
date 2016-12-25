@@ -354,12 +354,18 @@ window.TQ = window.TQ || {};
     touch事件处理
      */
     Utility.isTouchEvent = function(e) {
-        var e0 = e.nativeEvent;
+        var e0 = getNativeEvent(e);
         return ((e0.touches != null) && (e0.changedTouches != null));
     };
 
     Utility.isMultiTouchEvent = function(e) {
-        return (Utility.isTouchEvent(e) && (e.nativeEvent.touches.length >=2));
+        if (Utility.isTouchEvent(e))
+        {
+            var e0 = getNativeEvent(e);
+            return (e0.touches.length >= 2);
+        }
+
+        return false;
     };
 
     var __isTouchDevice = -1;
@@ -399,6 +405,15 @@ window.TQ = window.TQ || {};
         var DEFAULT_ACTION_ICON = 100; // ToDo： 修改此值，根据实际缺省ICON的ID
         return DEFAULT_ACTION_ICON;
     };
+
+    // private
+    function getNativeEvent(e) {
+        var e0 = e.nativeEvent;
+        if (!e0 && e.gesture && e.gesture.srcEvent) { // gesture event of ionic
+            e0 = e.gesture.srcEvent;
+        }
+        return e0;
+    }
 
     TQ.Utility = Utility;
 }());

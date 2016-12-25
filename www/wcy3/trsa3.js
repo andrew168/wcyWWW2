@@ -17,7 +17,10 @@ var TQ = TQ || {};
     Trsa3.isOperating = isOperating;
 
     var isDithering = false,
-        ele = null;
+        ele = null,
+        startEle = null,
+        startLevel = null,
+        startOffset = null;
     var ang = 0, scale = 1;
     var dAngle = 0, dScale = 1;
     var pos = {x: 0, y: 0},
@@ -100,12 +103,26 @@ var TQ = TQ || {};
         }
     }
 
-    function onTouchStart(e) {
+    function onTouchStart(e) { // ==mouse的onPressed，
         console.log("touch start" + e.gesture.touches.length);
         ele = null;
         TQ.CommandMgr.startNewOperation();
         getSelectedElement(e);
         if (TQ.SelectSet.peek()) {
+            // setup base
+            startEle = TQ.SelectSet.peek();
+            startLevel = currScene.currentLevel;
+
+            var target = startEle.displayObj;
+            if (target === null) { // 防止 刚刚被删除的物体.
+                return;
+            }
+            var evt = touch2StageXY(e);
+            target = startEle.getPositionInDc();
+            startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
+            // showFloatToolbar(evt);
+            // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
+
             isOperatingFlag = true;
         }
         e.stopPropagation();
@@ -122,7 +139,7 @@ var TQ = TQ || {};
         isDithering = false;
     }
 
-    function onTouchEnd(e) {
+    function onTouchEnd(e) {// ==mouse的onUp，
         isMultiTouching = false;
         var ele = TQ.SelectSet.peek();
         if (ele && ele.snapIt) {
@@ -140,7 +157,7 @@ var TQ = TQ || {};
         isDithering = false;
     }
 
-    function onDrag(e) {
+    function onDrag(e) {  //// ==mouse的onMove，
         if (isDithering || TQ.SelectSet.isInMultiCmd()) {
             return;
         }
@@ -150,19 +167,28 @@ var TQ = TQ || {};
             return;
         }
 
+        if (!startEle) {
+            console.log("not started, force to start in onDrag!");
+            return onTouchStart(e);
+        }
         if (!ele) {
             getSelectedElement(e);
         }
+
+        e = touch2StageXY(e);
 
         if (!ele) {
             // console.log("Move..." + e.gesture.touches.length);
         } else {
             e.stopPropagation();
             e.preventDefault();
-            var deltaX = e.gesture.deltaX - deltaX0;
+
+            TQBase.Trsa.do(startEle, startLevel, startOffset, e, stageContainer.selectedItem);
+/*            var deltaX = e.gesture.deltaX - deltaX0;
             var deltaY = -(e.gesture.deltaY - deltaY0);
             // ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
             TQ.CommandMgr.directDo(new TQ.MoveCommand(ele, {x: deltaX + pos.x, y: deltaY + pos.y}));
+*/
         }
     }
 
@@ -244,6 +270,13 @@ var TQ = TQ || {};
         }
         var ele2 = TQ.SelectSet.getEditableEle(ele);
         TQ.SelectSet.add(ele2);
+    }
+
+    function touch2StageXY(e) { // touch ==> createJs
+        var touch = e.gesture.srcEvent.touches[0];
+        e.stageX = touch.pageX;
+        e.stageY = touch.pageY;
+        return e;
     }
 
     TQ.Trsa3 = Trsa3;

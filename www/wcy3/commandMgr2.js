@@ -131,10 +131,10 @@ window.TQ = window.TQ || {};
         if (cmd.constructor.name == "CompositeCommand") {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, cmd.commands.length > 0);
         }
-        if (!CommandMgr.__openedComposite) {
+        if (!TQ.CompositeCommand.isOpen()) {
             CommandMgr.addToUndoStack(cmd);
         } else {
-            CommandMgr.__openedComposite.addCommand(cmd);
+            TQ.CompositeCommand.addCommand(cmd);
         }
     };
 
