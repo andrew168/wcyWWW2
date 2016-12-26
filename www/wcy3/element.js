@@ -782,7 +782,7 @@ window.TQ = window.TQ || {};
             obj_dc.scaleX = obj_dc.scaleY = 1;
             obj_dc.regX = obj_dc.regY = 0;
             obj_dc.rotation = 0;
-            return;
+            return obj_dc;
         }
         if (!this.isMarker()) {
             obj_dc.regX = obj_pdc.pivotX * this.getWidth();

@@ -286,7 +286,7 @@ function create3DElement() {
             }
         }
     }
-    clearSubjectModeAndMultiSelect();
+    TQ.InputCtrl.clearSubjectModeAndMultiSelect();
 }
 
 function editActions() {

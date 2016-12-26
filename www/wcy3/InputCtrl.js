@@ -23,6 +23,8 @@ window.TQ = window.TQ || {};
     InputCtrl.vkeyCtrl = false;
     InputCtrl.vkeyUnjoint = false;
     InputCtrl.vkeyUngroup = false;
+    InputCtrl.setMultiSelect = setMultiSelect;
+    InputCtrl.clearSubjectModeAndMultiSelect = clearSubjectModeAndMultiSelect;
     InputCtrl.clearVkey = function () {
         InputCtrl.vkeyMove = false;
         InputCtrl.vkeyRotate = false;
@@ -162,12 +164,38 @@ window.TQ = window.TQ || {};
     };
 
     InputCtrl.setSubobjectMode = function() {
-      InputCtrl.inSubobjectMode = true;
+        InputCtrl.inSubobjectMode = true;
+        InputCtrl.showMarkerOnly = true;
 
-      //Todo: 让按钮与状态同步
-      // var btns = $("#subElementMode");
-      // btns[0].checked = true;
-      // btns.button("refresh");
+        //Todo: 让按钮与状态同步
+        // var btns = $("#subElementMode");
+        // btns[0].checked = true;
+        // btns.button("refresh");
     };
+
+    function setMultiSelect() {
+        InputCtrl.vkeyCtrl = true; // 设置多选
+        InputCtrl.showMarkerOnly = true;
+
+        //Todo: 让按钮与状态同步
+        // var btns = $("#subElementMode");
+        // btns[0].checked = true;
+        // btns.button("refresh");
+    }
+
+    function clearSubjectModeAndMultiSelect() {
+        InputCtrl.inSubobjectMode = false;
+        InputCtrl.showMarkerOnly = false;
+        InputCtrl.vkeyCtrl = false;  // 取消多选
+        /*        if (TQ.InputCtrl.inSubobjectMode) {
+         $("#subElementMode").click();
+         }
+
+         if (Menu.tb3Dfy) {
+         $("#tb3Dfy").click();
+         }
+         */
+    }
+
     TQ.InputCtrl = InputCtrl;
 }) ();

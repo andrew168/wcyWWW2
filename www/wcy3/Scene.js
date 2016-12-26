@@ -182,7 +182,7 @@ TQ = TQ || {};
                 TQ.InputCtrl.setSubobjectMode();
             }
             this.currentLevel.joint(elements);
-            clearSubjectModeAndMultiSelect()
+            TQ.InputCtrl.clearSubjectModeAndMultiSelect()
         }
 
         this.isSaved = false;
@@ -193,7 +193,7 @@ TQ = TQ || {};
             this.currentLevel.unGroup(elements);
         } else {
             this.currentLevel.groupIt(elements);
-            clearSubjectModeAndMultiSelect();
+            TQ.InputCtrl.clearSubjectModeAndMultiSelect();
         }
         this.isSaved = false;
     };

@@ -179,7 +179,7 @@ TQ = TQ || {};
         if (state.multiCmdStarted) {
             if (state.cmd === cmd) {
                 state.multiCmdStarted = false;
-                clearSubjectModeAndMultiSelect();
+                TQ.InputCtrl.clearSubjectModeAndMultiSelect();
                 // return groupIt();
                 return cmd();
             }
@@ -189,7 +189,7 @@ TQ = TQ || {};
         state.multiCmdStarted = true;
         state.cmd = cmd;
         SelectSet.clear();
-        setSubjectModeAndMultiSelect();
+        TQ.InputCtrl.setMultiSelect();
     }
 
     function multiCmdGroupIt() {
@@ -198,33 +198,6 @@ TQ = TQ || {};
 
     function multiCmdJointIt() {
         return multiCmd(jointIt);
-    }
-
-    function setSubjectModeAndMultiSelect() {
-        /*        if (!TQ.InputCtrl.inSubobjectMode) { // 设置 零件模式
-         if (!Menu.JointStarted) {  //加关节操作中， 必须是 真的 零件模式， 不能只是 showMarker
-         // TQ.InputCtrl.showMarkerOnly = true;
-         }
-         if (Menu.JointStarted) { // 只有加关节才进入零件模式， 以便于修改各个关节的转轴点。
-         $("#subElementMode").click();
-         }
-         }
-         */
-        TQ.InputCtrl.vkeyCtrl = true; // 设置多选
-    }
-
-    function clearSubjectModeAndMultiSelect() {
-        TQ.InputCtrl.showMarkerOnly = false;
-        /*        if (TQ.InputCtrl.inSubobjectMode) {
-         $("#subElementMode").click();
-         }
-
-         if (Menu.tb3Dfy) {
-         $("#tb3Dfy").click();
-         }
-
-         */
-        TQ.InputCtrl.vkeyCtrl = false;  // 取消多选
     }
 
     function jointIt() {
@@ -316,7 +289,7 @@ TQ = TQ || {};
         // Group的物体: 而且没有打散, 则操作其根
         // 3D打包的物体：操作其根
         if (TQ.InputCtrl.showMarkerOnly) { // 在创作复合物体的时候， 如果不在零件模式，也可以只要求显示Marker。
-            assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode);
+            // assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode);
         }
 
         if ((!ele.isJoint()) && ele.isGrouped()) {
