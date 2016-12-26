@@ -273,11 +273,16 @@ var TQ = TQ || {};
         TQ.SelectSet.add(ele2);
     }
 
-    function touch2StageXY(e) { // touch ==> createJs
-        var touch = e.gesture.srcEvent.touches[0];
+    function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
+        var srcEvent = e.gesture.srcEvent;
+        var touch = isMouseEvent(e)? srcEvent: srcEvent.touches[0];
         e.stageX = touch.pageX;
         e.stageY = touch.pageY;
         return e;
+    }
+
+    function isMouseEvent(e) {
+        return (e instanceof MouseEvent);
     }
 
     TQ.Trsa3 = Trsa3;
