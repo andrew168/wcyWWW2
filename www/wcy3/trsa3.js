@@ -147,6 +147,7 @@ var TQ = TQ || {};
         }
         isOperatingFlag = false;
         ditherStart();
+        startEle = null;
         var hasGesture = !!e.gesture;
         var touchNumber = (hasGesture) ? e.gesture.touches.length : e.touches.length;
         console.log("touch end " + touchNumber + (hasGesture ? " gesture Obj" : ""));
