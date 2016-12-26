@@ -86,7 +86,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         toAddMode: toAddMode,
         reset: reset,
 
-        // share
+        // particle Effect
+        SnowEffect: TQ.SnowEffect,  // start, stop, change(option)
+        RainEffect:TQ.RainEffect,
+
+    // share
         shareFbWeb: shareFbWeb
     };
 
@@ -760,35 +764,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         return TQ.FrameCounter.t();
     }
 
-    // size: 雪花大小，  默认1,  取值范围1-5.
-    // direction:  落雪方向： 0：向下， 取值范围： -15度到15度，
-    // density: 密度， 默认1（小雨）取值范围：1-10
-    function snow(size, direction, density, res, snowFlowerImage) {
-        TQ.SnowEffect.set(size, direction, density, res, snowFlowerImage);
-    }
-
-    function snowChange(size, direction, density) {
-        TQ.SnowEffect.set(size, direction, density);
-    }
-
-    function snowStop() {
-        TQ.SnowEffect.stop();
-    }
-
-    // size: 雨滴大小，  默认1,  取值范围1-5.
-    // direction: 落雨方向： 0：向下， 取值范围： -15度到15度，
-    // density: 密度， 默认1（小雨），取值范围：1-10
-    function rain(size, direction, density, res, dropImage) {
-        TQ.RainEffect.set(size, direction, density, res, dropImage);
-    }
-
-    function rainChange(size, direction, density) {
-        TQ.RainEffect.set(size, direction, density);
-    }
-
-    function rainStop() {
-        TQ.RainEffect.stop();
-    }
 
     // type: 烟火的种类，默认1,      系统保留扩展其它取值）
     function firework(type) {
