@@ -275,7 +275,7 @@ var TQ = TQ || {};
 
     function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
         var srcEvent = e.gesture.srcEvent;
-        var touch = isMouseEvent(e)? srcEvent: srcEvent.touches[0];
+        var touch = isMouseEvent(srcEvent)? srcEvent: srcEvent.touches[0];
         e.stageX = touch.pageX;
         e.stageY = touch.pageY;
         return e;
