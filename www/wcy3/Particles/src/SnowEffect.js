@@ -13,17 +13,24 @@ var TQ = TQ || {};
     };
 
     SnowEffect.start = start;
+    SnowEffect.stop = stop;
+    SnowEffect.change = set;
 
-    var p = SnowEffect;
-    p.initialize = function () {
+    function initialize() {
         SnowEffect.loadAsset();
-    };
+    }
 
     var defaultOps = {
         size: 3, // 雪花大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
         density: 5 // 密度， 默认1（小雨）取值范围：1-10
     };
+
+    var para1 = null,
+        emitter = null,
+        emitters = null,
+        created = false,
+        particleImage = null;
 
     function start(options) {
         if (!options) {
@@ -42,21 +49,21 @@ var TQ = TQ || {};
             }
         }
 
-        p.set(options.size, options.direction, options.density);
+        set(options.size, options.direction, options.density);
     }
 
-    p.set = function(size, direction, density, res, dropImage) {
+    function set (size, direction, density, res, dropImage) {
         size = TQ.MathExt.unifyValue10(size, 10, 20);
         direction = TQ.MathExt.unifyValue10(direction, 90-15, 90+15);
         density = TQ.MathExt.unifyValue10(density, 30, 40);
-        p.rain1 = {density: 40, startSize:10, direction:110,    dy:50, v0:300, endOpacity:-1, endSize:0, endSizeVar:5};
-        p.rain2 = {density: 40, startSize:20, direction:110,    dy:10, v0:100, endOpacity:0.1, endSize:-1, endSizeVar:5};
-        p.para1 = {density: density, startSize:size, direction:direction,    dy:10, v0:100, endOpacity:0.1, endSize:-1, endSizeVar:5};
-        if (!p.emitter) {
-            p.para1 = p.rain1;
-            p._loadAsset();
+        //rain1 = {density: 40, startSize:10, direction:110,    dy:50, v0:300, endOpacity:-1, endSize:0, endSizeVar:5};
+        //rain2 = {density: 40, startSize:20, direction:110,    dy:10, v0:100, endOpacity:0.1, endSize:-1, endSizeVar:5};
+        para1 = {density: density, startSize:size, direction:direction,    dy:10, v0:100, endOpacity:0.1, endSize:-1, endSizeVar:5};
+        if (!emitter) {
+            // para1 = rain1;
+            _loadAsset();
         } else {
-            p._apply();
+            _apply();
         }
 
         //if (!TQ.FrameCounter.isPlaying()) {
@@ -64,65 +71,65 @@ var TQ = TQ || {};
         //}
 
         createjs.ParticleEmitter.stopped = false;
-    };
+    }
 
-    p._apply = function() {
-        for (var i=0; i < p.emitters.length; i++) {
-            var emitter = p.emitters[i];
-            emitter.speed = p.para1.v0; // 粒子的初始速度，
-            emitter.positionVarY = p.para1.dy;
-            emitter.angle = p.para1.direction;
-            emitter.endOpacity = p.para1.endOpacity;
-            emitter.startSize = p.para1.startSize;
-            emitter.startSizeVar = p.para1.startSize / 2; //10;
-            emitter.endSizeVar = p.para1.endSizeVar;
+    function _apply () {
+        for (var i=0; i < emitters.length; i++) {
+            var emitter = emitters[i];
+            emitter.speed = para1.v0; // 粒子的初始速度，
+            emitter.positionVarY = para1.dy;
+            emitter.angle = para1.direction;
+            emitter.endOpacity = para1.endOpacity;
+            emitter.startSize = para1.startSize;
+            emitter.startSizeVar = para1.startSize / 2; //10;
+            emitter.endSizeVar = para1.endSizeVar;
         }
-    };
+    }
 
-    p._loadAsset = function() {
-        if (!p.particleImage) {
-            p.particleImage = new Image();
-            p.particleImage.onload = p._initCanvas;
-            p.particleImage.src = 'http://'+TQ.Config.DOMAIN_NAME + "/mcImages/xuehua1.png";
+    function _loadAsset () {
+        if (!particleImage) {
+            particleImage = new Image();
+            particleImage.onload = _initCanvas;
+            particleImage.src = 'http://'+TQ.Config.DOMAIN_NAME + "/mcImages/xuehua1.png";
         }
-    };
+    }
 
     // 停止下雨
-    p.stop = function() {
+    function stop() {
         createjs.ParticleEmitter.stopped = true;
-    };
+    }
 
-    p._initCanvas = function () {
+    function _initCanvas  () {
         TQ.Assert.isNotNull(canvas);
 
-        if (!p.emitter) {
+        if (!emitter) {
             // TQ.Assert.isTrue(false, "必须去除FPS， 否则竞争");
             // createjs.Ticker.setFPS(30);
             // createjs.Ticker.addListener(update);
             // addFPS();
-            p._create(p.para1);
-            p.created = true;
+            _create(para1);
+            created = true;
         } else {
-            p._apply(p.para1);
+            _apply(para1);
         }
-    };
+    }
 
-    p._create = function(para) {
+    function _create (para) {
         var M = para.density;  // 雪花的密度，
         var N = 1;
-        p.emitters = [];
+        emitters = [];
         for (var i =0; i < M; i++) {
             for (var j = 0; j < N; j++) {
                 var x = i/M * canvas.width  + canvas.width/10;
                 var y = j/N * canvas.height - canvas.height/10;
                 para.x = x;
                 para.y = y;
-                p.emitters.push(p.addParticleEmitter(para));
+                emitters.push(addParticleEmitter(para));
             }}
-    };
+    }
 
-    p.addParticleEmitter = function(para) {
-        var emitter = new createjs.ParticleEmitter(p.particleImage);
+    function addParticleEmitter (para) {
+        emitter = new createjs.ParticleEmitter(particleImage);
         emitter.position = new createjs.Point(para.x, para.y);
         emitter.emitterType = createjs.ParticleEmitterType.Emit;
         emitter.emissionRate = 2;  // 产生新粒子的速度
@@ -155,10 +162,9 @@ var TQ = TQ || {};
         emitter.startSizeVar = para.startSize / 2; //10;
         emitter.endSize = 0;
         emitter.endSizeVar = para.endSizeVar;
-        p.emitter = emitter;
         stageContainer.addChild(emitter);
         return emitter;
-    };
+    }
 
     TQ.SnowEffect = SnowEffect;
 }());
