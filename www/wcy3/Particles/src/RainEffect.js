@@ -10,7 +10,36 @@ this.TQ = this.TQ || {};
      */
     var RainEffect = function () {
     };
+
+    RainEffect.start = start;
     var p = RainEffect;
+
+    var defaultOps = {
+        size: 3, // 雨滴大小，  默认1,  取值范围1-5.
+        direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
+        density: 5 // 密度， 默认1（小雨）取值范围：1-10
+    };
+
+    function start(options) {
+        if (!options) {
+            options = defaultOps;
+        } else {
+            if (options.size === undefined) {
+                options.size = defaultOps.size;
+            }
+
+            if (options.direction === undefined) {
+                options.direction = defaultOps.direction;
+            }
+
+            if (options.density === undefined) {
+                options.density = defaultOps.density;
+            }
+        }
+
+        p.set(options.size, options.direction, options.density);
+    }
+
     p.initialize = function () {
         RainEffect.loadAsset();
     };
@@ -28,9 +57,9 @@ this.TQ = this.TQ || {};
         } else {
             p._apply();
         }
-        if (!TQ.FrameCounter.isPlaying()) {
-            $('#play').click();
-        }
+        //if (!TQ.FrameCounter.isPlaying()) {
+        //    $('#play').click();
+        //}
         createjs.ParticleEmitter.stopped = false;
     };
 
@@ -56,18 +85,18 @@ this.TQ = this.TQ || {};
         if (!p.particleImage) {
             p.particleImage = new Image();
             p.particleImage.onload = p._initCanvas;
-            p.particleImage.src = 'http://'+TQ.Config.DOMAIN_NAME + "/public/mcImages/yudi3.png";
+            p.particleImage.src = 'http://'+TQ.Config.DOMAIN_NAME + "/mcImages/yudi3.png";
         }
     };
 
     p._initCanvas = function () {
-        TQ.Assert.isNotNull(canvas);
+        // TQ.Assert.isNotNull(canvas);
 
         if (!p.emitter) {
-            TQ.Assert.isTrue(false, "必须去除FPS， 否则竞争");
-            createjs.Ticker.setFPS(30);
-            createjs.Ticker.addListener(update);
-            addFPS();
+            //TQ.Assert.isTrue(false, "必须去除FPS， 否则竞争");
+            //createjs.Ticker.setFPS(30);
+            //createjs.Ticker.addListener(update);
+            //addFPS();
             p._create(p.para1);
             p.created = true;
         } else {
@@ -76,7 +105,7 @@ this.TQ = this.TQ || {};
     };
 
     p._create = function(para) {
-        var M = para.density;  // 雪花的密度，
+        var M = para.density;  // 雨滴的密度，
         var N = 1;
         p.emitters = [];
         for (var i =0; i < M; i++) {
