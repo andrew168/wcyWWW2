@@ -94,6 +94,9 @@ window.TQ = window.TQ || {};
         for (var i=0; i < elements.length; i++) {
             // 先切断与 parent的联系（只有第一个元素有）， 再切断与孩子的联系
             var ele = elements[i];
+            if (!ele) { // 有元素为null？？
+                continue;
+            }
             var parent = ele.parent;
             if (parent != null) {
                 assertTrue(TQ.Dictionary.INVALID_PARAMETER, parent != null);
@@ -430,8 +433,18 @@ window.TQ = window.TQ || {};
         stage.update();
     };
 
+    p.removeNullElements = function() {
+        for (var i = 0; i < this.elements.length; ++i) {
+            if (!this.elements[i]) {
+                this.elements.splice(i, 1);
+                i--;
+            }
+        }
+    };
+
     p.update = function (t) {
         this.updateState();
+        this.removeNullElements();
         if (!this.dataReady) return;
 
         if (!(this.dirtyZ || this.isDirty || TQ.FrameCounter.isPlaying())) {
