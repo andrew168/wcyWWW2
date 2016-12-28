@@ -13,21 +13,28 @@ this.TQ = this.TQ || {};
 
     RainEffect.start = start;
     RainEffect.stop = stop;
-    RainEffect.change = set;
+    RainEffect.change = change;
+    RainEffect.set = set;
 
     var defaultOps = {
         size: 3, // 雨滴大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
-        density: 5 // 密度， 默认1（小雨）取值范围：1-10
+        density: 5, // 密度， 默认1（小雨）取值范围：1-10
+        imageSrc: 'http://'+TQ.Config.DOMAIN_NAME + "/mcImages/yudi3.png"
     };
 
     var para1 = null,
+        options1 = null,
         emitter = null,
         emitters = null,
         created = false,
         particleImage = null;
 
     function start(options) {
+        change(options);
+    }
+
+    function change(options) {
         if (!options) {
             options = defaultOps;
         } else {
@@ -42,13 +49,14 @@ this.TQ = this.TQ || {};
             if (options.density === undefined) {
                 options.density = defaultOps.density;
             }
+
+            if (options.imageSrc === undefined) {
+                options.imageSrc = defaultOps.imageSrc;
+            }
         }
 
+        options1 = options;
         set(options.size, options.direction, options.density);
-    }
-
-    function initialize () {
-        RainEffect.loadAsset();
     }
 
     function set (size, direction, density, res, dropImage) {
@@ -62,6 +70,7 @@ this.TQ = this.TQ || {};
             // para1 = rain1;
             _loadAsset();
         } else {
+            reset(para1);
             _apply();
         }
         //if (!TQ.FrameCounter.isPlaying()) {
@@ -92,7 +101,7 @@ this.TQ = this.TQ || {};
         if (!particleImage) {
             particleImage = new Image();
             particleImage.onload = _initCanvas;
-            particleImage.src = 'http://'+TQ.Config.DOMAIN_NAME + "/mcImages/yudi3.png";
+            particleImage.src = options1.imageSrc;
         }
     }
 
@@ -104,25 +113,34 @@ this.TQ = this.TQ || {};
             //createjs.Ticker.setFPS(30);
             //createjs.Ticker.addListener(update);
             //addFPS();
-            _create(para1);
+            reset(para1);
             created = true;
         } else {
             _apply(para1);
         }
     }
 
-    function _create (para) {
+    function reset(para) {
         var M = para.density;  // 雨滴的密度，
         var N = 1;
-        emitters = [];
-        for (var i =0; i < M; i++) {
+        var k = 0;
+        if (!emitters) {
+            emitters = [];
+        }
+        for (var i = 0; i < M; i++) {
             for (var j = 0; j < N; j++) {
-                var x = i/M * canvas.width  + canvas.width/10;
-                var y = j/N * canvas.height - canvas.height/10;
-                para.x = x;
-                para.y = y;
-                emitters.push(addParticleEmitter(para));
-            }}
+                var x = i / M * canvas.width + canvas.width / 10;
+                var y = j / N * canvas.height - canvas.height / 10;
+                if ((k < emitters.length) && (emitters[k])) {
+                    emitters[k].position = new createjs.Point(x, y);
+                } else {
+                    para.x = x;
+                    para.y = y;
+                    emitters.push(addParticleEmitter(para));
+                }
+                k++;
+            }
+        }
     }
 
     function addParticleEmitter (para) {

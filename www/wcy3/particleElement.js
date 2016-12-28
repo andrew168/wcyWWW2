@@ -31,19 +31,13 @@ TQ = TQ || {};
 
     p._doLoad = function () {
         p.isPlaying = false;
-        var paras = this.jsonObj.particles;
-        if (!paras) {
-            console.error("缺少参数： 粒子效果");
-            p.effect = TQ.SnowEffect;
-        } else {
-            switch (params.type) {
-                case TQ.RainEffect.name:
-                    p.effect = TQ.RainEffect;
-                    break;
-                case TQ.SnowEffect.name:
-                default:
-                    p.effect = TQ.SnowEffect;
-            }
+        switch (this.jsonObj.type) {
+            case TQ.RainEffect.name:
+                p.effect = TQ.RainEffect;
+                break;
+            case TQ.SnowEffect.name:
+            default:
+                p.effect = TQ.SnowEffect;
         }
     };
 
