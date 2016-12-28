@@ -5,6 +5,19 @@
 window.TQ = window.TQ || {};
 
 (function () {
+    var DescType = {
+        BITMAP: "Bitmap",
+        BITMAP_ANIMATION: "BitmapAnimation",
+        BUTTON: "BUTTON",
+        GROUP: "Group",
+        GROUP_FILE: "GroupFile",
+        JOINT_MARKER: "JointMarker",
+        RAIN: "RainEffect",
+        SNOW: "SnowEffect",
+        SOUND: "SOUND",
+        TEXT: "Text"
+    };
+
     function Element(level, desc) {
         if (level != null) {  // 适用于 子类的定义, 不做任何初始化,只需要prototype
             this.level = level;
@@ -117,23 +130,12 @@ window.TQ = window.TQ || {};
         desc.x = (desc.x == null) ? 0 : desc.x;
         desc.y = (desc.y == null) ? 0 : desc.y;
         this.jsonObj = this.fillGap(desc);
+        var DescType = Element.DescType;
         switch (desc.type) {
-            case "GroupFile" :
+            case DescType.GROUP_FILE:
                 this._addComponent(desc);
                 break;
-            case "Text" :
-                this.load(desc);
-                break;
-            case "Group" :
-                this.load(desc);
-                break;
-            case "Bitmap":
-                this.load(desc);
-                break;
-            case "SOUND" :
-                this.load(desc);
-                break;
-            case "BitmapAnimation":
+            case DescType.BITMAP_ANIMATION:
                 this._addActorByUrl(desc, null);
                 break;
             default:
@@ -354,18 +356,15 @@ window.TQ = window.TQ || {};
 
         var desc = this.jsonObj;
         switch (desc.type) {
-            case "BitmapAnimation":
+            case DescType.BITMAP_ANIMATION:
                 this._loadActor();
                 break;
-            case "Group":
+            case DescType.GROUP:
                 this._loadComponent();
                 break;
-            case "JointMarker":
+            case DescType.JOINT_MARKER:
                 this._loadMarker();
                 break;
-            case "Text":
-            case "SOUND":
-            case "Bitmap":
             default :
                 this._doLoad();
                 break;
@@ -1682,6 +1681,9 @@ window.TQ = window.TQ || {};
     p.isButton = function () {
         return false;
     };
+    p.isSelectable = function() {
+        return true;
+    };
     p.getTextHtml = function () {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText());
         return this.toHtmlStr();
@@ -1822,4 +1824,5 @@ window.TQ = window.TQ || {};
     };
 
     TQ.Element = Element;
+    TQ.Element.DescType = DescType;
 }());

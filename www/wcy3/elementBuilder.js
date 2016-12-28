@@ -19,16 +19,21 @@ window.TQ = window.TQ || {};
         }
         // 此处已经组装好了目录
         TQ.Element.upgradeToVer2(desc);
+        var DescType = TQ.Element.DescType;
         switch (desc.type) {
-            case "SOUND":
+            case DescType.SOUND:
                 return new TQ.SoundElement(level, desc);
-            case "JointMarker":
+            case DescType.JOINT_MARKER:
                 return new TQ.Marker(level, desc);
-            case "BUTTON":
+            case DescType.BUTTON:
                 return new TQ.ButtonElement(level, desc);
-            case "Text" :
+            case DescType.TEXT:
                 return new TQ.TextElement(level, desc);
+            case DescType.RAIN:
+            case DescType.SNOW:
+                return new TQ.ParticleElement(level, desc);
             default :
+                console.error("unknown desc.type:" + desc.type);
                 break;
         }
 

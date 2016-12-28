@@ -72,6 +72,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         insertBkImage: insertBkImage,
         insertText: insertText,
         insertSound: insertSound,
+        insertSnow: insertSnow,
         selectLocalFile: selectLocalFile,
         uploadMatFromLocal: uploadMatFromLocal,
 
@@ -469,6 +470,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     function insertBkImage(filename, x, y) {
         var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y};
         addItem(desc, TQ.MatType.BKG);
+    }
+
+    function insertSnow() {
+        // particle 不需要上传本地图片， 所以，不需要通过EditService的addItem,
+        // 而是直接调用SceneEditor的
+        var desc = {src: null, type: TQ.Element.DescType.SNOW};
+        TQ.SceneEditor.addItem(desc);
     }
 
     function insertText(message, x, y) {

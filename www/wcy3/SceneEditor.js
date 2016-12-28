@@ -48,7 +48,7 @@ var currScene = null;
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
 
         // "Groupfile" 暂时还没有纳入RM的管理范畴
-        if (((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON"))
+        if (((desc.type === TQ.Element.DescType.SOUND) || (desc.type === TQ.Element.DescType.BITMAP) || (desc.type === TQ.Element.DescType.BUTTON))
             && (!TQ.RM.hasElementDesc(desc))) {
             TQ.RM.addElementDesc(desc, doAdd);
         } else {
@@ -57,7 +57,7 @@ var currScene = null;
 
         function doAdd() {
             var ele = currScene.addItem(desc);
-            if (!ele.isSound()) {
+            if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
                 TQ.SelectSet.add(ele);
             }
         }
