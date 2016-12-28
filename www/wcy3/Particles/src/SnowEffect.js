@@ -137,6 +137,8 @@ var TQ = TQ || {};
                 if ((k < emitters.length) && (emitters[k])) {
                     emitters[k].position = new createjs.Point(x, y);
                 } else {
+                    para.x = x;
+                    para.y = y;
                     emitters.push(addParticleEmitter(para));
                 }
                 k++;
