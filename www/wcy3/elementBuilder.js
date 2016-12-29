@@ -32,6 +32,8 @@ window.TQ = window.TQ || {};
             case DescType.RAIN:
             case DescType.SNOW:
                 return new TQ.ParticleElement(level, desc);
+            case DescType.BITMAP:
+                break;
             default :
                 console.error("unknown desc.type:" + desc.type);
                 break;
