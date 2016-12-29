@@ -6,25 +6,29 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function OneTrack(value) {
+    function OneTrack(value, interpolationStyle) {
         if ((value == undefined) || (value == null))
         {
             value = 0;
         }
 
-        this.initialize(value);
+        if (interpolationStyle === undefined) {
+            interpolationStyle = TQ.TrackDecoder.LINE_INTERPOLATION;
+        }
+
+        this.initialize(value, interpolationStyle);
     }
 
     var p = OneTrack.prototype;
     p.t = [];
     p.value = [];
     p.c = [];
-    p.initialize = function (value) {
+    p.initialize = function (value, interpolationStyle) {
         var t = TQ.FrameCounter.t();
         if ((value.value == undefined) || (value.value == null)){
             this.t = [t];  // 只有一帧, 不能搞出来2
             this.value = [value];
-            this.c = [1];
+            this.c = [interpolationStyle];
         } else {
             this.t = value.t;
             this.value = value.value;

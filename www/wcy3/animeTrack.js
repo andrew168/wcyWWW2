@@ -63,9 +63,12 @@ TQ = TQ || {};
         }
 
         if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
-            || (desc.animeTrack.visible == undefined) || (desc.animeTrack.visible == null)) {
-            this.visible = new TQ.OneTrack(desc.isVis);
-        } else {
+            || (desc.animeTrack.visible == undefined) || (desc.animeTrack.visible == null)) { // 即时添加的元素
+            this.visible = new TQ.OneTrack(desc.isVis, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            if (!TQ.FrameCounter.isAtBeginning()) {
+                TQ.TrackRecorder.recordOneTrack(this.visible, 0.0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            }
+        } else { // 从文件中读入的元素
             this.visible = new TQ.OneTrack(desc.animeTrack.visible);
         }
 

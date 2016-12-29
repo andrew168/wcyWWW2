@@ -63,6 +63,10 @@ window.TQ = window.TQ || {};
         );
     };
 
+    FrameCounter.isAtBeginning = function() {
+        return FrameCounter.v < 1;
+    };
+
     FrameCounter.t = function ()
     {
         return FrameCounter.v / FrameCounter._FPS;
