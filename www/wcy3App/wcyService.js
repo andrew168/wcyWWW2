@@ -81,6 +81,7 @@ function WCY($http, FileService, WxService, NetService) {
             });
     }
     function getWcy(shareString) {
+        TQ.WCY.isPlayOnly = true;
         if (currScene && !currScene.isSaved) {
             return save().then(function() {
                 getWcy(shareString);
@@ -332,7 +333,7 @@ function WCY($http, FileService, WxService, NetService) {
     function _openInJson(content) {
         var filename = _findFileName(content),
             fileInfo = {name: filename, content: content};
-
+        fileInfo.isPlayOnly = TQ.WCY.isPlayOnly;
         _open(fileInfo);
     }
 

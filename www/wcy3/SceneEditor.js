@@ -13,23 +13,29 @@ var currScene = null;
     SceneEditor._mode = TQBase.LevelState.EDITING; // 创作界面的缺省模式是编辑.
 
     SceneEditor.showWcy = function (fileInfo) {
-        var playOnlyFlag = true;
-        init(fileInfo, playOnlyFlag);
+        if (fileInfo.isPlayOnly === undefined) {
+            fileInfo.isPlayOnly = true;
+        }
+
+        init(fileInfo);
     };
 
     SceneEditor.openWcy = function (fileInfo) {
-        var playOnlyFlag = false;
-        init(fileInfo, playOnlyFlag);
+        if (fileInfo.isPlayOnly === undefined) {
+            fileInfo.isPlayOnly = false;
+        }
+        init(fileInfo);
     };
 
     SceneEditor.createScene = function (option) {
         TQ.Assert.isNotNull(option);
-        var playOnlyFlag = false;
         var fileInfo = {
             filename: option.filename || TQ.Config.UNNAMED_SCENE,
             screenshotName : option.screenshotName,
-            content:TQ.Scene.getEmptySceneJSON()};
-        init(fileInfo, playOnlyFlag);
+            content:TQ.Scene.getEmptySceneJSON()
+        };
+        fileInfo.isPlayOnly = false;
+        init(fileInfo);
     };
 
     function createStage() {

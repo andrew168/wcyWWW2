@@ -294,6 +294,7 @@ TQ = TQ || {};
     };
 
     p.open = function (fileInfo) {
+        p.isPlayOnly = (fileInfo.isPlayOnly === undefined)? false : fileInfo.isPlayOnly;
         TQ.MessageBox.showWaiting("正在加载作品...");
         this.reset();
         this.filename = fileInfo.filename;
@@ -479,6 +480,11 @@ TQ = TQ || {};
         }
         objJson.alias = (alias == null) ? 'none' : alias;
         objJson.remote = true;
+        if (p.isPlayOnly) {// 播放， 总是从第1场景的第t0=0时刻开始
+            objJson.currentLevelId = 0;
+            objJson.levels[0].t0 = 0.0;
+        }
+
         pt._fixedUp(objJson);
     };
 
@@ -575,8 +581,8 @@ TQ = TQ || {};
         if (TQ.SceneEditor.isEditMode()) {
             // $('#playRecord').click();
         } else if (TQ.SceneEditor.isPlayMode()) {
-            if (TQ.WCY.isPlayOnly) {
-                TQ.WCY.doStopRecord();
+            if (p.isPlayOnly) {
+                // TQ.WCY.doStopRecord();
             } else {
                 // $('#stopRecord').click();
             }
