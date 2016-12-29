@@ -568,6 +568,8 @@ window.TQ = window.TQ || {};
             console.log("is loading, or not loaded!");
         }
         TQ.SoundMgr.removeAll();
+        TQ.SnowEffect.stop();
+        TQ.RainEffect.stop();
         this.state = TQBase.LevelState.EXIT;
     };
 
