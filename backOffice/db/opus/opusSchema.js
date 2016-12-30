@@ -12,7 +12,7 @@ var opusSchema = new Schema({
     lastModified:{type:Date, default: Date.now},
     userId:Number,
     ssPath: {type: String, default:""},
-    template: Schema.ObjectId
+    template: {type: Number, default: 0} // 0: no template
 });
 
 function setup(autoIncrement) {

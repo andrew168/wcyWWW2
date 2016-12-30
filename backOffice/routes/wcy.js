@@ -42,7 +42,7 @@ router.post('/', function(req, res, next) {
             res.send(msg);
         } else {
             var wcyId = req.param('wcyId');
-            if (isNewWcy(wcyId)) {
+            if (isNewWcy(wcyId)) { // 新作品，
                 // 入库， 并获取新wcyID，
                 function onSavedToDB(_wcyId, ssPath) {
                     wcyId = _wcyId;
@@ -50,7 +50,7 @@ router.post('/', function(req, res, next) {
                 }
                 opusController.add(status.user.ID, ssPath, templateID, onSavedToDB, null);
             } else {
-                opusController.updateScreenshot(wcyId, ssPath, onSavedToDB);
+                opusController.updateScreenshot(status.user.ID, wcyId, ssPath, onSavedToDB);
             }
         }
 });

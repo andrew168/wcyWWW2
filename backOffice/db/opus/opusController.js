@@ -21,8 +21,8 @@ function get(id) {
 function add(userID, ssPath, templateID, onSuccess, onError) {
     var aOpus = new Opus({
         userId: userID,
-        ssPath: ssPath
-        // template: templateID
+        ssPath: ssPath,
+        template: templateID
     });
 
     aOpus.save(onSave);
@@ -80,11 +80,12 @@ function getList(userId, callback) {
     }
 }
 
-function updateScreenshot(id, path, onSuccess, onError) {
-    Opus.findOne({_id: id})
+function updateScreenshot(userId, id, path, onSuccess, onError) {
+    Opus.findOne({_id: id, userId: userId})
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found!' + id});
+                console.error(404, {msg: 'not found!' + id}); // 可能是不同的UserId，不能覆盖他人的作品
+                add(userId, path, id, onSuccess, onError); // 因此， 以建立新文件， 注明是以他人的作品为模板的
             } else {
                 console.log(data);
                 data.set('ssPath', path);
