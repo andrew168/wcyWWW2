@@ -59,6 +59,10 @@ function WxService($http, $cookies, $q) {
 
     //微信配置
     var getSignature = function () {
+        if (!TQ.Config.hasWx) {
+            return false;
+        }
+
         $http({
             method: 'GET',
             url: TQ.Config.AUTH_HOST + '/getWSignature?filename=myfile',
@@ -110,6 +114,10 @@ function WxService($http, $cookies, $q) {
     }
 
     function checkAPI() {
+        if (!TQ.Config.hasWx) {
+            return false;
+        }
+
         wx.checkJsApi({
             jsApiList: ApiList,
             success: function (res) {
@@ -125,6 +133,10 @@ function WxService($http, $cookies, $q) {
 
     // http://show.udoido.cn/index.html?opus=100_00000025_123_1234567890
     function shareMessage(shareCode) {
+        if (!TQ.Config.hasWx) {
+            return;
+        }
+
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
 
@@ -192,7 +204,11 @@ function WxService($http, $cookies, $q) {
 
     function chooseImage() {
         var q = $q.defer();
-
+        if (!TQ.Config.hasWx) {
+            setTimeout(function() {
+                q.reject("no wx");
+            })
+        }
         wx.chooseImage({
             count: 2, // 默认9
             sizeType: ['original', 'compressed'],
@@ -214,10 +230,18 @@ function WxService($http, $cookies, $q) {
     }
 
     function isReady() {
+        if (!TQ.Config.hasWx) {
+            return false;
+        }
+
         return _isReady;
     }
 
     function init() {
+        if (!TQ.Config.hasWx) {
+            return null;
+        }
+
         return getSignature();
     }
 

@@ -103,7 +103,7 @@ window.TQ = window.TQ || {};
 
 
     //
-    Config.hasWx = true;  // 支持微信服务器绑定，绑定到 udoido
+    Config.hasWx = false;  // 支持微信服务器绑定，绑定到 udoido
     Config.hasAudioRecording = false;  // 没有录音功能
     Config.ChromeFileEnabled = true;
     Config.useCloundServerSimulator = true;
