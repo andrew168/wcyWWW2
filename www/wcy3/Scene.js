@@ -151,6 +151,7 @@ TQ = TQ || {};
         TQ.MessageBox.hide();
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNum()); //level ID 超界
         this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
+        console.log("entering level " + this.currentLevelId);
         this.selectLevel(this.currentLevelId);
         this.currentLevel.show();
         this.isDirty = true;

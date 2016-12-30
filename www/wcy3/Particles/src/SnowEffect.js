@@ -104,7 +104,7 @@ var TQ = TQ || {};
     }
 
     // 停止下雨
-    function stop() {
+    function stop() {// 立即停止，消失所有的雨滴
         createjs.ParticleEmitter.stopped = true;
     }
 
