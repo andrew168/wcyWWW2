@@ -39,7 +39,7 @@ window.TQ = window.TQ || {};
         if (!str) {
             str = "";
         }
-        console.error("this is depreciated. " + str);
+        // console.error("this is depreciated. " + str);
     };
 
     Log.debugInfo = function (str) {
