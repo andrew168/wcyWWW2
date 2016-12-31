@@ -506,6 +506,8 @@ TQ = TQ || {};
         if (TQ.Config.REMOVE_EMPTY_LEVEL_ON) {
             Scene.removeEmptyLevel(objJson);
         }
+        // 删除临时办理，（升级用，防止，旧文件中带有这些参数）
+        delete(objJson.isPlayOnly);
 
         if (objJson.currentLevelId >= objJson.levels.length) {
             objJson.currentLevelId = 0;

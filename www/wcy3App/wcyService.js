@@ -80,23 +80,23 @@ function WCY($http, FileService, WxService, NetService) {
                 TQ.Log.error("出错：无法保存文件: " + fileName + JSON.stringify(e));
             });
     }
-    function getWcy(shareString) {
-        TQ.WCY.isPlayOnly = true;
+    function getWcy(shareString, forEdit) {
         if (currScene && !currScene.isSaved) {
             return save().then(function() {
-                getWcy(shareString);
+                getWcy(shareString, forEdit);
             });
         }
 
+        TQ.WCY.isPlayOnly = !forEdit;
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
         TQ.MessageBox.showWaiting("正在加载....");
         $http.get(url)
             .then(_onReceivedWcyData, _onFail);
     }
 
-    function getWcyById(wcyId) {
+    function getWcyById(wcyId) { // 通过作品栏目调入到编辑器中
         var shareCode = "0_" + wcyId + "_0_0";
-        return getWcy(shareCode);
+        return getWcy(shareCode, true);
     }
 
     function getWcyList() {
