@@ -11,6 +11,7 @@ TQ.MessageBox = (function() {
         getInstance: getInstance,
         hide: hide,
         prompt: prompt,
+        confirm: confirm,
         show: show,
         showWaiting: showWaiting,
         toast: toast
@@ -55,6 +56,10 @@ TQ.MessageBox = (function() {
 
     function prompt(msg) {
         doShow({content: msg, onOk: onOk, onCancel: onCancel});
+    }
+
+    function confirm(options) {
+        doShow(options);
     }
 
     function show(str) {
