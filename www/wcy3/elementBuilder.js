@@ -34,6 +34,8 @@ window.TQ = window.TQ || {};
                 return new TQ.ParticleElement(level, desc);
             case DescType.BITMAP:
                 break;
+            case DescType.GROUP:
+                break;
             default :
                 console.error("unknown desc.type:" + desc.type);
                 break;
