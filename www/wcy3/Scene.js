@@ -639,9 +639,11 @@ TQ = TQ || {};
 
     p.toJSON = function () {
         var scene2 = TQ.Base.Utility.shadowCopy(this);
+        //必须忽略这些临时的变量，否则， 在open的时候，他们就会覆盖currScene中的值
         delete(scene2.isUpdating);
         delete(scene2.isSaved);
         delete(scene2.onsceneload);
+        delete(scene2.isPlayOnly);
         delete(scene2.state);
         return scene2;
     };

@@ -301,17 +301,27 @@ window.TQ = window.TQ || {};
         this.build();  // 从Resource 到 canvas
         if (this.isWaitingForShow) {
           TQ.Log.info("onLoaded" + this.name);
-          this.show();
+          this.doShow();
         }
         TQ.DirtyFlag.setLevel(this);
     };
 
-    p.show = function () {
-        TQ.Log.info("show level, name = :" + this.name);
+    p.doShow = function () {
+        TQ.Log.info("doShow level, name = :" + this.name);
         if (this.dataReady) {
             TQ.Log.info("data ready");
             this.isWaitingForShow = false;
             this.onLevelCreated();
+        } else {
+            TQ.AssertExt.invalidLogic(true, "应该先调用show");
+        }
+        TQ.DirtyFlag.setLevel(this);
+    };
+    
+    p.show = function () {
+        TQ.Log.info("show level, name = :" + this.name);
+        if (this.dataReady) {
+            this.doShow();
         } else {
             TQ.Log.info("data ready: NO");
             this.isWaitingForShow = true;
