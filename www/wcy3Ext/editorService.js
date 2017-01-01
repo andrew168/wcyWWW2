@@ -163,6 +163,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
 
         if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
+            // TQ.MessageBox.showOk("请使用竖屏以获得好效果", preview);
             preview();
         }
 
@@ -695,6 +696,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             currScene.stop();
             updateMode();
         }
+
+        $timeout(function () { // 用timeout迫使angularjs 刷新UI
+            state.isPlaying = false;
+        }, 100);
     }
 
     function preview () {
@@ -706,8 +711,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
         if (currScene != null) {
             currScene.play();
-            _onPlay();
         }
+        _onPlay();
     }
 
     function _onPlay() {
@@ -716,6 +721,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         TQ.TouchManager.stop();
         $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
             startWatch();
+            state.isPlaying = true;
         }, 100);
         TQ.IdleCounter.start(onPreviewMenuOff);
     }
