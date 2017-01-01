@@ -93,8 +93,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         SnowEffect: TQ.SnowEffect,  // start, stop, change(option)
         RainEffect:TQ.RainEffect,
 
-    // share
-        shareFbWeb: shareFbWeb
+        // share
+        shareFbWeb: shareFbWeb,
+        saveScreenShot: saveScreenShot
     };
 
     function addItem(desc, matType) {
@@ -1042,6 +1043,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
             TQ.SelectSet.delete();
         }
+    }
+
+    var screenshotCounter = 0;
+    function saveScreenShot () {
+        var screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + screenshotCounter + ".png";
+        TQ.Tool.saveImage(screenshotName);
+        screenshotCounter++;
     }
 
     function shareFbWeb() {

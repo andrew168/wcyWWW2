@@ -233,14 +233,6 @@ function DashCtrl(
         TQ.SceneEditor.emptyScene();
     };
 
-    var screenshotCounter = 0;
-    var screenshotName;
-    $scope.saveScreenShot = function () {
-        screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + screenshotCounter + ".png";
-        TQ.Tool.saveImage(screenshotName);
-        screenshotCounter++;
-    };
-
     $scope.uploadScreenShot = function () {
         WCY.uploadScreenshot();
     };
@@ -248,21 +240,6 @@ function DashCtrl(
     $scope.insertBkImageFromLocal = function () {
         EditorService.insertBkImageFromLocal();
     };
-
-    function onSuccess(data) {
-        $timeout(function () {
-            if (data.url) {
-                $scope.localImage2 = data.url;
-            } else {
-                $scope.localImage2 = DeviceService.getFullPath(screenshotName);
-            }
-        });
-    }
-
-    function onError(e) {
-        TQ.Log.error("截图保持出错了！");
-        TQ.Log.error(e);
-    }
 
     $scope.saveWorks = function () {
         WCY.save();
