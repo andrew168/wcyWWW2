@@ -37,6 +37,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         replay: replay,
         startRecord: startRecord,
         stopRecord: stopRecord,
+        toggleSpeed: TQ.FrameCounter.toggleSpeed,
         // pause: doPause,
 
         // opus ==> WCY
@@ -131,6 +132,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         state.isPreviewMenuOn = false;
         state.isPlayMode = null;
         state.isPlaying = false;
+        TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
     }
 
     function initialize() {

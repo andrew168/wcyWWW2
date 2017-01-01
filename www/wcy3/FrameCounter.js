@@ -18,9 +18,11 @@ window.TQ = window.TQ || {};
     }
 
     var _isRecording = false,
+        NORMAL_SPEED = 1,
+        LOW_SPEED = 0.1,
         GO = 1, // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
         STOP = 0,
-        baseStep = 1,
+        baseStep = NORMAL_SPEED,
         step = baseStep;
 
     FrameCounter.isNew = true;  // 新的时刻, 需要更新数据
@@ -35,6 +37,7 @@ window.TQ = window.TQ || {};
         currLevel = null;
 
     FrameCounter.addHook = addHook;
+    FrameCounter.toggleSpeed = toggleSpeed;
 
     var _hooks = [];
     function addHook(hook) {
@@ -221,6 +224,38 @@ window.TQ = window.TQ || {};
         FrameCounter.v = 0;
         state = STOP;
     };
+
+    var stateReceiver = null;
+    function toggleSpeed(flag, receiver) {
+        if (flag && (flag === TQ.Const.TOGGLE_RESET)) {
+            TQ.AssertExt.expectObject(!receiver);
+            stateReceiver = receiver;
+            stateReceiver.isLowSpeed = false;
+            normalSpeed();
+        } else {
+            TQ.AssertExt.expectObject(!stateReceiver);
+            stateReceiver.isLowSpeed = !stateReceiver.isLowSpeed;
+            if (stateReceiver.isLowSpeed) {
+                lowSpeed();
+            } else {
+                normalSpeed();
+            }
+        }
+    }
+
+    function lowSpeed() {
+        if (baseStep === NORMAL_SPEED) {
+            step = step * LOW_SPEED / NORMAL_SPEED;
+        }
+        baseStep = LOW_SPEED;
+    }
+
+    function normalSpeed() {
+        if (baseStep === LOW_SPEED) {
+            step = step * NORMAL_SPEED / LOW_SPEED;
+        }
+        baseStep = NORMAL_SPEED;
+    }
 
     TQ.FrameCounter = FrameCounter;
 }());
