@@ -235,12 +235,9 @@ function DashCtrl(
 
     var screenshotCounter = 0;
     var screenshotName;
-    $scope.saveScreenShot = function (_onSuccess) {
-        if (!_onSuccess) {
-            _onSuccess = onSuccess;
-        }
-        screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + "nn" + screenshotCounter + ".png";
-        FileService.saveImage64(screenshotName, TQ.ScreenShot.getData(), onSuccess, onError);
+    $scope.saveScreenShot = function () {
+        screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + screenshotCounter + ".png";
+        TQ.Tool.saveImage(screenshotName);
         screenshotCounter++;
     };
 
