@@ -13,27 +13,26 @@
 window.TQ = window.TQ || {};
 
 (function (){
-    function FrameCounter()
-    {
+    function FrameCounter() {
         assertNotHere(TQ.Dictionary.INVALID_LOGIC); // Singleton, 禁止调用
     }
 
-    var _isRecording = false;
+    var _isRecording = false,
+        GO = 1, // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
+        STOP = 0,
+        baseStep = 1,
+        step = baseStep;
 
-    // ToDo:
-    FrameCounter.GO = 1; // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
-    FrameCounter.STOP = 0;
     FrameCounter.isNew = true;  // 新的时刻, 需要更新数据
     FrameCounter.v = 0;
     FrameCounter.defaultFPS = 20;
     FrameCounter.max = 120 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
-    FrameCounter._FPS = FrameCounter.defaultFPS;  // 下划线是内部变量, 禁止外面引用
-    FrameCounter.BASE_STEP = 1;
-    FrameCounter._step = FrameCounter.BASE_STEP;
-    FrameCounter._state = FrameCounter.STOP;
-    FrameCounter._requestState = null;
-    FrameCounter._autoRewind = false;
-    FrameCounter._level = null;
+
+    var _FPS = FrameCounter.defaultFPS,  // 下划线是内部变量, 禁止外面引用
+        state = STOP,
+        requestState = null,
+        autoRewind = false,
+        currLevel = null;
 
     FrameCounter.addHook = addHook;
 
@@ -52,8 +51,8 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, FPS);
         assertNotNull(TQ.Dictionary.FoundNull, level);
         FrameCounter.v = t0 * FPS;
-        FrameCounter._FPS = FPS;
-        FrameCounter._level = level;
+        _FPS = FPS;
+        currLevel = level;
         FrameCounter.max = level.getTime();
         TQ.InputMap.registerAction(TQ.InputMap.LAST_FRAME_KEY,
             function () {
@@ -69,27 +68,27 @@ window.TQ = window.TQ || {};
 
     FrameCounter.t = function ()
     {
-        return FrameCounter.v / FrameCounter._FPS;
+        return FrameCounter.v / _FPS;
     };
 
     FrameCounter.f2t = function(frameNumber) {
-        return (frameNumber / FrameCounter._FPS);
+        return (frameNumber / _FPS);
     };
 
     FrameCounter.t2f = function(t) {
-        return (t * FrameCounter._FPS);
+        return (t * _FPS);
     };
 
     FrameCounter.forward = function ()
     {
-        FrameCounter._step = 2 * FrameCounter.BASE_STEP;
-        FrameCounter._state = FrameCounter.GO;
+        step = 2 * baseStep;
+        state = GO;
     };
 
     FrameCounter.backward = function () {
         TQ.AssertExt.depreciated("backward: 过时了");
-        FrameCounter._step = -2 * FrameCounter.BASE_STEP;
-        FrameCounter._state = FrameCounter.GO;
+        step = -2 * baseStep;
+        state = GO;
     };
 
     FrameCounter.gotoBeginning = function() {
@@ -106,13 +105,13 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.goto = function(t) {
-        FrameCounter.gotoFrame(t * FrameCounter._FPS);
+        FrameCounter.gotoFrame(t * _FPS);
     };
 
     // 前进一个delta. (delta是负值, 即为倒带)
     FrameCounter.update = function () {
         FrameCounter.updateState();
-        if (!(FrameCounter._state == FrameCounter.GO)) {
+        if (!(state == GO)) {
             return ;
         }
 
@@ -121,18 +120,18 @@ window.TQ = window.TQ || {};
             return;
         }
 
-        var delta = FrameCounter._step;
+        var delta = step;
         FrameCounter.v = FrameCounter.v + delta;
         if(FrameCounter.v > FrameCounter.max) {
             if (_isRecording) {
-                FrameCounter.max += FrameCounter._step;
+                FrameCounter.max += step;
             } else {
                 FrameCounter.v = FrameCounter.max;
             }
         }
 
         if(FrameCounter.v < 0) {
-            if (FrameCounter._autoRewind) {
+            if (autoRewind) {
                 FrameCounter.v = FrameCounter.max;
             } else {
                 FrameCounter.v = 0;
@@ -152,25 +151,25 @@ window.TQ = window.TQ || {};
     }
 
     FrameCounter.updateState = function() {
-        switch (FrameCounter._requestState) {
+        switch (requestState) {
             case null: break;
-            case FrameCounter.GO : {
-                FrameCounter._step = FrameCounter.BASE_STEP;
-                FrameCounter._state = FrameCounter.GO;
+            case GO : {
+                step = baseStep;
+                state = GO;
                 break;
             }
-            case FrameCounter.STOP: {
-                FrameCounter._state = FrameCounter.STOP;
+            case STOP: {
+                state = STOP;
                 break;
             }
         }
-        FrameCounter._requestState = null;
+        requestState = null;
     };
 
     // state: 不能由外部改变, 必须是update自己改变, 以保持其唯一性
     FrameCounter.play = function ()
     {
-        FrameCounter._requestState = FrameCounter.GO;
+        requestState = GO;
         //ToDo: 暂时关闭GIF文件的生成
         /* if (TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL])
         {
@@ -184,7 +183,7 @@ window.TQ = window.TQ || {};
 
     FrameCounter.stop = function ()
     {
-        FrameCounter._requestState = FrameCounter.STOP;
+        requestState = STOP;
         TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.v));
         if (TQ.GifManager.isOpen) {
             TQ.GifManager.end();
@@ -195,7 +194,7 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.autoRewind = function () {
-        FrameCounter._autoRewind = !FrameCounter._autoRewind;
+        autoRewind = !autoRewind;
     };
 
 
@@ -207,20 +206,20 @@ window.TQ = window.TQ || {};
         _isRecording = false;
     };
 
-    FrameCounter.isInverse = function () { return FrameCounter._step < 0;};
-    FrameCounter.isPlaying = function () { return (FrameCounter._state == FrameCounter.GO); };
-    FrameCounter.isRequestedToStop = function () { return (FrameCounter._requestState == FrameCounter.STOP); };
+    FrameCounter.isInverse = function () { return step < 0;};
+    FrameCounter.isPlaying = function () { return (state == GO); };
+    FrameCounter.isRequestedToStop = function () { return (requestState == STOP); };
     FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= FrameCounter.max)); };
-    FrameCounter.isAutoRewind = function () { return FrameCounter._autoRewind; };
+    FrameCounter.isAutoRewind = function () { return autoRewind; };
 
     FrameCounter.maxTime = function () {
-        return FrameCounter.max / FrameCounter._FPS;
+        return FrameCounter.max / _FPS;
     };
 
     FrameCounter.reset = function () {
-        FrameCounter._requestState = null;
+        requestState = null;
         FrameCounter.v = 0;
-        FrameCounter._state = FrameCounter.STOP;
+        state = STOP;
     };
 
     TQ.FrameCounter = FrameCounter;
