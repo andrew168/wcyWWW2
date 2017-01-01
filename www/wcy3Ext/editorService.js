@@ -165,6 +165,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
             preview();
         }
+
+        if (currScene && !currScene.isPlayOnly) {
+            WCY.startAutoSave();
+        }
     }
 
     var hasTouch = false,

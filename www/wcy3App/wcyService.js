@@ -220,7 +220,6 @@ function WCY($http, FileService, WxService, NetService) {
         initToolbar();
         TQ.FloatToolbar.initialize();
         // TQ.FloatToolbar.isVisible();
-        startAutoSave();
         if (_onStarted) {
             _onStarted();
         }
@@ -357,6 +356,7 @@ function WCY($http, FileService, WxService, NetService) {
         start: start,  // start a new one, or load previous one (edited or played)
         create: create,
         save: save,
+        startAutoSave: startAutoSave,
         uploadScreenshot: uploadScreenshot,
         edit: edit,  // open for edit
         getWcy: getWcy,

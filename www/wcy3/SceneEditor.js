@@ -35,6 +35,7 @@ var currScene = null;
             content:TQ.Scene.getEmptySceneJSON()
         };
         fileInfo.isPlayOnly = false;
+        TQ.WCY.isPlayOnly = false;
         init(fileInfo);
     };
 
