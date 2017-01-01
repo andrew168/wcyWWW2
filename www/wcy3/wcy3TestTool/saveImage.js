@@ -22,7 +22,8 @@ TQ.Tool = TQ.Tool || {};
 
     function saveImage(filename) {
         var canvas = stage;
-        var image = canvas.toDataURL("image/png");
+        var backgroundColor = document.getElementById('testCanvas').style.backgroundColor;
+        var image = canvas.toDataURL(backgroundColor, "image/png");
          // 默认生成透明图, 带alpha信息, PNG格式的
         _saveAs(image, filename);
         // _saveWithLocation(image);
