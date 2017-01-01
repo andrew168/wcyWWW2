@@ -108,18 +108,6 @@ function DashCtrl(
         EditorService.insertText("国hello", x, y);
     };
 
-    $scope.play = function() {
-        EditorService.preview();
-    };
-
-    $scope.stop = function() {
-        EditorService.stop();
-    };
-
-    $scope.replay = function() {
-        EditorService.replay();
-    };
-
     $scope.startRecord = function() {
         EditorService.startRecord();
     };
