@@ -438,9 +438,9 @@ var p = Stage.prototype = new createjs.Container();
             // ls["touchcancel"] = {t:this.canvas, f:function(e) { _this._handleTouchCancel(e)} };
 			ls["mousemove"] = {t:t, f:function(e) { _this._handleMouseMove(e)} };
             // ls["touchmove"] = {t:t, f:function(e) { _this._handleTouchMove(e)} };
-			ls["dblclick"] = {t:t, f:function(e) { _this._handleDoubleClick(e)} };
-			ls["mousedown"] = {t:this.canvas, f:function(e) { _this._handleMouseDown(e)} };
-            ls["touchstart"] = {t:this.canvas, f:function(e) { _this._handleTouchStart(e)} };
+			ls['dblclick'] = {t:t, f:function(e) { _this._handleDoubleClick(e)} };
+			ls['mousedown'] = {t:this.canvas, f:function(e) { _this._handleMouseDown(e)} };
+            ls['touchstart'] = {t:this.canvas, f:function(e) { _this._handleTouchStart(e)} };
 
             for (n in ls) {
 				o = ls[n];

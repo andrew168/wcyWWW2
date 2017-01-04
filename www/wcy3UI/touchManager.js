@@ -44,7 +44,7 @@ var TQ = TQ || {};
         // 其余事件： 'swipeup'.
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
-        TQ.SceneEditor.stage.addEventListener("touch", TQ.Trsa3.onTouchStage);
+        TQ.SceneEditor.stage.addEventListener('touch', TQ.Trsa3.onTouchStage);
     }
 
     function stop() {
@@ -67,7 +67,7 @@ var TQ = TQ || {};
         // 其余事件： 'swipeup'.
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
-        TQ.SceneEditor.stage.removeEventListener("touch", TQ.Trsa3.onTouchStage);
+        TQ.SceneEditor.stage.removeEventListener('touch', TQ.Trsa3.onTouchStage);
     }
 
     function isFirstTouch(e) {

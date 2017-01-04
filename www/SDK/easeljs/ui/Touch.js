@@ -3,7 +3,7 @@
 * Visit http://createjs.com/ for documentation, updates and examples.
 *
 * Copyright (c) 2010 gskinner.com, inc.
-* 
+*
 * Permission is hereby granted, free of charge, to any person
 * obtaining a copy of this software and associated documentation
 * files (the "Software"), to deal in the Software without
@@ -12,10 +12,10 @@
 * copies of the Software, and to permit persons to whom the
 * Software is furnished to do so, subject to the following
 * conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be
 * included in all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -87,14 +87,14 @@ var Touch = function() {
 
 		// inject required properties on stage:
 		stage.__touch = {pointers:{}, multitouch:!singleTouch, preventDefault:!allowDefault, count:0};
-		
+
 		// note that in the future we may need to disable the standard mouse event model before adding
 		// these to prevent duplicate calls. It doesn't seem to be an issue with iOS devices though.
 		if ('ontouchstart' in window) { Touch._IOS_enable(stage); }
 		else if (window.navigator['msPointerEnabled']) { Touch._IE_enable(stage); }
 		return true;
 	};
-	
+
 	/**
 	 * Removes all listeners that were set up when calling Touch.enable on a stage.
 	 * @method disable
@@ -106,7 +106,7 @@ var Touch = function() {
 		if ('ontouchstart' in window) { Touch._IOS_disable(stage); }
 		else if (window.navigator['msPointerEnabled']) { Touch._IE_disable(stage); }
 	};
-	
+
 // Private static methods:
 
 	/**
@@ -118,12 +118,12 @@ var Touch = function() {
 	Touch._IOS_enable = function(stage) {
 		var canvas = stage.canvas;
 		var f = stage.__touch.f = function(e) { Touch._IOS_handleEvent(stage,e); };
-		canvas.addEventListener("touchstart", f, false);
-		canvas.addEventListener("touchmove", f, false);
-		canvas.addEventListener("touchend", f, false);
-		canvas.addEventListener("touchcancel", f, false);
+		canvas.addEventListener('touchstart', f, false);
+		canvas.addEventListener('touchmove', f, false);
+		canvas.addEventListener('touchend', f, false);
+		canvas.addEventListener('touchcancel', f, false);
 	};
-	
+
 	/**
 	 * @method _IOS_disable
 	 * @protected
@@ -134,10 +134,10 @@ var Touch = function() {
 		var canvas = stage.canvas;
 		if (!canvas) { return; }
 		var f = stage.__touch.f;
-		canvas.removeEventListener("touchstart", f, false);
-		canvas.removeEventListener("touchmove", f, false);
-		canvas.removeEventListener("touchend", f, false);
-		canvas.removeEventListener("touchcancel", f, false);
+		canvas.removeEventListener('touchstart', f, false);
+		canvas.removeEventListener('touchmove', f, false);
+		canvas.removeEventListener('touchend', f, false);
+		canvas.removeEventListener('touchcancel', f, false);
 	};
 
 	/**
@@ -154,17 +154,17 @@ var Touch = function() {
 			var touch = touches[i];
 			var id = touch.identifier;
 			if (touch.target != stage.canvas) { continue; }
-			
-			if (type == "touchstart") {
+
+			if (type == 'touchstart') {
 				this._handleStart(stage, id, e, touch.pageX, touch.pageY);
-			} else if (type == "touchmove") {
+			} else if (type == 'touchmove') {
 				this._handleMove(stage, id, e, touch.pageX, touch.pageY);
-			} else if (type == "touchend" || type == "touchcancel") {
+			} else if (type == 'touchend' || type == 'touchcancel') {
 				this._handleEnd(stage, id, e);
 			}
 		}
 	};
-	
+
 	/**
 	 * @method _IE_enable
 	 * @protected
@@ -181,7 +181,7 @@ var Touch = function() {
 		if (stage.__touch.preventDefault) { canvas.style.msTouchAction = "none"; }
 		stage.__touch.activeIDs = {};
 	};
-	
+
 	/**
 	 * @method _IE_enable
 	 * @protected
@@ -197,7 +197,7 @@ var Touch = function() {
 			stage.canvas.removeEventListener("MSPointerDown", f, false);
 		}
 	};
-	
+
 	/**
 	 * @method _IE_handleEvent
 	 * @protected
@@ -209,7 +209,7 @@ var Touch = function() {
 		var type = e.type;
 		var id = e.pointerId;
 		var ids = stage.__touch.activeIDs;
-		
+
 		if (type == "MSPointerDown") {
 			if (e.srcElement != stage.canvas) { return; }
 			ids[id] = true;
@@ -223,8 +223,8 @@ var Touch = function() {
 			}
 		}
 	};
-	
-	
+
+
 	/**
 	 * @method _handleStart
 	 * @protected
@@ -238,7 +238,7 @@ var Touch = function() {
 		props.count++;
 		stage._handlePointerDown(id, e, x, y);
 	};
-	
+
 	/**
 	 * @method _handleMove
 	 * @protected
@@ -247,7 +247,7 @@ var Touch = function() {
 		if (!stage.__touch.pointers[id]) { return; }
 		stage._handlePointerMove(id, e, x, y);
 	};
-	
+
 	/**
 	 * @method _handleEnd
 	 * @protected

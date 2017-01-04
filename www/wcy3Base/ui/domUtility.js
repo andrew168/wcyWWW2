@@ -35,9 +35,9 @@ var DomUtility = (function () {
         var ele = createElement(parent, BUTTON_TAG, id, eleClass);
         ele.innerText = text;
         if (onTouchStart) {
-            ele.addEventListener("touchstart", onTouchStart, true); // act as soon as captured
+            ele.addEventListener('touchstart', onTouchStart, true); // act as soon as captured
         } else if (onClick) {
-            ele.addEventListener("click", onClick, true);
+            ele.addEventListener('click', onClick, true);
         }
         ele.style.display = 'inline';
         return ele;
