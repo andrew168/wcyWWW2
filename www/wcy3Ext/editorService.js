@@ -1045,11 +1045,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         }
     }
 
-    var screenshotCounter = 0;
     function saveScreenShot () {
-        var screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + screenshotCounter + ".png";
+        var timestamp = new Date(),
+            prefix = timestamp.getTime() +
+                '-' + (timestamp.getMonth() + 1) + timestamp.getDate() +
+                ', ' + timestamp.getHours() +
+                '-' + timestamp.getMinutes() +
+                '-' + timestamp.getSeconds();
+
+        var screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + prefix + ".png";
         TQ.Tool.saveImage(screenshotName);
-        screenshotCounter++;
     }
 
     function shareFbWeb() {
