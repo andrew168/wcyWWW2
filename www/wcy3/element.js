@@ -634,14 +634,14 @@ window.TQ = window.TQ || {};
     p.autoFit = function(img) {
         // 保持图像长宽比例不失真
         // 自动充满整个画面 或者 保持物体的原始大小
-        var scaleX = 1 / img.naturalWidth,
-            scaleY = 1 / img.naturalHeight;
+        var sx = 1 / img.naturalWidth,
+            sy = 1 / img.naturalHeight;
         var desc = this.jsonObj;
         if (this.autoFitFlag != Element.FitFlag.NO) {
             desc.x = 0.5;
             desc.y = 0.5;
-            desc.sx = scaleX;
-            desc.sy = scaleY;
+            desc.sx = sx;
+            desc.sy = sy;
             desc.rotation = 0;
         }
 
@@ -760,8 +760,8 @@ window.TQ = window.TQ || {};
         var obj_dc = this.pdc2dc(obj_pdc);
         displayObj.x = obj_dc.x;
         displayObj.y = obj_dc.y;
-        displayObj.scaleX = obj_dc.scaleX;
-        displayObj.scaleY = obj_dc.scaleY;
+        displayObj.scaleX = obj_dc.sx;
+        displayObj.scaleY = obj_dc.sy;
         displayObj.regX = obj_dc.regX;
         displayObj.regY = obj_dc.regY;
         displayObj.rotation = obj_dc.rotation;
@@ -778,7 +778,7 @@ window.TQ = window.TQ || {};
         obj_dc.x = TQ.Config.zoomX * obj_pdc.x;
         obj_dc.y = TQ.Utility.toDeviceCoord(TQ.Config.zoomY * obj_pdc.y);
         if (this.isMarker() || this.isSound()) { // marker 永远是一样的大小, 圆的, 没有旋转, 定位在圆心.
-            obj_dc.scaleX = obj_dc.scaleY = 1;
+            obj_dc.sx = obj_dc.sy = 1;
             obj_dc.regX = obj_dc.regY = 0;
             obj_dc.rotation = 0;
             return obj_dc;
@@ -792,8 +792,8 @@ window.TQ = window.TQ || {};
         }
 
         obj_dc.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
-        obj_dc.scaleX = TQ.Config.zoomX * obj_pdc.sx;
-        obj_dc.scaleY = TQ.Config.zoomY * obj_pdc.sy;
+        obj_dc.sx = TQ.Config.zoomX * obj_pdc.sx;
+        obj_dc.sy = TQ.Config.zoomY * obj_pdc.sy;
         return obj_dc;
     };
 
