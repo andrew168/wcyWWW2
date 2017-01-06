@@ -13,7 +13,6 @@ var TQ = TQ || {};
     Trsa3.onTouchEnd = onTouchEnd;
     Trsa3.onRelease = onRelease;
     Trsa3.onDrag = onDrag;
-    Trsa3.onPinchAndRotate = onPinchAndRotate;
     Trsa3.isOperating = isOperating;
 
     var isDithering = false,
@@ -211,13 +210,20 @@ var TQ = TQ || {};
         if (!ele) {
             console.log("pinch..." + e.gesture.touches.length);
         } else {
-            dScale = e.gesture.scale;
+            if (e.type.indexOf('rotate') >=0) {
+                console.log("rotate");
+                dAngle = e.gesture.rotation;
+            } else if (e.type.indexOf('pinch') >= 0) {
+                console.log("pinch");
+                dScale = e.gesture.scale;
+            } else {
+                console.log("not pinch, rotate: " + e.type);
+            }
             var newScale = scale * dScale;
             if (!isNaN(newScale)) {
                 if (Math.abs(newScale) < 0.001) {
                     console.warn("Too small");
                 } else {
-                    dAngle = e.gesture.rotation;
                     TQ.CommandMgr.directScaleAndRotate(ele, {sx: newScale, sy: newScale}, ang - dAngle);
                     isMultiTouching = true;
                 }
