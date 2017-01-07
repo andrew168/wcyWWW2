@@ -19,7 +19,7 @@ window.TQ = window.TQ || {};
 
     var _isRecording = false,
         NORMAL_SPEED = 1,
-        LOW_SPEED = 0.1,
+        LOW_SPEED = 0.5,
         GO = 1, // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
         STOP = 0,
         baseStep = NORMAL_SPEED,
