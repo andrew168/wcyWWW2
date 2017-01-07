@@ -19,9 +19,15 @@ var TQ = TQ || {};
         ele = null,
         startEle = null,
         startLevel = null,
-        startOffset = null;
-    var ang = 0, scale = 1;
-    var dAngle = 0, dScale = 1;
+        startOffset = null,
+        startTrsa = {
+            ang: 0,
+            scale: {sx: 1, sy : 1}
+        },
+        deltaTrsa = {
+            ang: 0,
+            scaleXY: 1
+        };
     var pos = {x: 0, y: 0},
         deltaX0 = 0,
         deltaY0 = 0,
@@ -91,14 +97,15 @@ var TQ = TQ || {};
             return;
         }
 
-        ang = ele.getRotation();
-        scale = ele.getScale().sx;
+        startTrsa.ang = ele.getRotation();
+        startTrsa.scale = ele.getScale();
         pos = ele.getPosition();
         deltaX0 = e.gesture.deltaX;
         deltaY0 = e.gesture.deltaY;
 
-        if (isNaN(scale)) {
-            scale = 1;
+        if (isNaN(startTrsa.scale.sx)) {
+            startTrsa.scale.sx = 1;
+            startTrsa.scale.sy = 1;
         }
     }
 
@@ -212,19 +219,20 @@ var TQ = TQ || {};
         } else {
             if (e.type.indexOf('rotate') >=0) {
                 console.log("rotate");
-                dAngle = e.gesture.rotation;
+                deltaTrsa.ang = e.gesture.rotation;
             } else if (e.type.indexOf('pinch') >= 0) {
                 console.log("pinch");
-                dScale = e.gesture.scale;
+                deltaTrsa.scaleXY = e.gesture.scale;
             } else {
                 console.log("not pinch, rotate: " + e.type);
             }
-            var newScale = scale * dScale;
-            if (!isNaN(newScale)) {
-                if (Math.abs(newScale) < 0.001) {
+            var newScaleX = startTrsa.scale.sx * deltaTrsa.scaleXY,
+                newScaleY = startTrsa.scale.sy * deltaTrsa.scaleXY;
+            if (!isNaN(newScaleX)) {
+                if (Math.abs(newScaleX) < 0.001) {
                     console.warn("Too small");
                 } else {
-                    TQ.CommandMgr.directScaleAndRotate(ele, {sx: newScale, sy: newScale}, ang - dAngle);
+                    TQ.CommandMgr.directScaleAndRotate(ele, {sx: newScaleX, sy: newScaleY}, startTrsa.ang - deltaTrsa.ang);
                     isMultiTouching = true;
                 }
             }

@@ -1531,8 +1531,7 @@ window.TQ = window.TQ || {};
     };
 
     p.getRotation = function () {
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        return obj_pdc.rotation;
+        return this.jsonObj.rotation;
     };
 
     p.getPosition = function () { // in PDC
