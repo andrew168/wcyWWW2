@@ -8,6 +8,20 @@ var TQ = TQ || {};
         started = false,
         canvas = null;
 
+    var trsaOps = [
+        ['touch', TQ.Trsa3.onTouchStart],
+        ['touchend', TQ.Trsa3.onTouchEnd],
+        ['release', TQ.Trsa3.onRelease],
+        ['rotate', TQ.Trsa3.onPinchAndRotate],
+        ['pinch', TQ.Trsa3.onPinchAndRotate],
+        // 'scale': not work
+        //
+        // ['pinchin', onPinch],
+        // ['pinchout', onPinch],
+        ['drag', TQ.Trsa3.onDrag]
+        // 其余事件： 'swipeup'.
+    ];
+
     function addHandler(gesture, handler) {
         ionic.EventController.onGesture(gesture, handler, canvas);
     }
@@ -31,17 +45,9 @@ var TQ = TQ || {};
             return;
         }
         started = true;
-        addHandler('touch', TQ.Trsa3.onTouchStart);
-        addHandler('touchend', TQ.Trsa3.onTouchEnd);
-        addHandler('release', TQ.Trsa3.onRelease);
-        addHandler('rotate', TQ.Trsa3.onPinchAndRotate);
-        addHandler('pinch', TQ.Trsa3.onPinchAndRotate);
-        // 'scale': not work
-        //
-        // addHandler('pinchin', onPinch);
-        // addHandler('pinchout', onPinch);
-        addHandler('drag', TQ.Trsa3.onDrag);
-        // 其余事件： 'swipeup'.
+        trsaOps.forEach(function (item) {
+            addHandler(item[0], item[1]);
+        });
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.addEventListener('touch', TQ.Trsa3.onTouchStage);
@@ -54,17 +60,9 @@ var TQ = TQ || {};
         }
 
         started = false;
-        detachHandler('touch', TQ.Trsa3.onTouchStart);
-        detachHandler('touchend', TQ.Trsa3.onTouchEnd);
-        detachHandler('release', TQ.Trsa3.onRelease);
-        detachHandler('rotate', TQ.Trsa3.onPinchAndRotate);
-        detachHandler('pinch', TQ.Trsa3.onPinchAndRotate);
-        // 'scale': not work
-        //
-        // detachHandler('pinchin', onPinch);
-        // detachHandler('pinchout', onPinch);
-        detachHandler('drag', TQ.Trsa3.onDrag);
-        // 其余事件： 'swipeup'.
+        trsaOps.forEach(function (item) {
+            detachHandler(item[0], item[1]);
+        });
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.removeEventListener('touch', TQ.Trsa3.onTouchStage);
