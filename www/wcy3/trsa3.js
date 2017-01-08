@@ -7,6 +7,7 @@ var TQ = TQ || {};
     function Trsa3() {
     }
 
+    Trsa3.mCopy = mCopy;
     Trsa3.onTouchStart = onTouchStart;
     Trsa3.onPinchAndRotate = onPinchAndRotate;
     Trsa3.onTouchStage = onTouchStage;
@@ -35,6 +36,17 @@ var TQ = TQ || {};
         isMultiTouching = false;
 
     var touchedEle;
+
+    function mCopy(evt) {
+        if (TQ.SelectSet.isEmpty()) {
+            return TQ.MessageBox.prompt("请先选择物体！");
+        }
+        evt = touch2StageXY(evt);
+        var results = currScene.currentLevel.cloneElement(TQ.SelectSet.members);
+        results.forEach(function(ele) {
+            ele.moveTo(TQ.Utility.deviceToWorld(evt.stageX, evt.stageY));
+        });
+    }
 
     function isOperating() {
         return isOperatingFlag;

@@ -6,21 +6,10 @@ var TQ = TQ || {};
 
     var enableTouchScreen = true,
         started = false,
-        canvas = null;
-
-    var trsaOps = [
-        ['touch', TQ.Trsa3.onTouchStart],
-        ['touchend', TQ.Trsa3.onTouchEnd],
-        ['release', TQ.Trsa3.onRelease],
-        ['rotate', TQ.Trsa3.onPinchAndRotate],
-        ['pinch', TQ.Trsa3.onPinchAndRotate],
-        // 'scale': not work
-        //
-        // ['pinchin', onPinch],
-        // ['pinchout', onPinch],
-        ['drag', TQ.Trsa3.onDrag]
-        // 其余事件： 'swipeup'.
-    ];
+        canvas = null,
+        currentOps = null,
+        trsaOps = null,
+        mCopyOps = null;
 
     function addHandler(gesture, handler) {
         ionic.EventController.onGesture(gesture, handler, canvas);
@@ -31,6 +20,24 @@ var TQ = TQ || {};
     }
 
     function initialize() {
+        trsaOps = [
+            ['touch', TQ.Trsa3.onTouchStart],
+            ['touchend', TQ.Trsa3.onTouchEnd],
+            ['release', TQ.Trsa3.onRelease],
+            ['rotate', TQ.Trsa3.onPinchAndRotate],
+            ['pinch', TQ.Trsa3.onPinchAndRotate],
+            // 'scale': not work
+            //
+            // ['pinchin', onPinch],
+            // ['pinchout', onPinch],
+            ['drag', TQ.Trsa3.onDrag]
+            // 其余事件： 'swipeup'.
+        ];
+
+        mCopyOps = [
+            ['touch', TQ.Trsa3.mCopy]
+        ];
+
         canvas = document.getElementById("testCanvas");
         if (!enableTouchScreen) {
             return;
@@ -45,12 +52,32 @@ var TQ = TQ || {};
             return;
         }
         started = true;
-        trsaOps.forEach(function (item) {
-            addHandler(item[0], item[1]);
-        });
-
+        currentOps = trsaOps;
+        attachOps(currentOps);
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.addEventListener('touch', TQ.Trsa3.onTouchStage);
+    }
+
+    function updateOps(state) {
+        detachOps(currentOps);
+        if (state.isMCopying) {
+            currentOps = mCopyOps;
+        } else {
+            currentOps = trsaOps;
+        }
+        attachOps(currentOps);
+    }
+
+    function attachOps(ops) {
+        ops.forEach(function (item) {
+            addHandler(item[0], item[1]);
+        });
+    }
+
+    function detachOps(ops) {
+        ops.forEach(function (item) {
+            detachHandler(item[0], item[1]);
+        });
     }
 
     function stop() {
@@ -60,9 +87,9 @@ var TQ = TQ || {};
         }
 
         started = false;
-        trsaOps.forEach(function (item) {
-            detachHandler(item[0], item[1]);
-        });
+        if (currentOps) {
+            detachOps(currentOps);
+        }
 
         TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.removeEventListener('touch', TQ.Trsa3.onTouchStage);
@@ -95,6 +122,7 @@ var TQ = TQ || {};
     TouchManager.initialize = initialize;
     TouchManager.start = start;
     TouchManager.stop = stop;
+    TouchManager.updateOps = updateOps;
     TouchManager.isOperating = TQ.Trsa3.isOperating;
     TQ.TouchManager = TouchManager;
 })();

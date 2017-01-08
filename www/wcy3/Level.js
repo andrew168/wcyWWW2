@@ -156,19 +156,23 @@ window.TQ = window.TQ || {};
     };
 
     p.cloneElement = function(elements) {
+        var results = [];
         for (var i = 0; i < elements.length; i++) {
             // var marker = elements[i].detachDecoration();
             elements[i].persist(); // 记录zIndex, 就在此层次clone, 把原来的物体抬高1个层次.
             var desc = JSON.parse(JSON.stringify(elements[i].jsonObj));
             Level.removeMarker(desc);
+            var newEle;
             if (elements[i].parent == null) {
-                this.addElementDirect(TQ.Element.build(this, desc));
+                newEle = this.addElementDirect(TQ.Element.build(this, desc));
             } else {
-                elements[i].parent.addChild(desc);
+                newEle = elements[i].parent.addChild(desc);
             }
+            results.push(newEle);
         }
         TQ.DirtyFlag.setLevel(this);
         this.dirtyZ = true;
+        return results;
     };
 
     Level.removeMarker = function(desc) {
@@ -317,7 +321,7 @@ window.TQ = window.TQ || {};
         }
         TQ.DirtyFlag.setLevel(this);
     };
-    
+
     p.show = function () {
         TQ.Log.info("show level, name = :" + this.name);
         if (this.dataReady) {

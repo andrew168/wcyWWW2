@@ -63,6 +63,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         pinIt:pinIt,
 
         // element insert (text, sound, image...)
+        mCopyToggle: mCopyToggle,
         insertMat: insertMat,
         insertBkImageFromLocal: insertBkMatFromLocal, // upload
         insertPeopleFromLocal: insertPeopleFromLocal,
@@ -424,6 +425,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         addItemByUrl(data.url, data.matType, data.option);
     }
 
+    function mCopyToggle() {
+        state.isMCopying = !state.isMCopying;
+        TQ.TouchManager.updateOps(state);
+
+    }
     function insertMat(data) {
         return uploadMat(data).
             then(addItemByData, function (err) {
