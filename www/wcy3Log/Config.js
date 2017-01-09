@@ -99,7 +99,7 @@ window.TQ = window.TQ || {};
 
 
     Config.useHighlightBox = false;  // 不显示red的亮显box
-    Config.koutuOn = false;  // 不抠图
+    Config.koutuOn = true;  // 只缩放，（暂时不抠图）
 
 
     //
