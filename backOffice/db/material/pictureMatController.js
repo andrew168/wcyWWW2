@@ -5,11 +5,10 @@
 // 1) 获取我的所有素材和公共分享的素材
 // 2) 上传素材，(先获取ID， 上传到Cloundary，在通知：以及上传成功
 //
-
-
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
-    PictureMat = mongoose.model('PictureMat');
+    pictureMatSchema = require('./pictureMatSchema.js'),
+    PictureMat = mongoose.model('PictureMat', pictureMatSchema.schema);
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
 function get(userId, callback) {
@@ -26,10 +25,11 @@ function get(userId, callback) {
                 i;
 
             for (i= 0; i < num; i++) {
-                if (!data[i].path) {
+                var doc1 = data[i];
+                if (!doc1.path) {
                     continue;
                 }
-                result.push(data[i].path);
+                result.push(doc1.path);
             }
             callback(result);
         }
@@ -48,13 +48,14 @@ function getList(userId, typeId, callback) {
     function onSeachResult(err, data) {
         var result = [];
         if (!data) {
-            console.error(404, {msg: 'not found!' + id});
+            console.error(404, {msg: 'not found! userId = ' + userId + ", matType =" + typeId});
         } else {
             data.forEach(copyItem);
         }
 
         callback(result);
-        function copyItem(item) {
+        function copyItem(model) {
+            var item = model._doc;
             if (item.path) {
                 result.push({name:item.name, path: item.path});
             }
@@ -75,7 +76,7 @@ function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
         if (!data || (data.length < 1)) {
             doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError);
         } else {
-            onSuccess(data[0]._id, data[0].path);
+            onSuccess(data[0]._doc._id, data[0]._doc.path);
         }
     }
 }
@@ -116,7 +117,7 @@ function update(id, path, callback) {
                 data.save(function (err, data) {
                     if (!err) {
                         if (callback){
-                            callback(data._id);
+                            callback(data._doc._id);
                         }
                     } else {
                         console.error("error in update picture mat!");
@@ -137,7 +138,7 @@ function ban(id, callback) {
                 data.save(function (err, data) {
                     if (!err) {
                         if (callback) {
-                            callback(data._id);
+                            callback(data._doc._id);
                         }
                     } else {
                         console.error("error in ban picture mat!");

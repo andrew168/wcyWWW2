@@ -25,7 +25,7 @@ function get(userId, callback) {
                 i;
 
             for (i= 0; i < num; i++) {
-                result.push(data[i].path);
+                result.push(data[i]._doc.path);
             }
             callback(result);
         }
@@ -64,7 +64,8 @@ function getList(userId, typeId, callback) {
         }
 
         callback(result);
-        function copyItem(item) {
+        function copyItem(model1) {
+            var item = model1._doc;
             if (item.path) {
                 result.push({name:item.name, path: item.path});
             }

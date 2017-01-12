@@ -20,7 +20,7 @@ function get(callback) {
                 insert(defaultRecord, callback);
             } else {
                 console.log(data);
-                callback(data);
+                callback(data._doc);
             }
         });
 }
@@ -34,12 +34,13 @@ function insert(newData) {
 
 function update(newData) {
     var query = WxTickets.findOne({_id:newData._id});
-    query.exec(function (err, doc) {
+    query.exec(function (err, model) {
+            console.error("need update to model.doc");
             if (err) { // not found, it's first time,
                 throw "Unknown error in ticket db";
             } else {
-                console.log(doc);
-                var query2 = doc.update({$set: {jsapiTicket: newData.jsapiTicket,
+                console.log(model);
+                var query2 = model.update({$set: {jsapiTicket: newData.jsapiTicket,
                     jsapiTicketExpireTime: newData.jsapiTicketExpireTime,
                     accessToken:  newData.accessToken,
                     accessTokenExpireTime: newData.accessTokenExpireTime}});

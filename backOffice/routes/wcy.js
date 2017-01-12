@@ -20,7 +20,7 @@ router.param('shareCode', function (req, res, next, id) {
 });
 
 router.get('/:shareCode', function(req, res, next) {
-    var shareCode = req.param('shareCode');
+    var shareCode = req.params.shareCode || 0;
     console.log("shareCode =", shareCode);
     var wcyId = utils.decomposeShareCode(shareCode).wcyId;
     sendBackWcy(req, res, wcyId);
@@ -41,7 +41,7 @@ router.post('/', function(req, res, next) {
             console.log(msg);
             res.send(msg);
         } else {
-            var wcyId = req.param('wcyId');
+            var wcyId = req.query.wcyId || 0;
             if (isNewWcy(wcyId)) { // 新作品，
                 // 入库， 并获取新wcyID，
                 function onSavedToDB(_wcyId, ssPath) {

@@ -25,3 +25,4 @@ function setup(autoIncrement) {
 }
 
 exports.setup = setup;
+exports.schema = pictureMatSchema;

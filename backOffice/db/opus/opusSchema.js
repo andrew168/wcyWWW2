@@ -21,3 +21,4 @@ function setup(autoIncrement) {
 }
 
 exports.setup = setup;
+exports.schems = opusSchema;

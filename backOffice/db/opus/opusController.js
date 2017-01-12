@@ -5,7 +5,8 @@
 var LATEST_OPUS_NUM = 100;
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
-    Opus = mongoose.model('Opus');
+    opusSchema = require('./opusSchema.js'),
+    Opus = mongoose.model('Opus', opusSchema.schema);
 
 function get(id) {
     Opus.findOne({_id: id})
@@ -32,10 +33,10 @@ function add(userID, ssPath, templateID, onSuccess, onError) {
     }
 }
 
-function onSaveOpus(err, doc, onSuccess, onError) {
+function onSaveOpus(err, model, onSuccess, onError) {
     if (!err) {
         if (onSuccess) {
-            onSuccess(doc._id, doc.ssPath);
+            onSuccess(model._doc._id, model._doc.ssPath);
         }
     } else {
         console.error("error in save/update opus!");
@@ -70,10 +71,11 @@ function getList(userId, callback) {
             num = Math.min(LATEST_OPUS_NUM, data.length);
 
         for (i = 0; i < num; i++ ) {
-            if (!data[i].ssPath) {
-                continue;
+            var doc1 = data[i]._doc;
+            if (!doc1.ssPath) {
+                //  continue;
             }
-            result.push(data[i]);
+            result.push(doc1);
         }
 
         return result;

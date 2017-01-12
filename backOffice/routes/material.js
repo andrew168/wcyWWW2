@@ -27,10 +27,10 @@ router.post('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
-    var public_id = req.param('public_id') || null,
-        ban = req.param('ban') || false,
+    var public_id = req.body.public_id || null,
+        ban = req.body.ban || false,
         matType = getMatType(req),
-        path = req.param('path') || null;
+        path = req.body.path || null;
 
     status.logUser(req);
     if (ban) {
@@ -41,7 +41,7 @@ router.post('/', function(req, res, next) {
     }
 
     if (!public_id) {
-        var originalFilename = req.param('filename') || "no_filename";
+        var originalFilename = req.body.filename || "no_filename";
         createMatId(req, res, matType, originalFilename);
     } else {
         updateMatId(req, res, matType, utils.matName2Id(public_id), path);
@@ -63,12 +63,13 @@ router.param('matType', function (req, res, next, id) {
 });
 
 router.get('/list/:matType', function(req, res, next) {
-    var matType = parseInt(req.param('matType'));
+    var matType = req.params.matType;
+    matType = (!matType) ? 10 : parseInt(matType);
     console.log("type = " + matType);
     status.logUser(req);
     getMatController(matType).getList(status.user.ID, matType, onGotList, onFail);
     function onGotList(list) {
-        console.log(list);
+        console.log(JSON.stringify(list));
         res.json(list);
     }
 
@@ -149,7 +150,7 @@ function isNewMaterial(mat_id) {
 }
 
 function getMatType(req) {
-    return req.param('type') || TYPE_BKG_IMAGE;
+    return req.body.type || TYPE_BKG_IMAGE;
 }
 
 function getMatController(type) {
