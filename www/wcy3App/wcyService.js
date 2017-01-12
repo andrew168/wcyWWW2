@@ -267,11 +267,13 @@ function WCY($http, FileService, WxService, NetService) {
         if (!!data) {
             if (!!data.url) {
                 currScene.setSsPath(data.url);
+                TQ.MessageBox.prompt('截图上传成功！');
+                save();
+            } else {
+                TQ.MessageBox.hide();
             }
 
-            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS} );
             console.log(data);
-            TQ.MessageBox.hide();
         }
     }
 

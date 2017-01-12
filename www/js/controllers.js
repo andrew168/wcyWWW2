@@ -233,7 +233,7 @@ function DashCtrl(
         TQ.SceneEditor.emptyScene();
     };
 
-    $scope.uploadScreenShot = function () {
+    $scope.uploadScreenshot = function () {
         WCY.uploadScreenshot();
     };
 

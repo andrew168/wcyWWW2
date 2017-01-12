@@ -61,8 +61,13 @@ function DataService(list) {
         var i;
         for (i = 0; i < items.length; i++) {
             if (!items[i].isProxy) {
-                items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(items[i].path));
-                items[i].path = TQ.RM.toFullPathFs(items[i].path);
+                if (!items[i].path) {
+                    items[i].thumbPath = null;
+                    items[i].path = null;
+                } else {
+                    items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(items[i].path));
+                    items[i].path = TQ.RM.toFullPathFs(items[i].path);
+                }
             }
         }
     }
