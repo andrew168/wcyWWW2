@@ -213,8 +213,6 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _open(fileinfo) {
-        $("#Container").css("width", TQ.Config.validPageWidth.toString() + "px");
-        // setStageSize(600, 480);
         //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
         TQ.SceneEditor.openWcy(fileinfo);
         initToolbar();

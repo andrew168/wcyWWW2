@@ -51,7 +51,6 @@ window.TQ = window.TQ || {};
     Config.orientation = Config.ORIENTATION_PORTRAIT;
     Config.zoomX = 1; // 缩放系数
     Config.zoomY = 1;
-    Config.validPageWidth = 960;
     Config.MouseSensitivity = 10;  // 10个像素Z向移动一个层次。
     Config.RotateSensitivity = 2;  // 2个像素Z向移动一个层次。
     Config.pivotX = 0.5;  // 图像缺省: Pivot在(0.5, 0.5)

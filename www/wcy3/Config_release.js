@@ -19,7 +19,6 @@ window.TQ = window.TQ || {};
     Config.workingRegionY0 = 63;
     Config.workingRegionWidth = 662;
     Config.workingRegionHeight = 485;
-    Config.validPageWidth = 960;
 	Config.MouseSensitivity = 10;  // 10个像素Z向移动一个层次。
     Config.RotateSensitivity = 2;  // 2个像素Z向移动一个层次。
     Config.pivotX = 0.5;  // 图像缺省: Pivot在(0.5, 0.5)
