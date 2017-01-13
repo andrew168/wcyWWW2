@@ -14,8 +14,14 @@ TQ = TQ || {};
         state = {
             multiCmdStarted: false,
             cmd: null
+        },
+
+        btnEffect = {
+            group: "",
+            joint: ""
         };
 
+    SelectSet.btnEffect = btnEffect;
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
     SelectSet.SELECTION_EMPTY_EVENT = "selection empty";
     SelectSet.members = [];
@@ -201,13 +207,26 @@ TQ = TQ || {};
     }
 
     function multiCmdGroupIt() {
-        return multiCmd(groupIt);
+        return multiCmd(groupIt, {
+            cmdBefore: function () {
+                btnEffect.group = "effect-working";
+            },
+            cmdAfter: function () {
+                btnEffect.group = null;
+            }
+        });
     }
 
     function multiCmdJointIt() {
-        return multiCmd(jointIt, {cmdBefore: function() {
-            TQ.InputCtrl.inSubobjectMode = true;
-        }});
+        return multiCmd(jointIt, {
+            cmdBefore: function () {
+                TQ.InputCtrl.inSubobjectMode = true;
+                btnEffect.joint = "effect-working";
+            },
+            cmdAfter: function () {
+                btnEffect.joint = null;
+            }
+        });
     }
 
     function jointIt() {
