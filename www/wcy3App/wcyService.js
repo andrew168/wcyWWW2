@@ -55,7 +55,7 @@ function WCY($http, FileService, WxService, NetService) {
         _ssSign = null;
         _shareCode = null;
         TQ.SceneEditor.createScene(option);
-        startAutoSave();
+        doStarted();
     }
 
     function save() {
@@ -215,6 +215,10 @@ function WCY($http, FileService, WxService, NetService) {
     function _open(fileinfo) {
         //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
         TQ.SceneEditor.openWcy(fileinfo);
+        doStarted();
+    }
+
+    function doStarted() {
         initToolbar();
         TQ.FloatToolbar.initialize();
         // TQ.FloatToolbar.isVisible();

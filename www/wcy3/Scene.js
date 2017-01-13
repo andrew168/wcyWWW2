@@ -515,7 +515,7 @@ TQ = TQ || {};
 
         // copy non-object properties
         TQUtility.shadowCopyWithoutObject(this, objJson);
-
+        this.state = TQBase.LevelState.NOT_INIT;
         if (!objJson.version) {
             if (this.filename == TQ.Config.UNNAMED_SCENE) {
                 this.version = Scene.VER2;  // 创建一个新版作品
@@ -727,12 +727,12 @@ TQ = TQ || {};
                     "name": "0",
                     "itemCounter": 8,
                     "dataReady": true,
-                    "state": 6,
+                    "state": TQBase.LevelState.NOT_INIT,
                     "isWaitingForShow": false,
                     "isDirty": true,
                     "dirty": true
                 }
-            ], "overlay": null, "currentLevelId": 0, "currentLevel": null, "state": 4, "isUpdating": false
+            ], "overlay": null, "currentLevelId": 0, "currentLevel": null, "state": TQBase.LevelState.NOT_INIT, "isUpdating": false
         };
 
         return JSON.stringify(empty);

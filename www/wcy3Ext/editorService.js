@@ -147,28 +147,27 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     }
 
     function onSceneReady() {
-        TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
-        if (_sceneReady) {
-            return;
-        }
-        _sceneReady = true;
-        document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
-        document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
-        updateMode();
-        updateColorPanel();
-        WxService.init();
-        if (TQ.Config.statServiceEnabled) {
-            // 此服务无法lazyLoading，因为是ng模块， 暂时停止使用
-            StatService.startToShow();
-        }
-        TQ.LazyLoading.start();
+        if (!_sceneReady) {
+            TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
+            _sceneReady = true;
+            document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
+            document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
+            updateMode();
+            updateColorPanel();
+            WxService.init();
+            if (TQ.Config.statServiceEnabled) {
+                // 此服务无法lazyLoading，因为是ng模块， 暂时停止使用
+                StatService.startToShow();
+            }
+            TQ.LazyLoading.start();
 
-        // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
-        // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
+            // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
+            // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
 
-        if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
-            // TQ.MessageBox.showOk("请使用竖屏以获得好效果", preview);
-            preview();
+            if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
+                // TQ.MessageBox.showOk("请使用竖屏以获得好效果", preview);
+                preview();
+            }
         }
 
         if (currScene && !currScene.isPlayOnly) {
