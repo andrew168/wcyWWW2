@@ -59,8 +59,10 @@ window.TQ = window.TQ || {};
         if (typeof str != "string") {
             str = JSON.stringify(str);
         }
-        if (TQ.Config.WX_DEBUG_ENABLED) {
+        if (TQ.Config.hasWx && TQ.Config.WX_DEBUG_ENABLED) {
             alert("wx调试__" + str);
+        } else {
+            Log.error(str);
         }
     };
 
