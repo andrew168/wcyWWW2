@@ -54,7 +54,7 @@ window.TQ = window.TQ || {};
         Log.debugInfo = Log.info = Log.out = function() {};
     }
 
-    Log.alertError = Log.alertInfo = function (str) {
+    Log.alertError = function (str) {
         // 主要是 debug 微信的程序使用
         if (typeof str != "string") {
             str = JSON.stringify(str);
@@ -63,6 +63,18 @@ window.TQ = window.TQ || {};
             alert("wx调试__" + str);
         } else {
             Log.error(str);
+        }
+    };
+
+    Log.alertInfo = function (str) {
+        // 主要是 debug 微信的程序使用
+        if (typeof str != "string") {
+            str = JSON.stringify(str);
+        }
+        if (TQ.Config.hasWx && TQ.Config.WX_DEBUG_ENABLED) {
+            alert("wx调试__" + str);
+        } else {
+            Log.info(str);
         }
     };
 
