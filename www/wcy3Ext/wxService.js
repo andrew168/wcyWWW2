@@ -7,6 +7,7 @@ function WxService($http, $cookies, $q) {
     var user = userProfile.user;
     var _isReady = false;
     var urlConcat = TQ.Base.Utility.urlConcat;
+    var _shareCode = '100_00000020_123_1234567890';
 
     //在本应用中用到的API，（白名单）
     // 1) 白名单之外的API， 将无法使用
@@ -74,9 +75,9 @@ function WxService($http, $cookies, $q) {
         TQ.Log.alertInfo("Wx Ready! " + JSON.stringify(msg));
         // 对于注册型的API，在此调用
         // checkAPI();
-        shareMessage(); // 其实，只是预制内容而已， 并非直接发送，
-                        // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
         _isReady = true;
+        shareMessage(_shareCode); // 其实，只是预制内容而已， 并非直接发送，
+                        // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
     });
 
     wx.error(function (error) {
@@ -135,16 +136,12 @@ function WxService($http, $cookies, $q) {
 
     // http://show.udoido.cn/index.html?opus=100_00000025_123_1234567890
     function shareMessage(shareCode) {
-        if (!TQ.Config.hasWx) {
+        if (!TQ.Config.hasWx || !_isReady) {
             return;
         }
 
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
-
-        if (!shareCode) {
-            shareCode = '100_00000020_123_1234567890';
-        }
 
         var param = {
             title: title,
@@ -238,7 +235,8 @@ function WxService($http, $cookies, $q) {
         return _isReady;
     }
 
-    function init() {
+    function init(shareCode) {
+        _shareCode = shareCode;
         if (!inWx()) {  // 如果不在微信里面， 则总是关闭此功能
             TQ.Config.hasWx = false;
         }
