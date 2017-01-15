@@ -97,10 +97,12 @@ function WxService($http, $cookies, $q) {
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
 
-        TQ.Log.alertInfo(JSON.stringify(wechat_sign));
+        if (TQ.Config.WX_DEBUG_ENABLED) {
+            TQ.Log.alertInfo(JSON.stringify(wechat_sign));
+        }
         var appId = 'wx9a9eb662dd97612f';
         wx.config({
-            debug: true, // false,
+            debug: TQ.Config.WX_DEBUG_ENABLED, // true, // false,
             appId: appId,
             timestamp: wechat_sign.timestamp,
             nonceStr: wechat_sign.nonceStr,
@@ -144,7 +146,6 @@ function WxService($http, $cookies, $q) {
             shareCode = '100_00000020_123_1234567890';
         }
 
-        shareCode = '100_00000020_123_1234567890';
         var param = {
             title: title,
             desc: desc,
@@ -157,10 +158,10 @@ function WxService($http, $cookies, $q) {
             complete: _onComplete,
 
             success: function (res) {
-                TQ.Log.alertInfo("Share, All is supported!");
+                TQ.Log.alertInfo("微信分享成功！" + JSON.stringify(res));
             },
             fail: function (res) {
-                TQ.Log.alertInfo("Share: 不支持" + JSON.stringify(res));
+                TQ.Log.alertInfo("微信分享不成功，原因" + JSON.stringify(res));
             },
 
             cancel: _onCancel

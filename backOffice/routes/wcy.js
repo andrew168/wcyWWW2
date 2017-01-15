@@ -72,8 +72,7 @@ function _saveWcy(wcyId, ssPath, wcyData, res) {
 
 function resWcySaved(res, wcyId, ssPath, msg) {
     var shareId = 0,
-        timestamp = (new Date()).getTime();
-    var shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID, timestamp);
+        shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID);
     // ssPath可能为null，(如果本次没有截屏的话）
     var data = {
         public_id: imageUtils.screenshotId2Name(wcyId)
@@ -84,14 +83,18 @@ function resWcySaved(res, wcyId, ssPath, msg) {
 
 /// private function:
 function response(req, res, data, wcyId) {
-    var url = req.headers.origin;
+    var url = req.headers.origin,
     // var url = req.headers.referer;
+        shareId = 0,
+        shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID);
+
     var data = {
         timestamp: utils.createTimestamp(),
         url: 'url' + url,
         referer: 'url' + req.headers.referer,
         timesCalled: status.timesCalled,
         wcyId: wcyId,
+        shareCode: shareCode,
         data: data
     };
 

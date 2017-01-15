@@ -330,6 +330,13 @@ function WCY($http, FileService, WxService, NetService) {
             _wcyId = _getWcyId(data);
         }
 
+        if (!!data.shareCode) {
+            _shareCode = data.shareCode;
+            if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
+                WxService.shareMessage(_shareCode);
+            }
+        }
+
         _openInJson(data.data);
     }
 

@@ -11,6 +11,9 @@ shareCode包括3个信息： 本次分享的唯一编号, 哪一个作品， 谁
   100_12345678_123_1234567890
  */
 function composeShareCode(shareId, wcyId, userId, timestamp) {
+    if (!timestamp) {
+        timestamp = (new Date()).getTime();
+    }
     return shareId + '_' + wcyId + '_' + userId + '_' + timestamp;
 }
 
