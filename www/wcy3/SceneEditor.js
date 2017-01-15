@@ -172,7 +172,7 @@ function openScene(fileInfo) {
     if ((typeof fileInfo) === "string") {
         fileInfo = {name: fileInfo, content: null};
     }
-    if ((!currScene) || (currScene.isSaved)) {
+    if ((!currScene) || currScene.isSaved || currScene.isEmpty()) {
         TQ.MessageBox.hide();
         if (!currScene) {
             currScene = new TQ.Scene();

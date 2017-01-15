@@ -40,11 +40,15 @@ function WCY($http, FileService, WxService, NetService) {
         _onStarted = null;
 
     function create(option) {
-        if (currScene && !currScene.isSaved) {
+        if (currScene && !currScene.isEmpty() && !currScene.isSaved) {
             return save().then(function() {
                 create(option);
                 currScene.isSaved = true; // 数据已经保存，到内存， 网络上传还需要时间
             });
+        }
+
+        if (currScene.isEmpty() && !currScene.isSaved) {
+            currScene.isSaved = true;
         }
 
         if (!option) {
