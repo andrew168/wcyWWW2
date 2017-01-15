@@ -80,14 +80,14 @@ function WCY($http, FileService, WxService, NetService) {
                 TQ.Log.error("出错：无法保存文件: " + fileName + JSON.stringify(e));
             });
     }
-    function getWcy(shareString, forEdit) {
+    function getWcy(shareString, isPlayOnly) {
         if (currScene && !currScene.isSaved) {
             return save().then(function() {
-                getWcy(shareString, forEdit);
+                getWcy(shareString, isPlayOnly);
             });
         }
 
-        TQ.WCY.isPlayOnly = !forEdit;
+        TQ.WCY.isPlayOnly = !!isPlayOnly;
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
         TQ.MessageBox.showWaiting("正在加载....");
         $http.get(url)
@@ -96,7 +96,7 @@ function WCY($http, FileService, WxService, NetService) {
 
     function getWcyById(wcyId) { // 通过作品栏目调入到编辑器中
         var shareCode = "0_" + wcyId + "_0_0";
-        return getWcy(shareCode, true);
+        return getWcy(shareCode, false);
     }
 
     function getWcyList() {
