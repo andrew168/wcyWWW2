@@ -29,16 +29,15 @@ WCY.$inject = ['$http', 'FileService', 'WxService', 'NetService'];
 function WCY($http, FileService, WxService, NetService) {
     // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
     var user = userProfile.user;
-    var _AUTO_SAVE_NAME = '_auto_save_name_';
-    var _FILENAME = '_filename_';
-    var readCache = TQ.Base.Utility.readCache;
-    var writeCache = TQ.Base.Utility.writeCache;
-
-    var _wcyId = -1, // 缺省-1， 表示没有保存的作品。，12345678;
+    var _AUTO_SAVE_NAME = '_auto_save_name_',
+        _FILENAME = '_filename_',
+        _SHARE_CODE_ = '_shareCode',
+        readCache = TQ.Base.Utility.readCache,
+        writeCache = TQ.Base.Utility.writeCache,
+        _wcyId = -1, // 缺省-1， 表示没有保存的作品。，12345678;
         _shareCode = null,
         _ssSign = null,
         _onStarted = null;
-
 
     function create(option) {
         if (currScene && !currScene.isSaved) {
@@ -167,18 +166,16 @@ function WCY($http, FileService, WxService, NetService) {
         return _load(sceneID);
     }
 
-    function start(wcyCacheName) {
+    function start() {
         if (currScene && !currScene.isSaved) {
             return save().then(function() {
-                start(wcyCacheName);
+                start();
             });
         }
 
-        if (!wcyCacheName) {
-            wcyCacheName = _AUTO_SAVE_NAME;
-        }
-        var previousSaved = readCache(wcyCacheName);
+        var previousSaved = readCache(_AUTO_SAVE_NAME);
         if (previousSaved) {
+            _shareCode = readCache(_SHARE_CODE_);
             var filename = readCache(_FILENAME);
             var fileInfo = {name: filename, content: previousSaved};
             _open(fileInfo);
@@ -287,12 +284,7 @@ function WCY($http, FileService, WxService, NetService) {
                 _wcyId = _getWcyId(data);
             }
 
-            if (!!data.shareCode) {
-                _shareCode = data.shareCode;
-                if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
-                    WxService.shareMessage(_shareCode);
-                }
-            }
+            parseCommonData(data);
 
             if (!!data.ssSign) {
                 _ssSign = data.ssSign;
@@ -310,6 +302,19 @@ function WCY($http, FileService, WxService, NetService) {
         if (!res) {
             TQ.Log.error("为什么为null？  在save的时候？");
         }
+    }
+
+    function parseCommonData(data) { // the common data in both save and get
+        if (!!data.shareCode) {
+            _shareCode = data.shareCode;
+            if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
+                WxService.shareMessage(_shareCode);
+            }
+        } else {
+            _shareCode = null;
+        }
+
+        writeCache(_SHARE_CODE_, _shareCode);
     }
 
     function _getWcyId(resData) {
@@ -330,13 +335,7 @@ function WCY($http, FileService, WxService, NetService) {
             _wcyId = _getWcyId(data);
         }
 
-        if (!!data.shareCode) {
-            _shareCode = data.shareCode;
-            if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
-                WxService.shareMessage(_shareCode);
-            }
-        }
-
+        parseCommonData(data);
         _openInJson(data.data);
     }
 

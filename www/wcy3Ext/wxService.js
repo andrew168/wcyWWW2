@@ -76,8 +76,12 @@ function WxService($http, $cookies, $q) {
         // 对于注册型的API，在此调用
         // checkAPI();
         _isReady = true;
-        shareMessage(_shareCode); // 其实，只是预制内容而已， 并非直接发送，
-                        // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
+        if (_shareCode) {
+            shareMessage(_shareCode); // 其实，只是预制内容而已， 并非直接发送，
+            // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
+        } else {
+            TQ.AssertExt.invalidLogic(false, "shareCode不能为空");
+        }
     });
 
     wx.error(function (error) {
@@ -163,7 +167,7 @@ function WxService($http, $cookies, $q) {
 
             cancel: _onCancel
         };
-        TQ.Log.alertError(param);
+        TQ.Log.alertInfo(param);
         wx.onMenuShareAppMessage(param);
     }
 
