@@ -661,7 +661,7 @@ TQ = TQ || {};
 
     /// close current scene
     p.close = function (discard) {
-        if (this.isSaved || !!discard) {
+        if (this.isSaved || this.isEmpty() || !!discard) {
             if (this.currentLevel != null) {
                 TQ.RM.reset(); // 必须先停止RM，否则其中的callback如果引用了Level对象就会出错
                 TQ.SoundMgr.close();
