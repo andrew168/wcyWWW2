@@ -66,9 +66,13 @@ function getList(userId, callback) {
         });
 
     function getLatest(data) {
+        if (!data) {
+            console.error("data 是null？什么情况？");
+        }
+
         var i,
             result = [],
-            num = Math.min(LATEST_OPUS_NUM, data.length);
+            num = (!data ? 0 : Math.min(LATEST_OPUS_NUM, data.length));
 
         for (i = 0; i < num; i++ ) {
             var doc1 = data[i]._doc;
