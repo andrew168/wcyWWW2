@@ -43,8 +43,11 @@ var sign = function (ret) {
 
     return ret;
 };
-
-/* GET users listing. */
+/*
+ jsapi_ticket是公众号用于调用微信JS接口的临时票据。
+ 有效期为7200秒，（2小时）
+ 通过access_token来获取。
+ */
 var jsapiTicket = "bxLdikRXVbTPdHSM05e5u6sMAbQ-4wKaZjQssNrkbxe6fIV1i6BJ_as-MOtj7-2RpuJbwZzotgMS2bjpWeBXzQ";
 var jsapiTicketExpireTime = 0;
 var accessToken;
@@ -63,7 +66,6 @@ function responseSign(req, res, next) {
     if (url.indexOf("http") <0) {
         url = "http://" + url;
     }
-    // var url = req.headers.referer;
     var data = {
         jsapi_ticket: jsapiTicket,
         nonceStr: createNonceStr(),
@@ -122,6 +124,7 @@ function getToken(cb) {
         'grant_type=client_credential' +
         '&appid=' + appID + '&secret=' + appSecret;
 
+    // !! 注意调用所有微信接口时均需使用https协议
     https.get(getTokenUrl, function(res) {
         console.log("Got response: " + res.statusCode);
         // console.log("Got response: " + res);

@@ -7,7 +7,8 @@ function WxService($http, $cookies, $q) {
     var user = userProfile.user;
     var _isReady = false;
     var urlConcat = TQ.Base.Utility.urlConcat;
-    var _shareCode = '100_00000020_123_1234567890';
+    var _shareCode = null,
+        pageUrlSigned = null;
 
     //在本应用中用到的API，（白名单）
     // 1) 白名单之外的API， 将无法使用
@@ -81,6 +82,7 @@ function WxService($http, $cookies, $q) {
          */
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
+        pageUrlSigned = wechat_sign.url;
 
         if (TQ.Config.WX_DEBUG_ENABLED) {
             TQ.Log.alertInfo(JSON.stringify(wechat_sign));
@@ -149,7 +151,7 @@ function WxService($http, $cookies, $q) {
         var param = {
             title: title,
             desc: desc,
-            link: link + "?opus=" + shareCode,
+            link: pageUrlSigned, // link + "?opus=" + shareCode,
             imgUrl: imgUrl,
             type: 'link', // 分享类型,music、video或link，不填默认为link
             trigger: _onTrigger,
