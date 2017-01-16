@@ -53,10 +53,9 @@ function WxService($http, $cookies, $q) {
         desc = "阖家欢乐，财源滚滚！",
         link = TQ.Config.ENT_HOST,
         imgUrl = urlConcat(urlConcat(TQ.Config.MAT_HOST, TQ.Config.IMAGES_CORE_PATH), "v1453298300/67.jpg");
-    // TQ.Config.MAT_HOST + "v1453298300/67.jpg"; // "/mcImages/p10324.png",
-    // imgUrl = TQ.Config.MAT_HOST + "/mcImages/animation1.gif",
-    imgData = imgUrl;
-
+        // TQ.Config.MAT_HOST + "v1453298300/67.jpg"; // "/mcImages/p10324.png",
+        // imgUrl = TQ.Config.MAT_HOST + "/mcImages/animation1.gif",
+        imgData = imgUrl;
 
     //微信配置
     var getSignature = function () {
@@ -71,23 +70,6 @@ function WxService($http, $cookies, $q) {
         }).success(doConfig);
     };
 
-    wx.ready(function (msg) {
-        TQ.Log.alertInfo("Wx Ready! " + JSON.stringify(msg));
-        // 对于注册型的API，在此调用
-        // checkAPI();
-        _isReady = true;
-        if (_shareCode) {
-            shareMessage(_shareCode); // 其实，只是预制内容而已， 并非直接发送，
-            // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
-        } else {
-            TQ.AssertExt.invalidLogic(false, "shareCode不能为空");
-        }
-    });
-
-    wx.error(function (error) {
-        TQ.Log.alertError("Wx Error " + JSON.stringify(error));
-    });
-
     function doConfig(wechat_sign) {
         /* 1） 需要使用JS-SDK的页面必须先注入配置信息, 否则将无法调用
          2） 同一个url仅需调用一次，
@@ -95,9 +77,7 @@ function WxService($http, $cookies, $q) {
          4） 目前Android微信客户端不支持pushState的H5新特性，
          所以使用pushState来实现web app的页面会导致签名失败，
          此问题会在Android6.2中修复）
-
          ？？ 2小时之后， 是否需要重新认证？
-
          */
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
@@ -117,6 +97,25 @@ function WxService($http, $cookies, $q) {
             fail: _onFail,
             complete: _onComplete,
             cancel: _onCancel
+        });
+
+        // 如果更换了页面，则需要向wx重新注册？
+        // wx.ready如果注册1次， 则只执行1次。放在doConfig里面，以确保每个页面初始化之后，都能够执行1次
+        wx.ready(function (msg) {
+            TQ.Log.alertInfo("Wx Ready! " + JSON.stringify(msg));
+            // 对于注册型的API，在此调用
+            // checkAPI();
+            _isReady = true;
+            if (_shareCode) {
+                shareMessage(_shareCode); // 其实，只是预制内容而已， 并非直接发送，
+                // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
+            } else {
+                TQ.AssertExt.invalidLogic(false, "shareCode不能为空");
+            }
+        });
+
+        wx.error(function (error) {
+            TQ.Log.alertError("Wx Error " + JSON.stringify(error));
         });
     }
 

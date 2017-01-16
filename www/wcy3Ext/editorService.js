@@ -154,7 +154,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
             updateMode();
             updateColorPanel();
-            WxService.init(WCY.getShareCode());
             if (TQ.Config.statServiceEnabled) {
                 // 此服务无法lazyLoading，因为是ng模块， 暂时停止使用
                 StatService.startToShow();

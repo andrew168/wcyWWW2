@@ -310,14 +310,18 @@ function WCY($http, FileService, WxService, NetService) {
     function parseCommonData(data) { // the common data in both save and get
         if (!!data.shareCode) {
             _shareCode = data.shareCode;
-            if (TQ.Config.hasWx) { //  更新微信的shareCode， 以供用户随时分享。
-                WxService.shareMessage(_shareCode);
-            }
         } else {
             _shareCode = null;
         }
 
         writeCache(_SHARE_CODE_, _shareCode);
+    }
+
+    function onUrlChanged() { // 在页面url更新之后， 才能初始化微信分享
+        if (TQ.Config.hasWx && _shareCode) { //  更新微信的shareCode， 以供用户随时分享。
+            WxService.init(_shareCode);
+            // WxService.shareMessage(_shareCode);
+        }
     }
 
     function _getWcyId(resData) {
@@ -378,6 +382,7 @@ function WCY($http, FileService, WxService, NetService) {
         getShareCode: getShareCode,
         getScreenshotUrl: getScreenshotUrl,
         hasSsPath: hasSsPath,
+        onUrlChanged: onUrlChanged,
         show: show,  // open for show only
 
         // old api will be depreciated
