@@ -87,10 +87,10 @@ function WxService($http, $cookies, $q) {
         if (TQ.Config.WX_DEBUG_ENABLED) {
             TQ.Log.alertInfo(JSON.stringify(wechat_sign));
         }
-        var appId = 'wx9a9eb662dd97612f';
+
         wx.config({
             debug: TQ.Config.WX_DEBUG_ENABLED, // true, // false,
-            appId: appId,
+            appId: TQ.Config.wx.appId,
             timestamp: wechat_sign.timestamp,
             nonceStr: wechat_sign.nonceStr,
             signature: wechat_sign.signature,

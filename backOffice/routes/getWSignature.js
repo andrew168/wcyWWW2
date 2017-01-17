@@ -3,9 +3,10 @@
  */
 var express = require('express');
 var router = express.Router();
-var https = require('https');
-var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
-var status = require('../common/status');
+var https = require('https'),
+    configSvr = require('../common/configSvr'),
+    utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
+    status = require('../common/status');
 
 var createNonceStr = function () {
     return Math.random().toString(36).substr(2, 15);
@@ -117,9 +118,11 @@ function doGetTicket(cb) {
 }
 
 function getToken(cb) {
-    var appID = "wx9a9eb662dd97612f",
-        appSecret = "7375b13e9c859d48b71a6097790d8358";
+    var appID, //  = "wx9a9eb662dd97612f",
+        appSecret; // = "7375b13e9c859d48b71a6097790d8358";
 
+    appID = configSvr.wx.udoido.appID;
+    appSecret = configSvr.wx.udoido.appSecret;
     var getTokenUrl = 'https://api.weixin.qq.com/cgi-bin/token?' +
         'grant_type=client_credential' +
         '&appid=' + appID + '&secret=' + appSecret;
