@@ -6,9 +6,6 @@ var express = require('express');
 var router = express.Router();
 var configSvr = require('../common/configSvr');
 
-// config
-var _token = "tuqiangkeji1111";
-
 /* GET users listing. */
 router.get('/', function(req, res, next) {
     responseSign(req, res, next);
