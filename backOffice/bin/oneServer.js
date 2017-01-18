@@ -133,7 +133,23 @@
             startLocalSimulator(app);
         }
 
-// catch 404 and forward to error handler
+        //* 把 SAP 中的 state都映射到起始页
+        app.use('/edit/*', state2index);
+        app.use('/opus/*', state2index);
+
+        function state2index(req, res) {
+            if (!isStatePath(req.baseUrl)) {
+                next(req, res);
+            } else {
+                res.sendFile(path.join(__dirname, './../../www/index.html'));
+            }
+        }
+
+        function isStatePath(url) {
+            return (!url) || (url.lastIndexOf(".") < 0);
+        }
+
+        // catch 404 and forward to error handler
         app.use(function (req, res, next) {
             console.log("body: " + JSON.stringify(req.body));
             var err = new Error('Not Found');
