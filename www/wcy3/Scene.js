@@ -331,6 +331,7 @@ TQ = TQ || {};
         this.description = null;
         this.ssPath = null; // 初始化， 没有此值
         this.isDirty = true;
+        this.hasSavedToCache = false;
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
@@ -658,9 +659,21 @@ TQ = TQ || {};
         for (var i = 0; i < this.levelNum(); i++) {
             this.levels[i].prepareForJSONOut();
         }
+        this.updateShareData();
         var data = JSON.stringify(this);
         this.afterToJSON();
         return data;
+    };
+
+    p.updateShareData = function() {
+        var level1 = (this.levelNum() > 0) ? this.levels[0] : null;
+        if (level1) {
+            this.title = level1.getText(0);
+            this.description = level1.getText(1);
+            if (!this.description) {
+                this.description = this.title;
+            }
+        }
     };
 
     /// close current scene

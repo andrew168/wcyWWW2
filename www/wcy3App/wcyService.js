@@ -46,7 +46,7 @@ function WCY($http, FileService, WxService, NetService) {
 
     function create(option) {
         if (needToSave()) {
-            return save().then(function() {
+            return save().then(function () {
                 create(option); // 数据已经保存，到内存， 网络上传还需要时间
             });
         }
@@ -85,7 +85,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
     function getWcy(shareString, isPlayOnly) {
         if (needToSave()) {
-            return save().then(function() {
+            return save().then(function () {
                 getWcy(shareString, isPlayOnly);
             });
         }
@@ -134,7 +134,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function getScreenshotUrl() {
-        return (!currScene.ssPath) ? null: TQ.RM.toFullPathFs(currScene.ssPath);
+        return (!currScene.ssPath) ? null : TQ.RM.toFullPathFs(currScene.ssPath);
     }
 
     function hasSsPath() {
@@ -184,7 +184,7 @@ function WCY($http, FileService, WxService, NetService) {
 
     function start() {
         if (needToSave()) {
-            return save().then(function() {
+            return save().then(function () {
                 start();
             });
         }
@@ -252,6 +252,7 @@ function WCY($http, FileService, WxService, NetService) {
             writeCache(_AUTO_SAVE_NAME, data);
             writeCache(_FILENAME, currScene.filename);
             currScene.hasSavedToCache = true;
+            updateWxShareData();
         }
         return setTimeout(_autoSave, 30000); // 30s
     }
@@ -282,7 +283,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function onUploadSsSuccess(res) {
-        var data = (!res)? null: res.data;
+        var data = (!res) ? null : res.data;
         if (!!data) {
             if (!!data.url) {
                 currScene.setSsPath(data.url);
@@ -297,7 +298,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function onSavedSuccess(res) {
-        var data = (!res)? null: res.data;
+        var data = (!res) ? null : res.data;
         currScene.isSaved = true;
         if (!!data) {
             parseCommonData(data);
@@ -310,7 +311,7 @@ function WCY($http, FileService, WxService, NetService) {
                 currScene.setSsPath(data.ssPath);
             }
 
-            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS} );
+            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
             console.log(data);
             TQ.MessageBox.hide();
         }
@@ -337,7 +338,11 @@ function WCY($http, FileService, WxService, NetService) {
         writeCache(_WCY_ID_, _wcyId);
     }
 
-    function onUrlChanged() { // 在页面url更新之后， 才能初始化微信分享
+    function onUrlChanged() {
+        updateWxShareData();
+    }
+
+    function updateWxShareData() { // 在页面url更新之后， 才能初始化微信分享
         if (TQ.Config.hasWx && _shareCode && (_wcyId > 0)) { //  更新微信的shareCode， 以供用户随时分享。
             WxService.init(composeWxShareData(currScene, _shareCode));
         }
@@ -347,7 +352,7 @@ function WCY($http, FileService, WxService, NetService) {
         TQ.Assert(_wcyId > 0, "必须先保存，才能调用");
         return {
             title: (scene.title) ? scene.title : "UdoIdo",
-            ssPath: (scene.ssPath) ? scene.ssPath : null,
+            ssPath: (scene.ssPath) ? TQ.RM.toFullPathFs(scene.ssPath): null,
             desc: (scene.description) ? scene.description: null,
             code: (_shareCode) ? _shareCode : wcyId2ShareCode(_wcyId)
         }

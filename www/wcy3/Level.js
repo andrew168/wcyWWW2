@@ -281,6 +281,20 @@ window.TQ = window.TQ || {};
         return this.elements[id];
     };
 
+    p.getText = function (id) {
+        var j = 0,
+            n = this.elements.length;
+        for (var i=0; i < n; i++ ) {
+            if (this.elements[i].isText()) {
+                if (j === id) {
+                    return this.elements[i].getText();
+                }
+                j++;
+            }
+        }
+        return null;
+    };
+
     p.getSounds = function() {
         var result = [];
         if (this.resourceReady) {
@@ -410,10 +424,9 @@ window.TQ = window.TQ || {};
     };
 
     p.hitTest = function () {
-
         return;
-
-        for (var i = 0; i < this.itemNum(); i++) {
+        var n = this.elements.length;
+        for (var i = 0; i < n; i++) {
             var displayObj = this.elements[i].displayObj;
             if (displayObj.hitTest(stage.mouseX, stage.mouseY)) {
                 displayObj.alpha = 0.5;  // 加框子

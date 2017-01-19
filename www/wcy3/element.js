@@ -1669,7 +1669,7 @@ window.TQ = window.TQ || {};
         return this.jsonObj.isClipPoint;
     };
     p.isText = function () {
-        return (this.jsonObj.text != undefined);
+        return false;
     };
     p.isSound = function () {
         return (this.jsonObj.type == "SOUND");

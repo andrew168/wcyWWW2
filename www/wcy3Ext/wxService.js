@@ -82,7 +82,8 @@ function WxService($http, $cookies, $q) {
          */
         user.timesShared = $cookies.get('timesCalled');
         user.ID = $cookies.get('userID');
-        pageUrlSigned = wechat_sign.url;
+        // pageUrlSigned = wechat_sign.url;
+        pageUrlSigned = location.href;
 
         if (TQ.Config.WX_DEBUG_ENABLED) {
             TQ.Log.alertInfo(JSON.stringify(wechat_sign));
@@ -241,6 +242,10 @@ function WxService($http, $cookies, $q) {
     }
 
     function init(shareData) {
+        if (JSON.stringify(_shareData) === JSON.stringify(shareData)) {
+            return;
+        }
+
         _shareData = shareData;
         if (!inWx()) {  // 如果不在微信里面， 则总是关闭此功能
             TQ.Config.hasWx = false;
