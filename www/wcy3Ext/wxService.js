@@ -7,7 +7,7 @@ function WxService($http, $cookies, $q) {
     var user = userProfile.user;
     var _isReady = false;
     var urlConcat = TQ.Base.Utility.urlConcat;
-    var _shareCode = null,
+    var _shareData = null,
         pageUrlSigned = null;
 
     //在本应用中用到的API，（白名单）
@@ -108,8 +108,8 @@ function WxService($http, $cookies, $q) {
             // 对于注册型的API，在此调用
             // checkAPI();
             _isReady = true;
-            if (_shareCode) {
-                shareMessage(_shareCode); // 其实，只是预制内容而已， 并非直接发送，
+            if (_shareData) {
+                shareMessage(); // 其实，只是预制内容而已， 并非直接发送，
                 // 只有等客户点击“分享给朋友”按钮之后，这些内容才会自动填入
             } else {
                 TQ.AssertExt.invalidLogic(false, "shareCode不能为空");
@@ -140,7 +140,7 @@ function WxService($http, $cookies, $q) {
     }
 
     // http://show.udoido.cn/index.html?opus=100_00000025_123_1234567890
-    function shareMessage(shareCode) {
+    function shareMessage() {
         if (!TQ.Config.hasWx || !_isReady) {
             return;
         }
@@ -149,10 +149,10 @@ function WxService($http, $cookies, $q) {
         user.ID = $cookies.get('userID');
 
         var param = {
-            title: title,
-            desc: desc,
+            title: _shareData.title,
+            desc: _shareData.desc,
             link: pageUrlSigned, // link + "?opus=" + shareCode,
-            imgUrl: imgUrl,
+            imgUrl: _shareData.ssPath,
             type: 'link', // 分享类型,music、video或link，不填默认为link
             trigger: _onTrigger,
             // success: _onSuccess,
@@ -240,8 +240,8 @@ function WxService($http, $cookies, $q) {
         return _isReady;
     }
 
-    function init(shareCode) {
-        _shareCode = shareCode;
+    function init(shareData) {
+        _shareData = shareData;
         if (!inWx()) {  // 如果不在微信里面， 则总是关闭此功能
             TQ.Config.hasWx = false;
         }
@@ -264,7 +264,6 @@ function WxService($http, $cookies, $q) {
     return {
         init: init,
         config: getSignature,
-        shareMessage: shareMessage,
         checkAPI: checkAPI,
         chooseImage: chooseImage,
         isReady: isReady

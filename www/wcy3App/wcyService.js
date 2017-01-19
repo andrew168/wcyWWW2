@@ -32,6 +32,7 @@ function WCY($http, FileService, WxService, NetService) {
     var _AUTO_SAVE_NAME = '_auto_save_name_',
         _FILENAME = '_filename_',
         _SHARE_CODE_ = '_shareCode',
+        _WCY_ID_ = "_wcy_id",
         readCache = TQ.Base.Utility.readCache,
         writeCache = TQ.Base.Utility.writeCache,
         _wcyId = -1, // 缺省-1， 表示没有保存的作品。，12345678;
@@ -96,9 +97,21 @@ function WCY($http, FileService, WxService, NetService) {
             .then(_onReceivedWcyData, _onFail);
     }
 
+    function wcyId2ShareCode(id) {
+        return ("0_" + id + "_0_0");
+    }
+
+    function shareCode2Id(shareCode) {
+        var items = shareCode.split('_');
+        if (items.length > 1) {
+            return items[1];
+        }
+
+        return -1;
+    }
+
     function getWcyById(wcyId) { // 通过作品栏目调入到编辑器中
-        var shareCode = "0_" + wcyId + "_0_0";
-        return getWcy(shareCode, false);
+        return getWcy(wcyId2ShareCode(wcyId), false);
     }
 
     function getWcyList() {
@@ -179,6 +192,10 @@ function WCY($http, FileService, WxService, NetService) {
         var previousSaved = readCache(_AUTO_SAVE_NAME);
         if (previousSaved) {
             _shareCode = readCache(_SHARE_CODE_);
+            _wcyId = readCache(_WCY_ID_);
+            if (_shareCode && ((!_wcyId) || (_wcyId < 1))) {
+                _wcyId = shareCode2Id(_shareCode);
+            }
             var filename = readCache(_FILENAME);
             var fileInfo = {name: filename, content: previousSaved};
             _open(fileInfo);
@@ -283,10 +300,6 @@ function WCY($http, FileService, WxService, NetService) {
         var data = (!res)? null: res.data;
         currScene.isSaved = true;
         if (!!data) {
-            if (!!data.wcyId) {
-                _wcyId = _getWcyId(data);
-            }
-
             parseCommonData(data);
 
             if (!!data.ssSign) {
@@ -308,6 +321,12 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function parseCommonData(data) { // the common data in both save and get
+        if (!!data && !!data.wcyId) {
+            _wcyId = _getWcyId(data);
+        } else {
+            _wcyId = -1;
+        }
+
         if (!!data.shareCode) {
             _shareCode = data.shareCode;
         } else {
@@ -315,12 +334,22 @@ function WCY($http, FileService, WxService, NetService) {
         }
 
         writeCache(_SHARE_CODE_, _shareCode);
+        writeCache(_WCY_ID_, _wcyId);
     }
 
     function onUrlChanged() { // 在页面url更新之后， 才能初始化微信分享
-        if (TQ.Config.hasWx && _shareCode) { //  更新微信的shareCode， 以供用户随时分享。
-            WxService.init(_shareCode);
-            // WxService.shareMessage(_shareCode);
+        if (TQ.Config.hasWx && _shareCode && (_wcyId > 0)) { //  更新微信的shareCode， 以供用户随时分享。
+            WxService.init(composeWxShareData(currScene, _shareCode));
+        }
+    }
+
+    function composeWxShareData(scene, _shareCode) {
+        TQ.Assert(_wcyId > 0, "必须先保存，才能调用");
+        return {
+            title: (scene.title) ? scene.title : "UdoIdo",
+            ssPath: (scene.ssPath) ? scene.ssPath : null,
+            desc: (scene.description) ? scene.description: null,
+            code: (_shareCode) ? _shareCode : wcyId2ShareCode(_wcyId)
         }
     }
 
@@ -338,10 +367,6 @@ function WCY($http, FileService, WxService, NetService) {
     function _onReceivedWcyData(res) {
         TQ.MessageBox.hide();  // end of loading，no resource yet
         var data = res.data;
-        if (!!data && !!data.wcyId) {
-            _wcyId = _getWcyId(data);
-        }
-
         parseCommonData(data);
         _openInJson(data.data);
     }

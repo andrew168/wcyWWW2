@@ -15,6 +15,8 @@ TQ = TQ || {};
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
     p.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
     p.title = null;  // title是微创意的标题，
+    p.description = null; // 内容描述，摘要， 用于微信分享，FB分享的简介文字
+    p.ssPath = null;
     p.isPreloading = false;
     p.currentLevelId = 0;
     p.currentLevel = null;
@@ -325,6 +327,8 @@ TQ = TQ || {};
         this.setEditor();
         _tMax = 0;
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
+        this.title = "";  // 必须reset, 因为currScene在New新作品的时候， reuse了
+        this.description = null;
         this.ssPath = null; // 初始化， 没有此值
         this.isDirty = true;
         //ToDo:@UI   initMenu(); // 重新设置菜单
