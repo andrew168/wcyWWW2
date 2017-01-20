@@ -49,7 +49,7 @@ function onSaveOpus(err, model, onSuccess, onError) {
 // 获取最新的10个作品， 有ssPath的， 无论是否我的，
 function getList(userId, callback) {
     var condition = null; // (userId === null) ? null : {userId: userId};
-    Opus.find(condition).sort({timestamp: -1})
+    Opus.find(condition).sort({lastModified: -1})
         .exec(function (err, data) {
             if (!data) {
                 console.error(404, {msg: 'not found!' + userId});
@@ -86,6 +86,7 @@ function getList(userId, callback) {
     }
 }
 
+// 也更新wcy的记录，
 function updateScreenshot(userId, id, path, onSuccess, onError) {
     Opus.findOne({_id: id, userId: userId})
         .exec(function (err, data) {
@@ -100,7 +101,7 @@ function updateScreenshot(userId, id, path, onSuccess, onError) {
             }
         });
 
-    function onSaved (err, data) {
+    function onSaved(err, data) {
         onSaveOpus(err, data, onSuccess, onError);
     }
 }
