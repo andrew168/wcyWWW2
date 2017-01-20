@@ -971,7 +971,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             y -= fontHeight;
         }
 
-        if (y < fontHeight) {
+        if (y < (2 * fontHeight)) {
             y = 1;  // go to top again;
         }
 
