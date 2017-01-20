@@ -266,11 +266,26 @@ function WxService($http, $cookies, $q) {
         return /micromessenger/.test(ua);
     }
 
+    //扫面印刷品上的二维码（不是微信上的图片)
+    function scanQRCode() {
+        if (_isReady) {
+            wx.scanQRCode({
+                needResult: 0,// 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+                scanType: ["qrCode"], //可以指定扫二维码还是一维码"barCode"，默认二者都有
+                desc: 'scanQRCode desc',
+                success: function (res) {
+                    alert(JSON.stringify(res));
+                }
+            });
+        }
+    }
+
     return {
         init: init,
         config: getSignature,
         checkAPI: checkAPI,
         chooseImage: chooseImage,
-        isReady: isReady
+        isReady: isReady,
+        scanQRCode: scanQRCode
     };
 }
