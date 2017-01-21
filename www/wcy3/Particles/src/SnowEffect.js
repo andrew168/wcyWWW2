@@ -33,9 +33,9 @@ var TQ = TQ || {};
     var rainOps = {
         startSize: 3, // 雨滴大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
-        density: 5, // 密度， 默认1（小雨）取值范围：1-10
+        density: 2, // 密度， 默认1（小雨）取值范围：1-10
         dy: 10,
-        v0: 200,
+        v0: 400,
         endOpacity: 0.1,
         endSize: -1,
         endSizeVar: 5,
@@ -49,7 +49,7 @@ var TQ = TQ || {};
         particleImage = null;
 
     function getDefaultOptions(type) {
-        if (type === TQ.DescType.RAIN) {
+        if (type === TQ.Element.DescType.RAIN) {
             return rainOps;
         }
         return defaultOps;
