@@ -31,6 +31,9 @@ TQ = TQ || {};
 
     p._doLoad = function () {
         p.isPlaying = false;
+        if (!this.jsonObj.particles) {
+            this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions();
+        }
         p.effect = TQ.SnowEffect;
     };
 
@@ -48,12 +51,11 @@ TQ = TQ || {};
 
         var paras = this.jsonObj.particles;
         if (!paras) {
+            paras = null;
             console.error("缺少参数： 粒子效果");
-        } else {
-            p.effect.change(paras);
         }
 
-        p.effect.start();
+        p.effect.start(paras);
     };
 
     p.stop = function () {

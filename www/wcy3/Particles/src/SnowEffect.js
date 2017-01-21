@@ -12,24 +12,33 @@ var TQ = TQ || {};
     var SnowEffect = function () {
     };
 
+    SnowEffect.getDefaultOptions = getDefaultOptions;
     SnowEffect.start = start;
     SnowEffect.stop = stop;
     SnowEffect.change = change;
     SnowEffect.set = set;
 
     var defaultOps = {
-        size: 3, // 雪花大小，  默认1,  取值范围1-5.
+        startSize: 3, // 雪花大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
         density: 5, // 密度， 默认1（小雨）取值范围：1-10
+        dy: 10,
+        v0: 200,
+        endOpacity: 0.1,
+        endSize: -1,
+        endSizeVar: 5,
         imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/xuehua1.png"
     };
 
     var para1 = null,
-        options1 = null,
         emitter = null,
         emitters = null,
         created = false,
         particleImage = null;
+
+    function getDefaultOptions() {
+        return defaultOps;
+    }
 
     function start(options) {
         change(options);
@@ -39,8 +48,8 @@ var TQ = TQ || {};
         if (!options) {
             options = defaultOps;
         } else {
-            if (options.size === undefined) {
-                options.size = defaultOps.size;
+            if (options.startSize === undefined) {
+                options.startSize = defaultOps.startSize;
             }
 
             if (options.direction === undefined) {
@@ -56,17 +65,16 @@ var TQ = TQ || {};
             }
         }
 
-        options1 = options;
-        set(options.size, options.direction, options.density);
+        set(options);
     }
 
-    function set (size, direction, density, res, dropImage) {
-        size = TQ.MathExt.unifyValue10(size, 10, 20);
-        direction = TQ.MathExt.unifyValue10(direction, 90-15, 90+15);
-        density = TQ.MathExt.unifyValue10(density, 30, 40);
+    function set(option) {
+        option.startSize = TQ.MathExt.unifyValue10(option.startSize, 10, 20);
+        option.direction = TQ.MathExt.unifyValue10(option.direction, 90-15, 90+15);
+        option.density = TQ.MathExt.unifyValue10(option.density, 30, 40);
         //rain1 = {density: 40, startSize:10, direction:110,    dy:50, v0:300, endOpacity:-1, endSize:0, endSizeVar:5};
         //rain2 = {density: 40, startSize:20, direction:110,    dy:10, v0:100, endOpacity:0.1, endSize:-1, endSizeVar:5};
-        para1 = {density: density, startSize:size, direction:direction,    dy:10, v0:100, endOpacity:0.1, endSize:-1, endSizeVar:5};
+        para1 = option;
         if (!emitter) {
             // para1 = rain1;
             _loadAsset();
@@ -99,7 +107,7 @@ var TQ = TQ || {};
         if (!particleImage) {
             particleImage = new Image();
             particleImage.onload = _initCanvas;
-            particleImage.src = options1.imageSrc;
+            particleImage.src = para1.imageSrc;
         }
     }
 
