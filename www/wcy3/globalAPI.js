@@ -174,11 +174,11 @@ window.TQ = window.TQ || {};
     // direction:  落雪方向： 0：向下， 取值范围： -15度到15度，
     // density: 密度， 默认1（小雨）取值范围：1-10
     WCY.snow = function(size, direction, density, res, snowFlowerImage) {
-        TQ.SnowEffect.set(size, direction, density, res, snowFlowerImage);
+
     };
 
     WCY.snowChange = function(size, direction, density) {
-        TQ.SnowEffect.set(size, direction, density);
+
     };
 
     WCY.snowStop = function() {
