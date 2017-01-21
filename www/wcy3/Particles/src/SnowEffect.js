@@ -21,13 +21,25 @@ var TQ = TQ || {};
     var defaultOps = {
         startSize: 3, // 雪花大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
+        density: 2.8, // 密度， 默认1（小雨）取值范围：1-10
+        dy: 10,
+        v0: 400,
+        endOpacity: 0.1,
+        endSize: -1,
+        endSizeVar: 5,
+        imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/xuehua1.png"
+    };
+
+    var rainOps = {
+        startSize: 3, // 雨滴大小，  默认1,  取值范围1-5.
+        direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
         density: 5, // 密度， 默认1（小雨）取值范围：1-10
         dy: 10,
         v0: 200,
         endOpacity: 0.1,
         endSize: -1,
         endSizeVar: 5,
-        imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/xuehua1.png"
+        imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/yudi3.png"
     };
 
     var para1 = null,
@@ -36,7 +48,10 @@ var TQ = TQ || {};
         created = false,
         particleImage = null;
 
-    function getDefaultOptions() {
+    function getDefaultOptions(type) {
+        if (type === TQ.DescType.RAIN) {
+            return rainOps;
+        }
         return defaultOps;
     }
 
@@ -193,7 +208,6 @@ var TQ = TQ || {};
     }
 
     TQ.SnowEffect = SnowEffect;
-    TQ.RainEffect = SnowEffect;
 }());
 
 // var fpsLabel;       // label to show the current frames per second

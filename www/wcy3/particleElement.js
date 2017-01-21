@@ -32,7 +32,7 @@ TQ = TQ || {};
     p._doLoad = function () {
         p.isPlaying = false;
         if (!this.jsonObj.particles) {
-            this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions();
+            this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions(this.jsonObj.type);
         }
         p.effect = TQ.SnowEffect;
     };
