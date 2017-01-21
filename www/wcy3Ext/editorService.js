@@ -92,7 +92,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
 
         // particle Effect
         SnowEffect: TQ.SnowEffect,  // start, stop, change(option)
-        RainEffect:TQ.RainEffect,
 
         // share
         shareFbWeb: shareFbWeb,

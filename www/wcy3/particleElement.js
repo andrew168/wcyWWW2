@@ -31,14 +31,7 @@ TQ = TQ || {};
 
     p._doLoad = function () {
         p.isPlaying = false;
-        switch (this.jsonObj.type) {
-            case TQ.RainEffect.name:
-                p.effect = TQ.RainEffect;
-                break;
-            case TQ.SnowEffect.name:
-            default:
-                p.effect = TQ.SnowEffect;
-        }
+        p.effect = TQ.SnowEffect;
     };
 
     p.doShow = function (isVisible) {

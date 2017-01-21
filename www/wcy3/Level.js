@@ -596,7 +596,6 @@ window.TQ = window.TQ || {};
         }
         TQ.SoundMgr.removeAll();
         TQ.SnowEffect.stop();
-        TQ.RainEffect.stop();
         this.state = TQBase.LevelState.EXIT;
     };
 

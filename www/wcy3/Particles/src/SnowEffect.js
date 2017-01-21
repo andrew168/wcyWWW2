@@ -185,6 +185,7 @@ var TQ = TQ || {};
     }
 
     TQ.SnowEffect = SnowEffect;
+    TQ.RainEffect = SnowEffect;
 }());
 
 // var fpsLabel;       // label to show the current frames per second

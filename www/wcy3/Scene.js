@@ -713,7 +713,6 @@ TQ = TQ || {};
         TQ.FrameCounter.stop();
         TQ.SoundMgr.pause();
         TQ.SnowEffect.stop();
-        TQ.RainEffect.stop();
     };
 
     p.play = function () {
