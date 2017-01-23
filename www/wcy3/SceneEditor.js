@@ -141,6 +141,7 @@ function init(fileInfo) {
     //stage.enableMouseOver();
     TQBase.LevelState.reset();
     TQ.SoundMgr.initialize();
+    TQ.ParticleMgr.initialize();
     TQ.RM.initialize();
     TQ.SceneEditor.loadScene(fileInfo);
     initializeControllers();
