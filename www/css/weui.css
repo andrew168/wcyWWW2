@@ -1649,6 +1649,7 @@ a.weui-media-box:active {
 .weui-dialog__title {
   font-weight: 400;
   font-size: 18px;
+  color: #000000;
 }
 .weui-dialog__bd {
   padding: 0 1.6em 0.8em;
