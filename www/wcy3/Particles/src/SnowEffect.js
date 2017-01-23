@@ -105,7 +105,12 @@ var TQ = TQ || {};
         createjs.ParticleEmitter.stopped = false;
     }
 
-    function _apply () {
+    function _apply() {
+        if (particleImage.src != para1.imageSrc) {
+            particleImage.src = para1.imageSrc;
+            particleImage.onload = _apply();
+            return;
+        }
         for (var i=0; i < emitters.length; i++) {
             var emitter = emitters[i];
             emitter.speed = para1.v0; // 粒子的初始速度，

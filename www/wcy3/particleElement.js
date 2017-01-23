@@ -30,37 +30,68 @@ TQ = TQ || {};
     };
 
     p._doLoad = function () {
-        p.isPlaying = false;
+        this.isPlaying = false;
         if (!this.jsonObj.particles) {
             this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions(this.jsonObj.type);
         }
-        p.effect = TQ.SnowEffect;
+        this.effect = TQ.SnowEffect;
+
+        // 要复制 父类中的逻辑
+        this.loaded = true;
+        this._afterItemLoaded();
+        this.setTRSAVZ();
+        TQ.DirtyFlag.setElement(this);
+    };
+
+    p.setTRSAVZ = function () {
+        var jsonObj = this.jsonObj;
+        // 可见性由父子共同决定：
+        //  如果父物体为空， 该物体的可见性由自己的标志完全决定
+        //  如果父物体非空：
+        //      父亲实际不可见，则都不可见（一票否决制）；
+        //      父亲实际可见，则孩子自己决定
+        //
+        //   物体的实际可见性就是 displayObj.visible,
+        //          如果displayObj为空，用临时标志： visibleTemp,
+        //
+        var visSum = false;
+        if (!this.parent) {
+            visSum = jsonObj.isVis;
+        } else {
+            visSum = this.parent.isVisible() && jsonObj.isVis;
+        }
+        visSum = visSum || TQ.Element.showHidenObjectFlag;
+        this.doShow(visSum);
     };
 
     p.doShow = function (isVisible) {
         this._parent_doShow(isVisible);
-        if (isVisible) this.play();
-        else this.stop();
+        if (isVisible) {
+            this.play();
+            TQ.ParticleMgr.register(this);
+        } else {
+            TQ.ParticleMgr.unregister(this);
+            this.stop();
+        }
     };
 
     p.play = function () {
-        if (p.isPlaying) {
+        if (this.isPlaying) {
             return;
         }
-        p.isPlaying = true;
+        this.isPlaying = true;
 
         var paras = this.jsonObj.particles;
         if (!paras) {
             paras = null;
             console.error("缺少参数： 粒子效果");
         }
-
-        p.effect.start(paras);
+        this.effect.start(paras);
     };
 
     p.stop = function () {
-        p.isPlaying = false;
-        p.effect.stop();
+        this.isPlaying = false;
+        this.effect.stop();
     };
 
     p._doAddItemToStage = function () {};

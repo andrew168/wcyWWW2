@@ -39,6 +39,7 @@ window.TQ = window.TQ || {};
         }
     }
 
+    Element.counter = 0;
     Element.VER1 = "V1";
     Element.VER2 = "V2"; // 从2014-3-2日开始使用
     Element.VER3 = 3; // 从2016-6-1日开始使用
@@ -90,11 +91,12 @@ window.TQ = window.TQ || {};
     p.animeTrack = {}; // 只是数组指针, 和jsonObj 共用数据, 没有重复
 
     p.show = function (isVisible) {
-        if (this.displayObj == undefined) return;
         this.jsonObj.isVis = isVisible;
-        if (this.jsonObj.isVis && !this.hasFlag(Element.IN_STAGE)) {
-            TQ.Log.out(TQ.Dictionary.INVALID_LOGIC); // show + _doAddItemToStage 飞线, 适用于: 1) load之时不可见的元素, 2) marker初次创建时, 不可见
-            TQ.StageBuffer.add(this);
+        if (this.displayObj) {
+            if (this.jsonObj.isVis && !this.hasFlag(Element.IN_STAGE)) {
+                TQ.Log.out(TQ.Dictionary.INVALID_LOGIC); // show + _doAddItemToStage 飞线, 适用于: 1) load之时不可见的元素, 2) marker初次创建时, 不可见
+                TQ.StageBuffer.add(this);
+            }
         }
         //ToDo: 留给显示函数做, 不能一竿子插到底,  this.displayObj.visible = isVisible;
         this.dirty2 = true;
@@ -271,6 +273,10 @@ window.TQ = window.TQ || {};
     // 补全所缺少的数据
     p.fillGap = function (desc) {
         // 所有元素， 在add之后， 都需要经过load， 从资源中调进来。
+        if (!!desc.name) {
+            desc.name = "element" + Element.counter++;
+        }
+
         if (desc.type == undefined) {
             desc.type = "Bitmap";
         }
