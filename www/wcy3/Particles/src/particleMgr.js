@@ -23,6 +23,7 @@ TQ = TQ || {};
     ParticleMgr.pause = pause;
     ParticleMgr.resume = resume;
     ParticleMgr.initialize = function() {
+        TQ.SnowEffect.initialize(); // 清除emitters;
         counter = 0;
         removeAll();
     };

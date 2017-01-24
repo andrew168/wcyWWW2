@@ -12,6 +12,7 @@ var TQ = TQ || {};
     var SnowEffect = function () {
     };
 
+    SnowEffect.initialize = initialize;
     SnowEffect.getDefaultOptions = getDefaultOptions;
     SnowEffect.start = start;
     SnowEffect.stop = stop;
@@ -44,9 +45,13 @@ var TQ = TQ || {};
 
     var para1 = null,
         emitter = null,
-        emitters = null,
+        emitters = [],
         created = false,
         particleImage = null;
+
+    function initialize() {
+        emitters.splice(0);
+    }
 
     function getDefaultOptions(type) {
         if (type === TQ.Element.DescType.RAIN) {
@@ -106,7 +111,7 @@ var TQ = TQ || {};
     }
 
     function _apply() {
-        if (particleImage.src != para1.imageSrc) {
+        if (!hasSameAsset()) {
             particleImage.src = para1.imageSrc;
             particleImage.onload = _apply();
             return;
@@ -129,6 +134,10 @@ var TQ = TQ || {};
             particleImage.onload = _initCanvas;
             particleImage.src = para1.imageSrc;
         }
+    }
+
+    function hasSameAsset() {
+        return particleImage.src === para1.imageSrc;
     }
 
     // 停止下雨
@@ -155,9 +164,6 @@ var TQ = TQ || {};
         var M = para.density;  // 雪花的密度，
         var N = 1;
         var k=0;
-        if (!emitters) {
-            emitters = [];
-        }
         for (var i = 0; i < M; i++) {
             for (var j = 0; j < N; j++) {
                 var x = i / M * canvas.width + canvas.width / 10;
