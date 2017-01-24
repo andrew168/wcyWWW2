@@ -17,16 +17,38 @@ TQ = TQ || {};
 
     var items = [],
         selectedElement = null,
-        counter = 0;
-
-    ParticleMgr.removeAll = removeAll;
+        counter = 0,
+        fullscreenEffect = TQ.SnowEffect,
+        feReferCount = 0;
+    ParticleMgr.feStart = feStart;
+    ParticleMgr.feStop = feStop;
     ParticleMgr.pause = pause;
+    ParticleMgr.removeAll = removeAll;
     ParticleMgr.resume = resume;
     ParticleMgr.initialize = function() {
-        TQ.SnowEffect.initialize(); // 清除emitters;
+        fullscreenEffect.initialize(); // 清除emitters;
         counter = 0;
         removeAll();
     };
+
+    function feStart(paras) {
+        feReferCount++;
+        if (feReferCount === 1) {
+            fullscreenEffect.start(paras);
+        } else {
+            fullscreenEffect.change(paras);
+        }
+    }
+
+    function feStop() {
+        feReferCount--;
+        if (feReferCount < 0) {
+            feReferCount = 0;
+        }
+        if (feReferCount === 0) {
+            fullscreenEffect.stop();
+        }
+    }
 
     ParticleMgr.insertRain = function () {
         var desc = {name: TQ.Element.DescType.RAIN+counter, src: null, type: TQ.Element.DescType.RAIN};

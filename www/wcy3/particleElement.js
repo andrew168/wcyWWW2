@@ -34,7 +34,7 @@ TQ = TQ || {};
         if (!this.jsonObj.particles) {
             this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions(this.jsonObj.type);
         }
-        this.effect = TQ.SnowEffect;
+        this.effect = this.isFEeffect() ? null : TQ.SnowEffect;
 
         // 要复制 父类中的逻辑
         this.loaded = true;
@@ -86,12 +86,22 @@ TQ = TQ || {};
             paras = null;
             console.error("缺少参数： 粒子效果");
         }
-        this.effect.start(paras);
+        if (this.isFEeffect()) {
+            TQ.ParticleMgr.feStart(paras);
+        } else {
+            this.effect.start(paras);
+        }
     };
 
     p.stop = function () {
-        this.isPlaying = false;
-        this.effect.stop();
+        if (this.isPlaying) {
+            this.isPlaying = false;
+            if (this.isFEeffect()) {
+                TQ.ParticleMgr.feStop();
+            } else {
+                this.effect.stop();
+            }
+        }
     };
 
     p._doAddItemToStage = function () {};
@@ -107,6 +117,11 @@ TQ = TQ || {};
     // 计算元素插入点的绝对时刻（与当前level无关， 只与元素所在level有关），
     p.toGlobalTime = function (t) {
         return (this.level.getT0() + t);
+    };
+
+    p.isFEeffect = function() {
+        return ((this.jsonObj.type === TQ.Element.DescType.RAIN) ||
+        (this.jsonObj.type === TQ.Element.DescType.SNOW))
     };
 
     TQ.ParticleElement = ParticleElement;
