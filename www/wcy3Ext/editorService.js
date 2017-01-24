@@ -623,32 +623,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         currScene.deleteLevel(id);
     }
 
-    ////////////////////
-
-    function doStop() {
-        assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
-        if (currScene != null) {
-            currScene.stop();
-        }
-    }
-
-    function doPlay() {
-        assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
-        if (currScene != null) {
-            currScene.play();
-        }
-    }
-
-    function emptyScene() {TQ.SceneEditor.emptyScene(); }
-
-    function getCurrentScene() {
-        return currScene;
-    }
-
-    function getCurrentElement() {
-        return TQ.SelectSet.peek();
-    }
-
     /*
      移动序号为srcId的场景，并插入到序号dstId的场景之前，
      注意：srcId和dstId都是在执行此函数之前， 按照场景的顺序来编号的。
@@ -771,17 +745,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     function addResToStageCenter(res, levelID, t0) {
         return addResToStageCenter(res, levelID, t0);
     }
-
-    function getCurrentLevelID()
-    {
-        return currScene.currentLevelId;
-    }
-
-    function getCurrentTime()
-    {
-        return TQ.FrameCounter.t();
-    }
-
 
     // type: 烟火的种类，默认1,      系统保留扩展其它取值）
     function firework(type) {
