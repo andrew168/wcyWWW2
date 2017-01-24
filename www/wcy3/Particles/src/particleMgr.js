@@ -60,7 +60,11 @@ TQ = TQ || {};
         }
     };
 
-    ParticleMgr.stop = function (id) {
+    ParticleMgr.stop = function (evt) {
+        if (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+        }
         if (selectedElement) {
             selectedElement.stop();
             TQ.CommandMgr.directDo(new TQ.HideCommand([selectedElement], false));
@@ -68,7 +72,12 @@ TQ = TQ || {};
         }
     };
 
-    ParticleMgr.deleteItem = function () {
+    ParticleMgr.deleteItem = function (evt) {
+        if (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+        }
+
         if (selectedElement) {
             TQ.CommandMgr.directDo(new TQ.DeleteEleCommand(currScene, selectedElement));
             selectedElement = null;
