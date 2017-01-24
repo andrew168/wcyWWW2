@@ -91,7 +91,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         reset: reset,
 
         // particle Effect
-        SnowEffect: TQ.SnowEffect,  // start, stop, change(option)
+        ParticleMgr: TQ.ParticleMgr,  // start, stop, change(option)
 
         // share
         shareFbWeb: shareFbWeb,

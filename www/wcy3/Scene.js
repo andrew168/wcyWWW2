@@ -714,7 +714,7 @@ TQ = TQ || {};
         }
         TQ.FrameCounter.stop();
         TQ.SoundMgr.pause();
-        TQ.SnowEffect.stop();
+        TQ.ParticleMgr.pause();
     };
 
     p.play = function () {

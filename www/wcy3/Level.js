@@ -595,7 +595,7 @@ window.TQ = window.TQ || {};
             console.log("is loading, or not loaded!");
         }
         TQ.SoundMgr.removeAll();
-        TQ.SnowEffect.stop();
+        TQ.ParticleMgr.removeAll();
         this.state = TQBase.LevelState.EXIT;
     };
 

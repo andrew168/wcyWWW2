@@ -19,6 +19,9 @@ TQ = TQ || {};
         selectedElement = null,
         counter = 0;
 
+    ParticleMgr.removeAll = removeAll;
+    ParticleMgr.pause = pause;
+    ParticleMgr.resume = resume;
     ParticleMgr.initialize = function() {
         counter = 0;
         removeAll();
@@ -73,12 +76,21 @@ TQ = TQ || {};
     };
 
     function removeAll() {
+        selectedElement = null;
         for (var i = items.length - 1; i >= 0; i--) {
             var ele = items[i];
             // if (ele.isMultiScene) continue;
             ele.stop();
             items.splice(i, 1);
         }
+    }
+
+    function pause() {
+        createjs.ParticleEmitter.stopped = true;
+    }
+
+    function resume() {
+        createjs.ParticleEmitter.stopped = false;
     }
 
     TQ.ParticleMgr = ParticleMgr;
