@@ -64,7 +64,7 @@ TQ = TQ || {};
 
         if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
             || (desc.animeTrack.visible == undefined) || (desc.animeTrack.visible == null)) { // 即时添加的元素
-            this.visible = new TQ.OneTrack(desc.isVis, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            this.visible = new TQ.OneTrack(desc.isVis ? 1 : 0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
                 TQ.TrackRecorder.recordOneTrack(this.visible, 0.0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
             }

@@ -138,7 +138,9 @@ TQ = TQ || {};
         if (!currScene) {
             return;
         }
-        currScene.stop();
+        if (TQ.FrameCounter.isPlaying()) {
+            currScene.stop();
+        }
         currScene.gotoLevel(0);
         TQ.FrameCounter.gotoBeginning();
         currScene.play();
