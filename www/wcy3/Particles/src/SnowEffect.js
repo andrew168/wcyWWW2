@@ -1,5 +1,4 @@
-﻿
-var TQ = TQ || {};
+﻿var TQ = TQ || {};
 
 (function () {
     'use strict';
@@ -92,21 +91,13 @@ var TQ = TQ || {};
         option.startSize = TQ.MathExt.unifyValue10(option.startSize, 10, 20);
         option.direction = TQ.MathExt.unifyValue10(option.direction, 90-15, 90+15);
         option.density = TQ.MathExt.unifyValue10(option.density, 30, 40);
-        //rain1 = {density: 40, startSize:10, direction:110,    dy:50, v0:300, endOpacity:-1, endSize:0, endSizeVar:5};
-        //rain2 = {density: 40, startSize:20, direction:110,    dy:10, v0:100, endOpacity:0.1, endSize:-1, endSizeVar:5};
         para1 = option;
         if (!emitter) {
-            // para1 = rain1;
             _loadAsset();
         } else {
             reset(para1);
             _apply();
         }
-
-        //if (!TQ.FrameCounter.isPlaying()) {
-        //    $('#play').click();
-        //}
-
         createjs.ParticleEmitter.stopped = false;
     }
 
@@ -149,10 +140,6 @@ var TQ = TQ || {};
         TQ.Assert.isNotNull(canvas);
 
         if (!emitter) {
-            // TQ.Assert.isTrue(false, "必须去除FPS， 否则竞争");
-            // createjs.Ticker.setFPS(30);
-            // createjs.Ticker.addListener(update);
-            // addFPS();
             reset(para1);
             created = true;
         } else {
@@ -220,15 +207,3 @@ var TQ = TQ || {};
 
     TQ.SnowEffect = SnowEffect;
 }());
-
-// var fpsLabel;       // label to show the current frames per second
-
-function update() {
-    // fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
-    stage.update();
-}
-
-function addFPS() {
-    // fpsLabel = new createjs.Text("-- fps", "bold 14px Arial", "#BBBBBB");
-    // stage.addChild(fpsLabel);
-}
