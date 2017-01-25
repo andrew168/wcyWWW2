@@ -43,13 +43,16 @@
     };
 
     var para1 = null,
-        emitter = null,
         emitters = [],
         created = false,
-        particleImage = null;
+        particleImage = null,
+        images = {};
 
     function initialize() {
         emitters.splice(0);
+        created = false;
+        particleImage = null;
+        images = {};
     }
 
     function getDefaultOptions(type) {
@@ -92,43 +95,41 @@
         option.direction = TQ.MathExt.unifyValue10(option.direction, 90-15, 90+15);
         option.density = TQ.MathExt.unifyValue10(option.density, 30, 40);
         para1 = option;
-        if (!emitter) {
+        if (!hasSameAsset()) {
             _loadAsset();
         } else {
-            reset(para1);
-            _apply();
-        }
-        createjs.ParticleEmitter.stopped = false;
-    }
-
-    function _apply() {
-        if (!hasSameAsset()) {
-            particleImage.src = para1.imageSrc;
-            particleImage.onload = _apply();
-            return;
-        }
-        for (var i=0; i < emitters.length; i++) {
-            var emitter = emitters[i];
-            emitter.speed = para1.v0; // 粒子的初始速度，
-            emitter.positionVarY = para1.dy;
-            emitter.angle = para1.direction;
-            emitter.endOpacity = para1.endOpacity;
-            emitter.startSize = para1.startSize;
-            emitter.startSizeVar = para1.startSize / 2; //10;
-            emitter.endSizeVar = para1.endSizeVar;
+            initEmitter(particleImage);
         }
     }
 
-    function _loadAsset () {
-        if (!particleImage) {
-            particleImage = new Image();
-            particleImage.onload = _initCanvas;
-            particleImage.src = para1.imageSrc;
+    function resetOne(emitter1, position) {
+        emitter1.position = position;
+        emitter1.speed = para1.v0; // 粒子的初始速度，
+        emitter1.positionVarY = para1.dy;
+        emitter1.angle = para1.direction;
+        emitter1.endOpacity = para1.endOpacity;
+        emitter1.startSize = para1.startSize;
+        emitter1.startSizeVar = para1.startSize / 2; //10;
+        emitter1.endSizeVar = para1.endSizeVar;
+        emitter1.changeImage(particleImage);
+    }
+
+    function _loadAsset() {
+        var asset = images[para1.imageSrc];
+        if (asset) {
+            initEmitter(asset);
+        } else {
+            asset = new Image();
+            asset.onload = function () {
+                images[para1.imageSrc] = asset;
+                initEmitter(asset);
+            };
+            asset.src = para1.imageSrc;
         }
     }
 
     function hasSameAsset() {
-        return particleImage.src === para1.imageSrc;
+        return (particleImage && (particleImage.src === para1.imageSrc));
     }
 
     // 停止下雨
@@ -136,15 +137,10 @@
         createjs.ParticleEmitter.stopped = true;
     }
 
-    function _initCanvas  () {
-        TQ.Assert.isNotNull(canvas);
-
-        if (!emitter) {
-            reset(para1);
-            created = true;
-        } else {
-            _apply(para1);
-        }
+    function initEmitter(asset) {
+        particleImage = asset;
+        reset(para1);
+        created = true;
     }
 
     function reset(para) {
@@ -156,7 +152,7 @@
                 var x = i / M * canvas.width + canvas.width / 10;
                 var y = j / N * canvas.height - canvas.height / 10;
                 if ((k < emitters.length) && (emitters[k])) {
-                    emitters[k].position = new createjs.Point(x, y);
+                    resetOne(emitters[k], new createjs.Point(x, y));
                 } else {
                     para.x = x;
                     para.y = y;
@@ -165,10 +161,11 @@
                 k++;
             }
         }
+        createjs.ParticleEmitter.stopped = false;
     }
 
     function addParticleEmitter (para) {
-        emitter = new createjs.ParticleEmitter(particleImage);
+        var emitter = new createjs.ParticleEmitter(particleImage);
         emitter.position = new createjs.Point(para.x, para.y);
         emitter.emitterType = createjs.ParticleEmitterType.Emit;
         emitter.emissionRate = 2;  // 产生新粒子的速度

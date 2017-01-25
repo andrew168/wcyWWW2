@@ -1,7 +1,5 @@
 /**
  * Created by Andrewz on 1/22/2017.
- */
-/**
  * 图强动漫引擎,
  * 专利产品 领先技术
  * 粒子系统的增、删、改、查
@@ -42,10 +40,12 @@ TQ = TQ || {};
         if (feReferCount === 1) {
             fullscreenEffect.start(paras);
         } else {
-            fullscreenEffect.change(paras);
             if (lastFe) {
-                lastFe.stop(); // 隐藏上一个全屏特效
+                TQ.CommandMgr.directDo(new TQ.HideCommand([lastFe], false)); // 隐藏上一个全屏特效
             }
+            setTimeout(function() {
+                fullscreenEffect.change(paras);
+            });
         }
     }
 

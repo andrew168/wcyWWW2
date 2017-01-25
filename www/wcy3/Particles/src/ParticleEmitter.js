@@ -410,6 +410,10 @@ this.createjs = this.createjs || {};
 
     //#region Public Methods
 
+    p.changeImage = function(image) {
+        this.image = image;  // image宽度和高度必须与上一个图像的一致
+    };
+
     /**
      * Resets the emitter which removes any active particles before starting all over again.
      *
