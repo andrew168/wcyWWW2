@@ -19,6 +19,7 @@ TQ = TQ || {};
         selectedElement = null,
         counter = 0,
         fullscreenEffect = TQ.SnowEffect,
+        feRefers = [];
         feReferCount = 0;
     ParticleMgr.feStart = feStart;
     ParticleMgr.feStop = feStop;
@@ -28,20 +29,30 @@ TQ = TQ || {};
     ParticleMgr.initialize = function() {
         fullscreenEffect.initialize(); // 清除emitters;
         counter = 0;
+        feRefers.splice(0);
+        feReferCount = 0;
         removeAll();
     };
 
-    function feStart(paras) {
+    function feStart(owner, paras) {
         feReferCount++;
+        // feRefers.indexOf(owner) < 0
+        var lastFe = feRefers.pop();
+        feRefers.push(owner);
         if (feReferCount === 1) {
             fullscreenEffect.start(paras);
         } else {
             fullscreenEffect.change(paras);
+            if (lastFe) {
+                lastFe.stop(); // 隐藏上一个全屏特效
+            }
         }
     }
 
-    function feStop() {
+    function feStop(owner) {
         feReferCount--;
+        var id = feRefers.indexOf(owner);
+        feRefers.splice(id, 1);
         if (feReferCount < 0) {
             feReferCount = 0;
         }

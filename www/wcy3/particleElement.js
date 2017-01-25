@@ -68,9 +68,7 @@ TQ = TQ || {};
         this._parent_doShow(isVisible);
         if (isVisible) {
             this.play();
-            TQ.ParticleMgr.register(this);
         } else {
-            TQ.ParticleMgr.unregister(this);
             this.stop();
         }
     };
@@ -80,15 +78,15 @@ TQ = TQ || {};
             return;
         }
         this.isPlaying = true;
-
         var paras = this.jsonObj.particles;
         if (!paras) {
             paras = null;
             console.error("缺少参数： 粒子效果");
         }
         if (this.isFEeffect()) {
-            TQ.ParticleMgr.feStart(paras);
+            TQ.ParticleMgr.feStart(this, paras);
         } else {
+            TQ.ParticleMgr.register(this);
             this.effect.start(paras);
         }
     };
@@ -97,8 +95,9 @@ TQ = TQ || {};
         if (this.isPlaying) {
             this.isPlaying = false;
             if (this.isFEeffect()) {
-                TQ.ParticleMgr.feStop();
+                TQ.ParticleMgr.feStop(this);
             } else {
+                TQ.ParticleMgr.unregister(this);
                 this.effect.stop();
             }
         }
