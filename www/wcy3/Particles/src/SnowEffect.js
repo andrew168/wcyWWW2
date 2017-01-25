@@ -21,9 +21,9 @@
     var defaultOps = {
         startSize: 3, // 雪花大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
-        density: 2.8, // 密度， 默认1（小雨）取值范围：1-10
+        density: 1.2, // 密度， 默认1（小雨）取值范围：1-10
         dy: 10,
-        v0: 400,
+        v0: 200,
         endOpacity: 0.1,
         endSize: -1,
         endSizeVar: 5,
@@ -33,9 +33,9 @@
     var rainOps = {
         startSize: 3, // 雨滴大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
-        density: 2, // 密度， 默认1（小雨）取值范围：1-10
+        density: 1, // 密度， 默认1（小雨）取值范围：1-10
         dy: 10,
-        v0: 400,
+        v0: 200,
         endOpacity: 0.1,
         endSize: -1,
         endSizeVar: 5,
@@ -57,9 +57,9 @@
 
     function getDefaultOptions(type) {
         if (type === TQ.Element.DescType.RAIN) {
-            return rainOps;
+            return TQ.Base.Utility.shadowCopy(rainOps);
         }
-        return defaultOps;
+        return TQ.Base.Utility.shadowCopy(defaultOps);
     }
 
     function start(options) {
