@@ -32,11 +32,11 @@ TQ = TQ || {};
         removeAll();
     };
 
-    function feStart(owner, paras) {
+    function feStart(ele, paras) {
         feReferCount++;
-        // feRefers.indexOf(owner) < 0
+        // feRefers.indexOf(ele) < 0
         var lastFe = feRefers.pop();
-        feRefers.push(owner);
+        feRefers.push(ele);
         if (feReferCount === 1) {
             fullscreenEffect.start(paras);
         } else {
@@ -47,17 +47,20 @@ TQ = TQ || {};
                 fullscreenEffect.change(paras);
             });
         }
+
+        selectedElement = ele;
     }
 
-    function feStop(owner) {
+    function feStop(ele) {
         feReferCount--;
-        var id = feRefers.indexOf(owner);
+        var id = feRefers.indexOf(ele);
         feRefers.splice(id, 1);
         if (feReferCount < 0) {
             feReferCount = 0;
         }
         if (feReferCount === 0) {
             fullscreenEffect.stop();
+            selectedElement = null;
         }
     }
 
@@ -99,8 +102,8 @@ TQ = TQ || {};
             evt.preventDefault();
             evt.stopPropagation();
         }
-        if (selectedElement) {
-            selectedElement.stop();
+        if (!!selectedElement) {
+            // selectedElement.stop();
             TQ.CommandMgr.directDo(new TQ.HideCommand([selectedElement], false));
             selectedElement = null;
         }
@@ -113,7 +116,9 @@ TQ = TQ || {};
         }
 
         if (selectedElement) {
-            TQ.CommandMgr.directDo(new TQ.DeleteEleCommand(currScene, selectedElement));
+            var temp = selectedElement;
+            selectedElement.stop();
+            TQ.CommandMgr.directDo(new TQ.DeleteEleCommand(currScene, temp));
             selectedElement = null;
         }
     };

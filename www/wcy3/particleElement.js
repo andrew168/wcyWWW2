@@ -74,7 +74,7 @@ TQ = TQ || {};
     };
 
     p.play = function () {
-        if (this.isPlaying) {
+        if (this.isPlaying || !this.isVisible()) {
             return;
         }
         this.isPlaying = true;
