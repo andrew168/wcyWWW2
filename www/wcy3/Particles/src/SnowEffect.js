@@ -11,6 +11,11 @@
     var SnowEffect = function () {
     };
 
+    var FeParticle = SnowEffect;
+    FeParticle.SNOW = "snow";
+    FeParticle.RAIN = "rain";
+    FeParticle.MONEY = "money";
+
     SnowEffect.initialize = initialize;
     SnowEffect.getDefaultOptions = getDefaultOptions;
     SnowEffect.start = start;
@@ -18,7 +23,7 @@
     SnowEffect.change = change;
     SnowEffect.set = set;
 
-    var defaultOps = {
+    var snowOps = {
         startSize: 3, // 雪花大小，  默认1,  取值范围1-5.
         direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
         density: 1.2, // 密度， 默认1（小雨）取值范围：1-10
@@ -42,7 +47,20 @@
         imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/yudi3.png"
     };
 
-    var para1 = null,
+    var yuanbaoOps = {
+        startSize: 3,
+        direction: 0,
+        density: 1,
+        dy: 10,
+        v0: 200,
+        endOpacity: 0.1,
+        endSize: -1,
+        endSizeVar: 5,
+        imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/yuanbao1.png"
+    };
+
+    var defaultOps = snowOps,
+        para1 = null,
         emitters = [],
         created = false,
         particleImage = null,
@@ -55,11 +73,17 @@
         images = {};
     }
 
-    function getDefaultOptions(type) {
-        if (type === TQ.Element.DescType.RAIN) {
-            return TQ.Base.Utility.shadowCopy(rainOps);
+    function getDefaultOptions(subType) {
+        switch (subType) {
+            case TQ.FeParticle.MONEY:
+                return TQ.Base.Utility.shadowCopy(yuanbaoOps);
+            case TQ.FeParticle.RAIN:
+                return TQ.Base.Utility.shadowCopy(rainOps);
+            case TQ.FeParticle.SNOW:
+                return TQ.Base.Utility.shadowCopy(defaultOps);
+            default:
+                return TQ.Base.Utility.shadowCopy(defaultOps);
         }
-        return TQ.Base.Utility.shadowCopy(defaultOps);
     }
 
     function start(options) {
@@ -203,4 +227,5 @@
     }
 
     TQ.SnowEffect = SnowEffect;
+    TQ.FeParticle = FeParticle;
 }());

@@ -76,6 +76,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         insertSound: insertSound,
         insertSnow: TQ.ParticleMgr.insertSnow,
         insertRain: TQ.ParticleMgr.insertRain,
+        insertMoney: TQ.ParticleMgr.insertMoney,
         selectLocalFile: selectLocalFile,
         uploadMatFromLocal: uploadMatFromLocal,
 

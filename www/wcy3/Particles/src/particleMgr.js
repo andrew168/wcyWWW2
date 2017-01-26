@@ -61,15 +61,36 @@ TQ = TQ || {};
         }
     }
 
-    ParticleMgr.insertRain = function () {
-        var desc = {name: TQ.Element.DescType.RAIN+counter, src: null, type: TQ.Element.DescType.RAIN};
+    ParticleMgr.insertMoney =  function () {
+        var desc = {
+            name: TQ.FeParticle.MONEY + counter,
+            src: null,
+            type: TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE,
+            subType: TQ.FeParticle.MONEY
+        };
         TQ.SceneEditor.addItem(desc);
     };
 
-    ParticleMgr.insertSnow = function() {
+    ParticleMgr.insertRain = function () {
+        var desc = {
+            name: TQ.FeParticle.RAIN + counter,
+            src: null,
+            type: TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE,
+            subType: TQ.FeParticle.RAIN
+        };
+
+        TQ.SceneEditor.addItem(desc);
+    };
+
+    ParticleMgr.insertSnow = function () {
         // particle 不需要上传本地图片， 所以，不需要通过EditService的addItem,
         // 而是直接调用SceneEditor的
-        var desc = {name: TQ.Element.DescType.SNOW + counter, src: null, type: TQ.Element.DescType.SNOW};
+        var desc = {
+            name: TQ.FeParticle.SNOW + counter,
+            src: null,
+            type: TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE,
+            subType: TQ.FeParticle.SNOW
+        };
         TQ.SceneEditor.addItem(desc);
     };
 

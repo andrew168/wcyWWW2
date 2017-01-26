@@ -12,8 +12,9 @@ window.TQ = window.TQ || {};
         GROUP: "Group",
         GROUP_FILE: "GroupFile",
         JOINT_MARKER: "JointMarker",
-        RAIN: "RainEffect",
-        SNOW: "SnowEffect",
+        FULLSCREEN_EFFECT_PARTICLE: "fullscreenEffectParticle",
+        RAIN: "RainEffect", // TBD
+        SNOW: "SnowEffect", // TBD
         SOUND: "SOUND",
         TEXT: "Text"
     };

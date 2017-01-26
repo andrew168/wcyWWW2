@@ -31,6 +31,7 @@ window.TQ = window.TQ || {};
                 return new TQ.TextElement(level, desc);
             case DescType.RAIN:
             case DescType.SNOW:
+            case DescType.FULLSCREEN_EFFECT_PARTICLE:
                 return new TQ.ParticleElement(level, desc);
             case DescType.BITMAP:
                 break;

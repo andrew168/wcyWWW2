@@ -18,6 +18,19 @@ TQ = TQ || {};
         } else {
             this.t0 = 0;
         }
+
+        if (!jsonObj.subType) {
+            switch (jsonObj.type) {
+                case TQ.Element.DescType.RAIN:
+                    jsonObj.subType = TQ.FeParticle.RAIN;
+                    break;
+                case TQ.Element.DescType.SNOW:
+                default:
+                    jsonObj.subType = TQ.FeParticle.SNOW;
+            }
+            jsonObj.type = TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE;
+        }
+
         this.version = jsonObj.version;
         this.isMultiScene = (this.isVer2plus()) ? true : false;
         this.initialize(jsonObj);
@@ -32,7 +45,7 @@ TQ = TQ || {};
     p._doLoad = function () {
         this.isPlaying = false;
         if (!this.jsonObj.particles) {
-            this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions(this.jsonObj.type);
+            this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions(this.jsonObj.subType);
         }
         this.effect = this.isFEeffect() ? null : TQ.SnowEffect;
 
@@ -119,8 +132,7 @@ TQ = TQ || {};
     };
 
     p.isFEeffect = function() {
-        return ((this.jsonObj.type === TQ.Element.DescType.RAIN) ||
-        (this.jsonObj.type === TQ.Element.DescType.SNOW))
+        return (this.jsonObj.type === TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE);
     };
 
     TQ.ParticleElement = ParticleElement;
