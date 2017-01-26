@@ -34,8 +34,7 @@ TQ = TQ || {};
 
     function feStart(ele, paras) {
         feReferCount++;
-        // feRefers.indexOf(ele) < 0
-        var lastFe = feRefers.pop();
+        var lastFe = feRefers.shift();
         feRefers.push(ele);
         if (feReferCount === 1) {
             fullscreenEffect.start(paras);
@@ -51,10 +50,8 @@ TQ = TQ || {};
         selectedElement = ele;
     }
 
-    function feStop(ele) {
+    function feStop() {
         feReferCount--;
-        var id = feRefers.indexOf(ele);
-        feRefers.splice(id, 1);
         if (feReferCount < 0) {
             feReferCount = 0;
         }

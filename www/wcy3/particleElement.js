@@ -95,7 +95,7 @@ TQ = TQ || {};
         if (this.isPlaying) {
             this.isPlaying = false;
             if (this.isFEeffect()) {
-                TQ.ParticleMgr.feStop(this);
+                TQ.ParticleMgr.feStop();
             } else {
                 TQ.ParticleMgr.unregister(this);
                 this.effect.stop();
