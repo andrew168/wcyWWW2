@@ -1,12 +1,14 @@
 /**
  * Created by Andrewz on 8/24/2016.
  * Aux, 都是辅助的， 与核心功能无关，无耦合， 可以直接拿去用到第三个产品中
+ * 在预览状态下，
+ * ** 如果长时间没有用户输入，则 隐去 预览菜单，并开始watch
+ * ** 如果有用户输入， 则停止watch，暂停预览，并弹出预览菜单，
  */
-
 var TQ = TQ || {};
 TQ.IdleCounter = (function() {
     // 内部成员变量， 必须在return之前定义， 否则无效
-    var IDLE_DURATION = 5000, // ms
+    var IDLE_DURATION = 1000, // ms
         callbacks = [],
         events = ['click', 'keydown', 'touchstart', 'mousedown'],//  'mousemove',  'keyup', 'touchend', 'touchmove', 'mouseup'
         watchDog = null;
@@ -51,7 +53,6 @@ TQ.IdleCounter = (function() {
             document.addEventListener(item, onWorking, true);
         });
 
-        var IDLE_DURATION = 1000; //ms
         watchDog = setTimeout(stop, IDLE_DURATION);
     }
 

@@ -135,7 +135,18 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         state.isPlayMode = null;
         state.isPlaying = false;
         TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
-        TQ.PreviewMenu.initialize(state, $timeout);
+        TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
+
+        function onPreviewMenuOn() {
+            $timeout(function () {
+                stop();
+                TQ.TouchManager.start();
+            });
+        }
+
+        function onPreviewMenuOff() {
+            $timeout(function () {});
+        }
     }
 
     function initialize() {
@@ -613,12 +624,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             updateMode();
         }
 
+        //TQ.IdleCounter.stop();
         $timeout(function () { // 用timeout迫使angularjs 刷新UI
             state.isPlaying = false;
         }, 100);
     }
 
-    function preview () {
+    function preview (event) {
+        if (event) {
+            event.preventDefault();
+            event.stopPropagation();
+        }
         state.isPreviewMode = true;
         replay();
     }
@@ -636,10 +652,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         forceToRefreshUI();
         TQ.TouchManager.stop();
         $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
-            TQ.PreviewMenu.startWatch();
             state.isPlaying = true;
         }, 100);
         TQ.IdleCounter.start(TQ.PreviewMenu.hide);
+        TQ.PreviewMenu.startWatch();
     }
 
     function replay() {
