@@ -8,8 +8,7 @@ TQ.IdleCounter = (function() {
     // 内部成员变量， 必须在return之前定义， 否则无效
     var IDLE_DURATION = 5000, // ms
         callbacks = [],
-        events = ['keydown', 'keyup', 'touchstart', 'touchend', 'touchmove',
-            'mousedown', 'mouseup', 'mousemove'],
+        events = ['click', 'keydown', 'touchstart', 'mousedown'],//  'mousemove',  'keyup', 'touchend', 'touchmove', 'mouseup'
         watchDog = null;
 
     // 接口函数
@@ -20,10 +19,15 @@ TQ.IdleCounter = (function() {
     };
 
     // 所有成员函数， ABC 顺序
-    function onWorking() {
+    function onWorking(evt) {
         if (watchDog) {
             clearTimeout(watchDog);
         }
+        var msg = "evt to end idle: ";
+        if (evt) {
+            msg += evt.type;
+        }
+        console.log(msg);
         watchDog = setTimeout(stop, IDLE_DURATION);
     }
 
