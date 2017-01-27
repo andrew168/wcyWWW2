@@ -64,6 +64,7 @@ window.TQ = window.TQ || {};
     Config.IK_ITERATE_TIME = 1;
     Config.DEMO_SCENE_NAME="SystemDemo1";
     Config.UNNAMED_SCENE = "wcy01";
+    Config.INVALID_WCY_ID = -1;
     Config.THUMBS_CORE_PATH = "mcThumbs/";
 
     Config.SCENES_CORE_PATH = "mcAssets/";
