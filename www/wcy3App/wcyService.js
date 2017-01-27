@@ -35,7 +35,7 @@ function WCY($http, FileService, WxService, NetService) {
         _WCY_ID_ = "_wcy_id",
         readCache = TQ.Base.Utility.readCache,
         writeCache = TQ.Base.Utility.writeCache,
-        _wcyId = -1, // 缺省-1， 表示没有保存的作品。，12345678;
+        _wcyId = TQ.Config.INVALID_WCY_ID, // 缺省-1， 表示没有保存的作品。，12345678;
         _shareCode = null,
         _ssSign = null,
         _onStarted = null;
@@ -189,14 +189,14 @@ function WCY($http, FileService, WxService, NetService) {
             });
         }
 
-        var previousSaved = readCache(_AUTO_SAVE_NAME);
+        var previousSaved = readCache(_AUTO_SAVE_NAME, null);
         if (previousSaved) {
-            _shareCode = readCache(_SHARE_CODE_);
-            _wcyId = readCache(_WCY_ID_);
+            _shareCode = readCache(_SHARE_CODE_, null);
+            _wcyId = readCache(_WCY_ID_, TQ.Config.INVALID_WCY_ID);
             if (_shareCode && ((!_wcyId) || (_wcyId < 1))) {
                 _wcyId = shareCode2Id(_shareCode);
             }
-            var filename = readCache(_FILENAME);
+            var filename = readCache(_FILENAME, TQ.Config.UNNAMED_SCENE);
             var fileInfo = {name: filename, content: previousSaved};
             _open(fileInfo);
         } else {
