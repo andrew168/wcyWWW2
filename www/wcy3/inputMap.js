@@ -62,8 +62,8 @@ var TOUCH_MOVING_FLAG = 999;
     };
 
     InputMap.IsOperating = function() {
-        return ((InputMap.isTouchMoving || InputMap.isMouseDown || TQ.TouchManager.isOperating()) &&
-                (InputMap.toolbarState == null));
+        return ((InputMap.isTouchMoving || InputMap.isMouseDown) &&
+                (InputMap.toolbarState === null));
     };
 
     InputMap.maps = [];

@@ -14,7 +14,6 @@ var TQ = TQ || {};
     Trsa3.onTouchEnd = onTouchEnd;
     Trsa3.onRelease = onRelease;
     Trsa3.onDrag = onDrag;
-    Trsa3.isOperating = isOperating;
 
     var isDithering = false,
         ele = null,
@@ -32,7 +31,6 @@ var TQ = TQ || {};
     var pos = {x: 0, y: 0},
         deltaX0 = 0,
         deltaY0 = 0,
-        isOperatingFlag = false,
         isMultiTouching = false;
 
     var touchedEle;
@@ -46,10 +44,6 @@ var TQ = TQ || {};
         results.forEach(function(ele) {
             ele.moveTo(TQ.Utility.deviceToWorld(evt.stageX, evt.stageY));
         });
-    }
-
-    function isOperating() {
-        return isOperatingFlag;
     }
 
     function isMultiTouch(e) {
@@ -140,8 +134,6 @@ var TQ = TQ || {};
             startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
             // showFloatToolbar(evt);
             // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
-
-            isOperatingFlag = true;
         }
         e.stopPropagation();
         e.preventDefault();
@@ -163,7 +155,6 @@ var TQ = TQ || {};
         if (ele && ele.snapIt) {
             ele.snapIt();
         }
-        isOperatingFlag = false;
         ditherStart();
         startEle = null;
         var hasGesture = !!e.gesture;

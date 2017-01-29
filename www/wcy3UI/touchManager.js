@@ -123,6 +123,5 @@ var TQ = TQ || {};
     TouchManager.start = start;
     TouchManager.stop = stop;
     TouchManager.updateOps = updateOps;
-    TouchManager.isOperating = TQ.Trsa3.isOperating;
     TQ.TouchManager = TouchManager;
 })();
