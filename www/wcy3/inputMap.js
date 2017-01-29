@@ -92,17 +92,14 @@ var TOUCH_MOVING_FLAG = 999;
 
       $(document).bind('mousemove touchmove touchcancel', function (e) {
         // TQ.Log.info("which:" + e.which + "mousedown:" + InputMap.isMouseDown + " type:" + e.type + "(x,y):" + e.screenX + "," + e.screenY);
-        InputMap.mouseMoving = true;
         InputMap.updateSpecialKey(e);
       });
 
       $(document).bind('mouseup touchend', function (e) {
-        InputMap._updateMouse(e, false);
         InputMap.updateSpecialKey(e);
       });
 
       $(document).bind('mousedown touchstart', function (e) {
-        InputMap._updateMouse(e, true);
         InputMap.updateSpecialKey(e);
       });
 
@@ -136,11 +133,6 @@ var TOUCH_MOVING_FLAG = 999;
         // displayInfo2(e.which);
     };
 
-    InputMap._updateMouse = function (e, isDown) {
-        InputMap.isMouseDown = isDown;
-        // displayInfo2(e.which);
-    };
-
     InputMap.getCombination = function (e) {
         var result = e.which;
         if (InputMap.isPresseds[InputMap.LEFT_CTRL]) result |= InputMap.LEFT_CTRL_FLAG;
@@ -154,7 +146,33 @@ var TOUCH_MOVING_FLAG = 999;
         InputMap.isPresseds[InputMap.LEFT_CTRL] = e.ctrlKey;
         InputMap.isPresseds[InputMap.LEFT_SHIFT] = e.shiftKey;
         InputMap.isPresseds[InputMap.LEFT_ALT] = e.altKey;
-        InputMap.isMouseDown = e.which;
+
+        switch (e.type) {
+            case 'mousedown':
+            case 'touchstart':
+                InputMap.isMouseDown = true;
+                break;
+
+            case 'mouseup':
+            case 'touchend':
+            case 'touchcancel':
+                InputMap.isMouseDown = false;
+                break;
+        }
+
+        if (InputMap.isMouseDown) {
+            switch (e.type) {
+                case 'mousemove':
+                case 'touchmove':
+                    InputMap.mouseMoving = true;
+                    break;
+                case 'touchcancel':
+                    InputMap.mouseMoving = false;
+                    break;
+            }
+        } else {
+            InputMap.mouseMoving = false;
+        }
 
         InputMap.updateTouch(e);
     };
