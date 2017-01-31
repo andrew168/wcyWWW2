@@ -7,13 +7,20 @@
 angular.module('starter').factory('EditorService', EditorService);
 EditorService.$inject = ['$q', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY'];
 function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
+    var CMD_UNKNOWN = "unknown",
+        CMD_MCOPYING_BEGIN = 'mcopying begin',
+        CMD_MCOPYING_END = 'mcopying end';
+
     var _initialized = false,
         _sceneReady = false,
         _colorPanel = null,
         _lastSelected = null,
         fileElement = null,
         _tryToSave = false,
-        domEle = null;
+        domEle = null,
+        lastCmd = CMD_UNKNOWN,
+        currCmd = CMD_UNKNOWN;
+
     var isPlayOnly = false;
     var canvas;
 
@@ -90,6 +97,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         setColorPanel: setColorPanel,
         toAddMode: toAddMode,
         reset: reset,
+        onEventByToolbar : onEventByToolbar,
 
         // particle Effect
         ParticleMgr: TQ.ParticleMgr,  // start, stop, change(option)
@@ -425,6 +433,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
 
     function mCopyToggle() {
         state.isMCopying = !state.isMCopying;
+        currCmd = (state.isMCopying) ? CMD_MCOPYING_BEGIN : CMD_MCOPYING_END;
         TQ.TouchManager.updateOps(state);
 
     }
@@ -1079,5 +1088,24 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         if (pkg && pkg.error && pkg.msg) {
             TQ.MessageBox.show(pkg.msg);
         }
+    }
+
+    function onEventByToolbar(evt) {
+        if (evt) {
+            evt.preventDefault();
+            evt.stopPropagation();
+        }
+
+        //结束批命令:
+        if (state.isMCopying) {
+            if ((lastCmd === CMD_MCOPYING_BEGIN) && (currCmd !== CMD_MCOPYING_END)) {
+                mCopyToggle();
+            }
+        }
+
+        lastCmd = currCmd;
+        currCmd = CMD_UNKNOWN;
+
+        //ToDo: 　Joint, group
     }
 }
