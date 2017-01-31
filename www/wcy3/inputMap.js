@@ -147,6 +147,10 @@ var TOUCH_MOVING_FLAG = 999;
         InputMap.isPresseds[InputMap.LEFT_SHIFT] = e.shiftKey;
         InputMap.isPresseds[InputMap.LEFT_ALT] = e.altKey;
 
+        //  mouse click只激发touchStart，不触发touchEnd，
+        // 所以， 状态的控制， 必须
+        // 让touchEnd和mouseUp使用相同的处理，（同理：
+        // touchStart和mouseDown也使用相同的处理
         switch (e.type) {
             case 'mousedown':
             case 'touchstart':
