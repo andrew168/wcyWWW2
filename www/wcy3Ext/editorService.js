@@ -149,6 +149,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     function initialize() {
         reset();
         $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
+        $rootScope.$on(TQ.EVENT.REFRESH_UI, forceToRefreshUI);
     }
 
     function onSelectSetChange() {

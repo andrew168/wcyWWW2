@@ -62,6 +62,7 @@ TQ = TQ || {};
 
         selectedElement = ele;
         lastOps = paras;
+        TQUtility.triggerEvent(document.body, TQ.EVENT.REFRESH_UI);
         children[ele.jsonObj.subType] = ele;
     }
 
