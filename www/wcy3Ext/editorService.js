@@ -143,6 +143,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         state.isPlayMode = null;
         state.isPlaying = false;
         TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
+        TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
     }
 
     function initialize() {
@@ -209,30 +210,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         return true;
     }
 
-    function onPreviewMenuOn(e) {
-        var events = ['touchstart', 'click'];
-        if (!isSelectedEvent(e)) {
-            return;
-        }
-
-        if (state.isPreviewMode && e && (events.indexOf(e.type) >= 0)) {
-            $timeout(function(){
-                state.isPreviewMenuOn = true;
-                stopWatch();
-                stop();
-                TQ.TouchManager.start();
-            });
-        }
+    function onPreviewMenuOn() {
+        $timeout(function () {
+            stop();
+            TQ.TouchManager.start();
+        });
     }
 
-    function onPreviewMenuOff(e) {
-        if (e && !isSelectedEvent(e)) {
-            return;
-        }
-
-        $timeout(function() {
+    function onPreviewMenuOff() {
+        $timeout(function () {
             state.isPreviewMenuOn = false;
-            startWatch();
         });
     }
 
@@ -698,10 +685,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
         forceToRefreshUI();
         TQ.TouchManager.stop();
         $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
-            startWatch();
             state.isPlaying = true;
         }, 100);
-        TQ.IdleCounter.start(onPreviewMenuOff);
+        TQ.IdleCounter.start(TQ.PreviewMenu.hide);
+        TQ.PreviewMenu.startWatch();
     }
 
     function replay() {
@@ -827,7 +814,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             TQ.IdleCounter.remove(onPreviewMenuOff);
             TQ.TouchManager.start();
             onPreviewMenuOff();
-            stopWatch();
+            TQ.PreviewMenu.stopWatch();
         }
         updateMode(true);
     }
@@ -1072,16 +1059,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
                 caption: "U do I do, it's better and better.   -- UDOIDO",
                 message: "" // not supported by FB?
             });
-    }
-
-    function stopWatch() {
-        document.removeEventListener('touchstart', onPreviewMenuOn);
-        document.removeEventListener('click', onPreviewMenuOn);
-    }
-
-    function startWatch() {
-        document.addEventListener('touchstart', onPreviewMenuOn);
-        document.addEventListener('click', onPreviewMenuOn);
     }
 
     function errorReport(pkg) {
