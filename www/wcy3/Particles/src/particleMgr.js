@@ -17,10 +17,15 @@ TQ = TQ || {};
         selectedElement = null,
         counter = 0,
         fullscreenEffect = TQ.SnowEffect,
-        feRefers = [];
+        feRefers = [],
+        children = [],
+        lastOps = null,
         feReferCount = 0;
+
+    ParticleMgr.change = change;
     ParticleMgr.feStart = feStart;
     ParticleMgr.feStop = feStop;
+    ParticleMgr.getOps = getOps;
     ParticleMgr.pause = pause;
     ParticleMgr.removeAll = removeAll;
     ParticleMgr.resume = resume;
@@ -31,6 +36,14 @@ TQ = TQ || {};
         feReferCount = 0;
         removeAll();
     };
+
+    function change() {
+        var n = feRefers.length;
+        if (n > 0) {
+            var ele = feRefers[n - 1];
+            ele.apply();
+        }
+    }
 
     function feStart(ele, paras) {
         feReferCount++;
@@ -48,6 +61,8 @@ TQ = TQ || {};
         }
 
         selectedElement = ele;
+        lastOps = paras;
+        children[ele.jsonObj.subType] = ele;
     }
 
     function feStop() {
@@ -62,6 +77,14 @@ TQ = TQ || {};
     }
 
     ParticleMgr.insertMoney =  function () {
+        var existEle = children[TQ.FeParticle.MONEY];
+        if (existEle) {
+            existEle.show(true);
+            existEle.play();
+            selectedElement = existEle;
+            return;
+        }
+
         var desc = {
             name: TQ.FeParticle.MONEY + counter,
             src: null,
@@ -72,6 +95,14 @@ TQ = TQ || {};
     };
 
     ParticleMgr.insertRain = function () {
+        var existEle = children[TQ.FeParticle.RAIN];
+        if (existEle) {
+            existEle.show(true);
+            existEle.play();
+            selectedElement = existEle;
+            return;
+        }
+
         var desc = {
             name: TQ.FeParticle.RAIN + counter,
             src: null,
@@ -83,6 +114,14 @@ TQ = TQ || {};
     };
 
     ParticleMgr.insertSnow = function () {
+        var existEle = children[TQ.FeParticle.SNOW];
+        if (existEle) {
+            existEle.show(true);
+            existEle.play();
+            selectedElement = existEle;
+            return;
+        }
+
         // particle 不需要上传本地图片， 所以，不需要通过EditService的addItem,
         // 而是直接调用SceneEditor的
         var desc = {
@@ -153,6 +192,14 @@ TQ = TQ || {};
 
     function pause() {
         createjs.ParticleEmitter.stopped = true;
+    }
+
+    function getOps() {
+        if (!lastOps) {
+            lastOps = TQ.SnowEffect.getDefaultOptions();
+        }
+
+        return lastOps;
     }
 
     function resume() {

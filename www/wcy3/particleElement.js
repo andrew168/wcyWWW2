@@ -86,6 +86,14 @@ TQ = TQ || {};
         }
     };
 
+    p.apply = function() {
+        if (this.isPlaying) {
+            this.stop();
+        }
+
+        this.play();
+    };
+
     p.play = function () {
         if (this.isPlaying || !this.isVisible()) {
             return;
@@ -129,6 +137,10 @@ TQ = TQ || {};
     // 计算元素插入点的绝对时刻（与当前level无关， 只与元素所在level有关），
     p.toGlobalTime = function (t) {
         return (this.level.getT0() + t);
+    };
+
+    p.getOps = function() {
+        return this.jsonObj.particles;
     };
 
     p.isFEeffect = function() {

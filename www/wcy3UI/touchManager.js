@@ -59,7 +59,9 @@ var TQ = TQ || {};
     }
 
     function updateOps(state) {
-        detachOps(currentOps);
+        if (currentOps) {
+            detachOps(currentOps);
+        }
         if (state.isMCopying) {
             currentOps = mCopyOps;
         } else {
