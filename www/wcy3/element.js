@@ -886,7 +886,7 @@ window.TQ = window.TQ || {};
         // 同时,重置回调函数,阻止用户操作; 切断指针以便于释放内容,
         this._doRemoveFromStage();
         if (this.displayObj != null) {
-            this.displayObj.jsobObj = null;
+            this.displayObj.jsonObj = null;
             this.displayObj.onPress = null;
             this.displayObj.onMouseOver = null;
             this.displayObj.onMouseOut = null;
