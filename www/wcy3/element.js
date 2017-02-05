@@ -1510,6 +1510,20 @@ window.TQ = window.TQ || {};
         }
     };
 
+    function snapAngle(angle) {
+        // 角度钳制： 如果非常靠近90度的整数倍，则取该度数
+        if (TQ.Config.snapAngleOn) {
+            var k = angle/90,
+                kRound = Math.round(k),
+                toloerance = (k - kRound);
+            if (Math.abs(toloerance) < 0.05) {
+                angle = kRound * 90;
+            }
+        }
+
+        return angle;
+    }
+
     p.moveTo = function (point) {
         if (this.isPinned()) {
             return;
@@ -1561,7 +1575,7 @@ window.TQ = window.TQ || {};
             return;
         }
 
-        this.jsonObj.rotation = angle;
+        this.jsonObj.rotation = snapAngle(angle);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.ROTATING);
         TQ.DirtyFlag.setElement(this);

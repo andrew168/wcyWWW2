@@ -44,6 +44,7 @@ window.TQ = window.TQ || {};
     Config.workingRegionWidth = 751;
     Config.workingRegionHeight = 550;
     Config.snapOn = false;
+    Config.snapAngleOn = true;
     Config.snapDX = 50;
     Config.snapDY = 50;
     Config.ORIENTATION_PORTRAIT = "portrait";
