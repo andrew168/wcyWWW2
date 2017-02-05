@@ -31,8 +31,8 @@ var currScene = null;
         TQ.Assert.isNotNull(option);
         var fileInfo = {
             filename: option.filename || TQ.Config.UNNAMED_SCENE,
-            screenshotName : option.screenshotName,
-            content:TQ.Scene.getEmptySceneJSON()
+            screenshotName: option.screenshotName,
+            content: TQ.Scene.getEmptySceneJSON()
         };
         fileInfo.isPlayOnly = false;
         TQ.WCY.isPlayOnly = false;
@@ -51,7 +51,7 @@ var currScene = null;
         stage.addChild(stageContainer);
     }
 
-    SceneEditor.addItem = function(desc) {
+    SceneEditor.addItem = function (desc) {
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
 
         // "Groupfile" 暂时还没有纳入RM的管理范畴
@@ -131,178 +131,183 @@ var currScene = null;
     SceneEditor.stageContainer = stageContainer;
     TQ.SceneEditor = SceneEditor;
 
-function init(fileInfo) {
-    if ((typeof fileInfo) === "string") {
-        fileInfo = {name: fileInfo, content: null};
+    function init(fileInfo) {
+        if ((typeof fileInfo) === "string") {
+            fileInfo = {name: fileInfo, content: null};
+        }
+        if (!TQ.SceneEditor.stage) {
+            createStage();
+        }
+        //stage.enableMouseOver();
+        TQBase.LevelState.reset();
+        initializeCoreModules();
+        TQ.SceneEditor.loadScene(fileInfo);
+        initializeControllers();
+        createjs.Ticker.setFPS(20);
+
+        // 让Scene来决定处理tick，它可以包括update和render。而stage的自动响应只包括render。
+        // createjs.Ticker.addListener(stage, false);
+        createjs.Ticker.addListener(currScene, false);
+
+        createjs.Ticker.addListener(window);
     }
-    if (!TQ.SceneEditor.stage) {
-        createStage();
+
+    function initializeCoreModules() {
+        // core module是在loadScene中需要用到的module， 必须在loadScene之前初始化
+        TQ.SoundMgr.initialize();
+        TQ.ParticleMgr.initialize();
+        TQ.RM.initialize();
     }
-    //stage.enableMouseOver();
-    TQBase.LevelState.reset();
-    TQ.SoundMgr.initialize();
-    TQ.ParticleMgr.initialize();
-    TQ.RM.initialize();
-    TQ.SceneEditor.loadScene(fileInfo);
-    initializeControllers();
-    createjs.Ticker.setFPS(20);
 
-    // 让Scene来决定处理tick，它可以包括update和render。而stage的自动响应只包括render。
-    // createjs.Ticker.addListener(stage, false);
-    createjs.Ticker.addListener(currScene, false);
-
-    createjs.Ticker.addListener(window);
-}
-
-function initializeControllers() {
-    TQ.InputMap.initialize(TQ.WCY.isPlayOnly);
-    TQ.TaskMgr.initialize();
-    TQ.GarbageCollector.initialize();
-    TQ.CommandMgr.initialize();
-    TQ.InputCtrl.initialize(stageContainer);
-    TQ.MoveCtrl.initialize(stageContainer);
-    TQ.SkinningCtrl.initialize(stageContainer, currScene);
-    TQ.IKCtrl.initialize(stageContainer, currScene);
-    TQ.TrackRecorder.initialize();
-    TQ.ActionRecorder.initialize();
-    TQ.SelectSet.initialize();
-    TQ.TouchManager.initialize();
-}
-
-function openScene(fileInfo) {
-    if ((typeof fileInfo) === "string") {
-        fileInfo = {name: fileInfo, content: null};
+    function initializeControllers() {
+        TQ.InputMap.initialize(TQ.WCY.isPlayOnly);
+        TQ.TaskMgr.initialize();
+        TQ.GarbageCollector.initialize();
+        TQ.CommandMgr.initialize();
+        TQ.InputCtrl.initialize(stageContainer);
+        TQ.MoveCtrl.initialize(stageContainer);
+        TQ.SkinningCtrl.initialize(stageContainer, currScene);
+        TQ.IKCtrl.initialize(stageContainer, currScene);
+        TQ.TrackRecorder.initialize();
+        TQ.ActionRecorder.initialize();
+        TQ.SelectSet.initialize();
+        TQ.TouchManager.initialize();
     }
-    if ((!currScene) || currScene.isSaved || currScene.isEmpty()) {
-        TQ.MessageBox.hide();
-        if (!currScene) {
-            currScene = new TQ.Scene();
+
+    function openScene(fileInfo) {
+        if ((typeof fileInfo) === "string") {
+            fileInfo = {name: fileInfo, content: null};
+        }
+        if ((!currScene) || currScene.isSaved || currScene.isEmpty()) {
+            TQ.MessageBox.hide();
+            if (!currScene) {
+                currScene = new TQ.Scene();
+                TQ.WCY.currentScene = currScene;
+            } else {
+                currScene.close();
+            }
+            TQ.GarbageCollector.reset();
+            currScene.open(fileInfo);
+            localStorage.setItem("sceneName", fileInfo.name);
+            TQ.FrameCounter.reset();
+            TQ.CommandMgr.reset();
+            TQ.SkinningCtrl.end();
+            TQ.FloatToolbar.close();
             TQ.WCY.currentScene = currScene;
         } else {
-            currScene.close();
+            TQ.AssertExt.invalidLogic("必须自动保存， 减少干扰用户！");
+            TQ.MessageBox.show("请先保存作品！");
         }
-        TQ.GarbageCollector.reset();
-        currScene.open(fileInfo);
-        localStorage.setItem("sceneName", fileInfo.name);
-        TQ.FrameCounter.reset();
-        TQ.CommandMgr.reset();
-        TQ.SkinningCtrl.end();
-        TQ.FloatToolbar.close();
-        TQ.WCY.currentScene = currScene;
-    } else {
-        TQ.AssertExt.invalidLogic("必须自动保存， 减少干扰用户！");
-        TQ.MessageBox.show("请先保存作品！");
-    }
-    return currScene;
-}
-
-function getDefaultTitle(givenName) {
-    var defaultTitle = ((!currScene) || (!currScene.title)) ?
-        givenName : currScene.title;
-    if (!defaultTitle) {
-        defaultTitle = TQ.Config.UNNAMED_SCENE;
+        return currScene;
     }
 
-    var id = defaultTitle.lastIndexOf("\\");
-    if (id <= 0) {
-        id = defaultTitle.lastIndexOf("/");
+    function getDefaultTitle(givenName) {
+        var defaultTitle = ((!currScene) || (!currScene.title)) ?
+            givenName : currScene.title;
+        if (!defaultTitle) {
+            defaultTitle = TQ.Config.UNNAMED_SCENE;
+        }
+
+        var id = defaultTitle.lastIndexOf("\\");
+        if (id <= 0) {
+            id = defaultTitle.lastIndexOf("/");
+        }
+
+        var shortTitle = (id > 0) ? defaultTitle.substr(id + 1) : defaultTitle;
+        return TQ.Utility.forceExt(shortTitle);
     }
 
-    var shortTitle = (id > 0) ? defaultTitle.substr(id + 1) : defaultTitle;
-    return TQ.Utility.forceExt(shortTitle);
-}
 
+    function deleteScene() {
+        var title = currScene.title;
+        if ((title.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) // 不能覆盖系统的演示文件
+            && (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
+            var filename = currScene.filename;
+            TQ.TaskMgr.addTask(function () {
+                    netDelete(filename);
+                },
+                null);
+        } else {
+            displayInfo2("<" + title + ">:" + TQ.Dictionary.CanntDelete);
+        }
+    }
 
-function deleteScene() {
-    var title = currScene.title;
-    if ((title.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) // 不能覆盖系统的演示文件
-        && (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
-        var filename = currScene.filename;
+    function _doSave(filename, keywords) {
         TQ.TaskMgr.addTask(function () {
-                netDelete(filename);
+                currScene.save(filename, keywords);
             },
+
             null);
-    } else {
-        displayInfo2("<" + title + ">:" + TQ.Dictionary.CanntDelete);
-    }
-}
-
-function _doSave(filename, keywords) {
-    TQ.TaskMgr.addTask(function () {
-            currScene.save(filename, keywords);
-        },
-
-        null);
-    TQ.InputMap.turnOn();
-    localStorage.setItem("sceneName", filename);
-}
-
-function addLevelTest() {
-    var levelId = currScene.addLevel();
-    currScene.gotoLevel(levelId);
-}
-
-function addImage(desc) {
-    TQ.Log.depreciated("replaced by: SceneEditor.addItem");
-}
-
-function addAnimationTest() {
-    currScene.addItem({src: TQ.Config.SCENES_CORE_PATH + "AnimationDesc.adm", type: "BitmapAnimation"});
-}
-
-function makeAnimationTest() {
-    currScene.shooting();
-}
-
-function uploadImageWindow() {
-    // 从JS调用PHP, 则PHP的URL 是相对于当前HTML或PHP文件的目录, 而不是JS文件的目录,
-    createWindow("Weidongman/src/upload_image.php", 500, 400);
-}
-
-function createWindow(url, width, height) {
-    // Add some pixels to the width and height:
-    var borderWidth = 10;
-    width = width + borderWidth;
-    height = height + borderWidth;
-
-    // If the window is already open,
-    // resize it to the new dimensions:
-    if (window.popup && !window.popup.closed) {
-        window.popup.resizeTo(width, height);
+        TQ.InputMap.turnOn();
+        localStorage.setItem("sceneName", filename);
     }
 
-    // Set the window properties:
-    var specs = "location=no, scrollbars=no, menubars=no, toolbars=no, resizable=yes, left=0, top=0, width=" + width + ", height=" + height;
+    function addLevelTest() {
+        var levelId = currScene.addLevel();
+        currScene.gotoLevel(levelId);
+    }
 
-    // Create the pop-up window:
-    var popup = window.open(url, "ImageWindow", specs);
-    popup.focus();
+    function addImage(desc) {
+        TQ.Log.depreciated("replaced by: SceneEditor.addItem");
+    }
 
-} // End of function.
+    function addAnimationTest() {
+        currScene.addItem({src: TQ.Config.SCENES_CORE_PATH + "AnimationDesc.adm", type: "BitmapAnimation"});
+    }
 
-function addTextTest() {
-    TQ.TextEditor.addText(TQ.Dictionary.defaultText);
-}
+    function makeAnimationTest() {
+        currScene.shooting();
+    }
 
-function create3DElement() {
-    if (TQ.SelectSet.groupIt()) { // 返回false肯定不成功, 不要做后续的
-        var ele = currScene.currentLevel.latestElement;
-        if (ele != null) {
-            if (ele.viewCtrl == null) {
-                var ctrl = new TQ.MultiView();
-                TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.SET_3D_OBJ, ctrl, ele, ele));
+    function uploadImageWindow() {
+        // 从JS调用PHP, 则PHP的URL 是相对于当前HTML或PHP文件的目录, 而不是JS文件的目录,
+        createWindow("Weidongman/src/upload_image.php", 500, 400);
+    }
+
+    function createWindow(url, width, height) {
+        // Add some pixels to the width and height:
+        var borderWidth = 10;
+        width = width + borderWidth;
+        height = height + borderWidth;
+
+        // If the window is already open,
+        // resize it to the new dimensions:
+        if (window.popup && !window.popup.closed) {
+            window.popup.resizeTo(width, height);
+        }
+
+        // Set the window properties:
+        var specs = "location=no, scrollbars=no, menubars=no, toolbars=no, resizable=yes, left=0, top=0, width=" + width + ", height=" + height;
+
+        // Create the pop-up window:
+        var popup = window.open(url, "ImageWindow", specs);
+        popup.focus();
+
+    } // End of function.
+
+    function addTextTest() {
+        TQ.TextEditor.addText(TQ.Dictionary.defaultText);
+    }
+
+    function create3DElement() {
+        if (TQ.SelectSet.groupIt()) { // 返回false肯定不成功, 不要做后续的
+            var ele = currScene.currentLevel.latestElement;
+            if (ele != null) {
+                if (ele.viewCtrl == null) {
+                    var ctrl = new TQ.MultiView();
+                    TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.SET_3D_OBJ, ctrl, ele, ele));
+                }
             }
         }
+        TQ.InputCtrl.clearSubjectModeAndMultiSelect();
     }
-    TQ.InputCtrl.clearSubjectModeAndMultiSelect();
-}
 
-function editActions() {
-    var ele = TQ.SelectSet.peek();
+    function editActions() {
+        var ele = TQ.SelectSet.peek();
 
-    if (ele != null) {
-        TQ.Animation.unitTest(ele);
+        if (ele != null) {
+            TQ.Animation.unitTest(ele);
+        }
     }
-}
 
 }());
