@@ -18,7 +18,7 @@ TQ = TQ || {};
         counter = 0,
         fullscreenEffect = TQ.SnowEffect,
         feRefers = [],
-        children = [],
+        children = {},
         lastOps = null,
         feReferCount = 0;
 
@@ -32,6 +32,7 @@ TQ = TQ || {};
     ParticleMgr.initialize = function() {
         fullscreenEffect.initialize(); // 清除emitters;
         counter = 0;
+        children = {}; // create a new one, will throw the old into Garbage collection
         feRefers.splice(0);
         feReferCount = 0;
         removeAll();
