@@ -113,9 +113,10 @@
     }
 
     function set(option) {
-        option.startSize = TQ.MathExt.unifyValue10(option.nStartSize, 10, 20);
-        option.direction = TQ.MathExt.unifyValue10(option.nDirection, 90-15, 90+15);
-        option.density = TQ.MathExt.unifyValue10(option.nDensity, 30, 40);
+        option.startSize = TQ.MathExt.unifyValue10(parseFloat(option.nStartSize), 10, 20);
+        option.direction = TQ.MathExt.unifyValue10(parseFloat(option.nDirection), 90-15, 90+15);
+        option.density = TQ.MathExt.unifyValue10(parseFloat(option.nDensity), 30, 40);
+        option.v0 = parseFloat(option.v0);
         para1 = option;
         if (!hasSameAsset()) {
             _loadAsset();
