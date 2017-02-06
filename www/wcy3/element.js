@@ -5,6 +5,15 @@
 window.TQ = window.TQ || {};
 
 (function () {
+    TQ.ElementType = {
+        BITMAP: "Bitmap",
+        SOUND: "SOUND",
+        TEXT: "Text",
+        GROUP: "Group",
+        GROUP_FILE: "GroupFile",
+        BITMAP_ANIMATION: "BitmapAnimation"
+    };
+
     var DescType = {
         BITMAP: "Bitmap",
         BITMAP_ANIMATION: "BitmapAnimation",
@@ -39,6 +48,13 @@ window.TQ = window.TQ || {};
             this.initialize(desc);
         }
     }
+
+    Element.FitFlag = {
+        KEEP_SIZE: 1,
+        FULL_SCREEN: 2,
+        WITHIN_FRAME: 3,
+        NO: 4
+    };
 
     Element.counter = 0;
     Element.VER1 = "V1";
@@ -98,6 +114,8 @@ window.TQ = window.TQ || {};
                 TQ.Log.out(TQ.Dictionary.INVALID_LOGIC); // show + _doAddItemToStage 飞线, 适用于: 1) load之时不可见的元素, 2) marker初次创建时, 不可见
                 TQ.StageBuffer.add(this);
             }
+        } else {
+            TQ.AssertExt.invalidLogic(this.displayObj === undefined, "没有displayObj的元素，需要重定义show接口???");
         }
         //ToDo: 留给显示函数做, 不能一竿子插到底,  this.displayObj.visible = isVisible;
         this.dirty2 = true;
@@ -133,7 +151,6 @@ window.TQ = window.TQ || {};
         desc.x = (desc.x == null) ? 0 : desc.x;
         desc.y = (desc.y == null) ? 0 : desc.y;
         this.jsonObj = this.fillGap(desc);
-        var DescType = Element.DescType;
         switch (desc.type) {
             case DescType.GROUP_FILE:
                 this._addComponent(desc);
@@ -310,11 +327,11 @@ window.TQ = window.TQ || {};
             desc.zIndex = Element.TOP;
         }
         if (desc.type == "Text") {
-            desc.pivotX = 0;// (desc.pivotX == undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
-            desc.pivotY = 1; // (desc.pivotY == undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
+            desc.pivotX = (desc.pivotX === undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
+            desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
         } else {
-            desc.pivotX = (desc.pivotX == undefined) ? TQ.Config.pivotX : desc.pivotX;
-            desc.pivotY = (desc.pivotY == undefined) ? TQ.Config.pivotY : desc.pivotY;
+            desc.pivotX = (desc.pivotX === undefined) ? TQ.Config.pivotX : desc.pivotX;
+            desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.pivotY : desc.pivotY;
         }
 
         if (desc.sx == undefined) {
@@ -1825,22 +1842,6 @@ window.TQ = window.TQ || {};
 
     p.getColor = function() {
         return (this.jsonObj.color === undefined) ? TQ.Config.color : this.jsonObj.color;
-    };
-
-    TQ.ElementType = {
-        BITMAP: "Bitmap",
-        SOUND: "SOUND",
-        TEXT: "Text",
-        GROUP: "Group",
-        GROUP_FILE: "GroupFile",
-        BITMAP_ANIMATION: "BitmapAnimation"
-    };
-
-    Element.FitFlag = {
-        KEEP_SIZE: 1,
-        FULL_SCREEN: 2,
-        WITHIN_FRAME: 3,
-        NO: 4
     };
 
     TQ.Element = Element;
