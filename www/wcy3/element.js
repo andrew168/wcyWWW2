@@ -815,9 +815,9 @@ window.TQ = window.TQ || {};
             obj_dc.regY = 0
         }
 
-        obj_dc.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
-        obj_dc.sx = TQ.Config.zoomX * obj_pdc.sx;
-        obj_dc.sy = TQ.Config.zoomY * obj_pdc.sy;
+            obj_dc.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
+            obj_dc.sx = TQ.Config.zoomX * obj_pdc.sx;
+            obj_dc.sy = TQ.Config.zoomY * obj_pdc.sy;
         return obj_dc;
     };
 
@@ -1205,10 +1205,10 @@ window.TQ = window.TQ || {};
         if (!this.jsonObj) {
             return null;
         }
+        this.highlight(false);
         var data = TQ.Base.Utility.shadowCopy(this.jsonObj);
         //备注：displayObj 本身里面有Cycle， 无法消除。所以必须让他null。
         // JQuery 调用的toJSON， 只需要这个字段即可， 一定不要在这里调用stringify！
-        this.highlight(false);
         data.displayObj = null;
         data.animeTrack = this.animeTrack;
         data.animeCtrl = this.animeCtrl;
@@ -1231,7 +1231,9 @@ window.TQ = window.TQ || {};
         if (this.children != null) {
             data.children = [];
             for (var i = 0; i < this.children.length; i++) {
-                data.children.push(this.children[i].toJSON());
+                if (!this.children[i].isMarker()) {
+                    data.children.push(this.children[i].toJSON());
+                }
             }
         }
 
@@ -1243,6 +1245,9 @@ window.TQ = window.TQ || {};
     };
 
     p.afterToJSON = function () {
+        if (this.isMarker()) {
+            return;
+        }
         var data = this.jsonData;
         this.jsonData = null;
         //  只是为了输出, 才临时赋值给它, 现在收回.
