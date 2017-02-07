@@ -1744,7 +1744,7 @@ window.TQ = window.TQ || {};
         return ((this.parent != null) && (this.hasFlag(Element.JOINTED)));
     };
     p.isMarker = function () {
-        return (this.jsonObj.type == "JointMarker");
+        return false;
     };
     p.isVirtualObject = function () { // 虚拟物体包括： Group(displayObj 非空), 声音(displayObj 为空)，等
         if (!this.displayObj) {
@@ -1771,10 +1771,8 @@ window.TQ = window.TQ || {};
         return (this.hasFlag(Element.BROKEN));
     };
     p.isGrouped = function () {
-        if (this.children != null) {
-            // assertTrue("如果非空, 必须有元素", this.children.length > 0);
-        }
-        return ((this.parent != null) || (this.children != null));
+        return ((this.jsonObj.type === DescType.GROUP) ||
+        (this.jsonObj.type === DescType.GROUP_FILE));
     };
 
     p.isVer2plus = function() {

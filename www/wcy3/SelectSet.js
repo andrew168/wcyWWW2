@@ -27,7 +27,7 @@ TQ = TQ || {};
     SelectSet.members = [];
     SelectSet.decorations = [];  //  decorations ready to use
     SelectSet.workingDecorations = []; // decorations is using.
-    SelectSet.selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
+    var selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
     SelectSet.multiCmdGroupIt = multiCmdGroupIt;
     SelectSet.multiCmdJointIt = multiCmdJointIt;
     SelectSet.explode = explode;
@@ -85,11 +85,11 @@ TQ = TQ || {};
         assertNotNull(TQ.Dictionary.PleaseSelectOne, element);
         if ((element == null )) return;
         if (element.isMarker()) { //  Decoration 不能记入选择集
-            SelectSet.selectedMarkers.push(element);
+            selectedMarkers.push(element);
             return;
         }
 
-        SelectSet.selectedMarkers.splice(0); // 换了物体， Decoration就可能不被选中了。
+        selectedMarkers.splice(0); // 换了物体， Decoration就可能不被选中了。
         if (!(TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyCtrl)) {
             if (!((SelectSet.members.length == 1) && (SelectSet.members.indexOf(element) ==0))) {
                 SelectSet.clear();
@@ -149,7 +149,7 @@ TQ = TQ || {};
         }
 
         SelectSet.members.splice(0); // 删除全部选中的物体;
-        SelectSet.selectedMarkers.splice(0);
+        selectedMarkers.splice(0);
     };
 
     SelectSet.updateDecorations = function(show) {
@@ -343,7 +343,7 @@ TQ = TQ || {};
 
     SelectSet.isSelected = function(ele) {
         return ((SelectSet.members.indexOf(ele) >= 0) ||
-            (SelectSet.selectedMarkers.indexOf(ele) >= 0));
+            (selectedMarkers.indexOf(ele) >= 0));
     };
 
     SelectSet.empty = function() {
@@ -352,7 +352,7 @@ TQ = TQ || {};
             TQ.DirtyFlag.setScene();
             TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
         }
-        TQ.AssertExt.invalidLogic(SelectSet.selectedMarkers.length === 0);
+        TQ.AssertExt.invalidLogic(selectedMarkers.length === 0);
     };
 
     SelectSet.isEmpty = function() {
@@ -382,6 +382,17 @@ TQ = TQ || {};
         }
         return (SelectSet.members[0]);
     };
+
+    SelectSet.peekEditableEle = function() {
+        return peekMarker() || SelectSet.peek();
+    };
+
+    function peekMarker() {
+        if (selectedMarkers.length <= 0) {
+            return null;
+        }
+        return (selectedMarkers[0]);
+    }
 
     SelectSet.detachDecoration = function(ele) {
         if (ele.decorations != null) {

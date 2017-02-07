@@ -82,5 +82,9 @@ TQ = TQ || {};
         }
     };
 
+    p.isMarker = function() {
+        return true;
+    };
+
     TQ.Marker = Marker;
 }());

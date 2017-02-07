@@ -120,9 +120,10 @@ var TQ = TQ || {};
         ele = null;
         TQ.CommandMgr.startNewOperation();
         getSelectedElement(e);
-        if (TQ.SelectSet.peek()) {
+        var newStartEle = TQ.SelectSet.peekEditableEle();
+        if (newStartEle) {
             // setup base
-            startEle = TQ.SelectSet.peek();
+            startEle = newStartEle;
             startLevel = currScene.currentLevel;
 
             var target = startEle.displayObj;
@@ -168,7 +169,7 @@ var TQ = TQ || {};
     }
 
     function onDrag(e) {  //// ==mouse的onMove，
-        if (isDithering || TQ.SelectSet.isInMultiCmd()) {
+        if (isDithering || (TQ.SelectSet.isInMultiCmd() && ele && !ele.isMarker())) {
             return;
         }
 
@@ -266,7 +267,7 @@ var TQ = TQ || {};
                 var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
                 if (!!ele2) {
                     TQ.SelectSet.add(ele2);
-                    return TQ.SelectSet.peek();
+                    return TQ.SelectSet.peekEditableEle();
                 }
             }
         }
@@ -283,11 +284,12 @@ var TQ = TQ || {};
     };
 
     function _highlight(ele) {
+        // highlight 只是亮显， 不能修改选择集
         if (TQ.SceneEditor.isPlayMode()) {
             return;
         }
-        var ele2 = TQ.SelectSet.getEditableEle(ele);
-        TQ.SelectSet.add(ele2);
+        // var ele2 = TQ.SelectSet.getEditableEle(ele);
+        // TQ.SelectSet.add(ele2);
     }
 
     function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
