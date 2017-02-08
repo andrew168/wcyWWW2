@@ -750,6 +750,10 @@ window.TQ = window.TQ || {};
     };
 
     p.pdc2Ndc = function(obj) {
+        /* NDC 是归一化的设备坐标，DC， Y轴向上，[0,1]范围，jsonObj保存的是NDC坐标
+           PDC是 伪设备坐标，DC， Y轴向上
+           DC：是设备坐标， Y轴向下，用于displayObj
+         */
         this.justMoved = true;
         var sx = 1/TQ.Config.workingRegionWidth,
             sy = 1/TQ.Config.workingRegionHeight;
@@ -805,19 +809,13 @@ window.TQ = window.TQ || {};
             obj_dc.sx = obj_dc.sy = 1;
             obj_dc.regX = obj_dc.regY = 0;
             obj_dc.rotation = 0;
-            return obj_dc;
-        }
-        if (!this.isMarker()) {
+        } else {
             obj_dc.regX = obj_pdc.pivotX * this.getWidth();
             obj_dc.regY = TQ.Utility.toDevicePivot(obj_pdc.pivotY) * this.getHeight();
-        } else {
-            obj_dc.regX = 0;
-            obj_dc.regY = 0
-        }
-
             obj_dc.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
             obj_dc.sx = TQ.Config.zoomX * obj_pdc.sx;
             obj_dc.sy = TQ.Config.zoomY * obj_pdc.sy;
+        }
         return obj_dc;
     };
 

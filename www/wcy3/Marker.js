@@ -31,12 +31,11 @@ TQ = TQ || {};
         this.moveToTop();
         if (this.isUserControlling() && TQ.InputMap.mouseMoving) {
             this._parent_update(t);
-            var dwx = this.jsonObj.x - ele.jsonObj.x;
-            var dwy = this.jsonObj.y - ele.jsonObj.y;
+            var posMarker = this.getPosition();
             TQ.CommandMgr.directDo(new TQ.MovePivotCommand(ele,
                 ele.calPivot(TQ.Pose.x, TQ.Pose.y),
-                {x:ele.jsonObj.x + dwx,
-                 y:ele.jsonObj.y + dwy},
+                {x:posMarker.x,
+                 y:posMarker.y},
                 this));
         }
     };

@@ -169,7 +169,7 @@ var TQ = TQ || {};
     }
 
     function onDrag(e) {  //// ==mouse的onMove，
-        if (isDithering || (TQ.SelectSet.isInMultiCmd() && ele && !ele.isMarker())) {
+        if (isDithering) {// || (TQ.SelectSet.isInMultiCmd() && ele && !ele.isMarker())) {
             return;
         }
 
