@@ -115,7 +115,10 @@ window.TQ = window.TQ || {};
                 TQ.StageBuffer.add(this);
             }
         } else {
-            TQ.AssertExt.invalidLogic(this.displayObj === undefined, "没有displayObj的元素，需要重定义show接口???");
+            if (this.isFEeffect() || this.isSound() || this.isGrouped() || this.isGroupFile()) {
+            } else {
+                TQ.AssertExt.invalidLogic(this.displayObj === undefined, "没有displayObj的元素，需要重定义show接口???");
+            }
         }
         //ToDo: 留给显示函数做, 不能一竿子插到底,  this.displayObj.visible = isVisible;
         this.dirty2 = true;
@@ -1740,6 +1743,9 @@ window.TQ = window.TQ || {};
     };
     p.isJoint = function () {
         return ((this.parent != null) && (this.hasFlag(Element.JOINTED)));
+    };
+    p.isFEeffect = function() {
+        return false;
     };
     p.isMarker = function () {
         return false;
