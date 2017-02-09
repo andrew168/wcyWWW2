@@ -16,7 +16,6 @@ var TQ = TQ || {};
     Trsa3.onDrag = onDrag;
 
     var isDithering = false,
-        ele = null,
         startEle = null,
         startLevel = null,
         startOffset = null,
@@ -83,29 +82,28 @@ var TQ = TQ || {};
             return;
         }
 
-        if (ele === newEle) {
+        if (startEle === newEle) {
             return;
         }
 
-        ele = newEle;
-        if (ele) {
-            // console.log("element selected: " + ele.getType() + ", Id=" + ele.id);
-            _highlight(ele);
-            _showFloatToolbar(ele.getType());
+        startEle = newEle;
+        if (startEle) {
+            // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
+            _highlight(startEle);
+            _showFloatToolbar(startEle.getType());
         } else {
             // TQ.Log.warn("No Element selected, fake to first element of this level!");
-            ele = currScene.currentLevel.elements[0];
             TQ.FloatToolbar.close();
         }
 
-        if (!ele) {
+        if (!startEle) {
             TQ.Log.error("No Element selected");
             return;
         }
 
-        startTrsa.ang = ele.getRotation();
-        startTrsa.scale = ele.getScale();
-        pos = ele.getPosition();
+        startTrsa.ang = startEle.getRotation();
+        startTrsa.scale = startEle.getScale();
+        pos = startEle.getPosition();
         deltaX0 = e.gesture.deltaX;
         deltaY0 = e.gesture.deltaY;
 
@@ -117,10 +115,10 @@ var TQ = TQ || {};
 
     function onTouchStart(e) { // ==mouse的onPressed，
         console.log("touch start" + e.gesture.touches.length);
-        ele = null;
+        startEle = null;
         TQ.CommandMgr.startNewOperation();
         getSelectedElement(e);
-        var newStartEle = TQ.SelectSet.peekEditableEle();
+        var newStartEle = TQ.SelectSet.peekLatestEditableEle();
         if (newStartEle) {
             // setup base
             startEle = newStartEle;
@@ -152,9 +150,8 @@ var TQ = TQ || {};
 
     function onTouchEnd(e) {// ==mouse的onUp，
         isMultiTouching = false;
-        var ele = TQ.SelectSet.peek();
-        if (ele && ele.snapIt) {
-            ele.snapIt();
+        if (startEle && startEle.snapIt) {
+            startEle.snapIt();
         }
         ditherStart();
         startEle = null;
@@ -169,7 +166,7 @@ var TQ = TQ || {};
     }
 
     function onDrag(e) {  //// ==mouse的onMove，
-        if (isDithering) {// || (TQ.SelectSet.isInMultiCmd() && ele && !ele.isMarker())) {
+        if (isDithering) {// || (TQ.SelectSet.isInMultiCmd() && startEle && !startEle.isMarker())) {
             return;
         }
 
@@ -182,13 +179,13 @@ var TQ = TQ || {};
             console.log("not started, force to start in onDrag!");
             return onTouchStart(e);
         }
-        if (!ele) {
+        if (!startEle) {
             getSelectedElement(e);
         }
 
         e = touch2StageXY(e);
 
-        if (!ele) {
+        if (!startEle) {
             // console.log("Move..." + e.gesture.touches.length);
         } else {
             e.stopPropagation();
@@ -197,8 +194,8 @@ var TQ = TQ || {};
             TQBase.Trsa.do(startEle, startLevel, startOffset, e, stageContainer.selectedItem);
 /*            var deltaX = e.gesture.deltaX - deltaX0;
             var deltaY = -(e.gesture.deltaY - deltaY0);
-            // ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
-            TQ.CommandMgr.directDo(new TQ.MoveCommand(ele, {x: deltaX + pos.x, y: deltaY + pos.y}));
+            // startEle.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
+            TQ.CommandMgr.directDo(new TQ.MoveCommand(startEle, {x: deltaX + pos.x, y: deltaY + pos.y}));
 */
         }
     }
@@ -214,11 +211,11 @@ var TQ = TQ || {};
             return;
         }
 
-        if (!ele) {
+        if (!startEle) {
             getSelectedElement(e);
         }
 
-        if (!ele) {
+        if (!startEle) {
             console.log("pinch..." + e.gesture.touches.length);
         } else {
             if (e.type.indexOf('rotate') >=0) {
@@ -236,7 +233,7 @@ var TQ = TQ || {};
                 if (Math.abs(newScaleX) < 0.001) {
                     console.warn("Too small");
                 } else {
-                    TQ.CommandMgr.directScaleAndRotate(ele, {sx: newScaleX, sy: newScaleY}, startTrsa.ang - deltaTrsa.ang);
+                    TQ.CommandMgr.directScaleAndRotate(startEle, {sx: newScaleX, sy: newScaleY}, startTrsa.ang - deltaTrsa.ang);
                     isMultiTouching = true;
                 }
             }
@@ -267,7 +264,7 @@ var TQ = TQ || {};
                 var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
                 if (!!ele2) {
                     TQ.SelectSet.add(ele2);
-                    return TQ.SelectSet.peekEditableEle();
+                    return TQ.SelectSet.peekLatestEditableEle();
                 }
             }
         }

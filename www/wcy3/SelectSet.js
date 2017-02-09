@@ -19,7 +19,8 @@ TQ = TQ || {};
         btnEffect = {
             group: "",
             joint: ""
-        };
+        },
+        latestElement = null;
 
     SelectSet.btnEffect = btnEffect;
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
@@ -84,6 +85,7 @@ TQ = TQ || {};
     SelectSet.add = function(element) {
         assertNotNull(TQ.Dictionary.PleaseSelectOne, element);
         if ((element == null )) return;
+        latestElement = element;
         if (element.isMarker()) { //  Decoration 不能记入选择集
             selectedMarkers.push(element);
             return;
@@ -111,6 +113,7 @@ TQ = TQ || {};
         }
 
         TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_NEW_EVENT, {element: element});
+        latestElement = element;
     };
 
     /*
@@ -150,6 +153,7 @@ TQ = TQ || {};
 
         SelectSet.members.splice(0); // 删除全部选中的物体;
         selectedMarkers.splice(0);
+        latestElement = null;
     };
 
     SelectSet.updateDecorations = function(show) {
@@ -383,8 +387,20 @@ TQ = TQ || {};
         return (SelectSet.members[0]);
     };
 
+    function peekLatest () {
+        var n = SelectSet.members.length;
+        if (n <= 0) {
+            return null;
+        }
+        return latestElement;
+    }
+
     SelectSet.peekEditableEle = function() {
         return peekMarker() || SelectSet.peek();
+    };
+
+    SelectSet.peekLatestEditableEle = function () {
+        return peekMarker() || peekLatest();
     };
 
     function peekMarker() {
