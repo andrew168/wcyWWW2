@@ -23,6 +23,7 @@ var TQ = TQ || {};
         trsaOps = [
             ['touch', TQ.Trsa3.onTouchStart],
             ['touchend', TQ.Trsa3.onTouchEnd],
+            ['mouseup', TQ.Trsa3.onTouchEnd],
             ['release', TQ.Trsa3.onRelease],
             ['rotate', TQ.Trsa3.onPinchAndRotate],
             ['pinch', TQ.Trsa3.onPinchAndRotate],

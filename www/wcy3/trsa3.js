@@ -118,7 +118,6 @@ var TQ = TQ || {};
     function onTouchStart(e) { // ==mouse的onPressed，
         console.log("touch start" + e.gesture.touches.length);
         TQ.CommandMgr.startNewOperation();
-        startEle = null; // 必须置空， 否则， touch同一个物体的不同点， 将不会更新start的Parameters
         updateStartElement(e);
         e.stopPropagation();
         e.preventDefault();
@@ -141,9 +140,9 @@ var TQ = TQ || {};
         }
         ditherStart();
         startEle = null;
-        var hasGesture = !!e.gesture;
-        var touchNumber = (hasGesture) ? e.gesture.touches.length : e.touches.length;
-        console.log("touch end " + touchNumber + (hasGesture ? " gesture Obj" : ""));
+        var hasGesture = (!isMouseEvent(e) && !!e.gesture);
+        var touchNumber = hasGesture ? e.gesture.touches.length : 0;
+        console.log("touch end, or mouse up " + touchNumber + (hasGesture ? " gesture Obj" : ""));
     }
 
     function onRelease() {
