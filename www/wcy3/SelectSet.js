@@ -20,21 +20,27 @@ TQ = TQ || {};
             group: null,
             joint: null
         },
-        latestElement = null;
+        latestElement = null,
+        decorations = [],  //  decorations ready to use
+        workingDecorations = [], // decorations is using.
+        selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
 
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
     SelectSet.SELECTION_EMPTY_EVENT = "selection empty";
     SelectSet.members = [];
-    SelectSet.decorations = [];  //  decorations ready to use
-    SelectSet.workingDecorations = []; // decorations is using.
-    var selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
     SelectSet.multiCmdGroupIt = multiCmdGroupIt;
     SelectSet.multiCmdJointIt = multiCmdJointIt;
     SelectSet.explode = explode;
 
     SelectSet.initialize = function() {
-        TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function(){
-            if ( (!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
+        decorations.splice(0);
+        workingDecorations.splice(0);
+        SelectSet.members.splice(0);
+        state.multiCmdStarted = false;
+        state.cmd = null;
+        latestElement = null;
+        TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function() {
+            if ((!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
                 TQ.SelectSet.delete();
             }
         });
@@ -63,7 +69,7 @@ TQ = TQ || {};
     };
 
     SelectSet.getDecoration = function () {
-        var decs = SelectSet.decorations.pop();
+        var decs = decorations.pop();
         if (decs == null) {
             var ref = TQ.SelectSet.members[0];
             assertNotNull(TQ.Dictionary.PleaseSelectHost, ref);
@@ -71,14 +77,14 @@ TQ = TQ || {};
             var ele = TQ.Element.build(ref.level, {isVis: 0, type:"JointMarker"});
             decs = [ele];
         }
-        SelectSet.workingDecorations.push(decs);
+        workingDecorations.push(decs);
         return decs;
     };
 
     SelectSet.recycleDecoration = function(decoration) {
-        var id = SelectSet.workingDecorations.indexOf(decoration);
-        SelectSet.workingDecorations.splice(id, 1);
-        SelectSet.decorations.push(decoration);
+        var id = workingDecorations.indexOf(decoration);
+        workingDecorations.splice(id, 1);
+        decorations.push(decoration);
     };
 
     SelectSet.add = function(element) {

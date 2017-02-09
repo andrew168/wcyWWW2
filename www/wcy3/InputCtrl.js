@@ -37,6 +37,21 @@ window.TQ = window.TQ || {};
     InputCtrl.leaveTraceOn = false; // 不绘制运动轨迹
     InputCtrl.initialize = function(aStage) {
         InputCtrl._stage = aStage;
+        InputCtrl._stage = null;
+        InputCtrl.MODE_ROTATE = 1;
+        InputCtrl.MODE_SCALE = 2;
+        InputCtrl.mode = InputCtrl.MODE_ROTATE;
+        InputCtrl.inSubobjectMode = false;
+        InputCtrl.showMarkerOnly = false; // 在零件模式下， 只是显示marker， 不改变物体选择模式
+        InputCtrl.vkeyMove = false;
+        InputCtrl.vkeyRotate = false;
+        InputCtrl.vkeyScale = false;
+        InputCtrl.vkeyLift = false;
+        InputCtrl.vkeyCtrl = false;
+        InputCtrl.vkeyUnjoint = false;
+        InputCtrl.vkeyUngroup = false;
+        InputCtrl.setMultiSelect = setMultiSelect;
+        InputCtrl.clearSubjectModeAndMultiSelect = clearSubjectModeAndMultiSelect;
         TQ.InputMap.registerAction(TQ.InputMap.C,  function () {
             currScene.currentLevel.cloneElement(TQ.SelectSet.members);
         });
