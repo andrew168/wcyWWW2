@@ -17,12 +17,11 @@ TQ = TQ || {};
         },
 
         btnEffect = {
-            group: "",
-            joint: ""
+            group: null,
+            joint: null
         },
         latestElement = null;
 
-    SelectSet.btnEffect = btnEffect;
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
     SelectSet.SELECTION_EMPTY_EVENT = "selection empty";
     SelectSet.members = [];
