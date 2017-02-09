@@ -118,6 +118,7 @@ var TQ = TQ || {};
     function onTouchStart(e) { // ==mouse的onPressed，
         console.log("touch start" + e.gesture.touches.length);
         TQ.CommandMgr.startNewOperation();
+        startEle = null; // 必须置空， 否则， touch同一个物体的不同点， 将不会更新start的Parameters
         updateStartElement(e);
         e.stopPropagation();
         e.preventDefault();
