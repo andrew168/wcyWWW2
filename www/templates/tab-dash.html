@@ -158,6 +158,12 @@
                 <button class="button button-positive" ng-click="EditorService.stop()">stop</button>
                 <button class="button button-positive" ng-click="startRecord()">开启录制 </button>
                 <button class="button button-positive" ng-click="stopRecord()">停止录制 </button>
+                <button class="button button-positive" ng-click="testInsert()">Insert</button>
+                <button class="button button-positive" ng-click="SelectSet.multiCmdJointIt()">加关节</button>
+                <button class="button button-positive" ng-click="SelectSet.explode()">炸开</button>
+                <button class="button button-positive" ng-click="undo()">undo</button>
+                <button class="button button-positive" ng-click="redo()">redo</button>
+
             </div>
             <div style="display:none"> <!-- all, passed -->
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
@@ -217,12 +223,12 @@
                     data-show-faces="true">
                 </div>
             </div>
-            </div> <!-- all, passed -->
 
             <div style="display: none">
                 <label>{{params}}{{getTextMsg()}} </label>
                 <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
             </div>
+        </div>
         </div>
         <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="showcanvas positive-border"></canvas>
         <div id="textEditBoxDiv" style="display:none">
