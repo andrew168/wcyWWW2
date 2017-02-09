@@ -425,6 +425,8 @@ TQ = TQ || {};
                     return;
                 }
             }
+        } else {
+            TQ.SelectSet.clear();
         }
     };
 

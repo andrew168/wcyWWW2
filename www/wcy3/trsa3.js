@@ -178,7 +178,7 @@ var TQ = TQ || {};
             return onTouchStart(e);
         }
         if (!startEle) {
-            updateStartElement(e);
+            return updateStartElement(e);
         }
 
         e = touch2StageXY(e);
@@ -210,7 +210,8 @@ var TQ = TQ || {};
         }
 
         if (!startEle) {
-            updateStartElement(e);
+            // 首次选中， 不能立即TRSA， 下一个event吧， 以避免TRSA开始时的突变
+            return updateStartElement(e);
         }
 
         if (!startEle) {
