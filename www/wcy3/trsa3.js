@@ -74,10 +74,7 @@ var TQ = TQ || {};
         TQ.SelectSet.updateByGesture(e);
         var newEle = TQ.SelectSet.peekLatestEditableEle();
         if (!newEle) {
-            newEle = touchedEle;
-        }
-
-        if (!newEle) {
+            startEle = null;
             // console.error("No Obj touched!");
             TQ.SelectSet.empty();
             TQ.FloatToolbar.close();
@@ -89,19 +86,9 @@ var TQ = TQ || {};
         }
 
         startEle = newEle;
-        if (startEle) {
-            // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
-            _highlight(startEle);
-            _showFloatToolbar(startEle.getType());
-        } else {
-            // TQ.Log.warn("No Element selected, fake to first element of this level!");
-            TQ.FloatToolbar.close();
-        }
-
-        if (!startEle) {
-            TQ.Log.error("No Element selected");
-            return;
-        }
+        // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
+        _highlight(startEle);
+        _showFloatToolbar(startEle.getType());
 
         startTrsa.ang = startEle.getRotation();
         startTrsa.scale = startEle.getScale();
