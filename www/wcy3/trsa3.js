@@ -65,12 +65,14 @@ var TQ = TQ || {};
         touchedEle = stage.getObjectsUnderPoint(evt.stageX, evt.stageY);
     }
 
-    function getSelectedElement(e) {
+    function updateStartElement(e) {
         TQ.AssertExt.invalidLogic(!!e);
         if (!e) {
             return;
         }
-        var newEle = _doGetSelectedElement(e);
+
+        TQ.SelectSet.updateByGesture(e);
+        var newEle = TQ.SelectSet.peekLatestEditableEle();
         if (!newEle) {
             newEle = touchedEle;
         }
@@ -111,29 +113,25 @@ var TQ = TQ || {};
             startTrsa.scale.sx = 1;
             startTrsa.scale.sy = 1;
         }
+
+        // setup base
+        startLevel = currScene.currentLevel;
+
+        var target = startEle.displayObj;
+        if (target === null) { // 防止 刚刚被删除的物体.
+            return;
+        }
+        var evt = touch2StageXY(e);
+        target = startEle.getPositionInDc();
+        startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
+        // showFloatToolbar(evt);
+        // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
     }
 
     function onTouchStart(e) { // ==mouse的onPressed，
         console.log("touch start" + e.gesture.touches.length);
-        startEle = null;
         TQ.CommandMgr.startNewOperation();
-        getSelectedElement(e);
-        var newStartEle = TQ.SelectSet.peekLatestEditableEle();
-        if (newStartEle) {
-            // setup base
-            startEle = newStartEle;
-            startLevel = currScene.currentLevel;
-
-            var target = startEle.displayObj;
-            if (target === null) { // 防止 刚刚被删除的物体.
-                return;
-            }
-            var evt = touch2StageXY(e);
-            target = startEle.getPositionInDc();
-            startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
-            // showFloatToolbar(evt);
-            // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
-        }
+        updateStartElement(e);
         e.stopPropagation();
         e.preventDefault();
         // console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
@@ -180,7 +178,7 @@ var TQ = TQ || {};
             return onTouchStart(e);
         }
         if (!startEle) {
-            getSelectedElement(e);
+            updateStartElement(e);
         }
 
         e = touch2StageXY(e);
@@ -212,7 +210,7 @@ var TQ = TQ || {};
         }
 
         if (!startEle) {
-            getSelectedElement(e);
+            updateStartElement(e);
         }
 
         if (!startEle) {
@@ -241,38 +239,6 @@ var TQ = TQ || {};
     }
 
     // private:
-    function _doGetSelectedElement(evt) {
-        var touchPoint = evt.gesture.srcEvent;
-        if ((!!touchPoint.touches) && (touchPoint.touches.length > 0)) {
-            touchPoint = touchPoint.touches[0];
-        }
-
-        var pageX = touchPoint.pageX;
-        var pageY = touchPoint.pageY;
-
-        var rect = TQ.SceneEditor.stage._getElementRect(TQ.SceneEditor.stage.canvas);
-        pageX -= rect.left;
-        pageY -= rect.top;
-
-        var eles = TQ.SceneEditor.stageContainer.getObjectsUnderPoint(pageX, pageY);
-        if ((!!eles) && (eles.length > 0)) {
-            for (var i = 0; i < eles.length; i++) {
-                if (!eles[i].ele) {
-                    continue;
-                }
-
-                var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
-                if (!!ele2) {
-                    TQ.SelectSet.add(ele2);
-                    return TQ.SelectSet.peekLatestEditableEle();
-                }
-            }
-        }
-
-        // console.log(pageX + ", " + pageY) ;
-        return null;
-    }
-
     var _showFloatToolbar = function (type) {
         if ((TQ.FloatToolbar != undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
             TQ.FloatToolbar.setPosition(0, 0);
