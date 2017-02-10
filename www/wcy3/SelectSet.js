@@ -342,13 +342,19 @@ TQ = TQ || {};
             // assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode);
         }
 
-        if ((!ele.isJoint()) && ele.isGrouped()) {
+        if (!ele.isJoint() && !ele.isMarker() && isPart(ele)) {
             if ((!TQ.InputCtrl.inSubobjectMode) || TQ.InputCtrl.showMarkerOnly) {
                 if (ele.parent != null) return TQ.SelectSet.getEditableEle(ele.parent);
             }
         }
         return ele;
     };
+
+    function isPart(ele) {
+        // part 替代原来的 subobject概念
+        // marker 和 joint也都是 part， 所以，在editable中要特别处理
+        return (ele.isGrouped() || ele.parent);
+    }
 
     SelectSet.isSelected = function(ele) {
         return ((SelectSet.members.indexOf(ele) >= 0) ||
