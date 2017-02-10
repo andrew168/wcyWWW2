@@ -107,20 +107,30 @@ window.TQ = window.TQ || {};
         return factor * this.displayObj.getMeasuredHeight();
     };
 
+    p.parent_createHighlighter = p.createHighlighter;
+    p.parent_deleteHighlighter = p.deleteHighlighter;
     p.createHighlighter = function() {
-        var txtObj = this.displayObj;
-        txtObj.text = this.jsonObj.text;
-        this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
-        stageContainer.addChild(this.highter);
+        if (TQ.Config.useHighlightBox) {
+            var txtObj = this.displayObj;
+            txtObj.text = this.jsonObj.text;
+            this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+            stageContainer.addChild(this.highter);
+        } else {
+            this.parent_createHighlighter();
+        }
     };
 
     p.deleteHighlighter = function() {
-        if (!this.highter) {
-            return;
-        }
+        if (TQ.Config.useHighlightBox) {
+            if (!this.highter) {
+                return;
+            }
 
-        stageContainer.removeChild(this.highter);
-        this.highter = null;
+            stageContainer.removeChild(this.highter);
+            this.highter = null;
+        } else {
+            this.parent_deleteHighlighter();
+        }
     };
 
     p.parent_fillGap = p.fillGap;

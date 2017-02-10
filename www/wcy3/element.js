@@ -1059,35 +1059,44 @@ window.TQ = window.TQ || {};
         }
         if (this._isHighlighting == enable) return;
 
-
-        if (TQ.Config.useHighlightBox) {
+        if (TQ.Config.hightlightOn) {
             this._isHighlighting = enable;
         } else {
             this._isHighlighting = false;
         }
 
-        if (this._isHighlighting) {
-            this.createHighlighter();
-        } else {
-            this.deleteHighlighter();
-        }
+        // 通过dirty flag迫使系统更新， 并且重绘，而不是直接绘制
+        TQ.DirtyFlag.setElement(this);
     };
 
     p.createHighlighter = function() {
         this.displayObj.shadow = Element.getShadow();
-        this.highter = this.createBBox(1, 1, this.getRotation(),
-            this.getWidth(), this.getHeight());
-        stageContainer.addChild(this.highter);
+        if (TQ.Config.useHighlightBox) {
+            this.highter = this.createBBox(1, 1, this.getRotation(),
+                this.getWidth(), this.getHeight());
+            stageContainer.addChild(this.highter);
+        }
     };
 
     p.deleteHighlighter = function() {
         this.displayObj.shadow = null;
-        if (!this.highter) {
-            return;
-        }
+        if (TQ.Config.useHighlightBox) {
+            if (!this.highter) {
+                return;
+            }
 
-        stageContainer.removeChild(this.highter);
-        this.highter = null;
+            stageContainer.removeChild(this.highter);
+            this.highter = null;
+        }
+    };
+
+    p.updateHighlighter = function() {
+        if (this._isHighlighting && this.createHighlighter) {
+            this.deleteHighlighter();
+            this.createHighlighter();
+        } else {
+            this.deleteHighlighter();
+        }
     };
 
     p.createBBox = function(sx, sy, rotation, w, h) {
@@ -1464,12 +1473,8 @@ window.TQ = window.TQ || {};
             }
         }
 
+        this.updateHighlighter();
         this.dirty = this.dirty2 = false;
-
-        if (this._isHighlighting && this.createHighlighter) {
-            this.deleteHighlighter();
-            this.createHighlighter();
-        }
 
         if (this.hookInMove) {
             this.hookInMove.call(this, this);
