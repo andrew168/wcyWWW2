@@ -31,6 +31,7 @@ TQ = TQ || {};
     SelectSet.multiCmdGroupIt = multiCmdGroupIt;
     SelectSet.multiCmdJointIt = multiCmdJointIt;
     SelectSet.explode = explode;
+    SelectSet.btnEffect = btnEffect;
 
     SelectSet.initialize = function() {
         decorations.splice(0);
