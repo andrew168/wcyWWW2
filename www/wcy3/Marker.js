@@ -40,6 +40,16 @@ TQ = TQ || {};
         }
     };
 
+    p.limitHostNoRotation = function() {
+        if (this.host) {
+            var rotation = this.host.getRotation();
+            if (!TQ.Utility.equalToZero(rotation)) {
+                // ToDo: 提示
+                this.host.rotateTo(0);
+            }
+        }
+    };
+
     p.moveToTop = function() {
         var id = stageContainer.getNumChildren();
         stageContainer.setChildIndex(this.displayObj, id - 1);

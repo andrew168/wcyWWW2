@@ -406,6 +406,10 @@ window.TQ = window.TQ || {};
         return DEFAULT_ACTION_ICON;
     };
 
+    Utility.equalToZero = function(x) {
+        return (Math.abs(x) < 0.000001);
+    };
+
     // private
     function getNativeEvent(e) {
         var e0 = e.nativeEvent;
