@@ -1023,7 +1023,7 @@ window.TQ = window.TQ || {};
                                 return;
                             }
                             TQ.FloatToolbar.close();
-                            TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
+                            TQBase.Trsa.do(ele2, thislevel, offset, ev);
                         };
                         evt.onMouseUp = function (evt) {
                             showFloatToolbar(evt);

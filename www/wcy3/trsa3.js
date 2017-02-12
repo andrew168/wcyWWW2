@@ -179,7 +179,7 @@ var TQ = TQ || {};
             e.stopPropagation();
             e.preventDefault();
 
-            TQBase.Trsa.do(startEle, startLevel, startOffset, e, stageContainer.selectedItem);
+            TQBase.Trsa.do(startEle, startLevel, startOffset, e);
 /*            var deltaX = e.gesture.deltaX - deltaX0;
             var deltaY = -(e.gesture.deltaY - deltaY0);
             // startEle.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
