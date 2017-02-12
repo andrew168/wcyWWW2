@@ -1079,7 +1079,10 @@ window.TQ = window.TQ || {};
     };
 
     p.deleteHighlighter = function() {
-        this.displayObj.shadow = null;
+        if (this.displayObj && !!this.displayObj.shadow) {
+            this.displayObj.shadow = null;
+        }
+
         if (TQ.Config.useHighlightBox) {
             if (!this.highter) {
                 return;
