@@ -735,45 +735,6 @@ window.TQ = window.TQ || {};
         obj.sy = 1 / this.getHeight();
     },
 
-    p.ndc2Pdc = function(obj) {
-        var sx = TQ.Config.workingRegionWidth,
-            sy = TQ.Config.workingRegionHeight;
-
-        var obj_pdc = {
-            x: obj.x * sx,
-            y: obj.y * sy,
-            sx: obj.sx * sx,
-            sy: obj.sy * sy,
-            fontSize : (!obj.fontSize)? 0 : obj.fontSize * sx,
-            rotation : obj.rotation,
-            pivotX : obj.pivotX,
-            pivotY : obj.pivotY
-        };
-
-        return obj_pdc;
-    };
-
-    p.pdc2Ndc = function(obj) {
-        /* NDC 是归一化的设备坐标，DC， Y轴向上，[0,1]范围，jsonObj保存的是NDC坐标
-           PDC是 伪设备坐标，DC， Y轴向上
-           DC：是设备坐标， Y轴向下，用于displayObj
-         */
-        this.justMoved = true;
-        var sx = 1/TQ.Config.workingRegionWidth,
-            sy = 1/TQ.Config.workingRegionHeight;
-
-        return {
-            x: (obj.x === undefined)? Number.NaN : obj.x * sx,
-            y: (obj.y === undefined)? Number.NaN : obj.y * sy,
-            sx: (obj.sx === undefined)? 1: obj.sx * sx,
-            sy: (obj.sy === undefined)? 1: obj.sy * sy,
-            fontSize : (obj.fontSize === undefined)? 0:obj.fontSize * sx,
-            rotation : (obj.rotation === undefined)? 0: obj.rotation,
-            pivotX : (obj.pivotX === undefined)? 0: obj.pivotX,
-            pivotY : (obj.pivotY === undefined)? 0:obj.pivotY
-        };
-    };
-
     p.doShow = function (visSum) {
         if (!this.displayObj) {
             this.visibleTemp = visSum;
