@@ -203,7 +203,7 @@ window.TQ = window.TQ || {};
     // Move
     function MoveCommand(ele, pos) {
         this.receiver = ele;
-        this.oldValue = ele.getPosition();
+        this.oldValue = ele.getPositionInWorld();
         this.newValue = pos;
     }
 

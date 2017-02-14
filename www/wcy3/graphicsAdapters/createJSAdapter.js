@@ -67,6 +67,10 @@ var TQ = TQ || {};
         return {x: obj_pdc.x, y: obj_pdc.y};
     };
 
+    CreateJSAdapter.getPositionInWorld = function () {
+        return {x: this.jsonObj.x, y: this.jsonObj.y};
+    };
+
     CreateJSAdapter.getPositionInNdc = function () {
         return {x: this.jsonObj.x, y: this.jsonObj.y};
     };
@@ -113,6 +117,22 @@ var TQ = TQ || {};
             rotation: (obj.rotation === undefined) ? 0 : obj.rotation,
             pivotX: (obj.pivotX === undefined) ? 0 : obj.pivotX,
             pivotY: (obj.pivotY === undefined) ? 0 : obj.pivotY
+        };
+    };
+
+    CreateJSAdapter.dc2World = function(ptDc) {
+        var sx = 1 / TQ.Config.workingRegionWidth,
+            sy = 1 / TQ.Config.workingRegionHeight;
+
+        return {
+            x: (ptDc.x === undefined) ? Number.NaN : ptDc.x * sx,
+            y: (ptDc.y === undefined) ? Number.NaN : TQ.Utility.toWorldCoord(ptDc.y) * sy,
+            //sx: (ptDc.sx === undefined) ? 1 : ptDc.sx * sx,
+            //sy: (ptDc.sy === undefined) ? 1 : ptDc.sy * sy,
+            //fontSize: (ptDc.fontSize === undefined) ? 0 : ptDc.fontSize * sx,
+            //rotation: (ptDc.rotation === undefined) ? 0 : ptDc.rotation,
+            //pivotX: (ptDc.pivotX === undefined) ? 0 : ptDc.pivotX,
+            //pivotY: (ptDc.pivotY === undefined) ? 0 : ptDc.pivotY
         };
     };
 

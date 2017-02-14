@@ -1482,17 +1482,16 @@ window.TQ = window.TQ || {};
         return angle;
     }
 
-    p.moveTo = function (point) {
+    p.moveTo = function (ptWorld) {
         if (this.isPinned()) {
             return;
         }
 
-        var obj_ndc = this.pdc2Ndc(point);
-        TQ.Assert.isTrue(!isNaN(obj_ndc.x),  "x 为 NaN！！！");
-        TQ.Assert.isTrue(!isNaN(obj_ndc.y),  "y 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(ptWorld.x),  "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(ptWorld.y),  "y 为 NaN！！！");
 
-        this.jsonObj.x = obj_ndc.x;
-        this.jsonObj.y = obj_ndc.y;
+        this.jsonObj.x = ptWorld.x;
+        this.jsonObj.y = ptWorld.y;
 
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.TRANSLATING);

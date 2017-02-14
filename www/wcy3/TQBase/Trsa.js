@@ -77,11 +77,14 @@ window.TQBase = window.TQBase || {};
 
     Trsa._move = function (element, thisLevel, offset, ev) {
         // offsetY 是device下的， 必须转为jsonObj所用的World坐标系或用户坐标系，才能赋给jsonObj
-        var rDeviceX = ev.stageX + offset.x;
-        var rDeviceY = ev.stageY + offset.y;
-        TQ.CommandMgr.directDo(new TQ.MoveCommand(element, {x:rDeviceX, y:TQ.Utility.toWorldCoord(rDeviceY)}));
+        var ptDevice = {
+                x: ev.stageX + offset.x,
+                y: ev.stageY + offset.y
+            },
+            ptWorld = element.dc2World(ptDevice);
+        TQ.CommandMgr.directDo(new TQ.MoveCommand(element, ptWorld));
         if (TQ.InputCtrl.leaveTraceOn) {
-          TQ.TraceMgr.addNewPosition(element);
+            TQ.TraceMgr.addNewPosition(element);
         }
     };
 
