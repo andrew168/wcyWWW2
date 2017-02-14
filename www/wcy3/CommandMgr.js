@@ -93,7 +93,7 @@ window.TQ = window.TQ || {};
     CompositeCommand.open = function() {
         if (!__openedComposite) {
             __openedComposite = new CompositeCommand();
-            // $(document).mouseup(CompositeCommand.close);
+            $(document).mouseup(CompositeCommand.close);
         }
     };
 
