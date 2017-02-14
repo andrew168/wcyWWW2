@@ -100,6 +100,7 @@ window.TQ = window.TQ || {};
 
     Element.showHidenObjectFlag = false;  //  个人的state由个人记录, 上级可以控制
     var p = Element.prototype;
+    p = TQ.CreateJSAdapter.attach(p);
     p.loaded = false;
     p.jsonObj = null;
     p.displayObj = null;
@@ -780,22 +781,6 @@ window.TQ = window.TQ || {};
             this.displayObj.visible = visSum;
             this.toDeviceCoord(this.displayObj, this.jsonObj);
         }
-    };
-
-    p.toDeviceCoord = function (displayObj, jsonObj) {
-        if (!this.justMoved) {
-            // this.setNdc(this.jsonObj);
-        }
-        this.justMoved = false;
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        var obj_dc = this.pdc2dc(obj_pdc);
-        displayObj.x = obj_dc.x;
-        displayObj.y = obj_dc.y;
-        displayObj.scaleX = obj_dc.sx;
-        displayObj.scaleY = obj_dc.sy;
-        displayObj.regX = obj_dc.regX;
-        displayObj.regY = obj_dc.regY;
-        displayObj.rotation = obj_dc.rotation;
     };
 
     p.pdc2dc = function(obj_pdc) {
@@ -1493,25 +1478,6 @@ window.TQ = window.TQ || {};
         return {pivotX: this.jsonObj.pivotX + dPivotX, pivotY: this.jsonObj.pivotY + dPivotY};
     };
 
-    p.getWidth = function () {
-        if (this.isVirtualObject()) {// 对于Group物体
-            var w = 100;
-        } else {
-            w = this.displayObj.getWidth(true);
-        }
-
-        return w;
-    };
-
-    p.getHeight = function () {
-        if (this.isVirtualObject()) {// 对于Group物体
-            var h = 100;
-        } else {
-            h = this.displayObj.getHeight(true);
-        }
-        return h;
-    };
-
     p.movePivot = function (pivot, pos, marker) {
         this.jsonObj.pivotX = pivot.pivotX;
         this.jsonObj.pivotY = pivot.pivotY;
@@ -1573,10 +1539,6 @@ window.TQ = window.TQ || {};
         this.dirty2 = true;
     };
 
-    p.getScale = function () {
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        return {sx: obj_pdc.sx, sy: obj_pdc.sy};
-    };
 
     p.getScaleInNdc = function () {
         return {sx: this.jsonObj.sx, sy: this.jsonObj.sy};
@@ -1584,21 +1546,6 @@ window.TQ = window.TQ || {};
 
     p.getRotation = function () {
         return this.jsonObj.rotation;
-    };
-
-    p.getPosition = function () { // in PDC
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        return {x: obj_pdc.x, y: obj_pdc.y};
-    };
-
-    p.getPositionInNdc = function () {
-        return {x: this.jsonObj.x, y: this.jsonObj.y};
-    };
-
-    p.getPositionInDc = function () {
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        var obj_dc = this.pdc2dc(obj_pdc);
-        return {x: obj_dc.x, y: obj_dc.y};
     };
 
     p.rotateTo = function (angle) {
