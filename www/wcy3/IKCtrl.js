@@ -18,10 +18,8 @@ window.TQ = window.TQ || {};
     };
     IKCtrl.isSimpleRotationMode = false; // 切换IK模式 和 单一物体的简单旋转模式。
     IKCtrl.angle = function (S, E, A) { //  从SE 转到SA 需要转多少角度？
-        var SE = TQ.Vector2D.create([E.x - S.x, E.y - S.y]);
-        var SA = TQ.Vector2D.create([A.x - S.x, A.y - S.y]);
-        SE.toUnitVector();
-        SA.toUnitVector();
+        var SE = TQ.Vector2D.calDirection(S, E);
+        var SA = TQ.Vector2D.calDirection(S, A);
         return SA.angle360From(SE);
     };
 
@@ -107,6 +105,9 @@ window.TQ = window.TQ || {};
         if (IKCtrl.isSimpleRotationMode) return true;  // 简单旋转， 比不牵涉其它关节，
 
         if (child.isRoot() || child.parent.isPinned()) { // 如果固定了, 不IK
+            TQ.Log.debugInfo("not achieved: (" +
+                Math.round(A.x) + "," + Math.round(A.y) + ") <-- (" +
+                Math.round(E.x) + "," + Math.round(E.y) + ")");
             return false; // 达到根, 迭代了一遍, 未达到目标,
         }
 
@@ -125,22 +126,22 @@ window.TQ = window.TQ || {};
         angle = IKCtrl.applyLimitation(child, child.jsonObj.rotation + angle);
         TQ.CommandMgr.directDo(new TQ.RotateCommand(child, angle));
         child.update(TQ.FrameCounter.t()); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
-        TQ.Log.info("image: " + child.jsonObj.src + "angle = " + angle);
+        TQ.Log.info("ele.id " + child.id + "angle = " + angle);
         TQ.DirtyFlag.setElement(child);
     };
 
     IKCtrl.do = function (element, offset, ev, isSimpleRotationMode) {
+        console.log("ele.id =", element.id, "offest = ", JSON.stringify(offset));
         IKCtrl.isSimpleRotationMode = isSimpleRotationMode;
         var target  = TQ.SelectSet.peek();
         if (target == null) {
-            displayInfo2(TQ.Dictionary.PleaseSelectOne);
+            TQ.Log.debugInfo(TQ.Dictionary.PleaseSelectOne);
             return;
         }
 
         var rDeviceX = ev.stageX;
         var rDeviceY = ev.stageY;
-        // displayInfo2("ev.stageX,Y=" + rDeviceX +  ", " + rDeviceY);
-
+        TQ.Log.debugInfo("target rDeviceXY: " + rDeviceX +  ", " + rDeviceY);
         var A = TQ.Utility.deviceToWorld(rDeviceX, rDeviceY);
         if (offset.firstTime == true) {
           IKCtrl.EObj = IKCtrl.determineE(element, offset, ev);
@@ -152,7 +153,9 @@ window.TQ = window.TQ || {};
         }
 
         for (var i =0; i < TQ.Config.IK_ITERATE_TIME; i++) {
-            if (IKCtrl.calOneBone(target, target, A)) break;
+            if (IKCtrl.calOneBone(target, target, A)) {
+                return TQ.Log.debugInfo("achieved");
+            }
         }
     };
 
