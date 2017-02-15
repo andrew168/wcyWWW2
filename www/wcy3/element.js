@@ -1465,10 +1465,10 @@ window.TQ = window.TQ || {};
 
     p.snapIt = function () {
         if (TQ.Config.snapOn) {
-            obj_pdc = this.ndc2Pdc(this.jsonObj);
-            obj_pdc.x = Math.round(obj_pdc.x / TQ.Config.snapDX) * TQ.Config.snapDX;
-            obj_pdc.y = Math.round(obj_pdc.y / TQ.Config.snapDY) * TQ.Config.snapDY;
-            this.moveTo(obj_pdc);
+            var ptDc = this.getPositionInDc();
+            ptDc.x = Math.round(ptDc.x / TQ.Config.snapDX) * TQ.Config.snapDX;
+            ptDc.y = Math.round(ptDc.y / TQ.Config.snapDY) * TQ.Config.snapDY;
+            this.moveTo(this.dc2World(ptDc));
         }
     };
 
@@ -1524,17 +1524,16 @@ window.TQ = window.TQ || {};
         this.dirty2 = true;
     };
 
-    p.scaleTo = function (scale) {
+    p.scaleTo = function (scaleInWorld) {
         if (this.isPinned()) {
             return;
         }
 
-        var obj_ndc = this.pdc2Ndc(scale);
-        TQ.Assert.isTrue(!isNaN(obj_ndc.sx),  "x 为 NaN！！！");
-        TQ.Assert.isTrue(!isNaN(obj_ndc.sy),  "y 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(scaleInWorld.sx),  "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(scaleInWorld.sy),  "y 为 NaN！！！");
 
-        this.jsonObj.sx = obj_ndc.sx;
-        this.jsonObj.sy = obj_ndc.sy;
+        this.jsonObj.sx = scaleInWorld.sx;
+        this.jsonObj.sy = scaleInWorld.sy;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.SCALING);
         TQ.DirtyFlag.setElement(this);
