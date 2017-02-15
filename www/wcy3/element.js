@@ -338,14 +338,6 @@ window.TQ = window.TQ || {};
             desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.pivotY : desc.pivotY;
         }
 
-        if (desc.sx == undefined) {
-            desc.sx = 1;
-        }
-
-        if (desc.sy == undefined) {
-            desc.sy = 1;
-        }
-
         if (desc.rotation == undefined) {
             desc.rotation = 0;
         }
@@ -357,6 +349,13 @@ window.TQ = window.TQ || {};
         // 强制补全动画轨迹, 应为这是存放物体坐标的地方.!!! 2013-3-1
         desc.animeTrack = new TQ.AnimeTrack(desc);
         TQ.AnimeTrack.validate(desc.animeTrack);
+        return desc;
+    };
+
+    p.fillGap2 = function(desc) {
+        if ((desc.sx == undefined)|| (desc.sy == undefined)) {
+            TQ.CreateJSAdapter.scaleOne(desc);
+        }
         return desc;
     };
 
@@ -650,10 +649,11 @@ window.TQ = window.TQ || {};
         TQ.Assert.isNotNull(item, "先准备好资源， 再创建元素");
         this.loaded = true;
         var resource = this.getImageResource(item, jsonObj);
+        this.displayObj = new createjs.Bitmap(resource);
+        this.fillGap2(jsonObj);
         if (this.autoFitFlag) {
             this.autoFit(resource);
         }
-        this.displayObj = new createjs.Bitmap(resource);
         this._afterItemLoaded();
         this.setTRSAVZ();
         TQ.DirtyFlag.setElement(this);

@@ -75,12 +75,12 @@ window.TQ = window.TQ || {};
 
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
+        var jsonObj = this.jsonObj;
+        var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
+        this.fillGap2(jsonObj);
         if (this.autoFitFlag) {
             this.autoFit();
         }
-
-        var jsonObj = this.jsonObj;
-        var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
         this.loaded = true;
         if (jsonObj.textAlign == null) {
             txtObj.textAlign = jsonObj.textAlign;
