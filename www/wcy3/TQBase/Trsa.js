@@ -82,7 +82,16 @@ window.TQBase = window.TQBase || {};
                 y: ev.stageY + offset.y
             },
             ptWorld = element.dc2World(ptDevice);
-        TQ.CommandMgr.directDo(new TQ.MoveCommand(element, ptWorld));
+        if (!element.isMarker()) {
+            TQ.CommandMgr.directDo(new TQ.MoveCommand(element, ptWorld));
+        } else {
+            var eleHost = element.host;
+            TQ.CommandMgr.directDo(new TQ.MovePivotCommand(eleHost,
+                eleHost.calPivot(ptWorld),
+                ptWorld,
+                element));
+
+        }
         if (TQ.InputCtrl.leaveTraceOn) {
             TQ.TraceMgr.addNewPosition(element);
         }

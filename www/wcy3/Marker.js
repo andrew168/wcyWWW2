@@ -27,17 +27,7 @@ TQ = TQ || {};
 
     p._parent_update = p.update;
     p.update2 = function(t) {
-        var ele = this.host;
         this.moveToTop();
-        if (this.isUserControlling() && TQ.InputMap.mouseMoving) {
-            this._parent_update(t);
-            var posMarker = this.getPosition();
-            TQ.CommandMgr.directDo(new TQ.MovePivotCommand(ele,
-                ele.calPivot(TQ.Pose.x, TQ.Pose.y),
-                {x:posMarker.x,
-                 y:posMarker.y},
-                this));
-        }
     };
 
     p.limitHostNoRotation = function() {

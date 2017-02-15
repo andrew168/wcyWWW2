@@ -1431,12 +1431,16 @@ window.TQ = window.TQ || {};
     };
 
     // Marker 专用部分
-    p.calPivot = function (xObjectSpace, yObjectSpace) {
+    p.calPivot = function (ptWorld) {
         //  由于缩放系数， 物体空间的坐标被等比缩放了
         // 所以， 应该获取原始的 宽度和 高度， 在物体空间（也是原始的），来计算pivot值
-        var dPivotX = xObjectSpace / this.getWidth();
-        var dPivotY = yObjectSpace / this.getHeight();
-        return {pivotX: this.jsonObj.pivotX + dPivotX, pivotY: this.jsonObj.pivotY + dPivotY};
+        // 数据模型中的pivot永远是[0,1]规范化的， 在显示的时候转为createJS的像素格式
+        var dpObject = this.world2Object(ptWorld);
+        //    dpDevice = this.ndc2Dc(dpObject),
+        //    pivotX = dpDevice.x / this.getWidth(),
+        //    pivotY = dpDevice.y / this.getHeight();
+        //return {pivotX: pivotX, pivotY: pivotY};
+        return {pivotX: dpObject.x, pivotY: dpObject.y};
     };
 
     p.movePivot = function (pivot, pos, marker) {
@@ -1444,7 +1448,7 @@ window.TQ = window.TQ || {};
         this.jsonObj.pivotY = pivot.pivotY;
         this.moveTo(pos);
 
-        // marker.moveTo(0, 0);
+        // marker.moveTo({x:0, y:0});
         marker.jsonObj.x = 0;
         marker.jsonObj.y = 0;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);

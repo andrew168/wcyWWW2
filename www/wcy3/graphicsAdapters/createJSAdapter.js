@@ -23,8 +23,11 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.getWidth = function () {
+        var w;
         if (this.isVirtualObject()) {// 对于Group物体
-            var w = 100;
+            w = 100;
+        } else if (this.isMarker()) {
+            w = 1;
         } else {
             w = this.displayObj.getWidth(true);
         }
@@ -33,8 +36,11 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.getHeight = function () {
+        var h;
         if (this.isVirtualObject()) {// 对于Group物体
-            var h = 100;
+            h = 100;
+        } else if (this.isMarker()) {
+            h = 1;
         } else {
             h = this.displayObj.getHeight(true);
         }
@@ -134,6 +140,53 @@ var TQ = TQ || {};
             //pivotX: (ptDc.pivotX === undefined) ? 0 : ptDc.pivotX,
             //pivotY: (ptDc.pivotY === undefined) ? 0 : ptDc.pivotY
         };
+    };
+
+    CreateJSAdapter.ndc2Dc = function(ptNdc) {
+        return this.world2Dc(ptNdc);
+    };
+
+    CreateJSAdapter.world2Dc = function (ptWorld) {
+        var sx = TQ.Config.workingRegionWidth,
+            sy = TQ.Config.workingRegionHeight,
+            ptDc;
+
+        if (!ptWorld) {
+            ptWorld = this.jsonObj;
+            ptDc = {
+                sx: (ptWorld.sx === undefined) ? 1 : ptWorld.sx * sx, // 只在toDeviceCoord中使用
+                sy: (ptWorld.sy === undefined) ? 1 : ptWorld.sy * sy,
+                //fontSize: (ptWorld.fontSize === undefined) ? 0 : ptWorld.fontSize * sx,
+                rotation: (ptWorld.rotation === undefined) ? 0 : ptWorld.rotation,
+                pivotX: (ptWorld.pivotX === undefined) ? 0 : ptWorld.pivotX * this.getWidth() ,
+                pivotY: (ptWorld.pivotY === undefined) ? 0 : ptWorld.pivotY * this.getHeight()
+            };
+        } else {
+            ptDc = {};
+        }
+
+        ptDc.x = (ptWorld.x === undefined) ? 0 : ptWorld.x * sx;
+        ptDc.y = (ptWorld.y === undefined) ? 0 : TQ.Utility.toWorldCoord(ptWorld.y * sy);
+        return ptDc;
+    };
+
+    CreateJSAdapter.world2Object = function(ptWorld) {
+        if (!ptWorld) {
+            ptWorld = this.jsonObj;
+        }
+
+        if (!this.jsonObj.IM) {
+            return ptWorld;
+        }
+        var ptObject = this.jsonObj.IM.multiply($V([ptWorld.x, ptWorld.y, 1]));
+        return {x: ptObject.elements[0], y: ptObject.elements[1]};
+    };
+
+    CreateJSAdapter.scaleOne = function (desc) {
+        var sx = 1 / this.getWidth(),
+            sy = 1 / this.getHeight();
+        desc.sx = sx;
+        desc.sy = sy;
     };
 
     TQ.CreateJSAdapter = CreateJSAdapter;
