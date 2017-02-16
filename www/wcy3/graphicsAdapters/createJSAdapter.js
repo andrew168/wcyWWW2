@@ -131,8 +131,8 @@ var TQ = TQ || {};
             sy = 1 / TQ.Config.workingRegionHeight;
 
         return {
-            x: (ptDc.x === undefined) ? Number.NaN : ptDc.x * sx,
-            y: (ptDc.y === undefined) ? Number.NaN : TQ.Utility.toWorldCoord(ptDc.y) * sy,
+            x: (ptDc.x === undefined) ? 0 : ptDc.x * sx,
+            y: (ptDc.y === undefined) ? 0 : TQ.Utility.toWorldCoord(ptDc.y) * sy,
             //sx: (ptDc.sx === undefined) ? 1 : ptDc.sx * sx,
             //sy: (ptDc.sy === undefined) ? 1 : ptDc.sy * sy,
             //fontSize: (ptDc.fontSize === undefined) ? 0 : ptDc.fontSize * sx,
