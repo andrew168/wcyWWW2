@@ -52,14 +52,13 @@ var TQ = TQ || {};
             // this.setNdc(this.jsonObj);
         }
         this.justMoved = false;
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        var obj_dc = this.pdc2dc(obj_pdc);
+        var obj_dc = this.world2Dc();
         displayObj.x = obj_dc.x;
         displayObj.y = obj_dc.y;
         displayObj.scaleX = obj_dc.sx;
         displayObj.scaleY = obj_dc.sy;
-        displayObj.regX = obj_dc.regX;
-        displayObj.regY = obj_dc.regY;
+        displayObj.regX = obj_dc.pivotX * this.getWidth();
+        displayObj.regY = obj_dc.pivotY * this.getHeight();
         displayObj.rotation = obj_dc.rotation;
     };
 
@@ -158,8 +157,8 @@ var TQ = TQ || {};
                 sy: (ptWorld.sy === undefined) ? 1 : ptWorld.sy * sy,
                 //fontSize: (ptWorld.fontSize === undefined) ? 0 : ptWorld.fontSize * sx,
                 rotation: (ptWorld.rotation === undefined) ? 0 : ptWorld.rotation,
-                pivotX: (ptWorld.pivotX === undefined) ? 0 : ptWorld.pivotX * this.getWidth() ,
-                pivotY: (ptWorld.pivotY === undefined) ? 0 : ptWorld.pivotY * this.getHeight()
+                pivotX: (ptWorld.pivotX === undefined) ? 0.5 : ptWorld.pivotX,
+                pivotY: (ptWorld.pivotY === undefined) ? 0.5 : ptWorld.pivotY
             };
         } else {
             ptDc = {};
