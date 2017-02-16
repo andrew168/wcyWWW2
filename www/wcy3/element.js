@@ -354,7 +354,7 @@ window.TQ = window.TQ || {};
 
     p.fillGap2 = function(desc) {
         if ((desc.sx == undefined)|| (desc.sy == undefined)) {
-            TQ.CreateJSAdapter.scaleOne(desc);
+            this.scaleOne(desc);
         }
         return desc;
     };
@@ -692,9 +692,8 @@ window.TQ = window.TQ || {};
         desc.sx = ndc.sx;
         desc.sy = ndc.sy;
 
-        this.scaleTo(obj_pdc);
-        this.moveTo(obj_pdc);
-        // desc.pivotX = desc.pivotY = 0.5;
+        this.dirty2 = true; //迫使系统记录这个坐标
+        this.setFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING);
     };
 
     p.setTRSAVZ = function () {

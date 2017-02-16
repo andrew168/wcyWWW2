@@ -188,5 +188,12 @@ var TQ = TQ || {};
         desc.sy = sy;
     };
 
+    CreateJSAdapter.fontScaleOne = function (desc) {
+        var realHeight = desc.fontSize / TQ.Config.workingRegionHeight;
+        var pixel2Ndc = 1 / Math.max(this.getWidth(), this.getHeight());
+
+        desc.sx = desc.sy = pixel2Ndc * realHeight;
+    };
+
     TQ.CreateJSAdapter = CreateJSAdapter;
 })();

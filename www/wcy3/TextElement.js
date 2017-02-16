@@ -149,19 +149,10 @@ window.TQ = window.TQ || {};
         TQ.Assert(this.autoFitFlag === TQ.Element.FitFlag.KEEP_SIZE, "text只能是keepSize!");
         TQ.Assert(this.jsonObj.fontSize !== undefined, "必须先定义fontSize！");
         var desc = this.jsonObj;
-        desc.sx = 1;
-        desc.sy = 1;
+        this.fontScaleOne(desc);
         desc.rotation = 0;
-        // desc.pivotX = 0.5;
-        // desc.pivotY = 0.5;
-        var obj_pdc = this.ndc2Pdc(desc);
-        if (this.autoFitFlag === TQ.Element.FitFlag.KEEP_SIZE) {
-            obj_pdc.sx = 1;
-            obj_pdc.sy = 1;
-            obj_pdc.fontSIze = desc.fontSize;
-        }
-        this.scaleTo(obj_pdc);
-        this.moveTo(obj_pdc);
+        this.dirty2 = true; //迫使系统记录这个坐标
+        this.setFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING);
     };
 
     // 样例： <font color="#f74107" size="6" face="隶书">用克隆键</font>
