@@ -25,7 +25,7 @@ var TQ = TQ || {};
     CreateJSAdapter.getWidth = function () {
         var w;
         if (this.isVirtualObject()) {// 对于Group物体
-            w = 100;
+            w = 1;
         } else if (this.isMarker()) {
             w = TQ.Marker.RADIUS;
         } else {
@@ -38,7 +38,7 @@ var TQ = TQ || {};
     CreateJSAdapter.getHeight = function () {
         var h;
         if (this.isVirtualObject()) {// 对于Group物体
-            h = 100;
+            h = 1;
         } else if (this.isMarker()) {
             h = TQ.Marker.RADIUS;
         } else {

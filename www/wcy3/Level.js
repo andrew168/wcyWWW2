@@ -119,7 +119,7 @@ window.TQ = window.TQ || {};
     p.groupIt = function(elements) {
         TQ.Log.out("Group it");
         // 以第一个物体的参数, 为主, 建立Group元素.
-        var desc = {x: elements[0].jsonObj.x, y: elements[0].jsonObj.y, type:"Group" };
+        var desc = {x: elements[0].jsonObj.x, y: elements[0].jsonObj.y, type:"Group", autoFit: TQ.Element.FitFlag.KEEP_SIZE};
         var ele = this.addElement(desc); //ToDo:
         ele.update(TQ.FrameCounter.t());
         for (var i = 0; i < elements.length; i++) {

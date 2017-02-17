@@ -39,10 +39,12 @@ window.TQ = window.TQ || {};
             this.viewCtrl = null;
             this.state = (desc.state == undefined) ? 0 : desc.state;
             this.dirty = this.dirty2 = false;
-            if (!!desc.autoFit) {
+            if (!!desc.autoFit) { //所有新加的元素都必须有此属性， 从文件中load的元素则无
                 this.autoFitFlag = desc.autoFit;
+                this.isNewlyAdded = true;
             } else {
                 this.autoFitFlag = false;
+                this.isNewlyAdded = false;
             }
             delete(desc.autoFit);
             this.initialize(desc);
@@ -654,16 +656,13 @@ window.TQ = window.TQ || {};
         this.loaded = true;
         var resource = this.getImageResource(item, jsonObj);
         this.displayObj = new createjs.Bitmap(resource);
-        this.fillGap2();
-        if (this.autoFitFlag) {
-            this.autoFit(resource);
-        }
-        this._afterItemLoaded();
+        this._afterItemLoaded(resource);
         this.setTRSAVZ();
         TQ.DirtyFlag.setElement(this);
     };
 
     p.autoFit = function(img) {
+        TQ.AssertExt.invalidLogic(!img, "未改造的元素？");
         // 保持图像长宽比例不失真
         // 自动充满整个画面 或者 保持物体的原始大小
         var sx = 1 / img.naturalWidth,
@@ -695,7 +694,9 @@ window.TQ = window.TQ || {};
         var ndc = this.pdc2Ndc(obj_pdc);
         desc.sx = ndc.sx;
         desc.sy = ndc.sy;
+    };
 
+    p.forceToRecord = function() {
         this.dirty2 = true; //迫使系统记录这个坐标
         this.setFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING);
     };
@@ -784,7 +785,7 @@ window.TQ = window.TQ || {};
         ss.getAnimation("jump").next = "run";
         anima.gotoAndPlay("jump");
         this.displayObj = anima;
-        this._afterItemLoaded();
+        this._afterItemLoaded(null);
         this.setTRSAVZ();
     };
 
@@ -1119,7 +1120,16 @@ window.TQ = window.TQ || {};
         return Element._shadow;
     };
 
-    p._afterItemLoaded = function () {
+    p._afterItemLoaded = function (resource) {
+        this.fillGap2();
+        if (this.autoFitFlag && !this.isMarker() && !this.isVirtualObject()) {
+            this.autoFit(resource);
+        }
+
+        if (this.isNewlyAdded) {
+            this.forceToRecord();
+        }
+
         if (this.displayObj) { //声音元素， 没有displayObj
             this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
         }

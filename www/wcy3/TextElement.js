@@ -77,10 +77,6 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
         var jsonObj = this.jsonObj;
         var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
-        this.fillGap2();
-        if (this.autoFitFlag) {
-            this.autoFit();
-        }
         this.loaded = true;
         if (jsonObj.textAlign == null) {
             txtObj.textAlign = jsonObj.textAlign;
@@ -151,8 +147,6 @@ window.TQ = window.TQ || {};
         var desc = this.jsonObj;
         this.fontScaleOne(desc);
         desc.rotation = 0;
-        this.dirty2 = true; //迫使系统记录这个坐标
-        this.setFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING);
     };
 
     // 样例： <font color="#f74107" size="6" face="隶书">用克隆键</font>
