@@ -94,8 +94,8 @@ var TQ = TQ || {};
         _showFloatToolbar(startEle.getType());
 
         startTrsa.ang = startEle.getRotation();
-        startTrsa.scale = startEle.getScale();
-        pos = startEle.getPosition();
+        startTrsa.scale = startEle.getScaleInWorld();
+        pos = startEle.getPositionInWorld();
         deltaX0 = e.gesture.deltaX;
         deltaY0 = e.gesture.deltaY;
 
@@ -219,7 +219,7 @@ var TQ = TQ || {};
             var newScaleX = startTrsa.scale.sx * deltaTrsa.scaleXY,
                 newScaleY = startTrsa.scale.sy * deltaTrsa.scaleXY;
             if (!isNaN(newScaleX)) {
-                if (Math.abs(newScaleX) < 0.001) {
+                if (Math.abs(newScaleX) < 0.00001) {
                     console.warn("Too small");
                 } else {
                     TQ.CommandMgr.directScaleAndRotate(startEle, {sx: newScaleX, sy: newScaleY}, startTrsa.ang - deltaTrsa.ang);

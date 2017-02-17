@@ -67,6 +67,10 @@ var TQ = TQ || {};
         return {sx: obj_pdc.sx, sy: obj_pdc.sy};
     };
 
+    CreateJSAdapter.getScaleInWorld = function () {
+        return {sx: this.jsonObj.sx, sy: this.jsonObj.sy};
+    };
+
     CreateJSAdapter.getPosition = function () { // in PDC
         var obj_pdc = this.ndc2Pdc(this.jsonObj);
         return {x: obj_pdc.x, y: obj_pdc.y};
