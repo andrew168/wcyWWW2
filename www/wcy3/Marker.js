@@ -64,6 +64,7 @@ TQ = TQ || {};
         var jsonObj = this.jsonObj;
         var s = new createjs.Shape();
         this.loaded = true;
+        this.fillGap2();
         s.x = jsonObj.x;
         s.y = jsonObj.y;
         this.displayObj = s;

@@ -77,7 +77,7 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
         var jsonObj = this.jsonObj;
         var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
-        this.fillGap2(jsonObj);
+        this.fillGap2();
         if (this.autoFitFlag) {
             this.autoFit();
         }

@@ -27,7 +27,7 @@ var TQ = TQ || {};
         if (this.isVirtualObject()) {// 对于Group物体
             w = 100;
         } else if (this.isMarker()) {
-            w = 1;
+            w = TQ.Marker.RADIUS;
         } else {
             w = this.displayObj.getWidth(true);
         }
@@ -40,7 +40,7 @@ var TQ = TQ || {};
         if (this.isVirtualObject()) {// 对于Group物体
             h = 100;
         } else if (this.isMarker()) {
-            h = 1;
+            h = TQ.Marker.RADIUS;
         } else {
             h = this.displayObj.getHeight(true);
         }
@@ -186,6 +186,14 @@ var TQ = TQ || {};
             sy = 1 / this.getHeight();
         desc.sx = sx;
         desc.sy = sy;
+    };
+
+    CreateJSAdapter.markerScaleOne = function (desc) {
+        var heightInDC = Math.max(this.getWidth(), this.getHeight()),
+            heightInNdc = heightInDC / TQ.Config.workingRegionHeight;
+        var pixel2Ndc = 1 / heightInDC;
+
+        desc.sx = desc.sy = pixel2Ndc * heightInNdc;
     };
 
     CreateJSAdapter.fontScaleOne = function (desc) {

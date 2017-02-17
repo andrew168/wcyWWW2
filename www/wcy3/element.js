@@ -352,11 +352,15 @@ window.TQ = window.TQ || {};
         return desc;
     };
 
-    p.fillGap2 = function(desc) {
+    p.fillGap2 = function() {
+        var desc = this.jsonObj;
         if ((desc.sx == undefined)|| (desc.sy == undefined)) {
-            this.scaleOne(desc);
+            if (this.isMarker()) {
+                this.markerScaleOne(desc);
+            } else {
+                this.scaleOne(desc);
+            }
         }
-        return desc;
     };
 
     Element.type2eType = function (type) {
@@ -650,7 +654,7 @@ window.TQ = window.TQ || {};
         this.loaded = true;
         var resource = this.getImageResource(item, jsonObj);
         this.displayObj = new createjs.Bitmap(resource);
-        this.fillGap2(jsonObj);
+        this.fillGap2();
         if (this.autoFitFlag) {
             this.autoFit(resource);
         }
