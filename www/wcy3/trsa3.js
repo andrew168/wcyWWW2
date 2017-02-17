@@ -208,11 +208,16 @@ var TQ = TQ || {};
             console.log("pinch..." + e.gesture.touches.length);
         } else {
             if (e.type.indexOf('rotate') >=0) {
-                console.log("rotate");
+                /*
+                 * IONIC的gesture的角度方向： 顺时针为正， 用度数单位，
+                 * ** 数值可能从 正直突然变为等价的负值
+                 * ** 逆时针是负！！！！
+                 */
                 deltaTrsa.ang = e.gesture.rotation;
+                console.log("rotate: " + deltaTrsa.ang);
             } else if (e.type.indexOf('pinch') >= 0) {
-                console.log("pinch");
                 deltaTrsa.scaleXY = e.gesture.scale;
+                console.log("pinch" + deltaTrsa.scaleXY);
             } else {
                 console.log("not pinch, rotate: " + e.type);
             }
@@ -222,7 +227,7 @@ var TQ = TQ || {};
                 if (Math.abs(newScaleX) < 0.00001) {
                     console.warn("Too small");
                 } else {
-                    TQ.CommandMgr.directScaleAndRotate(startEle, {sx: newScaleX, sy: newScaleY}, startTrsa.ang - deltaTrsa.ang);
+                    TQ.CommandMgr.directScaleAndRotate(startEle, {sx: newScaleX, sy: newScaleY}, startTrsa.ang + deltaTrsa.ang);
                     isMultiTouching = true;
                 }
             }
