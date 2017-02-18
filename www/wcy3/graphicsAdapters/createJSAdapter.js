@@ -59,9 +59,7 @@ var TQ = TQ || {};
         displayObj.scaleY = obj_dc.sy;
         displayObj.regX = obj_dc.pivotX * this.getWidth();
         displayObj.regY = (1 - obj_dc.pivotY) * this.getHeight(); // regY=0在左上角，同设备坐标一致
-
-        //createJS的角度： 逆时针是负的，所以要 改之
-        displayObj.rotation = -obj_dc.rotation;
+        displayObj.rotation = obj_dc.rotation;
     };
 
     CreateJSAdapter.getScale = function () {
@@ -149,10 +147,11 @@ var TQ = TQ || {};
         if (!ptWorld) {
             ptWorld = this.jsonObj;
             ptDc = {
-                sx: (ptWorld.sx === undefined) ? 1 : ptWorld.sx * sx, // 只在toDeviceCoord中使用
+                sx: (ptWorld.sx === undefined) ? 1 : ptWorld.sx * sx,
                 sy: (ptWorld.sy === undefined) ? 1 : ptWorld.sy * sy,
                 //fontSize: (ptWorld.fontSize === undefined) ? 0 : ptWorld.fontSize * sx,
-                rotation: (ptWorld.rotation === undefined) ? 0 : ptWorld.rotation,
+                //createJS的角度： 逆时针是负的，所以要 改之
+                rotation: (ptWorld.rotation === undefined) ? 0 : -ptWorld.rotation,
                 pivotX: (ptWorld.pivotX === undefined) ? 0.5 : ptWorld.pivotX,
                 pivotY: (ptWorld.pivotY === undefined) ? 0.5 : ptWorld.pivotY
             };
