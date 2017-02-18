@@ -72,21 +72,15 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.getPosition = function () { // in PDC
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        return {x: obj_pdc.x, y: obj_pdc.y};
+        return this.getPositionInWorld();
     };
 
     CreateJSAdapter.getPositionInWorld = function () {
         return {x: this.jsonObj.x, y: this.jsonObj.y};
     };
 
-    CreateJSAdapter.getPositionInNdc = function () {
-        return {x: this.jsonObj.x, y: this.jsonObj.y};
-    };
-
     CreateJSAdapter.getPositionInDc = function () {
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        var obj_dc = this.pdc2dc(obj_pdc);
+        var obj_dc = this.world2Dc();
         return {x: obj_dc.x, y: obj_dc.y};
     };
 
@@ -130,8 +124,8 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.dc2World = function(ptDc) {
-        var sx = 1 / TQ.Config.workingRegionWidth,
-            sy = 1 / TQ.Config.workingRegionHeight;
+        var sx = 1,
+            sy = 1;
 
         return {
             x: (ptDc.x === undefined) ? 0 : ptDc.x * sx,
@@ -145,13 +139,9 @@ var TQ = TQ || {};
         };
     };
 
-    CreateJSAdapter.ndc2Dc = function(ptNdc) {
-        return this.world2Dc(ptNdc);
-    };
-
     CreateJSAdapter.world2Dc = function (ptWorld) {
-        var sx = TQ.Config.workingRegionWidth,
-            sy = TQ.Config.workingRegionHeight,
+        var sx = 1,
+            sy = 1,
             ptDc;
 
         if (!ptWorld) {
@@ -191,25 +181,15 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.scaleOne = function (desc) {
-        var sx = 1 / this.getWidth(),
-            sy = 1 / this.getHeight();
-        desc.sx = sx;
-        desc.sy = sy;
+        desc.sx = desc.sy = 1;
     };
 
     CreateJSAdapter.markerScaleOne = function (desc) {
-        var heightInDC = Math.max(this.getWidth(), this.getHeight()),
-            heightInNdc = heightInDC / TQ.Config.workingRegionHeight;
-        var pixel2Ndc = 1 / heightInDC;
-
-        desc.sx = desc.sy = pixel2Ndc * heightInNdc;
+        desc.sx = desc.sy = 1;
     };
 
     CreateJSAdapter.fontScaleOne = function (desc) {
-        var realHeight = desc.fontSize / TQ.Config.workingRegionHeight;
-        var pixel2Ndc = 1 / Math.max(this.getWidth(), this.getHeight());
-
-        desc.sx = desc.sy = pixel2Ndc * realHeight;
+        desc.sx = desc.sy = 1;
     };
 
     TQ.CreateJSAdapter = CreateJSAdapter;
