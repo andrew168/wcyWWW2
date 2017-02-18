@@ -179,8 +179,13 @@ var TQ = TQ || {};
         }
 
         if (!this.jsonObj.IM) {
-            return ptWorld;
+            if (!this.jsonObj.M) {
+                return ptWorld;
+            } else {
+                this.jsonObj.IM = this.jsonObj.M.inverse();
+            }
         }
+
         var ptObject = this.jsonObj.IM.multiply($V([ptWorld.x, ptWorld.y, 1]));
         return {x: ptObject.elements[0], y: ptObject.elements[1]};
     };

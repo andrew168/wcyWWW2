@@ -1453,7 +1453,9 @@ window.TQ = window.TQ || {};
         //    pivotX = dpDevice.x / this.getWidth(),
         //    pivotY = dpDevice.y / this.getHeight();
         //return {pivotX: pivotX, pivotY: pivotY};
-        return {pivotX: dpObject.x, pivotY: dpObject.y};
+        dpObject.x = dpObject.x / this.getWidth()/TQ.Config.workingRegionWidth;
+        dpObject.y = dpObject.y / this.getHeight()/TQ.Config.workingRegionHeight;
+        return {pivotX: this.jsonObj.pivotX + dpObject.x, pivotY: this.jsonObj.pivotY + dpObject.y};
     };
 
     p.movePivot = function (pivot, pos, marker) {

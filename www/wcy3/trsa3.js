@@ -87,7 +87,7 @@ var TQ = TQ || {};
 
         startEle = newEle;
         if (startEle.isMarker()) {
-            startEle.limitHostNoRotation();
+            // startEle.limitHostNoRotation();
         }
         // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
         _highlight(startEle);
