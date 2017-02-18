@@ -213,7 +213,7 @@ var TQ = TQ || {};
                  * ** 数值可能从 正直突然变为等价的负值
                  * ** 逆时针是负！！！！
                  */
-                deltaTrsa.ang = e.gesture.rotation;
+                deltaTrsa.ang = startEle.dc2World({rotation: e.gesture.rotation}).rotation;
                 console.log("rotate: " + deltaTrsa.ang);
             } else if (e.type.indexOf('pinch') >= 0) {
                 deltaTrsa.scaleXY = e.gesture.scale;

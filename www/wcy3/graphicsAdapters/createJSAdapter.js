@@ -135,7 +135,7 @@ var TQ = TQ || {};
             //sx: (ptDc.sx === undefined) ? 1 : ptDc.sx * sx,
             //sy: (ptDc.sy === undefined) ? 1 : ptDc.sy * sy,
             //fontSize: (ptDc.fontSize === undefined) ? 0 : ptDc.fontSize * sx,
-            //rotation: (ptDc.rotation === undefined) ? 0 : ptDc.rotation,
+            rotation: (ptDc.rotation === undefined) ? 0 : - ptDc.rotation,
             //pivotX: (ptDc.pivotX === undefined) ? 0 : ptDc.pivotX,
             //pivotY: (ptDc.pivotY === undefined) ? 0 : ptDc.pivotY
         };
