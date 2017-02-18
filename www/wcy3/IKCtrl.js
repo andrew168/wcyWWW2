@@ -12,7 +12,7 @@ window.TQ = window.TQ || {};
     }
     // 任何时候, 都是IK动画, 除非是 Break it 进入子物体编辑模式. 默认就是最好的状态, 精锐尽出
     IKCtrl._scene = null;
-    IKCtrl.EObj = null;  // E点在对象空间的坐标值
+    IKCtrl.EObj = null;  // E点在对象空间的坐标值， 在拖动过程中是不变的， 但是在世界坐标下是变的
     IKCtrl.initialize = function(aStage, scene) {
         IKCtrl._scene = scene;
     };
@@ -20,13 +20,30 @@ window.TQ = window.TQ || {};
     IKCtrl.angle = function (S, E, A) { //  从SE 转到SA 需要转多少角度？
         var SE = TQ.Vector2D.calDirection(S, E);
         var SA = TQ.Vector2D.calDirection(S, A);
-        return SA.angle360From(SE);
+        return limitToAcuteAngle(SA.angle360From(SE));
     };
 
-    IKCtrl.getE = function (targetElement) {
+    function limitToAcuteAngle(angle) {
+        var absAngle = Math.abs(angle);
+        if (absAngle > 90) {
+            if (angle < 0) {
+                angle = 360 + angle;
+            } else {
+                angle = -360 + angle;
+            }
+        }
+
+        absAngle = Math.abs(angle);
+        if (absAngle > 90) {
+            console.error("应该是锐角" + angle);
+        }
+
+        return angle;
+    }
+
+    IKCtrl.getEWorld = function (targetElement) {
         assertNotNull(TQ.Dictionary.PleaseSelectOne, IKCtrl.EObj);
-        var EWorld = targetElement.jsonObj.M.multiply($V([IKCtrl.EObj.x, IKCtrl.EObj.y, 1]));
-        return {x: EWorld.elements[0], y: EWorld.elements[1]};
+        return targetElement.object2World(IKCtrl.EObj);
     };
 
     IKCtrl.hasAchieved = function (E, A) {
@@ -96,8 +113,8 @@ window.TQ = window.TQ || {};
         // A: 目的位置， 要把E点移动到A点。
         // child： 当前处理的Bone，
         // target：选中的bone，一般是最末的一个bone。
-        var S = child.jsonObj;
-        var E = IKCtrl.getE(target);
+        var S = child.getPositionInWorld();
+        var E = IKCtrl.getEWorld(target);
         if (IKCtrl.hasAchieved(E, A)) return true;
         var angle = IKCtrl.angle(S, E, A);   // 从SE转到SA,
         var operationFlags = child.getOperationFlags();  // 必须保存， 因为 update和record会清除 此标记。
@@ -126,7 +143,7 @@ window.TQ = window.TQ || {};
         angle = IKCtrl.applyLimitation(child, child.jsonObj.rotation + angle);
         TQ.CommandMgr.directDo(new TQ.RotateCommand(child, angle));
         child.update(TQ.FrameCounter.t()); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
-        TQ.Log.info("ele.id " + child.id + "angle = " + angle);
+        TQ.Log.info("ele.id " + child.id + ": angle = " + angle);
         TQ.DirtyFlag.setElement(child);
     };
 
@@ -141,8 +158,7 @@ window.TQ = window.TQ || {};
 
         var rDeviceX = ev.stageX;
         var rDeviceY = ev.stageY;
-        TQ.Log.debugInfo("target rDeviceXY: " + rDeviceX +  ", " + rDeviceY);
-        var A = TQ.Utility.deviceToWorld(rDeviceX, rDeviceY);
+        var A = element.dc2World({x:rDeviceX, y:rDeviceY});
         if (offset.firstTime == true) {
           IKCtrl.EObj = IKCtrl.determineE(element, offset, ev);
           offset.firstTime = false;
@@ -159,15 +175,12 @@ window.TQ = window.TQ || {};
         }
     };
 
-    IKCtrl.determineE = function(element, offset, ev)
-    {
-      // 求E点在element元素物体空间的坐标
-      // 设备坐标 --》 世界坐标 --》 物体坐标。
-      var eDevice = {x: ev.stageX, y: ev.stageY};
-      var eWorld = TQ.Utility.deviceToWorld(eDevice.x, eDevice.y);
-      var objectSpace = element.jsonObj; // 对象空间的描述，注意: 是element元素自己，不是他的parent !!
-      TQ.Pose.worldToObject(eWorld, objectSpace);
-      return {x: TQ.Pose.x, y: TQ.Pose.y};
+    IKCtrl.determineE = function(element, offset, ev) {
+        // 求E点在element元素物体空间的坐标
+        // 设备坐标 --》 世界坐标 --》 物体坐标。
+        var eDevice = {x: ev.stageX, y: ev.stageY},
+            eWorld = element.dc2World(eDevice);
+        return element.world2Object(eWorld);
     };
 
     TQ.IKCtrl = IKCtrl;

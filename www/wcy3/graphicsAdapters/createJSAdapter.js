@@ -60,7 +60,8 @@ var TQ = TQ || {};
         displayObj.regX = obj_dc.pivotX * this.getWidth();
         displayObj.regY = (1 - obj_dc.pivotY) * this.getHeight(); // regY=0在左上角，同设备坐标一致
 
-        displayObj.rotation = obj_dc.rotation;
+        //createJS的角度： 逆时针是负的，所以要 改之
+        displayObj.rotation = -obj_dc.rotation;
     };
 
     CreateJSAdapter.getScale = function () {
@@ -179,6 +180,16 @@ var TQ = TQ || {};
 
         var ptObject = this.jsonObj.IM.multiply($V([ptWorld.x, ptWorld.y, 1]));
         return {x: ptObject.elements[0], y: ptObject.elements[1]};
+    };
+
+    CreateJSAdapter.object2World = function (ptObj) {
+        if (!ptObj || !this.jsonObj.M) {
+            console.error("must have ptObj 和 M");
+            return ptObj;
+        }
+
+        var ptWorld = this.jsonObj.M.multiply($V([ptObj.x, ptObj.y, 1]));
+        return {x: ptWorld.elements[0], y: ptWorld.elements[1]};
     };
 
     CreateJSAdapter.scaleOne = function (desc) {

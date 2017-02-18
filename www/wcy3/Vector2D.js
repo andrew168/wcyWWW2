@@ -19,8 +19,8 @@ window.TQ = window.TQ || {};
 
     Vector2D.calDirection = function (startP, endP) {
         var direction = Vector2D.create([endP.x - startP.x, endP.y - startP.y]);
-        direction.toUnitVector();
-        return direction;
+        var unitVector = direction.toUnitVector();
+        return Vector2D.create(unitVector.elements);
     };
 
     p.angle360 = function() {
