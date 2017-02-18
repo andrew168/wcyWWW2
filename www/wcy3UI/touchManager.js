@@ -135,7 +135,7 @@ var TQ = TQ || {};
     }
 
     function notHandled(e) {
-        console.log("event not handled: " + e.type);
+        console.log("event not handled: " + e.type + ", " + (e.touches? e.touches.length: 0));
     }
 
     TouchManager.addHandler = addHandler;

@@ -20,6 +20,7 @@ var TQ = TQ || {};
         startLevel = null,
         startOffset = null,
         startTrsa = {
+            needReset: true,
             ang: 0,
             scale: {sx: 1, sy : 1}
         },
@@ -28,8 +29,6 @@ var TQ = TQ || {};
             scaleXY: 1
         };
     var pos = {x: 0, y: 0},
-        deltaX0 = 0,
-        deltaY0 = 0,
         isMultiTouching = false;
 
     var touchedEle;
@@ -92,12 +91,20 @@ var TQ = TQ || {};
         // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
         _highlight(startEle);
         _showFloatToolbar(startEle.getType());
+        resetStartParams(e);
+        // showFloatToolbar(evt);
+        // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
+    }
 
+    function resetStartParams(e) {
+        if (!startEle) {
+            return;
+        }
+
+        startTrsa.needReset = false;
         startTrsa.ang = startEle.getRotation();
         startTrsa.scale = startEle.getScaleInWorld();
         pos = startEle.getPositionInWorld();
-        deltaX0 = e.gesture.deltaX;
-        deltaY0 = e.gesture.deltaY;
 
         if (isNaN(startTrsa.scale.sx)) {
             startTrsa.scale.sx = 1;
@@ -114,8 +121,6 @@ var TQ = TQ || {};
         var evt = touch2StageXY(e);
         target = startEle.getPositionInDc();
         startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
-        // showFloatToolbar(evt);
-        // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
     }
 
     function onTouchStart(e) { // ==mouse的onPressed，
@@ -137,15 +142,20 @@ var TQ = TQ || {};
     }
 
     function onTouchEnd(e) {// ==mouse的onUp，
-        isMultiTouching = false;
-        if (startEle && startEle.snapIt) {
-            startEle.snapIt();
+        var hasGesture = (!isMouseEvent(e) && !!e.gesture),
+            touches = hasGesture ? e.gesture.touches : e.touches;
+        if (touches.length >0) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
+            startTrsa.needReset = true;
+        } else {
+            isMultiTouching = false;
+            if (startEle && startEle.snapIt) {
+                startEle.snapIt();
+            }
+            ditherStart();
+            startEle = null;
         }
-        ditherStart();
-        startEle = null;
-        var hasGesture = (!isMouseEvent(e) && !!e.gesture);
-        var touchNumber = hasGesture ? e.gesture.touches.length : 0;
-        console.log("touch end, or mouse up " + touchNumber + (hasGesture ? " gesture Obj" : ""));
+
+        console.log("touch end, or mouse up " + touches.length + (hasGesture ? " gesture Obj" : ""));
     }
 
     function onRelease() {
@@ -169,22 +179,19 @@ var TQ = TQ || {};
         }
         if (!startEle) {
             return updateStartElement(e);
+        } else if (startTrsa.needReset) {
+            return resetStartParams(e);
         }
 
         e = touch2StageXY(e);
 
         if (!startEle) {
-            // console.log("Move..." + e.gesture.touches.length);
+            console.error(e.type + ": Drag, no selected..., " + e.gesture.touches.length);
         } else {
             e.stopPropagation();
             e.preventDefault();
 
             TQBase.Trsa.do(startEle, startLevel, startOffset, e);
-/*            var deltaX = e.gesture.deltaX - deltaX0;
-            var deltaY = -(e.gesture.deltaY - deltaY0);
-            // startEle.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
-            TQ.CommandMgr.directDo(new TQ.MoveCommand(startEle, {x: deltaX + pos.x, y: deltaY + pos.y}));
-*/
         }
     }
 
@@ -202,6 +209,8 @@ var TQ = TQ || {};
         if (!startEle) {
             // 首次选中， 不能立即TRSA， 下一个event吧， 以避免TRSA开始时的突变
             return updateStartElement(e);
+        } else if (startTrsa.needReset) {
+            return resetStartParams(e);
         }
 
         if (!startEle) {
@@ -252,7 +261,8 @@ var TQ = TQ || {};
     }
 
     function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
-        var srcEvent = e.gesture.srcEvent;
+        var srcEvent = (e.gesture && e.gesture.srcEvent) ?
+        e.gesture.srcEvent : e;
         var touch = isMouseEvent(srcEvent)? srcEvent: srcEvent.touches[0];
         e.stageX = touch.pageX;
         e.stageY = touch.pageY;
