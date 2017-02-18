@@ -58,7 +58,8 @@ var TQ = TQ || {};
         displayObj.scaleX = obj_dc.sx;
         displayObj.scaleY = obj_dc.sy;
         displayObj.regX = obj_dc.pivotX * this.getWidth();
-        displayObj.regY = obj_dc.pivotY * this.getHeight();
+        displayObj.regY = (1 - obj_dc.pivotY) * this.getHeight(); // regY=0在左上角，同设备坐标一致
+
         displayObj.rotation = obj_dc.rotation;
     };
 

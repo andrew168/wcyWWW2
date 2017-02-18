@@ -1445,23 +1445,20 @@ window.TQ = window.TQ || {};
 
     // Marker 专用部分
     p.calPivot = function (ptWorld) {
-        //  由于缩放系数， 物体空间的坐标被等比缩放了
-        // 所以， 应该获取原始的 宽度和 高度， 在物体空间（也是原始的），来计算pivot值
+        // 应该获取原始的 宽度和 高度， 在物体空间（也是原始的），来计算pivot值
         // 数据模型中的pivot永远是[0,1]规范化的， 在显示的时候转为createJS的像素格式
-        var dpObject = this.world2Object(ptWorld);
-        //    dpDevice = this.ndc2Dc(dpObject),
-        //    pivotX = dpDevice.x / this.getWidth(),
-        //    pivotY = dpDevice.y / this.getHeight();
-        //return {pivotX: pivotX, pivotY: pivotY};
-        dpObject.x = dpObject.x / this.getWidth()/TQ.Config.workingRegionWidth;
-        dpObject.y = dpObject.y / this.getHeight()/TQ.Config.workingRegionHeight;
-        return {pivotX: this.jsonObj.pivotX + dpObject.x, pivotY: this.jsonObj.pivotY + dpObject.y};
+        var dpObject = this.world2Object(ptWorld),
+            dx = dpObject.x / this.getWidth(),
+            dy = dpObject.y / this.getHeight();
+        return {pivotX: this.jsonObj.pivotX + dx, pivotY: this.jsonObj.pivotY + dy};
     };
 
-    p.movePivot = function (pivot, pos, marker) {
+    p.movePivot = function (pivot, ptWorld, marker) {
+        this.moveTo(ptWorld);
+        this.update(TQ.FrameCounter.t()); // 必须单独更新， 否则与pivot一起更新会不准确
+
         this.jsonObj.pivotX = pivot.pivotX;
         this.jsonObj.pivotY = pivot.pivotY;
-        this.moveTo(pos);
 
         // marker.moveTo({x:0, y:0});
         marker.jsonObj.x = 0;
