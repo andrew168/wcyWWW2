@@ -144,7 +144,7 @@ var TQ = TQ || {};
     function onTouchEnd(e) {// ==mouse的onUp，
         var hasGesture = (!isMouseEvent(e) && !!e.gesture),
             touches = hasGesture ? e.gesture.touches : e.touches;
-        if (touches.length >0) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
+        if (touches && (touches.length >0)) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
             startTrsa.needReset = true;
         } else {
             isMultiTouching = false;
@@ -155,7 +155,7 @@ var TQ = TQ || {};
             startEle = null;
         }
 
-        console.log("touch end, or mouse up " + touches.length + (hasGesture ? " gesture Obj" : ""));
+        console.log("touch end, or mouse up " + (touches? touches.length: 0));
     }
 
     function onRelease() {
