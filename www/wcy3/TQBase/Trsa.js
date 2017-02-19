@@ -16,7 +16,7 @@ window.TQBase = window.TQBase || {};
     // 2) 不绘制了(不修改displayObj的值), 留给element.update 统一做
     //
     // 但是, 提供自己的状态, 供外界查询
-    Trsa.do = function (element, thisLevel, offset, ev, item) {
+    Trsa.do = function (element, thisLevel, offset, ev) {
         var target = element.displayObj;
         if (element.isPinned()) {
             displayInfo2(TQ.Dictionary.Locked);
@@ -55,13 +55,13 @@ window.TQBase = window.TQBase || {};
                 element.setFlag(TQ.Element.TRANSLATING);
                 this._move(element, thisLevel, offset, ev);
                 if (target.isClipPoint) {
-                    this._calculateScale(target, thisLevel, offset, ev, item);
+                    this._calculateScale(target, thisLevel, offset, ev, element.host);
                 }
 
                 if (!target.isClipPoint) {
                     Trsa.displayClips(target);
                 } else {
-                    Trsa.displayClips(item);
+                    Trsa.displayClips(element.host);
                 }
             }
         }
@@ -77,11 +77,23 @@ window.TQBase = window.TQBase || {};
 
     Trsa._move = function (element, thisLevel, offset, ev) {
         // offsetY 是device下的， 必须转为jsonObj所用的World坐标系或用户坐标系，才能赋给jsonObj
-        var rDeviceX = ev.stageX + offset.x;
-        var rDeviceY = ev.stageY + offset.y;
-        TQ.CommandMgr.directDo(new TQ.MoveCommand(element, {x:rDeviceX, y:TQ.Utility.toWorldCoord(rDeviceY)}));
+        var ptDevice = {
+                x: ev.stageX + offset.x,
+                y: ev.stageY + offset.y
+            },
+            ptWorld = element.dc2World(ptDevice);
+        if (!element.isMarker()) {
+            TQ.CommandMgr.directDo(new TQ.MoveCommand(element, ptWorld));
+        } else {
+            var eleHost = element.host;
+            TQ.CommandMgr.directDo(new TQ.MovePivotCommand(eleHost,
+                eleHost.calPivot(ptWorld),
+                ptWorld,
+                element));
+
+        }
         if (TQ.InputCtrl.leaveTraceOn) {
-          TQ.TraceMgr.addNewPosition(element);
+            TQ.TraceMgr.addNewPosition(element);
         }
     };
 

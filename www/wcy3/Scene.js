@@ -8,6 +8,7 @@ TQ = TQ || {};
         this.isDirty = true;
     }
     Scene.EVENT_READY = "sceneReady";
+    Scene.EVENT_SAVED = "sceneSaved";
     Scene.VER1 = "V1";
     Scene.VER2 = "V2";
     Scene.VER3 = "V3"; // 采用归一化的坐标，记录保存wcy，以适应各种屏幕。
@@ -332,6 +333,7 @@ TQ = TQ || {};
         _tMax = 0;
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
         this.title = "";  // 必须reset, 因为currScene在New新作品的时候， reuse了
+        this.filename = null;
         this.description = null;
         this.ssPath = null; // 初始化， 没有此值
         this.isDirty = true;

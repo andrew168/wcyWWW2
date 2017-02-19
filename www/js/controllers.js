@@ -103,9 +103,19 @@ function DashCtrl(
     var x = 300,
         y = 300;
     $scope.testInsert = function () {
-        x = 0.2; // += 50;
-        y = 0.5; // += 50;
+        x = 300;
+        y = 300;
         EditorService.insertText("国hello", x, y);
+    };
+
+    $scope.insertProp = function() {
+        EditorService.insertPeopleImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+        300, 300);
+    };
+
+    $scope.insertBkImage = function () {
+        EditorService.insertBkImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+            300, 300);
     };
 
     $scope.startRecord = function() {

@@ -51,6 +51,7 @@ function WCY($http, FileService, WxService, NetService) {
             });
         }
 
+        _stopAutoSave();
         if (!option) {
             option = {};
         }
@@ -245,7 +246,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _autoSave() {
-        if (_autoSaveStopped || currScene.hasSavedToCache) {
+        if (_autoSaveStopped || currScene.hasSavedToCache || !needToSave()) {
         } else {
             TQ.Assert.isObject(currScene);
             var data = currScene.getData();
@@ -253,6 +254,9 @@ function WCY($http, FileService, WxService, NetService) {
             writeCache(_FILENAME, currScene.filename);
             currScene.hasSavedToCache = true;
             updateWxShareData();
+            if (isNewOpus()) {
+                save();
+            }
         }
         return setTimeout(_autoSave, 30000); // 30s
     }
@@ -312,6 +316,7 @@ function WCY($http, FileService, WxService, NetService) {
             }
 
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
+            TQUtility.triggerEvent(document.body, TQ.Scene.EVENT_SAVED);
             console.log(data);
             TQ.MessageBox.hide();
         }
@@ -396,6 +401,10 @@ function WCY($http, FileService, WxService, NetService) {
     function onErrorGeneral(e) {
         TQ.Log.error("网络操作出错：" +　JSON.stringify(e).substr(0, 250));
         TQ.MessageBox.hide();
+    }
+
+    function isNewOpus() {
+        return (!_shareCode);
     }
 
     return {

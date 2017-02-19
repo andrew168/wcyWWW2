@@ -43,9 +43,10 @@ window.TQ = window.TQ || {};
     Config.workingRegionY0 = 63;
     Config.workingRegionWidth = 751;
     Config.workingRegionHeight = 550;
-    Config.snapOn = false;
-    Config.snapDX = 50;
-    Config.snapDY = 50;
+    Config.snapOn = true;
+    Config.snapAngleOn = true;
+    Config.snapDX = 10;
+    Config.snapDY = 10;
     Config.ORIENTATION_PORTRAIT = "portrait";
     Config.ORIENTATION_LANDSCAPE = "landscape";
     Config.orientation = Config.ORIENTATION_PORTRAIT;
@@ -55,7 +56,7 @@ window.TQ = window.TQ || {};
     Config.RotateSensitivity = 2;  // 2个像素Z向移动一个层次。
     Config.pivotX = 0.5;  // 图像缺省: Pivot在(0.5, 0.5)
     Config.pivotY = 0.5;
-    Config.TEXT_PIVOT_X = 0.0;
+    Config.TEXT_PIVOT_X = 0.5;
     Config.TEXT_PIVOT_Y = Config.pivotY;
     Config.DISPLAY_CLIPS = false;
     Config.THUMBNAIL_WIDTH = 175;
@@ -98,6 +99,7 @@ window.TQ = window.TQ || {};
     };
 
 
+    Config.hightlightOn = true;
     Config.useHighlightBox = false;  // 不显示red的亮显box
     Config.koutuOn = true;  // 只缩放，（暂时不抠图）
 

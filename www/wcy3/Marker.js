@@ -27,17 +27,16 @@ TQ = TQ || {};
 
     p._parent_update = p.update;
     p.update2 = function(t) {
-        var ele = this.host;
         this.moveToTop();
-        if (this.isUserControlling() && TQ.InputMap.mouseMoving) {
-            this._parent_update(t);
-            var dwx = this.jsonObj.x - ele.jsonObj.x;
-            var dwy = this.jsonObj.y - ele.jsonObj.y;
-            TQ.CommandMgr.directDo(new TQ.MovePivotCommand(ele,
-                ele.calPivot(TQ.Pose.x, TQ.Pose.y),
-                {x:ele.jsonObj.x + dwx,
-                 y:ele.jsonObj.y + dwy},
-                this));
+    };
+
+    p.limitHostNoRotation = function() {
+        if (this.host) {
+            var rotation = this.host.getRotation();
+            if (!TQ.Utility.equalToZero(rotation)) {
+                // ToDo: 提示
+                this.host.rotateTo(0);
+            }
         }
     };
 
@@ -80,6 +79,10 @@ TQ = TQ || {};
         if (TQBase.LevelState.isOperatingCanvas()){
             this.createImage();
         }
+    };
+
+    p.isMarker = function() {
+        return true;
     };
 
     TQ.Marker = Marker;

@@ -1,5 +1,5 @@
 <ion-view>
-    <ion-content scroll="false">
+<ion-content scroll="false">
         <!-- BEGIN OF Config.TECH_TEST1_LOCAL_CACHE_ON -->
         <!--
         <div>
@@ -151,12 +151,26 @@
         <div class="float-tool_new" style="display: block">
             <!-- 作品 -->
             <div style="display: block">
+                <button class="button button-positive" ng-click="createWcy()">新建</button>
+                <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
                 <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()">重播</button>
                 <button class="button button-positive" ng-click="EditorService.preview($event)">预览</button>
                 <button class="button button-positive" ng-click="EditorService.stop($event)">stop</button>
                 <button class="button button-positive" ng-click="startRecord()">开启录制 </button>
                 <button class="button button-positive" ng-click="stopRecord()">停止录制 </button>
+                <button class="button button-positive" ng-click="insertBkImage()">背景</button>
+                <button class="button button-positive" ng-click="insertProp()">道具</button>
+                <button class="button button-positive" ng-click="testInsert()">文字</button>
+                <button class="btn-big ion-ios-copy-outline" ng-click="EditorService.mCopyToggle()">NCopy</button>
+                <button class="btn-big ion-ios-unlocked" ng-click="EditorService.pinIt()">PinIt</button>
+                <button class="button button-positive" ng-click="SelectSet.multiCmdGroupIt()">打包</button>
+                <button class="button button-positive" ng-click="SelectSet.multiCmdJointIt()">加关节</button>
+                <button class="button button-positive" ng-click="SelectSet.explode()">炸开</button>
+                <button class="button button-positive" ng-click="undo()">undo</button>
+                <button class="button button-positive" ng-click="redo()">redo</button>
 
+            </div>
+            <div style="display:none"> <!-- all, passed -->
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
             <button class="button button-positive" ng-click="EditorService.mCopyToggle()">mCopy</button>
             <button class="button button-positive" ng-click="testDownload()">下载资源</button>
@@ -172,14 +186,12 @@
             <button class="button button-positive" ng-click="redo()">redo</button>
             <button class="button button-positive" my-click="uploadScreenshot()">截屏上传</button>
             <button class="button button-positive" my-click="EditorService.saveScreenShot()">截屏保存</button>
-            </div>
+
             <button class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}">
                 Pick text color
             </button>
             <button class="button button-positive" ng-click="testShowMsg()">showMsg</button>
             <button class="button button-positive" ng-click="testPrompt()">showMsgOK</button>
-            <button class="button button-positive" ng-click="createWcy()">新建</button>
-            <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
             <button class="button button-positive" ng-click="reloadN()">反复加载</button>
             <button class="button button-positive" ng-click="addLevel()">建立新level </button>
             <button class="button button-positive" ng-click="deleteCurrentLevel()">删除当前level </button>
@@ -221,6 +233,7 @@
                 <label>{{params}}{{getTextMsg()}} </label>
                 <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
             </div>
+        </div>
         </div>
         <canvas id="testCanvas" width="960" height="480" style="left: 200px; background-color:lightskyblue;" class="showcanvas positive-border"></canvas>
         <div id="textEditBoxDiv" style="display:none">

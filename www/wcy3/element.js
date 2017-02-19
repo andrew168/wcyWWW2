@@ -5,6 +5,15 @@
 window.TQ = window.TQ || {};
 
 (function () {
+    TQ.ElementType = {
+        BITMAP: "Bitmap",
+        SOUND: "SOUND",
+        TEXT: "Text",
+        GROUP: "Group",
+        GROUP_FILE: "GroupFile",
+        BITMAP_ANIMATION: "BitmapAnimation"
+    };
+
     var DescType = {
         BITMAP: "Bitmap",
         BITMAP_ANIMATION: "BitmapAnimation",
@@ -30,15 +39,24 @@ window.TQ = window.TQ || {};
             this.viewCtrl = null;
             this.state = (desc.state == undefined) ? 0 : desc.state;
             this.dirty = this.dirty2 = false;
-            if (!!desc.autoFit) {
+            if (!!desc.autoFit) { //所有新加的元素都必须有此属性， 从文件中load的元素则无
                 this.autoFitFlag = desc.autoFit;
+                this.isNewlyAdded = true;
             } else {
                 this.autoFitFlag = false;
+                this.isNewlyAdded = false;
             }
             delete(desc.autoFit);
             this.initialize(desc);
         }
     }
+
+    Element.FitFlag = {
+        KEEP_SIZE: 1,
+        FULL_SCREEN: 2,
+        WITHIN_FRAME: 3,
+        NO: 4
+    };
 
     Element.counter = 0;
     Element.VER1 = "V1";
@@ -84,6 +102,7 @@ window.TQ = window.TQ || {};
 
     Element.showHidenObjectFlag = false;  //  个人的state由个人记录, 上级可以控制
     var p = Element.prototype;
+    p = TQ.CreateJSAdapter.attach(p);
     p.loaded = false;
     p.jsonObj = null;
     p.displayObj = null;
@@ -97,6 +116,11 @@ window.TQ = window.TQ || {};
             if (this.jsonObj.isVis && !this.hasFlag(Element.IN_STAGE)) {
                 TQ.Log.out(TQ.Dictionary.INVALID_LOGIC); // show + _doAddItemToStage 飞线, 适用于: 1) load之时不可见的元素, 2) marker初次创建时, 不可见
                 TQ.StageBuffer.add(this);
+            }
+        } else {
+            if (this.isFEeffect() || this.isSound() || this.isGrouped() || this.isGroupFile()) {
+            } else {
+                TQ.AssertExt.invalidLogic(this.displayObj === undefined, "没有displayObj的元素，需要重定义show接口???");
             }
         }
         //ToDo: 留给显示函数做, 不能一竿子插到底,  this.displayObj.visible = isVisible;
@@ -133,7 +157,6 @@ window.TQ = window.TQ || {};
         desc.x = (desc.x == null) ? 0 : desc.x;
         desc.y = (desc.y == null) ? 0 : desc.y;
         this.jsonObj = this.fillGap(desc);
-        var DescType = Element.DescType;
         switch (desc.type) {
             case DescType.GROUP_FILE:
                 this._addComponent(desc);
@@ -310,19 +333,11 @@ window.TQ = window.TQ || {};
             desc.zIndex = Element.TOP;
         }
         if (desc.type == "Text") {
-            desc.pivotX = 0;// (desc.pivotX == undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
-            desc.pivotY = 1; // (desc.pivotY == undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
+            desc.pivotX = (desc.pivotX === undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
+            desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
         } else {
-            desc.pivotX = (desc.pivotX == undefined) ? TQ.Config.pivotX : desc.pivotX;
-            desc.pivotY = (desc.pivotY == undefined) ? TQ.Config.pivotY : desc.pivotY;
-        }
-
-        if (desc.sx == undefined) {
-            desc.sx = 1;
-        }
-
-        if (desc.sy == undefined) {
-            desc.sy = 1;
+            desc.pivotX = (desc.pivotX === undefined) ? TQ.Config.pivotX : desc.pivotX;
+            desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.pivotY : desc.pivotY;
         }
 
         if (desc.rotation == undefined) {
@@ -337,6 +352,17 @@ window.TQ = window.TQ || {};
         desc.animeTrack = new TQ.AnimeTrack(desc);
         TQ.AnimeTrack.validate(desc.animeTrack);
         return desc;
+    };
+
+    p.fillGap2 = function() {
+        var desc = this.jsonObj;
+        if ((desc.sx == undefined)|| (desc.sy == undefined)) {
+            if (this.isMarker()) {
+                this.markerScaleOne(desc);
+            } else {
+                this.scaleOne(desc);
+            }
+        }
     };
 
     Element.type2eType = function (type) {
@@ -629,24 +655,23 @@ window.TQ = window.TQ || {};
         TQ.Assert.isNotNull(item, "先准备好资源， 再创建元素");
         this.loaded = true;
         var resource = this.getImageResource(item, jsonObj);
-        if (this.autoFitFlag) {
-            this.autoFit(resource);
-        }
         this.displayObj = new createjs.Bitmap(resource);
-        this._afterItemLoaded();
+        this._afterItemLoaded(resource);
         this.setTRSAVZ();
         TQ.DirtyFlag.setElement(this);
     };
 
     p.autoFit = function(img) {
+        TQ.AssertExt.invalidLogic(img!==null, "未改造的元素？");
         // 保持图像长宽比例不失真
         // 自动充满整个画面 或者 保持物体的原始大小
-        var sx = 1 / img.naturalWidth,
-            sy = 1 / img.naturalHeight;
-        var desc = this.jsonObj;
+        var sx = TQ.Config.workingRegionWidth / this.getWidth(),
+            sy = TQ.Config.workingRegionHeight / this.getHeight();
+        var desc = this.jsonObj,
+            pWorld = this.nw2World({x: 0.5, y: 0.5});
         if (this.autoFitFlag != Element.FitFlag.NO) {
-            desc.x = 0.5;
-            desc.y = 0.5;
+            desc.x = pWorld.x;
+            desc.y = pWorld.y;
             desc.sx = sx;
             desc.sy = sy;
             desc.rotation = 0;
@@ -654,26 +679,22 @@ window.TQ = window.TQ || {};
 
         desc.pivotX = 0.5;
         desc.pivotY = 0.5;
-        var obj_pdc = this.ndc2Pdc(desc);
-        var minScale = Math.min(obj_pdc.sx, obj_pdc.sy);
+        pWorld = desc;
+        var minScale = Math.min(pWorld.sx, pWorld.sy);
         if ((this.autoFitFlag === Element.FitFlag.KEEP_SIZE) ||
             ((this.autoFitFlag === Element.FitFlag.WITHIN_FRAME) && (minScale > 1))) { // 框大， 图小，保持原尺寸
-            obj_pdc.sx = 1;
-            obj_pdc.sy = 1;
+            pWorld.sx = 1;
+            pWorld.sy = 1;
         } else { // 框子小， 图大， 需要缩小
                 // 保持图像长宽比例不失真
-            obj_pdc.sx = minScale;
-            obj_pdc.sy = minScale;
+            pWorld.sx = minScale;
+            pWorld.sy = minScale;
         }
+    };
 
-        // 更新 desc
-        var ndc = this.pdc2Ndc(obj_pdc);
-        desc.sx = ndc.sx;
-        desc.sy = ndc.sy;
-
-        this.scaleTo(obj_pdc);
-        this.moveTo(obj_pdc);
-        // desc.pivotX = desc.pivotY = 0.5;
+    p.forceToRecord = function() {
+        this.dirty2 = true; //迫使系统记录这个坐标
+        this.setFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING);
     };
 
     p.setTRSAVZ = function () {
@@ -707,48 +728,6 @@ window.TQ = window.TQ || {};
         this.doShow(visSum);
     },
 
-    p.setNdc = function(obj) {
-        obj.x = 0.5;
-        obj.y = 0.5;
-        obj.sx = 1 / this.getWidth();
-        obj.sy = 1 / this.getHeight();
-    },
-
-    p.ndc2Pdc = function(obj) {
-        var sx = TQ.Config.workingRegionWidth,
-            sy = TQ.Config.workingRegionHeight;
-
-        var obj_pdc = {
-            x: obj.x * sx,
-            y: obj.y * sy,
-            sx: obj.sx * sx,
-            sy: obj.sy * sy,
-            fontSize : (!obj.fontSize)? 0 : obj.fontSize * sx,
-            rotation : obj.rotation,
-            pivotX : obj.pivotX,
-            pivotY : obj.pivotY
-        };
-
-        return obj_pdc;
-    };
-
-    p.pdc2Ndc = function(obj) {
-        this.justMoved = true;
-        var sx = 1/TQ.Config.workingRegionWidth,
-            sy = 1/TQ.Config.workingRegionHeight;
-
-        return {
-            x: (obj.x === undefined)? Number.NaN : obj.x * sx,
-            y: (obj.y === undefined)? Number.NaN : obj.y * sy,
-            sx: (obj.sx === undefined)? 1: obj.sx * sx,
-            sy: (obj.sy === undefined)? 1: obj.sy * sy,
-            fontSize : (obj.fontSize === undefined)? 0:obj.fontSize * sx,
-            rotation : (obj.rotation === undefined)? 0: obj.rotation,
-            pivotX : (obj.pivotX === undefined)? 0: obj.pivotX,
-            pivotY : (obj.pivotY === undefined)? 0:obj.pivotY
-        };
-    };
-
     p.doShow = function (visSum) {
         if (!this.displayObj) {
             this.visibleTemp = visSum;
@@ -756,52 +735,6 @@ window.TQ = window.TQ || {};
             this.displayObj.visible = visSum;
             this.toDeviceCoord(this.displayObj, this.jsonObj);
         }
-    };
-
-    p.toDeviceCoord = function (displayObj, jsonObj) {
-        if (!this.justMoved) {
-            // this.setNdc(this.jsonObj);
-        }
-        this.justMoved = false;
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        var obj_dc = this.pdc2dc(obj_pdc);
-        displayObj.x = obj_dc.x;
-        displayObj.y = obj_dc.y;
-        displayObj.scaleX = obj_dc.sx;
-        displayObj.scaleY = obj_dc.sy;
-        displayObj.regX = obj_dc.regX;
-        displayObj.regY = obj_dc.regY;
-        displayObj.rotation = obj_dc.rotation;
-    };
-
-    p.pdc2dc = function(obj_pdc) {
-        assertValid(TQ.Dictionary.FoundNull, obj_pdc); // 应有显示数据
-
-        var obj_dc = {};
-        //从 用户使用的世界坐标和物体坐标，转换为可以绘制用的设备坐标
-        if (!obj_pdc) {
-            return;
-        }
-        obj_dc.x = TQ.Config.zoomX * obj_pdc.x;
-        obj_dc.y = TQ.Utility.toDeviceCoord(TQ.Config.zoomY * obj_pdc.y);
-        if (this.isMarker() || this.isSound()) { // marker 永远是一样的大小, 圆的, 没有旋转, 定位在圆心.
-            obj_dc.sx = obj_dc.sy = 1;
-            obj_dc.regX = obj_dc.regY = 0;
-            obj_dc.rotation = 0;
-            return obj_dc;
-        }
-        if (!this.isMarker()) {
-            obj_dc.regX = obj_pdc.pivotX * this.getWidth();
-            obj_dc.regY = TQ.Utility.toDevicePivot(obj_pdc.pivotY) * this.getHeight();
-        } else {
-            obj_dc.regX = 0;
-            obj_dc.regY = 0
-        }
-
-        obj_dc.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
-        obj_dc.sx = TQ.Config.zoomX * obj_pdc.sx;
-        obj_dc.sy = TQ.Config.zoomY * obj_pdc.sy;
-        return obj_dc;
     };
 
     p._loadActor = function () {
@@ -817,7 +750,7 @@ window.TQ = window.TQ || {};
         ss.getAnimation("jump").next = "run";
         anima.gotoAndPlay("jump");
         this.displayObj = anima;
-        this._afterItemLoaded();
+        this._afterItemLoaded(null);
         this.setTRSAVZ();
     };
 
@@ -886,7 +819,7 @@ window.TQ = window.TQ || {};
         // 同时,重置回调函数,阻止用户操作; 切断指针以便于释放内容,
         this._doRemoveFromStage();
         if (this.displayObj != null) {
-            this.displayObj.jsobObj = null;
+            this.displayObj.jsonObj = null;
             this.displayObj.onPress = null;
             this.displayObj.onMouseOver = null;
             this.displayObj.onMouseOut = null;
@@ -1005,7 +938,7 @@ window.TQ = window.TQ || {};
                                 return;
                             }
                             TQ.FloatToolbar.close();
-                            TQBase.Trsa.do(ele2, thislevel, offset, ev, stageContainer.selectedItem);
+                            TQBase.Trsa.do(ele2, thislevel, offset, ev);
                         };
                         evt.onMouseUp = function (evt) {
                             showFloatToolbar(evt);
@@ -1041,35 +974,47 @@ window.TQ = window.TQ || {};
         }
         if (this._isHighlighting == enable) return;
 
-
-        if (TQ.Config.useHighlightBox) {
+        if (TQ.Config.hightlightOn) {
             this._isHighlighting = enable;
         } else {
             this._isHighlighting = false;
         }
 
-        if (this._isHighlighting) {
-            this.createHighlighter();
-        } else {
-            this.deleteHighlighter();
-        }
+        // 通过dirty flag迫使系统更新， 并且重绘，而不是直接绘制
+        TQ.DirtyFlag.setElement(this);
     };
 
     p.createHighlighter = function() {
         this.displayObj.shadow = Element.getShadow();
-        this.highter = this.createBBox(1, 1, this.getRotation(),
-            this.getWidth(), this.getHeight());
-        stageContainer.addChild(this.highter);
+        if (TQ.Config.useHighlightBox) {
+            this.highter = this.createBBox(1, 1, this.getRotation(),
+                this.getWidth(), this.getHeight());
+            stageContainer.addChild(this.highter);
+        }
     };
 
     p.deleteHighlighter = function() {
-        this.displayObj.shadow = null;
-        if (!this.highter) {
-            return;
+        if (this.displayObj && !!this.displayObj.shadow) {
+            this.displayObj.shadow = null;
         }
 
-        stageContainer.removeChild(this.highter);
-        this.highter = null;
+        if (TQ.Config.useHighlightBox) {
+            if (!this.highter) {
+                return;
+            }
+
+            stageContainer.removeChild(this.highter);
+            this.highter = null;
+        }
+    };
+
+    p.updateHighlighter = function() {
+        if (this._isHighlighting && this.createHighlighter) {
+            this.deleteHighlighter();
+            this.createHighlighter();
+        } else {
+            this.deleteHighlighter();
+        }
     };
 
     p.createBBox = function(sx, sy, rotation, w, h) {
@@ -1140,7 +1085,16 @@ window.TQ = window.TQ || {};
         return Element._shadow;
     };
 
-    p._afterItemLoaded = function () {
+    p._afterItemLoaded = function (resource) {
+        this.fillGap2();
+        if (this.autoFitFlag && !this.isMarker() && !this.isVirtualObject()) {
+            this.autoFit(resource);
+        }
+
+        if (this.isNewlyAdded) {
+            this.forceToRecord();
+        }
+
         if (this.displayObj) { //声音元素， 没有displayObj
             this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
         }
@@ -1188,10 +1142,10 @@ window.TQ = window.TQ || {};
         if (!this.jsonObj) {
             return null;
         }
+        this.highlight(false);
         var data = TQ.Base.Utility.shadowCopy(this.jsonObj);
         //备注：displayObj 本身里面有Cycle， 无法消除。所以必须让他null。
         // JQuery 调用的toJSON， 只需要这个字段即可， 一定不要在这里调用stringify！
-        this.highlight(false);
         data.displayObj = null;
         data.animeTrack = this.animeTrack;
         data.animeCtrl = this.animeCtrl;
@@ -1214,7 +1168,9 @@ window.TQ = window.TQ || {};
         if (this.children != null) {
             data.children = [];
             for (var i = 0; i < this.children.length; i++) {
-                data.children.push(this.children[i].toJSON());
+                if (!this.children[i].isMarker()) {
+                    data.children.push(this.children[i].toJSON());
+                }
             }
         }
 
@@ -1226,6 +1182,9 @@ window.TQ = window.TQ || {};
     };
 
     p.afterToJSON = function () {
+        if (this.isMarker()) {
+            return;
+        }
         var data = this.jsonData;
         this.jsonData = null;
         //  只是为了输出, 才临时赋值给它, 现在收回.
@@ -1441,12 +1400,8 @@ window.TQ = window.TQ || {};
             }
         }
 
+        this.updateHighlighter();
         this.dirty = this.dirty2 = false;
-
-        if (this._isHighlighting && this.createHighlighter) {
-            this.deleteHighlighter();
-            this.createHighlighter();
-        }
 
         if (this.hookInMove) {
             this.hookInMove.call(this, this);
@@ -1454,39 +1409,23 @@ window.TQ = window.TQ || {};
     };
 
     // Marker 专用部分
-    p.calPivot = function (xObjectSpace, yObjectSpace) {
-        //  由于缩放系数， 物体空间的坐标被等比缩放了
-        // 所以， 应该获取原始的 宽度和 高度， 在物体空间（也是原始的），来计算pivot值
-        var dPivotX = xObjectSpace / this.getWidth();
-        var dPivotY = yObjectSpace / this.getHeight();
-        return {pivotX: this.jsonObj.pivotX + dPivotX, pivotY: this.jsonObj.pivotY + dPivotY};
+    p.calPivot = function (ptWorld) {
+        // 应该获取原始的 宽度和 高度， 在物体空间（也是原始的），来计算pivot值
+        // 数据模型中的pivot永远是[0,1]规范化的， 在显示的时候转为createJS的像素格式
+        var dpObject = this.world2Object(ptWorld),
+            dx = dpObject.x / this.getWidth(),
+            dy = dpObject.y / this.getHeight();
+        return {pivotX: this.jsonObj.pivotX + dx, pivotY: this.jsonObj.pivotY + dy};
     };
 
-    p.getWidth = function () {
-        if (this.isVirtualObject()) {// 对于Group物体
-            var w = 100;
-        } else {
-            w = this.displayObj.getWidth(true);
-        }
+    p.movePivot = function (pivot, ptWorld, marker) {
+        this.moveTo(ptWorld);
+        this.update(TQ.FrameCounter.t()); // 必须单独更新， 否则与pivot一起更新会不准确
 
-        return w;
-    };
-
-    p.getHeight = function () {
-        if (this.isVirtualObject()) {// 对于Group物体
-            var h = 100;
-        } else {
-            h = this.displayObj.getHeight(true);
-        }
-        return h;
-    };
-
-    p.movePivot = function (pivot, pos, marker) {
         this.jsonObj.pivotX = pivot.pivotX;
         this.jsonObj.pivotY = pivot.pivotY;
-        this.moveTo(pos);
 
-        // marker.moveTo(0, 0);
+        // marker.moveTo({x:0, y:0});
         marker.jsonObj.x = 0;
         marker.jsonObj.y = 0;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
@@ -1503,24 +1442,37 @@ window.TQ = window.TQ || {};
 
     p.snapIt = function () {
         if (TQ.Config.snapOn) {
-            obj_pdc = this.ndc2Pdc(this.jsonObj);
-            obj_pdc.x = Math.round(obj_pdc.x / TQ.Config.snapDX) * TQ.Config.snapDX;
-            obj_pdc.y = Math.round(obj_pdc.y / TQ.Config.snapDY) * TQ.Config.snapDY;
-            this.moveTo(obj_pdc);
+            var ptWorld = this.getPositionInWorld();
+            ptWorld.x = Math.round(ptWorld.x / TQ.Config.snapDX) * TQ.Config.snapDX;
+            ptWorld.y = Math.round(ptWorld.y / TQ.Config.snapDY) * TQ.Config.snapDY;
+            this.moveTo(ptWorld);
         }
     };
 
-    p.moveTo = function (point) {
+    function snapAngle(angle) {
+        // 角度钳制： 如果非常靠近90度的整数倍，则取该度数
+        if (TQ.Config.snapAngleOn) {
+            var k = angle/90,
+                kRound = Math.round(k),
+                toloerance = (k - kRound);
+            if (Math.abs(toloerance) < 0.05) {
+                angle = kRound * 90;
+            }
+        }
+
+        return angle;
+    }
+
+    p.moveTo = function (ptWorld) {
         if (this.isPinned()) {
             return;
         }
 
-        var obj_ndc = this.pdc2Ndc(point);
-        TQ.Assert.isTrue(!isNaN(obj_ndc.x),  "x 为 NaN！！！");
-        TQ.Assert.isTrue(!isNaN(obj_ndc.y),  "y 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(ptWorld.x),  "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(ptWorld.y),  "y 为 NaN！！！");
 
-        this.jsonObj.x = obj_ndc.x;
-        this.jsonObj.y = obj_ndc.y;
+        this.jsonObj.x = ptWorld.x;
+        this.jsonObj.y = ptWorld.y;
 
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.TRANSLATING);
@@ -1528,10 +1480,6 @@ window.TQ = window.TQ || {};
         this.dirty2 = true;
     };
 
-    p.getScale = function () {
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        return {sx: obj_pdc.sx, sy: obj_pdc.sy};
-    };
 
     p.getScaleInNdc = function () {
         return {sx: this.jsonObj.sx, sy: this.jsonObj.sy};
@@ -1541,44 +1489,28 @@ window.TQ = window.TQ || {};
         return this.jsonObj.rotation;
     };
 
-    p.getPosition = function () { // in PDC
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        return {x: obj_pdc.x, y: obj_pdc.y};
-    };
-
-    p.getPositionInNdc = function () {
-        return {x: this.jsonObj.x, y: this.jsonObj.y};
-    };
-
-    p.getPositionInDc = function () {
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        var obj_dc = this.pdc2dc(obj_pdc);
-        return {x: obj_dc.x, y: obj_dc.y};
-    };
-
     p.rotateTo = function (angle) {
         if (this.isPinned()) {
             return;
         }
 
-        this.jsonObj.rotation = angle;
+        this.jsonObj.rotation = snapAngle(angle);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.ROTATING);
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
     };
 
-    p.scaleTo = function (scale) {
+    p.scaleTo = function (scaleInWorld) {
         if (this.isPinned()) {
             return;
         }
 
-        var obj_ndc = this.pdc2Ndc(scale);
-        TQ.Assert.isTrue(!isNaN(obj_ndc.sx),  "x 为 NaN！！！");
-        TQ.Assert.isTrue(!isNaN(obj_ndc.sy),  "y 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(scaleInWorld.sx),  "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(scaleInWorld.sy),  "y 为 NaN！！！");
 
-        this.jsonObj.sx = obj_ndc.sx;
-        this.jsonObj.sy = obj_ndc.sy;
+        this.jsonObj.sx = scaleInWorld.sx;
+        this.jsonObj.sy = scaleInWorld.sy;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.SCALING);
         TQ.DirtyFlag.setElement(this);
@@ -1707,8 +1639,11 @@ window.TQ = window.TQ || {};
     p.isJoint = function () {
         return ((this.parent != null) && (this.hasFlag(Element.JOINTED)));
     };
+    p.isFEeffect = function() {
+        return false;
+    };
     p.isMarker = function () {
-        return (this.jsonObj.type == "JointMarker");
+        return false;
     };
     p.isVirtualObject = function () { // 虚拟物体包括： Group(displayObj 非空), 声音(displayObj 为空)，等
         if (!this.displayObj) {
@@ -1735,10 +1670,8 @@ window.TQ = window.TQ || {};
         return (this.hasFlag(Element.BROKEN));
     };
     p.isGrouped = function () {
-        if (this.children != null) {
-            // assertTrue("如果非空, 必须有元素", this.children.length > 0);
-        }
-        return ((this.parent != null) || (this.children != null));
+        return ((this.jsonObj.type === DescType.GROUP) ||
+        (this.jsonObj.type === DescType.GROUP_FILE));
     };
 
     p.isVer2plus = function() {
@@ -1811,22 +1744,6 @@ window.TQ = window.TQ || {};
 
     p.getColor = function() {
         return (this.jsonObj.color === undefined) ? TQ.Config.color : this.jsonObj.color;
-    };
-
-    TQ.ElementType = {
-        BITMAP: "Bitmap",
-        SOUND: "SOUND",
-        TEXT: "Text",
-        GROUP: "Group",
-        GROUP_FILE: "GroupFile",
-        BITMAP_ANIMATION: "BitmapAnimation"
-    };
-
-    Element.FitFlag = {
-        KEEP_SIZE: 1,
-        FULL_SCREEN: 2,
-        WITHIN_FRAME: 3,
-        NO: 4
     };
 
     TQ.Element = Element;

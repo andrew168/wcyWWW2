@@ -75,10 +75,6 @@ window.TQ = window.TQ || {};
 
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
-        if (this.autoFitFlag) {
-            this.autoFit();
-        }
-
         var jsonObj = this.jsonObj;
         var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
         this.loaded = true;
@@ -107,20 +103,30 @@ window.TQ = window.TQ || {};
         return factor * this.displayObj.getMeasuredHeight();
     };
 
+    p.parent_createHighlighter = p.createHighlighter;
+    p.parent_deleteHighlighter = p.deleteHighlighter;
     p.createHighlighter = function() {
-        var txtObj = this.displayObj;
-        txtObj.text = this.jsonObj.text;
-        this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
-        stageContainer.addChild(this.highter);
+        if (TQ.Config.useHighlightBox) {
+            var txtObj = this.displayObj;
+            txtObj.text = this.jsonObj.text;
+            this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+            stageContainer.addChild(this.highter);
+        } else {
+            this.parent_createHighlighter();
+        }
     };
 
     p.deleteHighlighter = function() {
-        if (!this.highter) {
-            return;
-        }
+        if (TQ.Config.useHighlightBox) {
+            if (!this.highter) {
+                return;
+            }
 
-        stageContainer.removeChild(this.highter);
-        this.highter = null;
+            stageContainer.removeChild(this.highter);
+            this.highter = null;
+        } else {
+            this.parent_deleteHighlighter();
+        }
     };
 
     p.parent_fillGap = p.fillGap;
@@ -139,19 +145,8 @@ window.TQ = window.TQ || {};
         TQ.Assert(this.autoFitFlag === TQ.Element.FitFlag.KEEP_SIZE, "text只能是keepSize!");
         TQ.Assert(this.jsonObj.fontSize !== undefined, "必须先定义fontSize！");
         var desc = this.jsonObj;
-        desc.sx = 1;
-        desc.sy = 1;
+        this.fontScaleOne(desc);
         desc.rotation = 0;
-        // desc.pivotX = 0.5;
-        // desc.pivotY = 0.5;
-        var obj_pdc = this.ndc2Pdc(desc);
-        if (this.autoFitFlag === TQ.Element.FitFlag.KEEP_SIZE) {
-            obj_pdc.sx = 1;
-            obj_pdc.sy = 1;
-            obj_pdc.fontSIze = desc.fontSize;
-        }
-        this.scaleTo(obj_pdc);
-        this.moveTo(obj_pdc);
     };
 
     // 样例： <font color="#f74107" size="6" face="隶书">用克隆键</font>

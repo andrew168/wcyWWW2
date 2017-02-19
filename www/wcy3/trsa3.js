@@ -16,11 +16,11 @@ var TQ = TQ || {};
     Trsa3.onDrag = onDrag;
 
     var isDithering = false,
-        ele = null,
         startEle = null,
         startLevel = null,
         startOffset = null,
         startTrsa = {
+            needReset: true,
             ang: 0,
             scale: {sx: 1, sy : 1}
         },
@@ -29,8 +29,6 @@ var TQ = TQ || {};
             scaleXY: 1
         };
     var pos = {x: 0, y: 0},
-        deltaX0 = 0,
-        deltaY0 = 0,
         isMultiTouching = false;
 
     var touchedEle;
@@ -66,75 +64,72 @@ var TQ = TQ || {};
         touchedEle = stage.getObjectsUnderPoint(evt.stageX, evt.stageY);
     }
 
-    function getSelectedElement(e) {
+    function updateStartElement(e) {
         TQ.AssertExt.invalidLogic(!!e);
         if (!e) {
             return;
         }
-        var newEle = _doGetSelectedElement(e);
-        if (!newEle) {
-            newEle = touchedEle;
-        }
 
+        TQ.SelectSet.updateByGesture(e);
+        var newEle = TQ.SelectSet.peekLatestEditableEle();
         if (!newEle) {
+            startEle = null;
             // console.error("No Obj touched!");
             TQ.SelectSet.empty();
             TQ.FloatToolbar.close();
             return;
         }
 
-        if (ele === newEle) {
+        if (startEle === newEle) {
             return;
         }
 
-        ele = newEle;
-        if (ele) {
-            // console.log("element selected: " + ele.getType() + ", Id=" + ele.id);
-            _highlight(ele);
-            _showFloatToolbar(ele.getType());
-        } else {
-            // TQ.Log.warn("No Element selected, fake to first element of this level!");
-            ele = currScene.currentLevel.elements[0];
-            TQ.FloatToolbar.close();
+        startEle = newEle;
+        if (startEle.isMarker()) {
+            // startEle.limitHostNoRotation();
         }
+        // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
+        _highlight(startEle);
+        _showFloatToolbar(startEle.getType());
+        resetStartParams(e);
+        // showFloatToolbar(evt);
+        // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
+    }
 
-        if (!ele) {
-            TQ.Log.error("No Element selected");
+    function resetStartParams(e) {
+        if (!startEle) {
             return;
         }
 
-        startTrsa.ang = ele.getRotation();
-        startTrsa.scale = ele.getScale();
-        pos = ele.getPosition();
-        deltaX0 = e.gesture.deltaX;
-        deltaY0 = e.gesture.deltaY;
+        startTrsa.needReset = false;
+        startTrsa.ang = startEle.getRotation();
+        startTrsa.scale = startEle.getScaleInWorld();
+        pos = startEle.getPositionInWorld();
 
         if (isNaN(startTrsa.scale.sx)) {
             startTrsa.scale.sx = 1;
             startTrsa.scale.sy = 1;
         }
+
+        // setup base
+        startLevel = currScene.currentLevel;
+
+        var target = startEle.displayObj;
+        if (target === null) { // 防止 刚刚被删除的物体.
+            return;
+        }
+        var evt = touch2StageXY(e);
+        target = startEle.getPositionInDc();
+        startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
+
+        deltaTrsa.scaleXY = 1;
+        deltaTrsa.ang = 0;
     }
 
     function onTouchStart(e) { // ==mouse的onPressed，
         console.log("touch start" + e.gesture.touches.length);
-        ele = null;
         TQ.CommandMgr.startNewOperation();
-        getSelectedElement(e);
-        if (TQ.SelectSet.peek()) {
-            // setup base
-            startEle = TQ.SelectSet.peek();
-            startLevel = currScene.currentLevel;
-
-            var target = startEle.displayObj;
-            if (target === null) { // 防止 刚刚被删除的物体.
-                return;
-            }
-            var evt = touch2StageXY(e);
-            target = startEle.getPositionInDc();
-            startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
-            // showFloatToolbar(evt);
-            // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
-        }
+        updateStartElement(e);
         e.stopPropagation();
         e.preventDefault();
         // console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
@@ -150,16 +145,20 @@ var TQ = TQ || {};
     }
 
     function onTouchEnd(e) {// ==mouse的onUp，
-        isMultiTouching = false;
-        var ele = TQ.SelectSet.peek();
-        if (ele && ele.snapIt) {
-            ele.snapIt();
+        var hasGesture = (!isMouseEvent(e) && !!e.gesture),
+            touches = hasGesture ? e.gesture.touches : e.touches;
+        if (touches && (touches.length >0)) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
+            startTrsa.needReset = true;
+        } else {
+            isMultiTouching = false;
+            if (startEle && startEle.snapIt) {
+                startEle.snapIt();
+            }
+            ditherStart();
+            startEle = null;
         }
-        ditherStart();
-        startEle = null;
-        var hasGesture = !!e.gesture;
-        var touchNumber = (hasGesture) ? e.gesture.touches.length : e.touches.length;
-        console.log("touch end " + touchNumber + (hasGesture ? " gesture Obj" : ""));
+
+        console.log("touch end, or mouse up " + (touches? touches.length: 0));
     }
 
     function onRelease() {
@@ -168,7 +167,7 @@ var TQ = TQ || {};
     }
 
     function onDrag(e) {  //// ==mouse的onMove，
-        if (isDithering || TQ.SelectSet.isInMultiCmd()) {
+        if (isDithering) {// || (TQ.SelectSet.isInMultiCmd() && startEle && !startEle.isMarker())) {
             return;
         }
 
@@ -181,24 +180,21 @@ var TQ = TQ || {};
             console.log("not started, force to start in onDrag!");
             return onTouchStart(e);
         }
-        if (!ele) {
-            getSelectedElement(e);
+        if (!startEle) {
+            return updateStartElement(e);
+        } else if (startTrsa.needReset) {
+            return resetStartParams(e);
         }
 
         e = touch2StageXY(e);
 
-        if (!ele) {
-            // console.log("Move..." + e.gesture.touches.length);
+        if (!startEle) {
+            console.error(e.type + ": Drag, no selected..., " + e.gesture.touches.length);
         } else {
             e.stopPropagation();
             e.preventDefault();
 
-            TQBase.Trsa.do(startEle, startLevel, startOffset, e, stageContainer.selectedItem);
-/*            var deltaX = e.gesture.deltaX - deltaX0;
-            var deltaY = -(e.gesture.deltaY - deltaY0);
-            // ele.moveTo({x: deltaX + pos.x, y: deltaY + pos.y});
-            TQ.CommandMgr.directDo(new TQ.MoveCommand(ele, {x: deltaX + pos.x, y: deltaY + pos.y}));
-*/
+            TQBase.Trsa.do(startEle, startLevel, startOffset, e);
         }
     }
 
@@ -213,29 +209,37 @@ var TQ = TQ || {};
             return;
         }
 
-        if (!ele) {
-            getSelectedElement(e);
+        if (!startEle) {
+            // 首次选中， 不能立即TRSA， 下一个event吧， 以避免TRSA开始时的突变
+            return updateStartElement(e);
+        } else if (startTrsa.needReset) {
+            return resetStartParams(e);
         }
 
-        if (!ele) {
+        if (!startEle) {
             console.log("pinch..." + e.gesture.touches.length);
         } else {
             if (e.type.indexOf('rotate') >=0) {
-                console.log("rotate");
-                deltaTrsa.ang = e.gesture.rotation;
+                /*
+                 * IONIC的gesture的角度方向： 顺时针为正， 用度数单位，
+                 * ** 数值可能从 正直突然变为等价的负值
+                 * ** 逆时针是负！！！！
+                 */
+                deltaTrsa.ang = startEle.dc2World({rotation: e.gesture.rotation}).rotation;
+                console.log("rotate: " + deltaTrsa.ang);
             } else if (e.type.indexOf('pinch') >= 0) {
-                console.log("pinch");
                 deltaTrsa.scaleXY = e.gesture.scale;
+                console.log("pinch" + deltaTrsa.scaleXY);
             } else {
                 console.log("not pinch, rotate: " + e.type);
             }
             var newScaleX = startTrsa.scale.sx * deltaTrsa.scaleXY,
                 newScaleY = startTrsa.scale.sy * deltaTrsa.scaleXY;
             if (!isNaN(newScaleX)) {
-                if (Math.abs(newScaleX) < 0.001) {
+                if (Math.abs(newScaleX) < 0.00001) {
                     console.warn("Too small");
                 } else {
-                    TQ.CommandMgr.directScaleAndRotate(ele, {sx: newScaleX, sy: newScaleY}, startTrsa.ang - deltaTrsa.ang);
+                    TQ.CommandMgr.directScaleAndRotate(startEle, {sx: newScaleX, sy: newScaleY}, startTrsa.ang + deltaTrsa.ang);
                     isMultiTouching = true;
                 }
             }
@@ -243,38 +247,6 @@ var TQ = TQ || {};
     }
 
     // private:
-    function _doGetSelectedElement(evt) {
-        var touchPoint = evt.gesture.srcEvent;
-        if ((!!touchPoint.touches) && (touchPoint.touches.length > 0)) {
-            touchPoint = touchPoint.touches[0];
-        }
-
-        var pageX = touchPoint.pageX;
-        var pageY = touchPoint.pageY;
-
-        var rect = TQ.SceneEditor.stage._getElementRect(TQ.SceneEditor.stage.canvas);
-        pageX -= rect.left;
-        pageY -= rect.top;
-
-        var eles = TQ.SceneEditor.stageContainer.getObjectsUnderPoint(pageX, pageY);
-        if ((!!eles) && (eles.length > 0)) {
-            for (var i = 0; i < eles.length; i++) {
-                if (!eles[i].ele) {
-                    continue;
-                }
-
-                var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
-                if (!!ele2) {
-                    TQ.SelectSet.add(ele2);
-                    return TQ.SelectSet.peek();
-                }
-            }
-        }
-
-        // console.log(pageX + ", " + pageY) ;
-        return null;
-    }
-
     var _showFloatToolbar = function (type) {
         if ((TQ.FloatToolbar != undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
             TQ.FloatToolbar.setPosition(0, 0);
@@ -283,15 +255,17 @@ var TQ = TQ || {};
     };
 
     function _highlight(ele) {
+        // highlight 只是亮显， 不能修改选择集
         if (TQ.SceneEditor.isPlayMode()) {
             return;
         }
-        var ele2 = TQ.SelectSet.getEditableEle(ele);
-        TQ.SelectSet.add(ele2);
+        // var ele2 = TQ.SelectSet.getEditableEle(ele);
+        // TQ.SelectSet.add(ele2);
     }
 
     function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
-        var srcEvent = e.gesture.srcEvent;
+        var srcEvent = (e.gesture && e.gesture.srcEvent) ?
+        e.gesture.srcEvent : e;
         var touch = isMouseEvent(srcEvent)? srcEvent: srcEvent.touches[0];
         e.stageX = touch.pageX;
         e.stageY = touch.pageY;

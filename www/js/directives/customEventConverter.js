@@ -14,6 +14,12 @@ function EventConverter($rootScope) {
             element.bind(TQ.Scene.EVENT_READY, function () {
                 $rootScope.$broadcast(TQ.Scene.EVENT_READY);
             });
+            element.bind(TQ.Scene.EVENT_SAVED, function () {
+                $rootScope.$broadcast(TQ.Scene.EVENT_SAVED);
+            });
+            element.bind(TQ.EVENT.REFRESH_UI, function () {
+                $rootScope.$broadcast(TQ.EVENT.REFRESH_UI);
+            });
         }
     };
 }

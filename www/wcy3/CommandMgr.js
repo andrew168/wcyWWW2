@@ -93,7 +93,7 @@ window.TQ = window.TQ || {};
     CompositeCommand.open = function() {
         if (!__openedComposite) {
             __openedComposite = new CompositeCommand();
-            // $(document).mouseup(CompositeCommand.close);
+            $(document).mouseup(CompositeCommand.close);
         }
     };
 
@@ -132,7 +132,7 @@ window.TQ = window.TQ || {};
     function ScaleCommand(ele, scale) {
         this.receiver = ele;
         this.newValue = scale;
-        this.oldValue = ele.getScale(); // {sx:ele.jsonObj.sx, sy: ele.jsonObj.sy};
+        this.oldValue = ele.getScaleInWorld(); // {sx:ele.jsonObj.sx, sy: ele.jsonObj.sy};
     }
 
     inherit(ScaleCommand, AbstractCommand);
@@ -203,7 +203,7 @@ window.TQ = window.TQ || {};
     // Move
     function MoveCommand(ele, pos) {
         this.receiver = ele;
-        this.oldValue = ele.getPosition();
+        this.oldValue = ele.getPositionInWorld();
         this.newValue = pos;
     }
 
@@ -228,7 +228,7 @@ window.TQ = window.TQ || {};
         this.receiver = ele;
         this.receiver2 = marker;
         var oldPivot = {pivotX: Math.truncate6(ele.jsonObj.pivotX), pivotY:Math.truncate6(ele.jsonObj.pivotY)};
-        var oldPos = ele.getPosition();
+        var oldPos = ele.getPositionInWorld();
         oldPos.x = Math.truncate6(oldPos.x);
         oldPos.y = Math.truncate6(oldPos.y);
         this.oldValue = {pivot: oldPivot, pos:oldPos};

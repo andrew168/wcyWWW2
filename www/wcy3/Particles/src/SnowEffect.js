@@ -23,10 +23,10 @@
     SnowEffect.change = change;
     SnowEffect.set = set;
 
-    var snowOps = {
-        startSize: 3, // 雪花大小，  默认1,  取值范围1-5.
-        direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
-        density: 1.2, // 密度， 默认1（小雨）取值范围：1-10
+    var snowOps = { // nXXXX是规范化到[0,10]区间的参数
+        nStartSize: 3, // 雪花大小，  默认1,  取值范围1-5.
+        nDirection: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
+        nDensity: 1, // 密度， 默认1（小雨）取值范围：1-10
         dy: 10,
         v0: 200,
         endOpacity: 0.1,
@@ -36,9 +36,9 @@
     };
 
     var rainOps = {
-        startSize: 3, // 雨滴大小，  默认1,  取值范围1-5.
-        direction: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
-        density: 1, // 密度， 默认1（小雨）取值范围：1-10
+        nStartSize: 3, // 雨滴大小，  默认1,  取值范围1-5.
+        nDirection: 0, // 落雪方向： 0：向下， 取值范围： -15度到15度，
+        nDensity: 1, // 密度， 默认1（小雨）取值范围：1-10
         dy: 10,
         v0: 200,
         endOpacity: 0.1,
@@ -48,9 +48,9 @@
     };
 
     var yuanbaoOps = {
-        startSize: 3,
-        direction: 0,
-        density: 1,
+        nStartSize: 3,
+        nDirection: 0,
+        nDensity: 1,
         dy: 10,
         v0: 200,
         endOpacity: 0.1,
@@ -94,16 +94,14 @@
         if (!options) {
             options = defaultOps;
         } else {
-            if (options.startSize === undefined) {
-                options.startSize = defaultOps.startSize;
+            if (options.nStartSize === undefined) {
+                options.nStartSize = options.startSize;
             }
-
-            if (options.direction === undefined) {
-                options.direction = defaultOps.direction;
+            if (options.nDirection === undefined) {
+                options.nDirection = options.direction;
             }
-
-            if (options.density === undefined) {
-                options.density = defaultOps.density;
+            if (options.nDensity === undefined) {
+                options.nDensity = options.nDensity;
             }
 
             if (options.imageSrc === undefined) {
@@ -115,9 +113,10 @@
     }
 
     function set(option) {
-        option.startSize = TQ.MathExt.unifyValue10(option.startSize, 10, 20);
-        option.direction = TQ.MathExt.unifyValue10(option.direction, 90-15, 90+15);
-        option.density = TQ.MathExt.unifyValue10(option.density, 30, 40);
+        option.startSize = TQ.MathExt.unifyValue10(parseFloat(option.nStartSize), 10, 20);
+        option.direction = TQ.MathExt.unifyValue10(parseFloat(option.nDirection), 90-15, 90+15);
+        option.density = TQ.MathExt.unifyValue10(parseFloat(option.nDensity), 30, 40);
+        option.v0 = parseFloat(option.v0);
         para1 = option;
         if (!hasSameAsset()) {
             _loadAsset();

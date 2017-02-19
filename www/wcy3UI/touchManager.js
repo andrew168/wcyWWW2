@@ -23,6 +23,7 @@ var TQ = TQ || {};
         trsaOps = [
             ['touch', TQ.Trsa3.onTouchStart],
             ['touchend', TQ.Trsa3.onTouchEnd],
+            ['mouseup', TQ.Trsa3.onTouchEnd],
             ['release', TQ.Trsa3.onRelease],
             ['rotate', TQ.Trsa3.onPinchAndRotate],
             ['pinch', TQ.Trsa3.onPinchAndRotate],
@@ -30,7 +31,8 @@ var TQ = TQ || {};
             //
             // ['pinchin', onPinch],
             // ['pinchout', onPinch],
-            ['drag', TQ.Trsa3.onDrag]
+            ['drag', TQ.Trsa3.onDrag],
+            ['touchmove', notHandled],
             // 其余事件： 'swipeup'.
         ];
 
@@ -43,6 +45,7 @@ var TQ = TQ || {};
             return;
         }
         disableBodyScrollInIOS();
+        disableBrowserZooming();
         start();
     }
 
@@ -59,7 +62,9 @@ var TQ = TQ || {};
     }
 
     function updateOps(state) {
-        detachOps(currentOps);
+        if (currentOps) {
+            detachOps(currentOps);
+        }
         if (state.isMCopying) {
             currentOps = mCopyOps;
         } else {
@@ -99,10 +104,21 @@ var TQ = TQ || {};
         return (!started && !isMultiTouching);
     }
 
+    function disableBrowserZooming() {
+        document.addEventListener('mousewheel', function (e) {
+            // console.log(e.type, e.deltaX, e.deltaY, e.wheelDeltaX, e.wheelDeltaY);
+            e.preventDefault();
+        });
+    }
+
     function disableBodyScrollInIOS() {
         // IOS's page body are scrolling when user touch moving
         document.ontouchstart = disableScroll;
         document.ontouchmove = disableScroll;
+
+        document.addEventListener('touchmove', disableScroll, true);
+        document.addEventListener('touchstart', disableScroll, true);
+
         function disableScroll(e) {
             // console.log(e.type, e.target.tagName, e.srcElement.tagName, e.currentTarget ? e.currentTarget.tagName: 'None',
             //     e.target.nodeName, e.srcElement.nodeName, e.currentTarget ? e.currentTarget.nodeName: 'None');
@@ -116,6 +132,10 @@ var TQ = TQ || {};
                 e.preventDefault();
             }
         }
+    }
+
+    function notHandled(e) {
+        console.log("event not handled: " + e.type + ", " + (e.touches? e.touches.length: 0));
     }
 
     TouchManager.addHandler = addHandler;

@@ -17,24 +17,31 @@ TQ = TQ || {};
         },
 
         btnEffect = {
-            group: "",
-            joint: ""
-        };
+            group: null,
+            joint: null
+        },
+        latestElement = null,
+        decorations = [],  //  decorations ready to use
+        workingDecorations = [], // decorations is using.
+        selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
 
-    SelectSet.btnEffect = btnEffect;
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
     SelectSet.SELECTION_EMPTY_EVENT = "selection empty";
     SelectSet.members = [];
-    SelectSet.decorations = [];  //  decorations ready to use
-    SelectSet.workingDecorations = []; // decorations is using.
-    SelectSet.selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
     SelectSet.multiCmdGroupIt = multiCmdGroupIt;
     SelectSet.multiCmdJointIt = multiCmdJointIt;
     SelectSet.explode = explode;
+    SelectSet.btnEffect = btnEffect;
 
     SelectSet.initialize = function() {
-        TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function(){
-            if ( (!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
+        decorations.splice(0);
+        workingDecorations.splice(0);
+        SelectSet.members.splice(0);
+        state.multiCmdStarted = false;
+        state.cmd = null;
+        latestElement = null;
+        TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function() {
+            if ((!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
                 TQ.SelectSet.delete();
             }
         });
@@ -63,7 +70,7 @@ TQ = TQ || {};
     };
 
     SelectSet.getDecoration = function () {
-        var decs = SelectSet.decorations.pop();
+        var decs = decorations.pop();
         if (decs == null) {
             var ref = TQ.SelectSet.members[0];
             assertNotNull(TQ.Dictionary.PleaseSelectHost, ref);
@@ -71,25 +78,26 @@ TQ = TQ || {};
             var ele = TQ.Element.build(ref.level, {isVis: 0, type:"JointMarker"});
             decs = [ele];
         }
-        SelectSet.workingDecorations.push(decs);
+        workingDecorations.push(decs);
         return decs;
     };
 
     SelectSet.recycleDecoration = function(decoration) {
-        var id = SelectSet.workingDecorations.indexOf(decoration);
-        SelectSet.workingDecorations.splice(id, 1);
-        SelectSet.decorations.push(decoration);
+        var id = workingDecorations.indexOf(decoration);
+        workingDecorations.splice(id, 1);
+        decorations.push(decoration);
     };
 
     SelectSet.add = function(element) {
         assertNotNull(TQ.Dictionary.PleaseSelectOne, element);
         if ((element == null )) return;
+        latestElement = element;
         if (element.isMarker()) { //  Decoration 不能记入选择集
-            SelectSet.selectedMarkers.push(element);
+            selectedMarkers.push(element);
             return;
         }
 
-        SelectSet.selectedMarkers.splice(0); // 换了物体， Decoration就可能不被选中了。
+        selectedMarkers.splice(0); // 换了物体， Decoration就可能不被选中了。
         if (!(TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyCtrl)) {
             if (!((SelectSet.members.length == 1) && (SelectSet.members.indexOf(element) ==0))) {
                 SelectSet.clear();
@@ -111,6 +119,7 @@ TQ = TQ || {};
         }
 
         TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_NEW_EVENT, {element: element});
+        latestElement = element;
     };
 
     /*
@@ -149,7 +158,8 @@ TQ = TQ || {};
         }
 
         SelectSet.members.splice(0); // 删除全部选中的物体;
-        SelectSet.selectedMarkers.splice(0);
+        selectedMarkers.splice(0);
+        latestElement = null;
     };
 
     SelectSet.updateDecorations = function(show) {
@@ -333,7 +343,7 @@ TQ = TQ || {};
             // assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode);
         }
 
-        if ((!ele.isJoint()) && ele.isGrouped()) {
+        if (!ele.isJoint() && !ele.isMarker() && isPart(ele)) {
             if ((!TQ.InputCtrl.inSubobjectMode) || TQ.InputCtrl.showMarkerOnly) {
                 if (ele.parent != null) return TQ.SelectSet.getEditableEle(ele.parent);
             }
@@ -341,9 +351,15 @@ TQ = TQ || {};
         return ele;
     };
 
+    function isPart(ele) {
+        // part 替代原来的 subobject概念
+        // marker 和 joint也都是 part， 所以，在editable中要特别处理
+        return (ele.isGrouped() || ele.parent);
+    }
+
     SelectSet.isSelected = function(ele) {
         return ((SelectSet.members.indexOf(ele) >= 0) ||
-            (SelectSet.selectedMarkers.indexOf(ele) >= 0));
+            (selectedMarkers.indexOf(ele) >= 0));
     };
 
     SelectSet.empty = function() {
@@ -352,7 +368,7 @@ TQ = TQ || {};
             TQ.DirtyFlag.setScene();
             TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
         }
-        TQ.AssertExt.invalidLogic(SelectSet.selectedMarkers.length === 0);
+        TQ.AssertExt.invalidLogic(selectedMarkers.length === 0);
     };
 
     SelectSet.isEmpty = function() {
@@ -382,6 +398,57 @@ TQ = TQ || {};
         }
         return (SelectSet.members[0]);
     };
+
+    function peekLatest () {
+        var n = SelectSet.members.length;
+        if (n <= 0) {
+            return null;
+        }
+        return latestElement;
+    }
+
+    SelectSet.peekEditableEle = function() {
+        return peekMarker() || SelectSet.peek();
+    };
+
+    SelectSet.peekLatestEditableEle = function () {
+        return peekMarker() || peekLatest();
+    };
+
+    SelectSet.updateByGesture = function(evt) {
+        var touchPoint = evt.gesture.srcEvent;
+        if ((!!touchPoint.touches) && (touchPoint.touches.length > 0)) {
+            touchPoint = touchPoint.touches[0];
+        }
+
+        var rect = TQ.SceneEditor.stage._getElementRect(TQ.SceneEditor.stage.canvas),
+            pageX = touchPoint.pageX - rect.left,
+            pageY = touchPoint.pageY - rect.top,
+            eles = TQ.SceneEditor.stageContainer.getObjectsUnderPoint(pageX, pageY);
+
+        if ((!!eles) && (eles.length > 0)) {
+            for (var i = 0; i < eles.length; i++) {
+                if (!eles[i].ele) {
+                    continue;
+                }
+
+                var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
+                if (!!ele2) {
+                    TQ.SelectSet.add(ele2);
+                    return;
+                }
+            }
+        } else {
+            TQ.SelectSet.clear();
+        }
+    };
+
+    function peekMarker() {
+        if (selectedMarkers.length <= 0) {
+            return null;
+        }
+        return (selectedMarkers[0]);
+    }
 
     SelectSet.detachDecoration = function(ele) {
         if (ele.decorations != null) {
