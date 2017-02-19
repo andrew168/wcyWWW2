@@ -121,6 +121,9 @@ var TQ = TQ || {};
         var evt = touch2StageXY(e);
         target = startEle.getPositionInDc();
         startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
+
+        deltaTrsa.scaleXY = 1;
+        deltaTrsa.ang = 0;
     }
 
     function onTouchStart(e) { // ==mouse的onPressed，
