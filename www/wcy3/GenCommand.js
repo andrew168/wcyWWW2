@@ -56,14 +56,14 @@ window.TQ = window.TQ || {};
 (function () {
 
     TQ.CommandMgr.directScale = function(ele, newScale) {
-        var cmd = new TQ.GenCommand(TQ.GenCommand.SCALE, ele, newScale, ele.getScale());
+        var cmd = new TQ.GenCommand(TQ.GenCommand.SCALE, ele, newScale, ele.getScaleInWorld());
         return TQ.CommandMgr.directDo(cmd);
     };
 
 
     TQ.CommandMgr.directScaleAndRotate = function(ele, scale, angle) {
         var oldValue = {
-                scale: ele.getScale(),
+                scale: ele.getScaleInWorld(),
                 angle: Math.truncate6(ele.jsonObj.rotation)
             },
 

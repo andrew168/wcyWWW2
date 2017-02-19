@@ -132,7 +132,7 @@ window.TQ = window.TQ || {};
     function ScaleCommand(ele, scale) {
         this.receiver = ele;
         this.newValue = scale;
-        this.oldValue = ele.getScale(); // {sx:ele.jsonObj.sx, sy: ele.jsonObj.sy};
+        this.oldValue = ele.getScaleInWorld(); // {sx:ele.jsonObj.sx, sy: ele.jsonObj.sy};
     }
 
     inherit(ScaleCommand, AbstractCommand);
