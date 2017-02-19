@@ -108,6 +108,16 @@ function DashCtrl(
         EditorService.insertText("国hello", x, y);
     };
 
+    $scope.insertProp = function() {
+        EditorService.insertPeopleImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+        300, 300);
+    };
+
+    $scope.insertBkImage = function () {
+        EditorService.insertBkImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+            300, 300);
+    };
+
     $scope.startRecord = function() {
         EditorService.startRecord();
     };
