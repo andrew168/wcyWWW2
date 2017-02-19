@@ -662,15 +662,16 @@ window.TQ = window.TQ || {};
     };
 
     p.autoFit = function(img) {
-        TQ.AssertExt.invalidLogic(!img, "未改造的元素？");
+        TQ.AssertExt.invalidLogic(img!==null, "未改造的元素？");
         // 保持图像长宽比例不失真
         // 自动充满整个画面 或者 保持物体的原始大小
-        var sx = 1 / img.naturalWidth,
-            sy = 1 / img.naturalHeight;
-        var desc = this.jsonObj;
+        var sx = TQ.Config.workingRegionWidth / this.getWidth(),
+            sy = TQ.Config.workingRegionHeight / this.getHeight();
+        var desc = this.jsonObj,
+            pWorld = this.nw2World({x: 0.5, y: 0.5});
         if (this.autoFitFlag != Element.FitFlag.NO) {
-            desc.x = 0.5;
-            desc.y = 0.5;
+            desc.x = pWorld.x;
+            desc.y = pWorld.y;
             desc.sx = sx;
             desc.sy = sy;
             desc.rotation = 0;
@@ -678,22 +679,17 @@ window.TQ = window.TQ || {};
 
         desc.pivotX = 0.5;
         desc.pivotY = 0.5;
-        var obj_pdc = this.ndc2Pdc(desc);
-        var minScale = Math.min(obj_pdc.sx, obj_pdc.sy);
+        pWorld = desc;
+        var minScale = Math.min(pWorld.sx, pWorld.sy);
         if ((this.autoFitFlag === Element.FitFlag.KEEP_SIZE) ||
             ((this.autoFitFlag === Element.FitFlag.WITHIN_FRAME) && (minScale > 1))) { // 框大， 图小，保持原尺寸
-            obj_pdc.sx = 1;
-            obj_pdc.sy = 1;
+            pWorld.sx = 1;
+            pWorld.sy = 1;
         } else { // 框子小， 图大， 需要缩小
                 // 保持图像长宽比例不失真
-            obj_pdc.sx = minScale;
-            obj_pdc.sy = minScale;
+            pWorld.sx = minScale;
+            pWorld.sy = minScale;
         }
-
-        // 更新 desc
-        var ndc = this.pdc2Ndc(obj_pdc);
-        desc.sx = ndc.sx;
-        desc.sy = ndc.sy;
     };
 
     p.forceToRecord = function() {

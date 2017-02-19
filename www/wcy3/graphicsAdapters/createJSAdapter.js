@@ -85,21 +85,26 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.ndc2Pdc = function (obj) {
+        return this.nw2World(obj);
+    };
+
+    CreateJSAdapter.nw2World = function (oNWorld) {
+        // 从规范化的世界坐标Normalized World到世界坐标系(像素坐标)
         var sx = TQ.Config.workingRegionWidth,
             sy = TQ.Config.workingRegionHeight;
 
-        var obj_pdc = {
-            x: obj.x * sx,
-            y: obj.y * sy,
-            sx: obj.sx * sx,
-            sy: obj.sy * sy,
-            fontSize: (!obj.fontSize) ? 0 : obj.fontSize * sx,
-            rotation: obj.rotation,
-            pivotX: obj.pivotX,
-            pivotY: obj.pivotY
+        var oWorld = {
+            x: oNWorld.x * sx,
+            y: oNWorld.y * sy,
+            sx: oNWorld.sx * sx,
+            sy: oNWorld.sy * sy,
+            fontSize: (!oNWorld.fontSize) ? 0 : oNWorld.fontSize * sx,
+            rotation: oNWorld.rotation,
+            pivotX: oNWorld.pivotX,
+            pivotY: oNWorld.pivotY
         };
 
-        return obj_pdc;
+        return oWorld;
     };
 
     CreateJSAdapter.pdc2Ndc = function (obj) {
