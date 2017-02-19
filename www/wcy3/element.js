@@ -728,13 +728,6 @@ window.TQ = window.TQ || {};
         this.doShow(visSum);
     },
 
-    p.setNdc = function(obj) {
-        obj.x = 0.5;
-        obj.y = 0.5;
-        obj.sx = 1 / this.getWidth();
-        obj.sy = 1 / this.getHeight();
-    },
-
     p.doShow = function (visSum) {
         if (!this.displayObj) {
             this.visibleTemp = visSum;
@@ -742,30 +735,6 @@ window.TQ = window.TQ || {};
             this.displayObj.visible = visSum;
             this.toDeviceCoord(this.displayObj, this.jsonObj);
         }
-    };
-
-    p.pdc2dc = function(obj_pdc) {
-        assertValid(TQ.Dictionary.FoundNull, obj_pdc); // 应有显示数据
-
-        var obj_dc = {};
-        //从 用户使用的世界坐标和物体坐标，转换为可以绘制用的设备坐标
-        if (!obj_pdc) {
-            return;
-        }
-        obj_dc.x = TQ.Config.zoomX * obj_pdc.x;
-        obj_dc.y = TQ.Utility.toDeviceCoord(TQ.Config.zoomY * obj_pdc.y);
-        if (this.isMarker() || this.isSound()) { // marker 永远是一样的大小, 圆的, 没有旋转, 定位在圆心.
-            obj_dc.sx = obj_dc.sy = 1;
-            obj_dc.regX = obj_dc.regY = 0;
-            obj_dc.rotation = 0;
-        } else {
-            obj_dc.regX = obj_pdc.pivotX * this.getWidth();
-            obj_dc.regY = TQ.Utility.toDevicePivot(obj_pdc.pivotY) * this.getHeight();
-            obj_dc.rotation = TQ.Utility.toDeviceRotation(obj_pdc.rotation);
-            obj_dc.sx = TQ.Config.zoomX * obj_pdc.sx;
-            obj_dc.sy = TQ.Config.zoomY * obj_pdc.sy;
-        }
-        return obj_dc;
     };
 
     p._loadActor = function () {

@@ -49,7 +49,6 @@ var TQ = TQ || {};
 
     CreateJSAdapter.toDeviceCoord = function (displayObj, jsonObj) {
         if (!this.justMoved) {
-            // this.setNdc(this.jsonObj);
         }
         this.justMoved = false;
         var obj_dc = this.world2Dc();
@@ -63,8 +62,7 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.getScale = function () {
-        var obj_pdc = this.ndc2Pdc(this.jsonObj);
-        return {sx: obj_pdc.sx, sy: obj_pdc.sy};
+        return CreateJSAdapter.getScaleInWorld();
     };
 
     CreateJSAdapter.getScaleInWorld = function () {
@@ -82,10 +80,6 @@ var TQ = TQ || {};
     CreateJSAdapter.getPositionInDc = function () {
         var obj_dc = this.world2Dc();
         return {x: obj_dc.x, y: obj_dc.y};
-    };
-
-    CreateJSAdapter.ndc2Pdc = function (obj) {
-        return this.nw2World(obj);
     };
 
     CreateJSAdapter.nw2World = function (oNWorld) {
