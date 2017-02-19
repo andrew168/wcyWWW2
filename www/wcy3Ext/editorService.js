@@ -491,10 +491,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             autoFit: TQ.Element.FitFlag.KEEP_SIZE,
             x: x,
             y: y,
-            sx: 2,
-            sy: 2,
-            pivotX: 0,
-            pivotY: 0,
             fontSize: getFontSize(),
             color: state.color
         };
