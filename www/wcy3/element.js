@@ -1473,10 +1473,10 @@ window.TQ = window.TQ || {};
 
     p.snapIt = function () {
         if (TQ.Config.snapOn) {
-            var ptDc = this.getPositionInDc();
-            ptDc.x = Math.round(ptDc.x / TQ.Config.snapDX) * TQ.Config.snapDX;
-            ptDc.y = Math.round(ptDc.y / TQ.Config.snapDY) * TQ.Config.snapDY;
-            this.moveTo(this.dc2World(ptDc));
+            var ptWorld = this.getPositionInWorld();
+            ptWorld.x = Math.round(ptWorld.x / TQ.Config.snapDX) * TQ.Config.snapDX;
+            ptWorld.y = Math.round(ptWorld.y / TQ.Config.snapDY) * TQ.Config.snapDY;
+            this.moveTo(ptWorld);
         }
     };
 
