@@ -78,5 +78,12 @@ window.TQ = window.TQ || {};
         }
     };
 
+    Log.upgrade = function (str) {
+        if (!str) {
+            str = "";
+        }
+        console.error("必须升级到：" + str);
+    };
+
     TQ.Log = Log;
 }) ();
