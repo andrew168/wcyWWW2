@@ -41,8 +41,11 @@ window.TQ = window.TQ || {};
     Config.BACKGROUND_COLOR = "#FFF"; // HTML5的#系列颜色只有#FFF,不是#FFFFFF.
     Config.workingRegionX0 = 160; // ToDo: 1)初始化, 按照分辨率来. 2)响应窗口尺寸变化 (window.screen.width - 960) /2;
     Config.workingRegionY0 = 63;
-    Config.workingRegionWidth = 751;
+    Config.workingRegionWidth = 751; // 舞台的尺寸（当前设备的, 从设备中读出）
     Config.workingRegionHeight = 550;
+    Config.designatedWidth = 414; //1093; //360; // 目标设备的尺寸,默认是（360*640），由系统从作品中动态读出，
+                                  // 旧文件升级时候的缺省是(751， 550),
+    Config.designatedHeight = 736; //615; // 640;
     Config.snapOn = true;
     Config.snapAngleOn = true;
     Config.snapDX = 10;

@@ -188,6 +188,7 @@ window.TQ = window.TQ || {};
 
     Utility.deltaYinWorld = function(target, offset, event)
     {
+        TQ.Log.upgrade("offsetInWorld");
       var deltaYinDevice = (event.stageY + offset.y)  - target.y;
       return -deltaYinDevice; // 转到世界坐标系空间。
     };

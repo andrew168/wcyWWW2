@@ -18,7 +18,7 @@ var TQ = TQ || {};
     var isDithering = false,
         startEle = null,
         startLevel = null,
-        startOffset = null,
+        startOffsetInDcExt = null,
         startTrsa = {
             needReset: true,
             ang: 0,
@@ -120,7 +120,7 @@ var TQ = TQ || {};
         }
         var evt = touch2StageXY(e);
         target = startEle.getPositionInDc();
-        startOffset = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
+        startOffsetInDcExt = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
 
         deltaTrsa.scaleXY = 1;
         deltaTrsa.ang = 0;
@@ -194,7 +194,7 @@ var TQ = TQ || {};
             e.stopPropagation();
             e.preventDefault();
 
-            TQBase.Trsa.do(startEle, startLevel, startOffset, e);
+            TQBase.Trsa.do(startEle, startLevel, startOffsetInDcExt, e);
         }
     }
 

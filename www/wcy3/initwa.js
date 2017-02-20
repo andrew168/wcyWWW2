@@ -126,8 +126,8 @@ function _addResToStage(res, target, x0, y0, z0, levelID, _t0)
  */
 function addResToStageCenter(res, levelID, t0) {
     var target = TQ.SelectSet.peek(); // 选中物体
-    var x0 = TQ.Config.workingRegionWidth / 2;
-    var y0 = TQ.Config.workingRegionHeight / 2;
+    var x0 = TQ.Config.designatedWidth / 2;
+    var y0 = TQ.Config.designatedHeight / 2;
     var z0 = TQ.Utility.getMaxZ() + 1;
     return _addResToStage(res, target, x0, y0, z0, levelID, t0);
 }

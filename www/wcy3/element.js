@@ -665,8 +665,8 @@ window.TQ = window.TQ || {};
         TQ.AssertExt.invalidLogic(img!==null, "未改造的元素？");
         // 保持图像长宽比例不失真
         // 自动充满整个画面 或者 保持物体的原始大小
-        var sx = TQ.Config.workingRegionWidth / this.getWidth(),
-            sy = TQ.Config.workingRegionHeight / this.getHeight();
+        var sx = TQ.Config.designatedWidth / this.getWidth(),
+            sy = TQ.Config.designatedHeight / this.getHeight();
         var desc = this.jsonObj,
             pWorld = this.nw2World({x: 0.5, y: 0.5});
         if (this.autoFitFlag != Element.FitFlag.NO) {
