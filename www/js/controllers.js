@@ -103,8 +103,8 @@ function DashCtrl(
     var x = 300,
         y = 300;
     $scope.testInsert = function () {
-        x = 300;
-        y = 300;
+        x = TQ.Config.designatedWidth / 2;
+        y = TQ.Config.designatedHeight / 2;
         EditorService.insertText("国hello", x, y);
     };
 

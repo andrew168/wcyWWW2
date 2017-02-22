@@ -491,7 +491,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
             autoFit: TQ.Element.FitFlag.KEEP_SIZE,
             x: x,
             y: y,
-            fontSize: getFontSize(),
+            fontSize: getFontSize(), // 必须是像素坐标，在designated坐标系
             color: state.color
         };
 
