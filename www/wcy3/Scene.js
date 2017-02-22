@@ -362,11 +362,19 @@ TQ = TQ || {};
     };
 
     p.setDesignatedSize = function(w, h) {
-        this.designatedWidth = TQ.Config.designatedWidth = w;
-        this.designatedHeight = TQ.Config.designatedHeight = h;
+        this.designatedWidth = w;
+        this.designatedHeight = h;
         TQ.Config.snapDX = this.designatedWidth / 20;
         TQ.Config.snapDY = this.designatedHeight / 20;
         TQ.Config.FONT_LEVEL_UNIT = Math.min(this.designatedWidth, this.designatedHeight) / 30;
+    };
+
+    p.getDesignatedWidth = function() {
+        return this.designatedWidth;
+    };
+
+    p.getDesignatedHeight = function () {
+        return this.designatedHeight;
     };
 
     p.getLevel = function (id) {

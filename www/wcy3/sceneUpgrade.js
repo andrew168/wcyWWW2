@@ -23,15 +23,15 @@
 
     function upgrade3ToVer31(objJson) {
         objJson.version = TQ.Scene.VER3_1;
-        objJson.designatedWidth =  TQ.Config.designatedWidth = 1;
-        objJson.designatedHeight = TQ.Config.designatedHeight = 1;
+        objJson.designatedWidth = 1;
+        objJson.designatedHeight = 1;
         return objJson;
     }
 
     function upgrade2ToVer31(objJson) {
         objJson.version = TQ.Scene.VER3_1;
-        objJson.designatedWidth = TQ.Config.designatedWidth = 1093;
-        objJson.designatedHeight = TQ.Config.designatedHeight = 615;
+        objJson.designatedWidth = 1093;
+        objJson.designatedHeight = 615;
         return objJson;
     }
 }());

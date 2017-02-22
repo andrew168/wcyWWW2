@@ -84,8 +84,8 @@ var TQ = TQ || {};
 
     CreateJSAdapter.nw2World = function (oNWorld) {
         // 从规范化的世界坐标Normalized World到世界坐标系(像素坐标)
-        var sx = TQ.Config.designatedWidth,
-            sy = TQ.Config.designatedHeight;
+        var sx = currScene.getDesignatedWidth(),
+            sy = currScene.getDesignatedHeight();
 
         var oWorld = {
             x: oNWorld.x * sx,
@@ -123,8 +123,8 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.dc2World = function(ptDc) {
-        var sx = TQ.Config.designatedWidth / TQ.Config.workingRegionWidth, // 把当前device尺寸，映射到  target尺寸
-            sy = TQ.Config.designatedHeight / TQ.Config.workingRegionHeight;
+        var sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth, // 把当前device尺寸，映射到  target尺寸
+            sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight;
 
         return {
             x: (ptDc.x === undefined) ? 0 : ptDc.x * sx,
@@ -139,8 +139,8 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.world2Dc = function (ptWorld) {
-        var sx = TQ.Config.workingRegionWidth / TQ.Config.designatedWidth, // 把target尺寸映射到device尺寸
-            sy = TQ.Config.workingRegionHeight / TQ.Config.designatedHeight,
+        var sx = TQ.Config.workingRegionWidth / currScene.getDesignatedWidth(), // 把target尺寸映射到device尺寸
+            sy = TQ.Config.workingRegionHeight / currScene.getDesignatedHeight(),
             ptDc;
 
         if (!ptWorld) {
