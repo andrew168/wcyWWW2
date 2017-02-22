@@ -4,7 +4,8 @@ TQ = TQ || {};
     function Scene() {
         this.levels = [];
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
-        this.version = Scene.VER2;
+        this.version = Scene.VER_LATEST;
+        this.setDesignatedSize(TQ.Config.designatedWidth, TQ.Config.designatedHeight);
         this.isDirty = true;
     }
     Scene.EVENT_READY = "sceneReady";
@@ -12,6 +13,8 @@ TQ = TQ || {};
     Scene.VER1 = "V1";
     Scene.VER2 = "V2";
     Scene.VER3 = "V3"; // 采用归一化的坐标，记录保存wcy，以适应各种屏幕。
+    Scene.VER3_1 = 3.1; // 采用指定分辨率的世界坐标系(以像素为单位)， 替代归一化世界坐标系
+    Scene.VER_LATEST = Scene.VER3_1;
     var p = Scene.prototype;
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
     p.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
@@ -338,6 +341,7 @@ TQ = TQ || {};
         this.ssPath = null; // 初始化， 没有此值
         this.isDirty = true;
         this.hasSavedToCache = false;
+        this.setDesignatedSize(TQ.Config.designatedWidth, TQ.Config.designatedHeight);
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
@@ -355,6 +359,14 @@ TQ = TQ || {};
                 $("#linearMode").click();
             }
         }
+    };
+
+    p.setDesignatedSize = function(w, h) {
+        this.designatedWidth = TQ.Config.designatedWidth = w;
+        this.designatedHeight = TQ.Config.designatedHeight = h;
+        TQ.Config.snapDX = this.designatedWidth / 20;
+        TQ.Config.snapDY = this.designatedHeight / 20;
+        TQ.Config.FONT_LEVEL_UNIT = Math.min(this.designatedWidth, this.designatedHeight) / 30;
     };
 
     p.getLevel = function (id) {
@@ -529,14 +541,21 @@ TQ = TQ || {};
         this.state = TQBase.LevelState.NOT_INIT;
         if (!objJson.version) {
             if (this.filename == TQ.Config.UNNAMED_SCENE) {
-                this.version = Scene.VER2;  // 创建一个新版作品
+                this.version = Scene.VER_LATEST;  // 创建一个新版作品
             } else {
                 this.version = Scene.VER1;  // 升级旧版的作品， 添加其版本号
             }
         } else {
+            TQ.Scene.upgradeToVer3_1(objJson);
             this.version = objJson.version;
         }
 
+        if (!objJson.designatedWidth || !objJson.designatedHeight) {
+            objJson.designatedWidth = TQ.Config.designatedWidth;
+            objJson.designatedHeight = TQ.Config.designatedHeight;
+        }
+
+        this.setDesignatedSize(objJson.designatedWidth, objJson.designatedHeight);
         //initialize with defaults
         objJson.currentLevelId = (objJson.currentLevelId == undefined) ? 0 : objJson.currentLevelId;
         this.currentLevelId = objJson.currentLevelId;
