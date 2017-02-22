@@ -41,7 +41,7 @@ window.TQBase = window.TQBase || {};
             TQ.CompositeCommand.open();
             TQ.IKCtrl.do(element, offset, ev, false);
         } else {
-            if (TQ.InputMap.isPresseds[TQ.InputMap.Z] || TQ.InputCtrl.vkeyRotate) {
+            if (altIsPressed(ev) || TQ.InputCtrl.vkeyRotate) {
                 element.setFlag(TQ.Element.ROTATING);
                 Trsa.lastOperationFlag = element.getOperationFlags();
                 TQ.IKCtrl.do(element, offset, ev, true);
@@ -196,5 +196,13 @@ window.TQBase = window.TQBase || {};
         item.jsonObj.scaleX = item.scaleX;
         item.jsonObj.scaleY = item.scaleY;
     };
+
+    function altIsPressed(ev) {
+        if (ev.altkey != undefined) {
+            return ev.altKey;
+        } else if (ev.gesture && ev.gesture.srcEvent) {
+            return ev.gesture.srcEvent.altKey;
+        }
+    }
     TQBase.Trsa = Trsa;
 }());
