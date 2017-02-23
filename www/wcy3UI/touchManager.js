@@ -56,6 +56,7 @@ var TQ = TQ || {};
     function start() {
         if (started) {
             TQ.AssertExt.invalidLogic(true, "重复启动touchManager！");
+            updateOps({isMCopying: false});
             return;
         }
         started = true;

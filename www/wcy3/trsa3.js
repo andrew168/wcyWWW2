@@ -40,7 +40,7 @@ var TQ = TQ || {};
         evt = touch2StageXY(evt);
         var results = currScene.currentLevel.cloneElement(TQ.SelectSet.members);
         results.forEach(function(ele) {
-            ele.moveTo(TQ.Utility.deviceToWorld(evt.stageX, evt.stageY));
+            ele.moveTo(ele.dc2World({x:evt.stageX, y:evt.stageY}));
         });
     }
 

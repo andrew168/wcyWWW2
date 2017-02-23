@@ -142,6 +142,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isPreviewMenuOn = false;
         state.isPlayMode = null;
         state.isPlaying = false;
+        state.isMCopying = false;
         TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
         TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
     }
