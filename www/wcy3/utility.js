@@ -354,9 +354,43 @@ window.TQ = window.TQ || {};
     /*
     touch事件处理
      */
+
+    Utility.isMouseEvent = function (e) {
+        return (e instanceof MouseEvent);
+    };
+
+    Utility.getTouchNumbers = function(e) {
+        return Utility.getTouches(e).length;
+    };
+
+    Utility.getTouches = function (e) {
+        var touches;
+        if (Utility.isMouseEvent(e)) {
+            switch (e.type) {
+                case 'mousemove':
+                case 'mousedown':
+                    touches = [e];
+                    break;
+                case 'mouseup':
+                    touches = [];
+                    break;
+                default:
+                    console.error(e.type + "found unprocessed event!");
+            }
+        } else if (e.gesture && e.gesture.touches) {
+            touches = e.gesture.touches;
+        } else if (e.touches) {
+            touches = e.touches;
+        } else {
+            touches = [];
+        }
+
+        return touches;
+    };
+
     Utility.isTouchEvent = function(e) {
         var e0 = getNativeEvent(e);
-        return ((e0.touches != null) && (e0.changedTouches != null));
+        return (!!e0 && (e0.touches != null) && (e0.changedTouches != null));
     };
 
     Utility.isMultiTouchEvent = function(e) {

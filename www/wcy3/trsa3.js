@@ -46,7 +46,7 @@ var TQ = TQ || {};
 
     function isMultiTouch(e) {
         try {
-            return (e.gesture.touches.length > 1);
+            return (TQ.Utility.getTouchNumbers(e) > 1);
         } catch (err) { // in case touches not exist
         }
 
@@ -127,7 +127,7 @@ var TQ = TQ || {};
     }
 
     function onTouchStart(e) { // ==mouse的onPressed，
-        console.log("touch start" + e.gesture.touches.length);
+        console.log("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
         TQ.CommandMgr.startNewOperation();
         updateStartElement(e);
         e.stopPropagation();
@@ -145,9 +145,7 @@ var TQ = TQ || {};
     }
 
     function onTouchEnd(e) {// ==mouse的onUp，
-        var hasGesture = (!isMouseEvent(e) && !!e.gesture),
-            touches = hasGesture ? e.gesture.touches : e.touches;
-        if (touches && (touches.length >0)) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
+        if (TQ.Utility.getTouchNumbers(e) >0) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
             startTrsa.needReset = true;
         } else {
             isMultiTouching = false;
@@ -158,7 +156,7 @@ var TQ = TQ || {};
             startEle = null;
         }
 
-        console.log("touch end, or mouse up " + (touches? touches.length: 0));
+        console.log("touch end, or mouse up " + TQ.Utility.getTouchNumbers(e));
     }
 
     function onRelease() {
@@ -167,6 +165,10 @@ var TQ = TQ || {};
     }
 
     function onDrag(e) {  //// ==mouse的onMove，
+        if ((e.type === 'mousemove') && !startEle) {
+            return;
+        }
+
         if (isDithering) {// || (TQ.SelectSet.isInMultiCmd() && startEle && !startEle.isMarker())) {
             return;
         }
@@ -189,7 +191,7 @@ var TQ = TQ || {};
         e = touch2StageXY(e);
 
         if (!startEle) {
-            console.error(e.type + ": Drag, no selected..., " + e.gesture.touches.length);
+            console.error(e.type + ": Drag, no selected..., " + TQ.Utility.getTouchNumbers(e));
         } else {
             e.stopPropagation();
             e.preventDefault();
@@ -217,7 +219,7 @@ var TQ = TQ || {};
         }
 
         if (!startEle) {
-            console.log("pinch..." + e.gesture.touches.length);
+            console.log("pinch..." + TQ.Utility.getTouchNumbers(e));
         } else {
             if (e.type.indexOf('rotate') >=0) {
                 /*
@@ -264,16 +266,16 @@ var TQ = TQ || {};
     }
 
     function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
-        var srcEvent = (e.gesture && e.gesture.srcEvent) ?
-        e.gesture.srcEvent : e;
-        var touch = isMouseEvent(srcEvent)? srcEvent: srcEvent.touches[0];
-        e.stageX = touch.pageX;
-        e.stageY = touch.pageY;
-        return e;
-    }
+        var touches = TQ.Utility.getTouches(e);
+        if (touches.length > 0) {
+            var touch = touches[0];
+            e.stageX = touch.pageX;
+            e.stageY = touch.pageY;
+        } else {
+            TQ.AssertExt.invalidLogic(false, "应该有touch点");
+        }
 
-    function isMouseEvent(e) {
-        return (e instanceof MouseEvent);
+        return e;
     }
 
     TQ.Trsa3 = Trsa3;

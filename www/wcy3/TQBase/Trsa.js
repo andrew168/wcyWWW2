@@ -67,7 +67,7 @@ window.TQBase = window.TQBase || {};
         }
 
         Trsa.lastOperationFlag = element.getOperationFlags();
-        TQ.Log.out("OP: " + Trsa.lastOperationFlag);
+        TQ.Log.out(ev.type + ", OP: " + Trsa.lastOperationFlag);
         element.dirty = true;
         element.dirty2 = true;
         element.isOperating = true;
@@ -198,11 +198,12 @@ window.TQBase = window.TQBase || {};
     };
 
     function altIsPressed(ev) {
-        if (ev.altkey != undefined) {
+        if (ev.altKey !== undefined) {
             return ev.altKey;
         } else if (ev.gesture && ev.gesture.srcEvent) {
             return ev.gesture.srcEvent.altKey;
         }
+        return false;
     }
     TQBase.Trsa = Trsa;
 }());

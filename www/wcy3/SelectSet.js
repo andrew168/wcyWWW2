@@ -416,11 +416,11 @@ TQ = TQ || {};
     };
 
     SelectSet.updateByGesture = function(evt) {
-        var touchPoint = evt.gesture.srcEvent;
-        if ((!!touchPoint.touches) && (touchPoint.touches.length > 0)) {
-            touchPoint = touchPoint.touches[0];
+        var touches = TQ.Utility.getTouches(evt);
+        if (touches.length <= 0) {
+            TQ.AssertExt.invalidLogic(touches.length <=0, "应该有接触点");
         }
-
+        var touchPoint = touches[0];
         var rect = TQ.SceneEditor.stage._getElementRect(TQ.SceneEditor.stage.canvas),
             pageX = touchPoint.pageX - rect.left,
             pageY = touchPoint.pageY - rect.top,

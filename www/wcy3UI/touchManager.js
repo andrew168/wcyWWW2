@@ -22,8 +22,11 @@ var TQ = TQ || {};
     function initialize() {
         trsaOps = [
             ['touch', TQ.Trsa3.onTouchStart],
+            ['mousedown', TQ.Trsa3.onTouchStart],
+
             ['touchend', TQ.Trsa3.onTouchEnd],
             ['mouseup', TQ.Trsa3.onTouchEnd],
+
             ['release', TQ.Trsa3.onRelease],
             ['rotate', TQ.Trsa3.onPinchAndRotate],
             ['pinch', TQ.Trsa3.onPinchAndRotate],
@@ -32,6 +35,7 @@ var TQ = TQ || {};
             // ['pinchin', onPinch],
             // ['pinchout', onPinch],
             ['drag', TQ.Trsa3.onDrag],
+            ['mousemove', TQ.Trsa3.onDrag],
             ['touchmove', notHandled],
             // 其余事件： 'swipeup'.
         ];
