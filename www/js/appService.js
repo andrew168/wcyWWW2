@@ -47,7 +47,6 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             }
             _initialized = true;
             TQ.Log.debugInfo("_init");
-            window.addEventListener("resize", configCanvas);
             jscolor.installByClassName('jscolor');
             configCanvas();
             if (TQ.Config.LocalCacheEnabled) {
@@ -116,6 +115,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
 
         return {
             init: _init,
+            configCanvas: configCanvas,
             onAppStarting: setOnAppStarting,
             onAppStarted: setOnAppStarted
         }

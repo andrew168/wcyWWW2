@@ -5,8 +5,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$inject = ['$q', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY'];
-function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
+EditorService.$inject = ['$q', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY', 'AppService'];
+function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, AppService) {
     var CMD_UNKNOWN = "unknown",
         CMD_MCOPYING_BEGIN = 'mcopying begin',
         CMD_MCOPYING_END = 'mcopying end';
@@ -157,9 +157,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY) {
     }
 
     function onSceneReady() {
+        reset();
         if (!_sceneReady) {
             TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
             _sceneReady = true;
+            window.addEventListener("resize", AppService.configCanvas);
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
             updateMode();
