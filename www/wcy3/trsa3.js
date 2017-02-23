@@ -101,6 +101,10 @@ var TQ = TQ || {};
             return;
         }
 
+        if (TQ.Utility.isMouseEvent(e) && !e.altKey && !e.ctrlKey && !e.shiftKey) {
+            return;
+        }
+
         startTrsa.needReset = false;
         startTrsa.ang = startEle.getRotation();
         startTrsa.scale = startEle.getScaleInWorld();
@@ -127,6 +131,10 @@ var TQ = TQ || {};
     }
 
     function onTouchStart(e) { // ==mouse的onPressed，
+        if (e.type === 'mousedown') {
+            document.addEventListener('keyup', onKeyUp);
+        }
+
         console.log("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
         TQ.CommandMgr.startNewOperation();
         updateStartElement(e);
@@ -144,7 +152,16 @@ var TQ = TQ || {};
         isDithering = false;
     }
 
+    function onKeyUp() {
+        if (startEle) {
+            startTrsa.needReset = true;
+        }
+    }
+
     function onTouchEnd(e) {// ==mouse的onUp，
+        if (e.type === 'mouseup') {
+            document.removeEventListener('keyup', onKeyUp);
+        }
         if (TQ.Utility.getTouchNumbers(e) >0) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
             startTrsa.needReset = true;
         } else {
