@@ -1425,13 +1425,7 @@ window.TQ = window.TQ || {};
         this.jsonObj.pivotX = pivot.pivotX;
         this.jsonObj.pivotY = pivot.pivotY;
 
-        // marker.moveTo({x:0, y:0});
-        marker.jsonObj.x = 0;
-        marker.jsonObj.y = 0;
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
-        marker.setFlag(Element.TRANSLATING); // 要求重新记录新的（x,y), 而不是用老的值计算
-        marker.dirty = true;
-        // marker.dirty2 = true; // 不能设dirty2！！
+        this.dirty = true;
     };
 
     p._move_TBD_NOT_USED = function (dx, dy) {
@@ -1607,6 +1601,11 @@ window.TQ = window.TQ || {};
     p.isClipPoint = function () {
         return this.jsonObj.isClipPoint;
     };
+
+    p.isBitmap = function () {
+        return (!!this.displayObj && (this.displayObj instanceof createjs.Bitmap));
+    };
+
     p.isText = function () {
         return false;
     };

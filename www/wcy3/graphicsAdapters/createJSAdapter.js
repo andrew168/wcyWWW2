@@ -28,6 +28,8 @@ var TQ = TQ || {};
             w = 1;
         } else if (this.isMarker()) {
             w = TQ.Marker.RADIUS;
+        } else if (this.isBitmap()) {
+            w = this.displayObj.naturalWidth();
         } else {
             w = this.displayObj.getWidth(true);
         }
@@ -41,6 +43,8 @@ var TQ = TQ || {};
             h = 1;
         } else if (this.isMarker()) {
             h = TQ.Marker.RADIUS;
+        } else if (this.isBitmap()) {
+            h = this.displayObj.naturalHeight();
         } else {
             h = this.displayObj.getHeight(true);
         }
