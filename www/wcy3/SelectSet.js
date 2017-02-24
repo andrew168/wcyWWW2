@@ -93,6 +93,7 @@ TQ = TQ || {};
         if ((element == null )) return;
         latestElement = element;
         if (element.isMarker()) { //  Decoration 不能记入选择集
+            selectedMarkers.splice(0); // 最多只能同时选中、操作1个marker
             selectedMarkers.push(element);
             return;
         }
