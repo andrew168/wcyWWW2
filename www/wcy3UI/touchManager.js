@@ -35,7 +35,6 @@ var TQ = TQ || {};
             // ['pinchin', onPinch],
             // ['pinchout', onPinch],
             ['drag', TQ.Trsa3.onDrag],
-            ['mousemove', TQ.Trsa3.onDrag],
             ['touchmove', notHandled],
             // 其余事件： 'swipeup'.
         ];
@@ -56,6 +55,7 @@ var TQ = TQ || {};
     function start() {
         if (started) {
             TQ.AssertExt.invalidLogic(true, "重复启动touchManager！");
+            TQ.Trsa3.reset();
             updateOps({isMCopying: false});
             return;
         }
@@ -144,6 +144,8 @@ var TQ = TQ || {};
     }
 
     TouchManager.addHandler = addHandler;
+    TouchManager.attachHandler = addHandler;
+    TouchManager.detachHandler = detachHandler;
     TouchManager.initialize = initialize;
     TouchManager.start = start;
     TouchManager.stop = stop;

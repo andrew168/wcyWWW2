@@ -14,6 +14,7 @@ var TQ = TQ || {};
     Trsa3.onTouchEnd = onTouchEnd;
     Trsa3.onRelease = onRelease;
     Trsa3.onDrag = onDrag;
+    Trsa3.reset = reset;
 
     var isDithering = false,
         startEle = null,
@@ -92,6 +93,9 @@ var TQ = TQ || {};
         _highlight(startEle);
         _showFloatToolbar(startEle.getType());
         resetStartParams(e);
+        if (TQ.Utility.isMouseEvent(e)) {
+            TQ.TouchManager.attachHandler('mousemove', onDrag);
+        }
         // showFloatToolbar(evt);
         // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
     }
@@ -161,6 +165,7 @@ var TQ = TQ || {};
     function onTouchEnd(e) {// ==mouse的onUp，
         if (e.type === 'mouseup') {
             document.removeEventListener('keyup', onKeyUp);
+            TQ.TouchManager.detachHandler('mousemove', onDrag);
         }
         if (TQ.Utility.getTouchNumbers(e) >0) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
             startTrsa.needReset = true;
@@ -293,6 +298,13 @@ var TQ = TQ || {};
         }
 
         return e;
+    }
+
+    function reset() {
+        isDithering = false;
+        isMultiTouching = false;
+        startEle = null;
+        startTrsa.needReset = true;
     }
 
     TQ.Trsa3 = Trsa3;
