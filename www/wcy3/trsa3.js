@@ -32,8 +32,6 @@ var TQ = TQ || {};
     var pos = {x: 0, y: 0},
         isMultiTouching = false;
 
-    var touchedEle;
-
     function mCopy(evt) {
         if (TQ.SelectSet.isEmpty()) {
             return TQ.MessageBox.prompt("请先选择物体！");
@@ -61,8 +59,6 @@ var TQ = TQ || {};
         if (result) {
             console.log("OK!");
         }
-
-        touchedEle = stage.getObjectsUnderPoint(evt.stageX, evt.stageY);
     }
 
     function updateStartElement(e) {
@@ -90,7 +86,6 @@ var TQ = TQ || {};
             // startEle.limitHostNoRotation();
         }
         // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
-        _highlight(startEle);
         _showFloatToolbar(startEle.getType());
         resetStartParams(e);
         if (TQ.Utility.isMouseEvent(e)) {
@@ -144,7 +139,6 @@ var TQ = TQ || {};
         updateStartElement(e);
         e.stopPropagation();
         e.preventDefault();
-        // console.log("start event Type = " + e.gesture.eventType + " @ t= " + e.gesture.timeStamp);
     }
 
     function ditherStart() {
@@ -277,15 +271,6 @@ var TQ = TQ || {};
             TQ.FloatToolbar.show(type);
         }
     };
-
-    function _highlight(ele) {
-        // highlight 只是亮显， 不能修改选择集
-        if (TQ.SceneEditor.isPlayMode()) {
-            return;
-        }
-        // var ele2 = TQ.SelectSet.getEditableEle(ele);
-        // TQ.SelectSet.add(ele2);
-    }
 
     function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
         var touches = TQ.Utility.getTouches(e);
