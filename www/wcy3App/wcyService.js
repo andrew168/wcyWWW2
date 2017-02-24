@@ -48,7 +48,7 @@ function WCY($http, FileService, WxService, NetService) {
         if (needToSave()) {
             return save().then(function () {
                 create(option); // 数据已经保存，到内存， 网络上传还需要时间
-            });
+            }, _onFail);
         }
 
         _stopAutoSave();
@@ -67,7 +67,7 @@ function WCY($http, FileService, WxService, NetService) {
             saveToCache();
         }
         //ToDo: if (has wifi)
-        return upload().then(onSavedSuccess, _onFail);
+        return upload().then(onSavedSuccess);
     }
 
     function saveToCache() {
@@ -370,8 +370,8 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _onFail(data) {
-        TQ.MessageBox.hide();  // end of loading，no resource yet
         console.log(data);
+        TQ.MessageBox.prompt("哎呀，网络有问题？");
     }
 
     function _onReceivedWcyData(res) {
