@@ -322,14 +322,6 @@ window.TQ = window.TQ || {};
             supported = true;
         }
 
-        if (!supported) {
-            if (Utility.hasEnv(Utility.DEV_PC)) {
-                window.location="ShowBrowsers.php";
-            } else {
-                window.location="MobileBrowsers.php";
-            }
-        }
-
         return supported;
     };
 

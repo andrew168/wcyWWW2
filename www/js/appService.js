@@ -45,6 +45,10 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 TQ.Log.error("Duplicated call in _init");
                 return;
             }
+            if (!TQ.Utility.isSupportedEnvironment()) {
+                TQ.MessageBox.prompt('请下载安装<a href="https://www.google.ca/chrome/browser/features.html" style="font-weight: bold; text-decoration: underline">谷歌浏览器</a>！');
+                return;
+            }
             _initialized = true;
             TQ.Log.debugInfo("_init");
             jscolor.installByClassName('jscolor');
