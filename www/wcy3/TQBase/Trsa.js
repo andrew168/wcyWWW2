@@ -67,7 +67,10 @@ window.TQBase = window.TQBase || {};
         }
 
         Trsa.lastOperationFlag = element.getOperationFlags();
-        TQ.Log.out(ev.type + ", OP: " + Trsa.lastOperationFlag);
+        var touches = TQ.Utility.getTouches(ev),
+            posInfo = (touches.length <= 0 ) ? "" :
+                ", at(" + touches[0].pageX + ", " + touches[0].pageY + ")";
+        TQ.Log.debugInfo(ev.type + ", OP: " + Trsa.lastOperationFlag + posInfo);
         element.dirty = true;
         element.dirty2 = true;
         element.isOperating = true;
