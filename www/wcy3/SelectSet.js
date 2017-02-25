@@ -40,6 +40,8 @@ TQ = TQ || {};
         state.multiCmdStarted = false;
         state.cmd = null;
         latestElement = null;
+        btnEffect.group = null;
+        btnEffect.joint = null;
         TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function() {
             if ((!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
                 TQ.SelectSet.delete();
