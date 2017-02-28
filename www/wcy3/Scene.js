@@ -547,15 +547,13 @@ TQ = TQ || {};
         // copy non-object properties
         TQUtility.shadowCopyWithoutObject(this, objJson);
         this.state = TQBase.LevelState.NOT_INIT;
-        if (this.filename == TQ.Config.UNNAMED_SCENE) {
-            this.version = Scene.VER_LATEST;  // 创建一个新版作品,
-        } else {
-            if (!objJson.version) {
-                this.version = Scene.VER1;  // 升级旧版的作品， 添加其版本号
-            } else {
-                TQ.Scene.upgradeToVer3_1(objJson);
-                this.version = objJson.version;
-            }
+        if (!objJson.version) {
+            this.version = Scene.VER1;  // 升级旧版的作品， 添加其版本号
+        }
+
+        if (objJson.version !== Scene.VER_LATEST) {
+            TQ.Scene.upgradeToLatest(objJson);
+            this.version = objJson.version;
         }
 
         if (!objJson.designatedWidth || !objJson.designatedHeight) {
@@ -767,6 +765,7 @@ TQ = TQ || {};
         // this equals to the WCY01.WDM
         // it is provided to prevent loading WCY01.WDM from server
         var empty = {
+            version: Scene.VER_LATEST,
             "levels": [
                 {
                     "jsonElements": null,

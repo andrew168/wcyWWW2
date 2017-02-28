@@ -3,7 +3,7 @@
  */
 
 (function () {
-    TQ.Scene.upgradeToVer3_1 = function(objJson) {
+    TQ.Scene.upgradeToLatest = function(objJson) {
         switch (objJson.version) {
             case TQ.Scene.VER3_1:
                 break;
