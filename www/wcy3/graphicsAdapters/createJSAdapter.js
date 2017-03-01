@@ -16,7 +16,9 @@ var TQ = TQ || {};
                     continue;
                 }
 
-                p[item] = CreateJSAdapter[item];
+                if (!p[item]) {
+                    p[item] = CreateJSAdapter[item];
+                }
             }
         }
         return p;
