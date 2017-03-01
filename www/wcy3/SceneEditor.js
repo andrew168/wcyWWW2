@@ -58,8 +58,9 @@ var currScene = null;
         if (((desc.type === TQ.Element.DescType.SOUND) || (desc.type === TQ.Element.DescType.BITMAP) || (desc.type === TQ.Element.DescType.BUTTON))
             && (!TQ.RM.hasElementDesc(desc))) {
             TQ.RM.addElementDesc(desc, doAdd);
+            return null; // 无法立即添加并返回ele，因为资源不ready
         } else {
-            doAdd();
+            return doAdd();
         }
 
         function doAdd() {
@@ -67,6 +68,7 @@ var currScene = null;
             if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
                 TQ.SelectSet.add(ele);
             }
+            return ele;
         }
     };
 

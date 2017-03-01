@@ -7,6 +7,13 @@ window.TQ = window.TQ || {};
 (function () {
     function TextElement(level, desc) {
         TQ.Element.call(this, level, desc);
+        if (!this.disableBubble && !this.getTextBubble()) {
+            // 默认都有bubble， 除非明确取消
+            var host = this;
+            setTimeout(function () { // 用timeout避免超大时间片
+                TQ.TextBubble.attachTo(host);
+            });
+        }
     }
 
     TextElement.prototype = Object.create(TQ.Element.prototype);
@@ -89,6 +96,21 @@ window.TQ = window.TQ || {};
         this._afterItemLoaded();
         this.setTRSAVZ();
     };
+
+    p.hasBubble = function() {
+        return !!this.getTextBubble();
+    };
+
+    //p.addBubble = function() {
+    //    var bubble;
+    //    if (!this.jsonObj.bubble) {
+    //        bubble = new TQ.TextBubble(this);
+    //    } else {
+    //        bubble = new TQ.TextBubble(this.jsobObj.bubble);
+    //    }
+    //
+    //    this.addChildDirect(bubble);
+    //};
 
     p.createHitArea = function(rotation, w, h) {
         var shape = new createjs.Shape();

@@ -12,7 +12,7 @@ window.TQ = window.TQ || {};
     };
 
     // 工厂, 根据数据制作
-    TQ.Element.build = function (level, desc) {
+    TQ.Element.build = function (level, desc, host) {
         if (!desc) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, !desc);
             return TQ.ERROR;
@@ -29,6 +29,8 @@ window.TQ = window.TQ || {};
                 return new TQ.ButtonElement(level, desc);
             case DescType.TEXT:
                 return new TQ.TextElement(level, desc);
+            case DescType.TEXT_BUBBLE:
+                return new TQ.TextBubble(level, desc, host);
             case DescType.RAIN:
             case DescType.SNOW:
             case DescType.FULLSCREEN_EFFECT_PARTICLE:

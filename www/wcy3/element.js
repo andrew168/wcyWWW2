@@ -25,7 +25,8 @@ window.TQ = window.TQ || {};
         RAIN: "RainEffect", // TBD
         SNOW: "SnowEffect", // TBD
         SOUND: "SOUND",
-        TEXT: "Text"
+        TEXT: "Text",
+        TEXT_BUBBLE: "TextBubble"
     };
 
     function Element(level, desc) {
@@ -427,6 +428,20 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.getTextBubble = function() {
+        var bubble = null;
+        if (!!this.children) {
+            for (var i = 0; i < this.children.length; i++) {
+                if (this.children[i] instanceof TQ.TextBubble) {
+                    bubble = this.children[i];
+                    break;
+                }
+            }
+        }
+
+        return bubble;
+    };
+
     p.findChild = function (childDisplayObj) {
         if (this.children == null) {
             return null;
@@ -485,7 +500,8 @@ window.TQ = window.TQ || {};
             child.setFlag(Element.TO_RELATIVE_POSE);
 
         } else {
-            child = Element.build(this.level, desc);
+            var host = this;
+            child = Element.build(this.level, desc, host);
             this.addChildDirect(child);
         }
         return child;
@@ -550,7 +566,7 @@ window.TQ = window.TQ || {};
     };
 
     p.removeChild = function (child) {
-        if (this.isPinned()) {
+        if (!child || this.isPinned()) {
             return null;
         }
         assertNotNull(TQ.Dictionary.FoundNull, this.children); // "应该有孩子"
