@@ -22,10 +22,10 @@ var TQ = TQ || {};
     function initialize() {
         trsaOps = [
             ['touch', TQ.Trsa3.onTouchStart],
-            ['mousedown', TQ.Trsa3.onTouchStart],
+            ['mousedown', TQ.Trsa3.onMouseDown],
 
             ['touchend', TQ.Trsa3.onTouchEnd],
-            ['mouseup', TQ.Trsa3.onTouchEnd],
+            ['mouseup', TQ.Trsa3.onMouseUp],
 
             ['release', TQ.Trsa3.onRelease],
             ['rotate', TQ.Trsa3.onPinchAndRotate],

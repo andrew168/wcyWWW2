@@ -1329,6 +1329,7 @@ window.TQ = window.TQ || {};
         var justRecorded = false;
         if (!this.isLoaded()) return;
 
+        TQ.Log.debugInfo("update: " + this.id);
         if (this.hasActionTrack()) { // 更新使用者的动作track，
             this.updateAction(t);
         }
@@ -1345,7 +1346,7 @@ window.TQ = window.TQ || {};
         var motionType = 0; // 没有变化, 使用上一个时刻的 世界坐标
         if (!TQBase.LevelState.isOperatingTimerUI()) {
             if (this.dirty2 || this.isUserControlling()) {
-                // TQ.Log.out("操作: " + TQBase.Trsa.lastOperationFlag);
+                TQ.Log.debugInfo("update: Record, lastOperationFlag =" + TQBase.Trsa.lastOperationFlag);
                 if (!this.getOperationFlags()) {  // 鼠标按住, 但是 没有移动, 单独确定操作状态
                     this.setFlag(TQBase.Trsa.lastOperationFlag);
                     // TQ.Log.out("操作: " + TQBase.Trsa.lastOperationFlag +"last");
@@ -1411,6 +1412,7 @@ window.TQ = window.TQ || {};
                 // 传播dirty标志, 迫使child更新; dirty2的子关节不记录track
                 if (this.dirty || this.dirty2) this.children[i].dirty = true;
                 if (!(this.isMarker() && this.children[i].isUserControlling())) {
+                    TQ.Log.debugInfo("update children");
                     this.children[i].update(t);
                 }
             }

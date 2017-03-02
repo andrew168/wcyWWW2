@@ -9,9 +9,11 @@ var TQ = TQ || {};
 
     Trsa3.mCopy = mCopy;
     Trsa3.onTouchStart = onTouchStart;
+    Trsa3.onMouseDown = onMouseDown;
     Trsa3.onPinchAndRotate = onPinchAndRotate;
     Trsa3.onTouchStage = onTouchStage;
     Trsa3.onTouchEnd = onTouchEnd;
+    Trsa3.onMouseUp = onMouseUp;
     Trsa3.onRelease = onRelease;
     Trsa3.onDrag = onDrag;
     Trsa3.reset = reset;
@@ -173,6 +175,16 @@ var TQ = TQ || {};
         }
 
         console.log("touch end, or mouse up " + TQ.Utility.getTouchNumbers(e));
+    }
+
+    function onMouseDown(e) {
+        TQ.InputMap.updateSpecialKey(e);
+        return onTouchStart(e);
+    }
+
+    function onMouseUp(e) {
+        TQ.InputMap.updateSpecialKey(e);
+        return onTouchEnd(e);
     }
 
     function onRelease() {
