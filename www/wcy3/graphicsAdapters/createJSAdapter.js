@@ -28,8 +28,6 @@ var TQ = TQ || {};
         var w;
         if (this.isVirtualObject()) {// 对于Group物体
             w = 1;
-        } else if (this.isMarker()) {
-            w = TQ.Marker.RADIUS;
         } else if (this.isBitmap()) {
             w = this.displayObj.naturalWidth();
         } else {
@@ -43,8 +41,6 @@ var TQ = TQ || {};
         var h;
         if (this.isVirtualObject()) {// 对于Group物体
             h = 1;
-        } else if (this.isMarker()) {
-            h = TQ.Marker.RADIUS;
         } else if (this.isBitmap()) {
             h = this.displayObj.naturalHeight();
         } else {

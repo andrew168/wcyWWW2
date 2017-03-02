@@ -13,6 +13,8 @@ TQ = TQ || {};
         this.decorations = null;
         this.host = null;
         this._isNewSkin = false;
+        jsonObj.pivotX = (jsonObj.pivotX === undefined) ? 0 : jsonObj.pivotX; // Marker图元的原点已经在正中心了
+        jsonObj.pivotY = (jsonObj.pivotY === undefined) ? 0 : jsonObj.pivotY;
         this.initialize(jsonObj);
     }
 
@@ -83,6 +85,14 @@ TQ = TQ || {};
 
     p.isMarker = function() {
         return true;
+    };
+
+    p.getWidth = function () {
+        return 2 * Marker.RADIUS;
+    };
+
+    p.getHeight = function () {
+        return 2 * Marker.RADIUS;
     };
 
     TQ.Marker = Marker;
