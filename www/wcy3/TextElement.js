@@ -10,9 +10,12 @@ window.TQ = window.TQ || {};
         if (!this.disableBubble && !this.getTextBubble()) {
             // 默认都有bubble， 除非明确取消
             var host = this;
-            setTimeout(function () { // 用timeout避免超大时间片
-                TQ.TextBubble.attachTo(host);
-            });
+
+            if (TQ.Config.textBubbleOn) {
+                setTimeout(function () { // 用timeout避免超大时间片
+                    TQ.TextBubble.attachTo(host);
+                });
+            }
         }
     }
 

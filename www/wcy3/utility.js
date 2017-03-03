@@ -303,21 +303,23 @@ window.TQ = window.TQ || {};
             alert(navigator.userAgent);
         }
 
-        if (navigator.userAgent.match(/(Android)/i)) {
+        if (ionic.Platform.isAndroid()) {
             Utility.setEnv(Utility.DEV_MOBILE);
             Utility.setEnv(Utility.OS_ANDROID);
+            supported = true;
+        } else if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
+            Utility.setEnv(Utility.DEV_MOBILE);
+            Utility.setEnv(Utility.OS_IPHONE);
+            supported = true;
         } else {
-            Utility.setEnv(Utility.DEV_PC);
-            Utility.setEnv(Utility.OS_WINDOWS);
+            Utility.setEnv(Utility.DEV_PC);// or Mac
+            Utility.setEnv(Utility.OS_WINDOWS); // or Mac OS
         }
 
-        if (navigator.userAgent.indexOf("Chrome") > 0) {
+        if (isChrome()) {
             Utility.setEnv(Utility.BR_CHROME);
             supported = true;
-        } else if (navigator.userAgent.indexOf("Firefox") > 0) {
-            Utility.setEnv(Utility.BR_FIREFOX);
-            supported = true;
-        } else if (navigator.userAgent.indexOf("Safari") > 0) {
+        } else if (isSafari()) {
             Utility.setEnv(Utility.BR_SAFARI);
             supported = true;
         }
@@ -325,6 +327,45 @@ window.TQ = window.TQ || {};
         return supported;
     };
 
+    function isChrome() {
+        // please note,
+// that IE11 now returns undefined again for window.chrome
+// and new Opera 30 outputs true for window.chrome
+// and new IE Edge outputs to true now for window.chrome
+// and if not iOS Chrome check
+// so use the below updated condition
+        var isChromium = window.chrome,
+            winNav = window.navigator,
+            vendorName = winNav.vendor,
+            isOpera = winNav.userAgent.indexOf("OPR") > -1,
+            isIEedge = winNav.userAgent.indexOf("Edge") > -1,
+            isIOSChrome = winNav.userAgent.match("CriOS");
+
+        var result = false;
+        if (isIOSChrome) { // chrome in IOS
+            result = true;
+        } else if (isChromium !== null && isChromium !== undefined && vendorName === "Google Inc." && isOpera == false && isIEedge == false) {
+            result = true;
+        } else {
+            result = false;
+        }
+
+        return result;
+        // http://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome/13348618#13348618
+    }
+
+    function isSafari() {
+        var ua = navigator.userAgent.toLowerCase(),
+            result = false;
+
+        if (ua.indexOf('safari') != -1) {
+            if (ua.indexOf('chrome') > -1) {
+                result = false;
+            } else {
+                result = true;
+            }
+        }
+    }
     Utility.CheckUserRight = function() {
         var userID = Utility.getUserID();
         // ToDo: 使用数据库
