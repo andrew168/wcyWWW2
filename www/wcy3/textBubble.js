@@ -78,10 +78,7 @@ TQ = TQ || {};
         }
 
         s.graphics.clear(); // 清除老的边框
-        var radius = TextBubble.RADIUS;
-        s.graphics.ss(radius).beginStroke("#0F0").
-            beginRadialGradientFill(["#FFF", "#F00"], [0, 1], 0, 0, 0, 0, 0, radius).
-            drawCircle(0, 0, radius).endFill();
+        TQ.Graphics.drawCircle(s, 0, 0, TextBubble.RADIUS);
     };
 
     p._doLoad = function () {

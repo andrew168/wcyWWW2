@@ -55,10 +55,7 @@ TQ = TQ || {};
         }
 
         s.graphics.clear(); // 清除老的边框
-        var radius = Marker.RADIUS;
-        s.graphics.ss(radius).beginStroke("#f0f").
-            beginRadialGradientFill(["#FFF","#0FF"],[0,1],0,0,0,0,0,radius).
-            drawCircle(0,0,radius).endFill();
+        TQ.Graphics.drawCircle(s, 0, 0, Marker.RADIUS);
     };
 
     p._loadMarker = function () {
