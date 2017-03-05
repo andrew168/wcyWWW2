@@ -491,6 +491,9 @@ window.TQ = window.TQ || {};
             this.children.push(child);
             this.toRelative(worldData, child);
             Element.copyWorldData(child.jsonObj, p);
+
+            //ToDo： 是不是可以不加入到jsonObj.children中？
+            // 因为保存的时候， 总是遍历this.children的， 而且会忽视jsonObj.children
             if (!this.jsonObj.children) {
                 this.jsonObj.children = [];
             }
@@ -575,8 +578,12 @@ window.TQ = window.TQ || {};
         assertTrue(TQ.Dictionary.INVALID_LOGIC, id >= 0); //"应该能够找到孩子"
         if (id >= 0) {
             child = (this.children.splice(id, 1))[0];
-            id = this.jsonObj.children.indexOf(child.jsonObj);
-            this.jsonObj.children.splice(id, 1);
+            if (this.jsonObj.children) { // 注意： marker和气泡，不在jsonObj里面
+                id = this.jsonObj.children.indexOf(child.jsonObj);
+                if (id >= 0) {
+                    this.jsonObj.children.splice(id, 1);
+                }
+            }
             child.parent = null;
         }
 
