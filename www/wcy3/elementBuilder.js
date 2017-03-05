@@ -27,6 +27,8 @@ window.TQ = window.TQ || {};
                 return new TQ.Marker(level, desc);
             case DescType.BUTTON:
                 return new TQ.ButtonElement(level, desc);
+            case DescType.RECTANGLE:
+                return new TQ.Rectangle(level, desc);
             case DescType.TEXT:
                 return new TQ.TextElement(level, desc);
             case DescType.TEXT_BUBBLE:

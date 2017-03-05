@@ -10,11 +10,40 @@ var TQ = TQ || {};
     }
 
     Graphics.drawCircle = drawCicle;
+    Graphics.drawRect = drawRect;
+    Graphics.drawStar = drawStar;
 
     function drawCicle(shape, x, y, radius) { //shape is createJS.Shape
-        shape.graphics.ss(radius).beginStroke("#0F0").
-            beginRadialGradientFill(["#FFF", "#F00"], [0, 1], 0, 0, 0, 0, 0, radius).
+        var thickness = 1,
+            edgeColor = "#000",
+            gradientColorS = "#00F",
+            gradientColorE = "#F00";
+
+        shape.graphics.ss(thickness).beginStroke(edgeColor).
+            beginRadialGradientFill([gradientColorS, gradientColorE], [0, 1], 0, 0, 0, 0, 0, radius).
             drawCircle(x, y, radius).endFill();
+    }
+
+    function drawRect(shape, x,y, w, h) {
+        // 左下角， + pivot
+        var thickness = 1,
+            edgeColor = "#000";
+        var radius = 2;
+
+        shape.graphics.ss(thickness).beginStroke(edgeColor).
+            drawRoundRect(x, y, w, h, radius).
+            endFill();
+    }
+
+    function drawStar(shape, x, y, w, h) {
+        var thickness = 1,
+            edgeColor = "#000",
+            radius = Math.min(w, h),
+            edgeNumber = 6;
+
+        shape.graphics.ss(thickness).beginStroke(edgeColor).
+            drawPolyStar(x, y, radius, edgeNumber, 0).
+            endFill();
     }
 
     TQ.Graphics = Graphics;

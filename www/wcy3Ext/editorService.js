@@ -82,6 +82,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         insertPropImage: insertPropImage,
         insertBkImage: insertBkImage,
         insertText: insertText,
+        insertRectangle: insertRectangle,
         insertSound: insertSound,
         insertSnow: TQ.ParticleMgr.insertSnow,
         insertRain: TQ.ParticleMgr.insertRain,
@@ -503,6 +504,22 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.SceneEditor.addItem(desc);
         // TQ.TextEditor.initialize();
         // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
+    }
+
+    function insertRectangle(x, y, w, h) {
+        var desc = {
+            src: null,
+            type: TQ.Element.DescType.RECTANGLE,
+            autoFit: TQ.Element.FitFlag.NO,
+            x: x,
+            y: y,
+            width: w,
+            height: h,
+            fontSize: getFontSize(), // 必须是像素坐标，在designated坐标系
+            color: state.color
+        };
+
+        TQ.SceneEditor.addItem(desc);
     }
 
     function insertSound(filename) {

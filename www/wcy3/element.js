@@ -24,6 +24,7 @@ window.TQ = window.TQ || {};
         FULLSCREEN_EFFECT_PARTICLE: "fullscreenEffectParticle",
         RAIN: "RainEffect", // TBD
         SNOW: "SnowEffect", // TBD
+        RECTANGLE: "Rectangle",
         SOUND: "SOUND",
         TEXT: "Text",
         TEXT_BUBBLE: "TextBubble"

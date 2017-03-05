@@ -118,6 +118,16 @@ function DashCtrl(
             300, 300);
     };
 
+    $scope.insertRectangle = function () {
+        EditorService.insertRectangle(300, 300, 300, 300);
+        EditorService.insertRectangle(300, 300, 200, 200);
+        EditorService.insertRectangle(300, 300, 150, 150);
+        EditorService.insertRectangle(300, 300, 100, 100);
+        EditorService.insertRectangle(300, 300, 50, 50);
+        EditorService.insertRectangle(300, 300, 10, 10);
+        EditorService.insertRectangle(300, 300, 5, 5);
+    };
+
     $scope.startRecord = function() {
         EditorService.startRecord();
     };
