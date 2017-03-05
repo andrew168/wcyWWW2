@@ -678,6 +678,10 @@ window.TQ = window.TQ || {};
     };
 
     p.autoFit = function(img) {
+        if (this.autoFitFlag === Element.FitFlag.NO) {
+            return;
+        }
+
         TQ.AssertExt.invalidLogic(img!==null, "未改造的元素？");
         // 保持图像长宽比例不失真
         // 自动充满整个画面 或者 保持物体的原始大小
@@ -691,10 +695,10 @@ window.TQ = window.TQ || {};
             desc.sx = sx;
             desc.sy = sy;
             desc.rotation = 0;
+            desc.pivotX = 0.5;
+            desc.pivotY = 0.5;
         }
 
-        desc.pivotX = 0.5;
-        desc.pivotY = 0.5;
         pWorld = desc;
         var minScale = Math.min(pWorld.sx, pWorld.sy);
         if ((this.autoFitFlag === Element.FitFlag.KEEP_SIZE) ||
