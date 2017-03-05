@@ -77,7 +77,7 @@ window.TQ = window.TQ || {};
             txtObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
 
             // hitArea 不会根据str内容来更新， 所以：
-            txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+            txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
 
             TQ.DirtyFlag.setElement(this);
         }
@@ -95,7 +95,7 @@ window.TQ = window.TQ || {};
         }
 
         // hitArea 会随宿主物体的变换而变换， 所以，可以重用
-        txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+        txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
         this._afterItemLoaded();
         this.setTRSAVZ();
     };
@@ -123,18 +123,13 @@ window.TQ = window.TQ || {};
         return shape;
     };
 
-    p.getBBoxHeight = function() {
-        var factor = 1.4; // the measured height is not exact cover the full font.
-        return factor * this.displayObj.getMeasuredHeight();
-    };
-
     p.parent_createHighlighter = p.createHighlighter;
     p.parent_deleteHighlighter = p.deleteHighlighter;
     p.createHighlighter = function() {
         if (TQ.Config.useHighlightBox) {
             var txtObj = this.displayObj;
             txtObj.text = this.jsonObj.text;
-            this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getBBoxHeight());
+            this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
             stageContainer.addChild(this.highter);
         } else {
             this.parent_createHighlighter();
