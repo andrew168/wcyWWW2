@@ -24,14 +24,16 @@ var TQ = TQ || {};
             drawCircle(x, y, radius).endFill();
     }
 
-    function drawRect(shape, x,y, w, h) {
+    function drawRect(shape, x0,y0, w, h) {
         // 左下角， + pivot
         var thickness = 1,
             edgeColor = "#000";
         var radius = 2;
+        var xc = x0 - w/2,
+            yc = y0 - h/2;
 
         shape.graphics.ss(thickness).beginStroke(edgeColor).
-            drawRoundRect(x, y, w, h, radius).
+            drawRoundRect(xc, yc, w, h, radius).
             endFill();
     }
 

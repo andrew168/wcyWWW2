@@ -119,13 +119,13 @@ function DashCtrl(
     };
 
     $scope.insertRectangle = function () {
-        EditorService.insertRectangle(300, 300, 300, 300);
-        EditorService.insertRectangle(300, 300, 200, 200);
-        EditorService.insertRectangle(300, 300, 150, 150);
-        EditorService.insertRectangle(300, 300, 100, 100);
-        EditorService.insertRectangle(300, 300, 50, 50);
-        EditorService.insertRectangle(300, 300, 10, 10);
-        EditorService.insertRectangle(300, 300, 5, 5);
+        // EditorService.insertRectangle(200, 400, 300, 300);
+        // EditorService.insertRectangle(200, 400, 200, 200);
+        //EditorService.insertRectangle(200, 400, 150, 150);
+        EditorService.insertRectangle(200, 400, 100, 100);
+        // EditorService.insertRectangle(200, 400, 50, 50);
+        // EditorService.insertRectangle(200, 400, 10, 10);
+        // EditorService.insertRectangle(200, 400, 5, 5);
     };
 
     $scope.startRecord = function() {
