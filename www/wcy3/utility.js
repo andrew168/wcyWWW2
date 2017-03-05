@@ -478,6 +478,10 @@ window.TQ = window.TQ || {};
         return (Math.abs(x) < 0.000001);
     };
 
+    Utility.equalWithin2 = function (x, y) {
+        return (Math.abs(x - y) < 0.01);
+    };
+
     // private
     function getNativeEvent(e) {
         var e0 = e.nativeEvent;

@@ -524,11 +524,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function getFontSize() {
-        return parseInt(state.fontLevel) * TQ.Config.FONT_LEVEL_UNIT;
+        return parseFloat(state.fontLevel) * TQ.Config.FONT_LEVEL_UNIT;
     }
 
     function fontSize2Level(size) {
-        return '' + (parseInt(size) / TQ.Config.FONT_LEVEL_UNIT);
+        return '' + (parseFloat(size) / TQ.Config.FONT_LEVEL_UNIT);
     }
 
     /*
@@ -956,7 +956,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
             if (ele.getType() === TQ.ElementType.TEXT) {
                 var level = fontSize2Level(ele.getFontSize());
-                if (state.fontLevel !== level) {
+                if (!TQ.Utility.equalWithin2(state.fontLevel, level)) {
                     state.fontLevel = level;
                     hasChanged = true;
                 }
