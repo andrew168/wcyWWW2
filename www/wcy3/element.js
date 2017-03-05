@@ -630,6 +630,7 @@ window.TQ = window.TQ || {};
         var marker = this.decorations[0];
         marker.host = this;
         marker.level = this.level;
+        marker.reset();
         marker.attach();
         marker.createImage();
         this.dirty2 = marker.dirty2 = true;

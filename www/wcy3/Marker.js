@@ -92,5 +92,11 @@ TQ = TQ || {};
         return 2 * Marker.RADIUS;
     };
 
+    p.reset = function () {
+        this.jsonObj.sx = 1;
+        this.jsonObj.sy = 1;
+        this.jsonObj.rotation = 0;
+    };
+
     TQ.Marker = Marker;
 }());
