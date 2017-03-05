@@ -59,7 +59,21 @@ var TQ = TQ || {};
         displayObj.scaleX = obj_dc.sx;
         displayObj.scaleY = obj_dc.sy;
         displayObj.regX = obj_dc.pivotX * this.getWidth();
-        displayObj.regY = (1 - obj_dc.pivotY) * this.getHeight(); // regY=0在左上角，同设备坐标一致
+
+        // regX，Y坐标：(由createJS定义的)
+        // *   +Y 向下， 同设备坐标一致
+        // * 对于图像和Text： 原点regY=0在左上角，
+        // * 对于Shape（圆， 矩形， 星形）： regXY（0，0) 在正中心
+
+        // PivotXY: (在物体空间定义， 由TQ定义)
+        // *   +Y 向上， 同世界坐标系一致
+        // * 对于图像类： Pivot原点在左上角，
+        // * 对于Shape中的圆：  Pivot原点在正中心
+        if (displayObj instanceof createjs.Shape) {
+            displayObj.regY = -obj_dc.pivotY * this.getHeight();
+        } else {
+            displayObj.regY = (1 - obj_dc.pivotY) * this.getHeight();
+        }
         displayObj.rotation = obj_dc.rotation;
     };
 
