@@ -31,7 +31,7 @@ var TQ = TQ || {};
         } else if (this.isBitmap()) {
             w = this.displayObj.naturalWidth();
         } else {
-            w = this.displayObj.getWidth(true);
+            TQ.AssertExt.isNotNull(false, "发现新的元素类别：" + this.name);
         }
 
         return w;
@@ -44,7 +44,7 @@ var TQ = TQ || {};
         } else if (this.isBitmap()) {
             h = this.displayObj.naturalHeight();
         } else {
-            h = this.displayObj.getHeight(true);
+            TQ.AssertExt.isNotNull(false, "发现新的元素类别：" + this.name);
         }
         return h;
     };

@@ -212,5 +212,15 @@ window.TQ = window.TQ || {};
         if (!desc.color)  desc.color = TQ.Config.color;
     }
 
+    p.getWidth = function () {
+        return this.displayObj.getMeasuredWidth();
+    };
+
+    p.getHeight = function () {
+        var h = this.displayObj.getMeasuredHeight();
+        h = h * 1.8;
+        return h;
+    };
+
     TQ.TextElement = TextElement;
 }());
