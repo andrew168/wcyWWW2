@@ -85,15 +85,31 @@ var TQ = TQ || {};
         }
 
         var thickness = 1,
-            edgeColor = "#000";
+            edgeColor = "#000",
+            fillColor = "#DDD";
+
+        if (!anchor) {
+            var anchorWidth = 20,
+                xa = x + w / 2,
+                xa1 = xa + anchorWidth / 2,
+                xa3 = xa - anchorWidth / 2,
+                ya = y + h;
+
+            anchor = [{x: xa1, y: ya},
+                {x: xa, y: ya + 100},
+                {x: xa3, y: ya}
+            ];
+        }
 
         shape.graphics.ss(thickness).beginStroke(edgeColor).
-            // beginRadialGradientFill([gradientColorS, gradientColorE], [0, 1], 0, 0, 0, 0, 0, radius).
+            beginFill(fillColor).
             moveTo(x + w - radiusTR, y).
             arcTo(x + w + radiusTR * mTR, y - radiusTR * mTR, x + w, y + radiusTR, radiusTR).
             lineTo(x + w, y + h - radiusBR).
             arcTo(x + w + radiusBR * mBR, y + h + radiusBR * mBR, x + w - radiusBR, y + h, radiusBR).
-            lineTo(x + radiusBL, y + h).
+            lineTo(anchor[0].x, anchor[0].y).
+            lineTo(anchor[1].x, anchor[1].y).
+            lineTo(anchor[2].x, anchor[2].y).
             arcTo(x - radiusBL * mBL, y + h + radiusBL * mBL, x, y + h - radiusBL, radiusBL).
             lineTo(x, y + radiusTL).
             arcTo(x - radiusTL * mTL, y - radiusTL * mTL, x + radiusTL, y, radiusTL).
