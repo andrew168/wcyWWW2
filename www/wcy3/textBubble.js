@@ -65,7 +65,7 @@ TQ = TQ || {};
         }
 
         s.graphics.clear(); // 清除老的边框
-        TQ.Graphics.drawRect(s, 0, 0, this.getWidth(), this.getHeight());
+        TQ.Graphics.drawBubble(s, 0, 0, this.getWidth(), this.getHeight(), 1, 1, 1, 1, null);
     };
 
     p._doLoad = function () {

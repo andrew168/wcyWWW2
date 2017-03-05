@@ -9,6 +9,7 @@ var TQ = TQ || {};
     function Graphics() {
     }
 
+    Graphics.drawBubble = drawBubble;
     Graphics.drawCircle = drawCicle;
     Graphics.drawRect = drawRect;
     Graphics.drawStar = drawStar;
@@ -22,6 +23,13 @@ var TQ = TQ || {};
         shape.graphics.ss(thickness).beginStroke(edgeColor).
             beginRadialGradientFill([gradientColorS, gradientColorE], [0, 1], 0, 0, 0, 0, 0, radius).
             drawCircle(x, y, radius).endFill();
+    }
+
+    function drawBubble(shape, x0, y0, w, h, radiusTL, radiusTR, radiusBR, radiusBL, anchor) {
+        // 左下角， + pivot
+        var xc = x0 - w / 2,
+            yc = y0 - h / 2;
+        drawRectBubble(shape, xc, yc, w, h, radiusTL, radiusTR, radiusBR, radiusBL, anchor);
     }
 
     function drawRect(shape, x0,y0, w, h) {
@@ -45,6 +53,51 @@ var TQ = TQ || {};
 
         shape.graphics.ss(thickness).beginStroke(edgeColor).
             drawPolyStar(x, y, radius, edgeNumber, 0).
+            endFill();
+    }
+
+    function drawRectBubble(shape, x, y, w, h, radiusTL, radiusTR, radiusBR, radiusBL, anchor) {
+        var max = (w < h ? w : h) / 2;
+        var mTL = 0, mTR = 0, mBR = 0, mBL = 0;
+        if (radiusTL < 0) {
+            radiusTL *= (mTL = -1);
+        }
+        if (radiusTL > max) {
+            radiusTL = max;
+        }
+        if (radiusTR < 0) {
+            radiusTR *= (mTR = -1);
+        }
+        if (radiusTR > max) {
+            radiusTR = max;
+        }
+        if (radiusBR < 0) {
+            radiusBR *= (mBR = -1);
+        }
+        if (radiusBR > max) {
+            radiusBR = max;
+        }
+        if (radiusBL < 0) {
+            radiusBL *= (mBL = -1);
+        }
+        if (radiusBL > max) {
+            radiusBL = max;
+        }
+
+        var thickness = 1,
+            edgeColor = "#000";
+
+        shape.graphics.ss(thickness).beginStroke(edgeColor).
+            // beginRadialGradientFill([gradientColorS, gradientColorE], [0, 1], 0, 0, 0, 0, 0, radius).
+            moveTo(x + w - radiusTR, y).
+            arcTo(x + w + radiusTR * mTR, y - radiusTR * mTR, x + w, y + radiusTR, radiusTR).
+            lineTo(x + w, y + h - radiusBR).
+            arcTo(x + w + radiusBR * mBR, y + h + radiusBR * mBR, x + w - radiusBR, y + h, radiusBR).
+            lineTo(x + radiusBL, y + h).
+            arcTo(x - radiusBL * mBL, y + h + radiusBL * mBL, x, y + h - radiusBL, radiusBL).
+            lineTo(x, y + radiusTL).
+            arcTo(x - radiusTL * mTL, y - radiusTL * mTL, x + radiusTL, y, radiusTL).
+            closePath().
             endFill();
     }
 
