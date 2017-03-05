@@ -23,12 +23,7 @@ TQ = TQ || {};
 
         if (host) {
             var desc = compose(host);
-            var bubble = new TextBubble(currScene.currentLevel, desc, host);
-            //desc.src = "http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png";
-            //desc.type = "Bitmap";
-            //desc.autoFit = TQ.Element.FitFlag.NO;
-            //bubble = TQ.SceneEditor.addItem(desc, TQ.MatType.PROP);
-            host.addChild(bubble);
+            host.addChild(desc);
         }
     };
 
@@ -49,18 +44,10 @@ TQ = TQ || {};
     var p = TextBubble.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
     p.constructor = TextBubble; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
     p._parent_update = p.update;
-    p.update333 = function (t) {
-        var hostObj = this.host.jsonObj;
-        this.jsonObj.M = this.host.jsonObj.M;
-        this.jsonObj.IM = this.host.jsonObj.IM;
-        this.jsonObj.x = hostObj.x;
-        this.jsonObj.y = hostObj.y;
-        this.jsonObj.pivotX = hostObj.pivotX;
-        this.jsonObj.pivotY = hostObj.pivotY;
-        this.jsonObj.sx = hostObj.sx;
-        this.jsonObj.sy = hostObj.sy;
-        this.jsonObj.rotation = hostObj.rotation;
+    p.update = function (t) {
+        textPivot2Bubble(this.jsonObj, this.host);
         this.updateLayer();
+        this._parent_update(t);
     };
 
     p.updateLayer = function () { //  总是紧接着host的下一层
@@ -78,7 +65,7 @@ TQ = TQ || {};
         }
 
         s.graphics.clear(); // 清除老的边框
-        TQ.Graphics.drawCircle(s, 0, 0, TextBubble.RADIUS);
+        TQ.Graphics.drawRect(s, 0, 0, this.getWidth(), this.getHeight());
     };
 
     p._doLoad = function () {
@@ -103,31 +90,32 @@ TQ = TQ || {};
     };
 
     p.getWidth = function() {
-        // return TextBubble.RADIUS;
         return this.host.getWidth();
     };
 
     p.getHeight = function () {
-        // return TextBubble.RADIUS;
         return this.host.getHeight();
     };
 
     // private
     function compose(host) {
-        var hostObj = host.jsonObj,
-            pos = host.getPositionInWorld();
-
+        // 除了pivot，其余都是物体坐标系下的缺省值
         var jsonObj = {
             type: TQ.Element.DescType.TEXT_BUBBLE,
-            x: pos.x,
-            y: pos.y,
-            pivotX: hostObj.pivotX,
-            pivotY: hostObj.pivotY,
-            sx: 1, //hostObj.sx,
-            sy: 1, // hostObj.sy,
-            rotation: hostObj.rotation
+            x: 0,
+            y: 0,
+            sx: 1,
+            sy: 1,
+            rotation: 0
         };
+        textPivot2Bubble(jsonObj, host);
         return jsonObj;
+    }
+
+    function textPivot2Bubble(jsonObj, host) {
+        var hostObj = host.jsonObj;
+        jsonObj.pivotX = hostObj.pivotX - 0.5;
+        jsonObj.pivotY = hostObj.pivotY - 0.5;
     }
 
     TQ.TextBubble = TextBubble;

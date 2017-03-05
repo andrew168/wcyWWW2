@@ -68,8 +68,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         eraseAnimeTrack:eraseAnimeTrack,
         hideOrShow :hideOrShow ,
         pinIt:pinIt,
-        attachTextBubble: TQ.TextBubble.attach,
-        detachTextBubble: TQ.TextBubble.detach,
+        attachTextBubble: TQ.TextBubble.attachTo,
+        detachTextBubble: TQ.TextBubble.detachFrom,
 
         // element insert (text, sound, image...)
         mCopyToggle: mCopyToggle,
