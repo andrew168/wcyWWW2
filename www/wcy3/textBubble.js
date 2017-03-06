@@ -65,7 +65,42 @@ TQ = TQ || {};
         }
 
         s.graphics.clear(); // 清除老的边框
-        TQ.Graphics.drawBubble(s, 0, 0, this.getWidth(), this.getHeight(), 1, 1, 1, 1, null);
+        if (!this.jsonObj.textBubble) {
+            // 左下角， + pivot
+            var anchorWidth = 20,
+                xc = 0,
+                yc = 0,
+                w = this.getWidth(),
+                h = this.getHeight(),
+
+                xmin = xc - w / 2,  // 这些值被直接用于绘图， 所以是设备坐标
+                ymin = yc - h / 2,
+                xmax = xc + w / 2,
+                ymax = yc + h / 2,
+                xa = xmin + w / 2,
+                xa1 = xa + anchorWidth / 2,
+                xa3 = xa - anchorWidth / 2,
+                ya1 = ymin,
+                ya3 = ymin,
+                ya = ya1 - 100;
+
+            this.jsonObj.textBubble = { // 从设备坐标简单地变为 对象坐标： Y轴变负
+                xmin: xmin,
+                ymin: -ymax,
+                width: w,
+                height: h,
+                radiusTL: 1,
+                radiusTR: 1,
+                radiusBL: 1,
+                radiusBR: 1,
+                anchor: [{x: xa1, y: -ya1},
+                    {x: xa, y: -ya},
+                    {x: xa3, y: -ya3}
+                ]
+            };
+        }
+
+        TQ.Graphics.drawBubble(s, this.jsonObj.textBubble);
     };
 
     p._doLoad = function () {

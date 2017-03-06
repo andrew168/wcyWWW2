@@ -25,11 +25,10 @@ var TQ = TQ || {};
             drawCircle(x, y, radius).endFill();
     }
 
-    function drawBubble(shape, x0, y0, w, h, radiusTL, radiusTR, radiusBR, radiusBL, anchor) {
-        // 左下角， + pivot
-        var xc = x0 - w / 2,
-            yc = y0 - h / 2;
-        drawRectBubble(shape, xc, yc, w, h, radiusTL, radiusTR, radiusBR, radiusBL, anchor);
+    function drawBubble(shape, bubble) {
+        //  正中心是 原点
+        drawRectBubble(shape, bubble.xmin, bubble.ymin, bubble.width, bubble.height,
+            bubble.radiusTL, bubble.radiusTR, bubble.radiusBR, bubble.radiusBL, bubble.anchor)
     }
 
     function drawRect(shape, x0,y0, w, h) {
@@ -87,19 +86,6 @@ var TQ = TQ || {};
         var thickness = 1,
             edgeColor = "#000",
             fillColor = "#DDD";
-
-        if (!anchor) {
-            var anchorWidth = 20,
-                xa = x + w / 2,
-                xa1 = xa + anchorWidth / 2,
-                xa3 = xa - anchorWidth / 2,
-                ya = y + h;
-
-            anchor = [{x: xa1, y: ya},
-                {x: xa, y: ya + 100},
-                {x: xa3, y: ya}
-            ];
-        }
 
         shape.graphics.ss(thickness).beginStroke(edgeColor).
             beginFill(fillColor).
