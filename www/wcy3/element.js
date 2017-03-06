@@ -662,6 +662,7 @@ window.TQ = window.TQ || {};
             marker.level = null;
             this.removeChild(marker);
         }
+        TQ.SelectSet.recycleDecoration(decorations);
         return decorations;
     };
 

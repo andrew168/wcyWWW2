@@ -143,7 +143,7 @@ TQ = TQ || {};
             var ele = SelectSet.members[i];
             assertNotNull(TQ.Dictionary.FoundNull, ele);
             if (ele.isValid()) ele.highlight(false); // 可能已经被前面的父物体一起删除了
-            SelectSet.detachDecoration(ele);
+            ele.detachDecoration();
             if (withDelete && ele.isValid()) {
                 cmd.addCommand(new TQ.DeleteEleCommand(currScene, ele));
             }
@@ -171,7 +171,7 @@ TQ = TQ || {};
             if (show) {
                 SelectSet.attachDecoration(ele);
             } else {
-                SelectSet.detachDecoration(ele);
+                ele.detachDecoration();
             }
         }
     };
@@ -388,7 +388,7 @@ TQ = TQ || {};
     SelectSet.pop = function() {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, SelectSet.members.length > 0); //非空集合
         var ele = SelectSet.members.pop();
-        SelectSet.detachDecoration(ele);
+        ele.detachDecoration();
         return (ele);
     };
 
@@ -452,13 +452,6 @@ TQ = TQ || {};
         }
         return (selectedMarkers[0]);
     }
-
-    SelectSet.detachDecoration = function(ele) {
-        if (ele.decorations != null) {
-            var decoration = ele.detachDecoration();
-            SelectSet.recycleDecoration(decoration);
-        }
-    };
 
     SelectSet.attachDecoration = function(ele){
         if (!ele.decorations) {

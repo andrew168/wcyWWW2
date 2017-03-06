@@ -123,30 +123,15 @@ window.TQ = window.TQ || {};
         return shape;
     };
 
-    p.parent_createHighlighter = p.createHighlighter;
-    p.parent_deleteHighlighter = p.deleteHighlighter;
-    p.createHighlighter = function() {
-        if (TQ.Config.useHighlightBox) {
-            var txtObj = this.displayObj;
-            txtObj.text = this.jsonObj.text;
-            this.highter = this.createBBox(txtObj.scaleX, txtObj.scaleY, txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
-            stageContainer.addChild(this.highter);
-        } else {
-            this.parent_createHighlighter();
+    p.parent_hightlight = p.highlight;
+    p.highlight = function (enable) {
+        this.parent_hightlight(enable);
+        var bubble = this.getTextBubble();
+        if (!bubble) {
+            return;
         }
-    };
 
-    p.deleteHighlighter = function() {
-        if (TQ.Config.useHighlightBox) {
-            if (!this.highter) {
-                return;
-            }
-
-            stageContainer.removeChild(this.highter);
-            this.highter = null;
-        } else {
-            this.parent_deleteHighlighter();
-        }
+        bubble.highlight(enable);
     };
 
     p.parent_fillGap = p.fillGap;
