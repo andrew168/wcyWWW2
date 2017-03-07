@@ -475,12 +475,26 @@ window.TQ = window.TQ || {};
         this.dirty2 = true;
     };
 
-    p.addChild = function (desc) {
+    p.neverUpdated = function() {
+        return !this.jsonObj.M;
+    };
+
+    p.addChild = function (desc, isInObjectSpace) {
         if (desc.displayObj != null) { // 在group或者joint物体的时候,出现
             var child = desc; // 已经是物体了, 不用创建了. 但是,需要衔接jsonObj
-            //从世界坐标, 变换到父物体坐标系: 由Update来做
             var t = TQ.FrameCounter.t();
-            child.update(t);
+            if (this.neverUpdated()) { // 新创建的元素，必须update以求出矩阵M
+                this.dirty = true;
+                this.update(t);
+            }
+
+            if (isInObjectSpace) {
+                var posWorld = this.object2World(child.jsonObj);
+                child.jsonObj.x = posWorld.x;
+                child.jsonObj.y = posWorld.y;
+            }
+
+            //从世界坐标, 变换到父物体坐标系: 由Update来做
             var p = {};
             p.t = t;
             Element.copyWorldData(p, child.jsonObj);
@@ -498,6 +512,8 @@ window.TQ = window.TQ || {};
                 this.jsonObj.children = [];
             }
             this.jsonObj.children.push(child.jsonObj);
+            child.dirty = true;
+            child.update(t);
 
             TQ.DirtyFlag.setElement(this);
             child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
@@ -632,17 +648,17 @@ window.TQ = window.TQ || {};
     };
 
     p.attachDecoration = function (decs) {
-        this.decorations = decs;
         // ToDo: 处理每一个Marker
-        var marker = this.decorations[0];
+        var marker = decs[0];
         marker.host = this;
         marker.level = this.level;
         marker.reset();
-        marker.attach();
         marker.createImage();
         this.dirty2 = marker.dirty2 = true;
         marker.setFlag(Element.TO_RELATIVE_POSE | Element.CLEAR_ANIMATATION); // 迫使他记录所有的track,
-        this.addChild(marker);
+        var isInObjectSpace = true;
+        this.addChild(marker, isInObjectSpace);
+        this.decorations = decs;
         marker.show(true);
         marker.moveToTop();
     };

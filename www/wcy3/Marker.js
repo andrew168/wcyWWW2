@@ -93,9 +93,12 @@ TQ = TQ || {};
     };
 
     p.reset = function () {
+        this.jsonObj.x = 0;
+        this.jsonObj.y = 0;
         this.jsonObj.sx = 1;
         this.jsonObj.sy = 1;
         this.jsonObj.rotation = 0;
+        this.jsonObj.M = this.jsonObj.IM = null;
     };
 
     TQ.Marker = Marker;
