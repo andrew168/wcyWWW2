@@ -1376,7 +1376,6 @@ window.TQ = window.TQ || {};
             }
         }
 
-        this.updateDecorations(t); //根据Marker，移动Pivot点
         // 如果有拍摄, 先拍摄
         var parentPose = (null == this.parent) ? null : this.parent.jsonObj;
         var motionType = 0; // 没有变化, 使用上一个时刻的 世界坐标
@@ -1440,7 +1439,6 @@ window.TQ = window.TQ || {};
 
         // 2) 从世界坐标 到 设备坐标
         this.setTRSAVZ();
-        this.applyToDecorations();
         var debugON = false;
         if (debugON) {
             if ((stage.selectedItem != null) && (stage.selectedItem.id == this.displayObj.id)) {
