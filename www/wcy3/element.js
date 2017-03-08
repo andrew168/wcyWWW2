@@ -1393,11 +1393,11 @@ window.TQ = window.TQ || {};
                 TQ.Assert.isTrue(!isNaN(TQ.Pose.x),  "x 为 NaN！！！");
                 TQ.Assert.isTrue(!isNaN(TQ.Pose.y),  "y 为 NaN！！！");
                 // 记录修改值
-                TQ.TrackRecorder.record(this, t);
-                justRecorded = true;
-                motionType += 0x02;
+                    TQ.TrackRecorder.record(this, t);
+                    justRecorded = true;
+                    motionType += 0x02;
+                }
             }
-        }
 
         // 播放过程:
         // 1) 生成世界坐标:
@@ -1420,6 +1420,17 @@ window.TQ = window.TQ || {};
             // 1.1B): 从物体坐标 TQ.Pose. 到世界坐标
             TQ.Pose._toWorldCoordinate(this.jsonObj, parentPose);
             motionType += 0x04;
+        } else if (this.isMarker()) {
+            this.jsonObj.x = 0;
+            this.jsonObj.y = 0;
+            this.jsonObj.rotation = 0;
+            this.jsonObj.sx = 1;
+            this.jsonObj.sy = 1;
+            TQ.Pose.updateM(this.jsonObj, parentPose);
+            var pObjectSpace = {x: 0, y: 0};
+            var pWorld = this.object2World(pObjectSpace);
+            this.jsonObj.x = pWorld.x;
+            this.jsonObj.y = pWorld.y;
         } else if ((motionType == 0) && this.dirty) {
             // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
             TQ.Pose.worldToObjectExt(this.jsonObj, parentPose);
