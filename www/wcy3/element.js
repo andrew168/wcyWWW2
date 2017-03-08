@@ -1365,7 +1365,7 @@ window.TQ = window.TQ || {};
         var justRecorded = false;
         if (!this.isLoaded()) return;
 
-        TQ.Log.debugInfo("update: " + this.type + this.id + ", t = " + t + "(x,y) = " + this.jsonObj.x + ", " + this.jsonObj.y);
+        TQ.Log.debugInfo("update: " + this.jsonObj.type + this.id + ", t = " + t + "(x,y) = " + this.jsonObj.x + ", " + this.jsonObj.y);
         if (this.hasActionTrack()) { // 更新使用者的动作track，
             this.updateAction(t);
         }
