@@ -164,8 +164,8 @@ window.TQ = window.TQ || {};
     };
 
     p.parent_update = p.update;
-    p.update = function (t) {
-        this.parent_update(t);
+    p.update = function (t, noRecording) {
+        this.parent_update(t, noRecording);
     };
 
     Element.parseHtmlStr = function (jsonObj, htmlStr) {
