@@ -79,6 +79,12 @@ var TQ = TQ || {};
             return;
         }
 
+        if (newEle instanceof TQ.TextBubble) {
+            if (newEle.host) {
+                newEle = newEle.host;
+            }
+        }
+
         if (startEle === newEle) {
             return;
         }
