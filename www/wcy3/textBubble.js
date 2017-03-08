@@ -146,6 +146,10 @@ TQ = TQ || {};
         }
     };
 
+    p.allowRecording = function () {
+        return false;
+    };
+
     // private
     function compose(host) {
         // 除了pivot，其余都是物体坐标系下的缺省值

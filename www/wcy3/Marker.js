@@ -99,5 +99,9 @@ TQ = TQ || {};
         this.jsonObj.M = this.jsonObj.IM = null;
     };
 
+    p.allowRecording = function () {
+        return false;
+    };
+
     TQ.Marker = Marker;
 }());

@@ -1381,7 +1381,7 @@ window.TQ = window.TQ || {};
         // 如果有拍摄, 先拍摄
         var parentPose = (null == this.parent) ? null : this.parent.jsonObj;
         var motionType = 0; // 没有变化, 使用上一个时刻的 世界坐标
-        if (!noRecording && !TQBase.LevelState.isOperatingTimerUI()) {
+        if (!noRecording && this.allowRecording() && !TQBase.LevelState.isOperatingTimerUI()) {
             if (this.dirty2 || this.isUserControlling()) {
                 TQ.Log.debugInfo("update: Record, lastOperationFlag =" + TQBase.Trsa.lastOperationFlag);
                 if (!this.getOperationFlags()) {  // 鼠标按住, 但是 没有移动, 单独确定操作状态
@@ -1769,6 +1769,9 @@ window.TQ = window.TQ || {};
     };
     p.hasActionTrack = function () {
         return (this.animeTrack && this.animeTrack.action);
+    };
+    p.allowRecording = function () {
+        return true; // 缺省下， 所有元素都支持recording，
     };
     p.getOperationFlags = function () {
         return (this.state & 0xFFF0);
