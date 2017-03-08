@@ -1485,8 +1485,9 @@ window.TQ = window.TQ || {};
     };
 
     p.movePivot = function (pivot, ptWorld, marker) {
+        TQ.Log.debugInfo("movePivot: ptWorld.x = " + ptWorld.x);
         this.moveTo(ptWorld);
-        this.update(TQ.FrameCounter.t(), TQ.Const.NO_RECORDING_TRUE); // 必须单独更新， 否则与pivot一起更新会不准确
+        this.update(TQ.FrameCounter.t()); // 必须单独更新， 否则与pivot一起更新会不准确
 
         this.jsonObj.pivotX = pivot.pivotX;
         this.jsonObj.pivotY = pivot.pivotY;
