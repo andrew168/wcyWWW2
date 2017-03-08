@@ -504,7 +504,7 @@ window.TQ = window.TQ || {};
             var worldData = [];
             this.saveWorldDataAll(worldData, child);
             child.parent = this;
-            child.animeTrack = null;
+            child.animeTrack = null; // group元素和关节，都会丢失原来的动画轨迹!!!
             this.children.push(child);
             this.toRelative(worldData, child);
             Element.copyWorldData(child.jsonObj, p);
@@ -516,7 +516,8 @@ window.TQ = window.TQ || {};
             }
             this.jsonObj.children.push(child.jsonObj);
             child.dirty = true;
-            child.update(t, TQ.Const.NO_RECORDING_TRUE);
+            child.forceToRecord();
+            child.update(t); // 必须强制记录， 否则，无法生成AnimeTrack
 
             TQ.DirtyFlag.setElement(this);
             child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
@@ -611,10 +612,11 @@ window.TQ = window.TQ || {};
 
         //迫使元素回到世界坐标系标示
         TQ.DirtyFlag.setElement(this);
-        child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
+        child.forceToRecord();
+        this.forceToRecord();  // 迫使系统更新child的位置数据位相对坐标
         child.setFlag(Element.TO_RELATIVE_POSE);
         var t = TQ.FrameCounter.t();
-        child.update(t, TQ.Const.NO_RECORDING_TRUE);
+        child.update(t);
         return child;
     };
 
