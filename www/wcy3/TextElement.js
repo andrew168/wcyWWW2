@@ -6,6 +6,7 @@ window.TQ = window.TQ || {};
 
 (function () {
     function TextElement(level, desc) {
+        this.name = "Text";
         TQ.Element.call(this, level, desc);
         if (!this.disableBubble && !this.getTextBubble()) {
             // 默认都有bubble， 除非明确取消

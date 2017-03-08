@@ -9,6 +9,7 @@ TQ = TQ || {};
     //       2) 从scene中读入, 是 JSON
     //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
     function SoundElement(level, jsonObj) {
+        this.name = "Sound";
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
         this.level = level;
         this.children = [];
