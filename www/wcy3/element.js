@@ -557,6 +557,9 @@ window.TQ = window.TQ || {};
 
     p.saveWorldDataAll = function (worldData, child) {
         // 计算当前的世界坐标，并且保存,并且记录轨道的类别
+        if (!child.animeTrack) {
+            return;
+        }
         if (child.animeTrack.x) child.saveWorldData(worldData, child.animeTrack.x, Element.TRANSLATING);
         if (child.animeTrack.sx) child.saveWorldData(worldData, child.animeTrack.sx, Element.SCALING);
         if (child.animeTrack.rotation) child.saveWorldData(worldData, child.animeTrack.rotation, Element.ROTATING);

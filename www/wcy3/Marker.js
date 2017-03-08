@@ -23,11 +23,6 @@ TQ = TQ || {};
 
     var p = Marker.prototype = new TQ.Element(null, null, null, null);
 
-    p.attach = function() {
-        this.jsonObj.x = this.host.jsonObj.x; // 相同的位置, 没有误差, 才会得到 真正的原点
-        this.jsonObj.y = this.host.jsonObj.y;
-    };
-
     p._parent_update = p.update;
     p.update2 = function(t) {
         this.moveToTop();
@@ -99,6 +94,7 @@ TQ = TQ || {};
         this.jsonObj.sx = 1;
         this.jsonObj.sy = 1;
         this.jsonObj.rotation = 0;
+        this.jsonObj.animeTrack = this.animeTrack = null;
         this.jsonObj.M = this.jsonObj.IM = null;
     };
 
