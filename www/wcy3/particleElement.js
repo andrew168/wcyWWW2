@@ -7,7 +7,6 @@ TQ = TQ || {};
 (function () {
     //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
     function ParticleElement(level, jsonObj) {
-        this.name = "Particle";
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
         this.level = level;
         this.children = [];

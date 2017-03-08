@@ -10,7 +10,6 @@ TQ = TQ || {};
 (function () {
     // 用法: TextBubble是一种可变大小的修饰品Decoration. 也是Element类的子类.
     function TextBubble(level, desc, host) {
-        this.name = "TextBubble";
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
         this.host = host;
         TQ.Element.call(this, level, desc); // 调用父类的初始化函数， 在子类构造函数中

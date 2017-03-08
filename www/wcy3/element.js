@@ -31,9 +31,6 @@ window.TQ = window.TQ || {};
     };
 
     function Element(level, desc) {
-        if (!this.name) { // 可能子类已经定义了， 不覆盖
-            this.name = "Element";
-        }
         if (level != null) {  // 适用于 子类的定义, 不做任何初始化,只需要prototype
             this.level = level;
             this.children = [];
@@ -1368,7 +1365,7 @@ window.TQ = window.TQ || {};
         var justRecorded = false;
         if (!this.isLoaded()) return;
 
-        TQ.Log.debugInfo("update: " + this.name + this.id + ", t = " + t + "(x,y) = " + this.jsonObj.x + ", " + this.jsonObj.y);
+        TQ.Log.debugInfo("update: " + this.type + this.id + ", t = " + t + "(x,y) = " + this.jsonObj.x + ", " + this.jsonObj.y);
         if (this.hasActionTrack()) { // 更新使用者的动作track，
             this.updateAction(t);
         }

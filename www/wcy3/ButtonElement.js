@@ -14,7 +14,6 @@ TQ = TQ || {};
     //     再次转为不可见，          初始化状态
 
     function ButtonElement(level, jsonObj) {
-        this.name = "Button";
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
         this.level = level;
         this.children = [];

@@ -7,7 +7,6 @@ TQ = TQ || {};
 (function () {
     // 用法: Marker是一种修饰品Decoration. 也是Element类的子类.
     function Marker(level, jsonObj) {
-        this.name = "Marker";
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
         this.level = level;
         this.children = [];
