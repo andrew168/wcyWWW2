@@ -142,7 +142,7 @@ window.TQ = window.TQ || {};
 
         angle = IKCtrl.applyLimitation(child, child.jsonObj.rotation + angle);
         TQ.CommandMgr.directDo(new TQ.RotateCommand(child, angle));
-        child.update(TQ.FrameCounter.t()); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
+        child.update(TQ.FrameCounter.t(), TQ.Const.NO_RECORDING_TRUE); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
         TQ.Log.info("ele.id " + child.id + ": angle = " + angle);
         TQ.DirtyFlag.setElement(child);
     };

@@ -44,10 +44,10 @@ TQ = TQ || {};
     var p = TextBubble.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
     p.constructor = TextBubble; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
     p._parent_update = p.update;
-    p.update = function (t) {
+    p.update = function (t, noRecording) {
         textPivot2Bubble(this.jsonObj, this.host);
+        this._parent_update(t, noRecording);
         this.updateLayer();
-        this._parent_update(t);
     };
 
     p.updateLayer = function () { //  总是紧接着host的下一层

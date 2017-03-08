@@ -24,7 +24,8 @@ TQ = TQ || {};
     var p = Marker.prototype = new TQ.Element(null, null, null, null);
 
     p._parent_update = p.update;
-    p.update2 = function(t) {
+    p.update2 = function(t, noRecording) {
+        this._parent_update(t, noRecording);
         this.moveToTop();
     };
 

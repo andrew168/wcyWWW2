@@ -488,7 +488,7 @@ window.TQ = window.TQ || {};
             var t = TQ.FrameCounter.t();
             if (this.neverUpdated()) { // 新创建的元素，必须update以求出矩阵M
                 this.dirty = true;
-                this.update(t);
+                this.update(t, TQ.Const.NO_RECORDING_TRUE);
             }
 
             if (isInObjectSpace) {
@@ -516,7 +516,7 @@ window.TQ = window.TQ || {};
             }
             this.jsonObj.children.push(child.jsonObj);
             child.dirty = true;
-            child.update(t);
+            child.update(t, TQ.Const.NO_RECORDING_TRUE);
 
             TQ.DirtyFlag.setElement(this);
             child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
@@ -574,7 +574,7 @@ window.TQ = window.TQ || {};
             child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
             child.setFlag(p.type);
             Element.copyWorldData(child.jsonObj, p);
-            this.update(p.t);
+            this.update(p.t, TQ.Const.NO_RECORDING_TRUE);
         }
     };
 
@@ -582,7 +582,7 @@ window.TQ = window.TQ || {};
         //ToDo: 先计算所有parent的pose，再计算它的pose
         for (var i = 0; i < track.t.length; i++) {
             var t = track.t[i];
-            this.update(t);
+            this.update(t, TQ.Const.NO_RECORDING_TRUE);
             var p = {};
             p.t = t;
             p.type = type;
@@ -614,7 +614,7 @@ window.TQ = window.TQ || {};
         child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
         child.setFlag(Element.TO_RELATIVE_POSE);
         var t = TQ.FrameCounter.t();
-        child.update(t);
+        child.update(t, TQ.Const.NO_RECORDING_TRUE);
         return child;
     };
 
@@ -1361,7 +1361,8 @@ window.TQ = window.TQ || {};
         }
     };
 
-    p.update = function (t) {
+    p.update = function (t, noRecording) {
+        noRecording = !!noRecording;
         var justRecorded = false;
         if (!this.isLoaded()) return;
 
@@ -1380,7 +1381,7 @@ window.TQ = window.TQ || {};
         // 如果有拍摄, 先拍摄
         var parentPose = (null == this.parent) ? null : this.parent.jsonObj;
         var motionType = 0; // 没有变化, 使用上一个时刻的 世界坐标
-        if (!TQBase.LevelState.isOperatingTimerUI()) {
+        if (!noRecording && !TQBase.LevelState.isOperatingTimerUI()) {
             if (this.dirty2 || this.isUserControlling()) {
                 TQ.Log.debugInfo("update: Record, lastOperationFlag =" + TQBase.Trsa.lastOperationFlag);
                 if (!this.getOperationFlags()) {  // 鼠标按住, 但是 没有移动, 单独确定操作状态
@@ -1449,7 +1450,7 @@ window.TQ = window.TQ || {};
                 if (this.dirty || this.dirty2) this.children[i].dirty = true;
                 if (!(this.isMarker() && this.children[i].isUserControlling())) {
                     TQ.Log.debugInfo("update children");
-                    this.children[i].update(t);
+                    this.children[i].update(t, noRecording);
                 }
             }
         }
@@ -1474,7 +1475,7 @@ window.TQ = window.TQ || {};
 
     p.movePivot = function (pivot, ptWorld, marker) {
         this.moveTo(ptWorld);
-        this.update(TQ.FrameCounter.t()); // 必须单独更新， 否则与pivot一起更新会不准确
+        this.update(TQ.FrameCounter.t(), TQ.Const.NO_RECORDING_TRUE); // 必须单独更新， 否则与pivot一起更新会不准确
 
         this.jsonObj.pivotX = pivot.pivotX;
         this.jsonObj.pivotY = pivot.pivotY;
