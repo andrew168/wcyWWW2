@@ -65,7 +65,7 @@ window.TQ = window.TQ || {};
             angle = relativeAngle + parentAngle;
         }
 
-        return angle;
+        return limitToAcuteAngle(angle);
     };
 
     /*
