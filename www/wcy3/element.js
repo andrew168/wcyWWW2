@@ -1365,7 +1365,7 @@ window.TQ = window.TQ || {};
         var justRecorded = false;
         if (!this.isLoaded()) return;
 
-        TQ.Log.debugInfo("update: " + this.jsonObj.type + this.id + ", t = " + t + "(x,y) = " + this.jsonObj.x + ", " + this.jsonObj.y);
+        TQ.Log.debugInfo("update: " + (noRecording?"NR ":"") + this.jsonObj.type + this.id + ", t = " + t + "(x,y) = " + this.jsonObj.x + ", " + this.jsonObj.y);
         if (this.hasActionTrack()) { // 更新使用者的动作track，
             this.updateAction(t);
         }
@@ -1388,14 +1388,14 @@ window.TQ = window.TQ || {};
                 }
                 //  不能在此记录, 因为, Move, Rotate操作的时候, 不调用它update
                 TQ.Pose.worldToObjectExt(this.jsonObj, parentPose);
-                TQ.Assert.isTrue(!isNaN(TQ.Pose.x),  "x 为 NaN！！！");
-                TQ.Assert.isTrue(!isNaN(TQ.Pose.y),  "y 为 NaN！！！");
+                TQ.Assert.isTrue(!isNaN(TQ.Pose.x), "x 为 NaN！！！");
+                TQ.Assert.isTrue(!isNaN(TQ.Pose.y), "y 为 NaN！！！");
                 // 记录修改值
-                    TQ.TrackRecorder.record(this, t);
-                    justRecorded = true;
-                    motionType += 0x02;
-                }
+                TQ.TrackRecorder.record(this, t);
+                justRecorded = true;
+                motionType += 0x02;
             }
+        }
 
         // 播放过程:
         // 1) 生成世界坐标:
@@ -1407,6 +1407,7 @@ window.TQ = window.TQ || {};
             // 1.1A) 从动画轨迹 到物体坐标
             // 如果有动画数据, 才需要解码,生成新的 世界坐标. 否则,跳过
             // 先生成新的 物体坐标(TQ.Pose), 再转化到世界坐标系
+            TQ.Log.debugInfo("update: regenerate coordinates 1: hasAnimation");
             var tt = t;
             if (justRecorded && (TQ.TrackRecorder.style == TQ.TrackDecoder.JUMP_INTERPOLATION)) {
                 tt = t + 0.01; // 在脉冲运动下，迫使系统采用最新的位置
@@ -1419,6 +1420,7 @@ window.TQ = window.TQ || {};
             TQ.Pose._toWorldCoordinate(this.jsonObj, parentPose);
             motionType += 0x04;
         } else if (this.isMarker()) {
+            TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
             this.jsonObj.x = 0;
             this.jsonObj.y = 0;
             this.jsonObj.rotation = 0;
@@ -1431,6 +1433,7 @@ window.TQ = window.TQ || {};
             this.jsonObj.y = pWorld.y;
         } else if ((motionType == 0) && this.dirty) {
             // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
+            TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");
             TQ.Pose.worldToObjectExt(this.jsonObj, parentPose);
             TQ.Pose._toWorldCoordinate(this.jsonObj, parentPose);
         }
