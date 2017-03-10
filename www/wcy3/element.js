@@ -1461,7 +1461,7 @@ window.TQ = window.TQ || {};
                 if (this.dirty || this.dirty2) this.children[i].dirty = true;
                 if (!(this.isMarker() && this.children[i].isUserControlling())) {
                     TQ.Log.debugInfo("update children");
-                    this.children[i].update(t, noRecording);
+                    this.children[i].update(t, true); // 对孩子的传播，都是被动的，纯更新，不记录。
                 }
             }
         }
