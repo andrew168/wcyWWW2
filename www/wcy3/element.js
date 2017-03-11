@@ -1377,7 +1377,7 @@ window.TQ = window.TQ || {};
         }
 
         // 如果有拍摄, 先拍摄
-        var parentPose = (null == this.parent) ? null : this.parent.jsonObj;
+        var parentTSR = (null == this.parent) ? null : this.parent.jsonObj;
         var motionType = 0; // 没有变化, 使用上一个时刻的 世界坐标
         if (!noRecording && this.allowRecording() && !TQBase.LevelState.isOperatingTimerUI()) {
             if (this.dirty2 || this.isUserControlling()) {
@@ -1387,7 +1387,7 @@ window.TQ = window.TQ || {};
                     // TQ.Log.out("操作: " + TQBase.Trsa.lastOperationFlag +"last");
                 }
                 //  不能在此记录, 因为, Move, Rotate操作的时候, 不调用它update
-                TQ.Pose.worldToObjectExt(this.jsonObj, parentPose);
+                TQ.Pose.worldToObjectExt(this.jsonObj, parentTSR);
                 TQ.Assert.isTrue(!isNaN(TQ.Pose.x), "x 为 NaN！！！");
                 TQ.Assert.isTrue(!isNaN(TQ.Pose.y), "y 为 NaN！！！");
                 // 记录修改值
@@ -1399,7 +1399,7 @@ window.TQ = window.TQ || {};
 
         // 播放过程:
         // 1) 生成世界坐标:
-        parentPose = (null == this.parent) ? null : this.parent.jsonObj;
+        parentTSR = (null == this.parent) ? null : this.parent.jsonObj;
         if (this.hasAnimation()) { //  动画物体
             // 即使是 用户操作的物体, 也需要重新生成, 因为用户只操作了其中的几个轨道,
             //  而其余的轨道, 仍然需要使用原来的数据,
@@ -1416,8 +1416,10 @@ window.TQ = window.TQ || {};
                 tt = currScene.toGlobalTime(tt);
             }
             TQ.TrackDecoder.calculate(this.animeTrack, tt); // 计算结果在Pose中，是 物体坐标系的）
+            this.updateM(parentTSR, TQ.Pose);
             // 1.1B): 从物体坐标 TQ.Pose. 到世界坐标
-            TQ.Pose._toWorldCoordinate(this.jsonObj, parentPose);
+            tsrObj = TQ.Pose;
+            this.tsrObject2World(tsrObj);
             motionType += 0x04;
         } else if (this.isMarker()) {
             TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
@@ -1426,7 +1428,7 @@ window.TQ = window.TQ || {};
             this.jsonObj.rotation = 0;
             this.jsonObj.sx = 1;
             this.jsonObj.sy = 1;
-            this.updateM(parentPose, null);
+            this.updateM(parentTSR, null);
             var pObjectSpace = {x: 0, y: 0};
             var pWorld = this.object2World(pObjectSpace);
             this.jsonObj.x = pWorld.x;
@@ -1434,8 +1436,9 @@ window.TQ = window.TQ || {};
         } else if ((motionType == 0) && this.dirty) {
             // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
             TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");
-            TQ.Pose.worldToObjectExt(this.jsonObj, parentPose);
-            TQ.Pose._toWorldCoordinate(this.jsonObj, parentPose);
+            TQ.Pose.worldToObjectExt(this.jsonObj, parentTSR);
+            tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
+            this.tsrObject2World(tsrObj);
         }
 
         // 1.3) 没有动画的物体, 也没有被操作,被移动, jsonObj 已经是世界坐标

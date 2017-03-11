@@ -225,6 +225,29 @@ var TQ = TQ || {};
         return {x: ptWorld.elements[0], y: ptWorld.elements[1]};
     };
 
+    CreateJSAdapter.tsrObject2World = function (pose) {
+        // Pose 总是临时生成的，
+        var tsrObj = pose,
+            shapeObj = [{x: 0, y: 0}],
+            originObj = shapeObj[0];
+
+        // 物体坐标 ===>到 世界坐标下
+        // 平移部分：
+        var tsrWorld = this.jsonObj,
+            originWorld = this.object2World(originObj); //  only平移
+        tsrWorld.x = originWorld.x;
+        tsrWorld.y = originWorld.y;
+
+        // 比例和旋转部分：
+        var parentTSRWorld = (!this.parent || !this.parent.jsonObj) ? getDefaultRootTsr() : this.parent.jsonObj;
+        tsrWorld.rotation = parentTSRWorld.rotation + tsrObj.rotation;
+        tsrWorld.sx = parentTSRWorld.sx * tsrObj.sx;
+        tsrWorld.sy = parentTSRWorld.sy * tsrObj.sy;
+
+        // 可见性：
+        tsrWorld.isVis = tsrObj.visible;
+    };
+
     CreateJSAdapter.updateM = function (parent, Pose) {
         var tsrObj = Pose;
         if (!tsrObj) {

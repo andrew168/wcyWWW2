@@ -25,37 +25,6 @@ window.TQ = window.TQ || {};
     Pose.action = poseDefault.action = "idle";
     Pose._parentPoseWorld = null;
 
-    Pose._toWorldCoordinate = function(poseWorld, parentPoseWorld) {
-        // 物体坐标 ===>到 世界坐标下
-        if (parentPoseWorld == null) {
-            parentPoseWorld = _rootBoneDefault;
-        }
-        var M = TQ.Matrix2D.transformation(Pose.x, Pose.y, Pose.rotation, Pose.sx, Pose.sy);
-        poseWorld.M = parentPoseWorld.M.multiply(M);
-        poseWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
-        if (Pose.x === null) {
-            TQ.Log.error("this opus has valid Pose.x: null");
-            Pose.x = 0;
-        }
-
-        if (Pose.y === null) {
-            TQ.Log.error("this opus has valid Pose.y: null");
-            Pose.y = 0;
-        }
-
-        var Vjw = parentPoseWorld.M.multiply($V([Pose.x, Pose.y, 1]));
-        poseWorld.x = Vjw.elements[0];
-        poseWorld.y = Vjw.elements[1];
-        if ((Vjw.elements[2]< 0.99) || (Vjw.elements[2]> 1.01) )
-        {
-            assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, Vjw.elements[2], 0.01); //齐次分量应该近似为1
-        }
-        poseWorld.rotation = parentPoseWorld.rotation + Pose.rotation;
-        poseWorld.sx = parentPoseWorld.sx * Pose.sx;
-        poseWorld.sy = parentPoseWorld.sy * Pose.sy;
-        poseWorld.isVis = Pose.visible;
-    };
-
     Pose.worldToObject = function(poseWorld, parentPoseWorld) {
         // 这是反变换:  世界坐标  ==> 物体坐标. 用于拍摄记录物体的操作, 不是播放.
         // 其中, 世界坐标中的参数, 必须完整.
@@ -87,7 +56,7 @@ window.TQ = window.TQ || {};
         Pose._parentPoseWorld = parentPoseWorld;  //  保留， 因为后面的函数也要使用。
     };
 
-    Pose.worldToObjectExt = function(poseWorld, parentPoseWorld) {
+    Pose.worldToObjectExt = function (poseWorld, parentPoseWorld) {
         Pose.worldToObject(poseWorld, parentPoseWorld);
         parentPoseWorld = Pose._parentPoseWorld; // 获取上个函数的修改（改 null为有意义的值）
         Pose.rotation = poseWorld.rotation - parentPoseWorld.rotation;
