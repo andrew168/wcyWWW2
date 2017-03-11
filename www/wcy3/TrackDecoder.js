@@ -20,7 +20,7 @@ window.TQ = window.TQ || {};
      *
      */
     //ToDo: 是否 参数 JSONObj可以省略？
-    TrackDecoder.calculate = function (track, jsonObj, t) {
+    TrackDecoder.calculate = function (track, t) {
         // 计算本物体坐标系下的值
         TQ.Pose.rotation = ((track.rotation == undefined) || (track.rotation == null)) ?
             TQ.poseDefault.rotation : TrackDecoder.calOneTrack(track.rotation, t);
