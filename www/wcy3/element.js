@@ -1400,6 +1400,7 @@ window.TQ = window.TQ || {};
         // 播放过程:
         // 1) 生成世界坐标:
         parentTSR = (null == this.parent) ? null : this.parent.jsonObj;
+        var tsrObj = null;
         if (this.hasAnimation()) { //  动画物体
             // 即使是 用户操作的物体, 也需要重新生成, 因为用户只操作了其中的几个轨道,
             //  而其余的轨道, 仍然需要使用原来的数据,
@@ -1423,22 +1424,17 @@ window.TQ = window.TQ || {};
             motionType += 0x04;
         } else if (this.isMarker()) {
             TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
-            this.jsonObj.x = 0;
-            this.jsonObj.y = 0;
-            this.jsonObj.rotation = 0;
-            this.jsonObj.sx = 1;
-            this.jsonObj.sy = 1;
             this.updateM(parentTSR, null);
-            var pObjectSpace = {x: 0, y: 0};
-            var pWorld = this.object2World(pObjectSpace);
-            this.jsonObj.x = pWorld.x;
-            this.jsonObj.y = pWorld.y;
+            tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
+            this.tsrObject2World(tsrObj);
         } else if ((motionType == 0) && this.dirty) {
             // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
             TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");
             TQ.Pose.worldToObjectExt(this.jsonObj, parentTSR);
             tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
             this.tsrObject2World(tsrObj);
+        } else {
+            TQ.Log.error("unknown case");
         }
 
         // 1.3) 没有动画的物体, 也没有被操作,被移动, jsonObj 已经是世界坐标

@@ -102,5 +102,16 @@ TQ = TQ || {};
         return false;
     };
 
+    p.noScaleRotation = function() { // marker， 任何时候都是一样的大小， 方位， 不旋转
+        this.jsonObj.rotation = 0;
+        this.jsonObj.sx = 1;
+        this.jsonObj.sy = 1;
+    };
+
+    p.tsrObject2World = function (pose) {
+        TQ.CreateJSAdapter.tsrObject2World.call(this, pose);
+        this.noScaleRotation();
+    };
+
     TQ.Marker = Marker;
 }());
