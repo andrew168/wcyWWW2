@@ -102,17 +102,6 @@ window.TQ = window.TQ || {};
 
         Pose.visible = poseWorld.isVis;
     };
-
-    Pose.updateM = function (jsonObj, parent) {
-        if (parent == null) {
-            parent = _rootBoneDefault;
-        }
-
-        var M = TQ.Matrix2D.transformation(jsonObj.x, jsonObj.y, jsonObj.rotation, jsonObj.sx, jsonObj.sy);
-        jsonObj.M = parent.M.multiply(M);
-        jsonObj.visible = parent.isVis;
-    };
-
     TQ.poseDefault = poseDefault;
     TQ.Pose = Pose;
 }());

@@ -9,6 +9,21 @@ var TQ = TQ || {};
     function CreateJSAdapter() {
     }
 
+    var _rootBoneDefaultTsr = { // 缺省的TSR参数： 无平移， 无旋转， 无比例
+        x: 0,
+        y: 0,
+        rotation: 0,
+        sx: 1,
+        sy: 1,
+        M: TQ.Matrix2D.I(),
+        IM: TQ.Matrix2D.I()   // Inverse Matrix, 逆矩阵
+    };
+
+    function getDefaultRootTsr() {
+        return _rootBoneDefaultTsr;
+    }
+
+    CreateJSAdapter.getDefaultRootTsr = getDefaultRootTsr;
     CreateJSAdapter.attach = function(p) {
         for (var item in CreateJSAdapter) {
             if (typeof CreateJSAdapter[item] === "function") {
@@ -203,7 +218,29 @@ var TQ = TQ || {};
         }
 
         var ptWorld = this.jsonObj.M.multiply($V([ptObj.x, ptObj.y, 1]));
+        if ((ptWorld.elements[2] < 0.99) || (ptWorld.elements[2] > 1.01)) {
+            assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, ptWorld.elements[2], 0.01); //齐次分量应该近似为1
+        }
+
         return {x: ptWorld.elements[0], y: ptWorld.elements[1]};
+    };
+
+    CreateJSAdapter.updateM = function (parent, Pose) {
+        var tsrObj = Pose;
+        if (!tsrObj) {
+            TQ.Log.debugInfo("Root element, use default trsObj");
+            tsrObj = getDefaultRootTsr();
+        }
+
+        if (!parent || !parent.M) {
+            parent = getDefaultRootTsr();
+        }
+
+        var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, tsrObj.sx, tsrObj.sy);
+        var tsrWorld = this.jsonObj;
+        tsrWorld.M = parent.M.multiply(M);
+        tsrWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
+        tsrWorld.visible = parent.isVis;
     };
 
     CreateJSAdapter.scaleOne = function (desc) {

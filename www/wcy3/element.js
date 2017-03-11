@@ -1426,7 +1426,7 @@ window.TQ = window.TQ || {};
             this.jsonObj.rotation = 0;
             this.jsonObj.sx = 1;
             this.jsonObj.sy = 1;
-            TQ.Pose.updateM(this.jsonObj, parentPose);
+            this.updateM(parentPose, null);
             var pObjectSpace = {x: 0, y: 0};
             var pWorld = this.object2World(pObjectSpace);
             this.jsonObj.x = pWorld.x;
