@@ -23,7 +23,6 @@ window.TQ = window.TQ || {};
     Pose.sy = poseDefault.sy = 1;
     Pose.visible = poseDefault.visible = 1;
     Pose.action = poseDefault.action = "idle";
-    Pose._parentPoseWorld = null;
 
     Pose.worldToObject = function(poseWorld, parentPoseWorld) {
         // 这是反变换:  世界坐标  ==> 物体坐标. 用于拍摄记录物体的操作, 不是播放.
@@ -53,23 +52,26 @@ window.TQ = window.TQ || {};
         {
             assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, V.elements[2], 0.01);  //齐次分量应该近似为1
         }
-        Pose._parentPoseWorld = parentPoseWorld;  //  保留， 因为后面的函数也要使用。
     };
 
-    Pose.worldToObjectExt = function (poseWorld, parentPoseWorld) {
-        Pose.worldToObject(poseWorld, parentPoseWorld);
-        parentPoseWorld = Pose._parentPoseWorld; // 获取上个函数的修改（改 null为有意义的值）
-        Pose.rotation = poseWorld.rotation - parentPoseWorld.rotation;
-        Pose.sx = poseWorld.sx / parentPoseWorld.sx;
-        Pose.sy = poseWorld.sy / parentPoseWorld.sy;
+    Pose.tsrWorld2Object = function (ele) {
+        var tsrWorld = ele.jsonObj,
+            originObj = ele.parentWorld2Object(tsrWorld),
+            parentTsrWorld = (!ele.parent || !ele.parent.jsonObj) ? _rootBoneDefault : ele.parent.jsonObj; // 获取上个函数的修改（改 null为有意义的值）
+
+        var tsrObj = Pose;
+        tsrObj.x = originObj.x;
+        tsrObj.y = originObj.y;
+        tsrObj.rotation = tsrWorld.rotation - parentTsrWorld.rotation;
+        tsrObj.sx = tsrWorld.sx / parentTsrWorld.sx;
+        tsrObj.sy = tsrWorld.sy / parentTsrWorld.sy;
+        tsrObj.visible = tsrWorld.isVis;
 
         // 维护矩阵, 供子孙使用
-        var M = TQ.Matrix2D.transformation(Pose.x, Pose.y, Pose.rotation, Pose.sx, Pose.sy);
-        poseWorld.M = parentPoseWorld.M.multiply(M);
-        poseWorld.IM = poseWorld.M.inverse();
-        assertNotNull(poseWorld.IM);  // 好习惯, 检查重要数据的出口, 确保是合格的
-
-        Pose.visible = poseWorld.isVis;
+        var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, tsrObj.sx, tsrObj.sy);
+        tsrWorld.M = parentTsrWorld.M.multiply(M);
+        tsrWorld.IM = tsrWorld.M.inverse();
+        assertNotNull(tsrWorld.IM);  // 好习惯, 检查重要数据的出口, 确保是合格的
     };
     TQ.poseDefault = poseDefault;
     TQ.Pose = Pose;

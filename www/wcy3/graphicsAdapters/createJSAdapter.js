@@ -212,6 +212,18 @@ var TQ = TQ || {};
         return {x: ptObject.elements[0], y: ptObject.elements[1]};
     };
 
+    CreateJSAdapter.parentWorld2Object = function (ptWorld) {
+        if (!ptWorld) {
+            ptWorld = this.jsonObj;
+        }
+
+        if (!this.parent) {
+            return ptWorld;
+        }
+
+        return this.parent.world2Object(ptWorld);
+    };
+
     CreateJSAdapter.object2World = function (ptObj) {
         if (!ptObj || !this.jsonObj.M) {
             console.error("must have ptObj 和 M");

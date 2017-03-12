@@ -1387,7 +1387,7 @@ window.TQ = window.TQ || {};
                     // TQ.Log.out("操作: " + TQBase.Trsa.lastOperationFlag +"last");
                 }
                 //  不能在此记录, 因为, Move, Rotate操作的时候, 不调用它update
-                TQ.Pose.worldToObjectExt(this.jsonObj, parentTSR);
+                TQ.Pose.tsrWorld2Object(this);
                 TQ.Assert.isTrue(!isNaN(TQ.Pose.x), "x 为 NaN！！！");
                 TQ.Assert.isTrue(!isNaN(TQ.Pose.y), "y 为 NaN！！！");
                 // 记录修改值
