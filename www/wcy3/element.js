@@ -1417,25 +1417,24 @@ window.TQ = window.TQ || {};
                 tt = currScene.toGlobalTime(tt);
             }
             TQ.TrackDecoder.calculate(this.animeTrack, tt); // 计算结果在Pose中，是 物体坐标系的）
-            this.updateM(parentTSR, TQ.Pose);
             // 1.1B): 从物体坐标 TQ.Pose. 到世界坐标
             tsrObj = TQ.Pose;
-            this.tsrObject2World(tsrObj);
             motionType += 0x04;
         } else if (this.isMarker()) {
             TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
-            this.updateM(parentTSR, null);
             tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
-            this.tsrObject2World(tsrObj);
         } else if ((motionType == 0) && this.dirty) {
             // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
             TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");
-            TQ.Pose.worldToObjectExt(this.jsonObj, parentTSR);
             tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
-            this.tsrObject2World(tsrObj);
         } else {
             TQ.Log.error("unknown case");
+            tsrObj = null;
         }
+
+        //TSR 从物体坐标系到 世界坐标系
+        this.updateM(parentTSR, tsrObj);
+        this.tsrObject2World(tsrObj);
 
         // 1.3) 没有动画的物体, 也没有被操作,被移动, jsonObj 已经是世界坐标
 
