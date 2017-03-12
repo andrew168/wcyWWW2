@@ -46,6 +46,16 @@ window.TQ = window.TQ || {};
         console.info(str);
     };
 
+    Log.tsrDebugInfo = function (msg, obj) {
+        Log.debugInfo(msg + "("+ obj.x.toFixed(2) + "," + obj.y.toFixed(2) + "), Scale(" +
+            obj.sx.toFixed(2) + "," + obj.sy.toFixed(2) + "), A:" + obj.rotation.toFixed(2));
+    };
+
+    Log.matrixDebugInfo = function(msg, m) {
+        Log.debugInfo(msg + "matrix translation: " + m.elements[0][2].toFixed(20) + ", " +
+            m.elements[1][2].toFixed(20) + " " + m.elements[2][2].toFixed(20));
+    };
+
     if (Log.level >= Log.INFO_LEVEL) {
         Log.info = Log.out = function(str) {
             console.log(str);

@@ -1416,7 +1416,7 @@ window.TQ = window.TQ || {};
             if (this.isSound() && this.isMultiScene) {//支持跨场景的声音
                 tt = currScene.toGlobalTime(tt);
             }
-            TQ.TrackDecoder.calculate(this.animeTrack, tt); // 计算结果在Pose中，是 物体坐标系的）
+            TQ.TrackDecoder.calculate(this, tt); // 计算结果在Pose中，是 物体坐标系的）
             // 1.1B): 从物体坐标 TQ.Pose. 到世界坐标
             tsrObj = TQ.Pose;
             motionType += 0x04;
