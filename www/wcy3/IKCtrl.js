@@ -34,7 +34,7 @@ window.TQ = window.TQ || {};
         }
 
         absAngle = Math.abs(angle);
-        if (absAngle > 90) {
+        if (absAngle > 180) {
             console.error("应该是锐角" + angle);
         }
 
