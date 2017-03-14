@@ -17,22 +17,15 @@ var TQUtility; //
     };
 
     Utility.isPC = function () { // including windows and mac
-        TQ.Log.depreciated('Utility.isPC');
-        return (!window.device && !window.cordova);
+        return !isIOS() && !isAndroid();
     };
 
     function isAndroid() {
-        if (!window.device) {
-            return false;
-        }
-        return (window.device.platform.toLowerCase() === 'android');
+        return ionic.Platform.isAndroid();
     }
 
     function isIOS() { // only mobile, pad, no mac
-        if (!window.device) {
-            return false;
-        }
-        return (window.device.platform.toLowerCase() === 'ios')
+        return ionic.Platform.isIOS();
     }
 
     function getVersionNumber() {
@@ -75,6 +68,11 @@ var TQUtility; //
             ionic.Platform.isIOS() ||
             ionic.Platform.isWebView() ||
             ionic.Platform.isWindowsPhone()));
+    };
+
+    Utility.isMobile = function () {
+        // 不论是真正的 mobile设备， 还是 Chrome的仿真
+        return isAndroid() || isIOS();
     };
 
     Utility.triggerEvent = function (DomElement, eventName, data) {

@@ -165,7 +165,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (!_sceneReady) {
             TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
             _sceneReady = true;
-            window.addEventListener("resize", AppService.configCanvas);
+            window.addEventListener("resize", function() {
+                AppService.configCanvas();
+                if (TQUtility.isMobile() && TQ.SceneEditor.isEditMode() && currScene) {
+                    currScene.setDesignatedSize(TQ.Scene.getDesignatedRegionDefault());
+                }
+            });
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
             updateMode();

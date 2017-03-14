@@ -5,7 +5,7 @@ TQ = TQ || {};
         this.levels = [];
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
         this.version = Scene.VER_LATEST;
-        this.setDesignatedSize(TQ.Config.designatedWidth, TQ.Config.designatedHeight);
+        this.setDesignatedSize(Scene.getDesignatedRegion());
         this.isDirty = true;
     }
     Scene.EVENT_READY = "sceneReady";
@@ -38,6 +38,34 @@ TQ = TQ || {};
     Scene.localT2Global = localT2Global;
     Scene.globalT2local = globalT2local;
     Scene.getTMax = getTMax;
+    Scene.getDesignatedRegion = function () {
+        var designated;
+        if (currScene && currScene.isReady) {
+            designated = {
+                w: currScene.getDesignatedWidth(),
+                h: currScene.getDesignatedHeight()
+            };
+        } else {
+            designated = Scene.getDesignatedRegionDefault();
+        }
+        return designated;
+    };
+
+    Scene.getDesignatedRegionDefault = function () {
+        var designated;
+        if (TQUtility.isMobile()) {
+            designated = {
+                w: TQ.State.viewportWidth,
+                h: TQ.State.viewportHeight
+            }
+        } else {
+            designated = {
+                w: TQ.Config.designatedWidth,
+                h: TQ.Config.designatedHeight
+            }
+        }
+        return designated;
+    };
 
     // dynamic APIs
     p.shooting = function () {
@@ -341,7 +369,7 @@ TQ = TQ || {};
         this.ssPath = null; // 初始化， 没有此值
         this.isDirty = true;
         this.hasSavedToCache = false;
-        this.setDesignatedSize(TQ.Config.designatedWidth, TQ.Config.designatedHeight);
+        this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
@@ -361,9 +389,9 @@ TQ = TQ || {};
         }
     };
 
-    p.setDesignatedSize = function(w, h) {
-        this.designatedWidth = w;
-        this.designatedHeight = h;
+    p.setDesignatedSize = function(region) {
+        this.designatedWidth = region.w;
+        this.designatedHeight = region.h;
         TQ.Config.snapDX = this.designatedWidth / 20;
         TQ.Config.snapDY = this.designatedHeight / 20;
         TQ.Config.FONT_LEVEL_UNIT = Math.min(this.designatedWidth, this.designatedHeight) / 30;
@@ -557,11 +585,15 @@ TQ = TQ || {};
         }
 
         if (!objJson.designatedWidth || !objJson.designatedHeight) {
-            objJson.designatedWidth = TQ.Config.designatedWidth;
-            objJson.designatedHeight = TQ.Config.designatedHeight;
+            var designated = Scene.getDesignatedRegionDefault();
+        } else {
+            designated = {
+                w: objJson.designatedWidth,
+                h: objJson.designatedHeight
+            }
         }
 
-        this.setDesignatedSize(objJson.designatedWidth, objJson.designatedHeight);
+        this.setDesignatedSize(designated);
         //initialize with defaults
         objJson.currentLevelId = (objJson.currentLevelId == undefined) ? 0 : objJson.currentLevelId;
         this.currentLevelId = objJson.currentLevelId;

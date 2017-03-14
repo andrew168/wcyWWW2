@@ -44,16 +44,11 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     function determineWorkingRegion() {
         var h = TQ.State.viewportHeight,
             w = TQ.State.viewportWidth,
-            designatedW = TQ.Config.designatedWidth,
-            designatedH = TQ.Config.designatedHeight;
-        if (currScene && currScene.isReady) {
-            designatedW = currScene.getDesignatedWidth();
-            designatedH = currScene.getDesignatedHeight();
-        }
+            designated = TQ.Scene.getDesignatedRegion();
 
-        scaleMin = Math.min(w / designatedW, h / designatedH);
-        TQ.Config.workingRegionWidth = scaleMin * designatedW;
-        TQ.Config.workingRegionHeight = scaleMin * designatedH;
+        scaleMin = Math.min(w / designated.w, h / designated.h);
+        TQ.Config.workingRegionWidth = scaleMin * designated.w;
+        TQ.Config.workingRegionHeight = scaleMin * designated.h;
         if (TQ.Config.workingRegionHeight > TQ.Config.workingRegionWidth) {
             TQ.Config.orientation = TQ.Config.ORIENTATION_PORTRAIT;
         } else {
