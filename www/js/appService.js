@@ -14,18 +14,8 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             _onAppStarted = onAppStartDefault;
 
         function configCanvas() {
-            if ((TQ.Config.workingRegionHeight === screen.height) &&
-                (TQ.Config.workingRegionWidth = screen.width)) {  // no change
-                return;
-            }
-
-            TQ.Config.workingRegionHeight = screen.height;
-            TQ.Config.workingRegionWidth = screen.width;
-            if (TQ.Config.workingRegionHeight > TQ.Config.workingRegionWidth) {
-                TQ.Config.orientation = TQ.Config.ORIENTATION_PORTRAIT;
-            } else {
-                TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
-            }
+            updateDeviceInfo();
+            determineWorkingRegion();
 
             if (canvas) {
                 canvas.height = TQ.Config.workingRegionHeight;
@@ -40,7 +30,38 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 + "orientation = " + TQ.Config.orientation);
         }
 
-        function _init() {
+    function updateDeviceInfo() {
+        if ((TQ.State.viewportWidth === window.innerWidth) &&
+            (TQ.State.viewportHeight === window.innerHeight)) {  // no change
+            return false;
+        }
+
+        TQ.State.viewportWidth = window.innerWidth;
+        TQ.State.viewportHeight = window.innerHeight;
+        return true;
+    }
+
+    function determineWorkingRegion() {
+        var h = TQ.State.viewportHeight,
+            w = TQ.State.viewportWidth,
+            designatedW = TQ.Config.designatedWidth,
+            designatedH = TQ.Config.designatedHeight;
+        if (currScene && currScene.isReady) {
+            designatedW = currScene.getDesignatedWidth();
+            designatedH = currScene.getDesignatedHeight();
+        }
+
+        scaleMin = Math.min(w / designatedW, h / designatedH);
+        TQ.Config.workingRegionWidth = scaleMin * designatedW;
+        TQ.Config.workingRegionHeight = scaleMin * designatedH;
+        if (TQ.Config.workingRegionHeight > TQ.Config.workingRegionWidth) {
+            TQ.Config.orientation = TQ.Config.ORIENTATION_PORTRAIT;
+        } else {
+            TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
+        }
+    }
+
+    function _init() {
             if (_initialized) {
                 TQ.Log.error("Duplicated call in _init");
                 return;

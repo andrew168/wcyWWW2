@@ -215,7 +215,11 @@ window.TQ = window.TQ || {};
 
     Utility.toWorldCoord = function(deviceY)
     {
-        return TQ.Config.workingRegionHeight - deviceY;
+        return TQ.State.viewportHeight - (TQ.Config.workingRegionY0 + deviceY);
+    };
+
+    Utility.toWorldCoordX = function (deviceX) {
+        return TQ.Config.workingRegionX0 + deviceX;
     };
 
     Utility.canvas2WindowX = function(x)

@@ -173,8 +173,10 @@ var TQ = TQ || {};
     CreateJSAdapter.world2Dc = function (ptWorld) {
         var sx = TQ.Config.workingRegionWidth / currScene.getDesignatedWidth(), // 把target尺寸映射到device尺寸
             sy = TQ.Config.workingRegionHeight / currScene.getDesignatedHeight(),
+            sMin = Math.min(sx, sy),
             ptDc;
 
+        sx = sy = sMin; // 可以自适应到任何屏幕， 但是， 必须等比例
         if (!ptWorld) {
             ptWorld = this.jsonObj;
             ptDc = {
