@@ -40,9 +40,7 @@ var currScene = null;
     };
 
     function createStage() {
-        canvas = document.getElementById("testCanvas");
-        canvas.height = TQ.Config.workingRegionHeight;
-        canvas.width = TQ.Config.workingRegionWidth;
+        canvas = TQ.Graphics.getCanvas();
         //ToDo:AZ
         // addHammer(canvas);
         // create a new stage and point it at our canvas:
