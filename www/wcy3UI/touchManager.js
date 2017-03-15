@@ -43,7 +43,7 @@ var TQ = TQ || {};
             ['touch', TQ.Trsa3.mCopy]
         ];
 
-        canvas = document.getElementById("testCanvas");
+        canvas = TQ.Graphics.getCanvas();
         if (!enableTouchScreen) {
             return;
         }

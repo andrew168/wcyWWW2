@@ -747,7 +747,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     // 进入/退出 全屏模式
     function fullscreenPlay (width, height){ // 屏幕分辨率的大小
-        canvas = document.getElementById("testCanvas");
+        canvas = TQ.Graphics.getCanvas();
         canvas.width = width;
         canvas.height = height;
 

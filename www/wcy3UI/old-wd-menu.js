@@ -540,7 +540,7 @@ function menu_unJoint() {
 }
 
 function setStageSize (width, height) {
-    var canvas = document.getElementById("testCanvas");
+    var canvas = TQ.Graphics.getCanvas();
     canvas.width = width;
     canvas.height = height;
     $("#workingarea").css("width", width.toString() + "px");

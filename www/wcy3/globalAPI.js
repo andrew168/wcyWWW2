@@ -131,7 +131,7 @@ window.TQ = window.TQ || {};
     var canvas;
     // 进入/退出 全屏模式
     WCY.fullscreenPlay = function (width, height){ // 屏幕分辨率的大小
-        canvas = document.getElementById("testCanvas");
+        canvas = TQ.Graphics.getCanvas();
         canvas.width = width;
         canvas.height = height;
 

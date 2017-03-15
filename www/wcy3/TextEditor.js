@@ -32,7 +32,7 @@ window.TQ = window.TQ || {};
             var obj = ele.jsonObj;
             ele.show(false);
 
-            var canvas = document.getElementById("testCanvas");
+            var canvas = TQ.Graphics.getCanvas();
             canvasLeft = (canvas.offsetLeft + (TQ.Utility.getOffsetLeft(canvas.offsetParent)));
             canvasTop = (canvas.offsetTop + (TQ.Utility.getOffsetTop(canvas.offsetParent)));
 
@@ -47,7 +47,7 @@ window.TQ = window.TQ || {};
         TextEditor.isCreating = true;
         TextEditor.lastElement = null;  //  防止在输入新字串的时候, 被close
 
-        var canvas = document.getElementById("testCanvas");
+        var canvas = TQ.Graphics.getCanvas();
         canvasWidth = (canvas.clientWidth || canvas.body.clientWidth || 0);
         canvasHeight = (canvas.clientHeight || canvas.body.clientHeight || 0);
 
