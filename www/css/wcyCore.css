@@ -69,3 +69,9 @@
     left: 100%;
     margin-left: 10px;
 }
+
+#testCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+}

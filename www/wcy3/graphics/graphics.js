@@ -13,6 +13,15 @@ var TQ = TQ || {};
     Graphics.drawCircle = drawCicle;
     Graphics.drawRect = drawRect;
     Graphics.drawStar = drawStar;
+    Graphics.getCanvas = getCanvas;
+
+    var _canvas = null;
+    function getCanvas() {
+        if (!_canvas) {
+            _canvas = document.getElementById("testCanvas");
+        }
+        return _canvas;
+    }
 
     function drawCicle(shape, x, y, radius) { //shape is createJS.Shape
         var thickness = 1,

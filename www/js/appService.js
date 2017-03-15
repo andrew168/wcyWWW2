@@ -17,9 +17,12 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             updateDeviceInfo();
             determineWorkingRegion();
 
+            var canvas = TQ.Graphics.getCanvas();
             if (canvas) {
                 canvas.height = TQ.Config.workingRegionHeight;
                 canvas.width = TQ.Config.workingRegionWidth;
+                canvas.style.top = TQ.Config.workingRegionY0 + "px";
+                canvas.style.left = TQ.Config.workingRegionX0 + "px";
             }
 
             if (currScene) {
@@ -54,6 +57,9 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         } else {
             TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
         }
+
+        TQ.Config.workingRegionX0 = Math.round((TQ.State.viewportWidth - TQ.Config.workingRegionWidth) / 2);
+        TQ.Config.workingRegionY0 = Math.round((TQ.State.viewportHeight - TQ.Config.workingRegionHeight) / 2);
     }
 
     function _init() {
