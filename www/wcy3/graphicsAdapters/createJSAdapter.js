@@ -193,7 +193,7 @@ var TQ = TQ || {};
         }
 
         ptDc.x = (ptWorld.x === undefined) ? 0 : ptWorld.x * sx;
-        ptDc.y = (ptWorld.y === undefined) ? 0 : TQ.Utility.toWorldCoord(ptWorld.y * sy);
+        ptDc.y = (ptWorld.y === undefined) ? 0 : TQ.Utility.toDeviceCoord(ptWorld.y * sy);
         return ptDc;
     };
 
