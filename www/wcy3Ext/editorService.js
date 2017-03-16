@@ -148,6 +148,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isMCopying = false;
         TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
         TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
+        onResize();
     }
 
     function initialize() {
@@ -162,12 +163,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function onSceneReady() {
         reset();
-        if (!_sceneReady) {
+        if (!_sceneReady) { // 新建WCY， 不属于此
             TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
             _sceneReady = true;
-            window.addEventListener("resize", function() {
-                AppService.configCanvas();
-            });
+            window.addEventListener("resize", onResize);
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
             updateMode();
@@ -190,6 +189,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (currScene && !currScene.isPlayOnly) {
             WCY.startAutoSave();
         }
+    }
+
+    function onResize() {
+        AppService.configCanvas();
     }
 
     var hasTouch = false,

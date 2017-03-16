@@ -38,13 +38,10 @@ TQ = TQ || {};
     Scene.localT2Global = localT2Global;
     Scene.globalT2local = globalT2local;
     Scene.getTMax = getTMax;
-    Scene.getDesignatedRegion = function () {
-        if (!currScene) {
-            console.error("invalid call !");
-        }
+    p.getDesignatedRegion = function () {
         return {
-            w: currScene.getDesignatedWidth(),
-            h: currScene.getDesignatedHeight()
+            w: this.getDesignatedWidth(),
+            h: this.getDesignatedHeight()
         }
     };
 

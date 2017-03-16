@@ -47,7 +47,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     function determineWorkingRegion() {
         var h = TQ.State.viewportHeight,
             w = TQ.State.viewportWidth,
-            designated = TQ.Scene.getDesignatedRegion();
+            designated = !currScene ? TQ.Scene.getDesignatedRegionDefault(): currScene.getDesignatedRegion();
 
         scaleMin = Math.min(w / designated.w, h / designated.h);
         TQ.Config.workingRegionWidth = scaleMin * designated.w;
