@@ -5,7 +5,7 @@ TQ = TQ || {};
         this.levels = [];
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
         this.version = Scene.VER_LATEST;
-        this.setDesignatedSize(Scene.getDesignatedRegion());
+        this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         this.isDirty = true;
     }
     Scene.EVENT_READY = "sceneReady";
@@ -39,16 +39,13 @@ TQ = TQ || {};
     Scene.globalT2local = globalT2local;
     Scene.getTMax = getTMax;
     Scene.getDesignatedRegion = function () {
-        var designated;
-        if (currScene && currScene.isReady) {
-            designated = {
-                w: currScene.getDesignatedWidth(),
-                h: currScene.getDesignatedHeight()
-            };
-        } else {
-            designated = Scene.getDesignatedRegionDefault();
+        if (!currScene) {
+            console.error("invalid call !");
         }
-        return designated;
+        return {
+            w: currScene.getDesignatedWidth(),
+            h: currScene.getDesignatedHeight()
+        }
     };
 
     Scene.getDesignatedRegionDefault = function () {
@@ -358,7 +355,7 @@ TQ = TQ || {};
         this.isDirty = true;
     };
 
-    p.reset = function () { // 打开文件，或者创建新文件的时候， 重新设置环境
+    p.reset = function () { // 在打开文件，或者创建新文件的时候， 重新设置环境
         //   $('#stop').trigger('click');
         this.setEditor();
         _tMax = 0;

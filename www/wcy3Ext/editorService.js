@@ -167,9 +167,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             _sceneReady = true;
             window.addEventListener("resize", function() {
                 AppService.configCanvas();
-                if (TQUtility.isMobile() && TQ.SceneEditor.isEditMode() && currScene) {
-                    currScene.setDesignatedSize(TQ.Scene.getDesignatedRegionDefault());
-                }
             });
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
