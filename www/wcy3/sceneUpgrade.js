@@ -50,8 +50,8 @@
 
     function upgrade2ToVer31(objJson) {
         objJson.version = TQ.Scene.VER3_1;
-        objJson.designatedWidth = 1093;
-        objJson.designatedHeight = 615;
+        objJson.designatedWidth = 1094;
+        objJson.designatedHeight = 498;
          return objJson;
     }
 
