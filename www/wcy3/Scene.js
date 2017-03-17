@@ -14,7 +14,8 @@ TQ = TQ || {};
     Scene.VER2 = "V2";
     Scene.VER3 = "V3"; // 采用归一化的坐标，记录保存wcy，以适应各种屏幕。
     Scene.VER3_1 = 3.1; // 采用指定分辨率的世界坐标系(以像素为单位)， 替代归一化世界坐标系
-    Scene.VER_LATEST = Scene.VER3_1;
+    Scene.VER3_3 = 3.3; // designated区域 大于1*1
+    Scene.VER_LATEST = Scene.VER3_3;
     var p = Scene.prototype;
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
     p.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
