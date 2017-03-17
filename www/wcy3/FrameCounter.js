@@ -190,8 +190,8 @@ window.TQ = window.TQ || {};
         TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.v));
         if (TQ.GifManager.isOpen) {
             TQ.GifManager.end();
-            canvas.width = TQ.Config.workingRegionWidth;
-            canvas.height = TQ.Config.workingRegionHeight;
+            canvas.width = Math.round(TQ.Config.workingRegionWidth);
+            canvas.height = Math.round(TQ.Config.workingRegionHeight);
             $("#testCanvas").show();
         }
     };

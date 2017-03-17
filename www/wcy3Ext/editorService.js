@@ -748,8 +748,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     // 进入/退出 全屏模式
     function fullscreenPlay (width, height){ // 屏幕分辨率的大小
         canvas = TQ.Graphics.getCanvas();
-        canvas.width = width;
-        canvas.height = height;
+        canvas.width = Math.round(width);
+        canvas.height = Math.round(height);
 
         TQ.Config.zoomX = width / TQ.Config.workingRegionWidth;
         TQ.Config.zoomY = height / TQ.Config.workingRegionHeight;
@@ -759,8 +759,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function eixtFullscreen() {
-        canvas.width = TQ.Config.workingRegionWidth;
-        canvas.height = TQ.Config.workingRegionHeight;
+        canvas.width = Math.round(TQ.Config.workingRegionWidth);
+        canvas.height = Math.round(TQ.Config.workingRegionHeight);
         TQ.Config.zoomX = TQ.Config.zoomY = 1;
     }
 

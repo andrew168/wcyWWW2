@@ -19,10 +19,13 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
 
             var canvas = TQ.Graphics.getCanvas();
             if (canvas) {
-                canvas.height = TQ.Config.workingRegionHeight;
-                canvas.width = TQ.Config.workingRegionWidth;
-                canvas.style.top = TQ.Config.workingRegionY0 + "px";
-                canvas.style.left = TQ.Config.workingRegionX0 + "px";
+                canvas.height = Math.round(TQ.Config.workingRegionHeight);
+                canvas.width = Math.round(TQ.Config.workingRegionWidth);
+                canvas.style.top = Math.round(TQ.Config.workingRegionY0) + "px";
+                canvas.style.left = Math.round(TQ.Config.workingRegionX0) + "px";
+                if (!!currScene) {
+                    console.log(TQ.State.viewportWidth, TQ.State.viewportHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
+                }
             }
 
             if (currScene) {

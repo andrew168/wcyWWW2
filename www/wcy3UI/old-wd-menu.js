@@ -541,8 +541,8 @@ function menu_unJoint() {
 
 function setStageSize (width, height) {
     var canvas = TQ.Graphics.getCanvas();
-    canvas.width = width;
-    canvas.height = height;
+    canvas.width = Math.round(width);
+    canvas.height = Math.round(height);
     $("#workingarea").css("width", width.toString() + "px");
     $("#workingarea").css("height", height.toString() + "px");
 }
