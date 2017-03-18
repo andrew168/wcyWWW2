@@ -1012,7 +1012,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function forceToRedraw() {
-        currScene.isDirty = true; // 迫使IPad系统重新绘制canvas上的图像， 否则，屏幕上是空白
+        if (currScene) {
+            currScene.isDirty = true; // 迫使IPad系统重新绘制canvas上的图像， 否则，屏幕上是空白
+        }
         forceToRefreshUI();
     }
 
