@@ -213,9 +213,11 @@ window.TQ = window.TQ || {};
         return - worldRotation;
     };
 
-    Utility.toWorldCoord = function(deviceY)
+    Utility.toWorldCoord = function(canvasY)
+    // 这是Canvas设备的坐标， 不是浏览器整个client区的坐标，在Canvas只占用部分client区域的时候， 有用
+    // 而 canvas的height， 就是workingRegionHeight
     {
-        return TQ.State.viewportHeight - (TQ.Config.workingRegionY0 + deviceY);
+        return TQ.Config.workingRegionHeight - canvasY;
     };
 
     Utility.toWorldCoordX = function (deviceX) {
