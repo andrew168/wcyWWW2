@@ -18,7 +18,7 @@ TQ = TQ || {};
         this.initialize(jsonObj);
     }
 
-    Marker.RADIUS = 10;
+    Marker.RADIUS = 32; // 2个字的大小
 
     var p = Marker.prototype = new TQ.Element(null, null, null, null);
 
