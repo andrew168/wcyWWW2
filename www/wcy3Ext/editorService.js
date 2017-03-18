@@ -37,7 +37,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         banMat: NetService.banMat,
 
         // play & preview
-        forceToRedraw: forceToRedraw,
         preview: preview,
         play: play,
         stop: stop,
