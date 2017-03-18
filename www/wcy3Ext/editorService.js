@@ -759,8 +759,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function eixtFullscreen() {
-        canvas.width = Math.round(TQ.Config.workingRegionWidth);
-        canvas.height = Math.round(TQ.Config.workingRegionHeight);
+        TQ.Graphics.setCanvas();
         TQ.Config.zoomX = TQ.Config.zoomY = 1;
     }
 

@@ -14,6 +14,7 @@ var TQ = TQ || {};
     Graphics.drawRect = drawRect;
     Graphics.drawStar = drawStar;
     Graphics.getCanvas = getCanvas;
+    Graphics.setCanvas = setCanvas;
 
     var _canvas = null;
     function getCanvas() {
@@ -21,6 +22,18 @@ var TQ = TQ || {};
             _canvas = document.getElementById("testCanvas");
         }
         return _canvas;
+    }
+
+    function setCanvas() {
+        if (_canvas) {
+            _canvas.height = Math.round(TQ.Config.workingRegionHeight);
+            _canvas.width = Math.round(TQ.Config.workingRegionWidth);
+            _canvas.style.top = Math.round(TQ.Config.workingRegionY0) + "px";
+            _canvas.style.left = Math.round(TQ.Config.workingRegionX0) + "px";
+            if (!!currScene) {
+                console.log(TQ.State.viewportWidth, TQ.State.viewportHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
+            }
+        }
     }
 
     function drawCicle(shape, x, y, radius) { //shape is createJS.Shape
