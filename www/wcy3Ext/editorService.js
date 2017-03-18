@@ -167,6 +167,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
             _sceneReady = true;
             window.addEventListener("resize", onResize);
+            window.addEventListener('orientationchange', function () {
+                $timeout(onResize); // ！！ 必须用timeout 之后， 否则ipad上不起作用。
+            });
+
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
             updateMode();
@@ -193,6 +197,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function onResize() {
         AppService.configCanvas();
+        forceToRedraw(); // 迫使IOS系统重新绘制canvas上的图像
     }
 
     var hasTouch = false,
