@@ -79,7 +79,10 @@ var TQ = TQ || {};
 
     function drawRectBubble(shape, x, y, w, h, radiusTL, radiusTR, radiusBR, radiusBL, anchor) {
         var max = (w < h ? w : h) / 2;
-        var mTL = 0, mTR = 0, mBR = 0, mBL = 0;
+        var mTL = 0, mTR = 0, mBR = 0, mBL = 0,
+            x2 = x + w,
+            y2 = y + h;
+
         if (radiusTL < 0) {
             radiusTL *= (mTL = -1);
         }
@@ -111,14 +114,14 @@ var TQ = TQ || {};
 
         shape.graphics.ss(thickness).beginStroke(edgeColor).
             beginFill(fillColor).
-            moveTo(x + w - radiusTR, y).
-            arcTo(x + w + radiusTR * mTR, y - radiusTR * mTR, x + w, y + radiusTR, radiusTR).
-            lineTo(x + w, y + h - radiusBR).
-            arcTo(x + w + radiusBR * mBR, y + h + radiusBR * mBR, x + w - radiusBR, y + h, radiusBR).
+            moveTo(x2 - radiusTR, y).
+            arcTo(x2 + radiusTR * mTR, y - radiusTR * mTR, x2, y + radiusTR, radiusTR).
+            lineTo(x2, y2 - radiusBR).
+            arcTo(x2 + radiusBR * mBR, y2 + radiusBR * mBR, x2 - radiusBR, y2, radiusBR).
             lineTo(anchor[0].x, anchor[0].y).
             lineTo(anchor[1].x, anchor[1].y).
             lineTo(anchor[2].x, anchor[2].y).
-            arcTo(x - radiusBL * mBL, y + h + radiusBL * mBL, x, y + h - radiusBL, radiusBL).
+            arcTo(x - radiusBL * mBL, y2 + radiusBL * mBL, x, y2 - radiusBL, radiusBL).
             lineTo(x, y + radiusTL).
             arcTo(x - radiusTL * mTL, y - radiusTL * mTL, x + radiusTL, y, radiusTL).
             closePath().

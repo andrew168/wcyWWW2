@@ -59,6 +59,7 @@ TQ = TQ || {};
     };
 
     p.createImage = function () {
+        // 将替换已有的image，如果有的话
         var s = this.displayObj;
         if (!s) {
             TQ.Log.criticalError(TQ.Dictionary.FoundNull);
@@ -66,6 +67,10 @@ TQ = TQ || {};
         }
 
         s.graphics.clear(); // 清除老的边框
+        TQ.Graphics.drawBubble(s, this.jsonObj.textBubble);
+    };
+
+    p.createModal = function() {
         if (!this.jsonObj.textBubble) {
             // 左下角， + pivot
             var anchorWidth = 20,
@@ -100,8 +105,6 @@ TQ = TQ || {};
                 ]
             };
         }
-
-        TQ.Graphics.drawBubble(s, this.jsonObj.textBubble);
     };
 
     p._doLoad = function () {
@@ -112,6 +115,7 @@ TQ = TQ || {};
         s.x = jsonObj.x;
         s.y = jsonObj.y;
         this.displayObj = s;
+        this.createModal();
         this.createImage();
         this._afterItemLoaded();
         this.setTRSAVZ();
