@@ -82,6 +82,7 @@ var TQ = TQ || {};
     }
 
     function calBubbleModel(x, y, w, h, radiusTL, radiusTR, radiusBR, radiusBL, anchor) {
+        // 在物体空间计算
         var max = (w < h ? w : h) / 2;
         var mTL = 0, mTR = 0, mBR = 0, mBL = 0,
             x2 = x + w,
@@ -116,16 +117,18 @@ var TQ = TQ || {};
             {type: ET_ARC, x: x2 + radiusTR * mTR, y: y - radiusTR * mTR, x2: x2, y2: y + radiusTR, r: radiusTR},
             {type: ET_LINE, x: x2, y: y2 - radiusBR},
             {type: ET_ARC, x: x2 + radiusBR * mBR, y: y2 + radiusBR * mBR, x2: x2 - radiusBR, y2: y2, r: radiusBR},
-            {type: ET_LINE, x: anchor[0].x, y: anchor[0].y},
-            {type: ET_LINE, x: anchor[1].x, y: anchor[1].y},
-            {type: ET_LINE, x: anchor[2].x, y: anchor[2].y},
             {type: ET_LINE, x: x + radiusTL, y: y2},
             {type: ET_ARC, x: x - radiusBL * mBL, y: y2 + radiusBL * mBL, x2: x, y2: y2 - radiusBL, r: radiusBL},
             {type: ET_LINE, x: x, y: y + radiusTL},
-            {type: ET_ARC, x: x - radiusTL * mTL, y: y - radiusTL * mTL, x2: x + radiusTL, y2: y, r: radiusTL}];
+            {type: ET_ARC, x: x - radiusTL * mTL, y: y - radiusTL * mTL, x2: x + radiusTL, y2: y, r: radiusTL},
+            {type: ET_LINE, x: anchor[2].x, y: anchor[2].y},
+            {type: ET_LINE, x: anchor[1].x, y: anchor[1].y},
+            {type: ET_LINE, x: anchor[0].x, y: anchor[0].y}
+        ];
     }
 
     function drawPolygon(shape, geoModel) {
+        // 转为设备空间
         var thickness = 1,
             edgeColor = "#000",
             fillColor = "#DDD";
@@ -136,13 +139,13 @@ var TQ = TQ || {};
             var item = geoModel[i];
             switch (item.type) {
                 case ET_MOVETO:
-                    brush.moveTo(item.x, item.y);
+                    brush.moveTo(item.x, toCanvasDevice(item.y));
                     break;
                 case ET_LINE:
-                    brush.lineTo(item.x, item.y);
+                    brush.lineTo(item.x, toCanvasDevice(item.y));
                     break;
                 case ET_ARC:
-                    brush.arcTo(item.x, item.y, item.x2, item.y2, item.r);
+                    brush.arcTo(item.x, toCanvasDevice(item.y), item.x2, toCanvasDevice(item.y2), item.r);
                     break;
                 default:
                     console.error("known type!", item.type);
@@ -150,6 +153,10 @@ var TQ = TQ || {};
         }
         brush.closePath().
             endFill();
+    }
+
+    function toCanvasDevice(objY) {  //只是反Y坐标， 不能被Height减，否则有系统误差
+        return -objY;
     }
 
     TQ.Graphics = Graphics;

@@ -79,32 +79,41 @@ TQ = TQ || {};
                 w = this.getWidth(),
                 h = this.getHeight(),
 
-                xmin = xc - w / 2,  // 这些值被直接用于绘图， 所以是设备坐标
+                xmin = xc - w / 2,  // 已经改为物体坐标， 便于使用
                 ymin = yc - h / 2,
                 xmax = xc + w / 2,
                 ymax = yc + h / 2,
                 xa = xmin + w / 2,
                 xa1 = xa + anchorWidth / 2,
                 xa3 = xa - anchorWidth / 2,
-                ya1 = ymin,
+                ya1 = ymin, // anchor在下边缘
                 ya3 = ymin,
                 ya = ya1 - 100;
 
             this.jsonObj.textBubble = { // 从设备坐标简单地变为 对象坐标： Y轴变负
                 xmin: xmin,
-                ymin: -ymax,
+                ymin: ymin,
                 width: w,
                 height: h,
                 radiusTL: 1,
                 radiusTR: 1,
                 radiusBL: 1,
                 radiusBR: 1,
-                anchor: [{x: xa1, y: -ya1},
-                    {x: xa, y: -ya},
-                    {x: xa3, y: -ya3}
+                anchor: [{x: xa1, y: ya1},
+                    {x: xa, y: ya},
+                    {x: xa3, y: ya3}
                 ]
             };
         }
+    };
+
+    p.anchorMoveTo = function(ptWorld) {
+        var ptObj = this.world2Object(ptWorld);
+        var anchor = this.jsonObj.textBubble.anchor; // 气泡的modal是用设备坐标，Y向下
+        anchor[1].x = ptObj.x;
+        anchor[1].y = ptObj.y;
+        this.createImage();
+        TQ.DirtyFlag.setElement(this);
     };
 
     p._doLoad = function () {
