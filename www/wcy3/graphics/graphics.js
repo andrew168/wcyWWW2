@@ -121,6 +121,7 @@ var TQ = TQ || {};
             lineTo(anchor[0].x, anchor[0].y).
             lineTo(anchor[1].x, anchor[1].y).
             lineTo(anchor[2].x, anchor[2].y).
+            lineTo(x + radiusTL, y2).
             arcTo(x - radiusBL * mBL, y2 + radiusBL * mBL, x, y2 - radiusBL, radiusBL).
             lineTo(x, y + radiusTL).
             arcTo(x - radiusTL * mTL, y - radiusTL * mTL, x + radiusTL, y, radiusTL).
