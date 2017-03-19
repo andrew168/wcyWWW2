@@ -133,20 +133,6 @@ TQ = TQ || {};
         return this.host.getHeight();
     };
 
-    p.parent_hightlight = p.highlight;
-    p.highlight = function (enable) {
-        this.parent_hightlight(enable);
-        if (this._isHighlighting) {
-            if (!this.decorations) {
-                this.attachDecoration(TQ.SelectSet.getDecoration());
-            }
-        } else {
-            if (!!this.decorations) {
-                this.detachDecoration();
-            }
-        }
-    };
-
     p.allowRecording = function () {
         return false;
     };

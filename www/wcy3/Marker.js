@@ -109,7 +109,9 @@ TQ = TQ || {};
     };
 
     p.tsrObject2World = function (pose) {
+        var bakIsVis = this.jsonObj.isVis;
         TQ.CreateJSAdapter.tsrObject2World.call(this, pose);
+        this.jsonObj.isVis = bakIsVis;
         this.noScaleRotation();
     };
 
