@@ -10,6 +10,8 @@ window.TQ = window.TQ || {};
     function MoveCtrl () {
 
     }
+    var TO_TOP = 99999,
+        TO_BOTTOM = -99999;
     MoveCtrl._stage = null;
     MoveCtrl.initialize = function(aStage) {
         MoveCtrl._stage = aStage;
@@ -67,7 +69,7 @@ window.TQ = window.TQ || {};
     MoveCtrl.moveToTop = function (ele) {
         assertNotNull(TQ.Dictionary.FoundNull, ele);
         if (!ele) return;
-        MoveCtrl.moveLayer(ele, 99999);
+        MoveCtrl.moveLayer(ele, TO_TOP);
     };
 
     /*
@@ -76,7 +78,7 @@ window.TQ = window.TQ || {};
     MoveCtrl.moveToBottom = function (ele) {
         assertNotNull(TQ.Dictionary.FoundNull, ele);
         if (!ele) return;
-        MoveCtrl.moveLayer(ele, -99999);
+        MoveCtrl.moveLayer(ele, TO_BOTTOM);
     };
 
     MoveCtrl._doMoveZ = function (ele, step) {
@@ -120,9 +122,9 @@ window.TQ = window.TQ || {};
             if ( (step == 1) && ((MoveCtrl._stage.getNumChildren() - 1) == MoveCtrl.queue[0].id)) {return; }
             if ( (step == -1) && (0 == MoveCtrl.queue[0].id)) {return; }
             // 到底、到顶操作：确保各个子元素的移动距离是一样的， 不能都奔到最顶最低
-            if (step > 1) {
+            if (step === TO_TOP) {
                 step = (MoveCtrl._stage.getNumChildren() - 1) - MoveCtrl.queue[0].id;
-            } else if (step < -1) {
+            } else if (step === TO_BOTTOM) {
                 step = - MoveCtrl.queue[0].id;
             }
             if (step == 0) return;

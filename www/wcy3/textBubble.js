@@ -50,9 +50,11 @@ TQ = TQ || {};
     };
 
     p.updateLayer = function () { //  总是紧接着host的下一层
-        var newZ = this.host.getZ() - 1;
-        if (newZ !== this.getZ()) {
-            this.moveToZ(newZ);
+        var hostZ = this.host.getZ();
+        if (hostZ !== (this.getZ() + 1)) {
+            // 新添加， 在host之后添加的， 所以在host之上
+            // 后附加的，重复利用的bubble, 可能在host之下N层
+            this.moveToZ(hostZ); // 正好移到host的z， 把host顶起来
         }
     };
 
