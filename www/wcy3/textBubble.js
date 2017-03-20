@@ -107,6 +107,10 @@ TQ = TQ || {};
         }
     };
 
+    p.onMoveMarker = function (marker, ptWorld) {
+        this.anchorMoveTo(ptWorld);
+    };
+
     p.anchorMoveTo = function(ptWorld) {
         var ptObj = this.world2Object(ptWorld);
         var anchor = this.getAnchorInObject();

@@ -88,12 +88,9 @@ window.TQBase = window.TQBase || {};
         if (!element.isMarker()) {
             TQ.CommandMgr.directDo(new TQ.MoveCommand(element, ptWorld));
         } else {
-            var eleHost = element.host;
-            TQ.CommandMgr.directDo(new TQ.MovePivotCommand(eleHost,
-                eleHost.calPivot(ptWorld),
-                ptWorld,
-                element));
-
+            if (!!element.host){
+                element.host.onMoveMarker(element, ptWorld);
+            }
         }
         if (TQ.InputCtrl.leaveTraceOn) {
             TQ.TraceMgr.addNewPosition(element);

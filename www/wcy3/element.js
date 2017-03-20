@@ -1550,6 +1550,13 @@ window.TQ = window.TQ || {};
         this.dirty2 = true;
     };
 
+    p.onMoveMarker = function(marker, ptWorld) {
+        // 默认marker是pivot的， 对于anchor marker等， 必须另外重载
+        TQ.CommandMgr.directDo(new TQ.MovePivotCommand(this,
+            this.calPivot(ptWorld),
+            ptWorld,
+            marker));
+    };
 
     p.getScaleInNdc = function () {
         return {sx: this.jsonObj.sx, sy: this.jsonObj.sy};
