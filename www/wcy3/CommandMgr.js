@@ -224,6 +224,7 @@ window.TQ = window.TQ || {};
         return("redo move" + this.receiver);
     };
 
+    // move pivot
     function MovePivotCommand(ele, pivot, pos, marker) {
         this.receiver = ele;
         this.receiver2 = marker;
@@ -252,6 +253,27 @@ window.TQ = window.TQ || {};
     };
 
     MovePivotCommand.prototype.redo = MovePivotCommand.prototype.do;
+
+    // Move anchor
+    function MoveAnchorCommand(ele, pos) {
+        this.receiver = ele;
+        this.oldValue = ele.anchorMarker.getPositionInWorld();
+        this.newValue = pos;
+    }
+
+    inherit(MoveAnchorCommand, AbstractCommand);
+
+    MoveAnchorCommand.prototype.do = function () {
+        this.receiver.moveAnchorTo(this.newValue);
+        return ("move" + this.receiver);
+    };
+
+    MoveAnchorCommand.prototype.undo = function () {
+        this.receiver.moveAnchorTo(this.oldValue);
+        return ("undo move" + this.receiver);
+    };
+
+    MoveAnchorCommand.prototype.redo = MoveAnchorCommand.prototype.do;
 
     function SetTimeCommand(v) {
         this.receiver = TQ.FrameCounter;
@@ -301,6 +323,7 @@ window.TQ = window.TQ || {};
     TQ.AbstractCommand = AbstractCommand;
     TQ.CompositeCommand = CompositeCommand;
     TQ.MoveCommand = MoveCommand;
+    TQ.MoveAnchorCommand = MoveAnchorCommand;
     TQ.MovePivotCommand = MovePivotCommand;
     TQ.ScaleCommand = ScaleCommand;
     TQ.SetColorCommand = SetColorCommand;

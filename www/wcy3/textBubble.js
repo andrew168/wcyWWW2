@@ -108,10 +108,19 @@ TQ = TQ || {};
     };
 
     p.onMoveMarker = function (marker, ptWorld) {
-        this.anchorMoveTo(ptWorld);
+        TQ.CommandMgr.directDo(new TQ.MoveAnchorCommand(this, ptWorld));
     };
 
-    p.anchorMoveTo = function(ptWorld) {
+    p.moveAnchorTo = function(ptWorld) {
+        var ptObj = this.world2Object(ptWorld);
+        var anchor = this.getAnchorInObject();
+        anchor.x = ptObj.x;
+        anchor.y = ptObj.y;
+        this.createImage();
+        TQ.DirtyFlag.setElement(this);
+    };
+
+    p.moveAnchorTo = function (ptWorld) {
         var ptObj = this.world2Object(ptWorld);
         var anchor = this.getAnchorInObject();
         anchor.x = ptObj.x;
