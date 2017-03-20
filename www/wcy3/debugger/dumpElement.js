@@ -53,8 +53,8 @@ var TQDebugger = TQDebugger || {};
         }
 
         var jsonObj = e.jsonObj;
-        console.log(msg + e.jsonObj.type + "_" + e.id + ": z = " + e.getZ() + "x = " + jsonObj.x + " y=" +
-                jsonObj.y + ", sx= " + jsonObj.sx + " sy= " + jsonObj.sy + ", ang = " + jsonObj.rotation);
+        console.log(msg + e.jsonObj.type + "_" + e.id + ": z = " + e.getZ() + " x = " + jsonObj.x.toFixed(1) + " y=" +
+                jsonObj.y.toFixed(1) + ", sx= " + jsonObj.sx.toFixed(1) + " sy= " + jsonObj.sy.toFixed(1) + ", ang = " + jsonObj.rotation.toFixed(1));
         if (e.children && e.children.length > 0) {
             dumpArray(depth + 1, e.children);
         }
