@@ -34,7 +34,10 @@ TQ = TQ || {};
     };
 
     p.getTsrInHostObj = function() {
-        return TQ.CreateJSAdapter.getDefaultRootTsr();
+        if (!this.jsonObj.tsrObj) {
+            this.jsonObj.tsrObj = TQ.Base.Utility.shadowCopy(TQ.CreateJSAdapter.getDefaultRootTsr());
+        }
+        return this.jsonObj.tsrObj;
     };
 
     p.limitHostNoRotation = function() {
