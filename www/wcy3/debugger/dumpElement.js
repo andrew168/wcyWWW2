@@ -52,7 +52,9 @@ var TQDebugger = TQDebugger || {};
             msg += "  ";
         }
 
-        console.log(msg + e.jsonObj.type + "_" + e.id + ": z = " + e.getZ());
+        var jsonObj = e.jsonObj;
+        console.log(msg + e.jsonObj.type + "_" + e.id + ": z = " + e.getZ() + "x = " + jsonObj.x + " y=" +
+                jsonObj.y + ", sx= " + jsonObj.sx + " sy= " + jsonObj.sy + ", ang = " + jsonObj.rotation);
         if (e.children && e.children.length > 0) {
             dumpArray(depth + 1, e.children);
         }
