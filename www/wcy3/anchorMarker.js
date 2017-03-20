@@ -10,6 +10,11 @@ TQ = TQ || {};
         TQ.Marker.call(this, level, jsonObj);
     }
 
+    AnchorMarker.init = function () {
+        markers.splice(0);
+        workingMarkers.splice(0);
+    };
+
     var p = AnchorMarker.prototype = Object.create(TQ.Marker.prototype);
     p.parent_getTsrInHostObj = p.getTsrInHostObj;
 
@@ -23,25 +28,24 @@ TQ = TQ || {};
         return tsrObj;
     };
 
-
     /// singleton
-    var decorations = [],
-        workingDecorations = [];
+    var markers = [],
+        workingMarkers = [];
 
     AnchorMarker.getOne = function () {
-        var decs = decorations.pop();
-        if (decs == null) {
-            var ele = TQ.Element.build(currScene.currentLevel, {isVis: 0, type: TQ.Element.DescType.ANCHOR_MARKER});
-            decs = [ele];
+        var decs = markers.pop();
+        if (!decs) {
+            decs = TQ.Element.build(currScene.currentLevel, {isVis: 0, type: TQ.Element.DescType.ANCHOR_MARKER});
         }
-        workingDecorations.push(decs);
+        workingMarkers.push(decs);
         return decs;
     };
 
-    AnchorMarker.recycleDecoration = function (decoration) {
-        var id = workingDecorations.indexOf(decoration);
-        workingDecorations.splice(id, 1);
-        decorations.push(decoration);
+    p.recycle = function () {
+        var aMarker = this;
+        var id = workingMarkers.indexOf(aMarker);
+        workingMarkers.splice(id, 1);
+        markers.push(aMarker);
     };
 
     TQ.AnchorMarker = AnchorMarker;

@@ -693,8 +693,8 @@ window.TQ = window.TQ || {};
             marker.host = null;
             marker.level = null;
             this.removeChild(marker);
+            marker.recycle();
         }
-        TQ.SelectSet.recycleDecoration(decorations);
         return decorations;
     };
 

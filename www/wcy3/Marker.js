@@ -18,6 +18,11 @@ TQ = TQ || {};
         this.initialize(jsonObj);
     }
 
+    Marker.init = function() {
+        markers.splice(0);
+        workingMarkers.splice(0);
+    };
+
     Marker.RADIUS = 32; // 2个字的大小
 
     var p = Marker.prototype = new TQ.Element(null, null, null, null);
@@ -117,6 +122,26 @@ TQ = TQ || {};
         TQ.CreateJSAdapter.tsrObject2World.call(this, pose);
         this.jsonObj.isVis = bakIsVis;
         this.noScaleRotation();
+    };
+
+    /// singleton
+    var markers = [],
+        workingMarkers = [];
+
+    Marker.getOne = function () {
+        var decs = markers.pop();
+        if (decs == null) {
+            decs = TQ.Element.build(currScene.currentLevel, {isVis: 0, type: TQ.Element.DescType.JOINT_MARKER});
+        }
+        workingMarkers.push(decs);
+        return decs;
+    };
+
+    p.recycle = function () {
+        var aMarker = this;
+        var id = workingMarkers.indexOf(aMarker);
+        workingMarkers.splice(id, 1);
+        markers.push(aMarker);
     };
 
     TQ.Marker = Marker;

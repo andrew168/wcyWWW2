@@ -156,7 +156,7 @@ TQ = TQ || {};
 
     p.attachAnchorMarker = function () {
         var anchorMarker = TQ.AnchorMarker.getOne();
-        this.attachDecoration(anchorMarker);
+        this.attachDecoration([anchorMarker]);
         this.anchorMarker = this.decorations[0];
         this.updateAnchorMarker();
     };
