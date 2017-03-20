@@ -21,8 +21,6 @@ TQ = TQ || {};
             joint: null
         },
         latestElement = null,
-        decorations = [],  //  decorations ready to use
-        workingDecorations = [], // decorations is using.
         selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
 
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
@@ -34,8 +32,8 @@ TQ = TQ || {};
     SelectSet.btnEffect = btnEffect;
 
     SelectSet.initialize = function() {
-        decorations.splice(0);
-        workingDecorations.splice(0);
+        TQ.Marker.init();
+        TQ.AnchorMarker.init();
         SelectSet.members.splice(0);
         state.multiCmdStarted = false;
         state.cmd = null;
@@ -69,25 +67,6 @@ TQ = TQ || {};
         if (ele != null) {
             ele.playAction(actionName);
         }
-    };
-
-    SelectSet.getDecoration = function () {
-        var decs = decorations.pop();
-        if (decs == null) {
-            var ref = TQ.SelectSet.members[0];
-            assertNotNull(TQ.Dictionary.PleaseSelectHost, ref);
-            //ToDo: 生成所有的夹点, 和 轴心点 图案.
-            var ele = TQ.Element.build(ref.level, {isVis: 0, type:"JointMarker"});
-            decs = [ele];
-        }
-        workingDecorations.push(decs);
-        return decs;
-    };
-
-    SelectSet.recycleDecoration = function(decoration) {
-        var id = workingDecorations.indexOf(decoration);
-        workingDecorations.splice(id, 1);
-        decorations.push(decoration);
     };
 
     SelectSet.add = function(element) {
@@ -455,7 +434,7 @@ TQ = TQ || {};
 
     SelectSet.attachDecoration = function(ele){
         if (!ele.decorations) {
-            ele.attachDecoration(SelectSet.getDecoration());
+            ele.attachDecoration([TQ.Marker.getOne()]);
         }
     };
 
