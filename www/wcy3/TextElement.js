@@ -23,6 +23,24 @@ window.TQ = window.TQ || {};
     TextElement.prototype.constructor = TextElement;
 
     var p = TextElement.prototype = new TQ.Element(null, null);
+    p.parent_attachDecoration = p.attachDecoration;
+    p.parent_detachDecoration = p.detachDecoration;
+    p.attachDecoration = function (decs) {
+        var bubble = this.getTextBubble();
+        if (bubble) {
+            bubble.attachAnchorMarker();
+        }
+        return this.parent_attachDecoration(decs);
+    };
+
+    p.detachDecoration = function () {
+        var bubble = this.getTextBubble();
+        if (bubble) {
+            bubble.detachAnchorMarker();
+        }
+        // TQ.SelectSet.recycleDecoration(decorations);
+        return this.parent_detachDecoration();
+    };
 
     p.getColor = function() {
         return this.jsonObj.color;

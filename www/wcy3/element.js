@@ -15,6 +15,7 @@ window.TQ = window.TQ || {};
     };
 
     var DescType = {
+        ANCHOR_MARKER: "AnchorMarker",
         BITMAP: "Bitmap",
         BITMAP_ANIMATION: "BitmapAnimation",
         BUTTON: "BUTTON",
@@ -303,19 +304,19 @@ window.TQ = window.TQ || {};
             desc.name = "element" + Element.counter++;
         }
 
-        if (desc.type == undefined) {
+        if (desc.type === undefined) {
             desc.type = "Bitmap";
         }
 
-        if (desc.eType == undefined) {
+        if (desc.eType === undefined) {
             desc.eType = Element.type2eType(desc.type);
         }
 
-        if (desc.state == undefined) {
+        if (desc.state === undefined) {
             desc.state = 0;
         }
 
-        if (desc.isVis == undefined) {
+        if (desc.isVis === undefined) {
             desc.isVis = true;
         }
 
@@ -323,17 +324,26 @@ window.TQ = window.TQ || {};
             desc.isClipPoint = false;
         }
 
-        if (desc.x == undefined) { // 区别： 如果 desc.x 是 0， 则不会重新被赋值
+        if (desc.x === undefined) { // 区别： 如果 desc.x 是 0， 则不会重新被赋值
             desc.x = 0;
         }
 
-        if (desc.y == undefined) {
+        if (desc.y === undefined) {
             desc.y = 0;
+        }
+
+        if (desc.sx === undefined) {
+            desc.sx = 1;
+        }
+
+        if (desc.sy === undefined) {
+            desc.sy = 1;
         }
 
         if (desc.zIndex == undefined) {
             desc.zIndex = Element.TOP;
         }
+
         if (desc.type == "Text") {
             desc.pivotX = (desc.pivotX === undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
             desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
@@ -342,7 +352,7 @@ window.TQ = window.TQ || {};
             desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.pivotY : desc.pivotY;
         }
 
-        if (desc.rotation == undefined) {
+        if (desc.rotation === undefined) {
             desc.rotation = 0;
         }
 
@@ -398,6 +408,7 @@ window.TQ = window.TQ || {};
                 this._loadComponent();
                 break;
             case DescType.JOINT_MARKER:
+            case DescType.ANCHOR_MARKER:
                 this._loadMarker();
                 break;
             default :
@@ -1422,7 +1433,7 @@ window.TQ = window.TQ || {};
             motionType += 0x04;
         } else if (this.isMarker()) {
             TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
-            tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
+            tsrObj = this.getTsrInHostObj();
         } else if ((motionType == 0) && this.dirty) {
             // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
             TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");

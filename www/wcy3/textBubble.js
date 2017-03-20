@@ -109,9 +109,9 @@ TQ = TQ || {};
 
     p.anchorMoveTo = function(ptWorld) {
         var ptObj = this.world2Object(ptWorld);
-        var anchor = this.jsonObj.textBubble.anchor; // 气泡的modal是用设备坐标，Y向下
-        anchor[1].x = ptObj.x;
-        anchor[1].y = ptObj.y;
+        var anchor = this.getAnchorInObject();
+        anchor.x = ptObj.x;
+        anchor.y = ptObj.y;
         this.createImage();
         TQ.DirtyFlag.setElement(this);
     };
@@ -148,6 +148,29 @@ TQ = TQ || {};
 
     p.allowRecording = function () {
         return false;
+    };
+
+    p.getAnchorInObject = function() {
+        return this.jsonObj.textBubble.anchor[1];
+    };
+
+    p.attachAnchorMarker = function () {
+        var anchorMarker = TQ.AnchorMarker.getOne();
+        this.attachDecoration(anchorMarker);
+        this.anchorMarker = this.decorations[0];
+        this.updateAnchorMarker();
+    };
+
+    p.updateAnchorMarker = function() {
+        if (this.anchorMarker) {
+            var ptObj = this.getAnchorInObject(),
+                ptWorld = this.object2World(ptObj);
+            this.anchorMarker.moveTo(ptWorld);
+        }
+    };
+
+    p.detachAnchorMarker = function () {
+        this.detachDecoration();
     };
 
     // private

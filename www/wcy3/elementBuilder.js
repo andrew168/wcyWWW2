@@ -21,6 +21,8 @@ window.TQ = window.TQ || {};
         TQ.Element.upgradeToVer2(desc);
         var DescType = TQ.Element.DescType;
         switch (desc.type) {
+            case DescType.ANCHOR_MARKER:
+                return new TQ.AnchorMarker(level, desc);
             case DescType.SOUND:
                 return new TQ.SoundElement(level, desc);
             case DescType.JOINT_MARKER:

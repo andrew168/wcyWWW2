@@ -28,6 +28,10 @@ TQ = TQ || {};
         this.moveToTop();
     };
 
+    p.getTsrInHostObj = function() {
+        return TQ.CreateJSAdapter.getDefaultRootTsr();
+    };
+
     p.limitHostNoRotation = function() {
         if (this.host) {
             var rotation = this.host.getRotation();
