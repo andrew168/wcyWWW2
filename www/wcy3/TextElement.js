@@ -28,9 +28,10 @@ window.TQ = window.TQ || {};
     p.attachDecoration = function (decs) {
         var bubble = this.getTextBubble();
         if (bubble) {
-            bubble.attachAnchorMarker();
+            return bubble.attachAnchorMarker();
+        } else {
+            return this.parent_attachDecoration(decs);
         }
-        return this.parent_attachDecoration(decs);
     };
 
     p.detachDecoration = function () {
@@ -38,7 +39,6 @@ window.TQ = window.TQ || {};
         if (bubble) {
             bubble.detachAnchorMarker();
         }
-        // TQ.SelectSet.recycleDecoration(decorations);
         return this.parent_detachDecoration();
     };
 
@@ -162,6 +162,10 @@ window.TQ = window.TQ || {};
         if (!desc.fontSize)  desc.fontSize = TQ.Config.fontSize;
         if (!desc.color)  desc.color = TQ.Config.color;
         return this.parent_fillGap(desc);
+    };
+
+    p.onMoveMarker = function(marker, ptWorld) { // keep anchor's position in world
+        //ToDo: 文本的pivot 与bubble对不上号
     };
 
     p.autoFit = function() {
