@@ -47,6 +47,7 @@ TQ = TQ || {};
         textPivot2Bubble(this.jsonObj, this.host);
         this._parent_update(t, noRecording);
         this.updateLayer();
+        this.dirty = false;
     };
 
     p.updateLayer = function () { //  总是紧接着host的下一层
@@ -112,15 +113,6 @@ TQ = TQ || {};
     };
 
     p.moveAnchorTo = function(ptWorld) {
-        var ptObj = this.world2Object(ptWorld);
-        var anchor = this.getAnchorInObject();
-        anchor.x = ptObj.x;
-        anchor.y = ptObj.y;
-        this.createImage();
-        TQ.DirtyFlag.setElement(this);
-    };
-
-    p.moveAnchorTo = function (ptWorld) {
         var ptObj = this.world2Object(ptWorld);
         var anchor = this.getAnchorInObject();
         anchor.x = ptObj.x;
