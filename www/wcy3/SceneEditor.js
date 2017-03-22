@@ -63,9 +63,11 @@ var currScene = null;
 
         function doAdd() {
             var ele = currScene.addItem(desc);
-            if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
-                TQ.SelectSet.add(ele);
-            }
+            setTimeout(function() { // 延时， 以确保元素建立好了，避免autoFit失效,
+                if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
+                    TQ.SelectSet.add(ele);
+                }
+            }, 200);
             return ele;
         }
     };
