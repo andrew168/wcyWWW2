@@ -34,6 +34,7 @@ TQ = TQ || {};
         if (!!host) {
             bubble = host.getTextBubble();
             host.removeChild(bubble);
+            bubble.doShow(false);
         }
     };
 
