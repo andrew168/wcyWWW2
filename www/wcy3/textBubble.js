@@ -21,8 +21,12 @@ TQ = TQ || {};
         }
 
         if (host) {
-            var desc = compose(host);
-            host.addChild(desc);
+            var desc = compose(host),
+                bubble = host.addChild(desc);
+            setTimeout(function() {
+                host.detachDecoration();
+                bubble.attachAnchorMarker();
+            })
         }
     };
 
