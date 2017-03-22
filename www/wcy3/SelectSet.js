@@ -88,7 +88,7 @@ TQ = TQ || {};
         if (SelectSet.members.indexOf(element) < 0) {
             SelectSet.members.push(element);
             element.highlight(true);
-            if (TQ.InputCtrl.inSubobjectMode)  SelectSet.attachDecoration(element);
+            SelectSet.attachDecoration(element);
 
             // 对于关节物体上的子关节，在整体模式下，情况复杂一些：
             //    如果是“移动关节”： 则选中的是子关节
@@ -145,6 +145,7 @@ TQ = TQ || {};
     };
 
     SelectSet.updateDecorations = function(show) {
+        TQ.AssertExt.depreciated("updateDecorations");
         for (var i = 0; i< SelectSet.members.length; i++) {
             var ele = SelectSet.members[i];
             if (show) {
