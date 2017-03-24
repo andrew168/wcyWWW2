@@ -395,7 +395,11 @@ TQ = TQ || {};
     };
 
     SelectSet.peekLatestEditableEle = function () {
-        return peekMarker() || peekLatest();
+        var ele = peekMarker() || peekLatest();
+        while (ele && !ele.isEditable()) {
+            ele = ele.host;
+        }
+        return ele;
     };
 
     SelectSet.updateByGesture = function(evt) {

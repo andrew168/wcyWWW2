@@ -148,6 +148,10 @@ TQ = TQ || {};
         return true;
     };
 
+    p.isEditable = function () {
+        return false;
+    };
+
     p.getWidth = function() {
         return this.host.getWidth();
     };

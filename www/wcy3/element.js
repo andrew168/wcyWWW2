@@ -1831,6 +1831,10 @@ window.TQ = window.TQ || {};
         return (this.jsonObj.color === undefined) ? TQ.Config.color : this.jsonObj.color;
     };
 
+    p.isEditable = function() {
+        return true;
+    };
+
     TQ.Element = Element;
     TQ.Element.DescType = DescType;
 }());
