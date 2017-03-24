@@ -24,6 +24,8 @@ TQ = TQ || {};
     };
 
     Marker.RADIUS = 32; // 2个字的大小
+    var GRADIENT_COLOR_S = "#00F",
+        GRADIENT_COLOR_E = "#F00";
 
     var p = Marker.prototype = new TQ.Element(null, null, null, null);
 
@@ -63,7 +65,7 @@ TQ = TQ || {};
         }
 
         s.graphics.clear(); // 清除老的边框
-        TQ.Graphics.drawCircle(s, 0, 0, Marker.RADIUS);
+        TQ.Graphics.drawCircle(s, 0, 0, Marker.RADIUS, GRADIENT_COLOR_S, GRADIENT_COLOR_E);
     };
 
     p._loadMarker = function () {

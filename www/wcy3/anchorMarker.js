@@ -15,6 +15,9 @@ TQ = TQ || {};
         workingMarkers.splice(0);
     };
 
+    var GRADIENT_COLOR_S = "#007",
+        GRADIENT_COLOR_E = "#00F";
+
     var p = AnchorMarker.prototype = Object.create(TQ.Marker.prototype);
     p.parent_getTsrInHostObj = p.getTsrInHostObj;
 
@@ -26,6 +29,17 @@ TQ = TQ || {};
             tsrObj.y = anchor.y;
         }
         return tsrObj;
+    };
+
+    p.createImage = function () {
+        var s = this.displayObj;
+        if (!s) {
+            TQ.Log.criticalError(TQ.Dictionary.FoundNull);
+            return;
+        }
+
+        s.graphics.clear(); // 清除老的边框
+        TQ.Graphics.drawCircle(s, 0, 0, TQ.Marker.RADIUS, GRADIENT_COLOR_S, GRADIENT_COLOR_E);
     };
 
     /// singleton

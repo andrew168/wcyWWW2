@@ -10,7 +10,7 @@ var TQ = TQ || {};
     }
 
     Graphics.drawBubble = drawBubble;
-    Graphics.drawCircle = drawCicle;
+    Graphics.drawCircle = drawCircle;
     Graphics.drawRect = drawRect;
     Graphics.drawStar = drawStar;
     Graphics.getCanvas = getCanvas;
@@ -39,11 +39,14 @@ var TQ = TQ || {};
         }
     }
 
-    function drawCicle(shape, x, y, radius) { //shape is createJS.Shape
+    function drawCircle(shape, x, y, radius, gradientColorS, gradientColorE) { //shape is createJS.Shape
         var thickness = 1,
-            edgeColor = "#000",
-            gradientColorS = "#00F",
+            edgeColor = "#000";
+
+        if (!gradientColorS) { // 兼容
+            gradientColorS = "#00F";
             gradientColorE = "#F00";
+        }
 
         shape.graphics.ss(thickness).beginStroke(edgeColor).
             beginRadialGradientFill([gradientColorS, gradientColorE], [0, 1], 0, 0, 0, 0, 0, radius).
