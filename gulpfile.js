@@ -1,7 +1,8 @@
 /* jshint node:true */
 
 'use strict';
-var dstPath1 = 'E:\\projects\\cardforvote\\www',
+var srcPath = 'E:\\projects\\WcyCore\\www',
+    dstPath1 = 'E:\\projects\\cardforvote\\www',
     dstPath2 = 'E:\\projects\\cardforvote\\ksWww';
 var gulp = require('gulp');
 var $ = require('gulp-load-plugins')(); //jshint ignore:line
@@ -75,6 +76,12 @@ gulp.task('build', ['wcylib_minify'], function () {
         .pipe(gulp.dest(dstPath2 + '\\lib'));
 });
 
-gulp.task('default', ['config'], function () {
+gulp.task('copy_debug_tools', function () {
+    return gulp.src(srcPath + "\\wcy3\\debugger\\*.*")
+        .pipe(gulp.dest(dstPath1 + "\\wcy3\\debugger"))
+        .pipe(gulp.dest(dstPath2 + "\\wcy3\\debugger"));
+});
+
+gulp.task('default', ['config', 'copy_debug_tools'], function () {
     gulp.start('build');
 });
