@@ -990,6 +990,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     state.isFont = true;
                     hasChanged = true;
                 }
+                if (state.isFont) {
+                    if (state.hasBubble !== ele.hasBubble()) {
+                        state.hasBubble = ele.hasBubble();
+                        hasChanged = true;
+                    }
+                }
             } else {
                 if (state.isFont) {
                     state.isFont = false;
