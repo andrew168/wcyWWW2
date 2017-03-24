@@ -30,7 +30,7 @@ window.TQ = window.TQ || {};
         if (bubble) {
             return bubble.attachAnchorMarker();
         } else {
-            return this.parent_attachDecoration(decs);
+            // return this.parent_attachDecoration(decs);
         }
     };
 
@@ -39,7 +39,7 @@ window.TQ = window.TQ || {};
         if (bubble) {
             bubble.detachAnchorMarker();
         }
-        return this.parent_detachDecoration();
+        // return this.parent_detachDecoration();
     };
 
     p.getColor = function() {
