@@ -89,7 +89,10 @@ window.TQ = window.TQ || {};
             MoveCtrl._lastItemID = target.id;
             if (!!ele.children) {
                 for (var i=0; i< ele.children.length; i++) {
-                    MoveCtrl._doMoveZ(ele.children[i], step);
+                    var child = ele.children[i];
+                    if (!child.isMarker()) {
+                        MoveCtrl._doMoveZ(child, step);
+                    }
                 }
             }
         }
