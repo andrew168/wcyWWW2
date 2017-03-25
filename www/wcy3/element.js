@@ -141,7 +141,7 @@ window.TQ = window.TQ || {};
         this.id = createjs.UID.get();
         if ((this.level.isStageReady())) {
             // 如果所需资源都在RM， 则直接init， 否则，sent到RM， 要求调入。完成后， 再init
-            if ((desc.type == "SOUND") || (desc.type == "Bitmap") || (desc.type == "BUTTON")){
+            if ((desc.type === DescType.SOUND) || (desc.type === DescType.BITMAP) || (desc.type === DescType.BUTTON)){
                 TQ.Assert.isTrue(TQ.RM.hasResourceReady(desc.src), "先准备好资源， 再创建元素");
             }
         }
@@ -336,7 +336,7 @@ window.TQ = window.TQ || {};
             desc.zIndex = Element.TOP;
         }
 
-        if (desc.type == "Text") {
+        if (desc.type === DescType.TEXT) {
             desc.pivotX = (desc.pivotX === undefined) ? TQ.Config.TEXT_PIVOT_X : desc.pivotX;
             desc.pivotY = (desc.pivotY === undefined) ? TQ.Config.TEXT_PIVOT_Y : desc.pivotY;
         } else {
@@ -630,8 +630,8 @@ window.TQ = window.TQ || {};
 
     p.skinning = function (skin) {
         var hostType = this.getType();
-        if (hostType == "BUTTON") {
-            hostType = "Bitmap";
+        if (hostType === DescType.BUTTON) {
+            hostType = DescType.BITMAP;
         }
         if (hostType != skin.getType()) {
             TQ.MessageBubble.show(TQ.Dictionary.SAME_TYPE_SKIN + skin.getType(), false);
@@ -1124,7 +1124,7 @@ window.TQ = window.TQ || {};
         }
 
         TQ.DirtyFlag.setElement(this);
-        if (this.jsonObj.type == "Group") {
+        if (this.jsonObj.type === DescType.GROUP) {
             for (var i = 0; i < this.children.length; i++) {
                 var ele = this.children[i];
                 if (!ele.isJoint()) ele.pinIt(); // 钉住Group， 但是， 不要钉住关节物体
@@ -1685,10 +1685,10 @@ window.TQ = window.TQ || {};
         return false;
     };
     p.isSound = function () {
-        return (this.jsonObj.type == "SOUND");
+        return (this.jsonObj.type == DescType.SOUND);
     };
     p.isGroupFile = function () {
-        return (this.jsonObj.type == "GroupFile");
+        return (this.jsonObj.type === DescType.GROUP_FILE);
     };
     p.isButton = function () {
         return false;
@@ -1724,7 +1724,7 @@ window.TQ = window.TQ || {};
             return this.isSound();
         }
         assertNotNull(TQ.Dictionary.FoundNull, this.displayObj); // 应该有可显示对象
-        return ((this.displayObj.image == null) && (this.jsonObj.type == "Group"));
+        return ((this.displayObj.image == null) && (this.jsonObj.type === DescType.GROUP));
     };
     p.isValid = function () { // 非法的物体包括: 被删除的物体
         return (this.jsonObj || this.displayObj);
