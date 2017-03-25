@@ -42,7 +42,7 @@ window.TQ = window.TQ || {};
             case DescType.BITMAP:
                 break;
             case DescType.GROUP:
-                break;
+                return new TQ.GroupElement(level, desc);
             default :
                 console.error("unknown desc.type:" + desc.type);
                 break;
