@@ -191,7 +191,7 @@ TQ = TQ || {};
     function compose(host) {
         // 除了pivot，其余都是物体坐标系下的缺省值
         var jsonObj = {
-            type: TQ.Element.DescType.TEXT_BUBBLE,
+            type: TQ.ElementType.TEXT_BUBBLE,
             x: 0,
             y: 0,
             sx: 1,

@@ -53,7 +53,7 @@ var currScene = null;
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
 
         // "Groupfile" 暂时还没有纳入RM的管理范畴
-        if (((desc.type === TQ.Element.DescType.SOUND) || (desc.type === TQ.Element.DescType.BITMAP) || (desc.type === TQ.Element.DescType.BUTTON))
+        if (((desc.type === TQ.ElementType.SOUND) || (desc.type === TQ.ElementType.BITMAP) || (desc.type === TQ.ElementType.BUTTON))
             && (!TQ.RM.hasElementDesc(desc))) {
             TQ.RM.addElementDesc(desc, doAdd);
             return null; // 无法立即添加并返回ele，因为资源不ready

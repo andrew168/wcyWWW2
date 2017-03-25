@@ -21,14 +21,14 @@ TQ = TQ || {};
 
         if (!jsonObj.subType) {
             switch (jsonObj.type) {
-                case TQ.Element.DescType.RAIN:
+                case TQ.ElementType.RAIN:
                     jsonObj.subType = TQ.FeParticle.RAIN;
                     break;
-                case TQ.Element.DescType.SNOW:
+                case TQ.ElementType.SNOW:
                 default:
                     jsonObj.subType = TQ.FeParticle.SNOW;
             }
-            jsonObj.type = TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE;
+            jsonObj.type = TQ.ElementType.FULLSCREEN_EFFECT_PARTICLE;
         }
 
         this.version = jsonObj.version;
@@ -144,7 +144,7 @@ TQ = TQ || {};
     };
 
     p.isFEeffect = function() {
-        return (this.jsonObj.type === TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE);
+        return (this.jsonObj.type === TQ.ElementType.FULLSCREEN_EFFECT_PARTICLE);
     };
 
     TQ.ParticleElement = ParticleElement;

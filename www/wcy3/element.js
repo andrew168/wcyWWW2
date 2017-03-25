@@ -6,15 +6,6 @@ window.TQ = window.TQ || {};
 
 (function () {
     TQ.ElementType = {
-        BITMAP: "Bitmap",
-        SOUND: "SOUND",
-        TEXT: "Text",
-        GROUP: "Group",
-        GROUP_FILE: "GroupFile",
-        BITMAP_ANIMATION: "BitmapAnimation"
-    };
-
-    var DescType = {
         ANCHOR_MARKER: "AnchorMarker",
         BITMAP: "Bitmap",
         BITMAP_ANIMATION: "BitmapAnimation",
@@ -30,6 +21,7 @@ window.TQ = window.TQ || {};
         TEXT: "Text",
         TEXT_BUBBLE: "TextBubble"
     };
+    var DescType = TQ.ElementType;
 
     function Element(level, desc) {
         if (level != null) {  // 适用于 子类的定义, 不做任何初始化,只需要prototype
@@ -1836,5 +1828,4 @@ window.TQ = window.TQ || {};
     };
 
     TQ.Element = Element;
-    TQ.Element.DescType = DescType;
 }());

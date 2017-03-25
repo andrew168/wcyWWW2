@@ -90,7 +90,7 @@ TQ = TQ || {};
         var desc = {
             name: TQ.FeParticle.MONEY + counter,
             src: null,
-            type: TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE,
+            type: TQ.ElementType.FULLSCREEN_EFFECT_PARTICLE,
             subType: TQ.FeParticle.MONEY
         };
         TQ.SceneEditor.addItem(desc);
@@ -108,7 +108,7 @@ TQ = TQ || {};
         var desc = {
             name: TQ.FeParticle.RAIN + counter,
             src: null,
-            type: TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE,
+            type: TQ.ElementType.FULLSCREEN_EFFECT_PARTICLE,
             subType: TQ.FeParticle.RAIN
         };
 
@@ -129,7 +129,7 @@ TQ = TQ || {};
         var desc = {
             name: TQ.FeParticle.SNOW + counter,
             src: null,
-            type: TQ.Element.DescType.FULLSCREEN_EFFECT_PARTICLE,
+            type: TQ.ElementType.FULLSCREEN_EFFECT_PARTICLE,
             subType: TQ.FeParticle.SNOW
         };
         TQ.SceneEditor.addItem(desc);

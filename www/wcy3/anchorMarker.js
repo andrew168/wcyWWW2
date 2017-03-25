@@ -49,7 +49,7 @@ TQ = TQ || {};
     AnchorMarker.getOne = function () {
         var decs = markers.pop();
         if (!decs) {
-            decs = TQ.Element.build(currScene.currentLevel, {isVis: 0, type: TQ.Element.DescType.ANCHOR_MARKER});
+            decs = TQ.Element.build(currScene.currentLevel, {isVis: 0, type: TQ.ElementType.ANCHOR_MARKER});
         }
         workingMarkers.push(decs);
         return decs;

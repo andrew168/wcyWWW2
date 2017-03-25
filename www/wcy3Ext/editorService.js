@@ -518,7 +518,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function insertRectangle(x, y, w, h) {
         var desc = {
             src: null,
-            type: TQ.Element.DescType.RECTANGLE,
+            type: TQ.ElementType.RECTANGLE,
             autoFit: TQ.Element.FitFlag.NO,
             x: x,
             y: y,

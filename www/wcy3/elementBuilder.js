@@ -19,7 +19,7 @@ window.TQ = window.TQ || {};
         }
         // 此处已经组装好了目录
         TQ.Element.upgradeToVer2(desc);
-        var DescType = TQ.Element.DescType;
+        var DescType = TQ.ElementType;
         switch (desc.type) {
             case DescType.ANCHOR_MARKER:
                 return new TQ.AnchorMarker(level, desc);
