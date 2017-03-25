@@ -1124,7 +1124,7 @@ window.TQ = window.TQ || {};
         }
 
         TQ.DirtyFlag.setElement(this);
-        if (this.jsonObj.type === DescType.GROUP) {
+        if (this.isGroup()) {
             for (var i = 0; i < this.children.length; i++) {
                 var ele = this.children[i];
                 if (!ele.isJoint()) ele.pinIt(); // 钉住Group， 但是， 不要钉住关节物体
@@ -1690,6 +1690,14 @@ window.TQ = window.TQ || {};
     p.isGroupFile = function () {
         return (this.jsonObj.type === DescType.GROUP_FILE);
     };
+    p.isGroup = function () {
+        return (this.jsonObj.type === DescType.GROUP);
+    };
+
+    p.isGrouped = function () {
+        return (this.isGroup() ||this.isGroupFile());
+    };
+
     p.isButton = function () {
         return false;
     };
@@ -1724,7 +1732,7 @@ window.TQ = window.TQ || {};
             return this.isSound();
         }
         assertNotNull(TQ.Dictionary.FoundNull, this.displayObj); // 应该有可显示对象
-        return ((this.displayObj.image == null) && (this.jsonObj.type === DescType.GROUP));
+        return ((this.displayObj.image == null) && (this.isGroup()));
     };
     p.isValid = function () { // 非法的物体包括: 被删除的物体
         return (this.jsonObj || this.displayObj);
@@ -1740,12 +1748,9 @@ window.TQ = window.TQ || {};
         }
         return this.displayObj.visible;
     };
+
     p.hasBroken = function () {
         return (this.hasFlag(Element.BROKEN));
-    };
-    p.isGrouped = function () {
-        return ((this.jsonObj.type === DescType.GROUP) ||
-        (this.jsonObj.type === DescType.GROUP_FILE));
     };
 
     p.isVer2plus = function() {
