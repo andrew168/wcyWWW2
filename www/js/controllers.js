@@ -69,6 +69,7 @@ function DashCtrl(
     };
 
     $scope.EditorService = EditorService;
+    $scope.es = EditorService;
     $scope.SelectSet = TQ.SelectSet;
     $scope.addLevel = function() {
         EditorService.addLevel();

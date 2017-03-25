@@ -69,6 +69,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         pinIt:pinIt,
         attachTextBubble: TQ.TextBubble.attachTo,
         detachTextBubble: TQ.TextBubble.detachFrom,
+        ftb:TQ.FloatToolbar,
 
         // element insert (text, sound, image...)
         mCopyToggle: mCopyToggle,
