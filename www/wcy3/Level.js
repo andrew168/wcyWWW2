@@ -117,17 +117,8 @@ window.TQ = window.TQ || {};
     };
 
     p.groupIt = function(elements) {
-        TQ.Log.out("Group it");
-        // 以第一个物体的参数, 为主, 建立Group元素.
-        var desc = {x: elements[0].jsonObj.x, y: elements[0].jsonObj.y, type:"Group", autoFit: TQ.Element.FitFlag.KEEP_SIZE};
-        var ele = this.addElement(desc); //ToDo:
-        ele.update(TQ.FrameCounter.t());
-        for (var i = 0; i < elements.length; i++) {
-            this.pickOffChild(elements[i]);
-            ele.addChild(elements[i]);
-        }
-
-        this.latestElement = ele;
+        var aGroup = TQ.GroupElement.create(this, elements);
+        this.latestElement = aGroup;
         TQ.DirtyFlag.setLevel(this);
     };
 
@@ -141,12 +132,12 @@ window.TQ = window.TQ || {};
                 ele = ele.parent;
             }
             if (ele == null) continue;
-            if (ele.isVirtualObject()) {
-                while (ele.children.length > 0) {
-                    var child = ele.removeChild(ele.children[0]);
-                    this.addElementDirect(child);
+            if (ele.isGroup()) {
+                var parts = ele.explode(),
+                    j;
+                for (j=0; j < parts.length; j++) {
+                    this.addElementDirect(parts[j]);
                 }
-
                 this.deleteElement(ele);
             }
         }
