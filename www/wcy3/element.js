@@ -209,15 +209,6 @@ window.TQ = window.TQ || {};
         this.animeTrack = this.jsonObj.animeTrack;
     };
 
-    p._loadComponent = function () {
-        assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并
-        // 建立空的 displayObj 以容纳设备空间的参数
-        this.displayObj = {};
-        this.loaded = true;
-        this._afterItemLoaded();
-        this.setTRSAVZ();
-    };
-
     Element.liftZ = function (jsonObj, zBase) {
         if (jsonObj.zIndex != -1) { // Group物体的zIndex，总是-1
             jsonObj.zIndex += zBase;
@@ -395,9 +386,6 @@ window.TQ = window.TQ || {};
         switch (desc.type) {
             case DescType.BITMAP_ANIMATION:
                 this._loadActor();
-                break;
-            case DescType.GROUP:
-                this._loadComponent();
                 break;
             case DescType.JOINT_MARKER:
             case DescType.ANCHOR_MARKER:
