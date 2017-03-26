@@ -53,9 +53,20 @@ var TQDebugger = TQDebugger || {};
         }
 
         var jsonObj = e.jsonObj;
-        console.log(msg + e.jsonObj.type + "_" + e.id + ": z = " + e.getZ() + " x = " + jsonObj.x.toFixed(1) + " y=" +
-                jsonObj.y.toFixed(1) + ", sx= " + jsonObj.sx.toFixed(1) + " sy= " + jsonObj.sy.toFixed(1) + ", ang = " + jsonObj.rotation.toFixed(1) +
-                " pvX=" + jsonObj.pivotX.toFixed(2) + ", pvY=" + jsonObj.pivotY.toFixed(2));
+
+        // basic info:
+        msg += e.jsonObj.type + "_" + e.id + ": z = " + e.getZ();
+
+        // jsonInfo
+        msg += " x = " + jsonObj.x.toFixed(1) + " y=" +
+        jsonObj.y.toFixed(1) + ", sx= " + jsonObj.sx.toFixed(1) + " sy= " + jsonObj.sy.toFixed(1) + ", ang = " + jsonObj.rotation.toFixed(1) +
+        " pvX=" + jsonObj.pivotX.toFixed(2) + ", pvY=" + jsonObj.pivotY.toFixed(2);
+
+        // world, Obj info
+        var pos = e.getPositionInWorld();
+        msg += "In World: x = " + pos.x.toFixed(1) + " y=" + pos.y.toFixed(1);
+
+        console.log(msg);
         if (e.children && e.children.length > 0) {
             dumpArray(depth + 1, e.children);
         }
