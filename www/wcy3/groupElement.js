@@ -30,10 +30,17 @@ TQ = TQ || {};
         ele.update(TQ.FrameCounter.t());
 
         for (var i = 0; i < elements.length; i++) {
+            level.pickOffChild(elements[i]);
             ele.addChild(elements[i]);
             stageContainer.removeChild(elements[i].displayObj);
             ele.displayObj.addChild(elements[i].displayObj);
         }
+
+        for (var i = 0; i < elements.length; i++) {
+            stageContainer.addChild(elements[i].displayObj);
+            ele.displayObj.removeChild(elements[i].displayObj);
+        }
+
         return ele;
     }
 

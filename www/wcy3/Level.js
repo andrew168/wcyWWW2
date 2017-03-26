@@ -117,10 +117,6 @@ window.TQ = window.TQ || {};
     };
 
     p.groupIt = function(elements) {
-        for (var i = 0; i < elements.length; i++) {
-            this.pickOffChild(elements[i]);
-        }
-
         var aGroup = TQ.GroupElement.create(this, elements);
         this.addElementDirect(aGroup);
         this.latestElement = aGroup;
