@@ -43,7 +43,7 @@ TQ = TQ || {};
         for (var i = 0; i < n; i++) {
             expectedZ = Math.max(expectedZ, elements[i].getZ());
         }
-        return expectedZ - n;
+        return expectedZ - n + 1;
     }
 
     var p = GroupElement.prototype = Object.create(TQ.Element.prototype);
