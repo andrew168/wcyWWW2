@@ -439,7 +439,7 @@ TQ = TQ || {};
 
     SelectSet.attachDecoration = function(ele){
         if (!ele.decorations) {
-            ele.attachDecoration([TQ.Marker.getOne()]);
+            ele.attachMarker();
         }
     };
 

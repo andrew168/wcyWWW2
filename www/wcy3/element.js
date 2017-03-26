@@ -643,6 +643,10 @@ window.TQ = window.TQ || {};
         skin.TBD = true;
     };
 
+    p.attachMarker = function(){
+        this.attachDecoration([TQ.Marker.getOne()]);
+    };
+
     p.attachDecoration = function (decs) {
         // ToDo: 处理每一个Marker
         var marker = decs[0];

@@ -23,14 +23,11 @@ window.TQ = window.TQ || {};
     TextElement.prototype.constructor = TextElement;
 
     var p = TextElement.prototype = new TQ.Element(null, null);
-    p.parent_attachDecoration = p.attachDecoration;
     p.parent_detachDecoration = p.detachDecoration;
-    p.attachDecoration = function (decs) {
+    p.attachMarker = function () {
         var bubble = this.getTextBubble();
         if (bubble) {
             return bubble.attachAnchorMarker();
-        } else {
-            // return this.parent_attachDecoration(decs);
         }
     };
 
