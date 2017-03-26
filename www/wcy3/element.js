@@ -555,7 +555,16 @@ window.TQ = window.TQ || {};
         if (child.animeTrack.visible) child.saveWorldData(worldData, child.animeTrack.visible, Element.VISIBLE_CHANGED);
     };
 
+    p.readyForChild = function() {
+        if (this.isDisplayabled()) {
+            return (!!this.jsonObj.M);
+        } else {
+            return true;
+        }
+    };
+
     p.toRelative = function (worldData, child) {
+        TQ.Assert.isTrue(this.readyForChild(), "新建立的物体， 至少要新1次，补齐矩阵，才能addChild！");
         // 计算相对坐标， 并且录制。
         for (var i = 0; i < worldData.length; i++) {
             var p = worldData[i];
@@ -563,7 +572,7 @@ window.TQ = window.TQ || {};
             child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
             child.setFlag(p.type);
             Element.copyWorldData(child.jsonObj, p);
-            this.update(p.t, TQ.Const.NO_RECORDING_TRUE);
+            child.update(p.t, TQ.Const.NO_RECORDING_FALSE);
         }
     };
 
@@ -1702,6 +1711,12 @@ window.TQ = window.TQ || {};
     p.isSelectable = function() {
         return true;
     };
+
+    p.isDisplayabled = function () { // 可显示的简单物体，或者组合体
+        return (this.isBitmap() || this.isText() || this.isButton() ||
+        this.isGroup() || this.isGroupFile());
+    };
+
     p.getTextHtml = function () {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText());
         return this.toHtmlStr();
