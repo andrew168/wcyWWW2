@@ -106,6 +106,7 @@ window.TQ = window.TQ || {};
     Config.useHighlightBox = false;  // 不显示red的亮显box
     Config.koutuOn = true;  // 只缩放，（暂时不抠图）
     Config.textBubbleOn = false;
+    Config.useCreateJSFullContainer = false; // 不把ele放到group container的displayObj中， 而是仍然放在stageContainer中
 
 
     //

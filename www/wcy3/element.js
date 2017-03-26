@@ -931,8 +931,12 @@ window.TQ = window.TQ || {};
     };
 
     p.getContainer = function() {
-        var parent = this.parent;
-        return (parent && parent.isGroup()) ? parent.displayObj : stageContainer;
+        if (TQ.Config.useCreateJSFullContainer) {
+            var parent = this.parent;
+            return (parent && parent.isGroup()) ? parent.displayObj : stageContainer;
+        }
+
+        return stageContainer;
     };
 
     p._doAddItemToStage = function (upperEle) {
