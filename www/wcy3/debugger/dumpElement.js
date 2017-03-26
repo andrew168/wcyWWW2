@@ -6,7 +6,29 @@ var TQDebugger = TQDebugger || {};
     var _eleSelected = null;
     TQDebugger.dumpAll = dumpAll;
     TQDebugger.dumpSelected = dumpSelected;
+    TQDebugger.rotateTo = rotateTo;
+    TQDebugger.moveTo = moveTo;
     TQDebugger.reset = reset;
+    function moveTo(pos) {
+        if (!_eleSelected) {
+            _eleSelected = reset();
+        }
+
+        if (_eleSelected) {
+            _eleSelected.moveTo(pos);
+        }
+    }
+
+    function rotateTo(angle) {
+        if (!_eleSelected) {
+            _eleSelected = reset();
+        }
+
+        if (_eleSelected) {
+            _eleSelected.rotateTo(angle);
+        }
+    }
+
 
     function dumpAll() {
         dumpArray(0, currScene.currentLevel.elements);
