@@ -17,27 +17,41 @@ TQ = TQ || {};
         }
 
         // 以第一个物体的参数为主, 建立Group元素.
+        var pos = elements[0].getPositionInWorld();
         var desc = {
-            x: elements[0].jsonObj.x,
-            y: elements[0].jsonObj.y,
+            x: pos.x, // elements[0].jsonObj.x,
+            y: pos.y, // elements[0].jsonObj.y,
             type: TQ.ElementType.GROUP,
             autoFit: TQ.Element.FitFlag.KEEP_SIZE
         };
-        var ele = level.addElement(desc);
+        var ele = TQ.Element.build(level, desc);
+        var expectedZ = calZ(elements);
+        stageContainer.addChildAt(ele.displayObj, expectedZ);
         ele.update(TQ.FrameCounter.t());
 
         for (var i = 0; i < elements.length; i++) {
-            level.pickOffChild(elements[i]);
             ele.addChild(elements[i]);
+            stageContainer.removeChild(elements[i].displayObj);
+            ele.displayObj.addChild(elements[i].displayObj);
         }
         return ele;
     }
 
+    function calZ(elements) {
+        var expectedZ = elements[0].getZ(),
+            n = elements.length;
+        for (var i = 0; i < n; i++) {
+            expectedZ = Math.max(expectedZ, elements[i].getZ());
+        }
+        return expectedZ - n;
+    }
+
     var p = GroupElement.prototype = Object.create(TQ.Element.prototype);
     p._doLoad = function () {
-        assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并
+        assertNotNull(TQ.Dictionary.
+            FoundNull, this.jsonObj); // 合并
         // 建立空的 displayObj 以容纳设备空间的参数
-        this.displayObj = {};
+        this.displayObj = new createjs.Container();
         this.loaded = true;
         this._afterItemLoaded();
         this.setTRSAVZ();

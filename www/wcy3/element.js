@@ -811,7 +811,7 @@ window.TQ = window.TQ || {};
 
         TQ.TraceMgr.removeFromStage(this);
         if (this.displayObj) {
-            stageContainer.removeChild(this.displayObj);
+            this.getContainer().removeChild(this.displayObj);
         }
         this.clearFlag(Element.IN_STAGE);
         TQ.DirtyFlag.setElement(this);
@@ -835,7 +835,7 @@ window.TQ = window.TQ || {};
         if (!this.displayObj) {
             this.jsonObj.zIndex = -1;
         } else {
-            this.jsonObj.zIndex = stageContainer.getChildIndex(this.displayObj);
+            this.jsonObj.zIndex = this.getContainer().getChildIndex(this.displayObj);
         }
         for (var i = 0; i < this.children.length; i++) {
             this.children[i].persist();
@@ -917,10 +917,16 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.getContainer = function() {
+        var parent = this.parent;
+        return (parent && parent.isGroup()) ? parent.displayObj : stageContainer;
+    };
+
     p._doAddItemToStage = function (upperEle) {
         // 只需要加入一次， 之后， 都是自动更新坐标，角度等等， 不需要反复加入
         // 他们的坐标都控制在 displayObj中，
-        if (( null == this.displayObj) || this.isVirtualObject()) { // group物体的虚根
+        if ( !this.isGroup() &&
+            ((null == this.displayObj) || this.isVirtualObject())) { // group物体的虚根
             return;
         }
 
@@ -935,15 +941,15 @@ window.TQ = window.TQ || {};
         { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
             this.setFlag(Element.IN_STAGE);
             if ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
-                stageContainer.addChild(item);
+                this.getContainer().addChild(item);
             } else {
-                var z = stageContainer.getChildIndex(upperEle.displayObj);
+                var z = this.getContainer().getChildIndex(upperEle.displayObj);
                 if (z < 0) { // 是 group， 或者其它不可显示的物体
-                    stageContainer.addChild(item);
+                    this.getContainer().addChild(item);
                 } else {
                     assertTrue(TQ.Dictionary.INVALID_PARAMETER, z >= 0); // 第一个元素的z = 0
-                    assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < stageContainer.getNumChildren());
-                    stageContainer.addChildAt(item, z);  // 把upperEle 顶起来
+                    assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < this.getContainer().getNumChildren());
+                    this.getContainer().addChildAt(item, z);  // 把upperEle 顶起来
                 }
             }
 
@@ -1031,7 +1037,7 @@ window.TQ = window.TQ || {};
         if (TQ.Config.useHighlightBox) {
             this.highter = this.createBBox(1, 1, this.getRotation(),
                 this.getWidth(), this.getHeight());
-            stageContainer.addChild(this.highter);
+            this.getContainer().addChild(this.highter);
         }
     };
 
@@ -1045,7 +1051,7 @@ window.TQ = window.TQ || {};
                 return;
             }
 
-            stageContainer.removeChild(this.highter);
+            this.getContainer().removeChild(this.highter);
             this.highter = null;
         }
     };
@@ -1156,7 +1162,7 @@ window.TQ = window.TQ || {};
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
             TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
             if ((this.jsonObj.zIndex != null) && (this.jsonObj.zIndex >= 0)) { // 原来是group, 没有皮肤, 所以是-1;
-                stageContainer.setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
+                this.getContainer().setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
             }
             this._isNewSkin = false;
         } else {
@@ -1795,7 +1801,7 @@ window.TQ = window.TQ || {};
     p.getZ = function () { //如果是没有Z值的(例如:Group,等), 则返回其首个有Z值孩子的值
         // 只是被 moveLayer命令的undo使用, 没有用于物体顺序的保存
         var target = this.displayObj;
-        var z = (!target) ? -1 : stageContainer.getChildIndex(target);
+        var z = (!target) ? -1 : this.getContainer().getChildIndex(target);
         if (z >= 0) {
             return z
         }
