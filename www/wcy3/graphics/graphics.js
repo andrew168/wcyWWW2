@@ -15,6 +15,8 @@ var TQ = TQ || {};
     Graphics.drawStar = drawStar;
     Graphics.getCanvas = getCanvas;
     Graphics.setCanvas = setCanvas;
+    Graphics.findElementAtZ = findElementAtZ;
+
     var ET_MOVETO = 1, // Elememt Type in polygon
         ET_ARC = 2,
         ET_LINE = 3;
@@ -160,6 +162,16 @@ var TQ = TQ || {};
 
     function toCanvasDevice(objY) {  //只是反Y坐标， 不能被Height减，否则有系统误差
         return -objY;
+    }
+
+    // stage
+    function findElementAtZ(z) {
+        var ele = stageContainer.getChildAt(z).ele;
+        while (ele && ele.parent) {
+            ele = ele.parent;
+        }
+
+        return ele;
     }
 
     TQ.Graphics = Graphics;

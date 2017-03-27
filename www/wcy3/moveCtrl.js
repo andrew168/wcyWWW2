@@ -50,9 +50,19 @@ window.TQ = window.TQ || {};
     移动层次，step >= 1： 向上移动1层； step <-1： 向下移动1层
      */
     MoveCtrl.moveLayer = function (ele, step) {
-        var oldZ = ele.getZ();
+        var oldZ = (step >0) ? ele.getMaxZ(): ele.getMinZ();  // 防止，目标z落在自身
+        step = zAdjustForGroup(oldZ, step); // 防止目标z录入复合体内
         TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.CHANGE_LAYER, ele, step, oldZ));
     };
+
+    function zAdjustForGroup(oldZ, step) {
+        var ele = TQ.Graphics.findElementAtZ(oldZ + step);
+        if (ele.isComposed()) {
+            var newZ = (step > 0) ? ele.getMaxZ() : ele.getMinZ();
+            step = newZ - oldZ;
+        }
+        return step;
+    }
 
     // 下面的函数只被command所调用, 不会被其它函数调用
     MoveCtrl.cmdMoveLayer = function (ele, step) {

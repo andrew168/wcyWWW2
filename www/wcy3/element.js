@@ -1684,6 +1684,10 @@ window.TQ = window.TQ || {};
         return this.loaded;
     };
 
+    p.isComposed = function() {
+        return (this.children && this.children.length >0 && !this.children[0].isMarker());
+    };
+
     p.isClipPoint = function () {
         return this.jsonObj.isClipPoint;
     };
@@ -1821,6 +1825,47 @@ window.TQ = window.TQ || {};
     p.getAlias = function () {
         return null;
     };
+
+    p.getMaxZ = function() {
+        if (!this.isComposed()) {
+            return this.getZ();
+        }
+
+        var n = this.children.length,
+            maxZ = this.getZ(),
+            child;
+
+        for (var i = 0; i < n; i++) {
+            child = this.children[i];
+            if (child.isMarker()) {
+                continue;
+            }
+            maxZ = Math.max(maxZ, child.getZ());
+        }
+
+        return maxZ;
+    };
+
+    p.getMinZ = function () {
+        if (!this.isComposed()) {
+            return this.getZ();
+        }
+
+        var n = this.children.length,
+            minZ = this.getZ(),
+            child;
+
+        for (var i = 0; i < n; i++) {
+            child = this.children[i];
+            if (child.isMarker()) {
+                continue;
+            }
+            minZ = Math.min(minZ, child.getZ());
+        }
+
+        return minZ;
+    };
+
     p.getZ = function () { //如果是没有Z值的(例如:Group,等), 则返回其首个有Z值孩子的值
         // 只是被 moveLayer命令的undo使用, 没有用于物体顺序的保存
         var target = this.displayObj;
