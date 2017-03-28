@@ -174,6 +174,7 @@ var currScene = null;
         TQ.ActionRecorder.initialize();
         TQ.SelectSet.initialize();
         TQ.TouchManager.initialize();
+        TQ.AnimationManager.initialize();
     }
 
     function openScene(fileInfo) {
@@ -193,6 +194,7 @@ var currScene = null;
             localStorage.setItem("sceneName", fileInfo.name);
             TQ.FrameCounter.reset();
             TQ.CommandMgr.reset();
+            TQ.AnimationManager.reset();
             TQ.SkinningCtrl.end();
             TQ.FloatToolbar.close();
             TQ.WCY.currentScene = currScene;

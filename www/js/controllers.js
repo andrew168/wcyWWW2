@@ -70,6 +70,7 @@ function DashCtrl(
 
     $scope.EditorService = EditorService;
     $scope.es = EditorService;
+    $scope.am = TQ.AnimationManager;
     $scope.SelectSet = TQ.SelectSet;
     $scope.addLevel = function() {
         EditorService.addLevel();
