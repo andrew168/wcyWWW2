@@ -152,28 +152,27 @@
             <!-- 作品 -->
             <div style="display: block">
                 <button class="button button-positive" ng-click="createWcy()">新建</button>
-                <button class="button button-positive" ng-click="saveWorks()">保存作品到localStorage和服务器</button>
+                <button class="button button-positive" ng-click="saveWorks()">保存</button>
                 <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()">重播</button>
                 <button class="button button-positive" ng-click="EditorService.preview($event)">预览</button>
                 <button class="button button-positive" ng-click="EditorService.stop($event)">stop</button>
-                <button class="button button-positive" ng-click="startRecord()">开启录制 </button>
-                <button class="button button-positive" ng-click="stopRecord()">停止录制 </button>
+                <button class="button button-positive" ng-click="startRecord()" ng-show="false">开启录制 </button>
+                <button class="button button-positive" ng-click="stopRecord()" ng-show="false">停止录制 </button>
                 <button class="button button-positive" ng-click="insertBkImage()">背景</button>
                 <button class="button button-positive" ng-click="insertProp()">道具</button>
                 <button class="button button-positive" ng-click="testInsert()">文字</button>
                 <button class="button button-positive" ng-click="insertRectangle()">矩形</button>
-                <button class="button button-positive" ng-click="EditorService.attachTextBubble()">加气泡</button>
-                <button class="button button-positive" ng-click="EditorService.detachTextBubble()">删气泡</button>
-                <button class="btn-big ion-ios-copy-outline" ng-click="EditorService.mCopyToggle()">NCopy</button>
-                <button class="btn-big ion-ios-unlocked" ng-click="EditorService.pinIt()">PinIt</button>
-                <button class="button button-positive" ng-click="SelectSet.multiCmdGroupIt()">打包</button>
-                <button class="button button-positive" ng-click="SelectSet.multiCmdJointIt()">加关节</button>
-                <button class="button button-positive" ng-click="SelectSet.explode()">炸开</button>
-                <button class="button button-positive" ng-click="es.ftb.onMoveUpLayer($event)">升</button>
-                <button class="button button-positive" ng-click="es.ftb.onMoveDownLayer($event)">降</button>
-                <button class="button button-positive" ng-click="undo()">undo</button>
-                <button class="button button-positive" ng-click="redo()">redo</button>
-
+                <button class="button button-positive" ng-click="EditorService.attachTextBubble()" ng-show="false">加气泡</button>
+                <button class="button button-positive" ng-click="EditorService.detachTextBubble()" ng-show="false">删气泡</button>
+                <button class="btn-big ion-ios-copy-outline" ng-click="EditorService.mCopyToggle()" ng-show="false">NCopy</button>
+                <button class="btn-big ion-ios-unlocked" ng-click="EditorService.pinIt()" ng-show="false">PinIt</button>
+                <button class="button button-positive" ng-click="SelectSet.multiCmdGroupIt()" ng-show="false">打包</button>
+                <button class="button button-positive" ng-click="SelectSet.multiCmdJointIt()" ng-show="false">加关节</button>
+                <button class="button button-positive" ng-click="SelectSet.explode()" ng-show="false">炸开</button>
+                <button class="button button-positive" ng-click="es.ftb.onMoveUpLayer($event)" ng-show="false">升</button>
+                <button class="button button-positive" ng-click="es.ftb.onMoveDownLayer($event)" ng-show="false">降</button>
+                <button class="button button-positive" ng-click="undo()" ng-show="false">undo</button>
+                <button class="button button-positive" ng-click="redo()" ng-show="false">redo</button>
             </div>
             <div style="display:none"> <!-- all, passed -->
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
