@@ -1395,18 +1395,7 @@ window.TQ = window.TQ || {};
         var motionType = 0; // 没有变化, 使用上一个时刻的 世界坐标
         if (!noRecording && this.allowRecording() && !TQBase.LevelState.isOperatingTimerUI()) {
             if (this.dirty2 || this.isUserControlling()) {
-                TQ.Log.debugInfo("update: Record, lastOperationFlag =" + TQBase.Trsa.lastOperationFlag);
-                if (!this.getOperationFlags()) {  // 鼠标按住, 但是 没有移动, 单独确定操作状态
-                    this.setFlag(TQBase.Trsa.lastOperationFlag);
-                    // TQ.Log.out("操作: " + TQBase.Trsa.lastOperationFlag +"last");
-                }
-                //  不能在此记录, 因为, Move, Rotate操作的时候, 不调用它update
-                TQ.Pose.tsrWorld2Object(this);
-                TQ.Assert.isTrue(!isNaN(TQ.Pose.x), "x 为 NaN！！！");
-                TQ.Assert.isTrue(!isNaN(TQ.Pose.y), "y 为 NaN！！！");
-                // 记录修改值
-                TQ.TrackRecorder.record(this, t);
-                justRecorded = true;
+                justRecorded = this.updateRecord(t);
                 motionType += 0x02;
             }
         }
@@ -1414,37 +1403,9 @@ window.TQ = window.TQ || {};
         // 播放过程:
         // 1) 生成世界坐标:
         parentTSR = (null == this.parent) ? null : this.parent.jsonObj;
-        var tsrObj = null;
-        if (this.hasAnimation()) { //  动画物体
-            // 即使是 用户操作的物体, 也需要重新生成, 因为用户只操作了其中的几个轨道,
-            //  而其余的轨道, 仍然需要使用原来的数据,
-            // 当然, 此刻的计算,一是为此刻的显示, 二是为下一时刻的修改. 两用的.
-            // 1.1A) 从动画轨迹 到物体坐标
-            // 如果有动画数据, 才需要解码,生成新的 世界坐标. 否则,跳过
-            // 先生成新的 物体坐标(TQ.Pose), 再转化到世界坐标系
-            TQ.Log.debugInfo("update: regenerate coordinates 1: hasAnimation");
-            var tt = t;
-            if (justRecorded && (TQ.TrackRecorder.style == TQ.TrackDecoder.JUMP_INTERPOLATION)) {
-                tt = t + 0.01; // 在脉冲运动下，迫使系统采用最新的位置
-            }
-            if (this.isSound() && this.isMultiScene) {//支持跨场景的声音
-                tt = currScene.toGlobalTime(tt);
-            }
-            TQ.TrackDecoder.calculate(this, tt); // 计算结果在Pose中，是 物体坐标系的）
-            // 1.1B): 从物体坐标 TQ.Pose. 到世界坐标
-            tsrObj = TQ.Pose;
-            motionType += 0x04;
-        } else if (this.isMarker()) {
-            TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
-            tsrObj = this.getTsrInHostObj();
-        } else if ((motionType == 0) && this.dirty) {
-            // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
-            TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");
-            tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
-        } else {
-            TQ.Log.error("unknown case");
-            tsrObj = null;
-        }
+        var result = this.updateTSR(t, justRecorded, motionType),
+            tsrObj = result.tsrObj;
+        motionType = result.motionType;
 
         //TSR 从物体坐标系到 世界坐标系
         this.updateM(parentTSR, tsrObj);
@@ -1484,6 +1445,57 @@ window.TQ = window.TQ || {};
         if (this.hookInMove) {
             this.hookInMove.call(this, this);
         }
+    };
+
+    p.updateRecord = function(t) {
+        TQ.Log.debugInfo("update: Record, lastOperationFlag =" + TQBase.Trsa.lastOperationFlag);
+        if (!this.getOperationFlags()) {  // 鼠标按住, 但是 没有移动, 单独确定操作状态
+            this.setFlag(TQBase.Trsa.lastOperationFlag);
+            // TQ.Log.out("操作: " + TQBase.Trsa.lastOperationFlag +"last");
+        }
+        //  不能在此记录, 因为, Move, Rotate操作的时候, 不调用它update
+        TQ.Pose.tsrWorld2Object(this);
+        TQ.Assert.isTrue(!isNaN(TQ.Pose.x), "x 为 NaN！！！");
+        TQ.Assert.isTrue(!isNaN(TQ.Pose.y), "y 为 NaN！！！");
+        // 记录修改值
+        TQ.TrackRecorder.record(this, t);
+        return true;
+    };
+
+    p.updateTSR = function(t, justRecorded, motionType) {
+        var tsrObj = null;
+        if (this.hasAnimation()) { //  动画物体
+            // 即使是 用户操作的物体, 也需要重新生成, 因为用户只操作了其中的几个轨道,
+            //  而其余的轨道, 仍然需要使用原来的数据,
+            // 当然, 此刻的计算,一是为此刻的显示, 二是为下一时刻的修改. 两用的.
+            // 1.1A) 从动画轨迹 到物体坐标
+            // 如果有动画数据, 才需要解码,生成新的 世界坐标. 否则,跳过
+            // 先生成新的 物体坐标(TQ.Pose), 再转化到世界坐标系
+            TQ.Log.debugInfo("update: regenerate coordinates 1: hasAnimation");
+            var tt = t;
+            if (justRecorded && (TQ.TrackRecorder.style == TQ.TrackDecoder.JUMP_INTERPOLATION)) {
+                tt = t + 0.01; // 在脉冲运动下，迫使系统采用最新的位置
+            }
+            if (this.isSound() && this.isMultiScene) {//支持跨场景的声音
+                tt = currScene.toGlobalTime(tt);
+            }
+            TQ.TrackDecoder.calculate(this, tt); // 计算结果在Pose中，是 物体坐标系的）
+            // 1.1B): 从物体坐标 TQ.Pose. 到世界坐标
+            tsrObj = TQ.Pose;
+            motionType += 0x04;
+        } else if (this.isMarker()) {
+            TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
+            tsrObj = this.getTsrInHostObj();
+        } else if ((motionType == 0) && this.dirty) {
+            // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
+            TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");
+            tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
+        } else {
+            TQ.Log.error("unknown case");
+            tsrObj = null;
+        }
+
+        return {tsrObj:tsrObj, motionType: motionType};
     };
 
     // Marker 专用部分
