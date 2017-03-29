@@ -1415,30 +1415,7 @@ window.TQ = window.TQ || {};
 
         // 2) 从世界坐标 到 设备坐标
         this.setTRSAVZ();
-        var debugON = false;
-        if (debugON) {
-            if ((stage.selectedItem != null) && (stage.selectedItem.id == this.displayObj.id)) {
-                var sels = TQ.Dictionary.Selected + stage.selectedItem.id;
-                //  值显示选中的物体:
-                displayInfo2(sels + "本物体id:" + this.displayObj.id + "motionType: " + motionType + " Pose: " + TQ.Pose.x + "," + TQ.Pose.y + "," +
-                        "jsonObjXY:" + this.jsonObj.x + ", " + this.jsonObj.y +
-                        "displayObjXY:" + this.displayObj.x + ", " + this.displayObj.y
-                );
-            }
-        }
-
-        if (this.jsonObj.isClipPoint == false) {
-            assertArray(TQ.Dictionary.INVALID_LOGIC, this.children); // "children可以是空数组[], 但不能为null，或undefined"
-            for (var i = 0; i < this.children.length; i++) {
-                // 传播dirty标志, 迫使child更新; dirty2的子关节不记录track
-                if (this.dirty || this.dirty2) this.children[i].dirty = true;
-                if (!(this.isMarker() && this.children[i].isUserControlling())) {
-                    TQ.Log.debugInfo("update children");
-                    this.children[i].update(t, true); // 对孩子的传播，都是被动的，纯更新，不记录。
-                }
-            }
-        }
-
+        this.updateChildren(t);
         this.updateHighlighter();
         this.dirty = this.dirty2 = false;
 
@@ -1496,6 +1473,20 @@ window.TQ = window.TQ || {};
         }
 
         return {tsrObj:tsrObj, motionType: motionType};
+    };
+
+    p.updateChildren = function (t) {
+        if (this.jsonObj.isClipPoint == false) {
+            assertArray(TQ.Dictionary.INVALID_LOGIC, this.children); // "children可以是空数组[], 但不能为null，或undefined"
+            for (var i = 0; i < this.children.length; i++) {
+                // 传播dirty标志, 迫使child更新; dirty2的子关节不记录track
+                if (this.dirty || this.dirty2) this.children[i].dirty = true;
+                if (!(this.isMarker() && this.children[i].isUserControlling())) {
+                    TQ.Log.debugInfo("update children");
+                    this.children[i].update(t, true); // 对孩子的传播，都是被动的，纯更新，不记录。
+                }
+            }
+        }
     };
 
     // Marker 专用部分
