@@ -1391,7 +1391,6 @@ window.TQ = window.TQ || {};
         }
 
         // 如果有拍摄, 先拍摄
-        var parentTSR = (null == this.parent) ? null : this.parent.jsonObj;
         var motionType = 0; // 没有变化, 使用上一个时刻的 世界坐标
         if (!noRecording && this.allowRecording() && !TQBase.LevelState.isOperatingTimerUI()) {
             if (this.dirty2 || this.isUserControlling()) {
@@ -1402,10 +1401,9 @@ window.TQ = window.TQ || {};
 
         // 播放过程:
         // 1) 生成世界坐标:
-        parentTSR = (null == this.parent) ? null : this.parent.jsonObj;
+        var parentTSR = (null == this.parent) ? null : this.parent.jsonObj;
         var result = this.updateTSR(t, justRecorded, motionType),
             tsrObj = result.tsrObj;
-        motionType = result.motionType;
 
         //TSR 从物体坐标系到 世界坐标系
         this.updateM(parentTSR, tsrObj);
