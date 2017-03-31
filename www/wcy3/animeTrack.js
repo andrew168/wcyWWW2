@@ -27,43 +27,37 @@ TQ = TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, desc.rotation);
         assertNotNull(TQ.Dictionary.FoundNull, desc.sx);
         assertNotNull(TQ.Dictionary.FoundNull, desc.sy);
-        if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
-            || (desc.animeTrack.x == undefined) || (desc.animeTrack.x == null)) {
+        if (!desc.animeTrack || !desc.animeTrack.x) {
             this.x = new TQ.OneTrack(desc.x);
         } else {
             this.x = new TQ.OneTrack(desc.animeTrack.x);
         }
 
-        if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
-            || (desc.animeTrack.y == undefined) || (desc.animeTrack.y == null)) {
+        if (!desc.animeTrack || !desc.animeTrack.y) {
             this.y = new TQ.OneTrack(desc.y);
         } else {
             this.y = new TQ.OneTrack(desc.animeTrack.y);
         }
 
-        if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
-            || (desc.animeTrack.rotation == undefined) || (desc.animeTrack.rotation == null)) {
+        if (!desc.animeTrack || !desc.animeTrack.rotation) {
             this.rotation = new TQ.OneTrack(desc.rotation);
         } else {
             this.rotation = new TQ.OneTrack(desc.animeTrack.rotation);
         }
 
-        if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
-            || (desc.animeTrack.sx == undefined) || (desc.animeTrack.sx == null)) {
+        if (!desc.animeTrack || !desc.animeTrack.sx) {
             this.sx = new TQ.OneTrack(desc.sx);
         } else {
             this.sx = new TQ.OneTrack(desc.animeTrack.sx);
         }
 
-        if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
-            || (desc.animeTrack.sy == undefined) || (desc.animeTrack.sy == null)) {
+        if (!desc.animeTrack || !desc.animeTrack.sy) {
             this.sy = new TQ.OneTrack(desc.sy);
         } else {
             this.sy = new TQ.OneTrack(desc.animeTrack.sy);
         }
 
-        if ((desc.animeTrack == undefined) || (desc.animeTrack == null)
-            || (desc.animeTrack.visible == undefined) || (desc.animeTrack.visible == null)) { // 即时添加的元素
+        if (!desc.animeTrack || !desc.animeTrack.visible) { // 即时添加的元素
             this.visible = new TQ.OneTrack(desc.isVis ? 1 : 0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
                 TQ.TrackRecorder.recordOneTrack(this.visible, 0.0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
