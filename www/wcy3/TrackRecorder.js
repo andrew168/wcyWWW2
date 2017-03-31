@@ -22,70 +22,44 @@ window.TQ = window.TQ || {};
         // ToDo: 2 记录单个的操作, 而不是每次都记录所有的轨道
 
         // 记录本物体坐标系下的值
-        if ((track == undefined) || (track == null)) {
+        if (!track) {
             // 第一次动画记录, 需要先初始化动画轨迹
             track = element.animeTrack = new TQ.AnimeTrack(jsonObj);
             assertNotUndefined(TQ.Dictionary.FoundNull, track);
         }
-        if ((track.rotation == undefined) || (track.rotation == null)) {
-            assertNotUndefined(TQ.Dictionary.FoundNull, track.tid1);
+
+        TQ.AssertExt.invalidLogic(!track.x || !track.y || !track.sx || !track.sy || !track.rotation, "新case， 未赋值");
+        if (element.hasFlag(TQ.Element.ROTATING)) {
+            TrackRecorder.recordOneTrack(track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
         }
 
-        if ((track.rotation == undefined) || (track.rotation == null)) {
-            track.rotation =new TQ.OneTrack(TQ.Pose.rotation);
-        } else {
-            if (element.hasFlag(TQ.Element.ROTATING)) {
-                TrackRecorder.recordOneTrack(track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
+        if (element.hasFlag(TQ.Element.TRANSLATING)) {
+            if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
+                TrackRecorder.recordOneTrack(track.x, t, TQ.Pose.x, TrackRecorder.style);
             }
         }
 
-        if ((track.x == undefined) || (track.x == null)) {
-            new TQ.OneTrack(TQ.Pose.x);
-        } else {
-            if (element.hasFlag(TQ.Element.TRANSLATING)) {
-                if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                    TrackRecorder.recordOneTrack(track.x, t, TQ.Pose.x, TrackRecorder.style);
-                }
+        if (element.hasFlag(TQ.Element.TRANSLATING)) {
+            if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
+                TrackRecorder.recordOneTrack(track.y, t, TQ.Pose.y, TrackRecorder.style);
             }
         }
 
-        if  ((track.y == undefined) || (track.y == null)) {
-            new TQ.OneTrack(TQ.Pose.y);
-        } else {
-            if (element.hasFlag(TQ.Element.TRANSLATING)) {
-                if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                    TrackRecorder.recordOneTrack(track.y, t, TQ.Pose.y, TrackRecorder.style);
-                }
+        if (element.hasFlag(TQ.Element.SCALING)) {
+            if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
+                TrackRecorder.recordOneTrack(track.sx, t, TQ.Pose.sx, TrackRecorder.style);
             }
         }
 
-        if ((track.sx == undefined) || (track.sx == null)) {
-            track.sx =  new TQ.OneTrack(TQ.Pose.sx);
-        } else {
-            if (element.hasFlag(TQ.Element.SCALING)) {
-                if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                    TrackRecorder.recordOneTrack(track.sx, t, TQ.Pose.sx, TrackRecorder.style);
-                }
+        if (element.hasFlag(TQ.Element.SCALING)) {
+            if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
+                TrackRecorder.recordOneTrack(track.sy, t, TQ.Pose.sy, TrackRecorder.style);
             }
         }
 
-        if ((track.sy == undefined) || (track.sy == null)) {
-            track.sy =  new TQ.OneTrack(TQ.Pose.sy);
-        } else {
-            if (element.hasFlag(TQ.Element.SCALING)) {
-                if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                    TrackRecorder.recordOneTrack(track.sy, t, TQ.Pose.sy, TrackRecorder.style);
-                }
-            }
-        }
-
-        if ((track.visible == undefined) || (track.visible == null)) {
-            track.visible =  new TQ.OneTrack(TQ.Pose.visible);
-        } else {
-            if (element.hasFlag(TQ.Element.VISIBLE_CHANGED)) { // 允许改变关节物体各个关节的可见性
-                TrackRecorder.recordOneTrack(track.visible, t, TQ.Pose.visible, TQ.TrackDecoder.JUMP_INTERPOLATION);
-                element.clearFlag(TQ.Element.VISIBLE_CHANGED);
-            }
+        if (element.hasFlag(TQ.Element.VISIBLE_CHANGED)) { // 允许改变关节物体各个关节的可见性
+            TrackRecorder.recordOneTrack(track.visible, t, TQ.Pose.visible, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            element.clearFlag(TQ.Element.VISIBLE_CHANGED);
         }
 
         element.clearFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING
