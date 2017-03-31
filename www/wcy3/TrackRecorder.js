@@ -28,7 +28,7 @@ window.TQ = window.TQ || {};
             assertNotUndefined(TQ.Dictionary.FoundNull, track);
         }
 
-        TQ.AssertExt.invalidLogic(!track.x || !track.y || !track.sx || !track.sy || !track.rotation, "新case， 未赋值");
+        TQ.AssertExt.invalidLogic(!!(track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
         if (element.hasFlag(TQ.Element.ROTATING)) {
             TrackRecorder.recordOneTrack(track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
         }
