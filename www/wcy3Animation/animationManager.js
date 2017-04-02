@@ -6,7 +6,9 @@ TQ.AnimationManager = (function() {
     'use strict';
     var UNLIMIT = 99999999,
         FLY_IN_DURATION = 1, // 1秒钟，飞入
-        FLY_IN_POS_0 = -100; // 从屏幕外开始
+        FLY_OUT_DURATION = 1,
+        FLY_IN_POS_0 = -100, // 从屏幕外开始
+        FLY_OUT_POS_1 = -100; // 到屏幕外结束
 
     var SagType = {
         // translate
@@ -39,7 +41,12 @@ TQ.AnimationManager = (function() {
         leftIn: leftIn,
         rightIn: rightIn,
         topIn: topIn,
-        bottomIn: bottomIn
+        bottomIn: bottomIn,
+
+        leftOut: leftOut,
+        rightOut: rightOut,
+        topOut: topOut,
+        bottomOut: bottomOut
     };
 
     function initialize() {
@@ -107,6 +114,40 @@ TQ.AnimationManager = (function() {
         return recordSag(sag);
     }
 
+    function leftOut() {
+        console.log("left out");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            posInWorld = ele.getPositionInWorld();
+        var sag = composeFlyOutSag(SagType.LEFT_OUT, posInWorld.x, FLY_OUT_POS_1);
+        return recordSag(sag);
+    }
+
+    function rightOut() {
+        console.log("right out");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            posInWorld = ele.getPositionInWorld(),
+            endPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width;
+        var sag = composeFlyOutSag(SagType.RIGHT_OUT, posInWorld.x, endPos);
+        return recordSag(sag);
+    }
+
+    function bottomOut() {
+        console.log("bottom out");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            posInWorld = ele.getPositionInWorld();
+        var sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, FLY_OUT_POS_1);
+        return recordSag(sag);
+    }
+
+    function topOut() {
+        console.log("top out");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            posInWorld = ele.getPositionInWorld(),
+            endPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height;
+        var sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, endPos);
+        return recordSag(sag);
+    }
+
     function composeFlyInSag(typeId, startPos, destinationPos) {
         var t2 = Math.max(TQ.FrameCounter.t(), FLY_IN_DURATION), // end time
             t1 = Math.max(0, t2 - FLY_IN_DURATION),
@@ -114,7 +155,20 @@ TQ.AnimationManager = (function() {
         return {
             typeID: typeId,
             speed: speed, // degree/second
-            value0: FLY_IN_POS_0,
+            value0: startPos,
+            t1: t1, // start time
+            t2: t2
+        }
+    }
+
+    function composeFlyOutSag(typeId, startPos, destinationPos) {
+        var t1 = TQ.FrameCounter.t(), // end time
+            t2 = t1 + FLY_OUT_DURATION,
+            speed = (destinationPos - startPos) / (t2 - t1);
+        return {
+            typeID: typeId,
+            speed: speed, // degree/second
+            value0: startPos,
             t1: t1, // start time
             t2: t2
         };
