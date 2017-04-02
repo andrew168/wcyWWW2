@@ -4,24 +4,24 @@
  * 以便于将来切换到createJS之外的library，
  */
 var TQ = TQ || {};
-(function () {
+TQ.Graphics = (function () {
     'use strict';
-    function Graphics() {
-    }
-
-    Graphics.drawBubble = drawBubble;
-    Graphics.drawCircle = drawCircle;
-    Graphics.drawRect = drawRect;
-    Graphics.drawStar = drawStar;
-    Graphics.getCanvas = getCanvas;
-    Graphics.setCanvas = setCanvas;
-    Graphics.findElementAtZ = findElementAtZ;
-
-    var ET_MOVETO = 1, // Elememt Type in polygon
+    var ET_MOVETO = 1, // Element Type in polygon
         ET_ARC = 2,
         ET_LINE = 3;
 
     var _canvas = null;
+
+    return {
+        drawBubble: drawBubble,
+        drawCircle: drawCircle,
+        drawRect: drawRect,
+        drawStar: drawStar,
+        getCanvas: getCanvas,
+        setCanvas: setCanvas,
+        findElementAtZ: findElementAtZ
+    };
+
     function getCanvas() {
         if (!_canvas) {
             _canvas = document.getElementById("testCanvas");
@@ -173,6 +173,4 @@ var TQ = TQ || {};
 
         return ele;
     }
-
-    TQ.Graphics = Graphics;
 })();
