@@ -1082,6 +1082,14 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.getBBoxData = function() {
+        // 简单的BBox, 为未考虑TRSA， 在世界坐标系下
+        return {
+            width: this.getWidth(),
+            height: this.getHeight()
+        }
+    };
+
     p.createBBox = function(sx, sy, rotation, w, h) {
         var shape = new createjs.Shape();
         shape.rotation = rotation;

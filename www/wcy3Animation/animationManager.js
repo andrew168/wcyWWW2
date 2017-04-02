@@ -12,6 +12,8 @@ var TQ = TQ || {};
     AnimationManager.flyInFromLeft = flyInFromLeft;
     AnimationManager.rotate = rotate;
     AnimationManager.leftIn = leftIn;
+    AnimationManager.rightIn = rightIn;
+    AnimationManager.topIn = topIn;
     AnimationManager.bottomIn = bottomIn;
 
     AnimationManager.SagType = {
@@ -82,11 +84,29 @@ var TQ = TQ || {};
         return recordSag(sag);
     }
 
+    function rightIn() {
+        console.log("right in");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            posInWorld = ele.getPositionInWorld(),
+            startPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width;
+        var sag = composeFlyInSag(SagType.RIGHT_IN, startPos, posInWorld.x);
+        return recordSag(sag);
+    }
+
     function bottomIn() {
         console.log("bottom in");
         var ele = TQ.SelectSet.peekLatestEditableEle(),
             posInWorld = ele.getPositionInWorld();
         var sag = composeFlyInSag(SagType.BOTTOM_IN, FLY_IN_POS_0, posInWorld.y);
+        return recordSag(sag);
+    }
+
+    function topIn() {
+        console.log("top in");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            posInWorld = ele.getPositionInWorld(),
+            startPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height;
+        var sag = composeFlyInSag(SagType.BOTTOM_IN, startPos, posInWorld.y);
         return recordSag(sag);
     }
 

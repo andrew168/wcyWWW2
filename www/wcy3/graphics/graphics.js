@@ -18,6 +18,8 @@ TQ.Graphics = (function () {
         drawRect: drawRect,
         drawStar: drawStar,
         getCanvas: getCanvas,
+        getCanvasWidth: getCanvasWidth,
+        getCanvasHeight: getCanvasHeight,
         setCanvas: setCanvas,
         findElementAtZ: findElementAtZ
     };
@@ -27,6 +29,14 @@ TQ.Graphics = (function () {
             _canvas = document.getElementById("testCanvas");
         }
         return _canvas;
+    }
+
+    function getCanvasWidth() {
+        return getCanvas().width;
+    }
+
+    function getCanvasHeight() {
+        return getCanvas().height;
     }
 
     function setCanvas() {
