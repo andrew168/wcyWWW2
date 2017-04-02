@@ -37,8 +37,11 @@ var TQ = TQ || {};
         FADE_OUT: 'sag fadein'
     };
 
+    var UNLIMIT = 99999999,
+        FLY_IN_DURATION = 1, // 1秒钟，飞入
+        FLY_IN_POS_0 = -100; // 从屏幕外开始
+
     var SagType = AnimationManager.SagType;
-    var UNLIMIT = 99999999;
 
     function initialize() {
 
@@ -71,26 +74,11 @@ var TQ = TQ || {};
         return sagId;
     }
 
-    var FLY_IN_DURATION = 1; // 1秒钟，飞入
     function leftIn() {
+        console.log("left in");
         var ele = TQ.SelectSet.peekLatestEditableEle(),
             posInWorld = ele.getPositionInWorld();
-
-        console.log("left in");
-        var sag = {
-            typeID: SagType.LEFT_IN,
-            speed: 10, // degree/second
-            value0: -100,
-            t1: 0, // start time
-            t2: TQ.FrameCounter.t() // end time
-        };
-
-        if (sag.t2 < FLY_IN_DURATION) {
-            sag.t2 = FLY_IN_DURATION; // 时间差不能是 0
-        }
-
-        sag.t1 = Math.max(0, sag.t2 - FLY_IN_DURATION);
-        sag.speed = (posInWorld.x - sag.value0) / (sag.t2 - sag.t1);
+        var sag = composeFlyInSag(SagType.LEFT_IN, FLY_IN_POS_0, posInWorld.x);
         return recordSag(sag);
     }
 
@@ -98,26 +86,21 @@ var TQ = TQ || {};
         console.log("bottom in");
         var ele = TQ.SelectSet.peekLatestEditableEle(),
             posInWorld = ele.getPositionInWorld();
-        var sag = {
-            typeID: SagType.BOTTOM_IN,
-            speed: 10, // degree/second
-            value0: -100,
-            t1: 0, // start time
-            t2: TQ.FrameCounter.t() // end time
-        };
-
-        if (sag.t2 < FLY_IN_DURATION) {
-            sag.t2 = FLY_IN_DURATION; // 时间差不能是 0
-        }
-
-        sag.t1 = Math.max(0, sag.t2 - FLY_IN_DURATION);
-
-        sag.speed = (posInWorld.y - sag.value0) / (sag.t2 - sag.t1);
+        var sag = composeFlyInSag(SagType.BOTTOM_IN, FLY_IN_POS_0, posInWorld.y);
         return recordSag(sag);
     }
 
-    function flyInFromLeft() {
-        console.log("flyInFromLeft");
+    function composeFlyInSag(typeId, startPos, destinationPos) {
+        var t2 = Math.max(TQ.FrameCounter.t(), FLY_IN_DURATION), // end time
+            t1 = Math.max(0, t2 - FLY_IN_DURATION),
+            speed = (destinationPos - startPos) / (t2 - t1);
+        return {
+            typeID: typeId,
+            speed: speed, // degree/second
+            value0: FLY_IN_POS_0,
+            t1: t1, // start time
+            t2: t2
+        };
     }
 
     TQ.AnimationManager = AnimationManager;
