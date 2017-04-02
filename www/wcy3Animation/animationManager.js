@@ -2,21 +2,13 @@
  * Created by Andrewz on 3/28/2017.
  */
 var TQ = TQ || {};
-(function () {
+TQ.AnimationManager = (function() {
     'use strict';
-    function AnimationManager() {
-    }
+    var UNLIMIT = 99999999,
+        FLY_IN_DURATION = 1, // 1秒钟，飞入
+        FLY_IN_POS_0 = -100; // 从屏幕外开始
 
-    AnimationManager.initialize = initialize;
-    AnimationManager.reset = reset;
-    AnimationManager.flyInFromLeft = flyInFromLeft;
-    AnimationManager.rotate = rotate;
-    AnimationManager.leftIn = leftIn;
-    AnimationManager.rightIn = rightIn;
-    AnimationManager.topIn = topIn;
-    AnimationManager.bottomIn = bottomIn;
-
-    AnimationManager.SagType = {
+    var SagType = {
         // translate
         RIGHT_IN: 'sag left in',
         LEFT_IN: 'sag left in',
@@ -39,11 +31,16 @@ var TQ = TQ || {};
         FADE_OUT: 'sag fadein'
     };
 
-    var UNLIMIT = 99999999,
-        FLY_IN_DURATION = 1, // 1秒钟，飞入
-        FLY_IN_POS_0 = -100; // 从屏幕外开始
-
-    var SagType = AnimationManager.SagType;
+    return {
+        SagType: SagType,
+        initialize: initialize,
+        reset: reset,
+        rotate: rotate,
+        leftIn: leftIn,
+        rightIn: rightIn,
+        topIn: topIn,
+        bottomIn: bottomIn
+    };
 
     function initialize() {
 
@@ -122,6 +119,4 @@ var TQ = TQ || {};
             t2: t2
         };
     }
-
-    TQ.AnimationManager = AnimationManager;
 })();
