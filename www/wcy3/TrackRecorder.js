@@ -75,6 +75,20 @@ window.TQ = window.TQ || {};
             case SagType.ROTATE:
                 recordOneSag(track.rotation, sag);
                 break;
+            case SagType.LEFT_IN:
+            case SagType.LEFT_OUT:
+            case SagType.RIGHT_IN:
+            case SagType.RIGHT_OUT:
+                recordOneSag(track.x, sag);
+                break;
+
+            case SagType.TOP_IN:
+            case SagType.TOP_OUT:
+            case SagType.BOTTOM_IN:
+            case SagType.BOTTOM_OUT:
+                recordOneSag(track.y, sag);
+                break;
+
             case SagType.TWINKLE:
                 break;
             default:
