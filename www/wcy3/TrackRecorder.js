@@ -66,6 +66,22 @@ window.TQ = window.TQ || {};
             | TQ.Element.ALPHAING | TQ.Element.ZING | TQ.Element.VISIBLE_CHANGED);
     };
 
+    // 参见: Decorder的说明
+    TrackRecorder.recordSag = function (element, sag) {
+        var track = element.animeTrack;
+        TQ.AssertExt.invalidLogic(!!(track && track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
+        var SagType = TQ.AnimationManager.SagType;
+        switch (sag.typeID) {
+            case SagType.ROTATE:
+                recordOneSag(track.rotation, sag);
+                break;
+            case SagType.TWINKLE:
+                break;
+            default:
+                break;
+        }
+    };
+
     TrackRecorder.erase = function (element) {
         element.animeTrack.erase();
     };
@@ -110,6 +126,25 @@ window.TQ = window.TQ || {};
         track.value.splice(id, 0, v);
         return v;
     };
+
+    function recordOneSag(track, sag) {
+        // 相等的情况, 不修改原来帧的值, 只增加新的帧， 确保t只是增加的
+        if (!track.sag) {
+            track.sag = [];
+        }
+
+        track.sag.push(sag);
+        track.sag.sort(compareSag);
+    }
+
+    function compareSag(sag1, sag2) {
+        if (sag1.t1 > sag2.t1) {
+            return 1;
+        } else if (sag1.t1 < sag2.t1) {
+            return -1;
+        }
+        return 0;
+    }
 
     TQ.TrackRecorder = TrackRecorder;
 }());

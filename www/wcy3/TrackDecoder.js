@@ -48,6 +48,42 @@ window.TQ = window.TQ || {};
     };
 
     TrackDecoder.calOneTrack = function (track, t) {
+        var sag = findSag(track, t);
+        if (sag) {
+            return calSag(sag, track, t);
+        }
+
+        // ToDo: 没有track， 只有sag， 以sag的末尾状态保持下去
+        // 在Sag结束的时候， 更新track， 以保存以sag的末尾状态保持下去
+        return calTrack(track, t);
+    };
+
+    function findSag(track, t) {
+        if (!track.sag) {
+            return null;
+        }
+
+        var n = track.sag.length,
+            i,
+            item;
+        for (i = 0; i < n; i++) {
+            item = track.sag[i];
+
+            if ((item.t1 <= t) && (t <= item.t2)) {
+                return item;
+                //return {sagId: TQ.AnimationManager.SagType.ROTATE, t1: 0, t2: 100};
+            }
+        }
+        return null;
+    }
+
+    function calSag(sag, track, t) {
+        // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
+        return sag.value0 + (t - sag.t1) * sag.speed;
+    }
+
+    function calTrack(track, t)
+    {
         TrackDecoder.searchInterval(t, track);
         if (track.tid1 == track.tid2) {
             // assertTrue("只有1帧或者时间出现负增长, ",track.tid1 == 0 );
