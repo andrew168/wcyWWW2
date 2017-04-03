@@ -1915,6 +1915,10 @@ window.TQ = window.TQ || {};
         return (this.jsonObj.color === undefined) ? TQ.Config.color : this.jsonObj.color;
     };
 
+    p.getAlpha = function () {
+        return (this.jsonObj.alpha === undefined) ? 1 : this.jsonObj.alpha;
+    };
+
     p.isEditable = function() {
         return true;
     };
