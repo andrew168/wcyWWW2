@@ -27,21 +27,21 @@ window.TQ = window.TQ || {};
         tsrObj.rotation = ((track.rotation == undefined) || (track.rotation == null)) ?
             TQ.poseDefault.rotation : TrackDecoder.calOneTrack(track.rotation, t);
 
-        tsrObj.x = ((track.x == undefined) || (track.x == null)) ?
+        tsrObj.x = (!track.x) ?
             TQ.poseDefault.x : TrackDecoder.calOneTrack(track.x, t);
         TQ.Assert.isTrue(!isNaN(tsrObj.x),  "x 为 NaN！！！");
 
-        tsrObj.y = ((track.y == undefined) || (track.y == null)) ?
+        tsrObj.y = (!track.y) ?
             TQ.poseDefault.y : TrackDecoder.calOneTrack(track.y, t);
         TQ.Assert.isTrue(!isNaN(tsrObj.y),  "y 为 NaN！！！");
 
-        tsrObj.sx = ((track.sx == undefined) || (track.sx == null)) ?
+        tsrObj.sx = (!track.sx) ?
             TQ.poseDefault.sx : TrackDecoder.calOneTrack(track.sx, t);
 
-        tsrObj.sy = ((track.sy == undefined) || (track.sy == null)) ?
+        tsrObj.sy = (!track.sy) ?
             TQ.poseDefault.sy : TrackDecoder.calOneTrack(track.sy, t);
 
-        tsrObj.visible = ((track.visible == undefined) || (track.visible == null)) ?
+        tsrObj.visible = (!track.visible) ?
             TQ.poseDefault.visible : TrackDecoder.calOneTrack(track.visible, t);
 
         TQ.Log.tsrDebugInfo("TSR in Object " + ele.jsonObj.type + ele.id, tsrObj);
