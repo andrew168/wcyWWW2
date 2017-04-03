@@ -78,8 +78,23 @@ window.TQ = window.TQ || {};
     }
 
     function calSag(sag, track, t) {
+        if (sag.typeID === TQ.AnimationManager.SagType.TWINKLE) {
+            return calVisible(sag, track, t);
+        }
+
         // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
         return sag.value0 + (t - sag.t1) * sag.speed;
+    }
+
+    function calVisible(sag, track, t) {
+        // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
+        var T = sag.hideT + sag.showT,
+            cycleNumber = Math.floor((t - sag.t1) / T),
+            thisCycle = t - sag.t1 - T * cycleNumber;
+        if (thisCycle < sag.hideT) {
+            return 0;
+        }
+        return 1;
     }
 
     function calTrack(track, t)

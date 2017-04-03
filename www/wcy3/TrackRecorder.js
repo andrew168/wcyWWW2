@@ -96,6 +96,7 @@ window.TQ = window.TQ || {};
                 break;
 
             case SagType.TWINKLE:
+                recordOneSag(track.visible, sag);
                 break;
             default:
                 break;

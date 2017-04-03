@@ -38,6 +38,7 @@ TQ.AnimationManager = (function() {
         initialize: initialize,
         reset: reset,
         rotate: rotate,
+        twinkle: twinkle,
         scaleIn: scaleIn,
         scaleOut: scaleOut,
 
@@ -66,6 +67,19 @@ TQ.AnimationManager = (function() {
             endAngle = ele.getRotation(),
             startAngle = endAngle - 360;
         var sag = composeFlyInSag(SagType.ROTATE, startAngle, endAngle);
+        return recordSag(sag);
+    }
+
+    function twinkle() {
+        console.log("twinkle");
+        var sag = {
+            typeID: SagType.TWINKLE,
+            showT: 1,
+            hideT: 1,
+            t1: 0,
+            t2: UNLIMIT // end time
+        };
+
         return recordSag(sag);
     }
 
