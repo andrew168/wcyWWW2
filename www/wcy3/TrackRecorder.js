@@ -86,6 +86,11 @@ window.TQ = window.TQ || {};
         TQ.AssertExt.invalidLogic(!!(track && track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
         var SagType = TQ.AnimationManager.SagType;
         switch (sag.typeID) {
+            case SagType.FADE_IN:
+            case SagType.FADE_OUT:
+                recordOneSag(track.alpha, sag);
+                break;
+
             case SagType.SCALE_IN:
             case SagType.SCALE_OUT:
                 recordOneSag(track.sx, sag);

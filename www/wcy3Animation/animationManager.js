@@ -41,6 +41,8 @@ TQ.AnimationManager = (function() {
         twinkle: twinkle,
         scaleIn: scaleIn,
         scaleOut: scaleOut,
+        fadeIn: fadeIn,
+        fadeOut: fadeOut,
 
         leftIn: leftIn,
         rightIn: rightIn,
@@ -176,6 +178,24 @@ TQ.AnimationManager = (function() {
             startSx = ele.getScaleInWorld().sx,
             endSx = 0.1 * startSx;
         var sag = composeFlyOutSag(SagType.SCALE_OUT, startSx, endSx);
+        return recordSag(sag);
+    }
+
+    function fadeIn() {
+        console.log("fade in");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            endValue = ele.getAlpha(),
+            startValue = 0;
+        var sag = composeFlyInSag(SagType.FADE_IN, startValue, endValue);
+        return recordSag(sag);
+    }
+
+    function fadeOut() {
+        console.log("fade out");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            endValue = 0,
+            startValue = ele.getAlpha();
+        var sag = composeFlyOutSag(SagType.FADE_OUT, startValue, endValue);
         return recordSag(sag);
     }
 
