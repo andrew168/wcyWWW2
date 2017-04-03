@@ -55,7 +55,9 @@ window.TQ = window.TQ || {};
         return true;
     };
 
+    p.parent_setColor = p.setColor;
     p.setColor = function(fontColor) {
+        this.parent_setColor(fontColor);
         this.setText(null, null, null, fontColor);
     };
 

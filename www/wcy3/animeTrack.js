@@ -27,6 +27,8 @@ TQ = TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, desc.rotation);
         assertNotNull(TQ.Dictionary.FoundNull, desc.sx);
         assertNotNull(TQ.Dictionary.FoundNull, desc.sy);
+        assertNotNull(TQ.Dictionary.FoundNull, desc.alpha);
+        assertNotNull(TQ.Dictionary.FoundNull, desc.color);
         if (!desc.animeTrack || !desc.animeTrack.x) {
             this.x = new TQ.OneTrack(desc.x);
         } else {
@@ -57,6 +59,22 @@ TQ = TQ || {};
             this.sy = new TQ.OneTrack(desc.animeTrack.sy);
         }
 
+        if (!desc.animeTrack || !desc.animeTrack.alpha) {
+            this.alpha = new TQ.OneTrack(desc.alpha);
+        } else {
+            this.alpha = new TQ.OneTrack(desc.animeTrack.alpha);
+        }
+
+        if (!desc.animeTrack || !desc.animeTrack.colorR) {
+            this.colorR = new TQ.OneTrack(TQ.Utility.getColorR(desc.color));
+            this.colorG = new TQ.OneTrack(TQ.Utility.getColorG(desc.color));
+            this.colorB = new TQ.OneTrack(TQ.Utility.getColorB(desc.color));
+        } else {
+            this.colorR = new TQ.OneTrack(desc.animeTrack.colorR);
+            this.colorG = new TQ.OneTrack(desc.animeTrack.colorG);
+            this.colorB = new TQ.OneTrack(desc.animeTrack.colorB);
+        }
+
         if (!desc.animeTrack || !desc.animeTrack.visible) { // 即时添加的元素
             this.visible = new TQ.OneTrack(desc.isVis ? 1 : 0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
@@ -79,6 +97,10 @@ TQ = TQ || {};
         AnimeTrack._validateOne(tracks.sx);
         AnimeTrack._validateOne(tracks.sy);
         AnimeTrack._validateOne(tracks.visible);
+        AnimeTrack._validateOne(tracks.alpha);
+        AnimeTrack._validateOne(tracks.colorR);
+        AnimeTrack._validateOne(tracks.colorG);
+        AnimeTrack._validateOne(tracks.colorB);
     };
 
     AnimeTrack._validateOne = function(track) {

@@ -44,6 +44,20 @@ window.TQ = window.TQ || {};
         tsrObj.visible = (!track.visible) ?
             TQ.poseDefault.visible : TrackDecoder.calOneTrack(track.visible, t);
 
+        tsrObj.alpha = (!track.alpha) ?
+            TQ.poseDefault.visible : TrackDecoder.calOneTrack(track.alpha, t);
+
+        var colorR = (!track.colorR) ?
+            TQ.Utility.getColorR(TQ.poseDefault.color) : TrackDecoder.calOneTrack(track.colorR, t),
+
+            colorG = (!track.colorG) ?
+            TQ.Utility.getColorG(TQ.poseDefault.color) : TrackDecoder.calOneTrack(track.colorG, t),
+
+            colorB = (!track.colorB) ?
+            TQ.Utility.getColorB(TQ.poseDefault.color) : TrackDecoder.calOneTrack(track.colorB, t);
+
+        tsrObj.color = TQ.Utility.RGB2Color(colorR, colorG, colorB);
+
         TQ.Log.tsrDebugInfo("TSR in Object " + ele.jsonObj.type + ele.id, tsrObj);
     };
 

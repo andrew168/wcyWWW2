@@ -497,5 +497,41 @@ window.TQ = window.TQ || {};
         return e0;
     }
 
+    Utility.getColorR = function(color) {
+        checkColorString(color);
+        return parseInt(color.substr(1, 2), 16);
+    };
+
+    Utility.getColorG = function(color)
+    {
+        checkColorString(color);
+        return parseInt(color.substr(3, 2), 16);
+    };
+
+    Utility.getColorB = function(color)
+    {
+        checkColorString(color);
+        return parseInt(color.substr(5, 2), 16);
+    };
+
+    Utility.RGB2Color = function(r, g, b) {
+        return '#' + number2Hex(r) + number2Hex(g) + number2Hex(b);
+    };
+
+    function number2Hex(n) {
+        var str = n.toString(16).toUpperCase();
+        if (n === 0) {
+            return "00";
+        } else if (n < 16) {
+            return "0" +str;
+        }
+
+        return str;
+    }
+
+    function checkColorString(color) {
+        TQ.Assert.isTrue(color[0] === '#', '颜色格式必须是#AABBCC');
+    }
+
     TQ.Utility = Utility;
 }());

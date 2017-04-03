@@ -72,6 +72,7 @@ window.TQ = window.TQ || {};
     Element.ZING = 0x200;
     Element.VISIBLE_CHANGED = 0x400;
     Element.ACTION_CHANGED = 0x800;
+    Element.COLOR_CHANGED = 0x1000;
 
     // 元素的类别
     Element.ETYPE_BACKGROUND = 1; //1 背景，
@@ -325,6 +326,14 @@ window.TQ = window.TQ || {};
 
         if (desc.zIndex == undefined) {
             desc.zIndex = Element.TOP;
+        }
+
+        if (desc.alpha === undefined) {
+            desc.alpha = 1;
+        }
+
+        if (desc.color === undefined) {
+            desc.color = TQ.Config.color;
         }
 
         if (desc.type === DescType.TEXT) {
@@ -749,7 +758,8 @@ window.TQ = window.TQ || {};
 
     p.forceToRecord = function() {
         this.dirty2 = true; //迫使系统记录这个坐标
-        this.setFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING);
+        this.setFlag(Element.TRANSLATING | Element.ROTATING | Element.SCALING
+            |Element.ALPHAING | Element.COLOR_CHANGED);
     };
 
     p.setTRSAVZ = function () {
@@ -1683,6 +1693,12 @@ window.TQ = window.TQ || {};
     // 小函数区域: has, is, 这些函数容易理解, 放到最后, 让重要的函数, 需要经常看的函数,放到前面
     p.setText = function (htmlStr) {
         assertDepreciated(TQ.Dictionary.isDepreciated + "， 移到了text元素中！");
+    };
+
+    p.setColor = function(color) {
+        this.setFlag(Element.COLOR_CHANGED);
+        TQ.DirtyFlag.setElement(this);
+        this.dirty2 = true;
     };
 
     p.hasAnimation = function () {

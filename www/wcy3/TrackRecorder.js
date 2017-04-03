@@ -62,8 +62,22 @@ window.TQ = window.TQ || {};
             element.clearFlag(TQ.Element.VISIBLE_CHANGED);
         }
 
+        if (element.hasFlag(TQ.Element.ALPHAING)) {
+            if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
+                TrackRecorder.recordOneTrack(track.alpha, t, TQ.Pose.alpha, TrackRecorder.style);
+            }
+        }
+
+        if (element.hasFlag(TQ.Element.COLOR_CHANGED)) {
+            if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
+                TrackRecorder.recordOneTrack(track.colorR, t, TQ.Utility.getColorR(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneTrack(track.colorG, t, TQ.Utility.getColorG(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneTrack(track.colorB, t, TQ.Utility.getColorB(TQ.Pose.color), TrackRecorder.style);
+            }
+        }
+
         element.clearFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING
-            | TQ.Element.ALPHAING | TQ.Element.ZING | TQ.Element.VISIBLE_CHANGED);
+            | TQ.Element.ALPHAING | TQ.Element.ZING | TQ.Element.VISIBLE_CHANGED | TQ.Element.COLOR_CHANGED);
     };
 
     // 参见: Decorder的说明

@@ -11,6 +11,8 @@ window.TQ = window.TQ || {};
     _rootBoneDefault.sx = 1;
     _rootBoneDefault.sy = 1;
     _rootBoneDefault.rotation = 0;
+    _rootBoneDefault.alpha = 1;
+    _rootBoneDefault.color = TQ.Config.color;
     _rootBoneDefault.M = TQ.Matrix2D.I();
     _rootBoneDefault.IM = TQ.Matrix2D.I();   // Inverse Matrix, 逆矩阵
 
@@ -22,6 +24,9 @@ window.TQ = window.TQ || {};
     Pose.sx = poseDefault.sx = 1;
     Pose.sy = poseDefault.sy = 1;
     Pose.visible = poseDefault.visible = 1;
+    Pose.alpha = poseDefault.alpha = 1;
+    Pose.color = poseDefault.color = TQ.Config.color;
+
     Pose.action = poseDefault.action = "idle";
 
     Pose.worldToObject = function(poseWorld, parentPoseWorld) {
