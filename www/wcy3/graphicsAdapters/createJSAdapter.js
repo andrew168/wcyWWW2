@@ -75,6 +75,8 @@ var TQ = TQ || {};
         displayObj.scaleX = obj_dc.sx;
         displayObj.scaleY = obj_dc.sy;
         displayObj.regX = obj_dc.pivotX * this.getWidth();
+        displayObj.color = jsonObj.color;
+        displayObj.alpha = jsonObj.alpha;
 
         // regX，Y坐标：(由createJS定义的)
         // *   +Y 向下， 同设备坐标一致
@@ -261,6 +263,10 @@ var TQ = TQ || {};
 
         // 可见性：
         tsrWorld.isVis = tsrObj.visible;
+        if (tsrObj.color !== undefined) {
+            tsrWorld.alpha = tsrObj.alpha;
+            tsrWorld.color = tsrObj.color;
+        }
     };
 
     CreateJSAdapter.updateM = function (parent, Pose) {
