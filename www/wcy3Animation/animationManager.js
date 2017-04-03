@@ -38,6 +38,9 @@ TQ.AnimationManager = (function() {
         initialize: initialize,
         reset: reset,
         rotate: rotate,
+        scaleIn: scaleIn,
+        scaleOut: scaleOut,
+
         leftIn: leftIn,
         rightIn: rightIn,
         topIn: topIn,
@@ -59,14 +62,10 @@ TQ.AnimationManager = (function() {
 
     function rotate() {
         console.log("rotate");
-        var sag = {
-            typeID: SagType.ROTATE,
-            speed: 60, // degree/second
-            value0: 0,
-            t1: TQ.FrameCounter.t(), // start time
-            t2: UNLIMIT // end time
-        };
-
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            endAngle = ele.getRotation(),
+            startAngle = endAngle - 360;
+        var sag = composeFlyInSag(SagType.ROTATE, startAngle, endAngle);
         return recordSag(sag);
     }
 
@@ -148,6 +147,25 @@ TQ.AnimationManager = (function() {
         return recordSag(sag);
     }
 
+    function scaleIn() {
+        console.log("scale in");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            endSx = ele.getScaleInWorld().sx,
+            startSx = 0.1 * endSx;
+        var sag = composeFlyOutSag(SagType.SCALE_IN, startSx, endSx);
+        return recordSag(sag);
+    }
+
+    function scaleOut() {
+        console.log("scale out");
+        var ele = TQ.SelectSet.peekLatestEditableEle(),
+            startSx = ele.getScaleInWorld().sx,
+            endSx = 0.1 * startSx;
+        var sag = composeFlyOutSag(SagType.SCALE_OUT, startSx, endSx);
+        return recordSag(sag);
+    }
+
+    // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
         var t2 = Math.max(TQ.FrameCounter.t(), FLY_IN_DURATION), // end time
             t1 = Math.max(0, t2 - FLY_IN_DURATION),
