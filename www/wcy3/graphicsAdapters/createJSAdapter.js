@@ -216,6 +216,13 @@ var TQ = TQ || {};
         return {x: ptObject.elements[0], y: ptObject.elements[1]};
     };
 
+    CreateJSAdapter.dWorld2Object = function (displacementInWorld) {
+        var originInWorld = {x:0, y:0},
+            originInObject = this.world2Object(originInWorld),
+            displacementInObj = this.world2Object(displacementInWorld);
+        return {x: displacementInObj.x - originInObject.x, y: displacementInObj.y - originInObject.y};
+    };
+
     CreateJSAdapter.parentWorld2Object = function (ptWorld) {
         if (!ptWorld) {
             ptWorld = this.jsonObj;

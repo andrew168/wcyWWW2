@@ -29,7 +29,7 @@ var TQ = TQ || {};
         },
         deltaTrsa = {
             ang: 0,
-            scaleXY: 1
+            scale: new TQ.ScaleCalculator()
         };
     var pos = {x: 0, y: 0},
         isMultiTouching = false;
@@ -133,7 +133,7 @@ var TQ = TQ || {};
         target = startEle.getPositionInDc();
         startOffsetInDcExt = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
 
-        deltaTrsa.scaleXY = 1;
+        deltaTrsa.scale.reset();
         deltaTrsa.ang = 0;
     }
 
@@ -264,13 +264,13 @@ var TQ = TQ || {};
                 deltaTrsa.ang = startEle.dc2World({rotation: e.gesture.rotation}).rotation;
                 console.log("rotate: " + deltaTrsa.ang);
             } else if (e.type.indexOf('pinch') >= 0) {
-                deltaTrsa.scaleXY = e.gesture.scale;
-                console.log("pinch" + deltaTrsa.scaleXY);
+                deltaTrsa.scale.determineScale(startEle, e);
+                console.log("pinch" + deltaTrsa.scale.x + "," + deltaTrsa.scale.y);
             } else {
                 console.log("not pinch, rotate: " + e.type);
             }
-            var newScaleX = startTrsa.scale.sx * deltaTrsa.scaleXY,
-                newScaleY = startTrsa.scale.sy * deltaTrsa.scaleXY;
+            var newScaleX = startTrsa.scale.sx * deltaTrsa.scale.sx,
+                newScaleY = startTrsa.scale.sy * deltaTrsa.scale.sy;
             if (!isNaN(newScaleX)) {
                 if (Math.abs(newScaleX) < 0.00001) {
                     console.warn("Too small");
