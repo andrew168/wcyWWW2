@@ -79,16 +79,23 @@ window.TQ = window.TQ || {};
 
         var n = track.sag.length,
             i,
-            item;
+            item,
+            lastSag = null;
         for (i = 0; i < n; i++) {
             item = track.sag[i];
+            if (t < item.t1) {
+                continue;
+            }
 
             if ((item.t1 <= t) && (t <= item.t2)) {
-                return item;
-                //return {sagId: TQ.AnimationManager.SagType.ROTATE, t1: 0, t2: 100};
+                return item; // 最多同时起作用的SAG只有一个，在一个track中
             }
+
+            if (!lastSag || (lastSag.t2 < item.t2)) {
+                lastSag = item;
             }
-        return null;
+        }
+        return lastSag;
     }
 
     function calSag(sag, track, t) {
@@ -97,6 +104,9 @@ window.TQ = window.TQ || {};
         }
 
         // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
+        if (t > sag.t2) { // 对于SAG结束后的状态， 保留SAG最后一刻的值
+            t = sag.t2;
+        }
         return sag.value0 + (t - sag.t1) * sag.speed;
     }
 
