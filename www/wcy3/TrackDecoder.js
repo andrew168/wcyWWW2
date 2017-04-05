@@ -45,7 +45,7 @@ window.TQ = window.TQ || {};
             TQ.poseDefault.visible : TrackDecoder.calOneTrack(track.visible, t);
 
         tsrObj.alpha = (!track.alpha) ?
-            TQ.poseDefault.visible : TrackDecoder.calOneTrack(track.alpha, t);
+            TQ.poseDefault.alpha : TrackDecoder.calOneTrack(track.alpha, t);
 
         var colorR = (!track.colorR) ?
             TQ.Utility.getColorR(TQ.poseDefault.color) : TrackDecoder.calOneTrack(track.colorR, t),
@@ -87,7 +87,7 @@ window.TQ = window.TQ || {};
                 return item;
                 //return {sagId: TQ.AnimationManager.SagType.ROTATE, t1: 0, t2: 100};
             }
-        }
+            }
         return null;
     }
 
