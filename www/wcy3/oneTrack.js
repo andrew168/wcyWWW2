@@ -33,8 +33,8 @@ window.TQ = window.TQ || {};
             this.t = value.t;
             this.value = value.value;
             this.c = value.c;
-            if (value.sag) {
-                this.sag = value.sag;
+            if (value.sags) {
+                this.sags = value.sags;
             }
         }
         this.tid1 = (value.tid1 == undefined) ? 0: value.tid1;

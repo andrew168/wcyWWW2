@@ -169,12 +169,12 @@ window.TQ = window.TQ || {};
 
     function recordOneSag(track, sag) {
         // 相等的情况, 不修改原来帧的值, 只增加新的帧， 确保t只是增加的
-        if (!track.sag) {
-            track.sag = [];
+        if (!track.sags) {
+            track.sags = [];
         }
 
-        track.sag.push(sag);
-        track.sag.sort(compareSag);
+        track.sags.push(sag);
+        track.sags.sort(compareSag);
     }
 
     function compareSag(sag1, sag2) {

@@ -73,16 +73,16 @@ window.TQ = window.TQ || {};
     };
 
     function findSag(track, t) {
-        if (!track.sag) {
+        if (!track.sags) {
             return null;
         }
 
-        var n = track.sag.length,
+        var n = track.sags.length,
             i,
             item,
             lastSag = null;
         for (i = 0; i < n; i++) {
-            item = track.sag[i];
+            item = track.sags[i];
             if (t < item.t1) {
                 continue;
             }
