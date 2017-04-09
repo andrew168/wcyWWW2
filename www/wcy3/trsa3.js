@@ -171,6 +171,7 @@ var TQ = TQ || {};
         }
         if (TQ.Utility.getTouchNumbers(e) >0) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
             startTrsa.needReset = true;
+            ditherStart();
         } else {
             isMultiTouching = false;
             if (startEle && startEle.snapIt) {
