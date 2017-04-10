@@ -30,7 +30,7 @@ TQ.AnimationManager = (function () {
 
         // opacity change
         FADE_IN: 'sag fadein',
-        FADE_OUT: 'sag fadein'
+        FADE_OUT: 'sag fadeout'
     };
 
     var removeSag = TQ.TrackRecorder.removeSag,
@@ -130,11 +130,11 @@ TQ.AnimationManager = (function () {
         state.bottomOut = !!sag;
         speeds.bottomOut = (sag) ? sag.speed : 2.5;
         sag = getSag(ele, SagType.SCALE_IN);
-        state.sacleIn = !!sag;
-        speeds.sacleIn = (sag) ? sag.speed : 2.5;
+        state.scaleIn = !!sag;
+        speeds.scaleIn = (sag) ? sag.speed : 2.5;
         sag = getSag(ele, SagType.SCALE_OUT);
-        state.sacleOut = !!sag;
-        speeds.sacleOut = (sag) ? sag.speed : 2.5;
+        state.scaleOut = !!sag;
+        speeds.scaleOut = (sag) ? sag.speed : 2.5;
         sag = getSag(ele, SagType.ROTATE);
         state.rotate = !!sag;
         speeds.rotate = (sag) ? sag.speed : 2.5;
@@ -184,12 +184,12 @@ TQ.AnimationManager = (function () {
 
         console.log("twinkle");
         var sag = {
-            typeID: SagType.TWINKLE,
+                typeID: SagType.TWINKLE,
             showT: 1,
             hideT: 1,
-            t1: 0,
-            t2: UNLIMIT // end time
-        };
+                t1: 0,
+                t2: UNLIMIT // end time
+            };
 
         state.twinkle = true;
         return recordSag(sag);
@@ -278,7 +278,7 @@ TQ.AnimationManager = (function () {
         console.log("top in");
         var posInWorld = ele.getPositionInWorld(),
             startPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
-            sag = composeFlyInSag(SagType.BOTTOM_IN, startPos, posInWorld.y);
+            sag = composeFlyInSag(SagType.TOP_IN, startPos, posInWorld.y);
         state.topIn = true;
         return recordSag(sag);
     }
