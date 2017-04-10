@@ -71,6 +71,7 @@ TQ.AnimationManager = (function () {
 
         instance = {
             state: state,
+            speeds: speeds,
             SagType: SagType,
             initialize: initialize,
             reset: reset,
