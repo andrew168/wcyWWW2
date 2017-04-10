@@ -183,10 +183,13 @@ TQ.AnimationManager = (function () {
         }
 
         console.log("twinkle");
-        var sag = {
+        var showT = 2.5 / speeds.twinkle,
+            hideT = showT,
+            sag = {
                 typeID: SagType.TWINKLE,
-            showT: 1,
-            hideT: 1,
+                showT: showT,
+                hideT: hideT,
+                speed: speeds.twinkle, // only for UI
                 t1: 0,
                 t2: UNLIMIT // end time
             };
@@ -445,13 +448,14 @@ TQ.AnimationManager = (function () {
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
         var speed = getSpeed(typeId),
-            dt = Math.abs((destinationPos - startPos) / speed.actual) ,
+            dt = Math.abs((destinationPos - startPos) / speed.actualSpeed) ,
             t2 = Math.max(TQ.FrameCounter.t(), dt), // end time
-            t1 = Math.max(0, t2 - dt);
+            t1 = Math.max(0, t2 - dt),
+            velocity = speed.actualSpeed * ((destinationPos - startPos) > 0 ? 1: -1);
         return {
             typeID: typeId,
-            speed: speed.norm, //1-5 规范化的速度
-            actualSpeed: speed.actual, //1-5 规范化的速度
+            speed: speed.normSpeed, //1-5 规范化的速度
+            actualSpeed: velocity,
             value0: startPos,
             t1: t1, // start time
             t2: t2
@@ -459,12 +463,15 @@ TQ.AnimationManager = (function () {
     }
 
     function composeFlyOutSag(typeId, startPos, destinationPos) {
-        var t1 = TQ.FrameCounter.t(), // end time
-            t2 = t1 + FLY_OUT_DURATION,
-            speed = (destinationPos - startPos) / (t2 - t1);
+        var speed = getSpeed(typeId),
+            dt = Math.abs((destinationPos - startPos) / speed.actualSpeed),
+            t1 = TQ.FrameCounter.t(), // end time
+            t2 = t1 + dt,
+            velocity = speed.actualSpeed * ((destinationPos - startPos) > 0 ? 1: -1);
         return {
             typeID: typeId,
-            speed: speed, // degree/second
+            speed: speed.normSpeed, // degree/second
+            actualSpeed: velocity,
             value0: startPos,
             t1: t1, // start time
             t2: t2
@@ -550,6 +557,6 @@ TQ.AnimationManager = (function () {
                 break;
         }
 
-        return {norm: norm, actual: actual};
+        return {normSpeed: norm, actualSpeed: actual};
     }
 })();
