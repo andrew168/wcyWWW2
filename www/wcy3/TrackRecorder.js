@@ -122,6 +122,80 @@ window.TQ = window.TQ || {};
         }
     };
 
+    TrackRecorder.removeSag = function (element, sagTypeId) {
+        var track = element.animeTrack;
+        var SagType = TQ.AnimationManager.SagType;
+        switch (sagTypeId) {
+            case SagType.FADE_IN:
+            case SagType.FADE_OUT:
+                removeOneSag(track.alpha, sagTypeId);
+                break;
+
+            case SagType.SCALE_IN:
+            case SagType.SCALE_OUT:
+                removeOneSag(track.sx, sagTypeId);
+                removeOneSag(track.sy, sagTypeId);
+                break;
+
+            case SagType.ROTATE:
+                removeOneSag(track.rotation, sagTypeId);
+                break;
+            case SagType.LEFT_IN:
+            case SagType.LEFT_OUT:
+            case SagType.RIGHT_IN:
+            case SagType.RIGHT_OUT:
+                removeOneSag(track.x, sagTypeId);
+                break;
+
+            case SagType.TOP_IN:
+            case SagType.TOP_OUT:
+            case SagType.BOTTOM_IN:
+            case SagType.BOTTOM_OUT:
+                removeOneSag(track.y, sagTypeId);
+                break;
+
+            case SagType.TWINKLE:
+                removeOneSag(track.visible, sagTypeId);
+                break;
+            default:
+                break;
+        }
+    };
+
+    TrackRecorder.getSagStatus = function (element, sagTypeId) {
+        var track = element.animeTrack;
+        var SagType = TQ.AnimationManager.SagType;
+        switch (sagTypeId) {
+            case SagType.FADE_IN:
+            case SagType.FADE_OUT:
+                return getOneSagFlag(track.alpha, sagTypeId);
+
+            case SagType.SCALE_IN:
+            case SagType.SCALE_OUT:
+                return getOneSagFlag(track.sx, sagTypeId);
+
+            case SagType.ROTATE:
+                return getOneSagFlag(track.rotation, sagTypeId);
+            case SagType.LEFT_IN:
+            case SagType.LEFT_OUT:
+            case SagType.RIGHT_IN:
+            case SagType.RIGHT_OUT:
+                return getOneSagFlag(track.x, sagTypeId);
+
+            case SagType.TOP_IN:
+            case SagType.TOP_OUT:
+            case SagType.BOTTOM_IN:
+            case SagType.BOTTOM_OUT:
+                return getOneSagFlag(track.y, sagTypeId);
+
+            case SagType.TWINKLE:
+                return getOneSagFlag(track.visible, sagTypeId);
+            default:
+                TQ.Log.debugInfo("unknown case");
+                break;
+        }
+    };
+
     TrackRecorder.erase = function (element) {
         element.animeTrack.erase();
     };
@@ -166,6 +240,38 @@ window.TQ = window.TQ || {};
         track.value.splice(id, 0, v);
         return v;
     };
+
+    function removeOneSag(track, sagTypeId) {
+        if (!track.sags) {
+            return TQ.AssertExt.invalidLogic(false, "sags已经为空");
+        }
+
+        var sags = track.sags,
+            n = sags.length,
+            i;
+        for (i = 0; i < n; i++) {
+            if (sags[i].typeID === sagTypeId) {
+                return sags.splice(i, 1);
+            }
+        }
+        return TQ.AssertExt.invalidLogic(false, "未找到");
+    }
+
+    function getOneSagFlag(track, sagTypeId) {
+        if (!track.sags) {
+            return false;
+        }
+
+        var sags = track.sags,
+            n = sags.length,
+            i;
+        for (i = 0; i < n; i++) {
+            if (sags[i].typeID === sagTypeId) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     function recordOneSag(track, sag) {
         // 相等的情况, 不修改原来帧的值, 只增加新的帧， 确保t只是增加的
