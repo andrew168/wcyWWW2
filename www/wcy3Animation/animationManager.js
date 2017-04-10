@@ -360,7 +360,7 @@ TQ.AnimationManager = (function () {
         console.log("top out");
         var posInWorld = ele.getPositionInWorld(),
             endPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
-            sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, endPos);
+            sag = composeFlyOutSag(SagType.TOP_OUT, posInWorld.y, endPos);
         state.topOut = true;
         return recordSag(sag);
     }
