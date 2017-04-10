@@ -34,44 +34,46 @@ TQ.AnimationManager = (function () {
     };
 
     var removeSag = TQ.TrackRecorder.removeSag,
-        getSagFlag = TQ.TrackRecorder.getSagStatus;
+        getSagFlag = TQ.TrackRecorder.getSagStatus,
+        state = {
+            leftInFlag: false,
+            leftOutFlag: false,
+            rightInFlag: false,
+            rightOutFlag: false,
+            topInFlag: false,
+            topOutFlag: false,
+            bottomInFlag: false,
+            bottomOutFlag: false,
+            scaleInFlag: false,
+            scaleOutFlag: false,
+            rotateFlag: false,
+            fadeInFlag: false,
+            fadeOutFlag: false,
+            twinkleFlag: false,
+        },
 
-    var instance = {
-        leftInFlag: false,
-        leftOutFlag: false,
-        rightInFlag: false,
-        rightOutFlag: false,
-        topInFlag: false,
-        topOutFlag: false,
-        bottomInFlag: false,
-        bottomOutFlag: false,
-        scaleInFlag: false,
-        scaleOutFlag: false,
-        rotateFlag: false,
-        fadeInFlag: false,
-        fadeOutFlag: false,
-        twinkleFlag: false,
+        instance = {
+            state: state,
+            SagType: SagType,
+            initialize: initialize,
+            reset: reset,
+            rotate: rotate,
+            twinkle: twinkle,
+            scaleIn: scaleIn,
+            scaleOut: scaleOut,
+            fadeIn: fadeIn,
+            fadeOut: fadeOut,
 
-        SagType: SagType,
-        initialize: initialize,
-        reset: reset,
-        rotate: rotate,
-        twinkle: twinkle,
-        scaleIn: scaleIn,
-        scaleOut: scaleOut,
-        fadeIn: fadeIn,
-        fadeOut: fadeOut,
+            leftIn: leftIn,
+            rightIn: rightIn,
+            topIn: topIn,
+            bottomIn: bottomIn,
 
-        leftIn: leftIn,
-        rightIn: rightIn,
-        topIn: topIn,
-        bottomIn: bottomIn,
-
-        leftOut: leftOut,
-        rightOut: rightOut,
-        topOut: topOut,
-        bottomOut: bottomOut
-    };
+            leftOut: leftOut,
+            rightOut: rightOut,
+            topOut: topOut,
+            bottomOut: bottomOut
+        };
 
     return instance;
 
@@ -85,20 +87,20 @@ TQ.AnimationManager = (function () {
             return false;
         }
 
-        instance.leftInFlag = getSagFlag(ele, SagType.LEFT_IN);
-        instance.leftOutFlag = getSagFlag(ele, SagType.LEFT_OUT);
-        instance.rightInFlag = getSagFlag(ele, SagType.RIGHT_IN);
-        instance.rightOutFlag = getSagFlag(ele, SagType.RIGHT_OUT);
-        instance.topInFlag = getSagFlag(ele, SagType.TOP_IN);
-        instance.topOutFlag = getSagFlag(ele, SagType.TOP_OUT);
-        instance.bottomInFlag = getSagFlag(ele, SagType.BOTTOM_IN);
-        instance.bottomOutFlag = getSagFlag(ele, SagType.BOTTOM_OUT);
-        instance.sacleInFlag = getSagFlag(ele, SagType.SCALE_IN);
-        instance.sacleOutFlag = getSagFlag(ele, SagType.SCALE_OUT);
-        instance.rotateFlag = getSagFlag(ele, SagType.ROTATE);
-        instance.fadeInFlag = getSagFlag(ele, SagType.FADE_IN);
-        instance.fadeOutFlag = getSagFlag(ele, SagType.FADE_OUT);
-        instance.twinkleFlag = getSagFlag(ele, SagType.TWINKLE);
+        state.leftIn = getSagFlag(ele, SagType.LEFT_IN);
+        state.leftOut = getSagFlag(ele, SagType.LEFT_OUT);
+        state.rightIn = getSagFlag(ele, SagType.RIGHT_IN);
+        state.rightOut = getSagFlag(ele, SagType.RIGHT_OUT);
+        state.topIn = getSagFlag(ele, SagType.TOP_IN);
+        state.topOut = getSagFlag(ele, SagType.TOP_OUT);
+        state.bottomIn = getSagFlag(ele, SagType.BOTTOM_IN);
+        state.bottomOut = getSagFlag(ele, SagType.BOTTOM_OUT);
+        state.sacleIn = getSagFlag(ele, SagType.SCALE_IN);
+        state.sacleOut = getSagFlag(ele, SagType.SCALE_OUT);
+        state.rotate = getSagFlag(ele, SagType.ROTATE);
+        state.fadeIn = getSagFlag(ele, SagType.FADE_IN);
+        state.fadeOut = getSagFlag(ele, SagType.FADE_OUT);
+        state.twinkle = getSagFlag(ele, SagType.TWINKLE);
 
         return true;
     }
@@ -110,16 +112,16 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.rotateFlag) {
+        if (state.rotate) {
             removeSag(ele, SagType.ROTATE);
-            instance.rotateFlag = false;
+            state.rotate = false;
             return;
         }
 
         var endAngle = ele.getRotation(),
             startAngle = endAngle - 360,
             sag = composeFlyInSag(SagType.ROTATE, startAngle, endAngle);
-        instance.rotateFlag = true;
+        state.rotate = true;
         return recordSag(sag);
     }
 
@@ -129,9 +131,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.twinkleFlag) { // remove
+        if (state.twinkle) { // remove
             removeSag(ele, SagType.TWINKLE);
-            instance.twinkleFlag = false;
+            state.twinkle = false;
             return;
         }
 
@@ -144,7 +146,7 @@ TQ.AnimationManager = (function () {
             t2: UNLIMIT // end time
         };
 
-        instance.twinkleFlag = true;
+        state.twinkle = true;
         return recordSag(sag);
     }
 
@@ -164,16 +166,16 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.leftInFlag) { // remove
+        if (state.leftIn) { // remove
             removeSag(ele, SagType.LEFT_IN);
-            instance.leftInFlag = false;
+            state.leftIn = false;
             return;
         }
 
         console.log("left in");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyInSag(SagType.LEFT_IN, FLY_IN_POS_0, posInWorld.x);
-        instance.leftInFlag = true;
+        state.leftIn = true;
         return recordSag(sag);
     }
 
@@ -183,9 +185,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.rightInFlag) { // remove
+        if (state.rightIn) { // remove
             removeSag(ele, SagType.RIGHT_IN);
-            instance.rightInFlag = false;
+            state.rightIn = false;
             return;
         }
 
@@ -193,7 +195,7 @@ TQ.AnimationManager = (function () {
         var posInWorld = ele.getPositionInWorld(),
             startPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width,
             sag = composeFlyInSag(SagType.RIGHT_IN, startPos, posInWorld.x);
-        instance.rightInFlag = true;
+        state.rightIn = true;
         return recordSag(sag);
     }
 
@@ -203,16 +205,16 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.bottomInFlag) { // remove
+        if (state.bottomIn) { // remove
             removeSag(ele, SagType.BOTTOM_IN);
-            instance.bottomInFlag = false;
+            state.bottomIn = false;
             return;
         }
 
         console.log("bottom in");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyInSag(SagType.BOTTOM_IN, FLY_IN_POS_0, posInWorld.y);
-        instance.bottomInFlag = true;
+        state.bottomIn = true;
         return recordSag(sag);
     }
 
@@ -222,9 +224,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.topInFlag) {
+        if (state.topIn) {
             removeSag(ele, SagType.TOP_IN);
-            instance.topInFlag = false;
+            state.topIn = false;
             return;
         }
 
@@ -232,7 +234,7 @@ TQ.AnimationManager = (function () {
         var posInWorld = ele.getPositionInWorld(),
             startPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
             sag = composeFlyInSag(SagType.BOTTOM_IN, startPos, posInWorld.y);
-        instance.topInFlag = true;
+        state.topIn = true;
         return recordSag(sag);
     }
 
@@ -242,16 +244,16 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.leftOutFlag) { // remove
+        if (state.leftOut) { // remove
             removeSag(ele, SagType.LEFT_OUT);
-            instance.leftOutFlag = false;
+            state.leftOut = false;
             return;
         }
 
         console.log("left out");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyOutSag(SagType.LEFT_OUT, posInWorld.x, FLY_OUT_POS_1);
-        instance.leftOutFlag = true;
+        state.leftOut = true;
         return recordSag(sag);
     }
 
@@ -261,9 +263,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.rightOutFlag) { // remove
+        if (state.rightOut) { // remove
             removeSag(ele, SagType.RIGHT_OUT);
-            instance.rightOutFlag = false;
+            state.rightOut = false;
             return;
         }
 
@@ -272,7 +274,7 @@ TQ.AnimationManager = (function () {
             endPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width,
             sag = composeFlyOutSag(SagType.RIGHT_OUT, posInWorld.x, endPos);
 
-        instance.rightOutFlag = true;
+        state.rightOut = true;
         return recordSag(sag);
     }
 
@@ -282,16 +284,16 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.bottomOutFlag) { // remove
+        if (state.bottomOut) { // remove
             removeSag(ele, SagType.BOTTOM_OUT);
-            instance.bottomOutFlag = false;
+            state.bottomOut = false;
             return;
         }
 
         console.log("bottom out");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, FLY_OUT_POS_1);
-        instance.bottomOutFlag = true;
+        state.bottomOut = true;
         return recordSag(sag);
     }
 
@@ -301,9 +303,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.topOutFlag) { // remove
+        if (state.topOut) { // remove
             removeSag(ele, SagType.TOP_OUT);
-            instance.topOutFlag = false;
+            state.topOut = false;
             return;
         }
 
@@ -311,7 +313,7 @@ TQ.AnimationManager = (function () {
         var posInWorld = ele.getPositionInWorld(),
             endPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
             sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, endPos);
-        instance.topOutFlag = true;
+        state.topOut = true;
         return recordSag(sag);
     }
 
@@ -322,16 +324,16 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.scaleInFlag) { // remove
+        if (state.scaleIn) { // remove
             removeSag(ele, SagType.SCALE_IN);
-            instance.scaleInFlag = false;
+            state.scaleIn = false;
             return;
         }
 
         var endSx = ele.getScaleInWorld().sx,
             startSx = 0.1 * endSx,
             sag = composeFlyOutSag(SagType.SCALE_IN, startSx, endSx);
-        instance.scaleInFlag = true;
+        state.scaleIn = true;
         return recordSag(sag);
     }
 
@@ -341,9 +343,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.scaleOutFlag) { // remove
+        if (state.scaleOut) { // remove
             removeSag(ele, SagType.SCALE_OUT);
-            instance.scaleOutFlag = false;
+            state.scaleOut = false;
             return;
         }
 
@@ -351,7 +353,7 @@ TQ.AnimationManager = (function () {
         var startSx = ele.getScaleInWorld().sx,
             endSx = 0.1 * startSx,
             sag = composeFlyOutSag(SagType.SCALE_OUT, startSx, endSx);
-        instance.scaleOutFlag = true;
+        state.scaleOut = true;
         return recordSag(sag);
     }
 
@@ -361,9 +363,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.fadeInFlag) { // remove
+        if (state.fadeIn) { // remove
             removeSag(ele, SagType.FADE_IN);
-            instance.fadeInFlag = false;
+            state.fadeIn = false;
             return;
         }
 
@@ -371,7 +373,7 @@ TQ.AnimationManager = (function () {
         var endValue = ele.getAlpha(),
             startValue = 0,
             sag = composeFlyInSag(SagType.FADE_IN, startValue, endValue);
-        instance.fadeInFlag = true;
+        state.fadeIn = true;
         return recordSag(sag);
     }
 
@@ -381,9 +383,9 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        if (instance.fadeOutFlag) { // remove
+        if (state.fadeOut) { // remove
             removeSag(ele, SagType.FADE_OUT);
-            instance.fadeOutFlag = false;
+            state.fadeOut = false;
             return;
         }
 
@@ -391,7 +393,7 @@ TQ.AnimationManager = (function () {
         var endValue = 0,
             startValue = ele.getAlpha(),
             sag = composeFlyOutSag(SagType.FADE_OUT, startValue, endValue);
-        instance.fadeOutFlag = true;
+        state.fadeOut = true;
         return recordSag(sag);
     }
 
