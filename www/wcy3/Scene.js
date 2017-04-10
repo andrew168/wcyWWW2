@@ -34,7 +34,6 @@ TQ = TQ || {};
     // static APIs:
     Scene.doReplay = doReplay;
     Scene.removeEmptyLevel = removeEmptyLevel;
-    Scene.stopAux = stopAux;
     Scene.getEmptySceneJSON = getEmptySceneJSON;
     Scene.localT2Global = localT2Global;
     Scene.globalT2local = globalT2local;
@@ -125,9 +124,9 @@ TQ = TQ || {};
             if (TQ.FrameCounter.finished() && TQ.FrameCounter.isPlaying()) {
                 if (this.isLastLevel()) {
                     if (!TQ.FrameCounter.isAutoRewind()) {
-                        $("#stop").click();
+                        this.stop();
                     } else if (!TQ.FrameCounter.isInverse()) {
-                        Scene.doReplay();
+                        this.doReplay();
                     }
                 } else {
                     this.nextLevel();
@@ -369,7 +368,7 @@ TQ = TQ || {};
 
         // close current if  has one;
         if (!((this.currentLevel == undefined) || (this.currentLevel == null))) {
-            Scene.stopAux();
+            this.stop();
             this.close();
         }
 
@@ -675,7 +674,7 @@ TQ = TQ || {};
 
     p.save_TBD_by_WCY_save = function (title, keywords) {
         // 必须预处理， 切断反向的link，以避免出现Circle，无法生成JSON字串
-        Scene.stopAux();
+        this.stop();
         this.currentLevel.exit();  // 先退出, 保存之后, 再次进入
         var bak_currentLevel = this.currentLevel;
         var bak_overlay = this.overlay;
@@ -781,12 +780,6 @@ TQ = TQ || {};
             this.currentLevel.play();
         }
     };
-
-    function stopAux() {
-        if (TQ.FrameCounter.isPlaying()) {
-            $("#stop").click();
-        }
-    }
 
     function getEmptySceneJSON() {
         // this equals to the WCY01.WDM

@@ -735,18 +735,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function emptyScene() {TQ.SceneEditor.emptyScene(); }
 
     function doPlayStop() {
-        if (isPlayOnly) {
-            if (TQ.FrameCounter.isPlaying()) {
-                stop();
-            } else {
-                play();
-            }
+        if (TQ.FrameCounter.isPlaying()) {
+            stop();
         } else {
-            if (TQ.FrameCounter.isPlaying()) {
-                $("#stop").click();
-            } else {
-                $("#play").click();
-            }
+            play();
         }
     }
 

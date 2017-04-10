@@ -113,18 +113,10 @@ window.TQ = window.TQ || {};
     WCY.emptyScene = function() {TQ.SceneEditor.emptyScene(); };
 
     WCY.doPlayStop = function() {
-        if (WCY.isPlayOnly) {
-            if (TQ.FrameCounter.isPlaying()) {
-                WCY.doStop();
-            } else {
-                WCY.doPlay();
-            }
+        if (TQ.FrameCounter.isPlaying()) {
+            WCY.doStop();
         } else {
-            if (TQ.FrameCounter.isPlaying()) {
-                $("#stop").click();
-            } else {
-                $("#play").click();
-            }
+            WCY.doPlay();
         }
     };
 
