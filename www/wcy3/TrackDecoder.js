@@ -107,7 +107,7 @@ window.TQ = window.TQ || {};
         if (t > sag.t2) { // 对于SAG结束后的状态， 保留SAG最后一刻的值
             t = sag.t2;
         }
-        return sag.value0 + (t - sag.t1) * sag.speed;
+        return sag.value0 + (t - sag.t1) * sag.actualSpeed;
     }
 
     function calVisible(sag, track, t) {

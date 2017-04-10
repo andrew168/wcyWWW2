@@ -162,34 +162,34 @@ window.TQ = window.TQ || {};
         }
     };
 
-    TrackRecorder.getSagStatus = function (element, sagTypeId) {
+    TrackRecorder.getSag = function (element, sagTypeId) {
         var track = element.animeTrack;
         var SagType = TQ.AnimationManager.SagType;
         switch (sagTypeId) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
-                return getOneSagFlag(track.alpha, sagTypeId);
+                return getOneSag(track.alpha, sagTypeId);
 
             case SagType.SCALE_IN:
             case SagType.SCALE_OUT:
-                return getOneSagFlag(track.sx, sagTypeId);
+                return getOneSag(track.sx, sagTypeId);
 
             case SagType.ROTATE:
-                return getOneSagFlag(track.rotation, sagTypeId);
+                return getOneSag(track.rotation, sagTypeId);
             case SagType.LEFT_IN:
             case SagType.LEFT_OUT:
             case SagType.RIGHT_IN:
             case SagType.RIGHT_OUT:
-                return getOneSagFlag(track.x, sagTypeId);
+                return getOneSag(track.x, sagTypeId);
 
             case SagType.TOP_IN:
             case SagType.TOP_OUT:
             case SagType.BOTTOM_IN:
             case SagType.BOTTOM_OUT:
-                return getOneSagFlag(track.y, sagTypeId);
+                return getOneSag(track.y, sagTypeId);
 
             case SagType.TWINKLE:
-                return getOneSagFlag(track.visible, sagTypeId);
+                return getOneSag(track.visible, sagTypeId);
             default:
                 TQ.Log.debugInfo("unknown case");
                 break;
@@ -257,7 +257,7 @@ window.TQ = window.TQ || {};
         return TQ.AssertExt.invalidLogic(false, "未找到");
     }
 
-    function getOneSagFlag(track, sagTypeId) {
+    function getOneSag(track, sagTypeId) {
         if (!track.sags) {
             return false;
         }
@@ -267,7 +267,7 @@ window.TQ = window.TQ || {};
             i;
         for (i = 0; i < n; i++) {
             if (sags[i].typeID === sagTypeId) {
-                return true;
+                return sags[i];
             }
         }
         return false;

@@ -34,7 +34,7 @@ TQ.AnimationManager = (function () {
     };
 
     var removeSag = TQ.TrackRecorder.removeSag,
-        getSagFlag = TQ.TrackRecorder.getSagStatus,
+        getSag = TQ.TrackRecorder.getSag,
         state = {
             leftIn: false,
             leftOut: false,
@@ -49,7 +49,24 @@ TQ.AnimationManager = (function () {
             rotate: false,
             fadeIn: false,
             fadeOut: false,
-            twinkle: false,
+            twinkle: false
+        },
+
+        speeds = {
+            leftIn: 2.5, // 1--5,
+            leftOut: 2.5,
+            rightIn: 2.5,
+            rightOut: 2.5,
+            topIn: 2.5,
+            topOut: 2.5,
+            bottomIn: 2.5,
+            bottomOut: 2.5,
+            scaleIn: 2.5,
+            scaleOut: 2.5,
+            rotate: 2.5,
+            fadeIn: 2.5,
+            fadeOut: 2.5,
+            twinkle: 2.5
         },
 
         instance = {
@@ -87,21 +104,49 @@ TQ.AnimationManager = (function () {
             return false;
         }
 
-        state.leftIn = getSagFlag(ele, SagType.LEFT_IN);
-        state.leftOut = getSagFlag(ele, SagType.LEFT_OUT);
-        state.rightIn = getSagFlag(ele, SagType.RIGHT_IN);
-        state.rightOut = getSagFlag(ele, SagType.RIGHT_OUT);
-        state.topIn = getSagFlag(ele, SagType.TOP_IN);
-        state.topOut = getSagFlag(ele, SagType.TOP_OUT);
-        state.bottomIn = getSagFlag(ele, SagType.BOTTOM_IN);
-        state.bottomOut = getSagFlag(ele, SagType.BOTTOM_OUT);
-        state.sacleIn = getSagFlag(ele, SagType.SCALE_IN);
-        state.sacleOut = getSagFlag(ele, SagType.SCALE_OUT);
-        state.rotate = getSagFlag(ele, SagType.ROTATE);
-        state.fadeIn = getSagFlag(ele, SagType.FADE_IN);
-        state.fadeOut = getSagFlag(ele, SagType.FADE_OUT);
-        state.twinkle = getSagFlag(ele, SagType.TWINKLE);
-
+        var sag;
+        sag = getSag(ele, SagType.LEFT_IN);
+        state.leftIn = !!sag;
+        speeds.leftIn = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.LEFT_OUT);
+        state.leftOut = !!sag;
+        speeds.leftOut = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.RIGHT_IN);
+        state.rightIn = !!sag;
+        speeds.rightIn = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.RIGHT_OUT);
+        state.rightOut = !!sag;
+        speeds.rightOut = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.TOP_IN);
+        state.topIn = !!sag;
+        speeds.topIn = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.TOP_OUT);
+        state.topOut = !!sag;
+        speeds.topOut = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.BOTTOM_IN);
+        state.bottomIn = !!sag;
+        speeds.bottomIn = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.BOTTOM_OUT);
+        state.bottomOut = !!sag;
+        speeds.bottomOut = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.SCALE_IN);
+        state.sacleIn = !!sag;
+        speeds.sacleIn = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.SCALE_OUT);
+        state.sacleOut = !!sag;
+        speeds.sacleOut = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.ROTATE);
+        state.rotate = !!sag;
+        speeds.rotate = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.FADE_IN);
+        state.fadeIn = !!sag;
+        speeds.fadeIn = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.FADE_OUT);
+        state.fadeOut = !!sag;
+        speeds.fadeOut = (sag) ? sag.speed : 2.5;
+        sag = getSag(ele, SagType.TWINKLE);
+        state.twinkle = !!sag;
+        speeds.twinkle = (sag) ? sag.speed : 2.5;
         return true;
     }
 
@@ -399,12 +444,14 @@ TQ.AnimationManager = (function () {
 
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
-        var t2 = Math.max(TQ.FrameCounter.t(), FLY_IN_DURATION), // end time
-            t1 = Math.max(0, t2 - FLY_IN_DURATION),
-            speed = (destinationPos - startPos) / (t2 - t1);
+        var speed = getSpeed(typeId),
+            dt = Math.abs((destinationPos - startPos) / speed.actual) ,
+            t2 = Math.max(TQ.FrameCounter.t(), dt), // end time
+            t1 = Math.max(0, t2 - dt);
         return {
             typeID: typeId,
-            speed: speed, // degree/second
+            speed: speed.norm, //1-5 规范化的速度
+            actualSpeed: speed.actual, //1-5 规范化的速度
             value0: startPos,
             t1: t1, // start time
             t2: t2
@@ -422,5 +469,87 @@ TQ.AnimationManager = (function () {
             t1: t1, // start time
             t2: t2
         };
+    }
+
+    function getSpeed(typeId) {
+        var norm,
+            actual;
+        switch (typeId) {
+            case SagType.FADE_IN:
+                norm = speeds.fadeIn;
+                actual = norm * 0.25;
+                break;
+
+            case SagType.FADE_OUT:
+                norm = speeds.fadeOut;
+                actual = norm * 0.25;
+                break;
+
+            case SagType.SCALE_IN:
+                norm = speeds.scaleOut;
+                actual = norm * 2;
+                break;
+
+            case SagType.SCALE_OUT:
+                norm = speeds.scaleIn;
+                actual = norm * 2;
+                break;
+
+            case SagType.ROTATE:
+                norm = speeds.rotate;
+                actual = norm * 140;
+                break;
+
+            case SagType.LEFT_IN:
+                norm = speeds.leftIn;
+                actual = norm * 100;
+                break;
+
+            case SagType.LEFT_OUT:
+                norm = speeds.leftOut;
+                actual = norm * 100;
+                break;
+
+            case SagType.RIGHT_IN:
+                norm = speeds.rightIn;
+                actual = norm * 100;
+                break;
+
+            case SagType.RIGHT_OUT:
+                norm = speeds.rightOut;
+                actual = norm * 100;
+                break;
+
+            case SagType.TOP_IN:
+                norm = speeds.topIn;
+                actual = norm * 100;
+                break;
+
+            case SagType.TOP_OUT:
+                norm = speeds.topOut;
+                actual = norm * 100;
+                break;
+
+            case SagType.BOTTOM_IN:
+                norm = speeds.bottomIn;
+                actual = norm * 100;
+                break;
+
+            case SagType.BOTTOM_OUT:
+                norm = speeds.bottomOut;
+                actual = norm * 100;
+                break;
+
+            case SagType.TWINKLE:
+                norm = speeds.twinkle;
+                actual = norm * 1;
+                break;
+
+            default:
+                TQ.AssertExt.invalidLogic(false, "unknown case");
+                break;
+        }
+
+        return {norm: norm, actual: actual};
     }
 })();
