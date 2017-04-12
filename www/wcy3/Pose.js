@@ -71,6 +71,7 @@ window.TQ = window.TQ || {};
         tsrObj.sx = tsrWorld.sx / parentTsrWorld.sx;
         tsrObj.sy = tsrWorld.sy / parentTsrWorld.sy;
         tsrObj.visible = tsrWorld.isVis;
+        tsrObj.color = tsrWorld.color;
 
         // 维护矩阵, 供子孙使用
         var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, tsrObj.sx, tsrObj.sy);

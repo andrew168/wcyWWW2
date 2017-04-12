@@ -56,7 +56,7 @@ window.TQ = window.TQ || {};
             colorB = (!track.colorB) ?
             TQ.Utility.getColorB(TQ.poseDefault.color) : TrackDecoder.calOneTrack(track.colorB, t);
 
-        tsrObj.color = TQ.Utility.RGB2Color(colorR, colorG, colorB);
+        tsrObj.color = TQ.Utility.RGB2Color(Math.round(colorR), Math.round(colorG), Math.round(colorB));
 
         TQ.Log.tsrDebugInfo("TSR in Object " + ele.jsonObj.type + ele.id, tsrObj);
     };

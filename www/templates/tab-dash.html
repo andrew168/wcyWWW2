@@ -162,8 +162,8 @@
                 <button class="button button-positive" ng-click="insertProp()">道具</button>
                 <button class="button button-positive" ng-click="testInsert()">文字</button>
                 <button class="button button-positive" ng-click="insertRectangle()">矩形</button>
-                <button class="button button-positive" ng-click="EditorService.attachTextBubble()" ng-show="false">加气泡</button>
-                <button class="button button-positive" ng-click="EditorService.detachTextBubble()" ng-show="false">删气泡</button>
+                <button class="button button-positive" ng-click="EditorService.attachTextBubble()" ng-show="true">加气泡</button>
+                <button class="button button-positive" ng-click="EditorService.detachTextBubble()" ng-show="true">删气泡</button>
                 <button class="btn-big ion-ios-copy-outline" ng-click="EditorService.mCopyToggle()" ng-show="false">NCopy</button>
                 <button class="btn-big ion-ios-unlocked" ng-click="EditorService.pinIt()" ng-show="false">PinIt</button>
                 <button class="button button-positive" ng-click="SelectSet.multiCmdGroupIt()" ng-show="false">打包</button>
@@ -185,6 +185,11 @@
                 <button class="button button-positive" ng-click="am.rightOut($event)">右边飞出</button>
                 <button class="button button-positive" ng-click="am.bottomOut($event)">底边飞出</button>
                 <button class="button button-positive" ng-click="am.topOut($event)">上边飞出</button>
+                <button
+                    class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}">
+                    Pick text color
+                </button>
+
                 <button class="button button-positive" ng-click="undo()" ng-show="false">undo</button>
                 <button class="button button-positive" ng-click="redo()" ng-show="false">redo</button>
             </div>

@@ -1696,6 +1696,7 @@ window.TQ = window.TQ || {};
     };
 
     p.setColor = function(color) {
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
         this.setFlag(Element.COLOR_CHANGED);
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
