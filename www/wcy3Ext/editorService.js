@@ -65,10 +65,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         setSize: setSize,
         setColor: setColor,
         eraseAnimeTrack:eraseAnimeTrack,
+
+        // UI操作部分， 更改了元素的state， 所有，必须 调用 updateMode()，以更新UI
         hideOrShow :hideOrShow ,
         pinIt:pinIt,
-        attachTextBubble: TQ.TextBubble.attachTo,
-        detachTextBubble: TQ.TextBubble.detachFrom,
+        attachTextBubble: attachTextBubble,
+        detachTextBubble: detachTextBubble,
+
         ftb:TQ.FloatToolbar,
 
         // element insert (text, sound, image...)
@@ -803,6 +806,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function pinIt() {
         TQ.SelectSet.pinIt();
+        updateMode();
+    }
+
+    function attachTextBubble() {
+        TQ.TextBubble.attachTo();
+        updateMode();
+    }
+
+    function detachTextBubble() {
+        TQ.TextBubble.detachFrom();
         updateMode();
     }
 

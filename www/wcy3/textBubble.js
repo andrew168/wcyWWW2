@@ -20,7 +20,7 @@ TQ = TQ || {};
             host = TQ.SelectSet.peekLatestEditableEle();
         }
 
-        if (host) {
+        if (host && host.hasBubble && !host.hasBubble()) {
             var desc = compose(host),
                 bubble = host.addChild(desc);
             setTimeout(function() {
@@ -35,7 +35,7 @@ TQ = TQ || {};
             host = TQ.SelectSet.peekLatestEditableEle();
         }
 
-        if (!!host) {
+        if (!!host && host.hasBubble && host.hasBubble()) {
             bubble = host.getTextBubble();
             host.removeChild(bubble);
             bubble.doShow(false);
