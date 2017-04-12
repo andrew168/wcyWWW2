@@ -35,6 +35,15 @@ TQ = TQ || {};
             host = TQ.SelectSet.peekLatestEditableEle();
         }
 
+        if (!host) {
+            return;
+        }
+
+        if (!host.hasBubble && host.isMarker()) {
+            var bubble = host.host;
+            host = bubble.host;
+        }
+
         if (!!host && host.hasBubble && host.hasBubble()) {
             bubble = host.getTextBubble();
             host.removeChild(bubble);
@@ -53,6 +62,15 @@ TQ = TQ || {};
         this._parent_update(t, noRecording);
         this.updateLayer();
         this.dirty = false;
+    };
+
+    p.parent_doShow = p.doShow;
+    p.doShow = function (flag) {
+        if (this.anchorMarker && !flag) {
+            this.anchorMarker.doShow(flag);
+        }
+
+        this.parent_doShow(flag);
     };
 
     p.updateLayer = function () { //  总是紧接着host的下一层
