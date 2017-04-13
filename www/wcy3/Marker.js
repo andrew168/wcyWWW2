@@ -147,6 +147,7 @@ TQ = TQ || {};
         var id = workingMarkers.indexOf(aMarker);
         workingMarkers.splice(id, 1);
         markers.push(aMarker);
+        aMarker.removeFromStage();
     };
 
     TQ.Marker = Marker;
