@@ -23,10 +23,15 @@ TQ = TQ || {};
 
     p.getTsrInHostObj = function () {
         var tsrObj = this.parent_getTsrInHostObj();
+
         if (this.host) {// 在初次创建的时候， 可能没有host
-            var anchor = this.host.getAnchorInObject();
-            tsrObj.x = anchor.x;
-            tsrObj.y = anchor.y;
+            if (!this.host.getAnchorInObject) {
+                TQ.AssertExt.invalidLogic("应该有anchor！");
+            } else {
+                var anchor = this.host.getAnchorInObject();
+                tsrObj.x = anchor.x;
+                tsrObj.y = anchor.y;
+            }
         }
         return tsrObj;
     };
