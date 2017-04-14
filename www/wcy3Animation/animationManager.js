@@ -12,15 +12,15 @@ TQ.AnimationManager = (function () {
 
     var SagType = {
         // translate
-        RIGHT_IN: 'sag left in',
+        RIGHT_IN: 'sag right in',
         LEFT_IN: 'sag left in',
-        BOTTOM_IN: 'bottom in',
-        TOP_IN: 'top in',
+        BOTTOM_IN: 'sag bottom in',
+        TOP_IN: 'sag top in',
 
-        RIGHT_OUT: 'sag left in',
-        LEFT_OUT: 'sag left in',
-        BOTTOM_OUT: 'bottom in',
-        TOP_OUT: 'top in',
+        RIGHT_OUT: 'sag right out',
+        LEFT_OUT: 'sag left out',
+        BOTTOM_OUT: 'sag bottom out',
+        TOP_OUT: 'sag top out',
 
         SCALE_IN: 'sag scale in',
         SCALE_OUT: 'sag scale out',
@@ -29,8 +29,8 @@ TQ.AnimationManager = (function () {
         TWINKLE: 'sag twinkle',
 
         // opacity change
-        FADE_IN: 'sag fadein',
-        FADE_OUT: 'sag fadeout'
+        FADE_IN: 'sag fade in',
+        FADE_OUT: 'sag fade out'
     };
 
     var removeSag = TQ.TrackRecorder.removeSag,
@@ -99,10 +99,12 @@ TQ.AnimationManager = (function () {
 
     }
 
-    function reset() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+    function reset(ele) {
         if (!ele) {
-            return false;
+            ele = TQ.SelectSet.peekLatestEditableEle();
+            if (!ele) {
+                return false;
+            }
         }
 
         var sag;

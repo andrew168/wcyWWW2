@@ -95,6 +95,7 @@ var TQ = TQ || {};
         }
         // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
         _showFloatToolbar(startEle.getType());
+        TQ.AnimationManager.reset(startEle);
         resetStartParams(e);
         if (TQ.Utility.isMouseEvent(e)) {
             TQ.TouchManager.attachHandler('mousemove', onDrag);
