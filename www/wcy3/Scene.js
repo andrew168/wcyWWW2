@@ -739,7 +739,7 @@ TQ = TQ || {};
             if (this.currentLevel != null) {
                 TQ.RM.reset(); // 必须先停止RM，否则其中的callback如果引用了Level对象就会出错
                 TQ.SoundMgr.close();
-                TQ.TextEditor.onNo();
+                // TQ.TextEditor.onNo();
                 this.currentLevel.exit();
                 this.currentLevel.delete();
                 this.currentLevel = null;

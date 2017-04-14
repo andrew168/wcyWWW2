@@ -96,11 +96,6 @@ window.TQ = window.TQ || {};
       return Utility.getComponentByThumbnail(thumbnail);
     };
 
-    Utility.isComponent = function() {
-        return ($("#tab_right_panel").tabs( "option", "active" ) == 1 );
-    };
-
-    Utility.isScene = function() { return ($("#tab_right_panel").tabs( "option", "active" ) == 0 );};
     Utility.getEmptyScene = function () {
       return {"levels":[{"jsonElements":null, "FPS":20, "elements":null, "name":"0"}],
         "overlay":null, "currentLevelId":0, "currentLevel":null};

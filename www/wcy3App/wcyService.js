@@ -237,7 +237,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function doStarted() {
-        initToolbar();
+        // initToolbar();
         TQ.FloatToolbar.initialize();
         // TQ.FloatToolbar.isVisible();
         if (_onStarted) {

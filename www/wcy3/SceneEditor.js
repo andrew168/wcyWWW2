@@ -289,10 +289,6 @@ var currScene = null;
 
     } // End of function.
 
-    function addTextTest() {
-        TQ.TextEditor.addText(TQ.Dictionary.defaultText);
-    }
-
     function create3DElement() {
         if (TQ.SelectSet.groupIt()) { // 返回false肯定不成功, 不要做后续的
             var ele = currScene.currentLevel.latestElement;
