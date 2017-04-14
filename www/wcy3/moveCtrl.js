@@ -52,16 +52,22 @@ window.TQ = window.TQ || {};
     MoveCtrl.moveLayer = function (ele, step) {
         var oldZ = (step >0) ? ele.getMaxZ(): ele.getMinZ();  // 防止，目标z落在自身
         if ((oldZ <= 0) && (step <=0)) { // 已经是最底层， 不能再move了
-            TQ.MessageBox.prompt("already in lowest layer!");
+            TQ.MessageBox.toast("already in lowest layer!");
         } else {
             step = zAdjustForGroup(oldZ, step); // 防止目标z录入复合体内
-            TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.CHANGE_LAYER, ele, step, oldZ));
+            if (step === 0) {
+                TQ.MessageBox.toast("couldn't move any more！");
+            } else {
+                TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.CHANGE_LAYER, ele, step, oldZ));
+            }
         }
     };
 
     function zAdjustForGroup(oldZ, step) {
         var ele = TQ.Graphics.findElementAtZ(oldZ + step);
-        if (ele.isComposed()) {
+        if (!ele) {
+            step = 0;
+        } else if (ele.isComposed()) {
             var newZ = (step > 0) ? ele.getMaxZ() : ele.getMinZ();
             step = newZ - oldZ;
         }

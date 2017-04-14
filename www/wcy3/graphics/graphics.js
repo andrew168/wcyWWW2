@@ -176,7 +176,8 @@ TQ.Graphics = (function () {
 
     // stage
     function findElementAtZ(z) {
-        var ele = stageContainer.getChildAt(z).ele;
+        var displayObj = stageContainer.getChildAt(z),
+            ele = (!displayObj) ? null:  displayObj.ele;
         while (ele && ele.parent) {
             ele = ele.parent;
         }
