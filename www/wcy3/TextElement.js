@@ -219,7 +219,6 @@ window.TQ = window.TQ || {};
 
     p.getHeight = function () {
         var h = this.displayObj.getMeasuredHeight();
-        h = h * 1.8;
         return h;
     };
 
