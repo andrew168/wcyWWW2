@@ -67,9 +67,11 @@ var TQ = TQ || {};
         }
         isWatching = true;
         console.log("start watch...");
-        selectedEvents.forEach(function (item) {
-            document.addEventListener(item, onPreviewMenuOn);
-        });
+        setTimeout(function() { // 避免延后一点， 避免被preview按钮的操作触发
+            selectedEvents.forEach(function (item) {
+                document.addEventListener(item, onPreviewMenuOn);
+            });
+        }, 100);
     }
 
     function stopWatch() {
