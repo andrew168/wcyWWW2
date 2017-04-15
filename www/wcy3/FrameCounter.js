@@ -23,7 +23,8 @@ window.TQ = window.TQ || {};
         GO = 1, // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
         STOP = 0,
         baseStep = NORMAL_SPEED,
-        step = baseStep;
+        step = baseStep,
+        abOptions = null;
 
     FrameCounter.isNew = true;  // 新的时刻, 需要更新数据
     FrameCounter.v = 0;
@@ -107,6 +108,10 @@ window.TQ = window.TQ || {};
         TQ.FrameCounter.isNew = true;
     };
 
+    FrameCounter.setABOptions = function (options) {
+        abOptions = options;
+    };
+
     FrameCounter.goto = function(t) {
         FrameCounter.gotoFrame(t * _FPS);
     };
@@ -125,7 +130,12 @@ window.TQ = window.TQ || {};
 
         var delta = step;
         FrameCounter.v = FrameCounter.v + delta;
-        if(FrameCounter.v > FrameCounter.max) {
+
+        if (abOptions) {
+            if (FrameCounter.t() > abOptions.tEnd) {
+                FrameCounter.stop();
+            }
+        } else if(FrameCounter.v > FrameCounter.max) {
             if (_isRecording) {
                 FrameCounter.max += step;
             } else {
@@ -187,7 +197,17 @@ window.TQ = window.TQ || {};
     FrameCounter.stop = function ()
     {
         requestState = STOP;
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.v));
+        if (abOptions) {
+            var tStop = abOptions.stopAt;
+            abOptions = null;
+            setTimeout(function() {
+                FrameCounter.goto(tStop);
+                TQ.DirtyFlag.requestToUpdateAll();
+            }, 100);
+        } else {
+            TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.v));
+        }
+
         if (TQ.GifManager.isOpen) {
             TQ.GifManager.end();
             TQ.Graphics.setCanvas();

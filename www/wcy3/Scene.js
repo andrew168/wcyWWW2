@@ -160,17 +160,24 @@ TQ = TQ || {};
         }
     };
 
-    function doReplay() {
+    function doReplay(options) {
         if (!currScene) {
             return;
         }
         if (TQ.FrameCounter.isPlaying()) {
             currScene.stop();
         }
-        if (currScene.currentLevelId !== 0) {
-            currScene.gotoLevel(0);
+
+        if (!options) {
+            if (currScene.currentLevelId !== 0) {
+                currScene.gotoLevel(0);
+            }
+            TQ.FrameCounter.gotoBeginning();
+        } else {
+            TQ.FrameCounter.setABOptions(options);
+            TQ.FrameCounter.goto(options.tStart);
         }
-        TQ.FrameCounter.gotoBeginning();
+
         currScene.play();
     }
 

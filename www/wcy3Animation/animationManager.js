@@ -222,7 +222,51 @@ TQ.AnimationManager = (function () {
         if (ele) {
             sagId = TQ.TrackRecorder.recordSag(ele, sag);
         }
+
+        setTimeout(function () {
+            TQ.Scene.doReplay(composePreviewOptions(sag));
+        }, 100);
+
         return sagId;
+    }
+
+    function composePreviewOptions(sag) {
+        var t1, t2,
+            currentTime = TQ.FrameCounter.t();
+        switch (sag.typeID) {
+            case SagType.TWINKLE:
+                t1 = currentTime;
+                t2 = t1 + 3 * (sag.hideT + sag.showT);
+                break;
+            case SagType.LEFT_IN:
+            case SagType.RIGHT_IN:
+            case SagType.BOTTOM_IN:
+            case SagType.TOP_IN:
+            case SagType.FADE_IN:
+            case SagType.SCALE_IN:
+                t1 = sag.t1;
+                t2 = sag.t2;
+                currentTime = Math.max(t2, currentTime);
+                break;
+
+            case SagType.LEFT_OUT:
+            case SagType.RIGHT_OUT:
+            case SagType.BOTTOM_OUT:
+            case SagType.TOP_OUT:
+            case SagType.FADE_OUT:
+            case SagType.SCALE_OUT:
+                t1 = sag.t1;
+                t2 = sag.t2;
+                currentTime = Math.min(t1, currentTime);
+                break;
+
+            default:
+                t1 = sag.t1;
+                t2 = sag.t2;
+                break;
+        }
+
+        return {tStart: t1, tEnd: t2, stopAt: currentTime};
     }
 
     function leftIn() {
