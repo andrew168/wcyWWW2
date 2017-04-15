@@ -103,6 +103,20 @@ TQ.AnimationManager = (function () {
         if (!ele) {
             ele = TQ.SelectSet.peekLatestEditableEle();
             if (!ele) {
+                state.leftIn = false;
+                state.leftOut = false;
+                state.rightIn = false;
+                state.rightOut = false;
+                state.topIn = false;
+                state.topOut = false;
+                state.bottomIn = false;
+                state.bottomOut = false;
+                state.scaleIn = false;
+                state.scaleOut = false;
+                state.rotate = false;
+                state.fadeIn = false;
+                state.fadeOut = false;
+                state.twinkle = false;
                 return false;
             }
         }
