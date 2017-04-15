@@ -704,7 +704,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }, 100);
     }
 
-    function preview () {
+    function preview (t1, t2) {
         state.isPreviewMode = true;
         replay();
     }
