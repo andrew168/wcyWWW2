@@ -23,7 +23,6 @@ TQ.TimerUI = (function () {
         initialize: initialize
     };
 
-
     function initialize () {
         if (initialized) {
             setTimeout(onRangeChanged, 100);
@@ -73,7 +72,7 @@ TQ.TimerUI = (function () {
     function syncToCounter() {
         // t = bodyEle.slider("value");
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(TQ.Scene.globalT2local(t)));
+        TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(TQ.Scene.globalT2local(t)));
         TQ.DirtyFlag.requestToUpdateAll();
     }
     function onMouseAction (event, ui) {

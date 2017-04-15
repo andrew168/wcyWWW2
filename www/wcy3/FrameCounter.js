@@ -30,6 +30,7 @@ window.TQ = window.TQ || {};
     FrameCounter.v = 0;
     FrameCounter.defaultFPS = 20;
     FrameCounter.max = 120 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
+    FrameCounter.cmdGotoFrame = cmdGotoFrame;
 
     var _FPS = FrameCounter.defaultFPS,  // 下划线是内部变量, 禁止外面引用
         state = STOP,
@@ -96,11 +97,11 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.gotoBeginning = function() {
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(0));
+        cmdGotoFrame(0);
     };
 
     FrameCounter.gotoEnd = function() {
-        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.max));
+        cmdGotoFrame(FrameCounter.max);
     };
 
     FrameCounter.gotoFrame = function(v) {
@@ -205,7 +206,7 @@ window.TQ = window.TQ || {};
                 TQ.DirtyFlag.requestToUpdateAll();
             }, 100);
         } else {
-            TQ.CommandMgr.directDo(new TQ.SetTimeCommand(FrameCounter.v));
+            cmdGotoFrame(FrameCounter.v);
         }
 
         if (TQ.GifManager.isOpen) {
@@ -274,6 +275,10 @@ window.TQ = window.TQ || {};
             step = step * NORMAL_SPEED / LOW_SPEED;
         }
         baseStep = NORMAL_SPEED;
+    }
+
+    function cmdGotoFrame(v) {
+        TQ.CommandMgr.directDo(new TQ.SetTimeCommand(v));
     }
 
     TQ.FrameCounter = FrameCounter;
