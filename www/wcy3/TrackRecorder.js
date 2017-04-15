@@ -120,6 +120,8 @@ window.TQ = window.TQ || {};
             default:
                 break;
         }
+
+        track.hasSag = true;
     };
 
     TrackRecorder.removeSag = function (element, sagTypeId) {
@@ -160,6 +162,9 @@ window.TQ = window.TQ || {};
             default:
                 break;
         }
+
+        track.hasSag = hasSag(track.x) || hasSag(track.y) || hasSag(track.sx) || hasSag(track.sy) ||
+            hasSag(track.rotation) || hasSag(track.alpha) || hasSag(track.visible);
     };
 
     TrackRecorder.getSag = function (element, sagTypeId) {
@@ -199,6 +204,10 @@ window.TQ = window.TQ || {};
     TrackRecorder.erase = function (element) {
         element.animeTrack.erase();
     };
+
+    function hasSag(track) {
+        return (track.sags  && track.sags.length > 0);
+    }
 
     TrackRecorder.recordOneTrack = function (track, t, v, interpolationMethod) {
         assertNotNull(TQ.Dictionary.FoundNull, track);

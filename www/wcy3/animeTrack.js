@@ -29,43 +29,49 @@ TQ = TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, desc.sy);
         assertNotNull(TQ.Dictionary.FoundNull, desc.alpha);
         assertNotNull(TQ.Dictionary.FoundNull, desc.color);
-        if (!desc.animeTrack || !desc.animeTrack.x) {
+        if (!desc.animeTrack) {
+            desc.animeTrack = {};
+        }
+
+        this.hasSag = !!desc.animeTrack.hasSag;
+
+        if (!desc.animeTrack.x) {
             this.x = new TQ.OneTrack(desc.x);
         } else {
             this.x = new TQ.OneTrack(desc.animeTrack.x);
         }
 
-        if (!desc.animeTrack || !desc.animeTrack.y) {
+        if (!desc.animeTrack.y) {
             this.y = new TQ.OneTrack(desc.y);
         } else {
             this.y = new TQ.OneTrack(desc.animeTrack.y);
         }
 
-        if (!desc.animeTrack || !desc.animeTrack.rotation) {
+        if (!desc.animeTrack.rotation) {
             this.rotation = new TQ.OneTrack(desc.rotation);
         } else {
             this.rotation = new TQ.OneTrack(desc.animeTrack.rotation);
         }
 
-        if (!desc.animeTrack || !desc.animeTrack.sx) {
+        if (!desc.animeTrack.sx) {
             this.sx = new TQ.OneTrack(desc.sx);
         } else {
             this.sx = new TQ.OneTrack(desc.animeTrack.sx);
         }
 
-        if (!desc.animeTrack || !desc.animeTrack.sy) {
+        if (!desc.animeTrack.sy) {
             this.sy = new TQ.OneTrack(desc.sy);
         } else {
             this.sy = new TQ.OneTrack(desc.animeTrack.sy);
         }
 
-        if (!desc.animeTrack || !desc.animeTrack.alpha) {
+        if (!desc.animeTrack.alpha) {
             this.alpha = new TQ.OneTrack(desc.alpha);
         } else {
             this.alpha = new TQ.OneTrack(desc.animeTrack.alpha);
         }
 
-        if (!desc.animeTrack || !desc.animeTrack.colorR) {
+        if (!desc.animeTrack.colorR) {
             this.colorR = new TQ.OneTrack(TQ.Utility.getColorR(desc.color));
             this.colorG = new TQ.OneTrack(TQ.Utility.getColorG(desc.color));
             this.colorB = new TQ.OneTrack(TQ.Utility.getColorB(desc.color));
@@ -75,7 +81,7 @@ TQ = TQ || {};
             this.colorB = new TQ.OneTrack(desc.animeTrack.colorB);
         }
 
-        if (!desc.animeTrack || !desc.animeTrack.visible) { // 即时添加的元素
+        if (!desc.animeTrack.visible) { // 即时添加的元素
             this.visible = new TQ.OneTrack(desc.isVis ? 1 : 0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
                 TQ.TrackRecorder.recordOneTrack(this.visible, 0.0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
