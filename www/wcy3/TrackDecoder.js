@@ -11,6 +11,8 @@ window.TQ = window.TQ || {};
     {
 
     }
+
+    var isSagElement;
     TrackDecoder.LINE_INTERPOLATION = 1;
     TrackDecoder.JUMP_INTERPOLATION = 0;
     /*  animeTrack(Object coordinate) ==> World coordinate
@@ -23,6 +25,7 @@ window.TQ = window.TQ || {};
     TrackDecoder.calculate = function (ele, t) {
         var track = ele.animeTrack,
             tsrObj = TQ.Pose;
+        isSagElement = !!track.hasSag;
         // 计算本物体坐标系下的值
         tsrObj.rotation = ((track.rotation == undefined) || (track.rotation == null)) ?
             TQ.poseDefault.rotation : TrackDecoder.calOneTrack(track.rotation, t);
@@ -124,7 +127,9 @@ window.TQ = window.TQ || {};
     function calTrack(track, t)
     {
         TrackDecoder.searchInterval(t, track);
-        if (track.tid1 == track.tid2) {
+        if (isSagElement) {
+            return track.value[0];
+        } else if (track.tid1 == track.tid2) {
             // assertTrue("只有1帧或者时间出现负增长, ",track.tid1 == 0 );
             // track.tid1 = 0;
             return track.value[track.tid1];

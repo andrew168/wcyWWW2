@@ -11,6 +11,8 @@ window.TQ = window.TQ || {};
     {
 
     }
+
+    var isSagElement;
     TrackRecorder.style = TQ.TrackDecoder.LINE_INTERPOLATION;
     TrackRecorder.initialize = function () {};
 
@@ -28,6 +30,7 @@ window.TQ = window.TQ || {};
             assertNotUndefined(TQ.Dictionary.FoundNull, track);
         }
 
+        isSagElement = !!track.hasSag;
         TQ.AssertExt.invalidLogic(!!(track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
         if (element.hasFlag(TQ.Element.ROTATING)) {
             TrackRecorder.recordOneTrack(track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
@@ -121,7 +124,10 @@ window.TQ = window.TQ || {};
                 break;
         }
 
-        track.hasSag = true;
+        if (!track.hasSag) {
+            trimTrack(track, TQ.FrameCounter.t());
+            track.hasSag = true;
+        }
     };
 
     TrackRecorder.removeSag = function (element, sagTypeId) {
@@ -221,7 +227,10 @@ window.TQ = window.TQ || {};
         // 相等的情况, 只修改原来帧的值, 不增加新的帧
         var EPSILON = 0.01;
         var rewrite = false;
-        if ( Math.abs(t - track.t[tid1]) < EPSILON ) {
+        if (isSagElement) {
+            id = 0;
+            rewrite = true;
+        } else if ( Math.abs(t - track.t[tid1]) < EPSILON ) {
             id = tid1;
             rewrite = true;
         } else if ( Math.abs(t - track.t[tid2]) < EPSILON ) {
@@ -299,6 +308,47 @@ window.TQ = window.TQ || {};
             return -1;
         }
         return 0;
+    }
+
+    function trimTrack(track, t) {
+        trimOneTrack(track.x, t);
+        trimOneTrack(track.y, t);
+        trimOneTrack(track.sx, t);
+        trimOneTrack(track.sy, t);
+        trimOneTrack(track.rotation, t);
+        trimOneTrack(track.alpha, t);
+        trimOneTrack(track.visible, t);
+        trimOneTrack(track.colorR, t);
+        trimOneTrack(track.colorG, t);
+        trimOneTrack(track.colorB, t);
+    }
+
+    function trimOneTrack(track, t) {
+        // 处理特殊情况, 只有1帧:
+        if (track.t.length <= 1) {
+            assertTrue(TQ.Dictionary.INVALID_PARAMETER, track.tid1 == 0); //只有1帧
+            return;
+        }
+
+        // 确定下边界: t1, 比 t小
+        var tid1 = track.t.length - 1;
+        for (; t <= track.t[tid1]; tid1--) {
+            if (tid1 <= 0) {
+                tid1 = 0;
+                break;
+            }
+        }
+
+        if (tid1 > 0 ) {
+            track.t.splice(0, tid1);
+            track.value.splice(0, tid1);
+            track.c.splice(0, tid1);
+        }
+
+        track.value[0] = TQ.TrackDecoder.calOneTrack(track, t);
+        track.t[0] = t;
+
+        track.tid1 = track.tid2 = 0;
     }
 
     TQ.TrackRecorder = TrackRecorder;
