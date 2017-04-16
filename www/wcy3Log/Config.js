@@ -79,6 +79,16 @@ window.TQ = window.TQ || {};
     Config.SCREENSHOT_CORE_PATH = "screenshots/";
     Config.SOUND_PLUGIN_PATH = "../soundjs/";
     Config.DefaultUserID = 10000;
+    Config.speedFactor = {
+        flyIn: 500,
+        flyOut: 500,
+        fadeIn: 0.25,
+        fadeOut: 0.25,
+        scaleIn: 2,
+        scaleOut: 2,
+        rotate: 140,
+        twinkle: 1
+    };
 
     // utilities tools
     Config.REMOVE_EMPTY_LEVEL_ON = true;

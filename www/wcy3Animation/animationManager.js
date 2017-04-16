@@ -5,8 +5,6 @@ var TQ = TQ || {};
 TQ.AnimationManager = (function () {
     'use strict';
     var UNLIMIT = 99999999,
-        FLY_IN_DURATION = 1, // 1秒钟，飞入
-        FLY_OUT_DURATION = 1,
         FLY_IN_POS_0 = -100, // 从屏幕外开始
         FLY_OUT_POS_1 = -100; // 到屏幕外结束
 
@@ -200,13 +198,14 @@ TQ.AnimationManager = (function () {
         }
 
         console.log("twinkle");
-        var showT = 2.5 / speeds.twinkle,
+        var speed = getSpeed(SagType.TWINKLE);
+        var showT = 1 / speed.actualSpeed,
             hideT = showT,
             sag = {
                 typeID: SagType.TWINKLE,
                 showT: showT,
                 hideT: hideT,
-                speed: speeds.twinkle, // only for UI
+                speed: speed.normSpeed, // only for UI
                 t1: 0,
                 t2: UNLIMIT // end time
             };
@@ -541,76 +540,77 @@ TQ.AnimationManager = (function () {
 
     function getSpeed(typeId) {
         var norm,
-            actual;
+            actual,
+            speedFactor = TQ.Config.speedFactor;
         switch (typeId) {
             case SagType.FADE_IN:
                 norm = speeds.fadeIn;
-                actual = norm * 0.25;
+                actual = norm * speedFactor.fadeIn;
                 break;
 
             case SagType.FADE_OUT:
                 norm = speeds.fadeOut;
-                actual = norm * 0.25;
+                actual = norm * speedFactor.fadeOut;
                 break;
 
             case SagType.SCALE_IN:
                 norm = speeds.scaleOut;
-                actual = norm * 2;
+                actual = norm * speedFactor.scaleIn;
                 break;
 
             case SagType.SCALE_OUT:
                 norm = speeds.scaleIn;
-                actual = norm * 2;
+                actual = norm * speedFactor.scaleOut;
                 break;
 
             case SagType.ROTATE:
                 norm = speeds.rotate;
-                actual = norm * 140;
+                actual = norm * speedFactor.rotate;
                 break;
 
             case SagType.LEFT_IN:
                 norm = speeds.leftIn;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyIn;
                 break;
 
             case SagType.LEFT_OUT:
                 norm = speeds.leftOut;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyOut;
                 break;
 
             case SagType.RIGHT_IN:
                 norm = speeds.rightIn;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyIn;
                 break;
 
             case SagType.RIGHT_OUT:
                 norm = speeds.rightOut;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyOut;
                 break;
 
             case SagType.TOP_IN:
                 norm = speeds.topIn;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyIn;
                 break;
 
             case SagType.TOP_OUT:
                 norm = speeds.topOut;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyOut;
                 break;
 
             case SagType.BOTTOM_IN:
                 norm = speeds.bottomIn;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyIn;
                 break;
 
             case SagType.BOTTOM_OUT:
                 norm = speeds.bottomOut;
-                actual = norm * 100;
+                actual = norm * speedFactor.flyOut;
                 break;
 
             case SagType.TWINKLE:
                 norm = speeds.twinkle;
-                actual = norm * 1;
+                actual = norm * speedFactor.twinkle;
                 break;
 
             default:
