@@ -5,10 +5,10 @@
 var TQ = TQ || {};
 TQ.TimerUI = (function () {
     var isUserControlling = false,
-        initialized = false;
-        t = 0,
+        initialized = false,
+        t10 = 0, // 10倍放大的t
         tMin = 0,
-        tMaxFrame = 0,
+        tMax = 0, //用秒s， 不要frame
         tEle = null,
         tMinEle = null,
         bodyEle = null;
@@ -30,9 +30,9 @@ TQ.TimerUI = (function () {
         }
 
         initialized = true;
-        t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        t10 = 10 * TQ.Scene.localT2Global(TQ.FrameCounter.t());
         tMin = 0;
-        tMaxFrame = TQ.Scene.getTMax();
+        tMax = TQ.FrameCounter.f2t(TQ.Scene.getTMax());
         var containerDiv = document.getElementById("timer-bar-div");
         TQ.AssertExt.isNotNull(containerDiv);
         containerDiv.innerHTML = htmlStr;
@@ -44,17 +44,16 @@ TQ.TimerUI = (function () {
             orientation: "horizontal",
             range: "min",
             min: tMin,
-            max: tMaxFrame,
-            value: t,   // 1个滑块
-            // values: [t, tMaxFrame/2],    // 2个滑块
+            max: tMax * 10,
+            value: t10,   // 1个滑块
+            // values: [t10, tMax/2],    // 2个滑块
             start: onMouseStart,
             slide: onMouseAction,
             change: onChange,
             stop: onMouseStop
         });
 
-        displayRange();
-        displayTime(t);
+        displayTime(t10);
         TQ.FrameCounter.addHook(update);
         document.addEventListener(TQ.EVENT.SCENE_TIME_RANGE_CHANGED, onRangeChanged, false);
     }
@@ -64,56 +63,51 @@ TQ.TimerUI = (function () {
     }
 
     function onMouseStop (event, ui) {
-        t = ui.value;
+        t10 = ui.value;
         syncToCounter();
         isUserControlling = false;
     }
 
     function syncToCounter() {
-        // t = bodyEle.slider("value");
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(TQ.Scene.globalT2local(t)));
+        TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(TQ.Scene.globalT2local(t10/10)));
         TQ.DirtyFlag.requestToUpdateAll();
     }
     function onMouseAction (event, ui) {
-        t = ui.value;
-        // console.log("Mouse Action: t = " + t);
-        displayTime(t);
+        t10 = ui.value;
+        // console.log("Mouse Action: t10 = " + t10);
+        displayTime(t10);
         syncToCounter();
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
     }
 
     function onChange () {
-        displayTime(t);
+        displayTime(t10);
     }
 
     function update (forceToUpdate) {
         if (forceToUpdate || !isUserControlling) {
             if (forceToUpdate || TQ.FrameCounter.isNew) {
-                t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
-                bodyEle.slider("value", t);
+                t10 = 10 * TQ.Scene.localT2Global(TQ.FrameCounter.t());
+                bodyEle.slider("value", t10);
             }
         }
     }
 
-    function displayTime (t) {
+    function displayTime (t10) {
         // tEle.innerText
-        tEle.textContent = t.toString() + '/' + tMaxFrame.toString();
+        tEle.textContent = (t10/10).toFixed(1) + '/' + tMax.toString();
     }
 
     function onRangeChanged() {
-        t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        t10 = 10 * TQ.Scene.localT2Global(TQ.FrameCounter.t());
         tMin = 0;
-        tMaxFrame = TQ.Scene.getTMax();
+        tMax = TQ.FrameCounter.f2t(TQ.Scene.getTMax());
 
         if (bodyEle) {
             bodyEle.slider('option', 'min', tMin);
-            bodyEle.slider('option', 'max', tMaxFrame);
+            bodyEle.slider('option', 'max', tMax * 10);
             update (true);
         }
-    }
-
-    function displayRange() {
-        // tMinEle.innerText = " : " + tMin + "--" + tMaxFrame;
     }
 }());
