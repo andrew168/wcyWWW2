@@ -80,8 +80,8 @@ window.TQ = window.TQ || {};
     Config.SOUND_PLUGIN_PATH = "../soundjs/";
     Config.DefaultUserID = 10000;
     Config.speedFactor = {
-        flyIn: 500,
-        flyOut: 500,
+        flyIn: 200,
+        flyOut: 200,
         fadeIn: 0.25,
         fadeOut: 0.25,
         scaleIn: 2,
