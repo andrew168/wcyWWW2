@@ -84,7 +84,7 @@ window.TQ = window.TQ || {};
             (track.sx.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.sy.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.rotation.t.length > TQ.Config.MAX_KEYFRAME) ||
-            (track.rotation.alpha.length > TQ.Config.MAX_KEYFRAME) ||
+            (track.alpha.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.colorR.t.length > TQ.Config.MAX_KEYFRAME)) {
             TQ.MessageBox.toast("该元素的动画超长， 请尽快保存!");
         }
