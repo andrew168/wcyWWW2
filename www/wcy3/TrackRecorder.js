@@ -79,6 +79,16 @@ window.TQ = window.TQ || {};
             }
         }
 
+        if ((track.x.t.length > TQ.Config.MAX_KEYFRAME)  ||
+            (track.y.t.length > TQ.Config.MAX_KEYFRAME) ||
+            (track.sx.t.length > TQ.Config.MAX_KEYFRAME) ||
+            (track.sy.t.length > TQ.Config.MAX_KEYFRAME) ||
+            (track.rotation.t.length > TQ.Config.MAX_KEYFRAME) ||
+            (track.rotation.alpha.length > TQ.Config.MAX_KEYFRAME) ||
+            (track.colorR.t.length > TQ.Config.MAX_KEYFRAME)) {
+            TQ.MessageBox.toast("该元素的动画超长， 请尽快保存!");
+        }
+
         element.clearFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING
             | TQ.Element.ALPHAING | TQ.Element.ZING | TQ.Element.VISIBLE_CHANGED | TQ.Element.COLOR_CHANGED);
     };

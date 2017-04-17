@@ -726,6 +726,10 @@ TQ = TQ || {};
         this.updateShareData();
         var data = JSON.stringify(this);
         this.afterToJSON();
+
+        if (data.length > TQ.Config.MAX_FILE_SIZE) {
+            TQ.MessageBox.toast("文件超长， 请尽快保存！");
+        }
         return data;
     };
 

@@ -8,6 +8,11 @@ window.TQ = window.TQ || {};
 (function () {
     function Config() {
     }
+
+    // 系统容量参数
+    Config.MAX_UNDO_STEP = 100;
+    Config.MAX_KEYFRAME = 2000;
+    Config.MAX_FILE_SIZE = 22767; //32000;
     // 陈永添加的配置， begin ---
     var host=window.location.host;
     status=host.indexOf("udoido.cn");
