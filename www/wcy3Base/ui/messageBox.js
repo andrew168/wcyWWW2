@@ -19,8 +19,15 @@ TQ.MessageBox = (function() {
 
     return instance;
 
+    function isEqualMsg(options1, options2) {
+        return options1.content === options2.content;
+    }
+
     function doShow(options) {
         if (isShowingByForce) {
+            if ((msgList.length > 0) && isEqualMsg(options, msgList[msgList.length - 1])) {
+                return;
+            }
             return msgList.push(options);
         }
 
@@ -67,7 +74,7 @@ TQ.MessageBox = (function() {
     }
 
     function toast(str) {
-        var duration = 3000;
+        var duration = 1000;
         doShow({content: str, duration: duration});
     }
 
