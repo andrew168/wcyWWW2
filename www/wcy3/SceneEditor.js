@@ -165,16 +165,18 @@ var currScene = null;
         TQ.InputMap.initialize(TQ.WCY.isPlayOnly);
         TQ.TaskMgr.initialize();
         TQ.GarbageCollector.initialize();
-        TQ.CommandMgr.initialize();
-        TQ.InputCtrl.initialize(stageContainer);
-        TQ.MoveCtrl.initialize(stageContainer);
-        TQ.SkinningCtrl.initialize(stageContainer, currScene);
-        TQ.IKCtrl.initialize(stageContainer, currScene);
-        TQ.TrackRecorder.initialize();
-        TQ.ActionRecorder.initialize();
-        TQ.SelectSet.initialize();
-        TQ.TouchManager.initialize();
-        TQ.AnimationManager.initialize();
+        if (!TQ.WCY.isPlayOnly) {
+            TQ.CommandMgr.initialize();
+            TQ.InputCtrl.initialize(stageContainer);
+            TQ.MoveCtrl.initialize(stageContainer);
+            TQ.SkinningCtrl.initialize(stageContainer, currScene);
+            TQ.IKCtrl.initialize(stageContainer, currScene);
+            TQ.TrackRecorder.initialize();
+            TQ.ActionRecorder.initialize();
+            TQ.SelectSet.initialize();
+            TQ.TouchManager.initialize();
+            TQ.AnimationManager.initialize();
+        }
     }
 
     function openScene(fileInfo) {
