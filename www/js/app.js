@@ -53,6 +53,16 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
                 templateUrl: '/templates/tab-dash.html',
                 controller: 'DashCtrl'
             })
+            .state('edit', {
+                url: '/edit/:shareCode',
+                templateUrl: '/templates/tab-dash.html',
+                controller: 'DashCtrl'
+            })
+            .state('opus.edit', {
+                url: '/edit' //没有templateUrl，也没有controller， 都是父state的，也就不刷新页面了
+                // 但是， 也不能直接打开
+            })
+
             .state('dash', {
                 url: '/dash',
                 templateUrl: '/templates/tab-dash.html',
