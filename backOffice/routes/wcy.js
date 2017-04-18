@@ -116,27 +116,28 @@ function filename2WcyId(filename) {
 
 function sendBackWcy(req, res, wcyId) {
     var userReady = false,
+        dataReady = false,
         error = null,
         wcyData = null;
     status.checkUser(req, res, onUserReady);
     fs.readFile(wcyId2Filename(wcyId), 'utf8', onDataReady);
     function onDataReady(err, data) {
-        if (userReady) {
-            onCompleted(err, data);
-        } else {
-            error = err;
-            wcyData = data;
+        dataReady = true;
+        error = err;
+        wcyData = data;
+        if (userReady && dataReady) {
+            doSendBackWcy(err, data);
         }
     }
 
     function onUserReady() {
         userReady = true;
-        if (wcyData) {
-            onCompleted(error, wcyData);
+        if (userReady && dataReady) {
+            doSendBackWcy(error, wcyData);
         }
     }
 
-    function onCompleted(err, data) {
+    function doSendBackWcy(err, data) {
         if (err) {
             console.log("找不到作品文件，wcyId = " + wcyId);
             data = defaultWcyData;
