@@ -95,6 +95,7 @@ function response(req, res, data, wcyId) {
         timesCalled: status.timesCalled,
         wcyId: wcyId,
         shareCode: shareCode,
+        isPlayOnly: true,
         data: data
     };
 

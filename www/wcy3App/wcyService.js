@@ -378,6 +378,7 @@ function WCY($http, FileService, WxService, NetService) {
         TQ.MessageBox.hide();  // end of loading，no resource yet
         var data = res.data;
         parseCommonData(data);
+        TQ.WCY.isPlayOnly = data.isPlayOnly;
         _openInJson(data.data);
     }
 
