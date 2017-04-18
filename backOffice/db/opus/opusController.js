@@ -106,6 +106,28 @@ function updateScreenshot(userId, id, path, onSuccess, onError) {
     }
 }
 
+function getAuthor(opusId, onCompleted) {
+    Opus.findOne({_id: opusId})
+        .exec(function (err, doc) {
+            var author;
+            if (!doc) {
+                console.error(404, {msg: 'user not found!' + id});
+                author = {ID:1};
+            } else {
+                console.log(doc);
+                author = {ID: doc.userId,
+                    timestamp: doc.timestamp,
+                    lastModified: doc.lastModified,
+                    ssPath: doc.ssPath,
+                    template: doc.template
+                };
+            }
+
+            onCompleted(author)
+        });
+}
+
+exports.getAuthor = getAuthor;
 exports.get = get;
 exports.add = add;
 exports.getList = getList;

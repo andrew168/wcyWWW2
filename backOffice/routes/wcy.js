@@ -82,7 +82,7 @@ function resWcySaved(res, wcyId, ssPath, msg) {
 }
 
 /// private function:
-function response(req, res, data, wcyId) {
+function response(req, res, data, wcyId, authorData) {
     var url = req.headers.origin,
     // var url = req.headers.referer;
         shareId = 0,
@@ -95,7 +95,7 @@ function response(req, res, data, wcyId) {
         timesCalled: status.timesCalled,
         wcyId: wcyId,
         shareCode: shareCode,
-        isPlayOnly: true,
+        isPlayOnly: (status.user.ID !== authorData.ID),
         data: data
     };
 
@@ -117,23 +117,32 @@ function filename2WcyId(filename) {
 
 function sendBackWcy(req, res, wcyId) {
     var userReady = false,
-        dataReady = false,
+        dataReady,
+        authorData,
         error = null,
         wcyData = null;
     status.checkUser(req, res, onUserReady);
+    opusController.getAuthor(wcyId, onGotAuthorData);
     fs.readFile(wcyId2Filename(wcyId), 'utf8', onDataReady);
+    function onGotAuthorData(data) {
+        authorData = data;
+        if (userReady && dataReady && authorData) {
+            doSendBackWcy(error, wcyData);
+        }
+    }
+
     function onDataReady(err, data) {
         dataReady = true;
         error = err;
         wcyData = data;
-        if (userReady && dataReady) {
-            doSendBackWcy(err, data);
+        if (userReady && dataReady && authorData) {
+            doSendBackWcy(error, wcyData);
         }
     }
 
     function onUserReady() {
         userReady = true;
-        if (userReady && dataReady) {
+        if (userReady && dataReady && authorData) {
             doSendBackWcy(error, wcyData);
         }
     }
@@ -145,9 +154,9 @@ function sendBackWcy(req, res, wcyId) {
         }
 
         if (status.isRegisteredUser()) {
-            response(req, res, data, wcyId);
+            response(req, res, data, wcyId, authorData);
         } else {
-            response(req, res, data, wcyId);
+            response(req, res, data, wcyId, authorData);
             console.log("对于非注册用户， 如何处理？");
         }
     }
