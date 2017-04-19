@@ -84,14 +84,13 @@ function WCY($http, FileService, WxService, NetService) {
                 TQ.Log.error("出错：无法保存文件: " + fileName + JSON.stringify(e));
             });
     }
-    function getWcy(shareString, isPlayOnly) {
+    function getWcy(shareString) {
         if (needToSave()) {
             return save().then(function () {
-                getWcy(shareString, isPlayOnly);
+                getWcy(shareString);
             });
         }
 
-        TQ.WCY.isPlayOnly = !!isPlayOnly;
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
         TQ.MessageBox.showWaiting("正在加载....");
         $http.get(url)
