@@ -79,15 +79,19 @@ var TQ = TQ || {};
     }
 
     function attachOps(ops) {
-        ops.forEach(function (item) {
-            addHandler(item[0], item[1]);
-        });
+        if (!!ops) {
+            ops.forEach(function (item) {
+                addHandler(item[0], item[1]);
+            });
+        }
     }
 
     function detachOps(ops) {
-        ops.forEach(function (item) {
-            detachHandler(item[0], item[1]);
-        });
+        if (!!ops) {
+            ops.forEach(function (item) {
+                detachHandler(item[0], item[1]);
+            });
+        }
     }
 
     function stop() {
