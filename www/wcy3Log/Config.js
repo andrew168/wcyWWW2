@@ -122,6 +122,7 @@ window.TQ = window.TQ || {};
     Config.koutuOn = false;  // 默认是不抠图， 如果打开，则自动抠图， 并且自动剔除周边的空白
     Config.textBubbleOn = false;
     Config.useCreateJSFullContainer = false; // 不把ele放到group container的displayObj中， 而是仍然放在stageContainer中
+    Config.ignoreCachedFile = true;  //忽略保存在cache中的文件数据， 等用户ID系统正常使用之后， 再考虑如何启用它。
 
 
     //

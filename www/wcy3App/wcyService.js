@@ -190,7 +190,7 @@ function WCY($http, FileService, WxService, NetService) {
             });
         }
 
-        var previousSaved = readCache(_AUTO_SAVE_NAME, null);
+        var previousSaved = TQ.Config.ignoreCachedFile? null: readCache(_AUTO_SAVE_NAME, null);
         if (previousSaved) {
             _shareCode = readCache(_SHARE_CODE_, null);
             _wcyId = readCache(_WCY_ID_, TQ.Config.INVALID_WCY_ID);
@@ -201,6 +201,7 @@ function WCY($http, FileService, WxService, NetService) {
             var fileInfo = {name: filename, content: previousSaved};
             _open(fileInfo);
         } else {
+            TQ.WCY.isPlayOnly = false; // 新创作的， 当然是可以修改的
             create();
         }
     }
