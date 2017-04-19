@@ -187,10 +187,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
             // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
 
-            if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
-                // TQ.MessageBox.showOk("请使用竖屏以获得好效果", preview);
-                preview();
-            }
+        }
+
+        if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
+            // TQ.MessageBox.showOk("请使用竖屏以获得好效果", preview);
+            preview();
         }
 
         if (currScene && !currScene.isPlayOnly) {
