@@ -95,6 +95,8 @@ function response(req, res, data, wcyId, authorData) {
         timesCalled: status.timesCalled,
         wcyId: wcyId,
         shareCode: shareCode,
+        userID: status.user.ID,
+        authorID: authorData.ID,
         isPlayOnly: (status.user.ID !== authorData.ID),
         data: data
     };
