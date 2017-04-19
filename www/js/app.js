@@ -53,6 +53,11 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
                 templateUrl: '/templates/tab-dash.html',
                 controller: 'DashCtrl'
             })
+            .state('wcy', {
+                url: '/wcy/:shareCode',
+                templateUrl: '/templates/tab-dash.html',
+                controller: 'DashCtrl'
+            })
             .state('edit', {
                 url: '/edit/:shareCode',
                 templateUrl: '/templates/tab-dash.html',
@@ -63,13 +68,13 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
                 // 但是， 也不能直接打开
             })
 
-            .state('dash', {
-                url: '/dash',
+            .state('welcome', {
+                url: '/welcome',
                 templateUrl: '/templates/tab-dash.html',
                 controller: 'DashCtrl'
             })
         ;
 
         // if none of the above states are matched, use this as the fallback
-        $urlRouterProvider.otherwise('/dash');
+        $urlRouterProvider.otherwise('/welcome');
     });
