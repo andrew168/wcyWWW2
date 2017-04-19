@@ -44,6 +44,10 @@ function WCY($http, FileService, WxService, NetService) {
         return (currScene && !currScene.isEmpty() && !currScene.isSaved);
     }
 
+    function needToStop() {
+        return (currScene && !!currScene.levels);
+    }
+
     function create(option) {
         if (needToSave()) {
             return save().then(function () {
@@ -51,7 +55,10 @@ function WCY($http, FileService, WxService, NetService) {
             }, _onFail);
         }
 
-        _stopAutoSave();
+        if (needToStop()) {
+            stop();
+        }
+
         if (!option) {
             option = {};
         }
@@ -60,6 +67,11 @@ function WCY($http, FileService, WxService, NetService) {
         _shareCode = null;
         TQ.SceneEditor.createScene(option);
         doStarted();
+    }
+
+    function stop() {
+        TQ.TouchManager.stop(); // 防止之前被打开
+        _stopAutoSave();
     }
 
     function save() {
@@ -89,6 +101,10 @@ function WCY($http, FileService, WxService, NetService) {
             return save().then(function () {
                 getWcy(shareString);
             });
+        }
+
+        if (needToStop()) {
+            stop();
         }
 
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
