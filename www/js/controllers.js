@@ -2,13 +2,14 @@ angular.module('starter').controller('DashCtrl', DashCtrl);
 DashCtrl.$inject = ['$scope', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
-        'AppService', 'MatLibService'];
+        'AppService', 'MatLibService', 'UserService'];
 
 function DashCtrl(
             $scope, $timeout, WCY, $cordovaImagePicker,
             $cordovaSocialSharing,
             FileService, NetService, DeviceService, WxService, EditorService,
-            AppService, MatLibService) {
+            AppService, MatLibService, UserService) {
+
     var vm = this;
     $scope.localImage1 = null;
     $scope.localImage2 = null;
@@ -74,6 +75,15 @@ function DashCtrl(
     $scope.SelectSet = TQ.SelectSet;
     $scope.addLevel = function() {
         EditorService.addLevel();
+    };
+
+    var testUserId = 100005;
+    $scope.testSignIn = function () {
+        UserService.signIn('user'+testUserId, 'pswww' + testUserId, 'disp' + testUserId);
+    };
+
+    $scope.testLogin = function() {
+        UserService.login('user' + testUserId, 'pswww' + testUserId);
     };
 
     $scope.deleteLevel = function(id) {
