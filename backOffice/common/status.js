@@ -32,6 +32,7 @@ function checkUser(req, res, callback) {
             user.timesCalled++;
             res.cookie('userID', user.ID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
             res.cookie('timesCalled', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
+            // res.cookie('isPlayOnly', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, path: '/'});
             res.clearCookie('oldCookie1');
             if (callback) {
                 callback();
@@ -47,7 +48,7 @@ function validateUser(req, res, callback) {
     user.timesCalled = getCookieNumber(req, 'timesCalled', 0);
     if (isNewUser()) {
         user.timesCalled = 0;
-        userController.add(req, function(doc) {
+        userController.addGuest(req, function(doc) {
             user.ID = doc._id;
             user.isRegistered = true;
             if (callback) {

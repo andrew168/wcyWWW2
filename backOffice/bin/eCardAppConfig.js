@@ -22,6 +22,7 @@ var appConfig = {
         {url: 'wechat', filePath: './../routes/isWx'}, //???
         {url: 'wcy', filePath: './../routes/wcy'},
         {url: 'wcyList', filePath: './../routes/wcyList'},
+        {url: 'user', filePath: './../routes/user'},
         {url: 'material', filePath: './../routes/material'}
     ]
 };
