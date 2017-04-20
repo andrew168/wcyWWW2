@@ -92,7 +92,7 @@ function doInit(app, appConfig, callback) {
             ctrl = require(item.ctrl);
 
             //设置数据库的路由
-            app.use('/' + item.name, ctrl.add);
+            // app.use('/' + item.name, ctrl.add);
         }
         console.log("DB Router start...");
     }
