@@ -18,16 +18,18 @@ function signIn(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     var name = req.params.name || null,
         psw = req.params.psw || null,
-        displayName = req.params.displayName || null;
-    status.logUser(req);
+        displayName = req.params.displayname || null;
+    // status.logUser(req);
     if (isValidFormat(name) && isValidFormat(displayName) && isValidFormat(psw)) {
-        userController.signIn(name, displayName, psw, onSignIn);
+        userController.signIn(name,psw, displayName, sendBackUserInfo1);
     } else {
-        onSignIn(false);
+        sendBackUserInfo1({result:false, reason:'invalid format'});
     }
 
-    function onSignIn(result) {
-        res.send({result: result});
+    function sendBackUserInfo1(data) {
+        status.updateUser(data);
+        status.setUserCookie(res);
+        res.send(data);
     }
 }
 
@@ -37,7 +39,7 @@ function checkName(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     var name = req.params.name || null;
 
-    status.logUser(req);
+    // status.logUser(req);
     if (isValidFormat(name)) {
         userController.checkName(name, onCheckName);
     } else {
@@ -58,13 +60,15 @@ function login(req, res, next) {
 
     // status.logUser(req);
     if (isValidFormat(name)) {
-        userController.signIn(name, psw, onSignIn);
+        userController.login(name, psw, sendBackUserInfo);
     } else {
-        onSignIn(false);
+        sendBackUserInfo({result:false});
     }
 
-    function onSignIn(result) {
-        res.send({result: result});
+    function sendBackUserInfo(data) {
+        status.updateUser(data);
+        status.setUserCookie(res);
+        res.send(data);
     }
 }
 

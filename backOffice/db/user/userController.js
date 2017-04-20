@@ -18,13 +18,9 @@ function get(id) {
 }
 
 function login(name, psw, onComplete) {
-    User.findOne({name: name, psw: psw})
-        .exec(function (err, data) {
-            if (!err) {
-                onComplete(true);
-            } else {
-                onComplete(false);
-            }
+    User.find({$and: [{'name': name}, {'psw': psw}]})
+        .exec(function (err, model) {
+            onComplete(model2User(err, model));
         });
 }
 
@@ -32,9 +28,9 @@ function checkName(name, onComplete) {
     User.findOne({name: name})
         .exec(function (err, data) {
             if (!err) {
-                onComplete(true);
+                onComplete({result: true});
             } else {
-                onComplete(false);
+                onComplete({result: false});
             }
         });
 }
@@ -47,8 +43,8 @@ function signIn(name, psw, displayName, onSuccess) {
     });
 
     try {
-        aDoc.save(function (err, doc) {
-            onSuccess(doc);
+        aDoc.save(function (err, model) {
+            onSuccess(model2User(err, model));
         });
     } catch (e) {
         console.log("Fatal error: at user doc read/write");
@@ -56,7 +52,29 @@ function signIn(name, psw, displayName, onSuccess) {
     }
 }
 
-function addGuest(req, onSuccess) {
+function model2User(err, model) {
+    var pkg;
+    if (err || !model || (Array.isArray(model) && (model.length < 1))) {
+        pkg = {
+            result: 0,
+            reason: 'DB failed!',
+            error: err
+        };
+    } else {
+        var doc = (Array.isArray(model)) ? model[0]._doc : model._doc,
+        pkg = {
+            result: 1,
+            loggedIn: true,
+            name: doc.name,
+            ID: doc._id,
+            displayName: doc.displayName
+        };
+    }
+
+    return pkg;
+}
+
+function add(req, onSuccess) {
     var aDoc = new User({
         name:'andrew' + new Date().getTime(),
         score: 100 //多余的字段， 将被忽略
@@ -73,8 +91,7 @@ function addGuest(req, onSuccess) {
 }
 
 exports.get = get;
-exports.addGuest = addGuest; // 游客
+exports.add = add; // 游客
 exports.checkName = checkName;
 exports.login = login;
 exports.signIn = signIn; // 正式注册用户，
-
