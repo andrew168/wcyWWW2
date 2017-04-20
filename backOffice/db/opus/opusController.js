@@ -111,7 +111,7 @@ function getAuthor(opusId, onCompleted) {
         .exec(function (err, doc) {
             var author;
             if (!doc) {
-                console.error(404, {msg: 'user not found!' + id});
+                console.error(404, {msg: "couldn't find user for opus: !" + opusId});
                 author = {ID:1};
             } else {
                 console.log(doc);
