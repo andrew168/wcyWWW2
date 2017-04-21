@@ -71,10 +71,12 @@ function WCY($http, FileService, WxService, NetService) {
         _wcyId = 0; // 能够从新分配一个作品ID
         _ssSign = null;
         _shareCode = null;
-        currScene.filename = TQ.Config.UNNAMED_SCENE;
         writeCache(_SHARE_CODE_, _shareCode);
         writeCache(_WCY_ID_, _wcyId);
-        writeCache(_FILENAME, currScene.filename);
+        if (!!currScene && !!currScene.filename) {
+            currScene.filename = TQ.Config.UNNAMED_SCENE;
+            writeCache(_FILENAME, currScene.filename);
+        }
     }
 
     function stop() {
