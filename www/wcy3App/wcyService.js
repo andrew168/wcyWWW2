@@ -62,11 +62,19 @@ function WCY($http, FileService, WxService, NetService) {
         if (!option) {
             option = {};
         }
-        _wcyId = 0;
-        _ssSign = null;
-        _shareCode = null;
+        setAsNew();
         TQ.SceneEditor.createScene(option);
         doStarted();
+    }
+
+    function setAsNew() {
+        _wcyId = 0; // 能够从新分配一个作品ID
+        _ssSign = null;
+        _shareCode = null;
+        currScene.filename = TQ.Config.UNNAMED_SCENE;
+        writeCache(_SHARE_CODE_, _shareCode);
+        writeCache(_WCY_ID_, _wcyId);
+        writeCache(_FILENAME, currScene.filename);
     }
 
     function stop() {
@@ -395,6 +403,7 @@ function WCY($http, FileService, WxService, NetService) {
         var data = res.data;
         parseCommonData(data);
         TQ.WCY.isPlayOnly = data.isPlayOnly;
+        TQ.WCY.authorID = data.authorID;
         _openInJson(data.data);
     }
 
@@ -429,6 +438,7 @@ function WCY($http, FileService, WxService, NetService) {
         start: start,  // start a new one, or load previous one (edited or played)
         create: create,
         save: save,
+        setAsNew: setAsNew,
         startAutoSave: startAutoSave,
         uploadScreenshot: uploadScreenshot,
         edit: edit,  // open for edit
