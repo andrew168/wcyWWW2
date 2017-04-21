@@ -5,7 +5,7 @@
 angular.module('starter').factory("UserService", UserService);
 UserService.$inject = ['$http'];
 function UserService($http) {
-    var user = userProfile.user;
+    var user = TQ.userProfile;
 
     function login(name, psw) {
         var url = TQ.Config.AUTH_HOST + '/user/login/' + name + '/' + psw;
