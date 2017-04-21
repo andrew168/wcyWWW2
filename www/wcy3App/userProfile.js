@@ -3,9 +3,11 @@
  */
 var TQ = TQ || {};
 TQ.userProfile = {
-    loggedIn: false,
+    loggedIn: false,  // 没有login，其余的信息都无意义
     isSignUping: false,
-    ID: 12345,
+    displayName: "",
+    name: "",
+    ID: "",
+    sessionToken: "",
     timesShared: 0
 };
-

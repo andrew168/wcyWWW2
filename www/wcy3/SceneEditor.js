@@ -12,6 +12,9 @@ var currScene = null;
 
     SceneEditor._mode = TQBase.LevelState.EDITING; // 创作界面的缺省模式是编辑.
 
+    // 接口
+    SceneEditor.turnOnEditor = turnOnEditor;
+
     SceneEditor.showWcy = function (fileInfo) {
         if (fileInfo.isPlayOnly === undefined) {
             fileInfo.isPlayOnly = true;
@@ -166,17 +169,21 @@ var currScene = null;
         TQ.TaskMgr.initialize();
         TQ.GarbageCollector.initialize();
         if (!TQ.WCY.isPlayOnly) {
-            TQ.CommandMgr.initialize();
-            TQ.InputCtrl.initialize(stageContainer);
-            TQ.MoveCtrl.initialize(stageContainer);
-            TQ.SkinningCtrl.initialize(stageContainer, currScene);
-            TQ.IKCtrl.initialize(stageContainer, currScene);
-            TQ.TrackRecorder.initialize();
-            TQ.ActionRecorder.initialize();
-            TQ.SelectSet.initialize();
-            TQ.TouchManager.initialize();
-            TQ.AnimationManager.initialize();
+            turnOnEditor();
         }
+    }
+
+    function turnOnEditor() {
+        TQ.CommandMgr.initialize();
+        TQ.InputCtrl.initialize(stageContainer);
+        TQ.MoveCtrl.initialize(stageContainer);
+        TQ.SkinningCtrl.initialize(stageContainer, currScene);
+        TQ.IKCtrl.initialize(stageContainer, currScene);
+        TQ.TrackRecorder.initialize();
+        TQ.ActionRecorder.initialize();
+        TQ.SelectSet.initialize();
+        TQ.TouchManager.initialize();
+        TQ.AnimationManager.initialize();
     }
 
     function openScene(fileInfo) {

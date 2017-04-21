@@ -9,21 +9,21 @@ function UserService($http) {
 
     function login(name, psw) {
         var url = TQ.Config.AUTH_HOST + '/user/login/' + name + '/' + psw;
-        $http.get(url)
-            .then(onLoginDone, onLoginDone);
+        return $http.get(url)
+            .then(onLoginDone);
     }
 
     function signUp(name, psw, displayName) {
         return $http({
             method: 'POST',
             url: TQ.Config.AUTH_HOST + '/user/signup/' + name + '/' + psw + '/' + displayName
-        }).then(onSignUpDone, onSignUpDone);
+        }).then(onSignUpDone);
     }
 
     function checkName(name) {
         var url = TQ.Config.AUTH_HOST + '/user/checkname/' + name;
         $http.get(url)
-            .then(onCheckNameDone, onCheckNameDone);
+            .then(onCheckNameDone);
     }
 
     function onCheckNameDone(netPkg) {
