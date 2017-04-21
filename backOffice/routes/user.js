@@ -8,11 +8,11 @@ var status = require('../common/status');
 var fs = require('fs');
 
 var userController = require('../db/user/userController');
-router.post('/signin/:name/:psw/:displayname', signIn);
+router.post('/signup/:name/:psw/:displayname', signUp);
 router.get('/checkname/:name', checkName);
 router.get('/login/:name/:psw', login);
 
-function signIn(req, res, next) {
+function signUp(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
@@ -21,7 +21,7 @@ function signIn(req, res, next) {
         displayName = req.params.displayname || null;
     // status.logUser(req);
     if (isValidFormat(name) && isValidFormat(displayName) && isValidFormat(psw)) {
-        userController.signIn(name,psw, displayName, sendBackUserInfo1);
+        userController.signUp(name,psw, displayName, sendBackUserInfo1);
     } else {
         sendBackUserInfo1({result:false, reason:'invalid format'});
     }

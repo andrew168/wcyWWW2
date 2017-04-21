@@ -13,11 +13,11 @@ function UserService($http) {
             .then(onLoginDone, onLoginDone);
     }
 
-    function signIn(name, psw, displayName) {
+    function signUp(name, psw, displayName) {
         return $http({
             method: 'POST',
-            url: TQ.Config.AUTH_HOST + '/user/signin/' + name + '/' + psw + '/' + displayName
-        }).then(onSignInDone, onSignInDone);
+            url: TQ.Config.AUTH_HOST + '/user/signup/' + name + '/' + psw + '/' + displayName
+        }).then(onSignUpDone, onSignUpDone);
     }
 
     function checkName(name) {
@@ -42,13 +42,13 @@ function UserService($http) {
         }
     }
 
-    function onSignInDone(data) {
+    function onSignUpDone(data) {
         onLoginDone(data);
     }
 
     return {
         checkName: checkName,
         login: login,
-        signIn: signIn
+        signUp: signUp
     }
 }

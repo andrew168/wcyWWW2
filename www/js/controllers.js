@@ -78,8 +78,8 @@ function DashCtrl(
     };
 
     var testUserId = 100005;
-    $scope.testSignIn = function () {
-        UserService.signIn('user'+testUserId, 'pswww' + testUserId, 'disp' + testUserId);
+    $scope.testSignUp = function () {
+        UserService.signUp('user'+testUserId, 'pswww' + testUserId, 'disp' + testUserId);
     };
 
     $scope.testLogin = function() {

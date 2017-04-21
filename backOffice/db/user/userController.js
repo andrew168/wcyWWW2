@@ -35,7 +35,7 @@ function checkName(name, onComplete) {
         });
 }
 
-function signIn(name, psw, displayName, onSuccess) {
+function signUp(name, psw, displayName, onSuccess) {
     var aDoc = new User({
         name: name,
         psw: psw,
@@ -94,4 +94,4 @@ exports.get = get;
 exports.add = add; // 游客
 exports.checkName = checkName;
 exports.login = login;
-exports.signIn = signIn; // 正式注册用户，
+exports.signUp = signUp; // 正式注册用户，
