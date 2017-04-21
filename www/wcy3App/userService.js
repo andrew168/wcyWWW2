@@ -26,11 +26,13 @@ function UserService($http) {
             .then(onCheckNameDone, onCheckNameDone);
     }
 
-    function onCheckNameDone(data) {
+    function onCheckNameDone(netPkg) {
+        var data = netPkg.data;
         user.isValidName = (data.result === TQ.Const.SUCCESS);
     }
 
-    function onLoginDone(data) {
+    function onLoginDone(netPkg) {
+        var data = netPkg.data;
         if (data.result === TQ.Const.SUCCESS) {
             user.loggedIn = true;
             user.name = data.name;
@@ -42,8 +44,8 @@ function UserService($http) {
         }
     }
 
-    function onSignUpDone(data) {
-        onLoginDone(data);
+    function onSignUpDone(netPkg) {
+        onLoginDone(netPkg);
     }
 
     return {
