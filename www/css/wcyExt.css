@@ -1,5 +1,5 @@
 
-#timer-bar-div-outer {
+#timer-bar-div {
     position: fixed;
     left: 5%;
     top: 70%;
@@ -12,21 +12,13 @@
     /* white-space: nowrap */
 }
 
-#timer-bar-div {
-    position: relative;
-    height: 2px;
-    width: 80%;
-    color: red; /* lightgrey; */
-    background-color: yellow; /* lightcyan; */
-    pointer-events: auto;
-}
-
 #timer-slider-2 {
     position: relative;
     height: 2px;
     width: 100%;
     color: blue;
     background-color: silver;
+    pointer-events: auto;
 }
 
 #maxTimeValue-2 {
