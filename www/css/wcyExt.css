@@ -1,10 +1,20 @@
 
-#timer-bar-div {
+#timer-bar-div-outer {
     position: fixed;
     left: 5%;
     top: 70%;
     height: 2px;
     width: 60%;
+    color: red; /* lightgrey; */
+    background-color: yellow; /* lightcyan; */
+    /* overflow-x: hidden; */
+    /* white-space: nowrap */
+}
+
+#timer-bar-div {
+    position: relative;
+    height: 2px;
+    width: 80%;
     color: red; /* lightgrey; */
     background-color: yellow; /* lightcyan; */
 }
