@@ -13,11 +13,9 @@ TQ.TimerUI = (function () {
         tMinEle = null,
         bodyEle = null;
 
-    var htmlStr = '<div class="toolbar-layer">' +
+    var htmlStr =
         '<div id="timer-slider-2"></div>' +
-        '<label id="timer-axis-value" class="ui-font-md inline"></label>' +
-        // '<label id="time-slider-min-value" class="ui-font-md inline">0</label>' +
-        '</div>';
+        '<label id="timer-axis-value" class="ui-font-md inline"></label>';
 
     return {
         initialize: initialize
