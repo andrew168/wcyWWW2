@@ -40,6 +40,13 @@ function UserService($http) {
             user.displayName = data.displayName;
             user.isValidName = true;
         } else {
+            user.displayNameError = (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID === data.errorID) ||
+                (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID_OR_TAKEN === data.errorID);
+            user.nameError = (TQ.Protocol.ERROR.NAME_IS_INVALID === data.errorID) ||
+                (TQ.Protocol.ERROR.NAME_IS_TAKEN === data.errorID) ||
+                (TQ.Protocol.ERROR.NAME_IS_INVALID_OR_TAKEN === data.errorID);
+            user.passwordError = (TQ.Protocol.ERROR.PASSWORD_IS_INVALID === data.errorID) ||
+                (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
             user.loggedIn = false;
         }
     }

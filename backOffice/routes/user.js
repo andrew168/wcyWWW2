@@ -1,7 +1,8 @@
 /**
  * Created by Andrewz on 4/19/2017.
  */
-var express = require('express');
+var Const = require('../base/const'),
+    express = require('express');
 var router = express.Router();
 var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
 var status = require('../common/status');
@@ -20,10 +21,19 @@ function signUp(req, res, next) {
         psw = req.params.psw || null,
         displayName = req.params.displayname || null;
     // status.logUser(req);
-    if (isValidFormat(name) && isValidFormat(displayName) && isValidFormat(psw)) {
+    var errorID = Const.ERROR.NO;
+    if (!isValidFormat(displayName)) {
+        errorID = Const.ERROR.DISPLAY_NAME_INVALID;
+    } else if (!isValidFormat(name)) {
+        errorID = Const.ERROR.NAME_IS_INVALID;
+    } else if (!isValidFormat(psw)) {
+        errorID = Const.ERROR.PASSWORD_IS_INVALID;
+    }
+
+    if (errorID === Const.ERROR.NO) {
         userController.signUp(name,psw, displayName, sendBackUserInfo1);
     } else {
-        sendBackUserInfo1({result:false, reason:'invalid format'});
+        sendBackUserInfo1({result:false, errorID: errorID});
     }
 
     function sendBackUserInfo1(data) {
@@ -43,11 +53,11 @@ function checkName(req, res, next) {
     if (isValidFormat(name)) {
         userController.checkName(name, onCheckName);
     } else {
-        onCheckName(false);
+        onCheckName({result: false, errorID: Const.ERROR.NAME_IS_INVALID_OR_TAKEN});
     }
 
     function onCheckName(result) {
-        res.send({result: result});
+        res.send(result);
     }
 }
 
@@ -62,7 +72,7 @@ function login(req, res, next) {
     if (isValidFormat(name)) {
         userController.login(name, psw, sendBackUserInfo);
     } else {
-        sendBackUserInfo({result:false});
+        sendBackUserInfo({result:false, errorID: Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT});
     }
 
     function sendBackUserInfo(data) {
