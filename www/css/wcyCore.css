@@ -47,7 +47,7 @@
     height: 1.2rem;
     cursor: default;
     background: blue;
-    top: -.3em;
+    top: -.6em;
     margin-left: -.6em;
 }
 
@@ -73,9 +73,10 @@
 
 #timer-axis-value {
     position: relative;
-    top: -2rem;
+    top: -1.5rem;
     left: 100%;
     margin-left: 10px;
+    pointer-events: none;
 }
 
 #testCanvas {
