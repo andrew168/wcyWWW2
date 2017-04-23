@@ -7,6 +7,16 @@ UserService.$inject = ['$http'];
 function UserService($http) {
     var user = TQ.userProfile;
 
+    function tryAutoLogin() {
+        if ((!user.name) || (!user.ID)) {
+            return false;
+        }
+
+        var url = TQ.Config.AUTH_HOST + '/user/autologin/' + user.name + '/' + user.ID;
+        return $http.get(url)
+            .then(onLoginDone);
+    }
+
     function login(name, psw) {
         var url = TQ.Config.AUTH_HOST + '/user/login/' + name + '/' + psw;
         return $http.get(url)
@@ -39,6 +49,7 @@ function UserService($http) {
             user.ID = data.ID;
             user.displayName = data.displayName;
             user.isValidName = true;
+            user.saveToCache();
         } else {
             user.displayNameError = (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID === data.errorID) ||
                 (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID_OR_TAKEN === data.errorID);
@@ -56,6 +67,7 @@ function UserService($http) {
     }
 
     return {
+        tryAutoLogin: tryAutoLogin,
         checkName: checkName,
         login: login,
         signUp: signUp

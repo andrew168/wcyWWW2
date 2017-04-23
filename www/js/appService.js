@@ -4,10 +4,10 @@
 angular.module('starter').factory('AppService', AppService);
 
 AppService.$inject = ['$stateParams', '$timeout', 'WCY', 'NetService', 'DeviceService',
-        'Setup'];
+        'Setup', 'UserService'];
 
 function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
-              Setup) {
+              Setup, UserService) {
 
         var _initialized = false,
             _onAppStarting = null,
@@ -55,6 +55,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     }
 
     function _init() {
+            UserService.tryAutoLogin();
             if (_initialized) {
                 TQ.Log.error("Duplicated call in _init");
                 return;
