@@ -193,6 +193,9 @@
                     Pick text color
                 </button>
 
+                <button class="button button-positive" my-click="uploadScreenshot()">截屏上传</button>
+                <button class="button button-positive" my-click="EditorService.saveScreenShot()">截屏保存</button>
+
                 <button class="button button-positive" ng-click="undo()" ng-show="false">undo</button>
                 <button class="button button-positive" ng-click="redo()" ng-show="false">redo</button>
             </div>
@@ -208,10 +211,6 @@
             <button class="button button-positive" ng-click="insertAlbum()">+图册</button>
             <button class="button button-positive" ng-click="insertFromCamera()">+相机</button>
             <button class="button button-positive" ng-click="deleteElement()">删除</button>
-            <button class="button button-positive" ng-click="undo()">undo</button>
-            <button class="button button-positive" ng-click="redo()">redo</button>
-            <button class="button button-positive" my-click="uploadScreenshot()">截屏上传</button>
-            <button class="button button-positive" my-click="EditorService.saveScreenShot()">截屏保存</button>
 
             <button class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}">
                 Pick text color
