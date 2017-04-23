@@ -12,6 +12,7 @@ var userController = require('../db/user/userController');
 router.post('/signup/:name/:psw/:displayname', signUp);
 router.get('/checkname/:name', checkName);
 router.get('/login/:name/:psw', login);
+router.get('/autoLogin/:name/:ID', autoLogin);
 
 function signUp(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
@@ -73,6 +74,25 @@ function login(req, res, next) {
         userController.login(name, psw, sendBackUserInfo);
     } else {
         sendBackUserInfo({result:false, errorID: Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT});
+    }
+
+    function sendBackUserInfo(data) {
+        status.updateUser(data);
+        status.setUserCookie(res);
+        res.send(data);
+    }
+}
+
+function autoLogin(req, res, next) {
+    var name = req.params.name || null,
+        ID = req.params.ID || null;
+
+    ID = parseInt(ID);
+    // status.logUser(req);
+    if (isValidFormat(name) && (status.user.ID === ID)) {
+        userController.autoLogin(name, ID, sendBackUserInfo);
+    } else {
+        sendBackUserInfo({result: false, errorID: Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT});
     }
 
     function sendBackUserInfo(data) {

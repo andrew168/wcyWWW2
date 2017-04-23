@@ -18,6 +18,13 @@ function get(id) {
         });
 }
 
+function autoLogin(name, ID, onComplete) {
+    User.find({$and: [{'name': name}, {'_id': ID}]})
+        .exec(function (err, model) {
+            onComplete(model2User(err, model, Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT));
+        });
+}
+
 function login(name, psw, onComplete) {
     User.find({$and: [{'name': name}, {'psw': psw}]})
         .exec(function (err, model) {
@@ -100,6 +107,7 @@ function add(req, onSuccess) {
 
 exports.get = get;
 exports.add = add; // 游客
+exports.autoLogin = autoLogin;
 exports.checkName = checkName;
 exports.login = login;
 exports.signUp = signUp; // 正式注册用户，
