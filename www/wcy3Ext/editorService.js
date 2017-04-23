@@ -1043,7 +1043,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
     }
 
-    function saveScreenShot () {
+    var screenShotIsDither = false;
+    function saveScreenShot () { // 奇怪：截屏按钮点击一次，会触发两次这个函数，
+        if (screenShotIsDither) {
+            return;
+        }
+        screenShotIsDither = true;
+        setTimeout(function() {
+            screenShotIsDither = false;
+        }, 1000);
+
         var timestamp = new Date(),
             prefix = timestamp.getTime() +
                 '-' + (timestamp.getMonth() + 1) + timestamp.getDate() +
@@ -1052,6 +1061,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 '-' + timestamp.getSeconds();
 
         var screenshotName = TQ.Config.SCREENSHOT_CORE_PATH + prefix + ".png";
+        TQ.Log.debugInfo("name = " + screenshotName);
         TQ.Tool.saveImage(screenshotName);
     }
 

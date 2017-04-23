@@ -4,8 +4,9 @@
 var TQ = TQ || {};
 TQ.Tool = TQ.Tool || {};
 (function () {
-    var TEMP_IMG_NODE_ID = "temp_img",
-        TEMP_LINK_NODE_ID = "temp_link";
+    var timestamp = new Date().getTime(),
+        TEMP_IMG_NODE_ID = "_tq_temp_img" + timestamp,
+        TEMP_LINK_NODE_ID = "_tq_temp_link" + timestamp;
 
     TQ.Tool.saveImage = saveImage;
     TQ.Tool.resetDom = resetDom;
@@ -31,15 +32,15 @@ TQ.Tool = TQ.Tool || {};
 
     function _saveAs(image64png, filename) {
         // create a new image and add to the document
-        var imgNode; // = document.getElementById(TEMP_IMG_NODE_ID);
-        if (!imgNode) {
-            imgNode = document.createElement("img");
-            imgNode.src = image64png;
-            imgNode.id = "temp_img";
-            document.body.appendChild(imgNode);
-        } else {
-            imgNode.src = image64png;
+        var imgNode = document.getElementById(TEMP_IMG_NODE_ID);
+        if (!!imgNode) { // 防止未清除的
+            resetDom();
         }
+
+        imgNode = document.createElement("img");
+        imgNode.src = image64png;
+        imgNode.id = TEMP_IMG_NODE_ID;
+        document.body.appendChild(imgNode);
 
         var link = document.getElementById(TEMP_LINK_NODE_ID);
         if (!link) {
@@ -49,5 +50,6 @@ TQ.Tool = TQ.Tool || {};
         link.download = filename;
         link.href = image64png;
         link.click();
+        setTimeout(resetDom, 1000);
     }
 }());
