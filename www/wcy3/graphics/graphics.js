@@ -18,6 +18,7 @@ TQ.Graphics = (function () {
         drawRect: drawRect,
         drawStar: drawStar,
         getCanvas: getCanvas,
+        getCanvasBkgColor: getCanvasBkgColor,
         getCanvasWidth: getCanvasWidth,
         getCanvasHeight: getCanvasHeight,
         setCanvas: setCanvas,
@@ -37,6 +38,11 @@ TQ.Graphics = (function () {
 
     function getCanvasHeight() {
         return getCanvas().height;
+    }
+
+    function getCanvasBkgColor() {
+        TQ.AssertExt.invalidLogic(!!_canvas);
+        return window.getComputedStyle(_canvas, null).getPropertyValue('background-color');
     }
 
     function setCanvas() {
