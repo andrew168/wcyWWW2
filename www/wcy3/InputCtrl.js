@@ -7,9 +7,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function InputCtrl () {
-
-    }
+    var InputCtrl = { };
     InputCtrl._stage = null;
     InputCtrl.MODE_ROTATE = 1;
     InputCtrl.MODE_SCALE = 2;

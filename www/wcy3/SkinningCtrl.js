@@ -7,9 +7,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function SkinningCtrl () {
-
-    }
+    var SkinningCtrl = { };
     SkinningCtrl.hasNew = false;
     SkinningCtrl._stage = null;
     SkinningCtrl._scene = null;
