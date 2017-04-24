@@ -248,7 +248,7 @@ function DashCtrl(
 
     $scope.testDownload = function () {
         var path = "p12504.png";
-        var server1File = "http://bone.udoido.cn/mcImages/" + path;
+        var server1File = TQ.Config.BONE_HOST + "/mcImages/" + path;
         NetService.get(server1File);
     };
 
@@ -282,8 +282,8 @@ function DashCtrl(
     };
 
     var message = "人人动画";
-    var image = "http://bone.udoido.cn/mcImages/" + "p12504.png";
-    var link = "http://bone.udoido.cn";
+    var image = TQ.Config.BONE_HOST + "/mcImages/" + "p12504.png";
+    var link = TQ.Config.BONE_HOST;
     var subject = "title etc";
     var file = "this is file";
 

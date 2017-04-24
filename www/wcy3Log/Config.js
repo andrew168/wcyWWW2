@@ -150,6 +150,8 @@ window.TQ = window.TQ || {};
     // 作品服务器
     // Config.OPUS_HOST = 'http://opus.' + rootDomain;
     Config.OPUS_HOST = 'http://show.' + rootDomain;
+    Config.TEST_HOST = 'http://test.' + rootDomain;
+    Config.BONE_HOST = 'http://bone.' + rootDomain;
 
     // 签名认证服务器
     // Config.AUTH_HOST = 'http://auth.' + rootDomain;
@@ -174,8 +176,8 @@ window.TQ = window.TQ || {};
     };
 
     var matServerBone = {
-        MAT_UPLOAD_API: 'http://test.' + rootDomain + '/getWSignature',
-        MAT_HOST: 'http://test.' + rootDomain,   // for old material(pXXXX), before transfer
+        MAT_UPLOAD_API: Config.TEST_HOST + '/getWSignature',
+        MAT_HOST: Config.TEST_HOST,   // for old material(pXXXX), before transfer
         IMAGES_CORE_PATH: "mcImages/",
         SOUNDS_PATH: "mcSounds/" //从 localhost的根目录开始, 不是 E盘的根目录
     };

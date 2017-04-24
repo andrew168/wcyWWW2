@@ -240,7 +240,7 @@ function WCY($http, FileService, WxService, NetService) {
             filename = 'p' + sceneID + '.wdm';
         }
 
-        var url = 'http://bone.udoido.cn/wcy/wdmOpen?filename=' + filename;
+        var url = TQ.Config.BONE_HOST + '/wcy/wdmOpen?filename=' + filename;
         if (!content) {
             $http.get(url, {})
                 .success(function (data, status, headers, config) {

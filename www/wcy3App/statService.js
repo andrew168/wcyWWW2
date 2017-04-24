@@ -19,7 +19,7 @@ function StatService($timeout, $http) {
         console.log("started");
         // 服务器收不到本页面#以后的内容（SPA应用的特点！！！）， 所以， 必须 把本页面url中的hash上传
         // 而且， 参数取值中，不能含特殊字符， 例如：#，/等
-        $http.get('http://test.udoido.cn/share' + "?hash=" + status + location.hash.substr(2), {})
+        $http.get(TQ.Config.TEST_HOST + '/share' + "?hash=" + status + location.hash.substr(2), {})
             .success(function (data, status, headers, config) {
                 console.log(data);
             }).error(function (data, status, headers, config) {

@@ -8,7 +8,7 @@ angular.module('starter').factory("NetService", NetService);
 NetService.$inject = ['$q', '$http', '$cordovaFileTransfer', 'Upload'];
 
 function NetService($q, $http, $cordovaFileTransfer, Upload) {
-    var baseUrl = "http://bone.udoido.cn/",
+    var baseUrl = TQ.Config.BONE_HOST,
         urlConcat = TQ.Base.Utility.urlConcat,
         IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API,
         C_MAN_URL = TQ.Config.MAN_HOST + '/material';

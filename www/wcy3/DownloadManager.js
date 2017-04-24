@@ -20,7 +20,7 @@ var TQ = TQ || {};
     var p = DownloadManager;
     var urlConcat = TQ.Base.Utility.urlConcat;
 
-    p.FAST_SERVER = TQ.Config.MAT_HOST; // "http://bone.udoido.cn";
+    p.FAST_SERVER = TQ.Config.MAT_HOST;
     // p.FAST_SERVER = "http://www.udoido.com";
     // p.FAST_SERVER = "http://localhost:63342/eCard/www";
     // p.FAST_SERVER = "";
