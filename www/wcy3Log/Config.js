@@ -14,18 +14,12 @@ window.TQ = window.TQ || {};
     Config.MAX_KEYFRAME = 2000;
     Config.MAX_FILE_SIZE = 22767; //32000;
     // 陈永添加的配置， begin ---
-    var host=window.location.host;
-    status=host.indexOf("udoido.cn");
-    var api_domain='';
-    if(status!='-1'){
-        api_domain='api.udoido.cn';
-    }else{
-        api_domain='api.udoido.com';
-    }
+    var host=window.location.host,
+        rootDomain = (host.indexOf('udoido.com') >=0) ? 'udoido.com': 'udoido.cn',
+        api_domain='api.' + rootDomain;
 
-    status=host.indexOf("test.udoido.cn");
-    if(status!='-1'){
-        api_domain='testapi.udoido.cn';
+    if(host.indexOf('test.' + rootDomain) >=0){
+        api_domain='testapi.' + rootDomain;
     }
 
     //ToDo:AZ mobile
@@ -37,7 +31,7 @@ window.TQ = window.TQ || {};
     // 陈永添加的配置， --- end
 
     //Config.DOMAIN_NAME="localhost";
-     Config.DOMAIN_NAME=window.location.host;
+    Config.DOMAIN_NAME=window.location.host;
     Config.EXTENSION = "";  // JS 不要后缀, 只有PHP自添加后缀
     Config.color = "#0000FF";
     Config.FONT_LEVEL_UNIT = 16 * 2;
@@ -138,29 +132,29 @@ window.TQ = window.TQ || {};
     Config.TECH_TEST1_LOCAL_CACHE_ON = false;
     Config.LocalCacheEnabled = false;
 
-    //允许2个素材server， （即：UDOIDO.cn和 本网站）
+    //允许2个素材server， （即：udoido.com和 本网站）
     Config.TwoMatServerEnabled = false;
 
     // 入口服务器配置
-    Config.ENT_HOST = 'http://show.udoido.cn';
+    Config.ENT_HOST = 'http://show.' + rootDomain;
 
     // 管理和控制服务器的参数
-    //Config.MAN_HOST = "http://man.udoido.cn";   // 素材管理， 分配素材id
-    Config.MAN_HOST = 'http://show.udoido.cn';   // 素材管理， 分配素材id
+    //Config.MAN_HOST = 'http://man.' + rootDomain;   // 素材管理， 分配素材id
+    Config.MAN_HOST = 'http://show.' + rootDomain;   // 素材管理， 分配素材id
 
     // 素材服务器的参数
-    // Config.MAT_HOST = "http://www.udoido.cn"; // for new material (mXXXX),
-    // Config.MAT_HOST = "http://bone.udoido.cn";   // for old material(pXXXX), before transfer
-    Config.MAT_HOST = 'http://show.udoido.cn';   // for old material(pXXXX), before transfer
+    // Config.MAT_HOST = 'http://www.' + rootDomain; // for new material (mXXXX),
+    // Config.MAT_HOST = 'http://bone.' + rootDomain;   // for old material(pXXXX), before transfer
+    Config.MAT_HOST = 'http://show.' + rootDomain;   // for old material(pXXXX), before transfer
     Config.MAT_UPLOAD_API;  // 上传mats所用的url，具体取值，见下面的 两种配置
 
     // 作品服务器
-    // Config.OPUS_HOST = "http://opus.udoido.cn";
-    Config.OPUS_HOST = 'http://show.udoido.cn';
+    // Config.OPUS_HOST = 'http://opus.' + rootDomain;
+    Config.OPUS_HOST = 'http://show.' + rootDomain;
 
     // 签名认证服务器
-    // Config.AUTH_HOST = "http://auth.udoido.cn";
-    Config.AUTH_HOST = 'http://show.udoido.cn';
+    // Config.AUTH_HOST = 'http://auth.' + rootDomain;
+    Config.AUTH_HOST = 'http://show.' + rootDomain;
 
     Config.cloundaryEnabled = true; // 选择使用哪一种配置： Cloundary云 或者阿里云的bone，
     Config.Cloudinary = {
@@ -181,8 +175,8 @@ window.TQ = window.TQ || {};
     };
 
     var matServerBone = {
-        MAT_UPLOAD_API: "http://test.udoido.cn/getWSignature",
-        MAT_HOST: "http://test.udoido.cn",   // for old material(pXXXX), before transfer
+        MAT_UPLOAD_API: 'http://test.' + rootDomain + '/getWSignature',
+        MAT_HOST: 'http://test.' + rootDomain,   // for old material(pXXXX), before transfer
         IMAGES_CORE_PATH: "mcImages/",
         SOUNDS_PATH: "mcSounds/" //从 localhost的根目录开始, 不是 E盘的根目录
     };
