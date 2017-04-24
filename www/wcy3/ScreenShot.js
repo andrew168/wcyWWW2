@@ -8,26 +8,36 @@ window.TQ = window.TQ || {};
 
 (function () {
     var ScreenShot = {};
-    ScreenShot.imageData = null;
-    ScreenShot.imageName = "noname";
-    ScreenShot.SaveScreen = function (imageName, keywords) {
-        ScreenShot.imageName = imageName;
-        ScreenShot.take();
+    var imageData = null,
+        imageName = "noname";
+
+    ScreenShot.SaveScreen = function (name, keywords) {
+        imageName = name;
+        takeImage();
         ScreenShot.upload(keywords);
     };
 
-    ScreenShot.take = function () {
-        ScreenShot.imageData = stage.toDataURL("image/png"); // 默认生成透明图, 带alpha信息, PNG格式的
-    };
+    function takeImage(bkgColor) {
+        if (!bkgColor) {
+            imageData = stage.toDataURL("image/png"); // 默认生成透明图, 带alpha信息, PNG格式的
+        } else {
+            imageData = stage.toDataURL(bkgColor, "image/png"); // 带背景色， 不再是透明的
+        }
+
+        return imageData;
+    }
 
     ScreenShot.getData = function() {
-        ScreenShot.take();
-        return ScreenShot.imageData;
+        return takeImage();
+    };
+
+    ScreenShot.getDataWithBkgColor = function() {
+        return takeImage(TQ.Graphics.getCanvasBkgColor());
     };
 
     ScreenShot.upload = function (_keywords)
     {
-        assertNotNull(TQ.Dictionary.FoundNull,  ScreenShot.imageData); // 先截取屏幕
+        assertNotNull(TQ.Dictionary.FoundNull,  imageData); // 先截取屏幕
         $.ajax({
             type: "POST",
             url: 'Weidongman/src/ScreenShot.php',
@@ -37,8 +47,8 @@ window.TQ = window.TQ || {};
             data: {
                 type:'png',
                 userID: localStorage.getItem("userID"),
-                imageName: ScreenShot.imageName,
-                base64data : ScreenShot.imageData,
+                imageName: imageName,
+                base64data : imageData,
                 keywords:_keywords
             }
         });

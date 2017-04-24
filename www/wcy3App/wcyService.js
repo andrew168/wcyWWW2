@@ -191,7 +191,7 @@ function WCY($http, FileService, WxService, NetService) {
             return save().then(uploadScreenshot);
         }
 
-        var data = TQ.ScreenShot.getData();
+        var data = TQ.ScreenShot.getDataWithBkgColor();
         TQ.AssertExt.invalidLogic(!!_ssSign);
         return NetService.doUploadImage(_ssSign, data).
             then(onUploadSsSuccess, onErrorGeneral);

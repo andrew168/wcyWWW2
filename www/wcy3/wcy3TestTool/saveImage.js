@@ -22,9 +22,7 @@ TQ.Tool = TQ.Tool || {};
     }
 
     function saveImage(filename) {
-        var backgroundColor = TQ.Graphics.getCanvasBkgColor();
-        var image = stage.toDataURL(backgroundColor, "image/png");
-         // 默认生成透明图, 带alpha信息, PNG格式的
+        var image = TQ.ScreenShot.getDataWithBkgColor();
         _saveAs(image, filename);
         // _saveWithLocation(image);
     }
