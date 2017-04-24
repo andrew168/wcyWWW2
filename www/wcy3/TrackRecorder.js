@@ -184,8 +184,12 @@ window.TQ = window.TQ || {};
     };
 
     TrackRecorder.getSag = function (element, sagTypeId) {
-        var track = element.animeTrack;
-        var SagType = TQ.AnimationManager.SagType;
+        var track = element.animeTrack,
+            SagType = TQ.AnimationManager.SagType;
+        if (!track) { //新添加的物体， 可能短时间没有track，
+            return null;
+        }
+
         switch (sagTypeId) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
