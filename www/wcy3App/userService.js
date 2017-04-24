@@ -8,7 +8,7 @@ function UserService($http) {
     var user = TQ.userProfile;
 
     function tryAutoLogin() {
-        if ((!user.name) || (!user.ID)) {
+        if ((!user.name) || (!user.ID) || (!user.keepMeLogin)) {
             return false;
         }
 
