@@ -6,8 +6,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function Config() {
-    }
+    var Config = {};
 
     // 系统容量参数
     Config.MAX_UNDO_STEP = 100;
