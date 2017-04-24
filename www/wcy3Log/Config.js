@@ -51,8 +51,8 @@ window.TQ = window.TQ || {};
     Config.designatedWidth = 1024; // 414; //1093; //360; // 目标设备的尺寸,默认是（360*640），由系统从作品中动态读出，
                                   // 旧文件升级时候的缺省是(751， 550),
     Config.designatedHeight = 748; // 736; //615; // 640;
-    Config.snapOn = true;
-    Config.snapAngleOn = true;
+    Config.snapOn = false; // true;
+    Config.snapAngleOn = false; // true;
     Config.snapDX = 10;
     Config.snapDY = 10;
     Config.ORIENTATION_PORTRAIT = "portrait";
