@@ -10,6 +10,7 @@ var currScene = null;
     function SceneEditor() {
     }
 
+    var editorOn = false;
     SceneEditor._mode = TQBase.LevelState.EDITING; // 创作界面的缺省模式是编辑.
 
     // 接口
@@ -174,6 +175,11 @@ var currScene = null;
     }
 
     function turnOnEditor() {
+        if (editorOn) {
+            return;
+        }
+
+        editorOn = true;
         TQ.CommandMgr.initialize();
         TQ.InputCtrl.initialize(stageContainer);
         TQ.MoveCtrl.initialize(stageContainer);
