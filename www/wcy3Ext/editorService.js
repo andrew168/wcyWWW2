@@ -190,7 +190,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
 
         if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
-            // TQ.MessageBox.showOk("请使用竖屏以获得好效果", preview);
+            // TQ.MessageBox.showOk(TQ.Locale.getStr('please use rotate to get better result'), preview);
             preview();
         }
 
@@ -390,7 +390,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             atob: !!window.atob
         };
 
-        TQ.MessageBox.showWaiting("预处理文件....");
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('processing...'));
         TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
         var q = $q.defer();
@@ -408,8 +408,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             default:
                 if (matType === TQ.MatType.SOUND) {
                     if (!isSound(aFile)) {
-                        TQ.MessageBox.show("发现不支持的声音格式：" + aFile.type + ". 请选用mp3或wav格式");
-                        q.reject({error:1, msg: "发现不支持的声音格式：" + aFile.type + ". 请选用mp3或wav格式"});
+                        var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
+                        TQ.MessageBox.show(str);
+                        q.reject({error:1, msg: str});
                         break;
                     }
                     TQ.Assert.isTrue(isSound(aFile));
@@ -1032,7 +1033,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function onDelete(evt) {
         if (TQ.SelectSet.isEmpty()) {
-            // TQ.MessageBox.show("确认要删除这个场景？", deleteCurrentLevel);
+            // TQ.MessageBox.show(TQ.Locale.getStr('are you sure to delete it?'), deleteCurrentLevel);
             deleteCurrentLevel();
         } else {
             // 删除当前选中的元素
@@ -1080,7 +1081,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     return WCY.uploadScreenshot().then(doItAndSave);
                 }
             } else {
-                return TQ.MessageBox.show("需要先保存");
+                return TQ.MessageBox.show(TQ.Locale.getStr('please save first'));
             }
         }
 
