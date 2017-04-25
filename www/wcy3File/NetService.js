@@ -99,7 +99,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     function doUploadImage(signData, fileOrBuffer) {
-        TQ.MessageBox.showWaiting('努力上传中....');
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('uploading...'));
         // console.log(JSON.stringify(signData)); // 图像数据太大
         signData.api_key = TQ.Config.Cloudinary.api_key;
         var res;
@@ -199,7 +199,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     var createMatId = function (option) {
-        TQ.MessageBox.showWaiting('获取ID....');
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('get material ID...'));
         return $http.post(C_MAN_URL, angular.toJson(option));
     };
 

@@ -86,7 +86,7 @@ window.TQ = window.TQ || {};
             (track.rotation.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.alpha.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.colorR.t.length > TQ.Config.MAX_KEYFRAME)) {
-            TQ.MessageBox.toast("该元素的动画超长， 请尽快保存!");
+            TQ.MessageBox.toast(TQ.Locale.getStr('the animation of this element is out of limit!'));
         }
 
         element.clearFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING

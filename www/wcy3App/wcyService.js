@@ -118,7 +118,7 @@ function WCY($http, FileService, WxService, NetService) {
         }
 
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
-        TQ.MessageBox.showWaiting("正在加载....");
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
         $http.get(url)
             .then(_onReceivedWcyData, _onFail);
     }
@@ -397,7 +397,7 @@ function WCY($http, FileService, WxService, NetService) {
 
     function _onFail(data) {
         console.log(data);
-        TQ.MessageBox.prompt("哎呀，网络有问题？");
+        TQ.MessageBox.prompt(TQ.Locale.getStr('hey, the network connection lost'));
     }
 
     function _onReceivedWcyData(res) {

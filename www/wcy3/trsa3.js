@@ -36,7 +36,7 @@ var TQ = TQ || {};
 
     function mCopy(evt) {
         if (TQ.SelectSet.isEmpty()) {
-            return TQ.MessageBox.prompt("请先选择物体！");
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
         evt = touch2StageXY(evt);
         var results = currScene.currentLevel.cloneElement(TQ.SelectSet.members);

@@ -61,7 +61,9 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 return;
             }
             if (!TQ.Utility.isSupportedEnvironment()) {
-                TQ.MessageBox.prompt('请下载安装<a href="https://www.google.ca/chrome/browser/features.html" style="font-weight: bold; text-decoration: underline">谷歌浏览器</a>！');
+                var msg = TQ.Locale.getStr('please install') +' <a href="https://www.google.ca/chrome/browser/features.html" style="font-weight: bold; text-decoration: underline">' +
+                    TQ.Locale.getStr('chrome') + '</a>！';
+                TQ.MessageBox.prompt(msg);
                 return;
             }
             _initialized = true;

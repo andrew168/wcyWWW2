@@ -60,11 +60,11 @@ window.TQ = window.TQ || {};
     function moveLayer(ele, step) {
         var oldZ = (step >0) ? ele.getMaxZ(): ele.getMinZ();  // 防止，目标z落在自身
         if ((oldZ <= 0) && (step <=0)) { // 已经是最底层， 不能再move了
-            TQ.MessageBox.toast("already in lowest layer!");
+            TQ.MessageBox.toast(TQ.Locale.getStr('already in lowest layer!'));
         } else {
             step = zAdjustForGroup(oldZ, step); // 防止目标z录入复合体内
             if (step === 0) {
-                TQ.MessageBox.toast("couldn't move any more！");
+                TQ.MessageBox.toast(TQ.Locale.getStr("couldn't move any more！"));
             } else {
                 TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.CHANGE_LAYER, ele, step, oldZ));
             }

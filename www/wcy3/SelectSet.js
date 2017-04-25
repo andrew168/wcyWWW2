@@ -183,7 +183,7 @@ TQ = TQ || {};
                     state.cmdAfter();
                 }
             } else {
-                return TQ.MessageBox.prompt("先结束当前操作！");
+                return TQ.MessageBox.prompt(TQ.Locale.getStr('please complete the current operation'));
             }
             return;
         }

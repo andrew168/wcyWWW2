@@ -335,7 +335,7 @@ TQ = TQ || {};
 
     p.open = function (fileInfo) {
         p.isPlayOnly = (fileInfo.isPlayOnly === undefined)? false : fileInfo.isPlayOnly;
-        TQ.MessageBox.showWaiting("正在加载作品...");
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
         this.reset();
         this.filename = fileInfo.filename;
         this.screenshotName = fileInfo.screenshotName;
@@ -521,7 +521,7 @@ TQ = TQ || {};
 
     // JQuery Ajax version
     p.loadFromJson = function (filename, alias) {
-        TQ.MessageBox.showWaiting("努力加载中 。。。");
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
         (function (pt) {
             netOpen(filename, function (jqResponse) {
                 pt._jsonStrToScene(pt, jqResponse, alias);
@@ -728,7 +728,7 @@ TQ = TQ || {};
         this.afterToJSON();
 
         if (data.length > TQ.Config.MAX_FILE_SIZE) {
-            TQ.MessageBox.toast("文件超长， 请尽快保存！");
+            TQ.MessageBox.toast(TQ.Locale.getStr('file is too long, please save your work ASAP'));
         }
         return data;
     };

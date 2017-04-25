@@ -215,7 +215,7 @@ var currScene = null;
             TQ.WCY.currentScene = currScene;
         } else {
             TQ.AssertExt.invalidLogic("必须自动保存， 减少干扰用户！");
-            TQ.MessageBox.show("请先保存作品！");
+            TQ.MessageBox.show(TQ.Locale.getStr('please save it first!'));
         }
         return currScene;
     }

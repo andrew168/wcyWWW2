@@ -24,11 +24,11 @@ function DashCtrl(
 
     // implementation, abc order
     function testShowMsg() {
-        TQ.MessageBox.showWaiting("loading...");
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('loading...'));
     }
 
     function testPrompt() {
-        TQ.MessageBox.prompt("Are you sure?");
+        TQ.MessageBox.prompt(TQ.Locale.getStr('Are you sure?'));
     }
 
     // AppService.onAppStarting(onAppStaring);
