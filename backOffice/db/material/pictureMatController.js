@@ -37,7 +37,7 @@ function get(userId, callback) {
 }
 
 function getList(userId, typeId, callback) {
-    var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]};
+    var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
         condition ={$and: [{"isBanned": false}, {"typeId": typeId}]};
 
     if (userLimit) {
@@ -57,7 +57,7 @@ function getList(userId, typeId, callback) {
         function copyItem(model) {
             var item = model._doc;
             if (item.path) {
-                result.push({name:item.name, path: item.path, authorID: item.userId});
+                result.push({name:item.name, path: item.path, authorID: item.userId, isShared: item.isShared});
             }
         }
     }
