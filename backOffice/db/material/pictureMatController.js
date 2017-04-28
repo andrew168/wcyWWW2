@@ -57,7 +57,7 @@ function getList(userId, typeId, callback) {
         function copyItem(model) {
             var item = model._doc;
             if (item.path) {
-                result.push({name:item.name, path: item.path});
+                result.push({name:item.name, path: item.path, authorID: item.userId});
             }
         }
     }
@@ -127,11 +127,11 @@ function update(id, path, callback) {
         });
 }
 
-function ban(id, callback) {
-    PictureMat.findOne({_id: id})
+function ban(id, playerID, callback) {
+    PictureMat.findOne({$and: [{_id: id}, {userId: playerID}]})
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found!' + id});
+                console.error(404, {msg: 'not found! : ' + id + ", or not belong to this user: " + playerID});
             } else {
                 console.log(data);
                 data.set('isBanned', true);

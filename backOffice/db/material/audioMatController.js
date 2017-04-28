@@ -95,11 +95,11 @@ function update(id, path, callback) {
         });
 }
 
-function ban(id, callback) {
-    AudioMat.findOne({_id: id})
+function ban(id, playerID, callback) {
+    AudioMat.findOne({$and: [{_id: id}, {userId: playerID}]})
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found!' + id});
+                console.error(404, {msg: 'not found! : ' + id + ", or not belong to this user: " + playerID});
             } else {
                 console.log(data);
                 data.set('isBanned', true);

@@ -129,7 +129,7 @@ function banMatId(req, res, matType, matId) {
         sendBack(data, res);
     }
 
-    getMatController(matType).ban(matId, onSavedToDB);
+    getMatController(matType).ban(matId, status.user.ID, onSavedToDB);
 }
 
 function getMatIds(req, res, matType) {
