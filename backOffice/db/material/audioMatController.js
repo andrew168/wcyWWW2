@@ -67,7 +67,8 @@ function getList(userId, typeId, callback) {
         function copyItem(model1) {
             var item = model1._doc;
             if (item.path) {
-                result.push({name:item.name, path: item.path, authorID: item.userId, isShared: item.isShared});
+                result.push({id: item._id, name:item.name, path: item.path, authorID: item.userId,
+                    isShared: item.isShared, time: item.timestamp});
             }
         }
     }
