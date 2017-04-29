@@ -52,9 +52,14 @@ function onSaveOpus(err, model, onSuccess, onError) {
 }
 
 // 获取最新的N个作品， 自己的， 或者 优秀公开的，而且有ssPath
-function getList(userId, callback) {
-    var userLimit = (userId === null) ? null : {"userId": userId},
+function getList(user, callback) {
+    var userId = user.ID,
+        userLimit = (userId === null) ? null : {"userId": userId},
         condition = (!userLimit) ? {"state": STATE_FINE} : {$or: [userLimit, {"state": STATE_FINE}]};
+
+    if (user.canBan || user.canApprove) {
+        condition = null;
+    }
 
     Opus.find(condition).sort({lastModified: -1})
         .exec(function (err, data) {

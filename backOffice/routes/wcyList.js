@@ -16,7 +16,7 @@ router.param('opusID', function (req, res, next, id) {
 
 router.get('/', function(req, res, next) {
     status.checkUser(req, res);
-    opusController.getList(status.user.ID, onGotList, onFail);
+    opusController.getList(status.user, onGotList, onFail);
     function onGotList(list) {
         // console.log(list);
         res.json(list);
@@ -29,16 +29,38 @@ router.get('/', function(req, res, next) {
 
 router.get('/apply/:opusID', function (req, res, next) {
     status.checkUser(req, res);
-    var opusID = req.params.opusID || 0;
+    var opusID = req.params.opusID || 0,
+        msg = "received! apply to publish: " + opusID;
     opusController.applyToPublish(opusID, status.user.ID);
-    res.json("received! apply to publish: " + opusID);
+    res.json(msg);
 });
 
 router.get('/approve/:opusID', function (req, res, next) {
     status.checkUser(req, res);
-    var opusID = req.params.opusID || 0;
-    opusController.approveToPublish(opusID);
-    res.json("received! approve, " + opusID);
+    var opusID = req.params.opusID || 0,
+        msg;
+
+    if (status.user.canApprove) {
+        opusController.approveToPublish(opusID);
+        msg = "received! approve, " + opusID;
+    } else {
+        msg = "not allowed!";
+    }
+    res.json(msg);
+});
+
+router.get('/ban/:opusID', function (req, res, next) {
+    status.checkUser(req, res);
+    var opusID = req.params.opusID || 0,
+        msg;
+
+    if (status.user.canBan) {
+        opusController.ban(opusID);
+        msg = "received! ban, " + opusID;
+    } else {
+        msg = "not allowed!";
+    }
+    res.json(msg);
 });
 
 module.exports = router;

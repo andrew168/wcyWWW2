@@ -7,6 +7,10 @@ var Const = require('../../base/const'),
     utils = require('../../common/utils'),
     User = mongoose.model('User');
 
+var PRIVILEGE_APPROVE_TO_PUBLISH = 0x10,
+    PRIVILEGE_REFINE = 0x20,
+    PRIVILEGE_BAN = 0x40;
+
 function get(id) {
     User.findOne({_id: id})
         .exec(function (err, data) {
@@ -82,7 +86,10 @@ function model2User(err, model, errorID) {
             errorID: Const.ERROR.NO,
             name: doc.name,
             ID: doc._id,
-            displayName: doc.displayName
+            displayName: doc.displayName,
+            canApprove: !!(doc.privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
+            canRefine: !!(doc.privilege & PRIVILEGE_REFINE),
+            canBan: !!(doc.privilege & PRIVILEGE_BAN)
         };
     }
 
