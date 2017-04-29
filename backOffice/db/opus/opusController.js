@@ -7,6 +7,11 @@ var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
     opusSchema = require('./opusSchema.js'),
     Opus = mongoose.model('Opus', opusSchema.schema);
+var STATE_PRIVATE = 10,
+    STATE_APPLY_TO_PUBLISH = 20, // 必须经过批准才能公开， 防止 出乱子，
+    STATE_APPROVED_TO_PUBLISH = 30, //
+    STATE_FINE = 40, // 优秀作品
+    STATE_BAN = 70;
 
 function get(id) {
     Opus.findOne({_id: id})
@@ -46,9 +51,11 @@ function onSaveOpus(err, model, onSuccess, onError) {
     }
 }
 
-// 获取最新的10个作品， 有ssPath的， 无论是否我的，
+// 获取最新的N个作品， 自己的， 或者 优秀公开的，而且有ssPath
 function getList(userId, callback) {
-    var condition = null; // (userId === null) ? null : {userId: userId};
+    var userLimit = (userId === null) ? null : {"userId": userId},
+        condition = (!userLimit) ? {"state": STATE_FINE} : {$or: [userLimit, {"state": STATE_FINE}]};
+
     Opus.find(condition).sort({lastModified: -1})
         .exec(function (err, data) {
             if (!data) {
@@ -74,7 +81,7 @@ function getList(userId, callback) {
             result = [],
             num = (!data ? 0 : Math.min(LATEST_OPUS_NUM, data.length));
 
-        for (i = 0; i < num; i++ ) {
+        for (i = 0; i < num; i++) {
             var doc1 = data[i]._doc;
             if (!doc1.ssPath) {
                 //  continue;
@@ -112,7 +119,7 @@ function getAuthor(opusId, onCompleted) {
             var author;
             if (!doc) {
                 console.error(404, {msg: "couldn't find user for opus: !" + opusId});
-                author = {ID:1};
+                author = {ID: 1};
             } else {
                 console.log(doc);
                 author = {ID: doc.userId,
@@ -127,8 +134,66 @@ function getAuthor(opusId, onCompleted) {
         });
 }
 
+function applyToPublish(id, playerID, callback) {
+    // 必须是自己的才能申请发表， 否则， 无效
+    Opus.findOne({$and: [{_id: id}, {userId: playerID}]})
+        .exec(function (err, data) {
+            if (!data) {
+                console.error(404, {msg: 'not found! : ' + id + ", or not belong to : " + playerID});
+            } else {
+                console.log(data);
+                var item = data._doc;
+                if (item.state === STATE_PRIVATE) {
+                    // state: Number, // 10, 私有的， 20： 申请公开， 30: 批准公开， 41: 禁用
+                    data.set('state', STATE_APPLY_TO_PUBLISH);
+                    data.save(function (err, data) {
+                        if (!err) {
+                            if (callback) {
+                                callback(item._id);
+                            }
+                        } else {
+                            console.error("error in ban picture mat!");
+                        }
+                    });
+                }
+            }
+        });
+}
+
+function approveToPublish(id, callback) {
+    // 必须是自己的才能申请发表， 否则， 无效
+    setProp(id, 'state', STATE_APPROVED_TO_PUBLISH, callback);
+}
+function ban(id, callback) {
+    setProp(id, 'state', STATE_BAN, callback);
+}
+
+function setProp(id, propName, propValue, callback) {
+    Opus.findOne({_id: id})
+        .exec(function (err, data) {
+            if (!data) {
+                console.error(404, {msg: 'not found! : ' + id});
+            } else {
+                console.log(data);
+                data.set(propName, propValue);
+                data.save(function (err, data) {
+                    if (!err) {
+                        if (callback) {
+                            callback(data._doc._id);
+                        }
+                    } else {
+                        console.error("error in ban picture mat!");
+                    }
+                });
+            }
+        });
+}
+
 exports.getAuthor = getAuthor;
 exports.get = get;
 exports.add = add;
 exports.getList = getList;
+exports.applyToPublish = applyToPublish;
+exports.approveToPublish = approveToPublish;
+exports.ban = ban;
 exports.updateScreenshot = updateScreenshot;

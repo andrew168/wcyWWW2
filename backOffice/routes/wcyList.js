@@ -9,6 +9,11 @@ var fs = require('fs');
 
 var opusController = require('../db/opus/opusController');
 
+// 定义RESTFull API（路径）中的参数， 形参
+router.param('opusID', function (req, res, next, id) {
+    next();
+});
+
 router.get('/', function(req, res, next) {
     status.checkUser(req, res);
     opusController.getList(status.user.ID, onGotList, onFail);
@@ -20,6 +25,20 @@ router.get('/', function(req, res, next) {
     function onFail(msg) {
         console.error("failed in getWcyList" + msg);
     }
+});
+
+router.get('/apply/:opusID', function (req, res, next) {
+    status.checkUser(req, res);
+    var opusID = req.params.opusID || 0;
+    opusController.applyToPublish(opusID, status.user.ID);
+    res.json("received! apply to publish: " + opusID);
+});
+
+router.get('/approve/:opusID', function (req, res, next) {
+    status.checkUser(req, res);
+    var opusID = req.params.opusID || 0;
+    opusController.approveToPublish(opusID);
+    res.json("received! approve, " + opusID);
 });
 
 module.exports = router;

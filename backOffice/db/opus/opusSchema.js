@@ -10,6 +10,8 @@ var mongoose = require('mongoose'),
 var opusSchema = new Schema({
     timestamp:{type:Date, default: Date.now},
     lastModified:{type:Date, default: Date.now},
+    // 申请共享，批准发表
+    state: {type: Number, default: 10}, // 10, 私有的,
     userId:Number,
     ssPath: {type: String, default:""},
     template: {type: Number, default: 0} // 0: no template
