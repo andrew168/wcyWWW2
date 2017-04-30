@@ -21,12 +21,20 @@ function updateUser(data) {
         user.name = data.name;
         user.isRegistered = true;
         user.displayName = data.displayName;
+        user.canApprove = data.canApprove;
+        user.canRefine = data.canRefine;
+        user.canBan = data.canBan;
+        user.canAdmin = data.canAdmin;
     } else {
         user.loggedIn = false;
         user.ID = 0;
         user.name = ANONYMOUS;
         user.isRegistered = false;
         user.displayName = ANONYMOUS;
+        user.canApprove = false;
+        user.canRefine = false;
+        user.canBan = false;
+        user.canAdmin = false;
     }
 }
 
