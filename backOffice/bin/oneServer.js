@@ -96,7 +96,8 @@
         var clientPathStatic = path.join(__dirname, './../public');
 
         function inWhiteList(ext) {
-            var whiteList = ['.css', '.js', '.ttf', '.html'];
+            var whiteList = ['.css', '.js', '.ttf', '.html', '.jpg', '.png', '.gif',
+                '.mp4', '.wav', '.mp3'];
 
             for (var i = 0; i < whiteList.length; i++) {
                 if (ext.indexOf(whiteList[i]) >= 0 ) {
@@ -110,7 +111,10 @@
         // 以上的路径是静态文件，排除在外,不log访问情况
         app.use(function (req, res, next) {
             // console.log("I'm first!!! for any path, 除了以上的路径");
-            var ext = req.url.substr(req.url.length - 5);
+            var url = req.url.split(/[?,#]/)[0],
+                ext = url.substr(url.lastIndexOf('.')),
+                ext = ext.toLocaleLowerCase();
+
             if (inWhiteList(ext)) {
                 next();
             } else {
