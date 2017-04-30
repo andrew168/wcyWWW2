@@ -6,8 +6,11 @@
 function setProp(model, id, propName, propValue, callback) {
     model.findOne({_id: id})
         .exec(function (err, data) {
-            if (!data) {
+            if (err) {
                 console.error(404, {msg: 'not found! : ' + id});
+                if (callback) {
+                    callback(-1);
+                }
             } else {
                 console.log(data);
                 data.set(propName, propValue);

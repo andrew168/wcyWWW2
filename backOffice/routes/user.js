@@ -124,6 +124,8 @@ function setPrivilege(req, res, next) {
     if (!privilegeCode || !clientID || !status.user.canAdmin) {
         return onCompleted("not allowed or wrong parameters!");
     } else {
+        privilegeCode = parseInt(privilegeCode);
+        clientID = parseInt(clientID);
         userController.setPrivilege(clientID, privilegeCode, onCompleted);
     }
     function onCompleted(msg) {
