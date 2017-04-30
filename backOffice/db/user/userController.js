@@ -5,12 +5,14 @@
 var Const = require('../../base/const'),
     mongoose = require('mongoose'),
     utils = require('../../common/utils'),
+    dbCommon = require('../dbCommonFunc.js'),
     User = mongoose.model('User');
 
-var PAGE_SIZE = 100;
+var PAGE_SIZE = 1000;
 var PRIVILEGE_APPROVE_TO_PUBLISH = 0x10,
     PRIVILEGE_REFINE = 0x20,
-    PRIVILEGE_BAN = 0x40;
+    PRIVILEGE_BAN = 0x40,
+    PRIVILEGE_ADMIN = 0x80;
 
 function get(id) {
     User.findOne({_id: id})
@@ -90,7 +92,8 @@ function model2User(err, model, errorID) {
             displayName: doc.displayName,
             canApprove: !!(doc.privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
             canRefine: !!(doc.privilege & PRIVILEGE_REFINE),
-            canBan: !!(doc.privilege & PRIVILEGE_BAN)
+            canBan: !!(doc.privilege & PRIVILEGE_BAN),
+            canAdmin: !!(doc.privilege & PRIVILEGE_ADMIN)
         };
     }
 
@@ -120,7 +123,7 @@ function getList(aUser, callback) {
         return callback(result);
     }
 
-    User.find(null).sort({lastModified: -1})
+    User.find(null).sort({_id: -1})
         .exec(function (err, data) {
             if (!data) {
                 console.error(404, {msg: 'not found!' + userId});
@@ -153,6 +156,10 @@ function getList(aUser, callback) {
     }
 }
 
+function setPrivilege(id, code, callback) {
+    dbCommon.setProp(User, id, 'privilege', code, callback);
+}
+
 exports.get = get;
 exports.getList = getList;
 exports.add = add; // 游客
@@ -160,3 +167,4 @@ exports.autoLogin = autoLogin;
 exports.checkName = checkName;
 exports.login = login;
 exports.signUp = signUp; // 正式注册用户，
+exports.setPrivilege = setPrivilege;

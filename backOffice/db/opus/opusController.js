@@ -5,6 +5,7 @@
 var LATEST_OPUS_NUM = 100;
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
+    dbCommon = require('../dbCommonFunc.js'),
     opusSchema = require('./opusSchema.js'),
     Opus = mongoose.model('Opus', opusSchema.schema);
 var STATE_PRIVATE = 10,
@@ -167,31 +168,10 @@ function applyToPublish(id, playerID, callback) {
 
 function approveToPublish(id, callback) {
     // 必须是自己的才能申请发表， 否则， 无效
-    setProp(id, 'state', STATE_APPROVED_TO_PUBLISH, callback);
+    dbCommon.setProp(Opus, id, 'state', STATE_APPROVED_TO_PUBLISH, callback);
 }
 function ban(id, callback) {
-    setProp(id, 'state', STATE_BAN, callback);
-}
-
-function setProp(id, propName, propValue, callback) {
-    Opus.findOne({_id: id})
-        .exec(function (err, data) {
-            if (!data) {
-                console.error(404, {msg: 'not found! : ' + id});
-            } else {
-                console.log(data);
-                data.set(propName, propValue);
-                data.save(function (err, data) {
-                    if (!err) {
-                        if (callback) {
-                            callback(data._doc._id);
-                        }
-                    } else {
-                        console.error("error in ban picture mat!");
-                    }
-                });
-            }
-        });
+    dbCommon.setProp(Opus, id, 'state', STATE_BAN, callback);
 }
 
 exports.getAuthor = getAuthor;

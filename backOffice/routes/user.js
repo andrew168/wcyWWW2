@@ -14,6 +14,7 @@ router.get('/checkname/:name', checkName);
 router.get('/login/:name/:psw', login);
 router.get('/autoLogin/:name/:ID', autoLogin);
 router.get('/list', getList);
+router.get('/privilege/:ID/:privilegeCode', setPrivilege);
 
 function signUp(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
@@ -113,6 +114,20 @@ function getList(req, res, next) {
 
     function onGotList(list) {
         res.json(list);
+    }
+}
+
+function setPrivilege(req, res, next) {
+    var privilegeCode = req.params.privilegeCode || null,
+        clientID = req.params.ID || null;
+
+    if (!privilegeCode || !clientID || !status.user.canAdmin) {
+        return onCompleted("not allowed or wrong parameters!");
+    } else {
+        userController.setPrivilege(clientID, privilegeCode, onCompleted);
+    }
+    function onCompleted(msg) {
+        res.json(msg);
     }
 }
 
