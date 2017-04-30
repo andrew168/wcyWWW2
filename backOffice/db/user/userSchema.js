@@ -8,6 +8,7 @@ var userSchema = new Schema({
     displayName: {type: String, default:""},
     psw: {type:String, required: true, default:"123abc"},
     score: {type: Number, default: 0}, // 实时统计并显示？
+    signUpAt: {type: Date, default: Date.now},
     privilege: {type: Number, default: 3} // 权限， 1: 普通用户， 可以 播放1， 创作2，
 });
 

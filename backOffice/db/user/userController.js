@@ -7,6 +7,7 @@ var Const = require('../../base/const'),
     utils = require('../../common/utils'),
     User = mongoose.model('User');
 
+var PAGE_SIZE = 100;
 var PRIVILEGE_APPROVE_TO_PUBLISH = 0x10,
     PRIVILEGE_REFINE = 0x20,
     PRIVILEGE_BAN = 0x40;
@@ -112,7 +113,48 @@ function add(req, onSuccess) {
     }
 }
 
+// 获取最新的N个user
+function getList(aUser, callback) {
+    var result = [];
+    if (!aUser.canAdmin) {
+        return callback(result);
+    }
+
+    User.find(null).sort({lastModified: -1})
+        .exec(function (err, data) {
+            if (!data) {
+                console.error(404, {msg: 'not found!' + userId});
+                callback(result);
+            }
+            result = getLatest(data);
+            if (result.length === 0) {
+                if (userId) {
+                    return getList(null, callback);
+                }
+            }
+            callback(result);
+        });
+
+    function getLatest(data) {
+        if (!data) {
+            console.error("data 是null？什么情况？");
+        }
+
+        var i,
+            result = [],
+            num = (!data ? 0 : Math.min(PAGE_SIZE, data.length));
+
+        for (i = 0; i < num; i++) {
+            var doc1 = data[i]._doc;
+            result.push(doc1);
+        }
+
+        return result;
+    }
+}
+
 exports.get = get;
+exports.getList = getList;
 exports.add = add; // 游客
 exports.autoLogin = autoLogin;
 exports.checkName = checkName;

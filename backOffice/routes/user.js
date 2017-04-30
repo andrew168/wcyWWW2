@@ -13,6 +13,7 @@ router.post('/signup/:name/:psw/:displayname', signUp);
 router.get('/checkname/:name', checkName);
 router.get('/login/:name/:psw', login);
 router.get('/autoLogin/:name/:ID', autoLogin);
+router.get('/list', getList);
 
 function signUp(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
@@ -99,6 +100,19 @@ function autoLogin(req, res, next) {
         status.updateUser(data);
         status.setUserCookie(res);
         res.send(data);
+    }
+}
+
+function getList(req, res, next) {
+    var user = status.user;
+    if (user.canAdmin) {
+        userController.getList(user, onGotList);
+    } else {
+        res.json("not allowed!");
+    }
+
+    function onGotList(list) {
+        res.json(list);
     }
 }
 
