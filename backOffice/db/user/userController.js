@@ -107,8 +107,8 @@ function add(req, onSuccess) {
     });
 
     try {
-        aDoc.save(function(err, doc) {
-            onSuccess(doc);
+        aDoc.save(function(err, model) {
+            onSuccess(model._doc);
         });
     } catch(e) {
         console.log("Fatal error: at user doc read/write");
