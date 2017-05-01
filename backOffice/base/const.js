@@ -12,3 +12,6 @@ exports.ERROR = {
     DISPLAY_NAME_INVALID: 6,
     PASSWORD_IS_INVALID : 7
 };
+
+exports.SUCCESS = 1;
+exports.FAILED = 0;

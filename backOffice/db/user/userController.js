@@ -77,14 +77,14 @@ function model2User(err, model, errorID) {
     var pkg;
     if (err || !model || (Array.isArray(model) && (model.length < 1))) {
         pkg = {
-            result: 0,
+            result: Const.FAILED,
             errorID: errorID,
             error: err
         };
     } else {
         var doc = (Array.isArray(model)) ? model[0]._doc : model._doc,
         pkg = {
-            result: 1,
+            result: Const.SUCCESS,
             loggedIn: true,
             errorID: Const.ERROR.NO,
             name: doc.name,
