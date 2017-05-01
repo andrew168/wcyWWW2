@@ -119,7 +119,12 @@
                 next();
             } else {
                 if (userStat) { // 可能尚未启动userStat, 因为需要启动db的支持，比较慢
-                    userStat.logUser(req, res, next);
+                    var user = userStat.getUserInfo(req, res);
+                    if (!user) {
+                        next();
+                    } else {
+                        userStat.logUser(user, req, res, next);
+                    }
                 }
             }
         });

@@ -8,15 +8,15 @@
  *
  * 在客户端，根据文件名， 决定素材的类别（Picture， Audio， Video，等）
  */
-var express = require('express');
-var router = express.Router();
-var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
-var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
-var status = require('../common/status');
-var fs = require('fs');
-
-var pictureMatController = require('../db/material/pictureMatController');
-var audioMatController = require('../db/material/audioMatController');
+var express = require('express'),
+    router = express.Router(),
+    utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
+    netCommon = require('../common/netCommonFunc'),
+    cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
+    status = require('../common/status'),
+    fs = require('fs'),
+    pictureMatController = require('../db/material/pictureMatController'),
+    audioMatController = require('../db/material/audioMatController');
 
 var TYPE_BKG_IMAGE = 10, // 'bkgimage',
     TYPE_PROP_IMAGE = 20, // 'propimage',
@@ -30,9 +30,13 @@ router.post('/', function(req, res, next) {
     var public_id = req.body.public_id || null,
         ban = req.body.ban || false,
         matType = getMatType(req),
-        path = req.body.path || null;
+        path = req.body.path || null,
+        user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
 
-    status.logUser(req);
+    status.logUser(user, req, res);
     if (ban) {
         if (!public_id) {
             public_id = utils.path2public_id(path);
@@ -63,11 +67,17 @@ router.param('matType', function (req, res, next, id) {
 });
 
 router.get('/list/:matType', function(req, res, next) {
-    var matType = req.params.matType;
+    var matType = req.params.matType,
+        user = status.getUserInfo(req, res);
+
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
     matType = (!matType) ? 10 : parseInt(matType);
     console.log("type = " + matType);
-    status.logUser(req);
-    getMatController(matType).getList(status.user.ID, matType, onGotList, onFail);
+    status.logUser(user, req, res);
+    getMatController(matType).getList(user.ID, matType, onGotList, onFail);
     function onGotList(list) {
         console.log(JSON.stringify(list));
         res.json(list);
@@ -80,6 +90,11 @@ router.get('/list/:matType', function(req, res, next) {
 });
 
 function createMatId(req, res, matType, originalFilename) {
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
     if (!originalFilename) {
         var msg = "wrong format: must have filename!";
         console.log(msg);
@@ -102,7 +117,7 @@ function createMatId(req, res, matType, originalFilename) {
             // ToDo:
             var ip = null;
             var isShared = false;
-            getMatController(matType).add(status.user.ID, originalFilename, matType, ip, isShared, onSavedToDB, null);
+            getMatController(matType).add(user.ID, originalFilename, matType, ip, isShared, onSavedToDB, null);
         } else {
             console.log("must be new material");
         }
@@ -122,6 +137,11 @@ function updateMatId(req, res, matType, matId, path) {
 }
 
 function banMatId(req, res, matType, matId) {
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
     function onSavedToDB(docId) {
         var data = {
             public_id: utils.matId2Name(docId)
@@ -129,12 +149,16 @@ function banMatId(req, res, matType, matId) {
         sendBack(data, res);
     }
 
-    getMatController(matType).ban(matId, status.user.ID, onSavedToDB);
+    getMatController(matType).ban(matId, user.ID, onSavedToDB);
 }
 
 function getMatIds(req, res, matType) {
-    // ToDo:
-    getMatController(matType).get(status.user.ID, function(data) {
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
+    getMatController(matType).get(user.ID, function(data) {
         res.json(data);
     });
 }

@@ -1,13 +1,13 @@
 /**
  * Created by admin on 12/5/2015.
  */
-var express = require('express');
-var router = express.Router();
-var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
-var status = require('../common/status');
-var fs = require('fs');
-
-var opusController = require('../db/opus/opusController');
+var express = require('express'),
+    router = express.Router(),
+    utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
+    netCommon = require('../common/netCommonFunc'),
+    status = require('../common/status'),
+    fs = require('fs'),
+    opusController = require('../db/opus/opusController');
 
 // 定义RESTFull API（路径）中的参数， 形参
 router.param('opusID', function (req, res, next, id) {
@@ -15,8 +15,11 @@ router.param('opusID', function (req, res, next, id) {
 });
 
 router.get('/', function(req, res, next) {
-    status.checkUser(req, res);
-    opusController.getList(status.user, onGotList, onFail);
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+    opusController.getList(user, onGotList, onFail);
     function onGotList(list) {
         // console.log(list);
         res.json(list);
@@ -28,19 +31,26 @@ router.get('/', function(req, res, next) {
 });
 
 router.get('/apply/:opusID', function (req, res, next) {
-    status.checkUser(req, res);
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
     var opusID = req.params.opusID || 0,
         msg = "received! apply to publish: " + opusID;
-    opusController.applyToPublish(opusID, status.user.ID);
+    opusController.applyToPublish(opusID, user.ID);
     res.json(msg);
 });
 
 router.get('/approve/:opusID', function (req, res, next) {
-    status.checkUser(req, res);
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
     var opusID = req.params.opusID || 0,
         msg;
 
-    if (status.user.canApprove) {
+    if (user.canApprove) {
         opusController.approveToPublish(opusID);
         msg = "received! approve, " + opusID;
     } else {
@@ -50,11 +60,15 @@ router.get('/approve/:opusID', function (req, res, next) {
 });
 
 router.get('/ban/:opusID', function (req, res, next) {
-    status.checkUser(req, res);
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
     var opusID = req.params.opusID || 0,
         msg;
 
-    if (status.user.canBan) {
+    if (user.canBan) {
         opusController.ban(opusID);
         msg = "received! ban, " + opusID;
     } else {

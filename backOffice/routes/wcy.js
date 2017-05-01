@@ -1,16 +1,17 @@
 /**
  * Created by admin on 12/5/2015.
  */
-var express = require('express');
-var router = express.Router();
-var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
-var imageUtils = require('../common/imageUtils'); // 后缀.js可以省略，Node会自动查找，
-var status = require('../common/status');
-var fs = require('fs');
-var opusController = require('../db/opus/opusController');
-var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
+var express = require('express'),
+    router = express.Router(),
+    utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
+    imageUtils = require('../common/imageUtils'), // 后缀.js可以省略，Node会自动查找，
+    status = require('../common/status'),
+    netCommon = require('../common/netCommonFunc'),
+    fs = require('fs'),
+    opusController = require('../db/opus/opusController'),
+    cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
 
-var WCY_DEPOT = "/data/wcydepot/";
+    WCY_DEPOT = "/data/wcydepot/";
 
 var defaultWcyData = '{"levels":[{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true}],"version":"V2","isDirty":false,"filename":"wcy01","title":"wcy01","currentLevelId":0,"alias":"gameScene","remote":true,"isPreloading":false,"overlay":{"elements":[],"FPS":20,"tMaxFrame":200,"_t":0,"name":"overlay","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false},"currentLevel":{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true},"stage":null}';
 
@@ -27,6 +28,11 @@ router.get('/:shareCode', function(req, res, next) {
 });
 
 router.post('/', function(req, res, next) {
+    var user = status.getUserInfo(req, res);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
@@ -46,16 +52,16 @@ router.post('/', function(req, res, next) {
                 // 入库， 并获取新wcyID，
                 function onSavedToDB(_wcyId, ssPath) {
                     wcyId = _wcyId;
-                    _saveWcy(wcyId, ssPath, wcyData, res);
+                    _saveWcy(req, res, wcyId, ssPath, wcyData);
                 }
-                opusController.add(status.user.ID, ssPath, templateID, onSavedToDB, null);
+                opusController.add(user.ID, ssPath, templateID, onSavedToDB, null);
             } else {
-                opusController.updateScreenshot(status.user.ID, wcyId, ssPath, onSavedToDB);
+                opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDB);
             }
         }
 });
 
-function _saveWcy(wcyId, ssPath, wcyData, res) {
+function _saveWcy(req, res, wcyId, ssPath, wcyData) {
     fs.writeFile(wcyId2Filename(wcyId), wcyData, onWriteCompleted);
     function onWriteCompleted(err) {
         var msg;
@@ -66,13 +72,18 @@ function _saveWcy(wcyId, ssPath, wcyData, res) {
             msg = "The file was saved!";
         }
         console.log(msg);
-        resWcySaved(res, wcyId, ssPath, msg);
+        resWcySaved(req, res, wcyId, ssPath, msg);
     }
 }
 
-function resWcySaved(res, wcyId, ssPath, msg) {
-    var shareId = 0,
-        shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID);
+function resWcySaved(req, res, wcyId, ssPath, msg) {
+    var user = status.getUserInfo(req, res),
+        shareId = 0,
+        shareCode = utils.composeShareCode(shareId, wcyId, user.ID);
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
+
     // ssPath可能为null，(如果本次没有截屏的话）
     var data = {
         public_id: imageUtils.screenshotId2Name(wcyId)
@@ -83,10 +94,15 @@ function resWcySaved(res, wcyId, ssPath, msg) {
 
 /// private function:
 function response(req, res, data, wcyId, authorData) {
-    var url = req.headers.origin,
+    var user = status.getUserInfo(req, res),
+        url = req.headers.origin,
     // var url = req.headers.referer;
         shareId = 0,
-        shareCode = utils.composeShareCode(shareId, wcyId, status.user.ID);
+        shareCode = utils.composeShareCode(shareId, wcyId, user.ID);
+
+    if (!user) {
+        return netCommon.invalidOperation(req, res);
+    }
 
     var data = {
         timestamp: utils.createTimestamp(),
@@ -95,9 +111,9 @@ function response(req, res, data, wcyId, authorData) {
         timesCalled: status.timesCalled,
         wcyId: wcyId,
         shareCode: shareCode,
-        userID: status.user.ID,
+        userID: user.ID,
         authorID: authorData.ID,
-        isPlayOnly: (status.user.ID !== authorData.ID),
+        isPlayOnly: (user.ID !== authorData.ID),
         data: data
     };
 
@@ -118,17 +134,19 @@ function filename2WcyId(filename) {
 }
 
 function sendBackWcy(req, res, wcyId) {
-    var userReady = false,
+    var // userReady = false,
         dataReady,
         authorData,
         error = null,
-        wcyData = null;
-    status.checkUser(req, res, onUserReady);
+        wcyData = null,
+        user;
+
+    // status.checkUser(req, res, onUserReady);
     opusController.getAuthor(wcyId, onGotAuthorData);
     fs.readFile(wcyId2Filename(wcyId), 'utf8', onDataReady);
     function onGotAuthorData(data) {
         authorData = data;
-        if (userReady && dataReady && authorData) {
+        if (dataReady && authorData) {
             doSendBackWcy(error, wcyData);
         }
     }
@@ -137,17 +155,18 @@ function sendBackWcy(req, res, wcyId) {
         dataReady = true;
         error = err;
         wcyData = data;
-        if (userReady && dataReady && authorData) {
+        if (dataReady && authorData) {
             doSendBackWcy(error, wcyData);
         }
     }
 
-    function onUserReady() {
-        userReady = true;
-        if (userReady && dataReady && authorData) {
-            doSendBackWcy(error, wcyData);
-        }
-    }
+    //function onUserReady() {
+    //    user = status.getUserInfo(req, res);
+    //    userReady = true;
+    //    if (userReady && dataReady && authorData) {
+    //        doSendBackWcy(error, wcyData);
+    //    }
+    //}
 
     function doSendBackWcy(err, data) {
         if (err) {
@@ -155,12 +174,12 @@ function sendBackWcy(req, res, wcyId) {
             data = defaultWcyData;
         }
 
-        if (status.isRegisteredUser()) {
+        // if (user && user.isRegistered) {
             response(req, res, data, wcyId, authorData);
-        } else {
-            response(req, res, data, wcyId, authorData);
-            console.log("对于非注册用户， 如何处理？");
-        }
+        //} else {
+        //    response(req, res, data, wcyId, authorData);
+        //    console.log("对于非注册用户， 如何处理？");
+        //}
     }
 }
 
