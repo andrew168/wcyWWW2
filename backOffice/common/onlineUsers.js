@@ -7,6 +7,8 @@
 
 var onlineUsers = [];
 function add(aUser) {
+    console.log("before add:" + JSON.stringify(onlineUsers));
+    console.log("new user:" + JSON.stringify(aUser));
     onlineUsers[aUser.tokenID] = aUser;
 }
 
