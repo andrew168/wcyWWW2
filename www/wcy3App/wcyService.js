@@ -49,7 +49,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function create(option) {
-        if (needToSave()) {
+        if (TQ.userProfile.loggedIn && needToSave()) {
             return save().then(function () {
                 create(option); // 数据已经保存，到内存， 网络上传还需要时间
             }, _onFail);
@@ -85,6 +85,9 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function save() {
+        if (!TQ.userProfile.loggedIn) {
+            return TQ.MessageBox.prompt("Login in first!");
+        }
         if (TQ.Config.LocalCacheEnabled) {
             saveToCache();
         }
@@ -107,7 +110,7 @@ function WCY($http, FileService, WxService, NetService) {
             });
     }
     function getWcy(shareString) {
-        if (needToSave()) {
+        if (TQ.userProfile.loggedIn && needToSave()) {
             return save().then(function () {
                 getWcy(shareString);
             });
@@ -209,7 +212,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function start() {
-        if (needToSave()) {
+        if (TQ.userProfile.loggedIn && needToSave()) {
             return save().then(function () {
                 start();
             });
@@ -280,7 +283,7 @@ function WCY($http, FileService, WxService, NetService) {
             writeCache(_FILENAME, currScene.filename);
             currScene.hasSavedToCache = true;
             updateWxShareData();
-            if (isNewOpus()) {
+            if (TQ.userProfile.loggedIn && isNewOpus()) {
                 save();
             }
         }
