@@ -18,13 +18,14 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
                 StatusBar.styleLightContent();
             }
 
-            if (!DeviceService.isReady()) {
-                // $cordovaProgress.showSimple(true);
-                ionic.Platform.ready(AppService.init);
-            } else {
-                AppService.init();
-            }
-
+            angular.element(document).ready(function(){
+                if (!DeviceService.isReady()) {
+                    // $cordovaProgress.showSimple(true);
+                    ionic.Platform.ready(AppService.init);
+                } else {
+                    AppService.init();
+                }
+            });
         });
     })
 
