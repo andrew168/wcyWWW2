@@ -227,6 +227,10 @@
             workCounter = readCacheWithParse("workCounter", 0);
         }
 
+        function reload() { // 用于 登录之后的刷新
+            onMatChanged();
+        }
+
         return {
             initialize: initialize,
             getProps: getProps,
@@ -235,6 +239,7 @@
             deleteWork: deleteWork,
             cloneWork: cloneWork,
             generateUUID: generateUUID,
+            reload: reload,
             toScreenshotName: toScreenshotName,
             toWcyName: toWcyName
         };
