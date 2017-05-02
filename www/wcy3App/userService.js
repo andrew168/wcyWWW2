@@ -7,11 +7,12 @@ UserService.$inject = ['$http'];
 function UserService($http) {
     var user = TQ.userProfile;
 
-    function tryAutoLogin() {
-        if ((!user.name) || (!user.ID) || (!user.keepMeLogin)) {
-            return false;
-        }
+    function canAutoLogin() {
+        return  ((!!user.name) && (!!user.ID) && (!!user.keepMeLogin));
+    }
 
+    function tryAutoLogin() {
+        TQ.AssertExt.invalidLogic(canAutoLogin(), "must call canAutoLogin to determine");
         var url = TQ.Config.AUTH_HOST + '/user/autologin/' + user.name + '/' + user.ID;
         return $http.get(url)
             .then(onLoginDone);
@@ -67,6 +68,7 @@ function UserService($http) {
     }
 
     return {
+        canAutoLogin: canAutoLogin,
         tryAutoLogin: tryAutoLogin,
         checkName: checkName,
         login: login,

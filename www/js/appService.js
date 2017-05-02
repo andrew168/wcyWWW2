@@ -55,7 +55,14 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     }
 
     function _init() {
-            UserService.tryAutoLogin();
+        if (UserService.canAutoLogin()) {
+            UserService.tryAutoLogin().then(doInit);
+        } else {
+            doInit();
+        }
+    }
+
+    function doInit() {
             if (_initialized) {
                 TQ.Log.error("Duplicated call in _init");
                 return;

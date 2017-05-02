@@ -33,13 +33,6 @@ function DashCtrl(
 
     // AppService.onAppStarting(onAppStaring);
     // AppService.onAppStarted(onAppStarted);
-    if (!DeviceService.isReady()) {
-        // $cordovaProgress.showSimple(true);
-        ionic.Platform.ready(AppService.init);
-    } else {
-        AppService.init();
-    }
-
     if (TQ.Config.TECH_TEST1_LOCAL_CACHE_ON) {
         $(document).ready(function () {
             $('#clear_cache').click(function (e) {
