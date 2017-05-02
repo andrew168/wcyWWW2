@@ -141,6 +141,7 @@ var TQ = TQ || {};
     function onTouchStart(e) { // ==mouse的onPressed，
         if (e.type === 'mousedown') {
             document.addEventListener('keyup', onKeyUp);
+            document.addEventListener('mouseup', onKeyUp);
         }
 
         console.log("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
@@ -163,6 +164,8 @@ var TQ = TQ || {};
         if (startEle) {
             startTrsa.needReset = true;
         }
+        document.removeEventListener('keyup', onKeyUp);
+        document.removeEventListener('mouseup', onKeyUp);
     }
 
     function onTouchEnd(e) {// ==mouse的onUp，
