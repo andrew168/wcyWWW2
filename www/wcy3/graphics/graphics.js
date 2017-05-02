@@ -21,9 +21,14 @@ TQ.Graphics = (function () {
         getCanvasBkgColor: getCanvasBkgColor,
         getCanvasWidth: getCanvasWidth,
         getCanvasHeight: getCanvasHeight,
+        getStage: getStage,
         setCanvas: setCanvas,
         findElementAtZ: findElementAtZ
     };
+
+    function getStage() {
+        return stageContainer;
+    }
 
     function getCanvas() {
         if (!_canvas) {

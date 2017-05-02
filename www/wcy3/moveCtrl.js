@@ -22,7 +22,6 @@ window.TQ = window.TQ || {};
         _direction;
 
     function initialize(aStage) {
-        _stage = aStage;
         _queue.splice(0);
         _direction = 1;
     }
@@ -128,6 +127,10 @@ window.TQ = window.TQ || {};
 
     function _moveZOne(ele)
     {
+        if (!_stage) {
+            _stage = TQ.Graphics.getStage();
+        }
+
         if (!ele.displayObj) return;
         var id = _stage.getChildIndex(ele.displayObj);
         if (id >= 0) {
@@ -141,6 +144,10 @@ window.TQ = window.TQ || {};
     }
 
     function _flush() {
+        if (!_stage) {
+            _stage = TQ.Graphics.getStage();
+        }
+
         var num = _queue.length;
         if (num > 0) {
             if (_direction < 0) {
@@ -168,6 +175,10 @@ window.TQ = window.TQ || {};
 
     function _doMoveZOne(ele, step)
     {
+        if (!_stage) {
+            _stage = TQ.Graphics.getStage();
+        }
+
         var target = ele.displayObj;
         if (!target) return;
         var id = _stage.getChildIndex(target);
