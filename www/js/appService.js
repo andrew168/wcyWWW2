@@ -15,7 +15,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         var _state = STATE_LOADED,
             _initialized = false,
             _onAppStarting = null,
-            _onAppStarted = onAppStartDefault;
+            _onAppStarted = null; // onAppStartDefault;
 
         function configCanvas() {
             updateDeviceInfo();
@@ -88,7 +88,10 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 onFileSystemReady();
             }
 
-            _state = STATE_STARTING;
+            if (_state < STATE_STARTING) { // 由于autoLogin的影响， 可能此段函数被滞后了。
+                _state = STATE_STARTING
+            }
+
             if (_onAppStarting) {
                 _onAppStarting();
             }
@@ -142,14 +145,15 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         function setOnAppStarted(fn) {
             _onAppStarted = fn;
             if (_state === STATE_STARTED) {
-                $timeout(function () {
-                    _onAppStarted();
-                });
+                _onAppStarted();
             }
         }
 
         function setOnAppStarting(fn) {
             _onAppStarting = fn;
+            if (_state >= STATE_STARTING) {
+                _onAppStarting();
+            }
         }
 
         return {
