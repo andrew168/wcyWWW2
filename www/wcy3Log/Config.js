@@ -112,7 +112,7 @@ window.TQ = window.TQ || {};
 
     Config.hightlightOn = true;
     Config.useHighlightBox = false;  // 不显示red的亮显box
-    Config.koutuOn = false;  // 默认是不抠图， 如果打开，则自动抠图， 并且自动剔除周边的空白
+    Config.koutuOn = false; // 默认是不抠图， 如果打开，则自动抠图， 并且自动剔除周边的空白
     Config.textBubbleOn = false;
     Config.useCreateJSFullContainer = false; // 不把ele放到group container的displayObj中， 而是仍然放在stageContainer中
     Config.ignoreCachedFile = true;  //忽略保存在cache中的文件数据， 等用户ID系统正常使用之后， 再考虑如何启用它。
@@ -120,6 +120,7 @@ window.TQ = window.TQ || {};
 
     //
     Config.hasWx = true;  //如果在微信之外使用，则自动关闭此功能： 支持微信服务器绑定，绑定到 udoido
+    Config.hasFacebook = false; // 中国没有fb,
     Config.wx = {appId: 'wx5fe65e70536d0258'}; // udoido
     Config.hasAudioRecording = false;  // 没有录音功能
     Config.ChromeFileEnabled = true;

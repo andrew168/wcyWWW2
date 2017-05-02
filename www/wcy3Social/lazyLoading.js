@@ -35,6 +35,8 @@ TQ.LazyLoading = (function(){
     }
 
     function start() {
-        TQ.LazyLoading.loadOne("/wcy3Social/fb.js");
+        if (TQ.Config.hasFacebook) {
+            TQ.LazyLoading.loadOne("/wcy3Social/fb.js");
+        }
     }
 })();
