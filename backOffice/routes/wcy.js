@@ -95,10 +95,11 @@ function resWcySaved(req, res, wcyId, ssPath, msg) {
 /// private function:
 function response(req, res, data, wcyId, authorData) {
     var user = status.getUserInfo(req, res),
+        userID = (!user) ? 0 : user.ID,
         url = req.headers.origin,
     // var url = req.headers.referer;
         shareId = 0,
-        shareCode = utils.composeShareCode(shareId, wcyId, user.ID);
+        shareCode = utils.composeShareCode(shareId, wcyId, userID);
 
     if (!user) {
         return netCommon.invalidOperation(req, res);
@@ -111,9 +112,9 @@ function response(req, res, data, wcyId, authorData) {
         timesCalled: status.timesCalled,
         wcyId: wcyId,
         shareCode: shareCode,
-        userID: user.ID,
+        userID: userID,
         authorID: authorData.ID,
-        isPlayOnly: (user.ID !== authorData.ID),
+        isPlayOnly: (userID !== authorData.ID),
         data: data
     };
 
