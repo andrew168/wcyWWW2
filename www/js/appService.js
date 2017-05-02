@@ -9,7 +9,11 @@ AppService.$inject = ['$stateParams', '$timeout', 'WCY', 'NetService', 'DeviceSe
 function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
               Setup, UserService) {
 
-        var _initialized = false,
+        var STATE_LOADED = 1,
+            STATE_STARTING = 2,
+            STATE_STARTED = 3;
+        var _state = STATE_LOADED,
+            _initialized = false,
             _onAppStarting = null,
             _onAppStarted = onAppStartDefault;
 
@@ -84,6 +88,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 onFileSystemReady();
             }
 
+            _state = STATE_STARTING;
             if (_onAppStarting) {
                 _onAppStarting();
             }
@@ -112,6 +117,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                     _onAppStarted();
                 });
             }
+            _state = STATE_STARTED;
         }
 
         function onAppStartDefault() {
@@ -135,6 +141,11 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
 
         function setOnAppStarted(fn) {
             _onAppStarted = fn;
+            if (_state === STATE_STARTED) {
+                $timeout(function () {
+                    _onAppStarted();
+                });
+            }
         }
 
         function setOnAppStarting(fn) {
