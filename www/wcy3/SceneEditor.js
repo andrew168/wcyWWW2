@@ -15,6 +15,8 @@ var currScene = null;
 
     // 接口
     SceneEditor.turnOnEditor = turnOnEditor;
+    SceneEditor.startTouchMgr = startTouchMgr;
+    SceneEditor.stopTouchMgr = stopTouchMgr;
 
     SceneEditor.showWcy = function (fileInfo) {
         if (fileInfo.isPlayOnly === undefined) {
@@ -188,8 +190,15 @@ var currScene = null;
         TQ.TrackRecorder.initialize();
         TQ.ActionRecorder.initialize();
         TQ.SelectSet.initialize();
-        TQ.TouchManager.initialize();
         TQ.AnimationManager.initialize();
+    }
+
+    function startTouchMgr() {
+        TQ.TouchManager.start();
+    }
+
+    function stopTouchMgr() {
+        TQ.TouchManager.stop();
     }
 
     function openScene(fileInfo) {

@@ -5,6 +5,7 @@ var TQ = TQ || {};
     }
 
     var enableTouchScreen = true,
+        initialized = false,
         started = false,
         canvas = null,
         currentOps = null,
@@ -49,6 +50,7 @@ var TQ = TQ || {};
         }
         disableBodyScrollInIOS();
         disableBrowserZooming();
+        initialized = true;
         start();
     }
 
@@ -147,10 +149,20 @@ var TQ = TQ || {};
         console.log("event not handled: " + e.type + ", " + (e.touches? e.touches.length: 0));
     }
 
+    function hasStarted() {
+        return started;
+    }
+
+    function hasInitialized() {
+        return initialized;
+    }
+
     TouchManager.addHandler = addHandler;
     TouchManager.attachHandler = addHandler;
     TouchManager.detachHandler = detachHandler;
     TouchManager.initialize = initialize;
+    TouchManager.hasStarted = hasStarted;
+    TouchManager.hasInitialized = hasInitialized;
     TouchManager.start = start;
     TouchManager.stop = stop;
     TouchManager.updateOps = updateOps;
