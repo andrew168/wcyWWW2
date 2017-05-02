@@ -320,7 +320,7 @@ window.TQ = window.TQ || {};
         if (isChrome()) {
             Utility.setEnv(Utility.BR_CHROME);
             supported = true;
-        } else if (isSafari()) {
+        } else if (isMacSafari()) {
             Utility.setEnv(Utility.BR_SAFARI);
             supported = true;
         }
@@ -355,18 +355,14 @@ window.TQ = window.TQ || {};
         // http://stackoverflow.com/questions/4565112/javascript-how-to-find-out-if-the-user-browser-is-chrome/13348618#13348618
     }
 
-    function isSafari() {
-        var ua = navigator.userAgent.toLowerCase(),
-            result = false;
-
-        if (ua.indexOf('safari') != -1) {
-            if (ua.indexOf('chrome') > -1) {
-                result = false;
-            } else {
-                result = true;
-            }
-        }
+    function isMacSafari() {
+        var ua = navigator.userAgent.toLowerCase();
+        return ((ua.indexOf('mac os x') > -1) &&
+        (ua.indexOf('macintosh') > -1) &&
+        (ua.indexOf('applewebkit') > -1) &&
+        (ua.indexOf('safari') > -1));
     }
+
     Utility.CheckUserRight = function() {
         var userID = Utility.getUserID();
         // ToDo: 使用数据库
