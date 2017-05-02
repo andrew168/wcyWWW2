@@ -9,12 +9,10 @@ window.TQ = window.TQ || {};
 (function () {
     var SkinningCtrl = { };
     SkinningCtrl.hasNew = false;
-    SkinningCtrl._stage = null;
     SkinningCtrl._scene = null;
     SkinningCtrl._hostObj = null;
     SkinningCtrl.isWorking = false;
     SkinningCtrl.initialize = function(aStage, scene) {
-        SkinningCtrl._stage = aStage;
         SkinningCtrl._scene = scene;
     };
 

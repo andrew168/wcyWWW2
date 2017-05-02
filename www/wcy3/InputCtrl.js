@@ -8,7 +8,6 @@ window.TQ = window.TQ || {};
 
 (function () {
     var InputCtrl = { };
-    InputCtrl._stage = null;
     InputCtrl.MODE_ROTATE = 1;
     InputCtrl.MODE_SCALE = 2;
     InputCtrl.mode = InputCtrl.MODE_ROTATE;
@@ -34,8 +33,6 @@ window.TQ = window.TQ || {};
 
     InputCtrl.leaveTraceOn = false; // 不绘制运动轨迹
     InputCtrl.initialize = function(aStage) {
-        InputCtrl._stage = aStage;
-        InputCtrl._stage = null;
         InputCtrl.MODE_ROTATE = 1;
         InputCtrl.MODE_SCALE = 2;
         InputCtrl.mode = InputCtrl.MODE_ROTATE;
