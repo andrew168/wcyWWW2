@@ -71,9 +71,7 @@ function getList(user, callback) {
             }
             var result = getLatest(data);
             if (result.length === 0) {
-                if (userId) {
-                    return getList(null, callback);
-                }
+                console.log("no opus found!, should has at least one demo or published");
             }
             callback(result);
         });

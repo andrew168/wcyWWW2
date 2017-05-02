@@ -5,11 +5,14 @@
  如果连续N小时不活跃， 则踢出去。
  */
 
-var onlineUsers = [];
+var onlineUsers = {};
 function add(aUser) {
     console.log("before add:" + JSON.stringify(onlineUsers));
+    console.log("before add2:" + JSON.stringify(onlineUsers[aUser.tokenID]));
     console.log("new user:" + JSON.stringify(aUser));
     onlineUsers[aUser.tokenID] = aUser;
+    console.log("after :" + JSON.stringify(onlineUsers));
+    console.log("after add2:" + JSON.stringify(onlineUsers[aUser.tokenID]));
 }
 
 function get(id) {

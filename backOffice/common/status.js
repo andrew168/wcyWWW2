@@ -18,7 +18,9 @@ var user = {
 function onSignUp(req, res, data) {
     var user = {};
     if (!!data.result && data.loggedIn) {
-        user.loggedIn = false;
+        var tokenID = getCookieNumber(req, 'tokenID', 0),
+            token = getCookieString(req, 'token', 0);
+        user.loggedIn = true;
         user.ID = data.ID;
         user.name = data.name;
         user.isRegistered = true;
@@ -27,8 +29,8 @@ function onSignUp(req, res, data) {
         user.canRefine = data.canRefine;
         user.canBan = data.canBan;
         user.canAdmin = data.canAdmin;
-        user.tokenID = generateTokenID(user);
-        user.token = generateToken(user);
+        user.tokenID = tokenID || data. generateTokenID(user);
+        user.token = token || generateToken(user);
         setUserCookie(user, res);
         onlineUsers.add(user);
     } else {
