@@ -29,7 +29,7 @@ function onSignUp(req, res, data) {
         user.canRefine = data.canRefine;
         user.canBan = data.canBan;
         user.canAdmin = data.canAdmin;
-        user.tokenID = tokenID || data. generateTokenID(user);
+        user.tokenID = tokenID || generateTokenID(user);
         user.token = token || generateToken(user);
         setUserCookie(user, res);
         onlineUsers.add(user);
