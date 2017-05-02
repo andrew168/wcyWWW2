@@ -184,12 +184,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             }
             TQ.LazyLoading.start();
 
-            if (!TQ.TouchManager.hasInitialized()) {
+            if (!TQ.TouchManager.hasInitialized() && !TQ.WCY.isPlayOnly ) {
                 TQ.TouchManager.initialize();
             }
 
-            if (!TQ.TouchManager.hasStarted()) {
+            if (!TQ.TouchManager.hasStarted() && !TQ.WCY.isPlayOnly) {
                 TQ.SceneEditor.startTouchMgr();
+            }
+
+            if (TQ.TouchManager.hasStarted() && TQ.WCY.isPlayOnly) {
+                TQ.SceneEditor.stopTouchMgr();
             }
 
             // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
