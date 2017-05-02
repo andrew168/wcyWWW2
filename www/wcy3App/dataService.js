@@ -186,6 +186,9 @@
 
             function onSuccess(response) {
                 var data = (response.status === 200) ? response.data : [];
+                if (!Array.isArray(data)) {
+                    data = [];
+                }
                 mats.setList(data);
                 state |= stateType;
                 if (state === READ_ALL) {
@@ -203,6 +206,10 @@
             function onSuccess(response) {
                 var data = (response.status === 200) ? response.data : [],
                     selected = [];
+
+                if (!Array.isArray(data)) {
+                    data = [];
+                }
 
                 data.forEach(function(item) {
                     selected.push({wcyId: item._id, path: item.ssPath});
