@@ -409,7 +409,9 @@ function WCY($http, FileService, WxService, NetService) {
         parseCommonData(data);
         TQ.WCY.isPlayOnly = data.isPlayOnly;
         TQ.WCY.authorID = data.authorID;
-        _openInJson(data.data);
+        if (!!data.data) {
+            _openInJson(data.data);
+        }
     }
 
     function _openInJson(content) {

@@ -101,10 +101,6 @@ function response(req, res, data, wcyId, authorData) {
         shareId = 0,
         shareCode = utils.composeShareCode(shareId, wcyId, userID);
 
-    if (!user) {
-        return netCommon.invalidOperation(req, res);
-    }
-
     var data = {
         timestamp: utils.createTimestamp(),
         url: 'url' + url,
