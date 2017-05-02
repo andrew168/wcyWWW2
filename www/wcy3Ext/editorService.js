@@ -183,22 +183,20 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 StatService.startToShow();
             }
             TQ.LazyLoading.start();
-
-            if (!TQ.TouchManager.hasInitialized() && !TQ.WCY.isPlayOnly ) {
-                TQ.TouchManager.initialize();
-            }
-
-            if (!TQ.TouchManager.hasStarted() && !TQ.WCY.isPlayOnly) {
-                TQ.SceneEditor.startTouchMgr();
-            }
-
-            if (TQ.TouchManager.hasStarted() && TQ.WCY.isPlayOnly) {
-                TQ.SceneEditor.stopTouchMgr();
-            }
-
             // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
             // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
+        }
 
+        if (!TQ.TouchManager.hasInitialized() && !TQ.WCY.isPlayOnly) {
+            TQ.TouchManager.initialize();
+        }
+
+        if (!TQ.TouchManager.hasStarted() && !TQ.WCY.isPlayOnly) {
+            TQ.SceneEditor.startTouchMgr();
+        }
+
+        if (TQ.TouchManager.hasStarted() && TQ.WCY.isPlayOnly) {
+            TQ.SceneEditor.stopTouchMgr();
         }
 
         if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
