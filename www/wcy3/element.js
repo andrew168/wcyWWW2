@@ -672,6 +672,7 @@ window.TQ = window.TQ || {};
         marker.level = this.level;
         marker.reset();
         marker.createImage();
+        marker._doAddItemToStage(null);
         this.dirty2 = marker.dirty2 = true;
         marker.setFlag(Element.TO_RELATIVE_POSE | Element.CLEAR_ANIMATATION); // 迫使他记录所有的track,
         var isInObjectSpace = true;
