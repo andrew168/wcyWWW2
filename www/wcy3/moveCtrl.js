@@ -6,8 +6,13 @@
 
 window.TQ = window.TQ || {};
 
-(function () {
-    var MoveCtrl = {
+TQ.MoveCtrl = (function () {
+    var TO_TOP = 99999,
+        TO_BOTTOM = -99999,
+        _stage = null,
+        _queue = [],
+        _direction;
+    var _self = {
         initialize: initialize,
         cmdMoveLayer: cmdMoveLayer,
         moveLayer: moveLayer,
@@ -15,11 +20,6 @@ window.TQ = window.TQ || {};
         moveToBottom: moveToBottom,
         moveZ: moveZ
     };
-    var TO_TOP = 99999,
-        TO_BOTTOM = -99999,
-        _stage = null,
-        _queue = [],
-        _direction;
 
     function initialize(aStage) {
         _queue.splice(0);
@@ -195,5 +195,5 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setElement(ele);
     }
 
-    TQ.MoveCtrl = MoveCtrl;
-}) ();
+    return _self;
+})();
