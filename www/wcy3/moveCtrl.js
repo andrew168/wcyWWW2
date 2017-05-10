@@ -11,29 +11,27 @@ TQ.MoveCtrl = (function () {
         TO_BOTTOM = -99999,
         _stage = null,
         _queue = [],
-        _direction;
+        _direction,
+        _accumulateStep = 0, // 连续Z向移动， 距离越远， 移动的越多。与鼠标运动快慢， 一致。
+        _lastItemID = -1;
+
     var _self = {
         initialize: initialize,
         cmdMoveLayer: cmdMoveLayer,
-        moveLayer: moveLayer,
+        onMoveDownLayer: onMoveDownLayer,
+        onMoveUpLayer: onMoveUpLayer,
         moveToTop: moveToTop,
         moveToBottom: moveToBottom,
         moveZ: moveZ
     };
 
-    function initialize(aStage) {
+    function initialize() {
         _queue.splice(0);
         _direction = 1;
+        $(document).mouseup(function () {
+            _accumulateStep = 0;
+        });
     }
-
-    // 连续Z向移动， 距离越远， 移动的越多。
-    // 与鼠标运动快慢， 一致。
-    var _accumulateStep = 0,
-        _lastItemID = -1;
-
-    $(document).mouseup(function () {
-        _accumulateStep = 0;
-    });
 
     function isSameItem(target) {
         return (_lastItemID == target.id);
@@ -53,9 +51,7 @@ TQ.MoveCtrl = (function () {
         }
     }
 
-    /*
-    移动层次，step >= 1： 向上移动1层； step <-1： 向下移动1层
-     */
+    // 移动层次，step >= 1： 向上移动1层； step <-1： 向下移动1层
     function moveLayer(ele, step) {
         var oldZ = (step >0) ? ele.getMaxZ(): ele.getMinZ();  // 防止，目标z落在自身
         if ((oldZ <= 0) && (step <=0)) { // 已经是最底层， 不能再move了
@@ -68,7 +64,7 @@ TQ.MoveCtrl = (function () {
                 TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.CHANGE_LAYER, ele, step, oldZ));
             }
         }
-    };
+    }
 
     function zAdjustForGroup(oldZ, step) {
         var ele = TQ.Graphics.findElementAtZ(oldZ + step);
@@ -90,18 +86,32 @@ TQ.MoveCtrl = (function () {
         _flush();
     }
 
-    /*
-    移动到最顶层
-     */
+    function onMoveUpLayer(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
+        var ele = TQ.SelectSet.peekLatestEditableEle();
+        if (ele) {
+            moveLayer(ele, 1);
+        }
+    }
+
+    function onMoveDownLayer(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
+        var ele = TQ.SelectSet.peekLatestEditableEle();
+        if (ele) {
+            moveLayer(ele, -1);
+        }
+    }
+
     function moveToTop(ele) {
         assertNotNull(TQ.Dictionary.FoundNull, ele);
         if (!ele) return;
         moveLayer(ele, TO_TOP);
     }
 
-    /*
-     移动到最底层
-     */
     function moveToBottom(ele) {
         assertNotNull(TQ.Dictionary.FoundNull, ele);
         if (!ele) return;

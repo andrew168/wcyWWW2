@@ -58,17 +58,10 @@ window.TQ = window.TQ || {};
     }
 
     function onMoveUpLayer(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.MoveCtrl.moveLayer(TQ.FloatToolbar.selectedElement, 1);
+        TQ.AssertExt.depreciated('onMoveUpLayer');
     }
-
     function onMoveDownLayer(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.MoveCtrl.moveLayer(TQ.FloatToolbar.selectedElement, -1);
+        TQ.AssertExt.depreciated('onMoveDownLayer');
     }
 
     function onMoveToTop(evt) {
