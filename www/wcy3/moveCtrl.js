@@ -206,8 +206,10 @@ TQ.MoveCtrl = (function () {
             }
         }
 
-        // 迫使系统再次刷新
-        TQ.DirtyFlag.setElement(lastEditableEle);
+        // 在IOS上， 迫使系统再次刷新,
+        setTimeout(function(){
+            TQ.DirtyFlag.setElement(lastEditableEle);
+        });
     }
 
     function _doMoveZOne(ele, step)
@@ -229,7 +231,7 @@ TQ.MoveCtrl = (function () {
                 }
             }
         }
-        TQ.DirtyFlag.setElement(ele);
+        TQ.DirtyFlag.setElementOnly(ele); // 必须配合setAll,或者setLevel
     }
 
     return _self;

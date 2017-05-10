@@ -8,15 +8,19 @@ var TQ = TQ || {};
     }
 
     DirtyFlag.setElement = setElement;
+    DirtyFlag.setElementOnly = setElementOnly;
     DirtyFlag.setLevel = setLevel;
     DirtyFlag.setScene = setAll;
     DirtyFlag.requestToUpdateAll = requestToUpdateAll;
 
-    function setElement(ele) {
-        // ele.isDirty = true;
+    function setElementOnly(ele) {
         if (!!ele) {
             ele.dirty = true;
         }
+    }
+
+    function setElement(ele) {
+        setElementOnly(ele);
         currScene.isDirty = true;
         currScene.currentLevel.isDirty = true;
     }
