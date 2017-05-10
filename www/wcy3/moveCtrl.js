@@ -67,12 +67,17 @@ TQ.MoveCtrl = (function () {
     }
 
     function zAdjustForGroup(oldZ, step) {
-        var newZ = oldZ + step;
+        var maxZ,
+            newZ = oldZ + step;
         if (newZ < 0) {
             newZ = 0;
+        } else {
+            if (newZ > (maxZ = (_stage.getNumChildren()-1))) {
+                newZ = maxZ;
+            }
         }
 
-        var ele = TQ.Graphics.findElementAtZ(newZ);
+        var ele = TQ.Graphics.findEditableElementBelowZ(newZ);
         if (!ele) {
             step = 0;
         } else if (ele.isComposed()) {
@@ -173,6 +178,7 @@ TQ.MoveCtrl = (function () {
             _stage = TQ.Graphics.getStage();
         }
 
+        var lastEditableEle = null;
         var num = _queue.length;
         if (num > 0) {
             if (_direction < 0) {
@@ -194,8 +200,14 @@ TQ.MoveCtrl = (function () {
             for (var i = 0; i < num; i ++) {
                 var item = _queue.shift();
                 _doMoveZOne(item.ele, step);
+                if (item.ele) {
+                    lastEditableEle = item.ele;
+                }
             }
         }
+
+        // 迫使系统再次刷新
+        TQ.DirtyFlag.setElement(lastEditableEle);
     }
 
     function _doMoveZOne(ele, step)

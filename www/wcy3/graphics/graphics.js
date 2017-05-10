@@ -23,7 +23,7 @@ TQ.Graphics = (function () {
         getCanvasHeight: getCanvasHeight,
         getStage: getStage,
         setCanvas: setCanvas,
-        findElementAtZ: findElementAtZ
+        findEditableElementBelowZ: findEditableElementBelowZ
     };
 
     function getStage() {
@@ -186,9 +186,16 @@ TQ.Graphics = (function () {
     }
 
     // stage
-    function findElementAtZ(z) {
-        var displayObj = stageContainer.getChildAt(z),
+    function findEditableElementBelowZ(z) {
+        var displayObj,
+            ele;
+
+        do {
+            displayObj = stageContainer.getChildAt(z);
             ele = (!displayObj) ? null:  displayObj.ele;
+            z--;
+        } while ((z >= 0) && ele.isMarker());
+
         while (ele && ele.parent) {
             ele = ele.parent;
         }
