@@ -320,7 +320,7 @@ function WCY($http, FileService, WxService, NetService) {
         if (!!data) {
             if (!!data.url) {
                 currScene.setSsPath(data.url);
-                TQ.MessageBox.prompt('截图上传成功！');
+                TQ.MessageBox.prompt(TQ.Locale.getStr('screenshot uploaded successfully!'));
                 save();
             } else {
                 TQ.MessageBox.hide();
