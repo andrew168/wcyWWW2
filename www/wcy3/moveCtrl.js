@@ -20,8 +20,8 @@ TQ.MoveCtrl = (function () {
         cmdMoveLayer: cmdMoveLayer,
         onMoveDownLayer: onMoveDownLayer,
         onMoveUpLayer: onMoveUpLayer,
-        moveToTop: moveToTop,
-        moveToBottom: moveToBottom,
+        onMoveToTop: onMoveToTop,
+        onMoveToBottom: onMoveToBottom,
         moveZ: moveZ
     };
 
@@ -67,11 +67,18 @@ TQ.MoveCtrl = (function () {
     }
 
     function zAdjustForGroup(oldZ, step) {
-        var ele = TQ.Graphics.findElementAtZ(oldZ + step);
+        var newZ = oldZ + step;
+        if (newZ < 0) {
+            newZ = 0;
+        }
+
+        var ele = TQ.Graphics.findElementAtZ(newZ);
         if (!ele) {
             step = 0;
         } else if (ele.isComposed()) {
-            var newZ = (step > 0) ? ele.getMaxZ() : ele.getMinZ();
+            newZ = (step > 0) ? ele.getMaxZ() : ele.getMinZ();
+            step = newZ - oldZ;
+        } else {
             step = newZ - oldZ;
         }
         return step;
@@ -106,16 +113,24 @@ TQ.MoveCtrl = (function () {
         }
     }
 
-    function moveToTop(ele) {
-        assertNotNull(TQ.Dictionary.FoundNull, ele);
-        if (!ele) return;
-        moveLayer(ele, TO_TOP);
+    function onMoveToTop(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
+        var ele = TQ.SelectSet.peekLatestEditableEle();
+        if (ele) {
+            moveLayer(ele, TO_TOP);
+        }
     }
 
-    function moveToBottom(ele) {
-        assertNotNull(TQ.Dictionary.FoundNull, ele);
-        if (!ele) return;
-        moveLayer(ele, TO_BOTTOM);
+    function onMoveToBottom(evt) {
+        evt.stopPropagation();
+        evt.preventDefault();
+        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
+        var ele = TQ.SelectSet.peekLatestEditableEle();
+        if (ele) {
+            moveLayer(ele, TO_BOTTOM);
+        }
     }
 
     function _doMoveZ(ele, step) {

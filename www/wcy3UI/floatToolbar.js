@@ -65,17 +65,11 @@ window.TQ = window.TQ || {};
     }
 
     function onMoveToTop(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.MoveCtrl.moveToTop(TQ.FloatToolbar.selectedElement);
+        TQ.AssertExt.depreciated('onMoveDownLayer');
     }
 
     function onMoveToBottom(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.MoveCtrl.moveToBottom(TQ.FloatToolbar.selectedElement);
+        TQ.AssertExt.depreciated('onMoveDownLayer');
     }
 
     function onDelete(evt) {
