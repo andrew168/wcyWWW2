@@ -182,9 +182,9 @@ TQ.MoveCtrl = (function () {
         var num = _queue.length;
         if (num > 0) {
             if (_direction < 0) {
-                _queue.sort(function(a, b) {return a.id >= b.id;})
+                _queue.sort(function(a, b) {return a.id - b.id;})
             } else {
-                _queue.sort(function(a, b) {return a.id <= b.id;})
+                _queue.sort(function(a, b) {return b.id - a.id;})
             }
             var step = _direction;
             // 上移一层但是已经到顶，或者下移一层但是已经到底， 就不再操作）
