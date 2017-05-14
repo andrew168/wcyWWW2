@@ -53,6 +53,10 @@ TQ.MoveCtrl = (function () {
 
     // 移动层次，step >= 1： 向上移动1层； step <-1： 向下移动1层
     function moveLayer(ele, step) {
+        if (!_stage) {
+            _stage = TQ.Graphics.getStage();
+        }
+
         var oldZ = (step >0) ? ele.getMaxZ(): ele.getMinZ();  // 防止，目标z落在自身
         if ((oldZ <= 0) && (step <=0)) { // 已经是最底层， 不能再move了
             TQ.MessageBox.toast(TQ.Locale.getStr('already in lowest layer!'));
@@ -91,6 +95,10 @@ TQ.MoveCtrl = (function () {
 
     // 下面的函数只被command所调用, 不会被其它函数调用
     function cmdMoveLayer(ele, step) {
+        if (!_stage) {
+            _stage = TQ.Graphics.getStage();
+        }
+
         assertNotNull(TQ.Dictionary.FoundNull, ele);
         if (!ele) return;
         _openQueue(step);
