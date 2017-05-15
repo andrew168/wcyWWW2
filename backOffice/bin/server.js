@@ -1,13 +1,20 @@
 var debug = require('debug')('iCardSvr2:vHostServer');
 var http = require('http');
 var vhost = require('vhost');
-var express = require('express');
+var express = require('express'),
+    gracefulExit = require('express-graceful-exit'),
+    onlineUsers = require('../common/onlineUsers');
 
 var vHostServer;
 var config = {port: 80};
 var app = express();
-
+var shuttingDown = false;
+onlineUsers.restore();
+app.use(gracefulExit.middleware(app)); //!!! gracefulExit 必须是app的第一个配置
 app.use(function(req, res, next) {
+    if (shuttingDown) {
+        return;
+    }
     next();
 });
 
@@ -24,6 +31,15 @@ function init() {
     console.info("process.env.PORT = " + process.env.PORT);
     config.port = normalizePort(process.env.PORT || config.port);
     app.set('port', config.port);
+    process.on('SIGINT', function() {
+        console.log("received SIGINT...");
+        onShotdown();
+    });
+
+    process.on('SIGTERM', function () {
+        console.log("received Terminate...");
+        onShotdown();
+    });
 
     /**
      * Create HTTP vHostServer.
@@ -69,13 +85,14 @@ function onError(error) {
     switch (error.code) {
         case 'EACCES':
             console.error(bind + ' requires elevated privileges');
-            process.exit(1);
+            onShotdown();
             break;
         case 'EADDRINUSE':
             console.error(bind + ' is already in use');
-            process.exit(1);
+            onShotdown();
             break;
         default:
+            onShotdown();
             throw error;
     }
 }
@@ -90,4 +107,29 @@ function onListening() {
         ? 'pipe ' + addr
         : 'port ' + addr.port;
     debug('Listening on ' + bind);
+}
+
+function onShotdown() {
+    if (shuttingDown) {
+        return;
+    }
+
+    console.log("prepare to shut dwon server ...");
+    shuttingDown = true;
+    if (onlineUsers) {
+        onlineUsers.save();
+    }
+
+    console.log("shutting dwon server gracefully...!");
+    gracefulExit.gracefulExitHandler(app, vHostServer, {
+        // socketio: app.settings.socketio,
+        exitProcess: false,
+        suicideTimeout: 130 * 1000, // ms
+        callback: onShutdownSuccessfully
+    });
+}
+
+function onShutdownSuccessfully(statusCode) {
+    console.info("Shutdown successfully!" + statusCode);
+    process.exit(statusCode);
 }
