@@ -9,32 +9,32 @@ var fs = require('fs'),
     tempFileName = "/data/onlineUserDump.txt",
     dataReady = false,
     readyToStop = false,
-    onlineUsers = null;
+    users = null;
 
 function add(aUser) {
-    if (!onlineUsers) {
+    if (!users) {
         console.error(" not ready");
         return;
     }
 
-    console.log("before add:" + JSON.stringify(onlineUsers));
-    console.log("before add2:" + JSON.stringify(onlineUsers[aUser.tokenID]));
+    console.log("before add:" + JSON.stringify(users));
+    console.log("before add2:" + JSON.stringify(users[aUser.tokenID]));
     console.log("new user:" + JSON.stringify(aUser));
-    onlineUsers[aUser.tokenID] = aUser;
-    console.log("after :" + JSON.stringify(onlineUsers));
-    console.log("after add2:" + JSON.stringify(onlineUsers[aUser.tokenID]));
+    users[aUser.tokenID] = aUser;
+    console.log("after :" + JSON.stringify(users));
+    console.log("after add2:" + JSON.stringify(users[aUser.tokenID]));
 }
 
 function get(id) {
-    if (!onlineUsers) {
+    if (!users) {
         console.error(" not ready");
         return;
     }
 
-    if (!onlineUsers[id]) {
+    if (!users[id]) {
         return null;
     }
-    return onlineUsers[id];
+    return users[id];
 }
 
 function remove() {
@@ -42,22 +42,26 @@ function remove() {
 }
 
 function getValidUser(tokenID, token, userID) {
-    if (!onlineUsers) {
+    if (!users) {
         console.error(" not ready");
         return null;
     }
 
-    var candidate = onlineUsers[tokenID];
+    var candidate = users[tokenID];
     if (!candidate || (candidate.ID !== userID) || (candidate.token !==token)) {
         candidate = null;
     }
     return candidate;
 }
 
-function save() {
+function save(callback) {
     function onSaved() {
         readyToStop = true;
+        if (callback) {
+            callback();
+        }
     }
+
     if (onlineUsers) {
         fs.writeFile(tempFileName, JSON.stringify(onlineUsers), onSaved);
     } else {
@@ -67,11 +71,13 @@ function save() {
 
 function restore() {
     function setup(err, data) {
-        onlineUsers = (!err && data) ? JSON.parse(data): {};
-        if (!onlineUsers) { // 防止 "null"
-            onlineUsers = {};
+        users = (!err && data) ? JSON.parse(data): {};
+        if (!users) { // 防止 "null"
+            users = {};
         }
         dataReady = true;
+
+        console.log("restored users = " + JSON.stringify(users));
     }
     try {
         fs.readFile(tempFileName, 'utf8', setup);
