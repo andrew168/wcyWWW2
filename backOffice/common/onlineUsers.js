@@ -62,8 +62,8 @@ function save(callback) {
         }
     }
 
-    if (onlineUsers) {
-        fs.writeFile(tempFileName, JSON.stringify(onlineUsers), onSaved);
+    if (users) {
+        fs.writeFile(tempFileName, JSON.stringify(users), onSaved);
     } else {
         onSaved();
     }
