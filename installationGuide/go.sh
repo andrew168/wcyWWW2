@@ -9,11 +9,11 @@ unzip -o releaseAll1.0.0.zip
 rm releaseAll1.0.0.zip
 
 mv /home/guopengch/wwwArts.zip .
-unzip -o wwwArts.zip 
+unzip -o wwwArts.zip
 rm wwwArts.zip
 
 mv /home/guopengch/www.zip .
-unzip -o www.zip 
+unzip -o www.zip
 rm www.zip
 
 #
@@ -28,7 +28,7 @@ mv /home/guopengch/wcy3all.min.css .
 mv /home/guopengch/libs.js .
 
 #
-# 后台： 
+# 后台：
 #
 
 cd /data/wwwz/card2/backoffice
@@ -50,5 +50,5 @@ rm wwwKs.zip
 #
 killall node
 cd /data/wwwz/card2
-node backoffice/bin/server.js
+nohup node backoffice/bin/server.js
 
