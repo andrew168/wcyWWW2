@@ -1631,16 +1631,17 @@ a.weui-media-box:active {
 }
 .weui-dialog {
   position: fixed;
-  z-index: 5000;
+  z-index: 8000;  /*必须 与 dlg-layer一致 */
   width: 80%;
-  max-width: 300px;
+  max-width: 500px;
   top: 50%;
   left: 50%;
   -webkit-transform: translate(-50%, -50%);
           transform: translate(-50%, -50%);
-  background-color: #FFFFFF;
+  background-color: silver;
   text-align: center;
   border-radius: 3px;
+  border: 5px solid #888888;
   overflow: hidden;
 }
 .weui-dialog__hd {
