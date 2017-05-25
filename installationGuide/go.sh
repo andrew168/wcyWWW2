@@ -1,7 +1,8 @@
 #!/bin/sh
 
 #
-# 前台： 解压所有的zip文件（可能不存在）
+# 前台： 解压所有的zip文件（可能不存在）,
+# 放到： wwwz/card2/www目录下
 #
 cd /data/wwwz/card2/www
 mv /home/guopengch/releaseAll1.0.0.zip .
@@ -18,19 +19,11 @@ rm www.zip
 
 #
 # 前台：搬移 index和lib
-#
-mv /home/guopengch/index.html .
-
-cd lib
-mv /home/guopengch/wcy3all.js .
-mv /home/guopengch/wcy3all.min.js .
-mv /home/guopengch/wcy3all.min.css .
-mv /home/guopengch/libs.js .
+# 
 
 #
 # 后台：
 #
-
 cd /data/wwwz/card2/backoffice
 mv /home/guopengch/backOffice.zip .
 unzip -o backOffice.zip
