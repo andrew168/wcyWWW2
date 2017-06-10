@@ -106,7 +106,7 @@ function autoLogin(req, res, next) {
 function getList(req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     if (user.canAdmin) {
@@ -126,7 +126,7 @@ function setPrivilege(req, res, next) {
         user = status.getUserInfo(req, res);
 
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     // user.canAdmin = true;

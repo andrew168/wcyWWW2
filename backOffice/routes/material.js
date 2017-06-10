@@ -33,7 +33,7 @@ router.post('/', function(req, res, next) {
         path = req.body.path || null,
         user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     status.logUser(user, req, res);
@@ -71,7 +71,7 @@ router.get('/list/:matType', function(req, res, next) {
         user = status.getUserInfo(req, res);
 
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     matType = (!matType) ? 10 : parseInt(matType);
@@ -92,7 +92,7 @@ router.get('/list/:matType', function(req, res, next) {
 function createMatId(req, res, matType, originalFilename) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     if (!originalFilename) {
@@ -139,7 +139,7 @@ function updateMatId(req, res, matType, matId, path) {
 function banMatId(req, res, matType, matId) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     function onSavedToDB(docId) {
@@ -155,7 +155,7 @@ function banMatId(req, res, matType, matId) {
 function getMatIds(req, res, matType) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     getMatController(matType).get(user.ID, function(data) {

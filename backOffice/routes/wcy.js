@@ -30,7 +30,7 @@ router.get('/:shareCode', function(req, res, next) {
 router.post('/', function(req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     console.log("params: " + JSON.stringify(req.params));
@@ -81,7 +81,7 @@ function resWcySaved(req, res, wcyId, ssPath, msg) {
         shareId = 0,
         shareCode = utils.composeShareCode(shareId, wcyId, user.ID);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     // ssPath可能为null，(如果本次没有截屏的话）

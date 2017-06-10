@@ -17,7 +17,7 @@ router.param('opusID', function (req, res, next, id) {
 router.get('/', function(req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
     opusController.getList(user, onGotList, onFail);
     function onGotList(list) {
@@ -33,7 +33,7 @@ router.get('/', function(req, res, next) {
 router.get('/apply/:opusID', function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
     var opusID = req.params.opusID || 0,
         msg = "received! apply to publish: " + opusID;
@@ -44,7 +44,7 @@ router.get('/apply/:opusID', function (req, res, next) {
 router.get('/approve/:opusID', function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     var opusID = req.params.opusID || 0,
@@ -62,7 +62,7 @@ router.get('/approve/:opusID', function (req, res, next) {
 router.get('/ban/:opusID', function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
-        return netCommon.invalidOperation(req, res);
+        return netCommon.notLogin(req, res);
     }
 
     var opusID = req.params.opusID || 0,
