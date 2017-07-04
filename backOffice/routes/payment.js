@@ -31,15 +31,87 @@ function initPaypal() {
 }
 
 function createPayment(req, res, next) {
+    var payReq = JSON.stringify({
+        intent: 'sale',
+        payer: {
+            payment_method: 'paypal'
+        },
+        redirect_urls: {
+            return_url: 'http://show.udoido.cn/payment/succeed',
+            cancel_url: 'http://show.udoido.cn/payment/cancel'
+        },
+        transactions: [{
+            amount: {
+                total: '10',
+                currency: 'USD'
+            },
+            description: 'This is the payment transaction description.'
+        }]
+    });
+
+    paypal.payment.create(payReq, function (error, payment) {
+        var links = {};
+        var result = null;
+
+        if (error) {
+            console.error(JSON.stringify(error));
+            result = "error";
+        } else {
+            // Capture HATEOAS links
+            payment.links.forEach(function (linkObj) {
+                links[linkObj.rel] = {
+                    href: linkObj.href,
+                    method: linkObj.method
+                };
+            });
+
+            // If redirect url present, redirect user
+            if (links.hasOwnProperty('approval_url')) {
+                //REDIRECT USER TO links['approval_url'].href
+            } else {
+                console.error('no redirect URI present');
+            }
+
+            console.log(payment);
+            result = {paymentID: payment.id, // 必须的数据
+                error:0, data: payment, links: links}; // extra 数据
+        }
+
+        res.json(result);
+    });
 }
 
 function executePayment(req, res, next) {
+    var paymentId = req.query.paymentId;
+    var payerId = {payer_id: req.query.PayerID};
+    paypal.payment.execute(paymentId, payerId, function (error, payment) {
+        var result;
+        if (error) {
+            console.error(JSON.stringify(error));
+            result = {error: error};
+        } else {
+            if (payment.state == 'approved') {
+                console.log('payment completed successfully');
+            } else {
+                console.log('payment not successful');
+            }
+            result = {error: 0, data: payment};
+        }
+
+        res.json(JSON.stringify(result));
+    });
 }
 
 function onCanceled(req, res, next) {
+    console.log(req);
+    console.log(res);
+    res.json("canceled!");
 }
 
 function onSucceed(req, res, next) {
+    console.log(req);
+    console.log(res);
+    res.json("succeed!");
 }
 
 initPaypal();
