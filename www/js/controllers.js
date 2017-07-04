@@ -318,5 +318,9 @@ function DashCtrl(
 
     $scope.reloadN = function() {
         WCY.getWcyById(144);
+    };
+
+    $scope.makeOrder = function() {
+        TQ.Pay.showButton();
     }
 }

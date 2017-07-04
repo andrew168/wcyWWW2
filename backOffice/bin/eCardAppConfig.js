@@ -23,7 +23,8 @@ var appConfig = {
         {url: 'wcy', filePath: './../routes/wcy'},
         {url: 'wcyList', filePath: './../routes/wcyList'},
         {url: 'user', filePath: './../routes/user'},
-        {url: 'material', filePath: './../routes/material'}
+        {url: 'material', filePath: './../routes/material'},
+        {url: 'payment', filePath: './../routes/payment'}
     ]
 };
 
