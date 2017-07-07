@@ -7,7 +7,8 @@ TQ = TQ || {};
 TQ.Pay = (function () {
     var ENV_MODE = 'sandbox',
         CREATE_URL = 'http://show.udoido.cn/payment/create',
-        EXECUTE_URL = 'http://show.udoido.cn/payment/execute/';
+        EXECUTE_URL = 'http://show.udoido.cn/payment/execute/',
+        THANKS_YOU_URL = 'http://show.udoido.cn/payment/execute/';
 
     return {
         showButton: showButton

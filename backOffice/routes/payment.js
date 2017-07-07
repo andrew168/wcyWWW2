@@ -74,7 +74,7 @@ function createPayment(req, res, next) {
 
             console.log(payment);
             result = {paymentID: payment.id, // 必须的数据
-                error:0, data: payment, links: links}; // extra 数据
+                error: 0, data: payment, links: links}; // extra 数据
         }
 
         res.json(result);
@@ -82,9 +82,9 @@ function createPayment(req, res, next) {
 }
 
 function executePayment(req, res, next) {
-    var paymentId = req.query.paymentId;
-    var payerId = {payer_id: req.query.PayerID};
-    paypal.payment.execute(paymentId, payerId, function (error, payment) {
+    var paymentID = req.query.paymentID || req.body.paymentID;
+    var payerID = {payer_id: req.query.payerID || req.body.payerID};
+    paypal.payment.execute(paymentID, payerID, function (error, payment) {
         var result;
         if (error) {
             console.error(JSON.stringify(error));
