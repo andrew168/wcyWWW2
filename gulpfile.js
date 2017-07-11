@@ -82,6 +82,12 @@ gulp.task('copy_debug_tools', function () {
         .pipe(gulp.dest(dstPath2 + "\\wcy3\\debugger"));
 });
 
-gulp.task('default', ['config', 'copy_debug_tools'], function () {
+gulp.task('copy_build_tools', function () {
+    return gulp.src(srcPath + "\\lazyLoading.js")
+        .pipe(gulp.dest(dstPath1))
+        .pipe(gulp.dest(dstPath2));
+});
+
+gulp.task('default', ['config', 'copy_debug_tools', 'copy_build_tools'], function () {
     gulp.start('build');
 });

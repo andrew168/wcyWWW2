@@ -2,6 +2,7 @@
  * Created by Andrewz on 7/12/2016.
  */
 
+var TQ = TQ ||{};
 TQ.LazyLoading = (function(){
     return {
         loadOne: loadOne
