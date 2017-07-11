@@ -180,7 +180,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 // 此服务无法lazyLoading，因为是ng模块， 暂时停止使用
                 StatService.startToShow();
             }
-            TQ.LazyLoading.start();
+
+            if (TQ.Config.hasFacebook) {
+                TQ.LazyLoading.loadOne("/wcy3Social/fb.js");
+            }
             // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
             // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
         }

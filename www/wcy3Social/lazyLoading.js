@@ -4,8 +4,7 @@
 
 TQ.LazyLoading = (function(){
     return {
-        loadOne: loadOne,
-        start: start
+        loadOne: loadOne
     };
 
     function loadOne(src, onLoaded) {
@@ -31,12 +30,6 @@ TQ.LazyLoading = (function(){
             js.type = 'text/css';
         } else {
             js.src = src;
-        }
-    }
-
-    function start() {
-        if (TQ.Config.hasFacebook) {
-            TQ.LazyLoading.loadOne("/wcy3Social/fb.js");
         }
     }
 })();
