@@ -1,7 +1,8 @@
 var debug = require('debug')('iCardSvr2:vHostServer');
 var http = require('http');
 var vhost = require('vhost');
-var express = require('express'),
+var compression = require('compression'),
+    express = require('express'),
     gracefulExit = require('express-graceful-exit'),
     onlineUsers = require('../common/onlineUsers');
 
@@ -16,6 +17,7 @@ function init() {
      * Create HTTP vHostServer.
      */
 
+    app.use(compression());
     vHostServer = http.createServer(app);
     app.use(gracefulExit.middleware(app)); //!!! gracefulExit 必须是app的第一个配置
     console.info("process.env.PORT = " + process.env.PORT);
