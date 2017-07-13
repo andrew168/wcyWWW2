@@ -17,7 +17,8 @@
 
 // our own module
     var userStat = null;
-    var _app = null;
+    var _app = null,
+        cacheOptions ={maxAge: '300d'}; // 300 days
 
     function start(newAppConfig) {
         var appConfig = newAppConfig;
@@ -133,8 +134,8 @@
         console.log("client path (dynamic): " + clientPath);
         console.log("client path (static): " + clientPathStatic);
 
-        app.use(express.static(clientPath));
-        app.use('/static', express.static(clientPathStatic));
+        app.use(express.static(clientPath, cacheOptions));
+        app.use('/static', express.static(clientPathStatic, cacheOptions));
     }
 
     function setupBasicRoutes(app, appConfig) {
@@ -288,9 +289,9 @@
 
     function startLocalSimulator(app) {
         // 在没有网络的情况下， 模仿 cloud图片服务器，
-        app.use('/eplan/image/upload/mcImages', express.static(path.join(__dirname, './../../www/mcImages')));
-        app.use('/eplan/image/upload/v1456716657', express.static(path.join(__dirname, './../../www/mcImages')));
-        app.use('/eplan/image/upload', express.static(path.join(__dirname, './../../www/mcImages')));
+        app.use('/eplan/image/upload/mcImages', express.static(path.join(__dirname, './../../www/mcImages'), cacheOptions));
+        app.use('/eplan/image/upload/v1456716657', express.static(path.join(__dirname, './../../www/mcImages'), cacheOptions));
+        app.use('/eplan/image/upload', express.static(path.join(__dirname, './../../www/mcImages'), cacheOptions));
     }
 
     function getApp() {
