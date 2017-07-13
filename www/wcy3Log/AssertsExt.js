@@ -32,30 +32,6 @@ var TQ = TQ || {};
     TQ.AssertExt = AssertExt;
 }());
 
-// 比较任意的对象，
-function assertEqualsObject(msg, expected, actual) {
-    var v1 = prettyPrintEntity_(expected);
-    var v2 = prettyPrintEntity_(actual);
-    return assertEquals(msg, v1, v2);
-}
-
-function assertNotEqualsObject(msg, expected, actual) {
-    var v1 = prettyPrintEntity_(expected);
-    var v2 = prettyPrintEntity_(actual);
-    return assertNotEquals(msg, v1, v2);
-}
-
-function assertEqualsMatrix(msg, expected, actual) {
-    var v1 = prettyPrintEntity_(expected.multiply(100));  // 放大100倍，否则精度不够，不相等
-    var v2 = prettyPrintEntity_(actual.multiply(100));
-    return assertEquals(msg, v1, v2);
-}
-
-function assertNotEqualsMatrix(msg, expected, actual) {
-    var v1 = prettyPrintEntity_(expected.multiply(100));  // 放大100倍，否则精度不够，不相等
-    var v2 = prettyPrintEntity_(actual.multiply(100));
-    return assertNotEquals(msg, v1, v2);
-}
 
 function assertNotHere(msg) {
     return assertTrue(TQ.Dictionary.INVALID_LOGIC + ", " + msg, false);
@@ -72,3 +48,36 @@ function assertDepreciated(name)
     TQ.AssertExt.depreciated(name);
 }
 
+function assertTrue(msg, actual) {
+    TQ.Assert.isTrue(actual, msg);
+}
+
+function assertFalse(msg, actual) {
+    TQ.Assert.isFalse(actual, msg);
+}
+
+function assertEquals(msg, expected, actual) {
+    TQ.Assert.equal(actual, expected, msg);
+}
+
+function assertNotEquals(msg, expected, actual) {
+    TQ.Assert.notEqual(actual, expected, msg);
+}
+
+function assertNotNull(msg, actual) {
+    TQ.Assert.isNotNull(actual, msg);
+}
+
+function assertNotUndefined(msg, actual) {
+    TQ.Assert.isDefined(actual, msg);
+}
+
+function assertEqualsDelta(msg, expected, actual, epsilon) {
+    TQ.assert.closeTo(actual, expected, epsilon, msg);
+}
+
+function assertArray(msg, actual) {
+    TQ.Assert.isArray(actual, msg);
+}
+
+var assert = assertTrue;
