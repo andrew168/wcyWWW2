@@ -18,7 +18,10 @@
 // our own module
     var userStat = null;
     var _app = null,
-        cacheOptions ={maxAge: '300d'}; // 300 days
+        // 实测：
+        // ** 如果不指定maxAge，则返回304代码，表明未修改， 在reload时候使用cache
+        // ** 如果指定maxAge，则返回200代码。 在reload时候也使用cache
+        cacheOptions ={maxAge: '300d'}; // 300 days,
 
     function start(newAppConfig) {
         var appConfig = newAppConfig;
