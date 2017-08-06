@@ -8,7 +8,7 @@ this.TQ = this.TQ || {};
     }
 
     function isReady(desc) {
-        if (!!desc.imageData) { // image buffer
+        if (!!desc.data) { // image buffer
             return true;
         }
 

@@ -279,7 +279,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         return selectLocalFile(matType, useDevice).
             then(function (data) {
-                TQ.SceneEditor.addItemByFile(data, true);
+                TQ.SceneEditor.addItemByFile(data, matType);
             }, errorReport).
             finally(TQ.MessageBox.hide);
     }
@@ -409,13 +409,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 break;
             default:
                 if (matType === TQ.MatType.SOUND) {
-                    if (!isSound(aFile)) {
+                    if (!TQUtility.isSoundFile(aFile)) {
                         var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
                         TQ.MessageBox.show(str);
                         q.reject({error:1, msg: str});
                         break;
                     }
-                    TQ.Assert.isTrue(isSound(aFile));
+                    TQ.Assert.isTrue(TQUtility.isSoundFile(aFile));
                 }
                 data.fileOrBuffer = aFile;
                 q.resolve(data);
@@ -458,14 +458,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     // private functions:
-    function isSound(file) {
-        if (!file.type) {  // for Wx
-            return false;
-        }
-
-        return (file.type.indexOf('audio') >= 0);
-    }
-
     function doInsertMatFromLocalWx(matType) {
         WxService.chooseImage().then(function (filePath) {
             var aFile = {

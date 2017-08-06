@@ -711,8 +711,8 @@ window.TQ = window.TQ || {};
     p._doLoad = function (desc) {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
         var resource;
-        if (desc.imageData) {
-            resource = desc.imageData;
+        if (desc.data) {
+            resource = desc.data;
         } else {
             var jsonObj = this.jsonObj;
             assertTrue("must has image name", jsonObj.src !== "");

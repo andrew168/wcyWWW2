@@ -60,32 +60,61 @@ var currScene = null;
         var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
         var needToSave = true;
 
-        TQ.ImageProcess.start(aFile, options,
-            function (buffer) {
-                SceneEditor.addItemByImageData(buffer.data, matType, needToSave);
-            });
+        if (matType === TQ.MatType.SOUND) {
+            if (!TQUtility.isSoundFile(aFile)) {
+                var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
+                TQ.MessageBox.show(str);
+            } else {
+                addItemBySoundFile(aFile, matType, needToSave);
+            }
+        } else {
+            TQ.ImageProcess.start(aFile, options,
+                function (buffer) {
+                    addItemByImageData(buffer.data, matType, needToSave);
+                });
+        }
     };
 
-    SceneEditor.addItemByImageData = function(image64Data, matType, needToSave) {
+    function addItemByImageData(image64Data, matType, needToSave) {
         var img = new Image();
         img.onload = function() {
             var desc = {
-                imageData: img,
+                data: img,
                 src: null, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN
             };
 
             var ele = SceneEditor.addItem(desc);
             if (needToSave) {
-                angular.element(document.body).injector().get('NetService').uploadOne(image64Data, matType)
-                    .then(function (res) {
-                        console.log(res.url);
-                        ele.jsonObj.src = res.url;
-                        TQ.MessageBox.hide();
-                    });
+                saveResource(ele, image64Data, matType);
             }
         };
         img.src = image64Data;
-    };
+    }
+
+    function addItemBySoundFile(aFile, matType, needToSave) {
+        var audio = new Audio();
+        audio.onloadeddata = function () {
+            var desc = {
+                data: audio,
+                src: null, type: TQ.ElementType.SOUND
+            };
+
+            var ele = SceneEditor.addItem(desc);
+            if (needToSave) {
+                saveResource(ele, aFile, matType);
+            }
+        };
+        audio.src = TQUtility.fileToUrl(aFile, {});
+    }
+
+    function saveResource(ele, fileOrBuffer, matType) {
+        angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType)
+            .then(function (res) {
+                console.log(res.url);
+                ele.jsonObj.src = res.url;
+                TQ.MessageBox.hide();
+            });
+    }
 
     SceneEditor.addItem = function (desc) {
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
@@ -93,7 +122,7 @@ var currScene = null;
         // "Groupfile" 暂时还没有纳入RM的管理范畴
         if (((desc.type === TQ.ElementType.SOUND) ||
             (desc.type === TQ.ElementType.BITMAP) ||
-            (desc.type === TQ.ElementType.BUTTON)) && !desc.imageData &&
+            (desc.type === TQ.ElementType.BUTTON)) && !desc.data &&
             (!TQ.RM.hasElementDesc(desc))) {
             TQ.RM.addElementDesc(desc, doAdd);
             return null; // 无法立即添加并返回ele，因为资源不ready

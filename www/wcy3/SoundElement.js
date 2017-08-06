@@ -50,22 +50,38 @@ TQ = TQ || {};
     };
 
     // 只允许MP3和ogg, 其余的必须转变
-    p._doLoad = function () {
+    p._doLoad = function (desc) {
+        if (!desc) {
+            desc = this.jsonObj;
+        }
+
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isSound()); // 只用于声音元素
         if (!TQ.SoundMgr.isSupported) return;
-        TQ.Log.info("start to play " + this.jsonObj.src);
-        var item = TQ.RM.getResource(this.jsonObj.src);
-        if (item) {
-            this.loaded = true;
-            this.instance = createjs.Sound.createInstance(TQ.RM.getID(item)); // 声音只用ID， 不要resouce data
+
+        var resource;
+        if (!!desc.data) {
+            resource = desc.data;
+        } else {
+            TQ.Log.info("start to play " + desc.src);
+            var item = TQ.RM.getResource(desc.src);
+            if (item) {
+                this.loaded = true;
+                resource = TQ.RM.getID(item);
+            }
+        }
+        if (!!resource) {
+            this.instance = createjs.Sound.createInstance(resource); // 声音只用ID， 不要resouce data
             //ToDo： 需要在这里play吗？
             //this.instance.play(); //interruptValue, delay, offset, loop);
             // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
             this._afterItemLoaded();
             // this.level.onItemLoaded(this);
         } else {
+            TQ.Assert.isTrue(false, "不支持的操作流程");
             (function (pt) {
-                TQ.RM.addItem(pt.jsonObj.src, function() {pt._doLoad();});
+                TQ.RM.addItem(desc.src, function () {
+                    pt._doLoad(desc);
+                });
             })(this);
         }
     };
