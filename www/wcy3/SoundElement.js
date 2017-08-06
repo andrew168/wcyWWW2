@@ -66,11 +66,11 @@ TQ = TQ || {};
             TQ.Log.info("start to play " + desc.src);
             var item = TQ.RM.getResource(desc.src);
             if (item) {
-                this.loaded = true;
                 resource = TQ.RM.getID(item);
             }
         }
         if (!!resource) {
+            this.loaded = true;
             this.instance = createjs.Sound.createInstance(resource); // 声音只用ID， 不要resouce data
             //ToDo： 需要在这里play吗？
             //this.instance.play(); //interruptValue, delay, offset, loop);
