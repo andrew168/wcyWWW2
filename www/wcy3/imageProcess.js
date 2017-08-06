@@ -12,42 +12,14 @@ var TQ = TQ || {};
     var IMAGE_MAX_LENGTH = 1280;
     var _canvas = null;
 
-    var urlAPI = (window.createObjectURL && window) ||
-        (window.URL && URL.revokeObjectURL && URL) ||
-        (window.webkitURL && webkitURL);
-
     function start(file, options, callback) {
-        var url = fileToUrl(file, options);
+        var url = TQUtility.fileToUrl(file, options);
         loadImage.parseMetaData(file, function (data) {
             if (data.exif) {
                 options.orientation = data.exif.get('Orientation');
             }
             loadData(url, file.name, options, callback);
         });
-    }
-
-    function fileToUrl(file, options) {
-        // convert blob, local file, to  url
-        var url, oUrl;
-        if (_isInstanceOf('Blob', file) ||
-            _isInstanceOf('File', file)) {
-            // Files are also Blob instances, but some browsers
-            // (Firefox 3.6) support the File API but not Blobs:
-
-            url = oUrl = _createObjectURL(file);
-            // Store the file type for resize processing:
-            options._type = file.type;
-        } else if (typeof file === 'string') {
-            url = file;
-            if (options && options.crossOrigin) {
-                // img.crossOrigin = options.crossOrigin;
-            }
-        } else {
-            TQ.Log.error("未知的文件信息");
-            url = file;
-        }
-
-        return url;
     }
 
     function loadData(url, filename, options, callback) {
@@ -152,16 +124,6 @@ var TQ = TQ || {};
         }
     }
 
-    function _isInstanceOf(type, obj) {
-        // Cross-frame instanceof check
-        return Object.prototype.toString.call(obj) === '[object ' + type + ']';
-    }
-
-    function _createObjectURL (file) {
-        return urlAPI ? urlAPI.createObjectURL(file) : false;
-    }
-
-    ImageProcess.fileToUrl = fileToUrl;
     ImageProcess.start = start;
     lib.ImageProcess = ImageProcess;
 })(TQ);
