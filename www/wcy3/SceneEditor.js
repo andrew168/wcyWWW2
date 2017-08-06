@@ -55,12 +55,46 @@ var currScene = null;
         stage.addChild(stageContainer);
     }
 
+    SceneEditor.addItemByFile = function (data, matType) {
+        var aFile = data.aFile;
+        var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
+        var needToSave = true;
+
+        TQ.ImageProcess.start(aFile, options,
+            function (buffer) {
+                SceneEditor.addItemByImageData(buffer.data, matType, needToSave);
+            });
+    };
+
+    SceneEditor.addItemByImageData = function(image64Data, matType, needToSave) {
+        var img = new Image();
+        img.onload = function() {
+            var desc = {
+                imageData: img,
+                src: null, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN
+            };
+
+            var ele = SceneEditor.addItem(desc);
+            if (needToSave) {
+                angular.element(document.body).injector().get('NetService').uploadOne(image64Data, matType)
+                    .then(function (res) {
+                        console.log(res.url);
+                        ele.jsonObj.src = res.url;
+                        TQ.MessageBox.hide();
+                    });
+            }
+        };
+        img.src = image64Data;
+    };
+
     SceneEditor.addItem = function (desc) {
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
 
         // "Groupfile" 暂时还没有纳入RM的管理范畴
-        if (((desc.type === TQ.ElementType.SOUND) || (desc.type === TQ.ElementType.BITMAP) || (desc.type === TQ.ElementType.BUTTON))
-            && (!TQ.RM.hasElementDesc(desc))) {
+        if (((desc.type === TQ.ElementType.SOUND) ||
+            (desc.type === TQ.ElementType.BITMAP) ||
+            (desc.type === TQ.ElementType.BUTTON)) && !desc.imageData &&
+            (!TQ.RM.hasElementDesc(desc))) {
             TQ.RM.addElementDesc(desc, doAdd);
             return null; // 无法立即添加并返回ele，因为资源不ready
         } else {

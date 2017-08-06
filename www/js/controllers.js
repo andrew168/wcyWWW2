@@ -266,6 +266,16 @@ function DashCtrl(
         EditorService.insertBkImageFromLocal();
     };
 
+    $scope.insertBkImageFromLocal2 = function () {
+        var useDevice = false,
+            matType = TQ.ElementType.BITMAP;
+
+        EditorService.selectLocalFile(matType, useDevice)
+            .then(function(data) {
+                TQ.SceneEditor.addItemByFile(data, true);
+            });
+    };
+
     $scope.saveWorks = function () {
         WCY.save();
     };

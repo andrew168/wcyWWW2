@@ -143,7 +143,7 @@ window.TQ = window.TQ || {};
         if ((this.level.isStageReady())) {
             // 如果所需资源都在RM， 则直接init， 否则，sent到RM， 要求调入。完成后， 再init
             if ((desc.type === DescType.SOUND) || (desc.type === DescType.BITMAP) || (desc.type === DescType.BUTTON)){
-                TQ.Assert.isTrue(TQ.RM.hasResourceReady(desc.src), "先准备好资源， 再创建元素");
+                TQ.Assert.isTrue(TQ.ResourceDesc.isReady(desc), "先准备好资源， 再创建元素");
             }
         }
 
@@ -385,13 +385,13 @@ window.TQ = window.TQ || {};
         return 1;
     };
 
-    p.load = function () {
+    p.load = function (desc) {
+        TQ.Assert.isTrue(!!desc, "must define desc");
         // 记录到element中
         if ((this.jsonObj.src != undefined) && (this.jsonObj.src != null)) {
             this.jsonObj.src = Element.upgrade(this.jsonObj.src);
         }
 
-        var desc = this.jsonObj;
         switch (desc.type) {
             case DescType.BITMAP_ANIMATION:
                 this._loadActor();
@@ -401,7 +401,7 @@ window.TQ = window.TQ || {};
                 this._loadMarker();
                 break;
             default :
-                this._doLoad();
+                this._doLoad(desc);
                 break;
         }
 
@@ -657,7 +657,7 @@ window.TQ = window.TQ || {};
         }
         this._doRemoveFromStage();
         this._isNewSkin = true;
-        this._doLoad();
+        this._doLoad(this.jsonObj);
         skin.TBD = true;
     };
 
@@ -708,14 +708,20 @@ window.TQ = window.TQ || {};
         return jsonObj.img;
     };
 
-    p._doLoad = function () {
+    p._doLoad = function (desc) {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
-        var jsonObj = this.jsonObj;
-        assertTrue("must has image name", jsonObj.src !== "");
-        var item = TQ.RM.getResource(jsonObj.src);
-        TQ.Assert.isNotNull(item, "先准备好资源， 再创建元素");
+        var resource;
+        if (desc.imageData) {
+            resource = desc.imageData;
+        } else {
+            var jsonObj = this.jsonObj;
+            assertTrue("must has image name", jsonObj.src !== "");
+            var item = TQ.RM.getResource(jsonObj.src);
+            TQ.Assert.isNotNull(item, "先准备好资源， 再创建元素");
+            resource = this.getImageResource(item, jsonObj);
+        }
+
         this.loaded = true;
-        var resource = this.getImageResource(item, jsonObj);
         this.displayObj = new createjs.Bitmap(resource);
         this._afterItemLoaded(resource);
         this.setTRSAVZ();
