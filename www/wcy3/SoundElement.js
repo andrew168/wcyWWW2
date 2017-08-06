@@ -61,6 +61,7 @@ TQ = TQ || {};
         var resource;
         if (!!desc.data) {
             resource = desc.data;
+            desc.data = null;
         } else {
             TQ.Log.info("start to play " + desc.src);
             var item = TQ.RM.getResource(desc.src);

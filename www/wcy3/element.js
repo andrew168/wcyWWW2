@@ -713,6 +713,7 @@ window.TQ = window.TQ || {};
         var resource;
         if (desc.data) {
             resource = desc.data;
+            desc.data = null;
         } else {
             var jsonObj = this.jsonObj;
             assertTrue("must has image name", jsonObj.src !== "");
