@@ -75,7 +75,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // element insert (text, sound, image...)
         mCopyToggle: mCopyToggle,
         insertMat: insertMat,
-        insertBkImageFromLocal: insertBkMatFromLocal, // upload
+        insertBkImageFromLocal: insertBkImageFromLocal, // upload
         insertPeopleFromLocal: insertPeopleFromLocal,
         insertPropFromLocal: insertPropFromLocal,
         insertSoundFromLocal: insertSoundFromLocal,
@@ -89,7 +89,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         insertRain: TQ.ParticleMgr.insertRain,
         insertMoney: TQ.ParticleMgr.insertMoney,
         selectLocalFile: selectLocalFile,
-        uploadMatFromLocal: uploadMatFromLocal,
 
         // select set
         emptySelectSet:emptySelectSet,
@@ -256,7 +255,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         });
     }
 
-    function insertBkMatFromLocal(useDevice) {
+    function insertBkImageFromLocal(useDevice) {
         return insertMatFromLocal(TQ.MatType.BKG, useDevice);
     }
 
@@ -278,19 +277,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             // return doInsertMatFromLocalWx(matType);
         }
 
-        return doInsertMatFromLocal(matType, useDevice);
-    }
-
-    function doInsertMatFromLocal(matType, useDevice) {
-        return uploadMatFromLocal(matType, useDevice).
-            then(addItemByData, errorReport).
-            finally(TQ.MessageBox.hide);
-    }
-
-    function uploadMatFromLocal(matType, useDevice) {
         return selectLocalFile(matType, useDevice).
-            then(processOneMat).
-            then(uploadMat);
+            then(function (data) {
+                TQ.SceneEditor.addItemByFile(data, true);
+            }, errorReport).
+            finally(TQ.MessageBox.hide);
     }
 
     function selectLocalFile(matType, useDevice) {
