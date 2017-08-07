@@ -1,4 +1,4 @@
-/*!
+blob:/*!
 * SoundJS
 * Visit http://createjs.com/ for documentation, updates and examples.
 *
@@ -4490,21 +4490,31 @@ this.createjs = this.createjs || {};
 	 * @static
 	 */
 	s._parsePath = function (value) {
-		if (typeof(value) != "string") {value = value.toString();}
+        var name;
+        var ext;
 
-		var match = value.match(s.FILE_PATTERN);
-		if (match == null) {return false;}
+        if (typeof(value) != "string") {value = value.toString();}
+        if (value.indexOf('blob:') >=0) { // is urlFromFile
+            name = value;
+            ext = null;
+        } else {
+            var match = value.match(s.FILE_PATTERN);
+            if (match == null) {
+                return false;
+            }
 
-		var name = match[4];
-		var ext = match[5];
-		var c = s.capabilities;
-		var i = 0;
-		while (!c[ext]) {
-			ext = s.alternateExtensions[i++];
-			if (i > s.alternateExtensions.length) { return null;}	// no extensions are supported
-		}
-		value = value.replace("."+match[5], "."+ext);
-
+            name = match[4];
+            ext = match[5];
+            var c = s.capabilities;
+            var i = 0;
+            while (!c[ext]) {
+                ext = s.alternateExtensions[i++];
+                if (i > s.alternateExtensions.length) {
+                    return null;
+                }	// no extensions are supported
+            }
+            value = value.replace("." + match[5], "." + ext);
+        }
 		var ret = {name:name, src:value, extension:ext};
 		return ret;
 	};
