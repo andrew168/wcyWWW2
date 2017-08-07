@@ -273,6 +273,7 @@ this.TQ = this.TQ || {};
 
         // RM.preloader.loadFile("assets/image0.jpg");
         RM.dataReady = false;
+        RM.isEmpty = false;
         addToPreloader(resourcePath, resourceID, type);
     }
 
