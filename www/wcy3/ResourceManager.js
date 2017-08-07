@@ -327,33 +327,50 @@ this.TQ = this.TQ || {};
      如果没有送入RM， （比如:RM中已经有了）， 则 返回false
      */
     RM.addElementDesc = function(desc, callback) {
+        TQ.AssertExt.isNotNull(desc);
         if (!desc) return false;
+        var allChildrenReady = !(desc.children || desc.children.length >0),
+            iReady = !!desc.src;
 
-        var result  = false;
-        if (!!desc.children) {  // 先调入子孙的资源， 以便于执行callback
-            for (var i = 0; i < desc.children.length; i++) {
-                if (RM.addElementDesc(desc.children[i])) {
-                    result = true;
+        tryCallback(); // 预防空的元素
+
+        if (!allChildrenReady) {  // 先调入子孙的资源， 以便于执行callback
+            var numOkChildren = 0,
+                numChildren = desc.children.length;
+            function onChildReady() {
+                numOkChildren++;
+                if (numOkChildren >= numChildren) {
+                    allChildrenReady = true;
+                    tryCallback();
                 }
+            }
+            for (var i = 0; i < numChildren; i++) {
+                RM.addElementDesc(desc.children[i], onChildReady);
             }
         }
 
-        //
-        if (desc.type === "Group") {
-            return result;
+        if (!iReady) {  // 处理自己的资源
+            var resName = desc.src;
+            iReady = RM.hasResourceReady(resName);
+            if (iReady) {
+                onIReady();
+            } else {
+                RM.addItem(resName, onIReady);
+            }
         }
 
-        if (!!desc.src) {  // 处理自己的资源
-            var resName = desc.src;
-            if (!RM.hasResourceReady(resName)) {
-                RM.addItem(resName, callback);
-                result = true;
-            } else if (!!callback) {
+        function tryCallback() {
+            if (allChildrenReady && iReady && callback) {
                 callback();
             }
         }
 
-        return result;
+        function onIReady() {
+            iReady = true;
+            tryCallback();
+        }
+
+        return allChildrenReady && iReady;
     };
 
     RM.isLocalResource = function(resName) {
@@ -364,6 +381,7 @@ this.TQ = this.TQ || {};
      只要差一个资源未调入RM， 都必须返回false，
      */
     RM.hasElementDesc = function(desc) {
+        TQ.AssertExt.isNotNull(desc);
         if (!desc) return true;
         var result = true;
 
