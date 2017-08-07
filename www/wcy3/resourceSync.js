@@ -11,16 +11,35 @@
 this.TQ = this.TQ || {};
 
 this.TQ.ResourceSync = (function () {
+    var numActiveTasks = 0;
+
     return {
+        isBusy: isBusy,
         local2Cloud: local2Cloud
     };
 
+    function isBusy() {
+        return numActiveTasks > 0;
+    }
+
     function local2Cloud(ele, fileOrBuffer, matType) {
-        angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType)
+        numActiveTasks ++;
+        var option = {
+            useBackgroundMode: true
+        };
+
+        angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
             .then(function (res) {
                 console.log(res.url);
                 ele.jsonObj.src = res.url;
-                TQ.MessageBox.hide();
+                numActiveTasks--;
+                tryShowCompleteInfo();
             });
+    }
+
+    function tryShowCompleteInfo() {
+        if (numActiveTasks <= 0) {
+            console.log("background sync completed!");
+        }
     }
 })();

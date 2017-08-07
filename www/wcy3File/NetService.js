@@ -37,16 +37,13 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         });
     }
 
-    function uploadOne(file, matType) { // upload one material, fileOrBuffer
+    function uploadOne(file, matType, option) { // upload one material, fileOrBuffer
+        option = option || {};
         var q = $q.defer();
         TQ.Assert.isTrue(!!file, "文件不能为null");
-        var option;
         if (isLocalFile(file)) {
-            option = {
-                filename: file.name,
-                type: matType
-            };
-
+            option.filename = file.name;
+            option.type = matType;
             if (!!file.isWx) {
                 TQ.Log.alertInfo("isWx");
                 TQ.Log.alertInfo(JSON.stringify(file));
@@ -55,12 +52,10 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         } else {
             var filename = hasFileName(file) ? file.name :
                 (isFullPath(file) ? file : getImageNameWithoutExt());
-            option = {
-                filename: filename,
-                type: matType,
-                tags: 'myphotoalbum',
-                context: 'photo=' + "No"
-            };
+            option.filename = filename;
+            option.type = matType;
+            option.tags = 'myphotoalbum';
+            option.context = 'photo=' + "No";
         }
 
         createMatId(option)
@@ -82,7 +77,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         }
 
         function doUploadMat(signData) {
-            doUploadImage(signData, file).
+            doUploadImage(signData, file, option).
                 success(onLoadedSuccess).
                 error(onError);
         }
@@ -98,8 +93,10 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         return q.promise;
     }
 
-    function doUploadImage(signData, fileOrBuffer) {
-        TQ.MessageBox.showWaiting(TQ.Locale.getStr('uploading...'));
+    function doUploadImage(signData, fileOrBuffer, option) {
+        if (option && !option.useBackgroundMode) {
+            TQ.MessageBox.showWaiting(TQ.Locale.getStr('uploading...'));
+        }
         // console.log(JSON.stringify(signData)); // 图像数据太大
         signData.api_key = TQ.Config.Cloudinary.api_key;
         var res;
@@ -199,7 +196,9 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     var createMatId = function (option) {
-        TQ.MessageBox.showWaiting(TQ.Locale.getStr('get material ID...'));
+        if (!option.useBackgroundMode) {
+            TQ.MessageBox.showWaiting(TQ.Locale.getStr('get material ID...'));
+        }
         return $http.post(C_MAN_URL, angular.toJson(option));
     };
 
