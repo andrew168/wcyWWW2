@@ -230,6 +230,7 @@ window.TQ = window.TQ || {};
             this.jsonObj.children = [];
         }
 
+        // ToDo: 暂时只支持1个level的组件，（下面的多level合并逻辑，要重新考虑）
         // 选取 元件中的所有元素, 作为当前元素的子元素, 如果有多个level, 则合并到一个Level
         for (var i = 0; i < objJson.levels.length; i++) {
             var level = objJson.levels[i];
