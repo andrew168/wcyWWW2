@@ -85,29 +85,27 @@ var currScene = null;
 
             var ele = SceneEditor.addItem(desc);
             if (needToSave) {
-                saveResource(ele, image64Data, matType);
+                synchronizeResource(ele, image64Data, matType);
             }
         };
         img.src = image64Data;
     }
 
     function addItemBySoundFile(aFile, matType, needToSave) {
-        var audio = new Audio();
-        audio.onloadeddata = function () {
+        TQ.RM.loadSoundFromFile(aFile, function (result) {
             var desc = {
-                data: audio,
-                src: null, type: TQ.ElementType.SOUND
+                data: TQ.RM.getResource(result.item.id).res,
+                src: result.item.id, type: TQ.ElementType.SOUND
             };
 
             var ele = SceneEditor.addItem(desc);
             if (needToSave) {
-                saveResource(ele, aFile, matType);
+                synchronizeResource(ele, aFile, matType);
             }
-        };
-        audio.src = TQUtility.fileToUrl(aFile, {});
+        });
     }
 
-    function saveResource(ele, fileOrBuffer, matType) {
+    function synchronizeResource(ele, fileOrBuffer, matType) {
         angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType)
             .then(function (res) {
                 console.log(res.url);

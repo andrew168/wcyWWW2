@@ -35,6 +35,7 @@ this.TQ = this.TQ || {};
         urlConcat = TQ.Base.Utility.urlConcat,
         RM = ResourceManager;
 
+    RM.DATA_TYPE_SOUND = createjs.AbstractLoader.SOUND; // preloader lib中定义的
     RM.NOSOUND = "p1.wav";
     RM.NOPIC = "p1.png";
     RM.NOSOUND_FULL = "p1.wav";
@@ -252,43 +253,62 @@ this.TQ = this.TQ || {};
         if (_hasResource(resourceID)) {
             assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
             _addReference(resourceID, _callback);
-          return;
+        } else {
+            var resourcePath = composeResourcePath(resourceID);
+            TQ.Assert.isNotNull(resourcePath, "不支持的逻辑!");
+            if (resourcePath) {
+                loadResource(resourcePath, resourceID, null, _callback);
+            }
         }
+    };
 
+    function loadResource(resourcePath, resourceID, type, _callback) {
         // 添加Item 到预加载队列中， 并启动运行预加载（如果没有运行的话）
         //ToDo: RM.Items.push({});
-        RM.items[resourceID] = { ID: resourceID, res:null, type:null};
+        RM.items[resourceID] = {ID: resourceID, res: null, type: null};
 
         if (!!_callback) {
-            RM.callbackList.push({ID:resourceID, func:_callback});
+            RM.callbackList.push({ID: resourceID, func: _callback});
         }
 
         // RM.preloader.loadFile("assets/image0.jpg");
         RM.dataReady = false;
+        addToPreloader(resourcePath, resourceID, type);
+    }
 
+    function loadSoundFromFile(aFile, callback)
+    {
+        var resourcePath = TQUtility.fileToUrl(aFile, {});
+        loadResource(resourcePath, resourcePath, RM.DATA_TYPE_SOUND, callback);
+    }
+
+    function addToPreloader(fullPath, resourceID, type) {
+        RM.preloader.loadManifest([{
+            type: type, // 对于本地声音， 必须加，因为blob类的url无法提供类别信息
+            src: fullPath,
+            id: resourceID,   // Sound资源的id是字符串, 不是数字
+            data: 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
+        }]);
+    }
+
+    function composeResourcePath(resourceID) {
+        var resourcePath = null;
         function makeOnSuccess1(fullPath, ID) {
             return function() {
                 addToPreloader(fullPath, ID);
             }
         }
 
-        function addToPreloader(fullPath, resourceID){
-            RM.preloader.loadManifest([{
-                src : fullPath,
-                id : resourceID,   // Sound资源的id是字符串, 不是数字
-                data : 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
-            }]);
-        }
-
         TQ.Assert.isTrue(resourceID.indexOf('imgcache') !== 0);
         // 先从本App的服务器下载， 没有的话， 在从File Server下载
         if (_isLocalFileSystem(resourceID)) {
-            addToPreloader(resourceID, resourceID);
+             resourcePath = resourceID;
         } else {
             if (TQ.Config.LocalCacheEnabled) {
+                TQ.Assert.isTrue(false, 'ToDo: 需要重新修改');
                 var cacheName = toCachePath(resourceID);
                 if (TQ.DownloadManager.hasCached(resourceID)) {
-                    addToPreloader(cacheName, resourceID);
+                    resourcePath = cacheName;
                 } else {
                     var onSuccess = makeOnSuccess1(cacheName, resourceID);
                     TQ.DownloadManager.downloadAux(resourceID, cacheName, onSuccess, function () {
@@ -296,12 +316,11 @@ this.TQ = this.TQ || {};
                     });
                 }
             } else {
-                addToPreloader(_toFullPath(resourceID), resourceID);
+                resourcePath = _toFullPath(resourceID);
             }
         }
-
-        RM.isEmpty = false;
-    };
+        return resourcePath;
+    }
 
     /*
      如果成功地送到RM， 则返回true；对于有多个资源的情况，只有送入1个就返回true。
@@ -617,6 +636,7 @@ this.TQ = this.TQ || {};
         return !_isFullPath(path);
     }
 
+    RM.loadSoundFromFile = loadSoundFromFile;
     RM.toCachePath = toCachePath;
     RM.toFullPathFs = _toFullPath;
     TQ.RM = RM;

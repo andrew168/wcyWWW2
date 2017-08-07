@@ -58,20 +58,23 @@ TQ = TQ || {};
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isSound()); // 只用于声音元素
         if (!TQ.SoundMgr.isSupported) return;
 
-        var resource;
+        var resource,
+            resourceID;
         if (!!desc.data) {
             resource = desc.data;
+            resourceID = desc.src;
             desc.data = null;
         } else {
             TQ.Log.info("start to play " + desc.src);
             var item = TQ.RM.getResource(desc.src);
             if (item) {
-                resource = TQ.RM.getID(item);
+                resource =   TQ.RM.getID(item);
+                resourceID = item.ID;
             }
         }
         if (!!resource) {
             this.loaded = true;
-            this.instance = createjs.Sound.createInstance(resource); // 声音只用ID， 不要resouce data
+            this.instance = createjs.Sound.createInstance(resourceID); // 声音只用ID， 不要resouce data
             //ToDo： 需要在这里play吗？
             //this.instance.play(); //interruptValue, delay, offset, loop);
             // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
