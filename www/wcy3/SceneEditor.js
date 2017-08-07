@@ -85,7 +85,7 @@ var currScene = null;
 
             var ele = SceneEditor.addItem(desc);
             if (needToSave) {
-                synchronizeResource(ele, image64Data, matType);
+                TQ.ResourceSync.local2Cloud(ele, image64Data, matType);
             }
         };
         img.src = image64Data;
@@ -100,18 +100,9 @@ var currScene = null;
 
             var ele = SceneEditor.addItem(desc);
             if (needToSave) {
-                synchronizeResource(ele, aFile, matType);
+                TQ.ResourceSync.local2Cloud(ele, aFile, matType);
             }
         });
-    }
-
-    function synchronizeResource(ele, fileOrBuffer, matType) {
-        angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType)
-            .then(function (res) {
-                console.log(res.url);
-                ele.jsonObj.src = res.url;
-                TQ.MessageBox.hide();
-            });
     }
 
     SceneEditor.addItem = function (desc) {
