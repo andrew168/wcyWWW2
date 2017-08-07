@@ -329,8 +329,8 @@ this.TQ = this.TQ || {};
     RM.addElementDesc = function(desc, callback) {
         TQ.AssertExt.isNotNull(desc);
         if (!desc) return false;
-        var allChildrenReady = !(desc.children || desc.children.length >0),
-            iReady = !!desc.src;
+        var allChildrenReady = !(desc.children && desc.children.length >0),
+            iReady = !desc.src;
 
         tryCallback(); // 预防空的元素
 
