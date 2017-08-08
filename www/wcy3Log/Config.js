@@ -11,7 +11,7 @@ window.TQ = window.TQ || {};
     // 系统容量参数
     Config.MAX_UNDO_STEP = 100;
     Config.MAX_KEYFRAME = 2000;
-    Config.MAX_FILE_SIZE = 22767; //32000;
+    Config.MAX_FILE_SIZE = 1024000; // 1M;
     // 陈永添加的配置， begin ---
     var host=window.location.host,
         rootDomain = (host.indexOf('udoido.com') >=0) ? 'udoido.com': 'udoido.cn',
