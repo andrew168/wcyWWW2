@@ -4,7 +4,7 @@
 var TQ = TQ || {};
 TQ.userProfile = (function() {
     var self = {
-        keepMeLogin: false,
+        keepMeLogin: true,
         loggedIn: false,  // 没有login，其余的信息都无意义
         isSignUping: false,
         displayName: "",
