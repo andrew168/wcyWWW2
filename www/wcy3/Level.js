@@ -591,7 +591,9 @@ window.TQ = window.TQ || {};
         this.state = TQBase.LevelState.EXIT;
     };
 
-    p.prepareForJSONOut = function () { };
+    p.prepareForJSONOut = function () {
+        this.persist(); // 固化z-Index值
+    };
 
     p.afterToJSON = function () {
         if (this.dataReady) { // 只对load的 level做这个操作
