@@ -282,7 +282,12 @@ window.TQ = window.TQ || {};
             n = sags.length,
             i;
         for (i = 0; i < n; i++) {
-            if (sags[i].typeID === sagTypeId) {
+            var item = sags[i];
+            if (!item) {
+                continue;
+            }
+
+            if (item.typeID === sagTypeId) {
                 return sags.splice(i, 1);
             }
         }
@@ -298,8 +303,13 @@ window.TQ = window.TQ || {};
             n = sags.length,
             i;
         for (i = 0; i < n; i++) {
-            if (sags[i].typeID === sagTypeId) {
-                return sags[i];
+            var item = sags[i];
+            if (!item ) {
+                continue;
+            }
+
+            if (item.typeID === sagTypeId) {
+                return item;
             }
         }
         return false;
@@ -311,8 +321,8 @@ window.TQ = window.TQ || {};
             track.sags = [];
         }
 
-        track.sags.push(sag);
-        track.sags.sort(compareSag);
+        track.sags[sag.categoryID] = sag; // ToDo: 仅支持1个入场，1个出场动画，1个idle
+        // track.sags.sort(compareSag);
     }
 
     function compareSag(sag1, sag2) {

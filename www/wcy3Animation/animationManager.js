@@ -1,39 +1,50 @@
 /**
  * Created by Andrewz on 3/28/2017.
+ * SAG: Simple Animation Generator
  */
 var TQ = TQ || {};
 TQ.AnimationManager = (function () {
     'use strict';
     var UNLIMIT = 99999999,
         FLY_IN_POS_0 = -100, // 从屏幕外开始
-        FLY_OUT_POS_1 = -100; // 到屏幕外结束
+        FLY_OUT_POS_1 = -100, // 到屏幕外结束
+        DEFAULT_DELAY = 0,
+        DEFAULT_DURATION = 2;
 
-    var SagType = {
-        // translate
-        RIGHT_IN: 'sag right in',
-        LEFT_IN: 'sag left in',
-        BOTTOM_IN: 'sag bottom in',
-        TOP_IN: 'sag top in',
+    var SagCategory = {
+            IN: 1,
+            IDLE: 2,
+            OUT: 3
+        },
 
-        RIGHT_OUT: 'sag right out',
-        LEFT_OUT: 'sag left out',
-        BOTTOM_OUT: 'sag bottom out',
-        TOP_OUT: 'sag top out',
+        SagType = {
+            // translate
+            RIGHT_IN: 'sag right in',
+            LEFT_IN: 'sag left in',
+            BOTTOM_IN: 'sag bottom in',
+            TOP_IN: 'sag top in',
 
-        SCALE_IN: 'sag scale in',
-        SCALE_OUT: 'sag scale out',
+            RIGHT_OUT: 'sag right out',
+            LEFT_OUT: 'sag left out',
+            BOTTOM_OUT: 'sag bottom out',
+            TOP_OUT: 'sag top out',
 
-        ROTATE: 'sag rotate',
-        TWINKLE: 'sag twinkle',
+            SCALE_IN: 'sag scale in',
+            SCALE_OUT: 'sag scale out',
 
-        // opacity change
-        FADE_IN: 'sag fade in',
-        FADE_OUT: 'sag fade out'
-    };
+            ROTATE: 'sag rotate',
+            TWINKLE: 'sag twinkle',
+
+            // opacity change
+            FADE_IN: 'sag fade in',
+            FADE_OUT: 'sag fade out'
+        };
 
     var removeSag = TQ.TrackRecorder.removeSag,
         getSag = TQ.TrackRecorder.getSag,
         state = {
+            delay: DEFAULT_DELAY,
+            duration: DEFAULT_DURATION,
             leftIn: false,
             leftOut: false,
             rightIn: false,
@@ -68,8 +79,10 @@ TQ.AnimationManager = (function () {
         },
 
         instance = {
+            save: save,
             state: state,
             speeds: speeds,
+            SagCategory: SagCategory,
             SagType: SagType,
             initialize: initialize,
             reset: reset,
@@ -101,6 +114,9 @@ TQ.AnimationManager = (function () {
         if (!ele) {
             ele = TQ.SelectSet.peekLatestEditableEle();
             if (!ele) {
+                state.hasSag = false;
+                state.delay = DEFAULT_DELAY;
+                state.duration = DEFAULT_DURATION;
                 state.leftIn = false;
                 state.leftOut = false;
                 state.rightIn = false;
@@ -119,49 +135,26 @@ TQ.AnimationManager = (function () {
             }
         }
 
-        var sag;
-        sag = getSag(ele, SagType.LEFT_IN);
-        state.leftIn = !!sag;
-        speeds.leftIn = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.LEFT_OUT);
-        state.leftOut = !!sag;
-        speeds.leftOut = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.RIGHT_IN);
-        state.rightIn = !!sag;
-        speeds.rightIn = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.RIGHT_OUT);
-        state.rightOut = !!sag;
-        speeds.rightOut = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.TOP_IN);
-        state.topIn = !!sag;
-        speeds.topIn = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.TOP_OUT);
-        state.topOut = !!sag;
-        speeds.topOut = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.BOTTOM_IN);
-        state.bottomIn = !!sag;
-        speeds.bottomIn = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.BOTTOM_OUT);
-        state.bottomOut = !!sag;
-        speeds.bottomOut = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.SCALE_IN);
-        state.scaleIn = !!sag;
-        speeds.scaleIn = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.SCALE_OUT);
-        state.scaleOut = !!sag;
-        speeds.scaleOut = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.ROTATE);
-        state.rotate = !!sag;
-        speeds.rotate = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.FADE_IN);
-        state.fadeIn = !!sag;
-        speeds.fadeIn = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.FADE_OUT);
-        state.fadeOut = !!sag;
-        speeds.fadeOut = (sag) ? sag.speed : 2.5;
-        sag = getSag(ele, SagType.TWINKLE);
-        state.twinkle = !!sag;
-        speeds.twinkle = (sag) ? sag.speed : 2.5;
+        var num = 0;
+        num += checkSag(ele, SagType.LEFT_IN) ;
+        num += checkSag(ele, SagType.LEFT_OUT);
+        num += checkSag(ele, SagType.RIGHT_IN);
+        num += checkSag(ele, SagType.RIGHT_OUT);
+        num += checkSag(ele, SagType.TOP_IN);
+        num += checkSag(ele, SagType.TOP_OUT);
+        num += checkSag(ele, SagType.BOTTOM_IN);
+        num += checkSag(ele, SagType.BOTTOM_OUT);
+        num += checkSag(ele, SagType.SCALE_IN);
+        num += checkSag(ele, SagType.SCALE_OUT);
+        num += checkSag(ele, SagType.ROTATE);
+        num += checkSag(ele, SagType.FADE_IN);
+        num += checkSag(ele, SagType.FADE_OUT);
+        num += checkSag(ele, SagType.TWINKLE);
+        state.hasSag = (num >0);
+        if (!state.hasSag) {
+            state.delay = DEFAULT_DELAY;
+            state.duration = DEFAULT_DURATION;
+        }
         return true;
     }
 
@@ -202,10 +195,11 @@ TQ.AnimationManager = (function () {
         var showT = 1 / speed.actualSpeed,
             hideT = showT,
             sag = {
+                categoryID: SagCategory.IDLE,
                 typeID: SagType.TWINKLE,
                 showT: showT,
                 hideT: hideT,
-                speed: speed.normSpeed, // only for UI
+                speed: speed.normSpeed, // only for UI // ToDo: 实际的speed
                 t1: 0,
                 t2: UNLIMIT // end time
             };
@@ -507,12 +501,18 @@ TQ.AnimationManager = (function () {
 
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
-        var speed = getSpeed(typeId),
-            dt = Math.abs((destinationPos - startPos) / speed.actualSpeed) ,
-            t2 = Math.max(TQ.FrameCounter.t(), dt), // end time
-            t1 = Math.max(0, t2 - dt),
-            velocity = speed.actualSpeed * ((destinationPos - startPos) > 0 ? 1: -1);
+        var delay = state.delay,
+            duration = state.duration,
+            t1 = delay / TQ.FrameCounter.defaultFPS,
+            t2 = (t1 + duration) / TQ.FrameCounter.defaultFPS,
+            velocity = (destinationPos - startPos) / (t2-t1);
         return {
+            /// for editor only begin
+            delay: delay,
+            duration: duration,
+            /// for editor only end
+            destinationPos: destinationPos, // exactly stop at this point
+            categoryID: SagCategory.IN,
             typeID: typeId,
             speed: speed.normSpeed, //1-5 规范化的速度
             actualSpeed: velocity,
@@ -529,6 +529,7 @@ TQ.AnimationManager = (function () {
             t2 = t1 + dt,
             velocity = speed.actualSpeed * ((destinationPos - startPos) > 0 ? 1: -1);
         return {
+            categoryID: SagCategory.OUT,
             typeID: typeId,
             speed: speed.normSpeed, // degree/second
             actualSpeed: velocity,
@@ -619,5 +620,81 @@ TQ.AnimationManager = (function () {
         }
 
         return {normSpeed: norm, actualSpeed: actual};
+    }
+
+    function type2fn(typeId) {
+        switch (typeId) {
+            case SagType.FADE_IN:
+                return 'fadeIn';
+
+            case SagType.FADE_OUT:
+                return 'fadeOut';
+
+            case SagType.SCALE_IN:
+                return 'scaleOut';
+
+            case SagType.SCALE_OUT:
+                return 'scaleIn';
+
+            case SagType.ROTATE:
+                return 'rotate';
+
+            case SagType.LEFT_IN:
+                return 'leftIn';
+
+            case SagType.LEFT_OUT:
+                return 'leftOut';
+
+            case SagType.RIGHT_IN:
+                return 'rightIn';
+
+            case SagType.RIGHT_OUT:
+                return 'rightOut';
+
+            case SagType.TOP_IN:
+                return 'topIn';
+
+            case SagType.TOP_OUT:
+                return 'topOut';
+
+            case SagType.BOTTOM_IN:
+                return 'bottomIn';
+
+            case SagType.BOTTOM_OUT:
+                return 'bottomOut';
+
+            case SagType.TWINKLE:
+                return 'twinkle';
+
+            default:
+                TQ.AssertExt.invalidLogic(false, "unknown case");
+                break;
+        }
+    }
+
+    function checkSag(ele, type) {
+        var sag = getSag(ele, type),
+            fn = type2fn(type);
+        state[fn] = !!sag;
+        speeds[fn] = (sag) ? sag.speed : 2.5;
+        if (sag) {
+            state.delay = sag.delay || DEFAULT_DELAY;
+            state.duration = sag.duration || DEFAULT_DURATION;
+            return 1;
+        }
+
+        return 0;
+    }
+
+    function save() {
+        for (var prop in SagType) {
+            var fn = type2fn(SagType[prop]);
+            if (state[fn]) {
+                var bak = state[fn];
+                state[fn] = null;
+                instance[fn].apply();
+                state[fn] = bak;
+            }
+        }
     }
 })();

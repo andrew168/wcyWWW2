@@ -86,11 +86,16 @@ window.TQ = window.TQ || {};
             lastSag = null;
         for (i = 0; i < n; i++) {
             item = track.sags[i];
-            if (t < item.t1) {
+            if (!item) {
                 continue;
             }
 
-            if ((item.t1 <= t) && (t <= item.t2)) {
+            if ((t < item.t1) && (item.categoryID !== TQ.AnimationManager.SagCategory.IN)) {
+                continue;
+            }
+
+            if (((item.t1 <= t) || (item.categoryID !== TQ.AnimationManager.SagCategory.IN))
+                && (t <= item.t2)) {
                 return item; // 最多同时起作用的SAG只有一个，在一个track中
             }
 
