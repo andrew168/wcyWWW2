@@ -501,7 +501,8 @@ TQ.AnimationManager = (function () {
 
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
-        var delay = state.delay,
+        var speed = getSpeed(typeId),
+            delay = state.delay,
             duration = state.duration,
             t1 = delay / TQ.FrameCounter.defaultFPS,
             t2 = (t1 + duration) / TQ.FrameCounter.defaultFPS,
