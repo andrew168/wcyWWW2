@@ -94,6 +94,7 @@ window.TQ = window.TQ || {};
     //以下调试开关,默认值都是release版. 禁止把修改值上传到代码库(代码库是可以发布的版本, 不是调试版).
     Config.IS_DEBUG = false;
     Config.WX_DEBUG_ENABLED = false;
+    Config.depreciateCheckOn = false;
     Config.LOG_LEVEL = 7;  // release 版 为 0,完全没有,输出, 内部release为 1,不用动程序, 也能够看到错误;
     Config.AutoPlay = true; //false , release 版 为 true, 第一次打开网址, 就自动播放;
     Config.AutoSaveEnabled = true;  // release 版 为 true, 自动保存WCY作品到LocalStorage

@@ -36,10 +36,12 @@ window.TQ = window.TQ || {};
     };
 
     Log.depreciated = function (str) {
-        if (!str) {
-            str = "";
+        if (TQ.Config.depreciateCheckOn) {
+            if (!str) {
+                str = "";
+            }
+            console.error("this is depreciated. " + str);
         }
-        // console.error("this is depreciated. " + str);
     };
 
     Log.debugInfo = function (str) {

@@ -14,7 +14,9 @@ var TQ = TQ || {};
     AssertExt.expectObject = expectObject;
 
     function depreciated(name) {
-        TQ.Assert.isTrue(false, "depreciated: " + name);
+        if (TQ.Config.depreciateCheckOn) {
+            TQ.Assert.isTrue(false, "depreciated: " + name);
+        }
     }
 
     function invalidLogic(exp, str) {
