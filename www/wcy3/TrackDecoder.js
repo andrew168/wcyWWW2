@@ -112,10 +112,15 @@ window.TQ = window.TQ || {};
         }
 
         // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
-        if (t > sag.t2) { // 对于SAG结束后的状态， 保留SAG最后一刻的值
-            t = sag.t2;
+        var dampingT0 = TQ.SpringEffect.getDampingT0(sag),
+            deltaY = 0;
+        if (t > dampingT0) { // 对于SAG结束后的状态， 保留SAG最后一刻的值
+            if (t < sag.t2) {
+                deltaY = TQ.SpringEffect.cal(sag, t - dampingT0);
+            }
+            t = dampingT0;
         }
-        return sag.value0 + (t - sag.t1) * sag.actualSpeed;
+        return sag.value0 + (t - sag.t1) * sag.actualSpeed + deltaY;
     }
 
     function calVisible(sag, track, t) {
