@@ -294,6 +294,17 @@ window.TQ = window.TQ || {};
         return TQ.AssertExt.invalidLogic(false, "未找到");
     }
 
+    function removeAllSags(element) {
+        var track = element.animeTrack;
+        track.alpha.sags = null;
+        track.x.sags = null;
+        track.y.sags = null;
+        track.sx.sags = null;
+        track.sy.sags = null;
+        track.rotation.sags = null;
+        track.visible.sags = null;
+    }
+
     function getOneSag(track, sagTypeId) {
         if (!track.sags) {
             return false;
@@ -375,5 +386,6 @@ window.TQ = window.TQ || {};
         track.tid1 = track.tid2 = 0;
     }
 
+    TrackRecorder.removeAllSags = removeAllSags;
     TQ.TrackRecorder = TrackRecorder;
 }());

@@ -79,13 +79,16 @@ TQ.AnimationManager = (function () {
         },
 
         instance = {
-            save: save,
             state: state,
             speeds: speeds,
             SagCategory: SagCategory,
             SagType: SagType,
+
             initialize: initialize,
+            removeAllSags: removeAllSags,
             reset: reset,
+            save: save,
+
             rotate: rotate,
             twinkle: twinkle,
             scaleIn: scaleIn,
@@ -136,7 +139,7 @@ TQ.AnimationManager = (function () {
         }
 
         var num = 0;
-        num += checkSag(ele, SagType.LEFT_IN) ;
+        num += checkSag(ele, SagType.LEFT_IN);
         num += checkSag(ele, SagType.LEFT_OUT);
         num += checkSag(ele, SagType.RIGHT_IN);
         num += checkSag(ele, SagType.RIGHT_OUT);
@@ -150,7 +153,7 @@ TQ.AnimationManager = (function () {
         num += checkSag(ele, SagType.FADE_IN);
         num += checkSag(ele, SagType.FADE_OUT);
         num += checkSag(ele, SagType.TWINKLE);
-        state.hasSag = (num >0);
+        state.hasSag = (num > 0);
         if (!state.hasSag) {
             state.delay = DEFAULT_DELAY;
             state.duration = DEFAULT_DURATION;
@@ -506,7 +509,7 @@ TQ.AnimationManager = (function () {
             duration = state.duration,
             t1 = delay / TQ.FrameCounter.defaultFPS,
             t2 = (t1 + duration) / TQ.FrameCounter.defaultFPS,
-            velocity = (destinationPos - startPos) / (t2-t1);
+            velocity = (destinationPos - startPos) / (t2 - t1);
         return {
             /// for editor only begin
             delay: delay,
@@ -528,7 +531,7 @@ TQ.AnimationManager = (function () {
             dt = Math.abs((destinationPos - startPos) / speed.actualSpeed),
             t1 = TQ.FrameCounter.t(), // end time
             t2 = t1 + dt,
-            velocity = speed.actualSpeed * ((destinationPos - startPos) > 0 ? 1: -1);
+            velocity = speed.actualSpeed * ((destinationPos - startPos) > 0 ? 1 : -1);
         return {
             categoryID: SagCategory.OUT,
             typeID: typeId,
@@ -697,5 +700,14 @@ TQ.AnimationManager = (function () {
                 state[fn] = bak;
             }
         }
+    }
+
+    function removeAllSags() {
+        var ele = TQ.SelectSet.peekLatestEditableEle();
+        if (!ele) {
+            return;
+        }
+
+        TQ.TrackRecorder.removeAllSags(ele);
     }
 })();
