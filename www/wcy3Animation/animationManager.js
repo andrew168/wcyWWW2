@@ -504,12 +504,21 @@ TQ.AnimationManager = (function () {
 
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
+        var MIN_MOVE_TIME = 0.1;
         var speed = getSpeed(typeId),
-            delay = state.delay,
-            duration = state.duration,
+            delay = state.delay,// fps,
+            duration = state.duration, // fps
             t1 = delay / TQ.FrameCounter.defaultFPS,
-            t2 = (t1 + duration) / TQ.FrameCounter.defaultFPS,
-            velocity = (destinationPos - startPos) / (t2 - t1);
+            dampingDuration = TQ.SpringEffect.defaultConfig.dampingDuration, // seconds
+            t2 = t1 + (duration / TQ.FrameCounter.defaultFPS),
+            velocity,
+            dt = t2 - t1 - dampingDuration;
+        if (dt < MIN_MOVE_TIME) {
+            t1 = t2 - dampingDuration - MIN_MOVE_TIME;
+            dt = t2 - t1 - dampingDuration;
+        }
+
+        velocity = (destinationPos - startPos) / dt;
         return {
             /// for editor only begin
             delay: delay,
