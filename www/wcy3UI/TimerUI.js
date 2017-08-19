@@ -29,7 +29,7 @@ TQ.TimerUI = (function () {
         initialized = true;
         t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
         tMin = 0;
-        tMaxFrame = TQ.Scene.getTMax();
+        tMaxFrame = Math.ceil(TQ.Scene.getTMax());
         var containerDiv = document.getElementById("timer-bar-div");
         TQ.AssertExt.isNotNull(containerDiv);
         containerDiv.innerHTML = htmlStr;
@@ -99,7 +99,7 @@ TQ.TimerUI = (function () {
     function onRangeChanged() {
         t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
         tMin = 0;
-        tMaxFrame = TQ.Scene.getTMax();
+        tMaxFrame = Math.ceil(TQ.Scene.getTMax());
 
         if (bodyEle) {
             bodyEle.slider('option', 'min', tMin);
