@@ -91,3 +91,8 @@ gulp.task('copy_build_tools', function () {
 gulp.task('default', ['config', 'copy_debug_tools', 'copy_build_tools'], function () {
     gulp.start('build');
 });
+
+gulp.task('hot_sync', ['config', 'copy_debug_tools', 'copy_build_tools'], function() {
+    console.log("hot sync souce to voteCard");
+    gulp.start('wcylib_concat');
+});
