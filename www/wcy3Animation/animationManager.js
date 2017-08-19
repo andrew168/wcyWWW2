@@ -78,6 +78,25 @@ TQ.AnimationManager = (function () {
             twinkle: 2.5
         },
 
+        animationList = [
+            "rotate",
+            "twinkle",
+            "scaleIn",
+            "scaleOut",
+            "fadeIn",
+            "fadeOut",
+
+            "leftIn",
+            "rightIn",
+            "topIn",
+            "bottomIn",
+
+            "leftOut",
+            "rightOut",
+            "topOut",
+            "bottomOut"
+        ],
+
         instance = {
             state: state,
             speeds: speeds,
@@ -716,6 +735,9 @@ TQ.AnimationManager = (function () {
         if (!ele) {
             return;
         }
+        animationList.forEach(function(name) {
+            state[name] = null;
+        });
 
         TQ.TrackRecorder.removeAllSags(ele);
     }
