@@ -860,6 +860,7 @@ window.TQ = window.TQ || {};
     };
 
     p.persist = function () {
+        TQ.AssertExt.invalidLogic(TQ.StageBuffer.isEmpty(), "StageBuffer中的未加入stage的元素， 无法persist！");
         // 记录当前数据到 json, 以便于存盘和再次切入该场景
         if (!this.jsonObj) {
             return;

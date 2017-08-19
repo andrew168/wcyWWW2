@@ -604,6 +604,9 @@ window.TQ = window.TQ || {};
     };
 
     p.persist = function() {
+        if (!this.isActive()) {
+            return;
+        }
         for (var i = 0; i < this.elements.length; i++) {  //持久化zIndex, 只在退出时, 而不是每一个Cycle, 以节约时间
             this.elements[i].persist();
         }
@@ -672,6 +675,10 @@ window.TQ = window.TQ || {};
         return ((this.state === TQBase.LevelState.INITING)||
         (this.state === TQBase.LevelState.EDITING) ||
         (this.state === TQBase.LevelState.RUNNING));
+    };
+
+    p.isActive = function() {
+        return (currScene && currScene.currentLevel === this)
     };
 
     TQ.Level = Level;

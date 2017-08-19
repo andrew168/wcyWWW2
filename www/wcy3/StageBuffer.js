@@ -50,5 +50,9 @@ window.TQ = window.TQ || {};
         StageBuffer.members.splice(0);
     };
 
+    StageBuffer.isEmpty = function() {
+        return StageBuffer.members.length<=0;
+    };
+
     TQ.StageBuffer = StageBuffer;
 }) ();

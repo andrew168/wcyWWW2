@@ -44,6 +44,10 @@ function WCY($http, FileService, WxService, NetService) {
         return (currScene && !currScene.isEmpty() && !currScene.isSaved);
     }
 
+    function isSafe() {
+        return TQ.StageBuffer.isEmpty();
+    }
+
     function needToStop() {
         return (currScene && !!currScene.levels);
     }
@@ -275,7 +279,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _autoSave() {
-        if (_autoSaveStopped || currScene.hasSavedToCache || !needToSave()) {
+        if (_autoSaveStopped || currScene.hasSavedToCache || !needToSave() || !isSafe()) {
         } else {
             TQ.Assert.isObject(currScene);
             var data = currScene.getData();
