@@ -116,6 +116,10 @@ var TQ = TQ || {};
         return {x: obj_dc.x, y: obj_dc.y};
     };
 
+    CreateJSAdapter.getPositionInNdc = function () {
+        return this.pdc2Ndc(this.getPositionInWorld());
+    };
+
     CreateJSAdapter.nw2World = function (oNWorld) {
         // 从规范化的世界坐标Normalized World到世界坐标系(像素坐标)
         var sx = currScene.getDesignatedWidth(),
