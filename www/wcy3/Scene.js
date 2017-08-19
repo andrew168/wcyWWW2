@@ -158,6 +158,9 @@ TQ = TQ || {};
         if (TQ.FrameCounter.isPlaying()) {
             currScene.stop();
         }
+        if (currScene.currentLevel && currScene.currentLevel.isEditMode()) {
+            currScene.currentLevel.calculateLastFrame();
+        }
 
         if (!options) {
             if (currScene.currentLevelId !== 0) {

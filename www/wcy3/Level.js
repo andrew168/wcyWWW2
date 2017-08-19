@@ -578,6 +578,9 @@ window.TQ = window.TQ || {};
 
     p.exit = function () {
         TQ.SelectSet.clear();
+        if (this.isEditMode()) {
+            this.calculateLastFrame();
+        }
         if ((this.state === TQBase.LevelState.EDITING) ||
             (this.state === TQBase.LevelState.RUNNING)) {
             this.sort(); // 退出本层之前, 必须保存 Z可见性顺序.
@@ -658,7 +661,7 @@ window.TQ = window.TQ || {};
                 lastFrame = Math.max(lastFrame, this.elements[i].calculateLastFrame());
             }
         }
-        this.tMaxFrame = lastFrame * 20; // 每秒20帧
+        this.tMaxFrame = TQ.FrameCounter.t2f(lastFrame);
         return lastFrame;
     };
 
@@ -685,6 +688,10 @@ window.TQ = window.TQ || {};
 
     p.isActive = function() {
         return (currScene && currScene.currentLevel === this)
+    };
+
+    p.isEditMode = function() {
+        return (this.state === TQBase.LevelState.EDITING);
     };
 
     TQ.Level = Level;

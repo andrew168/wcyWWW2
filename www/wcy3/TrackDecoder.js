@@ -215,6 +215,14 @@ window.TQ = window.TQ || {};
 
     TrackDecoder.calculateLastFrame = function(track) {
         var tMax = 0;
+        if (track.sags) {
+            track.sags.forEach(function(sag){
+                tMax = Math.max(sag.t2);
+            });
+
+            return tMax;
+        }
+
         if ( (!track) || (!track.t)) {return tMax;}
         var num = track.t.length;
 		tMax = track.t[0];
