@@ -139,16 +139,7 @@ TQ = TQ || {};
 
     p.updateTimeTable = function () {
         // update 当前level的时间
-        if (TQ.SceneEditor.isEditMode()) {  //录制的时候， 自动延长 本场景的时间长度
-            var BLOCK_SIZE = 100;
-            var LOWER_SIZE = 10;
-            if ((TQ.FrameCounter.v + LOWER_SIZE) > TQ.FrameCounter.max) {
-                TQ.FrameCounter.max += BLOCK_SIZE;
-                this.currentLevel.setTime(TQ.FrameCounter.v);
-                $('#maxTimeValue').text(TQ.FrameCounter.max);
-                //ToDo:@UI  TQ.TimerUI.body.slider("option", "max", TQ.FrameCounter.max);
-            } // 同时也要更新计时器的最大值
-        } else {
+        if (!TQ.SceneEditor.isEditMode()) {  //录制的时候， 自动延长 本场景的时间长度
             TQ.FrameCounter.max = this.currentLevel.getTime();
         }
 
