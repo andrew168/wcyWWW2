@@ -662,6 +662,12 @@ window.TQ = window.TQ || {};
         return lastFrame;
     };
 
+    p.increaseTime = function() {
+        var oldMax = this.getTime(),
+            newMax = Math.ceil(1.2 * oldMax);
+        this.setTime(newMax);
+    };
+
     p.setTime = function (t) { this.tMaxFrame = t;};
     p.getTime = function() { return this.tMaxFrame;};
     p.setT0 = function(t0) { this.t0 = t0;};
