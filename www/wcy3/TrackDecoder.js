@@ -217,7 +217,9 @@ window.TQ = window.TQ || {};
         var tMax = 0;
         if (track.sags) {
             track.sags.forEach(function(sag){
-                tMax = Math.max(sag.t2);
+                if (sag) {
+                    tMax = Math.max(sag.t2);
+                }
             });
 
             return tMax;
