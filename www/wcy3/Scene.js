@@ -273,7 +273,7 @@ TQ = TQ || {};
         var level = ele.level;
         this.isDirty = true;
         level.addElementDirect(ele);
-        if (ele.hasFlag(TQ.Element.LOADED)) {
+        if (ele.hasFlag(TQ.Element.LOADED) && !ele.hasFlag(TQ.Element.IN_STAGE)) {
             ele.addItemToStage();
         }
     };
