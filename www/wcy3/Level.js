@@ -671,7 +671,13 @@ window.TQ = window.TQ || {};
         this.setTime(newMax);
     };
 
-    p.setTime = function (t) { this.tMaxFrame = t;};
+    p.setTime = function (t) {
+        this.tMaxFrame = t;
+        if (this.isActive()) {
+            TQ.FrameCounter.setMax(this.tMaxFrame);
+        }
+    };
+
     p.getTime = function() { return this.tMaxFrame;};
     p.setT0 = function(t0) { this.t0 = t0;};
     p.getT0 = function(t0) { return this.t0;};

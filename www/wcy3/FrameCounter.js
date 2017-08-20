@@ -245,6 +245,10 @@ window.TQ = window.TQ || {};
         state = STOP;
     };
 
+    FrameCounter.setMax = function (newMax) {
+        FrameCounter.max = newMax;
+    };
+
     var stateReceiver = null;
     function toggleSpeed(flag, receiver) {
         if (flag && (flag === TQ.Const.TOGGLE_RESET)) {
