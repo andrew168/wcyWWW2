@@ -39,11 +39,14 @@ window.TQ = window.TQ || {};
     inherit(GenCommand, TQ.AbstractCommand);
 
     GenCommand.prototype.do = function() {
-        eval("this.receiver." + this.dofn + "(this.newValue)");
+        var result = this.receiver[this.dofn](this.newValue);
+        if (!this.oldValue) {
+            this.oldValue = result;
+        }
     };
 
     GenCommand.prototype.undo = function() {
-        eval("this.receiver." + this.undofn +"(this.oldValue)");
+        this.receiver[this.undofn](this.oldValue);
     };
 
     GenCommand.prototype.redo = GenCommand.prototype.do;
