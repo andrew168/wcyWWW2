@@ -129,19 +129,21 @@ TQ = TQ || {};
     };
 
     AnimeTrack.hideToNow = function(ele, t) {
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, TRUE_NUM_1, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        changeVisibility(0, FALSE_NUM_0, t, TRUE_NUM_1);
     };
 
     AnimeTrack.hide = function(ele, t) {
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        changeVisibility(0, FALSE_NUM_0, t, FALSE_NUM_0);
     };
 
     AnimeTrack.unHide = function(ele, t) {
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, TRUE_NUM_1, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        changeVisibility(0, FALSE_NUM_0, t, TRUE_NUM_1);
     };
+
+    function changeVisibility(t1, vis1, t2, vis2) {
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t1, vis1, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t2, vis2, TQ.TrackDecoder.JUMP_INTERPOLATION);
+    }
 
     AnimeTrack.setButton = function(ele, t) {
         var lifeTime = 3/20; // 3 frame;
