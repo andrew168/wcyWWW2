@@ -6,7 +6,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function OneTrack(value, interpolationStyle) {
+    function OneChannel(value, interpolationStyle) {
         if ((value == undefined) || (value == null))
         {
             value = 0;
@@ -19,7 +19,7 @@ window.TQ = window.TQ || {};
         this.initialize(value, interpolationStyle);
     }
 
-    var p = OneTrack.prototype;
+    var p = OneChannel.prototype;
     p.t = [];
     p.value = [];
     p.c = [];
@@ -54,5 +54,5 @@ window.TQ = window.TQ || {};
         this.tid2 = 0;
     };
 
-    TQ.OneTrack = OneTrack;
+    TQ.OneChannel = OneChannel;
 })();

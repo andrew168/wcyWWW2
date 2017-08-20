@@ -38,63 +38,63 @@ TQ = TQ || {};
         this.hasSag = !!desc.animeTrack.hasSag;
 
         if (!desc.animeTrack.x) {
-            this.x = new TQ.OneTrack(desc.x);
+            this.x = new TQ.OneChannel(desc.x);
         } else {
-            this.x = new TQ.OneTrack(desc.animeTrack.x);
+            this.x = new TQ.OneChannel(desc.animeTrack.x);
         }
 
         if (!desc.animeTrack.y) {
-            this.y = new TQ.OneTrack(desc.y);
+            this.y = new TQ.OneChannel(desc.y);
         } else {
-            this.y = new TQ.OneTrack(desc.animeTrack.y);
+            this.y = new TQ.OneChannel(desc.animeTrack.y);
         }
 
         if (!desc.animeTrack.rotation) {
-            this.rotation = new TQ.OneTrack(desc.rotation);
+            this.rotation = new TQ.OneChannel(desc.rotation);
         } else {
-            this.rotation = new TQ.OneTrack(desc.animeTrack.rotation);
+            this.rotation = new TQ.OneChannel(desc.animeTrack.rotation);
         }
 
         if (!desc.animeTrack.sx) {
-            this.sx = new TQ.OneTrack(desc.sx);
+            this.sx = new TQ.OneChannel(desc.sx);
         } else {
-            this.sx = new TQ.OneTrack(desc.animeTrack.sx);
+            this.sx = new TQ.OneChannel(desc.animeTrack.sx);
         }
 
         if (!desc.animeTrack.sy) {
-            this.sy = new TQ.OneTrack(desc.sy);
+            this.sy = new TQ.OneChannel(desc.sy);
         } else {
-            this.sy = new TQ.OneTrack(desc.animeTrack.sy);
+            this.sy = new TQ.OneChannel(desc.animeTrack.sy);
         }
 
         if (!desc.animeTrack.alpha) {
-            this.alpha = new TQ.OneTrack(desc.alpha);
+            this.alpha = new TQ.OneChannel(desc.alpha);
         } else {
-            this.alpha = new TQ.OneTrack(desc.animeTrack.alpha);
+            this.alpha = new TQ.OneChannel(desc.animeTrack.alpha);
         }
 
         if (!desc.animeTrack.colorR) {
-            this.colorR = new TQ.OneTrack(TQ.Utility.getColorR(desc.color));
-            this.colorG = new TQ.OneTrack(TQ.Utility.getColorG(desc.color));
-            this.colorB = new TQ.OneTrack(TQ.Utility.getColorB(desc.color));
+            this.colorR = new TQ.OneChannel(TQ.Utility.getColorR(desc.color));
+            this.colorG = new TQ.OneChannel(TQ.Utility.getColorG(desc.color));
+            this.colorB = new TQ.OneChannel(TQ.Utility.getColorB(desc.color));
         } else {
-            this.colorR = new TQ.OneTrack(desc.animeTrack.colorR);
-            this.colorG = new TQ.OneTrack(desc.animeTrack.colorG);
-            this.colorB = new TQ.OneTrack(desc.animeTrack.colorB);
+            this.colorR = new TQ.OneChannel(desc.animeTrack.colorR);
+            this.colorG = new TQ.OneChannel(desc.animeTrack.colorG);
+            this.colorB = new TQ.OneChannel(desc.animeTrack.colorB);
         }
 
         if (!desc.animeTrack.visible) { // 即时添加的元素
-            this.visible = new TQ.OneTrack(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            this.visible = new TQ.OneChannel(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
-                TQ.TrackRecorder.recordOneTrack(this.visible, 0.0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+                TQ.TrackRecorder.recordOneChannel(this.visible, 0.0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             }
         } else { // 从文件中读入的元素
-            this.visible = new TQ.OneTrack(desc.animeTrack.visible);
+            this.visible = new TQ.OneChannel(desc.animeTrack.visible);
         }
 
         // action, 如果有，则建立它； 如果没有， 不补充；
         if ((desc.animeTrack) && (desc.animeTrack.action)) {
-            this.action = new TQ.OneTrack(desc.animeTrack.action);
+            this.action = new TQ.OneChannel(desc.animeTrack.action);
         }
     };
 
@@ -111,9 +111,9 @@ TQ = TQ || {};
         AnimeTrack._validateOne(tracks.colorB);
     };
 
-    AnimeTrack._validateOne = function(track) {
-        track.tid1 = (track.tid1 == undefined) ? 0: track.tid1;
-        track.tid2 = (track.tid2 == undefined) ? 0: track.tid2;
+    AnimeTrack._validateOne = function(channel) {
+        channel.tid1 = (channel.tid1 == undefined) ? 0: channel.tid1;
+        channel.tid2 = (channel.tid2 == undefined) ? 0: channel.tid2;
     };
 
     AnimeTrack.calculateLastFrame = function(track) {
@@ -141,8 +141,8 @@ TQ = TQ || {};
     };
 
     function changeVisibility(t1, vis1, t2, vis2) {
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t1, vis1, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t2, vis2, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneChannel(ele.animeTrack.visible, t1, vis1, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneChannel(ele.animeTrack.visible, t2, vis2, TQ.TrackDecoder.JUMP_INTERPOLATION);
     }
 
     AnimeTrack.setButton = function(ele, t) {
@@ -150,7 +150,7 @@ TQ = TQ || {};
         // var currentTime = TQ.FrameCounter.t();
         ele.animeTrack.visible.reset();
         AnimeTrack.hideToNow(ele, t);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t + lifeTime, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneChannel(ele.animeTrack.visible, t + lifeTime, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
     };
 
     TQ.AnimeTrack = AnimeTrack;

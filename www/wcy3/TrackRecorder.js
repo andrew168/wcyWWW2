@@ -33,49 +33,49 @@ window.TQ = window.TQ || {};
         isSagElement = !!track.hasSag;
         TQ.AssertExt.invalidLogic(!!(track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
         if (element.hasFlag(TQ.Element.ROTATING)) {
-            TrackRecorder.recordOneTrack(track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
+            TrackRecorder.recordOneChannel(track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
         }
 
         if (element.hasFlag(TQ.Element.TRANSLATING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneTrack(track.x, t, TQ.Pose.x, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.x, t, TQ.Pose.x, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.TRANSLATING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneTrack(track.y, t, TQ.Pose.y, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.y, t, TQ.Pose.y, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.SCALING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneTrack(track.sx, t, TQ.Pose.sx, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.sx, t, TQ.Pose.sx, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.SCALING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneTrack(track.sy, t, TQ.Pose.sy, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.sy, t, TQ.Pose.sy, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.VISIBLE_CHANGED)) { // 允许改变关节物体各个关节的可见性
-            TrackRecorder.recordOneTrack(track.visible, t, TQ.Pose.visible, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            TrackRecorder.recordOneChannel(track.visible, t, TQ.Pose.visible, TQ.TrackDecoder.JUMP_INTERPOLATION);
             element.clearFlag(TQ.Element.VISIBLE_CHANGED);
         }
 
         if (element.hasFlag(TQ.Element.ALPHAING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneTrack(track.alpha, t, TQ.Pose.alpha, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.alpha, t, TQ.Pose.alpha, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.COLOR_CHANGED)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneTrack(track.colorR, t, TQ.Utility.getColorR(TQ.Pose.color), TrackRecorder.style);
-                TrackRecorder.recordOneTrack(track.colorG, t, TQ.Utility.getColorG(TQ.Pose.color), TrackRecorder.style);
-                TrackRecorder.recordOneTrack(track.colorB, t, TQ.Utility.getColorB(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.colorR, t, TQ.Utility.getColorR(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.colorG, t, TQ.Utility.getColorG(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track.colorB, t, TQ.Utility.getColorB(TQ.Pose.color), TrackRecorder.style);
             }
         }
 
@@ -229,14 +229,14 @@ window.TQ = window.TQ || {};
         return (track.sags  && track.sags.length > 0);
     }
 
-    TrackRecorder.recordOneTrack = function (track, t, v, interpolationMethod) {
-        assertNotNull(TQ.Dictionary.FoundNull, track);
-        assertNotUndefined(TQ.Dictionary.FoundNull, track.tid1);
-        assertNotNull(TQ.Dictionary.FoundNull,track.tid1);
+    TrackRecorder.recordOneChannel = function (channel, t, v, interpolationMethod) {
+        assertNotNull(TQ.Dictionary.FoundNull, channel);
+        assertNotUndefined(TQ.Dictionary.FoundNull, channel.tid1);
+        assertNotNull(TQ.Dictionary.FoundNull,channel.tid1);
         interpolationMethod = (interpolationMethod==null)? TQ.TrackDecoder.LINE_INTERPOLATION : interpolationMethod;
-        TQ.TrackDecoder.searchInterval(t, track);
-        var tid1 = track.tid1;
-        var tid2 = track.tid2;
+        TQ.TrackDecoder.searchInterval(t, channel);
+        var tid1 = channel.tid1;
+        var tid2 = channel.tid2;
 
         // 相等的情况, 只修改原来帧的值, 不增加新的帧
         var EPSILON = 0.01;
@@ -244,41 +244,41 @@ window.TQ = window.TQ || {};
         if (isSagElement) {
             id = 0;
             rewrite = true;
-        } else if ( Math.abs(t - track.t[tid1]) < EPSILON ) {
+        } else if ( Math.abs(t - channel.t[tid1]) < EPSILON ) {
             id = tid1;
             rewrite = true;
-        } else if ( Math.abs(t - track.t[tid2]) < EPSILON ) {
+        } else if ( Math.abs(t - channel.t[tid2]) < EPSILON ) {
             id = tid2;
             rewrite = true;
         }
 
         if (rewrite) {
-            track.value[id] = v;
-            track.c[id] = interpolationMethod;
+            channel.value[id] = v;
+            channel.c[id] = interpolationMethod;
             return v;
         }
 
 		    // 以下添加新的帧
         var id = tid2;      // 在tid2位置插入: 正好查到区间内 [t1, t, t2]
-        if (t >= track.t[tid2]) { // 在末尾插入 [t1, t2, t]
+        if (t >= channel.t[tid2]) { // 在末尾插入 [t1, t2, t]
             id = tid2+1;
-        } else if (t < track.t[tid1]) { // 在前面插入 [t, t1, t2]
+        } else if (t < channel.t[tid1]) { // 在前面插入 [t, t1, t2]
             id = tid1;
         }
 
         // 直接记录, 不优化
-        track.t.splice(id, 0, t);
-        track.c.splice(id, 0, interpolationMethod);
-        track.value.splice(id, 0, v);
+        channel.t.splice(id, 0, t);
+        channel.c.splice(id, 0, interpolationMethod);
+        channel.value.splice(id, 0, v);
         return v;
     };
 
-    function removeOneSag(track, sagTypeId) {
-        if (!track.sags) {
+    function removeOneSag(channel, sagTypeId) {
+        if (!channel.sags) {
             return TQ.AssertExt.invalidLogic(false, "sags已经为空");
         }
 
-        var sags = track.sags,
+        var sags = channel.sags,
             n = sags.length,
             i;
         for (i = 0; i < n; i++) {
@@ -326,13 +326,13 @@ window.TQ = window.TQ || {};
         return false;
     }
 
-    function recordOneSag(track, sag) {
+    function recordOneSag(channel, sag) {
         // 相等的情况, 不修改原来帧的值, 只增加新的帧， 确保t只是增加的
-        if (!track.sags) {
-            track.sags = [];
+        if (!channel.sags) {
+            channel.sags = [];
         }
 
-        track.sags[sag.categoryID] = sag; // ToDo: 仅支持1个入场，1个出场动画，1个idle
+        channel.sags[sag.categoryID] = sag; // ToDo: 仅支持1个入场，1个出场动画，1个idle
         // track.sags.sort(compareSag);
     }
 
@@ -346,28 +346,28 @@ window.TQ = window.TQ || {};
     }
 
     function trimTrack(track, t) {
-        trimOneTrack(track.x, t);
-        trimOneTrack(track.y, t);
-        trimOneTrack(track.sx, t);
-        trimOneTrack(track.sy, t);
-        trimOneTrack(track.rotation, t);
-        trimOneTrack(track.alpha, t);
-        trimOneTrack(track.visible, t);
-        trimOneTrack(track.colorR, t);
-        trimOneTrack(track.colorG, t);
-        trimOneTrack(track.colorB, t);
+        trimOneChannel(track.x, t);
+        trimOneChannel(track.y, t);
+        trimOneChannel(track.sx, t);
+        trimOneChannel(track.sy, t);
+        trimOneChannel(track.rotation, t);
+        trimOneChannel(track.alpha, t);
+        trimOneChannel(track.visible, t);
+        trimOneChannel(track.colorR, t);
+        trimOneChannel(track.colorG, t);
+        trimOneChannel(track.colorB, t);
     }
 
-    function trimOneTrack(track, t) {
+    function trimOneChannel(channel, t) {
         // 处理特殊情况, 只有1帧:
-        if (track.t.length <= 1) {
-            assertTrue(TQ.Dictionary.INVALID_PARAMETER, track.tid1 == 0); //只有1帧
+        if (channel.t.length <= 1) {
+            assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0); //只有1帧
             return;
         }
 
         // 确定下边界: t1, 比 t小
-        var tid1 = track.t.length - 1;
-        for (; t <= track.t[tid1]; tid1--) {
+        var tid1 = channel.t.length - 1;
+        for (; t <= channel.t[tid1]; tid1--) {
             if (tid1 <= 0) {
                 tid1 = 0;
                 break;
@@ -375,15 +375,15 @@ window.TQ = window.TQ || {};
         }
 
         if (tid1 > 0 ) {
-            track.t.splice(0, tid1);
-            track.value.splice(0, tid1);
-            track.c.splice(0, tid1);
+            channel.t.splice(0, tid1);
+            channel.value.splice(0, tid1);
+            channel.c.splice(0, tid1);
         }
 
-        track.value[0] = TQ.TrackDecoder.calOneTrack(track, t);
-        track.t[0] = t;
+        channel.value[0] = TQ.TrackDecoder.calOneChannel(channel, t);
+        channel.t[0] = t;
 
-        track.tid1 = track.tid2 = 0;
+        channel.tid1 = channel.tid2 = 0;
     }
 
     TrackRecorder.removeAllSags = removeAllSags;

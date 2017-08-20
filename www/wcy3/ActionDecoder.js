@@ -14,7 +14,7 @@ window.TQ = window.TQ || {};
 
     ActionDecoder.calculate = function (track, t) {
         TQ.Pose.action = (!track.action) ?
-            TQ.poseDefault.action : TQ.TrackDecoder.calOneTrack(track.action, t);
+            TQ.poseDefault.action : TQ.TrackDecoder.calOneChannel(track.action, t);
 
         if (!TQ.Pose.action) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.Pose.action);
