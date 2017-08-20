@@ -13,7 +13,7 @@ TQ.SpringEffect = (function () {
     var PHI = -90 * Math.PI / 180,
         defaultConfig = {
             actualSpeed: 1,
-            dampingDuration: 0.5,
+            dampingDuration: 0.4,
             numCycles: 2
         };
 

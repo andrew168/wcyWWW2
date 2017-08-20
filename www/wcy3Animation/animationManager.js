@@ -9,7 +9,7 @@ TQ.AnimationManager = (function () {
         FLY_IN_POS_0 = -100, // 从屏幕外开始
         FLY_OUT_POS_1 = -100, // 到屏幕外结束
         DEFAULT_DELAY = 0,
-        DEFAULT_DURATION = 2;
+        DEFAULT_DURATION = 16; //frames
 
     var SagCategory = {
             IN: 1,
