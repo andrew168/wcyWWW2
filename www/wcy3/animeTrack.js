@@ -9,6 +9,8 @@ TQ = TQ || {};
     function AnimeTrack (desc) {
         this.initialize(desc);
     }
+    var FALSE_NUM_0 = 0, // false
+        TRUE_NUM_1 = 1;
     var p = AnimeTrack.prototype;
     p.erase = function(track) {
         if (this.x) this.x.erase();
@@ -82,9 +84,9 @@ TQ = TQ || {};
         }
 
         if (!desc.animeTrack.visible) { // 即时添加的元素
-            this.visible = new TQ.OneTrack(desc.isVis ? 1 : 0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            this.visible = new TQ.OneTrack(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
-                TQ.TrackRecorder.recordOneTrack(this.visible, 0.0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
+                TQ.TrackRecorder.recordOneTrack(this.visible, 0.0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             }
         } else { // 从文件中读入的元素
             this.visible = new TQ.OneTrack(desc.animeTrack.visible);
@@ -127,18 +129,18 @@ TQ = TQ || {};
     };
 
     AnimeTrack.hideToNow = function(ele, t) {
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, true, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, TRUE_NUM_1, TQ.TrackDecoder.JUMP_INTERPOLATION);
     };
 
     AnimeTrack.hide = function(ele, t) {
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
     };
 
     AnimeTrack.unHide = function(ele, t) {
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, true, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, 0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t, TRUE_NUM_1, TQ.TrackDecoder.JUMP_INTERPOLATION);
     };
 
     AnimeTrack.setButton = function(ele, t) {
@@ -146,7 +148,7 @@ TQ = TQ || {};
         // var currentTime = TQ.FrameCounter.t();
         ele.animeTrack.visible.reset();
         AnimeTrack.hideToNow(ele, t);
-        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t + lifeTime, false, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneTrack(ele.animeTrack.visible, t + lifeTime, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
     };
 
     TQ.AnimeTrack = AnimeTrack;
