@@ -12,7 +12,6 @@ window.TQ = window.TQ || {};
 
     }
 
-    var isSagElement;
     TrackDecoder.LINE_INTERPOLATION = 1;
     TrackDecoder.JUMP_INTERPOLATION = 0;
     /*  animeTrack(Object coordinate) ==> World coordinate
@@ -25,46 +24,45 @@ window.TQ = window.TQ || {};
     TrackDecoder.calculate = function (ele, t) {
         var track = ele.animeTrack,
             tsrObj = TQ.Pose;
-        isSagElement = !!track.hasSag;
         // 计算本物体坐标系下的值
         tsrObj.rotation = ((track.rotation == undefined) || (track.rotation == null)) ?
-            TQ.poseDefault.rotation : TrackDecoder.calOneChannel(track.rotation, t);
+            TQ.poseDefault.rotation : TrackDecoder.calOneChannel(track, track.rotation, t);
 
         tsrObj.x = (!track.x) ?
-            TQ.poseDefault.x : TrackDecoder.calOneChannel(track.x, t);
+            TQ.poseDefault.x : TrackDecoder.calOneChannel(track, track.x, t);
         TQ.Assert.isTrue(!isNaN(tsrObj.x),  "x 为 NaN！！！");
 
         tsrObj.y = (!track.y) ?
-            TQ.poseDefault.y : TrackDecoder.calOneChannel(track.y, t);
+            TQ.poseDefault.y : TrackDecoder.calOneChannel(track, track.y, t);
         TQ.Assert.isTrue(!isNaN(tsrObj.y),  "y 为 NaN！！！");
 
         tsrObj.sx = (!track.sx) ?
-            TQ.poseDefault.sx : TrackDecoder.calOneChannel(track.sx, t);
+            TQ.poseDefault.sx : TrackDecoder.calOneChannel(track, track.sx, t);
 
         tsrObj.sy = (!track.sy) ?
-            TQ.poseDefault.sy : TrackDecoder.calOneChannel(track.sy, t);
+            TQ.poseDefault.sy : TrackDecoder.calOneChannel(track, track.sy, t);
 
         tsrObj.visible = (!track.visible) ?
-            TQ.poseDefault.visible : TrackDecoder.calOneChannel(track.visible, t);
+            TQ.poseDefault.visible : TrackDecoder.calOneChannel(track, track.visible, t);
 
         tsrObj.alpha = (!track.alpha) ?
-            TQ.poseDefault.alpha : TrackDecoder.calOneChannel(track.alpha, t);
+            TQ.poseDefault.alpha : TrackDecoder.calOneChannel(track, track.alpha, t);
 
         var colorR = (!track.colorR) ?
-            TQ.Utility.getColorR(TQ.poseDefault.color) : TrackDecoder.calOneChannel(track.colorR, t),
+            TQ.Utility.getColorR(TQ.poseDefault.color) : TrackDecoder.calOneChannel(track, track.colorR, t),
 
             colorG = (!track.colorG) ?
-            TQ.Utility.getColorG(TQ.poseDefault.color) : TrackDecoder.calOneChannel(track.colorG, t),
+            TQ.Utility.getColorG(TQ.poseDefault.color) : TrackDecoder.calOneChannel(track, track.colorG, t),
 
             colorB = (!track.colorB) ?
-            TQ.Utility.getColorB(TQ.poseDefault.color) : TrackDecoder.calOneChannel(track.colorB, t);
+            TQ.Utility.getColorB(TQ.poseDefault.color) : TrackDecoder.calOneChannel(track, track.colorB, t);
 
         tsrObj.color = TQ.Utility.RGB2Color(Math.round(colorR), Math.round(colorG), Math.round(colorB));
 
         TQ.Log.tsrDebugInfo("TSR in Object " + ele.jsonObj.type + ele.id, tsrObj);
     };
 
-    TrackDecoder.calOneChannel = function (channel, t) {
+    TrackDecoder.calOneChannel = function (track, channel, t) {
         var sag = findSag(channel, t);
         if (sag) {
             return calSag(sag, channel, t);
@@ -72,7 +70,7 @@ window.TQ = window.TQ || {};
 
         // ToDo: 没有track， 只有sag， 以sag的末尾状态保持下去
         // 在Sag结束的时候， 更新track， 以保存以sag的末尾状态保持下去
-        return calTrack(channel, t);
+        return calTrack(track, channel, t);
     };
 
     function findSag(channel, t) {
@@ -134,10 +132,10 @@ window.TQ = window.TQ || {};
         return 1;
     }
 
-    function calTrack(channel, t)
+    function calTrack(track, channel, t)
     {
         TrackDecoder.searchInterval(t, channel);
-        if (isSagElement) {
+        if (track.hasSag) {
             return channel.value[0];
         } else if (channel.tid1 == channel.tid2) {
             // assertTrue("只有1帧或者时间出现负增长, ",track.tid1 == 0 );

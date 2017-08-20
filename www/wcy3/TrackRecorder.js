@@ -12,7 +12,6 @@ window.TQ = window.TQ || {};
 
     }
 
-    var isSagElement;
     TrackRecorder.style = TQ.TrackDecoder.LINE_INTERPOLATION;
     TrackRecorder.initialize = function () {};
 
@@ -30,52 +29,51 @@ window.TQ = window.TQ || {};
             assertNotUndefined(TQ.Dictionary.FoundNull, track);
         }
 
-        isSagElement = !!track.hasSag;
         TQ.AssertExt.invalidLogic(!!(track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
         if (element.hasFlag(TQ.Element.ROTATING)) {
-            TrackRecorder.recordOneChannel(track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
+            TrackRecorder.recordOneChannel(track, track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
         }
 
         if (element.hasFlag(TQ.Element.TRANSLATING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track.x, t, TQ.Pose.x, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.x, t, TQ.Pose.x, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.TRANSLATING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track.y, t, TQ.Pose.y, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.y, t, TQ.Pose.y, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.SCALING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track.sx, t, TQ.Pose.sx, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.sx, t, TQ.Pose.sx, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.SCALING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track.sy, t, TQ.Pose.sy, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.sy, t, TQ.Pose.sy, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.VISIBLE_CHANGED)) { // 允许改变关节物体各个关节的可见性
-            TrackRecorder.recordOneChannel(track.visible, t, TQ.Pose.visible, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            TrackRecorder.recordOneChannel(track, track.visible, t, TQ.Pose.visible, TQ.TrackDecoder.JUMP_INTERPOLATION);
             element.clearFlag(TQ.Element.VISIBLE_CHANGED);
         }
 
         if (element.hasFlag(TQ.Element.ALPHAING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track.alpha, t, TQ.Pose.alpha, TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.alpha, t, TQ.Pose.alpha, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.COLOR_CHANGED)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track.colorR, t, TQ.Utility.getColorR(TQ.Pose.color), TrackRecorder.style);
-                TrackRecorder.recordOneChannel(track.colorG, t, TQ.Utility.getColorG(TQ.Pose.color), TrackRecorder.style);
-                TrackRecorder.recordOneChannel(track.colorB, t, TQ.Utility.getColorB(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.colorR, t, TQ.Utility.getColorR(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.colorG, t, TQ.Utility.getColorG(TQ.Pose.color), TrackRecorder.style);
+                TrackRecorder.recordOneChannel(track, track.colorB, t, TQ.Utility.getColorB(TQ.Pose.color), TrackRecorder.style);
             }
         }
 
@@ -229,7 +227,7 @@ window.TQ = window.TQ || {};
         return (track.sags  && track.sags.length > 0);
     }
 
-    TrackRecorder.recordOneChannel = function (channel, t, v, interpolationMethod) {
+    TrackRecorder.recordOneChannel = function (track, channel, t, v, interpolationMethod) {
         assertNotNull(TQ.Dictionary.FoundNull, channel);
         assertNotUndefined(TQ.Dictionary.FoundNull, channel.tid1);
         assertNotNull(TQ.Dictionary.FoundNull,channel.tid1);
@@ -241,7 +239,7 @@ window.TQ = window.TQ || {};
         // 相等的情况, 只修改原来帧的值, 不增加新的帧
         var EPSILON = 0.01;
         var rewrite = false;
-        if (isSagElement) {
+        if (track.hasSag) {
             id = 0;
             rewrite = true;
         } else if ( Math.abs(t - channel.t[tid1]) < EPSILON ) {
@@ -346,19 +344,19 @@ window.TQ = window.TQ || {};
     }
 
     function trimTrack(track, t) {
-        trimOneChannel(track.x, t);
-        trimOneChannel(track.y, t);
-        trimOneChannel(track.sx, t);
-        trimOneChannel(track.sy, t);
-        trimOneChannel(track.rotation, t);
-        trimOneChannel(track.alpha, t);
-        trimOneChannel(track.visible, t);
-        trimOneChannel(track.colorR, t);
-        trimOneChannel(track.colorG, t);
-        trimOneChannel(track.colorB, t);
+        trimOneChannel(track, track.x, t);
+        trimOneChannel(track, track.y, t);
+        trimOneChannel(track, track.sx, t);
+        trimOneChannel(track, track.sy, t);
+        trimOneChannel(track, track.rotation, t);
+        trimOneChannel(track, track.alpha, t);
+        trimOneChannel(track, track.visible, t);
+        trimOneChannel(track, track.colorR, t);
+        trimOneChannel(track, track.colorG, t);
+        trimOneChannel(track, track.colorB, t);
     }
 
-    function trimOneChannel(channel, t) {
+    function trimOneChannel(track, channel, t) {
         // 处理特殊情况, 只有1帧:
         if (channel.t.length <= 1) {
             assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0); //只有1帧
@@ -380,7 +378,7 @@ window.TQ = window.TQ || {};
             channel.c.splice(0, tid1);
         }
 
-        channel.value[0] = TQ.TrackDecoder.calOneChannel(channel, t);
+        channel.value[0] = TQ.TrackDecoder.calOneChannel(track, channel, t);
         channel.t[0] = t;
 
         channel.tid1 = channel.tid2 = 0;

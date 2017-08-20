@@ -86,7 +86,7 @@ TQ = TQ || {};
         if (!desc.animeTrack.visible) { // 即时添加的元素
             this.visible = new TQ.OneChannel(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
-                TQ.TrackRecorder.recordOneChannel(this.visible, 0.0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+                TQ.TrackRecorder.recordOneChannel(this, this.visible, 0.0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
             }
         } else { // 从文件中读入的元素
             this.visible = new TQ.OneChannel(desc.animeTrack.visible);
@@ -129,20 +129,21 @@ TQ = TQ || {};
     };
 
     AnimeTrack.hideToNow = function(ele, t) {
-        changeVisibility(0, FALSE_NUM_0, t, TRUE_NUM_1);
+        changeVisibility(ele, 0, FALSE_NUM_0, t, TRUE_NUM_1);
     };
 
     AnimeTrack.hide = function(ele, t) {
-        changeVisibility(0, FALSE_NUM_0, t, FALSE_NUM_0);
+        changeVisibility(ele, 0, FALSE_NUM_0, t, FALSE_NUM_0);
     };
 
     AnimeTrack.unHide = function(ele, t) {
-        changeVisibility(0, FALSE_NUM_0, t, TRUE_NUM_1);
+        changeVisibility(ele, 0, FALSE_NUM_0, t, TRUE_NUM_1);
     };
 
-    function changeVisibility(t1, vis1, t2, vis2) {
-        TQ.TrackRecorder.recordOneChannel(ele.animeTrack.visible, t1, vis1, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneChannel(ele.animeTrack.visible, t2, vis2, TQ.TrackDecoder.JUMP_INTERPOLATION);
+    function changeVisibility(ele, t1, vis1, t2, vis2) {
+        var track = ele.animeTrack;
+        TQ.TrackRecorder.recordOneChannel(track, track.visible, t1, vis1, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneChannel(track, track.visible, t2, vis2, TQ.TrackDecoder.JUMP_INTERPOLATION);
     }
 
     AnimeTrack.setButton = function(ele, t) {
@@ -150,7 +151,8 @@ TQ = TQ || {};
         // var currentTime = TQ.FrameCounter.t();
         ele.animeTrack.visible.reset();
         AnimeTrack.hideToNow(ele, t);
-        TQ.TrackRecorder.recordOneChannel(ele.animeTrack.visible, t + lifeTime, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        var track = ele.animeTrack;
+        TQ.TrackRecorder.recordOneChannel(track, track.visible, t + lifeTime, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
     };
 
     TQ.AnimeTrack = AnimeTrack;
