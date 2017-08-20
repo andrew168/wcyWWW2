@@ -68,11 +68,20 @@ TQ = TQ || {};
 
     p.isUpdating = false;
     // 这是scene的主控程序
+    var isStarted = false;
     p.tick = function () {
+        if (!isStarted) {
+            this.start();
+            isStarted = true;
+        }
+    };
+
+    p.start = function() {
         var _this = this;
-        TQ.TaskMgr.addTask(function () {
+        requestAnimationFrame(function () {
             _this.onTick();
-        }, null);
+            _this.start();
+        });
     };
 
     p.onTick = function () {
