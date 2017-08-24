@@ -75,14 +75,6 @@ TQ.Log = (function () {
             m.elements[1][2].toFixed(20) + " " + m.elements[2][2].toFixed(20));
     }
 
-    if (logLevel >= self.INFO_LEVEL) {
-        self.info = self.out = function(str) {
-            console.log(str);
-        };
-    } else {
-        self.debugInfo = self.info = self.out = function() {};
-    }
-
     function alertError(str) {
         // 主要是 debug 微信的程序使用
         if (typeof str != "string") {
@@ -111,6 +103,16 @@ TQ.Log = (function () {
             str = "";
         }
         console.error("必须升级到：" + str);
+    }
+
+    // init
+    if (logLevel >= self.INFO_LEVEL) {
+        self.info = self.out = function (str) {
+            console.log(str);
+        };
+    } else {
+        self.debugInfo = self.info = self.out = function () {
+        };
     }
 
     return self;
