@@ -1,4 +1,4 @@
-<ion-view>
+<ion-view id="udoido-view">
 <ion-content scroll="false">
         <!-- BEGIN OF Config.TECH_TEST1_LOCAL_CACHE_ON -->
         <!--
@@ -265,7 +265,7 @@
             </div>
         </div>
         </div>
-        <canvas id="testCanvas" width="960" height="480" class="content-layer showcanvas positive-border"></canvas>
+        <canvas id="testCanvas" class="content-layer positive-border" ng-style="EditorService.canvasStyle"></canvas>
         <div id="textEditBoxDiv" style="display:none">
             <input type="text" value="7332058" id="textEditBox"/>
             <div id="anchor">EndOfPageEndOfPageEnd</div>

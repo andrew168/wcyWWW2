@@ -33,6 +33,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     return {
         state: state,
+        canvasStyle: TQ.Graphics.getCanvasStyle(),
 
         banMat: NetService.banMat,
 

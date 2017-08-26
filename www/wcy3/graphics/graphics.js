@@ -10,7 +10,8 @@ TQ.Graphics = (function () {
         ET_ARC = 2,
         ET_LINE = 3;
 
-    var _canvas = null;
+    var _canvas = null,
+        canvasStyle = null;
 
     return {
         drawBubble: drawBubble,
@@ -21,6 +22,7 @@ TQ.Graphics = (function () {
         getCanvasBkgColor: getCanvasBkgColor,
         getCanvasWidth: getCanvasWidth,
         getCanvasHeight: getCanvasHeight,
+        getCanvasStyle: getCanvasStyle,
         getStage: getStage,
         setCanvas: setCanvas,
         findEditableElementBelowZ: findEditableElementBelowZ
@@ -37,6 +39,13 @@ TQ.Graphics = (function () {
         return _canvas;
     }
 
+    function getCanvasStyle() {
+        if (!canvasStyle) {
+            canvasStyle = setCanvas();
+        }
+        return canvasStyle;
+    }
+
     function getCanvasWidth() {
         return getCanvas().width;
     }
@@ -51,15 +60,17 @@ TQ.Graphics = (function () {
     }
 
     function setCanvas() {
-        if (_canvas) {
-            _canvas.height = Math.round(TQ.Config.workingRegionHeight);
-            _canvas.width = Math.round(TQ.Config.workingRegionWidth);
-            _canvas.style.top = Math.round(TQ.Config.workingRegionY0) + "px";
-            _canvas.style.left = Math.round(TQ.Config.workingRegionX0) + "px";
-            if (!!currScene) {
-                console.log(TQ.State.viewportWidth, TQ.State.viewportHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
-            }
+        if (!canvasStyle) {
+            canvasStyle = {};
         }
+        canvasStyle.height = Math.round(TQ.Config.workingRegionHeight) + "px";
+        canvasStyle.width = Math.round(TQ.Config.workingRegionWidth) + "px";
+        canvasStyle.top = Math.round(TQ.Config.workingRegionY0) + "px";
+        canvasStyle.left = Math.round(TQ.Config.workingRegionX0) + "px";
+        if (!!currScene) {
+            console.log(TQ.State.viewportWidth, TQ.State.viewportHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
+        }
+        return canvasStyle;
     }
 
     function drawCircle(shape, x, y, radius, gradientColorS, gradientColorE) { //shape is createJS.Shape
