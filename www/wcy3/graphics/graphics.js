@@ -47,11 +47,21 @@ TQ.Graphics = (function () {
     }
 
     function getCanvasWidth() {
-        return getCanvas().width;
+        if (!canvasStyle) {
+            canvasStyle = setCanvas();
+        }
+
+        var heigth = canvasStyle.height.replace("px", "");
+        return parseFloat(heigth);
     }
 
     function getCanvasHeight() {
-        return getCanvas().height;
+        if (!canvasStyle) {
+            canvasStyle = setCanvas();
+        }
+
+        var width = canvasStyle.width.replace("px", "");
+        return parseFloat(width);
     }
 
     function getCanvasBkgColor() {
