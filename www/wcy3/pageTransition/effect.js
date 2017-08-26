@@ -16,7 +16,6 @@ TQ.PageTransitionEffect = (function () {
         animEndEventName = animEndEventNames[Modernizr.prefixed('animation')],
 // support css animations
         support = Modernizr.cssanimations,
-        onTopClass = 'pt-page-current',
         defaultEffectName = 'rotateFoldLeft';
         effectsList = {
             'rotateFoldLeft': {
@@ -37,7 +36,10 @@ TQ.PageTransitionEffect = (function () {
             }
         };
 
-    return {
+    var _interface = {
+        canvasOn: true,
+        page1On: false,
+
         doTransition: doTransition,
         getEffect: getEffect,
         hidePage: hidePage,
@@ -46,8 +48,7 @@ TQ.PageTransitionEffect = (function () {
         showPage: showPage
     };
 
-    function init(topClass) {
-        onTopClass = topClass;
+    function init() {
     }
 
     function doTransition(transition) {
@@ -56,6 +57,7 @@ TQ.PageTransitionEffect = (function () {
 
         isAnimating = true;
         showPage(inPage);
+        _interface.page1On = true;
         outPage.on(animEndEventName, function () {
             outPage.off(animEndEventName);
             outPageEnd = true;
@@ -85,19 +87,19 @@ TQ.PageTransitionEffect = (function () {
         outPageEnd = false;
         inPageEnd = false;
         isAnimating = false;
+        _interface.canvasOn = true;
+        _interface.page1On = false;
         hidePage(transition.outPage, transition.outClass);
-        showPage(transition.inPage, transition.inClass);
+         showPage(transition.inPage, transition.inClass);
     }
 
     function showPage(page, classes) {
-        page.addClass(onTopClass);
         if (classes) {
             page.removeClass(classes);
         }
     }
 
     function hidePage(page, classes) {
-        page.removeClass(onTopClass);
         if (classes) {
             page.removeClass(classes);
         }
@@ -117,4 +119,6 @@ TQ.PageTransitionEffect = (function () {
         }
         return effectsList[defaultEffectName]
     }
+
+    return _interface;
 }());
