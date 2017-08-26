@@ -36,10 +36,13 @@ TQ.PageTransitionEffect = (function () {
             }
         };
 
-    var _interface = {
+    var state = {
         canvasOn: true,
-        page1On: false,
+        page1On: false
+    };
 
+    var _interface = {
+        state: state,
         doTransition: doTransition,
         getEffect: getEffect,
         hidePage: hidePage,
@@ -57,7 +60,7 @@ TQ.PageTransitionEffect = (function () {
 
         isAnimating = true;
         showPage(inPage);
-        _interface.page1On = true;
+        state.page1On = true;
         outPage.on(animEndEventName, function () {
             outPage.off(animEndEventName);
             outPageEnd = true;
@@ -87,8 +90,8 @@ TQ.PageTransitionEffect = (function () {
         outPageEnd = false;
         inPageEnd = false;
         isAnimating = false;
-        _interface.canvasOn = true;
-        _interface.page1On = false;
+        state.canvasOn = true;
+        state.page1On = false;
         hidePage(transition.outPage, transition.outClass);
          showPage(transition.inPage, transition.inClass);
     }
