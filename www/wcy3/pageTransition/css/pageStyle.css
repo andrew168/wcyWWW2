@@ -1,0 +1,101 @@
+.pt-page {
+    width: 60%;
+    height: 50%;
+    position: absolute;
+    top: 25%;
+    left: 20%;
+    visibility: hidden;
+    overflow: hidden;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+    -webkit-transform: translate3d(0, 0, 0);
+    -moz-transform: translate3d(0, 0, 0);
+    transform: translate3d(0, 0, 0);
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}
+
+.pt-page-current {
+    visibility: visible;
+    z-index: 1;
+}
+
+.pt-page-ontop {
+    z-index: 999;
+}
+
+/* Text Styles, Colors, Backgrounds */
+.pt-page h1 {
+    position: absolute;
+    font-weight: 300;
+    font-size: 4.4em;
+    line-height: 1;
+    letter-spacing: 6px;
+    margin: 0;
+    top: 12%;
+    width: 100%;
+    text-align: center;
+    text-transform: uppercase;
+    word-spacing: -0.3em;
+}
+
+.pt-page-0 {
+    background: red;
+}
+
+.pt-page-1 {
+    background: #0ac2d2;
+}
+
+.pt-page-2 {
+    background: #7bb7fa;
+}
+
+.pt-page-3 {
+    background: #60d7a9;
+}
+
+.pt-triggers {
+    position: absolute;
+    width: 300px;
+    z-index: 999999;
+    top: 12%;
+    left: 50%;
+    margin-top: 130px;
+    -webkit-transform: translateX(-50%);
+    -moz-transform: translateX(-50%);
+    -ms-transform: translateX(-50%);
+    transform: translateX(-50%);
+}
+
+.pt-touch-button {
+    border: none;
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    margin: 10px 0 20px;
+    padding: 0px 20px;
+    line-height: 50px;
+    height: 50px;
+    letter-spacing: 1px;
+    width: 100%;
+    cursor: pointer;
+    display: block;
+    font-family: 'Lato', Calibri, Arial, sans-serif;
+    box-shadow: 0 3px 0 rgba(0, 0, 0, 0.1);
+    -webkit-touch-callout: none;
+    -webkit-user-select: none;
+    -khtml-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+
+    background: #fff;
+    color: #aaa;
+}
+
+.pt-touch-button:active {
+    box-shadow: 0 1px 0 rgba(0, 0, 0, 0.1);
+}
