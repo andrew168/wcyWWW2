@@ -73,10 +73,16 @@ TQ.Graphics = (function () {
         if (!canvasStyle) {
             canvasStyle = {};
         }
-        canvasStyle.height = Math.round(TQ.Config.workingRegionHeight) + "px";
-        canvasStyle.width = Math.round(TQ.Config.workingRegionWidth) + "px";
+        var w = Math.round(TQ.Config.workingRegionWidth),
+            h = Math.round(TQ.Config.workingRegionHeight);
+        canvasStyle.width = w + "px";
+        canvasStyle.height = h + "px";
         canvasStyle.top = Math.round(TQ.Config.workingRegionY0) + "px";
         canvasStyle.left = Math.round(TQ.Config.workingRegionX0) + "px";
+        if (_canvas) {
+            _canvas.width = w;
+            _canvas.height = h;
+        }
         if (!!currScene) {
             console.log(TQ.State.viewportWidth, TQ.State.viewportHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
         }
