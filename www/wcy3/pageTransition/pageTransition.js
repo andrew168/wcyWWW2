@@ -10,7 +10,7 @@ TQ.PageTransition = (function () {
             TQ.Log.debugInfo("busy, delay " + currentId +' to ' + targetId + ", total: " + taskQue.length);
             var task = [currentId, targetId, callback];
             if (isNewTask(task)) {
-                taskQue.push(task);
+                addOrMergeTask(task);
             } else {
                 TQ.Log.debugInfo("delay duplicated!");
             }
@@ -24,10 +24,9 @@ TQ.PageTransition = (function () {
             setTimeout(checkQue);
         } else {
             TQ.PageTransitionEffect.state.page1Image = TQ.ScreenShot.getDataWithBkgColor();
-            if (targetId === (currentId - 1)) {
+            if (targetId < currentId) {
                 prevPage();
-            }
-            if (targetId === (currentId + 1)) {
+            } else {
                 nextPage();
             }
             callback();
@@ -89,6 +88,16 @@ TQ.PageTransition = (function () {
 
     function needFastPaging() {
         return (taskQue.length > 1);
+    }
+
+    function addOrMergeTask(task) {
+        if (taskQue.length <= 0) {
+            taskQue.push(task);
+        } else {
+            var lastTask = taskQue[taskQue.length - 1];
+            lastTask[1] = task[1];
+            lastTask[2] = task[2];
+        }
     }
 
     return {
