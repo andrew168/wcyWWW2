@@ -425,39 +425,6 @@ this.TQ = this.TQ || {};
         return RM.items[id];
     };
 
-    var stage;
-    var canvas;
-
-    var bar;
-    var loaderWidth = 300;
-
-    // bar
-    function barInitialize() {
-
-        var x0 = canvas.width - loaderWidth>>1;
-        var y0 = canvas.height - barHeight>>1;
-        var barHeight = 20;
-
-        var loaderColor = createjs.Graphics.getRGB(247,247,247);
-        var loaderBar = new createjs.Container();
-
-        bar = new createjs.Shape();
-        bar.graphics.beginFill(loaderColor).drawRect(0, 0, 1, barHeight).endFill();
-
-        var bgBar = new createjs.Shape();
-        var padding = 3;
-        bgBar.graphics.setStrokeStyle(1).beginStroke(loaderColor).drawRect(-padding/2, -padding/2, loaderWidth+padding, barHeight+padding);
-        loaderBar.x = x0;
-        loaderBar.y = y0;
-        loaderBar.addChild(bar, bgBar);
-        stage.addChild(loaderBar);
-    }
-
-    function handleProgress(event) {
-        TQ.Log.info(event.loaded);
-        // bar.scaleX = event.loaded * loaderWidth;
-    }
-
     RM.toRelative = function(str) {
         if (_isLocalFileSystem(str)) {
             return str;
