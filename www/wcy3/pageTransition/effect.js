@@ -53,7 +53,7 @@ TQ.PageTransitionEffect = (function () {
     function init() {
     }
 
-    function doTransition(transition) {
+    function doTransition(transition, callback) {
         var outPage = transition.outPage,
             inPage = transition.inPage;
         editorService = angular.element(document.body).injector().get('EditorService')
@@ -66,7 +66,7 @@ TQ.PageTransitionEffect = (function () {
             state.page1On = false;
             state.page1Image = null;
             if (inPageEnd) {
-                onEndAnimation(transition);
+                onEndAnimation(transition, callback);
             }
         });
 
@@ -76,7 +76,7 @@ TQ.PageTransitionEffect = (function () {
             inPage.off(animEndEventName);
             inPageEnd = true;
             if (outPageEnd) {
-                onEndAnimation(transition);
+                onEndAnimation(transition, callback);
             }
         });
 
@@ -89,7 +89,7 @@ TQ.PageTransitionEffect = (function () {
         editorService.forceToRefreshUI();
     }
 
-    function onEndAnimation(transition) {
+    function onEndAnimation(transition, callback) {
         outPageEnd = false;
         inPageEnd = false;
         isAnimating = false;
@@ -98,6 +98,7 @@ TQ.PageTransitionEffect = (function () {
         setTimeout(function() {
             detachEffect(transition.outPage, transition.outClass);
             detachEffect(transition.inPage, transition.inClass);
+            callback();
             editorService.forceToRefreshUI();
         });
     }
