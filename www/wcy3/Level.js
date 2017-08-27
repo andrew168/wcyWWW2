@@ -431,6 +431,7 @@ window.TQ = window.TQ || {};
     p.onLevelCreated = function () {
         if ((this.state == TQBase.LevelState.INITING) ||
             (this.state == TQBase.LevelState.LOADED) ||
+            (this.state == TQBase.LevelState.EDITING) ||
             (this.state == TQBase.LevelState.EXIT)) {
 			 //后续场景loaded是通过RM完成的， 所以可能还是INITING状态
             this.setupTimer();
