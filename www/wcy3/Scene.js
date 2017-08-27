@@ -316,7 +316,7 @@ TQ = TQ || {};
     };
 
     p.isEmpty = function() {
-        return (this.levelNum() <= 2 && this.currentLevel.isEmpty());
+        return (this.levelNum() <= 2 && this.currentLevel && this.currentLevel.isEmpty());
     };
 
     p.isLastLevel = function () {
@@ -329,8 +329,8 @@ TQ = TQ || {};
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
             TQ.FloatToolbar.close();
-            this.currentLevel.exit();
-            this.currentLevelId = id;
+        this.currentLevel.exit();
+        this.currentLevelId = id;
         }
 
         this.showLevel();
