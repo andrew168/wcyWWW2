@@ -40,10 +40,6 @@ function WCY($http, FileService, WxService, NetService) {
         _ssSign = null,
         _onStarted = null;
 
-    function needToSave() {
-        return (currScene && !currScene.isEmpty() && !currScene.isSaved);
-    }
-
     function isSafe() {
         return TQ.StageBuffer.isEmpty();
     }
@@ -53,7 +49,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function create(option) {
-        if (TQ.userProfile.loggedIn && needToSave()) {
+        if (TQ.userProfile.loggedIn && TQ.SceneEditor.needToSave()) {
             return save().then(function () {
                 create(option); // 数据已经保存，到内存， 网络上传还需要时间
             }, _onFail);
@@ -114,7 +110,7 @@ function WCY($http, FileService, WxService, NetService) {
             });
     }
     function getWcy(shareString) {
-        if (TQ.userProfile.loggedIn && needToSave()) {
+        if (TQ.userProfile.loggedIn && TQ.SceneEditor.needToSave()) {
             return save().then(function () {
                 getWcy(shareString);
             });
@@ -216,7 +212,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function start() {
-        if (TQ.userProfile.loggedIn && needToSave()) {
+        if (TQ.userProfile.loggedIn && TQ.SceneEditor.needToSave()) {
             return save().then(function () {
                 start();
             });
@@ -279,7 +275,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _autoSave() {
-        if (_autoSaveStopped || currScene.hasSavedToCache || !needToSave() || !isSafe()) {
+        if (_autoSaveStopped || currScene.hasSavedToCache || !TQ.SceneEditor.needToSave() || !isSafe()) {
         } else {
             TQ.Assert.isObject(currScene);
             var data = currScene.getData();

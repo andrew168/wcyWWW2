@@ -17,6 +17,7 @@ var currScene = null;
     SceneEditor.turnOnEditor = turnOnEditor;
     SceneEditor.startTouchMgr = startTouchMgr;
     SceneEditor.stopTouchMgr = stopTouchMgr;
+    SceneEditor.needToSave = needToSave;
 
     SceneEditor.showWcy = function (fileInfo) {
         if (fileInfo.isPlayOnly === undefined) {
@@ -257,7 +258,12 @@ var currScene = null;
         if ((typeof fileInfo) === "string") {
             fileInfo = {name: fileInfo, content: null};
         }
-        if ((!currScene) || currScene.isSaved || currScene.isEmpty()) {
+
+        if (!TQ.userProfile.loggedIn && needToSave()) {
+            currScene.reset();
+        }
+
+        if (!needToSave()) {
             TQ.MessageBox.hide();
             if (!currScene) {
                 currScene = new TQ.Scene();
@@ -386,4 +392,7 @@ var currScene = null;
         }
     }
 
+    function needToSave() {
+        return (currScene && !currScene.isEmpty() && !currScene.isSaved);
+    }
 }());
