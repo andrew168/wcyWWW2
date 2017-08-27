@@ -16,7 +16,8 @@ TQ.PageTransitionEffect = (function () {
         animEndEventName = animEndEventNames[Modernizr.prefixed('animation')],
 // support css animations
         support = Modernizr.cssanimations,
-        defaultEffectName = 'rotateFoldLeft';
+        defaultEffectName = 'rotateFoldLeft',
+        editorService,
         effectsList = {
             'rotateFoldLeft': {
                 outClass: 'pt-page-rotateFoldLeft', // 左翻
@@ -45,10 +46,8 @@ TQ.PageTransitionEffect = (function () {
         state: state,
         doTransition: doTransition,
         getEffect: getEffect,
-        hidePage: hidePage,
         init: init,
-        isBusy: isBusy,
-        showPage: showPage
+        isBusy: isBusy
     };
 
     function init() {
@@ -57,9 +56,9 @@ TQ.PageTransitionEffect = (function () {
     function doTransition(transition) {
         var outPage = transition.outPage,
             inPage = transition.inPage;
-
+        editorService = angular.element(document.body).injector().get('EditorService')
+        TQ.Log.debugInfo("page transition start...");
         isAnimating = true;
-        showPage(inPage);
         state.page1On = true;
         outPage.on(animEndEventName, function () {
             outPage.off(animEndEventName);
@@ -71,7 +70,7 @@ TQ.PageTransitionEffect = (function () {
             }
         });
 
-        startEffect(outPage, transition.outClass);
+        attachEffect(outPage, transition.outClass);
 
         inPage.on(animEndEventName, function () {
             inPage.off(animEndEventName);
@@ -81,37 +80,38 @@ TQ.PageTransitionEffect = (function () {
             }
         });
 
-        startEffect(inPage, transition.inClass);
+        attachEffect(inPage, transition.inClass);
 
         if (!support) {
             onEndAnimation(transition);
         }
+
+        editorService.forceToRefreshUI();
     }
 
     function onEndAnimation(transition) {
         outPageEnd = false;
         inPageEnd = false;
         isAnimating = false;
+        TQ.Log.debugInfo("page transition end!");
+
         setTimeout(function() {
-           hidePage(transition.outPage, transition.outClass);
-           showPage(transition.inPage, transition.inClass);
+            detachEffect(transition.outPage, transition.outClass);
+            detachEffect(transition.inPage, transition.inClass);
+            editorService.forceToRefreshUI();
         });
     }
 
-    function showPage(page, classes) {
+    function detachEffect(page, classes) {
         if (classes) {
             page.removeClass(classes);
         }
     }
 
-    function hidePage(page, classes) {
-        if (classes) {
-            page.removeClass(classes);
+    function attachEffect(page, effectClass) {
+        if (effectClass) {
+            page.addClass(effectClass);
         }
-    }
-
-    function startEffect(page, effectClass) {
-        page.addClass(effectClass);
     }
 
     function isBusy() {

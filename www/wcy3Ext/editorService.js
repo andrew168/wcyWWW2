@@ -95,6 +95,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         emptySelectSet:emptySelectSet,
 
         // editor
+        forceToRefreshUI: forceToRefreshUI,
         setAddMode: setAddMode,
         setModifyMode: setModifyMode,
         getTextCursor: getTextCursor,

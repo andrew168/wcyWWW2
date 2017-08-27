@@ -342,13 +342,12 @@ TQ = TQ || {};
                 TQ.AssertExt.invalidLogic(false, "已经在本level，不变切换");
             }
         }
-
-        this.showLevel();
     };
 
     p.doGotoLevel = function (id) {
         this.currentLevel.exit();
         this.currentLevelId = id;
+        this.showLevel();
     };
 
     p.open = function (fileInfo) {
