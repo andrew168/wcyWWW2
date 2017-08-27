@@ -13,9 +13,9 @@ TQ.PageTransition = (function () {
         }
 
         TQ.PageTransitionEffect.state.page1Image = TQ.ScreenShot.getDataWithBkgColor();
-        if (targetId < currentId) {
+        if (targetId === (currentId - 1)) {
             prevPage();
-        } else {
+        } if (targetId === (currentId + 1)) {
             nextPage();
         }
         callback();
