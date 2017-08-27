@@ -2,24 +2,27 @@
  * Created by Andrewz on 8/25/17.
  */
 var TQ = TQ || {};
-
 TQ.PageTransition = (function () {
-    var pagesCount = $('div.pt-page').length,
-        current = 0;
+    function start(currentId, targetId, callback) {
+        if (TQ.PageTransitionEffect.isBusy()) {
+            setTimeout(function () {
+                start(currentId, targetId, callback);
+            });
+            return;
+        }
 
-    function init() {
-        var page = getPage(current);
-        TQ.PageTransitionEffect.showPage(page, null);
+        TQ.PageTransitionEffect.state.page1Image = TQ.ScreenShot.getDataWithBkgColor();
+        if (targetId < currentId) {
+            prevPage();
+        } else {
+            nextPage();
+        }
+        callback();
     }
 
     function nextPage() {
-        if (TQ.PageTransitionEffect.isBusy()) {
-            return false;
-        }
-
-        var outPage = getPage(current);
-        current = toNextPage2();
-        var inPage = getPage(current);
+        var outPage = getCurrentPage();
+        var inPage = getTargetPage();
         var effects = TQ.PageTransitionEffect.getEffect('rotateFoldLeft');
         var transition = {
             outPage: outPage,
@@ -31,13 +34,8 @@ TQ.PageTransition = (function () {
     }
 
     function prevPage() {
-        if (TQ.PageTransitionEffect.isBusy()) {
-            return false;
-        }
-
-        var outPage = getPage(current);
-        current = toPrevPage2();
-        var inPage = getPage(current);
+        var outPage = getCurrentPage();
+        var inPage = getTargetPage();
         var effects = TQ.PageTransitionEffect.getEffect('rotateFoldRight');
         var transition = {
             outPage: outPage,
@@ -48,39 +46,15 @@ TQ.PageTransition = (function () {
         TQ.PageTransitionEffect.doTransition(transition);
     }
 
-    function toNextPage2() {
-        ++pagesCount;
-        if (current > pagesCount - 1) {
-            current = 0;
-        }
-        return current;
+    function getCurrentPage() {
+        return $('#id-page-effect1');
     }
 
-    function toPrevPage2() {
-        --current;
-        if (current < 0) {
-            current = pagesCount -1;
-        }
-        return current;
+    function getTargetPage() {
+        return $('#testCanvas');
     }
-
-    function getPage(pageID) {
-        return $('.pt-page-' + pageID);
-    }
-
-    init();
 
     return {
-        init: init,
-        nextPage: nextPage,
-        prevPage: prevPage
+        start: start
     };
 })();
-
-
-function nextPage() {
-    TQ.PageTransition.nextPage(0);
-}
-function prevPage() {
-    TQ.PageTransition.prevPage(0);
-}

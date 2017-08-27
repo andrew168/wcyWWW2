@@ -329,11 +329,26 @@ TQ = TQ || {};
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
             TQ.FloatToolbar.close();
-        this.currentLevel.exit();
-        this.currentLevelId = id;
+            if (this.currentLevelId !== id) {
+                var _self = this;
+                if (TQ.PageTransition) {
+                    TQ.PageTransition.start(_self.currentLevelId, id, function() {
+                        _self.doGotoLevel(id);
+                    })
+                } else {
+                    _self.doGotoLevel(id);
+                }
+            } else {
+                TQ.AssertExt.invalidLogic(false, "已经在本level，不变切换");
+            }
         }
 
         this.showLevel();
+    };
+
+    p.doGotoLevel = function (id) {
+        this.currentLevel.exit();
+        this.currentLevelId = id;
     };
 
     p.open = function (fileInfo) {

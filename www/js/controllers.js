@@ -65,6 +65,7 @@ function DashCtrl(
     $scope.EditorService = EditorService;
     $scope.es = EditorService;
     $scope.am = TQ.AnimationManager;
+    $scope.pteState = TQ.PageTransitionEffect.state;
     $scope.SelectSet = TQ.SelectSet;
     $scope.addLevel = function() {
         EditorService.addLevel();

@@ -29,7 +29,9 @@
     z-index:5000;
 }
 
-
+.page-effect-layer {
+    z-index: 4900;
+}
 .inline {
     display: inline !important;
 }
@@ -82,6 +84,13 @@
 }
 
 #testCanvas {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: lightskyblue;
+}
+
+#id-page-effect1 {
     position: fixed;
     top: 0;
     left: 0;

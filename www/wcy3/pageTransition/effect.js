@@ -37,7 +37,7 @@ TQ.PageTransitionEffect = (function () {
         };
 
     var state = {
-        canvasOn: true,
+        page1Image: null,
         page1On: false
     };
 
@@ -90,10 +90,12 @@ TQ.PageTransitionEffect = (function () {
         outPageEnd = false;
         inPageEnd = false;
         isAnimating = false;
-        state.canvasOn = true;
         state.page1On = false;
-        hidePage(transition.outPage, transition.outClass);
-         showPage(transition.inPage, transition.inClass);
+        state.page1Image = null;
+        setTimeout(function() {
+           hidePage(transition.outPage, transition.outClass);
+           showPage(transition.inPage, transition.inClass);
+        });
     }
 
     function showPage(page, classes) {

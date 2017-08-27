@@ -266,6 +266,10 @@
         </div>
         </div>
         <canvas id="testCanvas" class="content-layer positive-border" ng-style="EditorService.canvasStyle"></canvas>
+        <div id="id-page-effect1" class="page-effect-layer positive-border" ng-style="EditorService.canvasStyle" ng-show="pteState.page1On">
+            <img ng-src={{pteState.page1Image}}>
+        </div>
+
         <div id="textEditBoxDiv" style="display:none">
             <input type="text" value="7332058" id="textEditBox"/>
             <div id="anchor">EndOfPageEndOfPageEnd</div>
