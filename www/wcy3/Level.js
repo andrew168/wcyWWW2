@@ -443,7 +443,9 @@ window.TQ = window.TQ || {};
             if (this.onLevelRunning != null) this.onLevelRunning();
             TQ.DirtyFlag.setLevel(this);
         } else {
-            assertNotHere(TQ.Dictionary.CurrentState + this.state);
+            if (this.state !== TQBase.LevelState.EDITING) {
+                assertNotHere(TQ.Dictionary.CurrentState + this.state);
+            }
         }
     };
 
@@ -652,18 +654,24 @@ window.TQ = window.TQ || {};
         if (!this.dataReady) return this.tMaxFrame;
         // 在退出本level的时候才调用，以更新时间，
         //  ToDo: ?? 在编辑本Level的时候， 这个值基本上是没有用的
-        var lastFrame = 0;
+        var tLastFrame = 0;
         for (var i=0; i< this.elements.length; i ++ ) {
             assertNotNull(TQ.Dictionary.FoundNull, this.elements[i]);
             if (!this.elements[i].calculateLastFrame) {
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             } else {
-                lastFrame = Math.max(lastFrame, this.elements[i].calculateLastFrame());
+                tLastFrame = Math.max(tLastFrame, this.elements[i].calculateLastFrame());
             }
         }
-        this.tMaxFrame = TQ.FrameCounter.t2f(lastFrame);
-        return lastFrame;
+        if (!isStaticImage(tLastFrame)) {
+            this.tMaxFrame = TQ.FrameCounter.t2f(tLastFrame);
+        }
+        return TQ.FrameCounter.f2t(this.tMaxFrame);
     };
+
+    function isStaticImage(tLastFrame) {
+        return (tLastFrame < 0.1);
+    }
 
     p.increaseTime = function() {
         var oldMax = this.getTime(),
