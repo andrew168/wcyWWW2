@@ -6,8 +6,9 @@ TQ.PageTransition = (function () {
     function start(currentId, targetId, callback) {
         if (TQ.PageTransitionEffect.isBusy()) {
             setTimeout(function () {
+                console.log("busy, delay " + currentId +' to ' + targetId);
                 start(currentId, targetId, callback);
-            });
+            }, 200); // 0.7s
             return;
         }
 
