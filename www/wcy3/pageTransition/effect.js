@@ -64,6 +64,8 @@ TQ.PageTransitionEffect = (function () {
         outPage.on(animEndEventName, function () {
             outPage.off(animEndEventName);
             outPageEnd = true;
+            state.page1On = false;
+            state.page1Image = null;
             if (inPageEnd) {
                 onEndAnimation(transition);
             }
@@ -90,8 +92,6 @@ TQ.PageTransitionEffect = (function () {
         outPageEnd = false;
         inPageEnd = false;
         isAnimating = false;
-        state.page1On = false;
-        state.page1Image = null;
         setTimeout(function() {
            hidePage(transition.outPage, transition.outClass);
            showPage(transition.inPage, transition.inClass);
