@@ -6,6 +6,7 @@ var TQ = TQ || {};
 TQ.AnimationManager = (function () {
     'use strict';
     var UNLIMIT = 99999999,
+        MIN_MOVE_TIME = 0.1,
         FLY_IN_POS_0 = -100, // 从屏幕外开始
         FLY_OUT_POS_1 = -100, // 到屏幕外结束
         DEFAULT_DELAY = 0,
@@ -452,7 +453,6 @@ TQ.AnimationManager = (function () {
 
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
-        var MIN_MOVE_TIME = 0.1;
         var speed = getSpeed(typeId),
             delay = state.delay,// fps,
             duration = state.duration, // fps
@@ -484,15 +484,30 @@ TQ.AnimationManager = (function () {
     }
 
     function composeFlyOutSag(typeId, startPos, destinationPos) {
+            // t1 = TQ.FrameCounter.t(), // end time
         var speed = getSpeed(typeId),
-            dt = Math.abs((destinationPos - startPos) / speed.actualSpeed),
-            t1 = TQ.FrameCounter.t(), // end time
-            t2 = t1 + dt,
-            velocity = speed.actualSpeed * ((destinationPos - startPos) > 0 ? 1 : -1);
+            delay = state.delay,// fps,
+            duration = state.duration, // fps
+            t1 = delay / TQ.FrameCounter.defaultFPS,
+            dampingDuration = TQ.SpringEffect.defaultConfig.dampingDuration, // seconds
+            t2 = t1 + (duration / TQ.FrameCounter.defaultFPS),
+            velocity,
+            dt = t2 - t1 - dampingDuration;
+        if (dt < MIN_MOVE_TIME) {
+            t1 = t2 - dampingDuration - MIN_MOVE_TIME;
+            dt = t2 - t1 - dampingDuration;
+        }
+
+        velocity = (destinationPos - startPos) / dt;
         return {
+            /// for editor only begin
+            delay: delay,
+            duration: duration,
+            /// for editor only end
+            destinationPos: destinationPos, // exactly stop at this point
             categoryID: SagCategory.OUT,
             typeID: typeId,
-            speed: speed.normSpeed, // degree/second
+            speed: speed.normSpeed,
             actualSpeed: velocity,
             value0: startPos,
             t1: t1, // start time
