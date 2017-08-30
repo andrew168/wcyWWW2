@@ -456,7 +456,7 @@ TQ.AnimationManager = (function () {
 
         var endSx = ele.getScaleInWorld().sx,
             startSx = 0.1 * endSx,
-            sag = composeFlyOutSag(SagType.SCALE_IN, startSx, endSx);
+            sag = composeFlyInSag(SagType.SCALE_IN, startSx, endSx);
         state.scaleIn = true;
         return recordSag(sag);
     }
