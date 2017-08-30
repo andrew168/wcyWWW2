@@ -150,5 +150,9 @@ TQ = TQ || {};
         aMarker.removeFromStage();
     };
 
+    p.isEditable = function () {
+        return false;
+    };
+
     TQ.Marker = Marker;
 }());
