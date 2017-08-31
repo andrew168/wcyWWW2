@@ -403,7 +403,8 @@ TQ = TQ || {};
     };
 
     SelectSet.updateByGesture = function(evt) {
-        var touches = TQ.Utility.getTouches(evt);
+        var selectedNothing = true,
+            touches = TQ.Utility.getTouches(evt);
         if (touches.length <= 0) {
             TQ.AssertExt.invalidLogic(touches.length <=0, "应该有接触点");
         }
@@ -422,11 +423,14 @@ TQ = TQ || {};
                 var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
                 if (!!ele2) {
                     TQ.SelectSet.add(ele2);
+                    selectedNothing = false;
                     return;
                 }
             }
-        } else {
-            TQ.SelectSet.clear();
+        }
+
+        if (selectedNothing) {
+            SelectSet.empty();
         }
     };
 
