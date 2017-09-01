@@ -668,7 +668,7 @@ TQ.AnimationManager = (function () {
 
     function save() {
         for (var prop in SagType) {
-            if (prop === SagType.NO) {
+            if (prop === "NO") {
                 continue;
             }
             var fn = type2fn(SagType[prop]);
