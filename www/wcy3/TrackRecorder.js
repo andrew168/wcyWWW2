@@ -132,6 +132,18 @@ window.TQ = window.TQ || {};
                 break;
         }
 
+        switch (sag.categoryID) {
+            case TQ.AnimationManager.IN:
+                track.inSagType = sag.type;
+                break;
+            case TQ.AnimationManager.IDLE:
+                track.idleSagType = sag.type;
+                break;
+            case TQ.AnimationManager.OUT:
+            default :
+                track.outSagType = sag.type;
+        }
+
         if (!track.hasSag) {
             trimTrack(track, TQ.FrameCounter.t());
             track.hasSag = true;
