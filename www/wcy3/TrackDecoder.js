@@ -211,6 +211,16 @@ window.TQ = window.TQ || {};
         channel.tid2 = tid2;
     };
 
+    TrackDecoder.getInSagType = function (channel) {
+        if (channel.sags && channel.sags[TQ.AnimationManager.SagCategory.IN]) {
+            var sag = channel.sags[TQ.AnimationManager.SagCategory.IN];
+            if (sag) {
+                return sag.typeID;
+            }
+        }
+        return null;
+    };
+
     TrackDecoder.calculateLastFrame = function(channel) {
         var tMax = 0;
         if (channel.sags) {

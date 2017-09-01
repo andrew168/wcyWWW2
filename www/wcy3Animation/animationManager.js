@@ -19,6 +19,8 @@ TQ.AnimationManager = (function () {
         },
 
         SagType = {
+            NO: 'no animation',
+
             // translate
             RIGHT_IN: 'sag right in',
             LEFT_IN: 'sag left in',
@@ -649,14 +651,16 @@ TQ.AnimationManager = (function () {
     }
 
     function checkSag(ele, type) {
-        var sag = getSag(ele, type),
-            fn = type2fn(type);
-        state[fn] = !!sag;
-        speeds[fn] = (sag) ? sag.speed : 2.5;
-        if (sag) {
-            state.delay = sag.delay || DEFAULT_DELAY;
-            state.duration = sag.duration || DEFAULT_DURATION;
-            return 1;
+        if (type !== SagType.NO) {
+            var sag = getSag(ele, type),
+                fn = type2fn(type);
+            state[fn] = !!sag;
+            speeds[fn] = (sag) ? sag.speed : 2.5;
+            if (sag) {
+                state.delay = sag.delay || DEFAULT_DELAY;
+                state.duration = sag.duration || DEFAULT_DURATION;
+                return 1;
+            }
         }
 
         return 0;
@@ -664,6 +668,9 @@ TQ.AnimationManager = (function () {
 
     function save() {
         for (var prop in SagType) {
+            if (prop === SagType.NO) {
+                continue;
+            }
             var fn = type2fn(SagType[prop]);
             if (state[fn]) {
                 var bak = state[fn];

@@ -98,6 +98,23 @@ TQ = TQ || {};
         }
     };
 
+    p.getInSagName = function() {
+        if (!this.hasSag) {
+            return null;
+        }
+
+        return TQ.TrackDecoder.getInSagType(this.x) ||
+            TQ.TrackDecoder.getInSagType(this.y) ||
+            TQ.TrackDecoder.getInSagType(this.sx) ||
+            TQ.TrackDecoder.getInSagType(this.sy) ||
+            TQ.TrackDecoder.getInSagType(this.rotation) ||
+            TQ.TrackDecoder.getInSagType(this.visible) ||
+            TQ.TrackDecoder.getInSagType(this.alpha) ||
+            TQ.TrackDecoder.getInSagType(this.colorR) ||
+            TQ.TrackDecoder.getInSagType(this.colorG) ||
+            TQ.TrackDecoder.getInSagType(this.colorB);
+    };
+
     AnimeTrack.validate = function(tracks) {
         AnimeTrack._validateOne(tracks.x);
         AnimeTrack._validateOne(tracks.y);

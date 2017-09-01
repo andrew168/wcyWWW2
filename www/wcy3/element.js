@@ -1934,5 +1934,13 @@ window.TQ = window.TQ || {};
         return true;
     };
 
+    p.getInSagName = function() {
+        if (!this.animeTrack) {
+            return null;
+        }
+
+        return this.animeTrack.getInSagName();
+    };
+
     TQ.Element = Element;
 }());
