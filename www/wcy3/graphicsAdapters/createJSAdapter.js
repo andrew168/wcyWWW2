@@ -298,6 +298,7 @@ var TQ = TQ || {};
         tsrWorld.M = parent.M.multiply(M);
         tsrWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
         tsrWorld.visible = parent.isVis;
+        tsrWorld.alpha = tsrWorld.alpha * parent.alpha;
         TQ.Log.matrixDebugInfo("parent: ", parent.M);
         TQ.Log.matrixDebugInfo(this.id + ": ", tsrWorld.M);
     };
