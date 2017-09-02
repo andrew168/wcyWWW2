@@ -275,8 +275,10 @@ var TQ = TQ || {};
         // 可见性：
         tsrWorld.isVis = tsrObj.visible;
         if (tsrObj.color !== undefined) {
-            tsrWorld.alpha = tsrObj.alpha;
             tsrWorld.color = tsrObj.color;
+        }
+        if (tsrObj.alpha !== undefined) {
+            tsrWorld.alpha = tsrObj.alpha;
         }
     };
 
