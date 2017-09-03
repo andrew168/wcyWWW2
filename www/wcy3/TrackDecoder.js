@@ -222,14 +222,29 @@ window.TQ = window.TQ || {};
     };
 
     TrackDecoder.calculateLastFrame = function(channel) {
-        var tMax = 0;
+        var tMax = 0,
+            tInMax = 0,
+            tOutMax = 0;
         if (channel.sags) {
             channel.sags.forEach(function(sag){
                 if (sag) {
-                    tMax = Math.max(sag.t2);
+                    switch (sag.categoryID) {
+                        case TQ.AnimationManager.SagCategory.IN:
+                            tInMax = Math.max(sag.t2);
+                            break;
+                        case TQ.AnimationManager.SagCategory.IDLE:
+                            // ToDo: idle时间是弹性的， = 总时间 - 入场时间 - 离场时间
+                            break;
+                        case TQ.AnimationManager.SagCategory.OUT:
+                            // ToDo: 计算离场时间
+                            break;
+                        default :
+                            break;
+                    }
                 }
             });
 
+            tMax = tInMax + tOutMax;
             return tMax;
         }
 
