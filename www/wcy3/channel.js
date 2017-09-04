@@ -6,7 +6,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function OneChannel(value, interpolationStyle) {
+    function Channel(value, interpolationStyle) {
         if ((value == undefined) || (value == null))
         {
             value = 0;
@@ -19,10 +19,10 @@ window.TQ = window.TQ || {};
         this.initialize(value, interpolationStyle);
     }
 
-    OneChannel.LINE_INTERPOLATION = 1;
-    OneChannel.JUMP_INTERPOLATION = 0;
+    Channel.LINE_INTERPOLATION = 1;
+    Channel.JUMP_INTERPOLATION = 0;
 
-    var p = OneChannel.prototype;
+    var p = Channel.prototype;
     p.t = [];
     p.value = [];
     p.c = [];
@@ -141,6 +141,6 @@ window.TQ = window.TQ || {};
         return (sag) ? sag.typeID : null;
     };
 
-    TQ.OneChannel = OneChannel;
-    TQ.Channel = OneChannel;
+    TQ.OneChannel = Channel;
+    TQ.Channel = Channel;
 })();
