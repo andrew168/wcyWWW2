@@ -115,6 +115,17 @@ TQ = TQ || {};
             TQ.TrackDecoder.getInSagType(this.colorB);
     };
 
+    p.getInSag = function () {
+        var inSag = null;
+        this.forEachChannel(function (channel) {
+            if (!inSag) {
+                inSag = channel.getInSag();
+            }
+        });
+
+        return inSag;
+    };
+
     AnimeTrack.validate = function(tracks) {
         AnimeTrack._validateOne(tracks.x);
         AnimeTrack._validateOne(tracks.y);
@@ -126,6 +137,19 @@ TQ = TQ || {};
         AnimeTrack._validateOne(tracks.colorR);
         AnimeTrack._validateOne(tracks.colorG);
         AnimeTrack._validateOne(tracks.colorB);
+    };
+
+    p.forEachChannel = function(callback) {
+        var prop,
+            channel,
+            self = this;
+
+        for (prop in self) {
+            channel = self[prop];
+            if (channel instanceof TQ.OneChannel) {
+                callback(channel);
+            }
+        }
     };
 
     AnimeTrack._validateOne = function(channel) {

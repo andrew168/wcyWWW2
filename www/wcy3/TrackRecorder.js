@@ -149,7 +149,17 @@ window.TQ = window.TQ || {};
             trimTrack(track, TQ.FrameCounter.t());
             track.hasSag = true;
         }
+
+        adjustIdleSagTime(track);
     };
+
+    function adjustIdleSagTime(track) {
+        var inSag = track.getInSag(),
+            tInSagEnd = inSag ? inSag.t2 : 0;
+        track.forEachChannel(function (channel) {
+            channel.setIdleSagT1(tInSagEnd);
+        });
+    }
 
     TrackRecorder.removeSag = function (element, sagTypeId) {
         var track = element.animeTrack;

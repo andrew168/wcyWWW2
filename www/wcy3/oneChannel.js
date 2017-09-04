@@ -74,5 +74,21 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.setIdleSagT1 = function (t1) {
+        if (!this.sags || this.sags.length <= 0) {
+            return;
+        }
+
+        var idleSag = this.sags[TQ.AnimationManager.SagCategory.IDLE];
+        if (idleSag) {
+            idleSag.t1 = t1;
+        }
+    };
+
+    p.getInSag = function() {
+        return (this.sags && this.sags[TQ.AnimationManager.SagCategory.IN]) ?
+            this.sags[TQ.AnimationManager.SagCategory.IN] : null;
+    };
+
     TQ.OneChannel = OneChannel;
 })();

@@ -78,7 +78,8 @@ window.TQ = window.TQ || {};
             return null;
         }
 
-        var n = channel.sags.length,
+        var SagCategory = TQ.AnimationManager.SagCategory,
+            n = channel.sags.length,
             i,
             item,
             lastSag = null;
@@ -88,13 +89,12 @@ window.TQ = window.TQ || {};
                 continue;
             }
 
-            if ((t < item.t1) && (item.categoryID !== TQ.AnimationManager.SagCategory.IN)) {
-                continue;
+            if ((t < item.t2) && (item.categoryID === SagCategory.IN)) { // in SAG
+                return item;
             }
 
-            if (((item.t1 <= t) || (item.categoryID !== TQ.AnimationManager.SagCategory.IN))
-                && (t <= item.t2)) {
-                return item; // 最多同时起作用的SAG只有一个，在一个track中
+            if ((item.t1 <= t) && (t <= item.t2)) { // idle SAG
+                return item;
             }
 
             if (!lastSag || (lastSag.t2 < item.t2)) {
@@ -122,7 +122,6 @@ window.TQ = window.TQ || {};
     }
 
     function calVisible(sag, channel, t) {
-        // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
         var T = sag.hideT + sag.showT,
             cycleNumber = Math.floor((t - sag.t1) / T),
             thisCycle = t - sag.t1 - T * cycleNumber;
@@ -212,13 +211,8 @@ window.TQ = window.TQ || {};
     };
 
     TrackDecoder.getInSagType = function (channel) {
-        if (channel.sags && channel.sags[TQ.AnimationManager.SagCategory.IN]) {
-            var sag = channel.sags[TQ.AnimationManager.SagCategory.IN];
-            if (sag) {
-                return sag.typeID;
-            }
-        }
-        return null;
+        var sag = channel.getInSag();
+        return (sag) ? sag.typeID: null;
     };
 
     TrackDecoder.calculateLastFrame = function(channel) {
