@@ -12,8 +12,6 @@ window.TQ = window.TQ || {};
 
     }
 
-    TrackDecoder.LINE_INTERPOLATION = 1;
-    TrackDecoder.JUMP_INTERPOLATION = 0;
     /*  animeTrack(Object coordinate) ==> World coordinate
      *  插值t时刻的轨迹，并保存到时间坐标系（jsonObj）之中，供绘制
      *  animeTrack: 保存关节点的运动数据，是在父物体坐标系下， 而且是经过关节点改进的父物体坐标系）。

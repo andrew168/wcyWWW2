@@ -12,7 +12,7 @@ window.TQ = window.TQ || {};
 
     }
 
-    TrackRecorder.style = TQ.TrackDecoder.LINE_INTERPOLATION;
+    TrackRecorder.style = TQ.Channel.LINE_INTERPOLATION;
     TrackRecorder.initialize = function () {};
 
     // 参见: Decorder的说明
@@ -59,7 +59,7 @@ window.TQ = window.TQ || {};
         }
 
         if (element.hasFlag(TQ.Element.VISIBLE_CHANGED)) { // 允许改变关节物体各个关节的可见性
-            TrackRecorder.recordOneChannel(track, track.visible, t, TQ.Pose.visible, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            TrackRecorder.recordOneChannel(track, track.visible, t, TQ.Pose.visible, TQ.Channel.JUMP_INTERPOLATION);
             element.clearFlag(TQ.Element.VISIBLE_CHANGED);
         }
 
@@ -254,7 +254,7 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, channel);
         assertNotUndefined(TQ.Dictionary.FoundNull, channel.tid1);
         assertNotNull(TQ.Dictionary.FoundNull,channel.tid1);
-        interpolationMethod = (interpolationMethod==null)? TQ.TrackDecoder.LINE_INTERPOLATION : interpolationMethod;
+        interpolationMethod = (interpolationMethod==null)? TQ.Channel.LINE_INTERPOLATION : interpolationMethod;
         TQ.TrackDecoder.searchInterval(t, channel);
         var tid1 = channel.tid1;
         var tid2 = channel.tid2;

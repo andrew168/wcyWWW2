@@ -11,7 +11,7 @@ window.TQ = window.TQ || {};
     {
 
     }
-    ActionRecorder.style = TQ.TrackDecoder.LINE_INTERPOLATION;
+    ActionRecorder.style = TQ.Channel.LINE_INTERPOLATION;
     ActionRecorder.initialize = function () {};
 
     // 参见: Decorder的说明
@@ -35,7 +35,7 @@ window.TQ = window.TQ || {};
             track.action =  new TQ.OneChannel(actionName);
         } else {
             if (element.hasFlag(TQ.Element.ACTION_CHANGED)) { // 允许改变关节物体各个关节的可见性
-                TQ.TrackRecorder.recordOneChannel(track, track.action, t, actionName, TQ.TrackDecoder.JUMP_INTERPOLATION);
+                TQ.TrackRecorder.recordOneChannel(track, track.action, t, actionName, TQ.Channel.JUMP_INTERPOLATION);
                 element.clearFlag(TQ.Element.ACTION_CHANGED);
             }
         }

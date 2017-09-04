@@ -84,9 +84,9 @@ TQ = TQ || {};
         }
 
         if (!desc.animeTrack.visible) { // 即时添加的元素
-            this.visible = new TQ.OneChannel(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+            this.visible = new TQ.OneChannel(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
             if (!TQ.FrameCounter.isAtBeginning()) {
-                TQ.TrackRecorder.recordOneChannel(this, this.visible, 0.0, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+                TQ.TrackRecorder.recordOneChannel(this, this.visible, 0.0, FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
             }
         } else { // 从文件中读入的元素
             this.visible = new TQ.OneChannel(desc.animeTrack.visible);
@@ -179,8 +179,8 @@ TQ = TQ || {};
 
     function changeVisibility(ele, t1, vis1, t2, vis2) {
         var track = ele.animeTrack;
-        TQ.TrackRecorder.recordOneChannel(track, track.visible, t1, vis1, TQ.TrackDecoder.JUMP_INTERPOLATION);
-        TQ.TrackRecorder.recordOneChannel(track, track.visible, t2, vis2, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneChannel(track, track.visible, t1, vis1, TQ.Channel.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneChannel(track, track.visible, t2, vis2, TQ.Channel.JUMP_INTERPOLATION);
     }
 
     AnimeTrack.setButton = function(ele, t) {
@@ -189,7 +189,7 @@ TQ = TQ || {};
         ele.animeTrack.visible.reset();
         AnimeTrack.hideToNow(ele, t);
         var track = ele.animeTrack;
-        TQ.TrackRecorder.recordOneChannel(track, track.visible, t + lifeTime, FALSE_NUM_0, TQ.TrackDecoder.JUMP_INTERPOLATION);
+        TQ.TrackRecorder.recordOneChannel(track, track.visible, t + lifeTime, FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
     };
 
     TQ.AnimeTrack = AnimeTrack;

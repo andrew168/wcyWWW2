@@ -1476,7 +1476,7 @@ window.TQ = window.TQ || {};
             // 先生成新的 物体坐标(TQ.Pose), 再转化到世界坐标系
             TQ.Log.debugInfo("update: regenerate coordinates 1: hasAnimation");
             var tt = t;
-            if (justRecorded && (TQ.TrackRecorder.style == TQ.TrackDecoder.JUMP_INTERPOLATION)) {
+            if (justRecorded && (TQ.TrackRecorder.style == TQ.Channel.JUMP_INTERPOLATION)) {
                 tt = t + 0.01; // 在脉冲运动下，迫使系统采用最新的位置
             }
             if (this.isSound() && this.isMultiScene) {//支持跨场景的声音

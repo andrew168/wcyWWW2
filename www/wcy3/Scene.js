@@ -401,7 +401,7 @@ TQ = TQ || {};
             if (TQ.FrameCounter.isAutoRewind()) {
                 $("#rewind").click();
             }
-            if (TQ.TrackRecorder.style == TQ.TrackDecoder.JUMP_INTERPOLATION) {
+            if (TQ.TrackRecorder.style == TQ.Channel.JUMP_INTERPOLATION) {
                 $("#linearMode").click();
             }
         }

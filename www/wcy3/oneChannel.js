@@ -13,11 +13,14 @@ window.TQ = window.TQ || {};
         }
 
         if (interpolationStyle === undefined) {
-            interpolationStyle = TQ.TrackDecoder.LINE_INTERPOLATION;
+            interpolationStyle = TQ.Channel.LINE_INTERPOLATION;
         }
 
         this.initialize(value, interpolationStyle);
     }
+
+    OneChannel.LINE_INTERPOLATION = 1;
+    OneChannel.JUMP_INTERPOLATION = 0;
 
     var p = OneChannel.prototype;
     p.t = [];
@@ -139,4 +142,5 @@ window.TQ = window.TQ || {};
     };
 
     TQ.OneChannel = OneChannel;
+    TQ.Channel = OneChannel;
 })();
