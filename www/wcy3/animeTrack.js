@@ -103,16 +103,16 @@ TQ = TQ || {};
             return null;
         }
 
-        return TQ.TrackDecoder.getInSagType(this.x) ||
-            TQ.TrackDecoder.getInSagType(this.y) ||
-            TQ.TrackDecoder.getInSagType(this.sx) ||
-            TQ.TrackDecoder.getInSagType(this.sy) ||
-            TQ.TrackDecoder.getInSagType(this.rotation) ||
-            TQ.TrackDecoder.getInSagType(this.visible) ||
-            TQ.TrackDecoder.getInSagType(this.alpha) ||
-            TQ.TrackDecoder.getInSagType(this.colorR) ||
-            TQ.TrackDecoder.getInSagType(this.colorG) ||
-            TQ.TrackDecoder.getInSagType(this.colorB);
+        return this.x.getInSagType() ||
+            this.y.getInSagType() ||
+            this.sx.getInSagType() ||
+            this.sy.getInSagType() ||
+            this.rotation.getInSagType() ||
+            this.visible.getInSagType() ||
+            this.alpha.getInSagType() ||
+            this.colorR.getInSagType() ||
+            this.colorG.getInSagType() ||
+            this.colorB.getInSagType();
     };
 
     p.getInSag = function () {

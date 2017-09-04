@@ -90,5 +90,10 @@ window.TQ = window.TQ || {};
             this.sags[TQ.AnimationManager.SagCategory.IN] : null;
     };
 
+    p.getInSagType = function () {
+        var sag = this.getInSag();
+        return (sag) ? sag.typeID : null;
+    };
+
     TQ.OneChannel = OneChannel;
 })();

@@ -210,11 +210,6 @@ window.TQ = window.TQ || {};
         channel.tid2 = tid2;
     };
 
-    TrackDecoder.getInSagType = function (channel) {
-        var sag = channel.getInSag();
-        return (sag) ? sag.typeID: null;
-    };
-
     TrackDecoder.calculateLastFrame = function(channel) {
         var tMax = 0,
             tInMax = 0,
