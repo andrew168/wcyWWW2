@@ -189,7 +189,6 @@ TQ.AnimationManager = (function () {
         if (!ele) {
             return;
         }
-        removeAllSags();
         var endAngle = ele.getRotation(),
             startAngle = endAngle - 360,
             sag = composeFlyInSag(SagType.ROTATE, startAngle, endAngle);
@@ -203,7 +202,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("twinkle");
         var speed = getSpeed(SagType.TWINKLE);
         var showT = 1 / speed.actualSpeed,
@@ -282,7 +280,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("left in");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyInSag(SagType.LEFT_IN, FLY_IN_POS_0, posInWorld.x);
@@ -296,7 +293,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("right in");
         var posInWorld = ele.getPositionInWorld(),
             startPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width,
@@ -311,7 +307,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("bottom in");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyInSag(SagType.BOTTOM_IN, FLY_IN_POS_0, posInWorld.y);
@@ -325,7 +320,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("top in");
         var posInWorld = ele.getPositionInWorld(),
             startPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
@@ -340,7 +334,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("left out");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyOutSag(SagType.LEFT_OUT, posInWorld.x, FLY_OUT_POS_1);
@@ -354,7 +347,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("right out");
         var posInWorld = ele.getPositionInWorld(),
             endPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width,
@@ -370,7 +362,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("bottom out");
         var posInWorld = ele.getPositionInWorld(),
             sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, FLY_OUT_POS_1);
@@ -384,7 +375,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("top out");
         var posInWorld = ele.getPositionInWorld(),
             endPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
@@ -400,7 +390,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         var endSx = ele.getScaleInWorld().sx,
             startSx = 0.1 * endSx,
             sag = composeFlyInSag(SagType.SCALE_IN, startSx, endSx);
@@ -414,7 +403,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("scale out");
         var startSx = ele.getScaleInWorld().sx,
             endSx = 0.1 * startSx,
@@ -429,7 +417,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("fade in");
         var endValue = ele.getAlpha(),
             startValue = 0,
@@ -444,7 +431,6 @@ TQ.AnimationManager = (function () {
             return;
         }
 
-        removeAllSags();
         console.log("fade out");
         var endValue = 0,
             startValue = ele.getAlpha(),

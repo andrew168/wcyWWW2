@@ -96,6 +96,7 @@ window.TQ = window.TQ || {};
         var track = element.animeTrack;
         TQ.AssertExt.invalidLogic(!!(track && track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
         var SagType = TQ.AnimationManager.SagType;
+        removeSameKindSag(track, sag.categoryID);
         switch (sag.typeID) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
@@ -313,6 +314,18 @@ window.TQ = window.TQ || {};
         track.sy.sags = null;
         track.rotation.sags = null;
         track.visible.sags = null;
+    }
+
+    function removeSameKindSag(track, categoryID) {
+        if (!track) {
+            return;
+        }
+
+        for (var prop in track) {
+            if (track[prop] && (track[prop] instanceof TQ.OneChannel)) {
+                track[prop].removeOneCategorySag(categoryID);
+            }
+        }
     }
 
     function getOneSag(track, sagTypeId) {

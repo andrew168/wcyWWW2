@@ -54,5 +54,25 @@ window.TQ = window.TQ || {};
         this.tid2 = 0;
     };
 
+    p.removeOneCategorySag = function(categoryID)
+    {
+        if (!this.sags || this.sags.length <=0) {
+            return;
+        }
+
+        var n = this.sags.length,
+            i;
+        for (i = 0; i < n; i++) {
+            var item = this.sags[i];
+            if (!item) {
+                continue;
+            }
+
+            if (item.categoryID === categoryID) {
+                return this.sags.splice(i, 1);
+            }
+        }
+    };
+
     TQ.OneChannel = OneChannel;
 })();
