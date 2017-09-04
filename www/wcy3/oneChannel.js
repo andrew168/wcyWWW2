@@ -74,6 +74,49 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.calculateLastFrame = function() {
+        var tMax = 0,
+            tInMax = 0,
+            tOutMax = 0;
+        if (this.sags) {
+            this.sags.forEach(function (sag) {
+                if (sag) {
+                    switch (sag.categoryID) {
+                        case TQ.AnimationManager.SagCategory.IN:
+                            tInMax = Math.max(sag.t2);
+                            break;
+                        case TQ.AnimationManager.SagCategory.IDLE:
+                            // ToDo: idle时间是弹性的， = 总时间 - 入场时间 - 离场时间
+                            break;
+                        case TQ.AnimationManager.SagCategory.OUT:
+                            // ToDo: 计算离场时间
+                            break;
+                        default :
+                            break;
+                    }
+                }
+            });
+
+            tMax = tInMax + tOutMax;
+            return tMax;
+        }
+
+        if (!this.t) {
+            return tMax;
+        }
+        var num = this.t.length;
+        tMax = this.t[0];
+        if (num > 1) { // 数据合理性检查
+            for (var i = 1; i < num; i++) {
+                assertTrue(TQ.Dictionary.INVALID_LOGIC, tMax <= this.t[i]);
+                tMax = Math.max(tMax, this.t[i]);
+            }
+        }
+
+        tMax = this.t[num - 1];
+        return tMax;
+    };
+
     p.setIdleSagT1 = function (t1) {
         if (!this.sags || this.sags.length <= 0) {
             return;

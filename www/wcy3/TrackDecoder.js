@@ -206,45 +206,5 @@ window.TQ = window.TQ || {};
         channel.tid2 = tid2;
     };
 
-    TrackDecoder.calculateLastFrame = function(channel) {
-        var tMax = 0,
-            tInMax = 0,
-            tOutMax = 0;
-        if (channel.sags) {
-            channel.sags.forEach(function(sag){
-                if (sag) {
-                    switch (sag.categoryID) {
-                        case TQ.AnimationManager.SagCategory.IN:
-                            tInMax = Math.max(sag.t2);
-                            break;
-                        case TQ.AnimationManager.SagCategory.IDLE:
-                            // ToDo: idle时间是弹性的， = 总时间 - 入场时间 - 离场时间
-                            break;
-                        case TQ.AnimationManager.SagCategory.OUT:
-                            // ToDo: 计算离场时间
-                            break;
-                        default :
-                            break;
-                    }
-                }
-            });
-
-            tMax = tInMax + tOutMax;
-            return tMax;
-        }
-
-        if ( (!channel) || (!channel.t)) {return tMax;}
-        var num = channel.t.length;
-		tMax = channel.t[0];
-        if (num > 1) { // 数据合理性检查
-            for (var i = 1; i < num; i++) {
-                assertTrue(TQ.Dictionary.INVALID_LOGIC, tMax <= channel.t[i]);
-                tMax = Math.max(tMax, channel.t[i]);
-            }
-        }
-
-        tMax = channel.t[num - 1];
-        return tMax;
-    };
     TQ.TrackDecoder = TrackDecoder;
 }());

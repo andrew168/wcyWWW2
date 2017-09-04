@@ -1666,7 +1666,7 @@ window.TQ = window.TQ || {};
     p.calculateLastFrame = function () {
         var tMax = 0;
         if (!!this.animeTrack) {
-            tMax = Math.max(tMax, TQ.AnimeTrack.calculateLastFrame(this.animeTrack));
+            tMax = Math.max(tMax, this.animeTrack.calculateLastFrame());
         }
 
         if (!!p.children) {

@@ -157,15 +157,11 @@ TQ = TQ || {};
         channel.tid2 = (channel.tid2 == undefined) ? 0: channel.tid2;
     };
 
-    AnimeTrack.calculateLastFrame = function(track) {
-        assertTrue(TQ.Dictionary.INVALID_LOGIC, !!track);
+    p.calculateLastFrame = function() {
         var tMax = 0;
-        tMax = Math.max(tMax, TQ.TrackDecoder.calculateLastFrame(track.x));
-        tMax = Math.max(tMax, TQ.TrackDecoder.calculateLastFrame(track.y));
-        tMax = Math.max(tMax, TQ.TrackDecoder.calculateLastFrame(track.sx));
-        tMax = Math.max(tMax, TQ.TrackDecoder.calculateLastFrame(track.sy));
-        tMax = Math.max(tMax, TQ.TrackDecoder.calculateLastFrame(track.rotation));
-        tMax = Math.max(tMax, TQ.TrackDecoder.calculateLastFrame(track.visible));
+        this.forEachChannel(function(channel){
+            tMax = Math.max(tMax, channel.calculateLastFrame());
+        });
         return tMax;
     };
 
