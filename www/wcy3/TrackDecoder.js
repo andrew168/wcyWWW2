@@ -96,10 +96,6 @@ window.TQ = window.TQ || {};
             if ((item.t1 <= t) && (t <= item.t2)) { // idle SAG
                 return item;
             }
-
-            if (!lastSag || (lastSag.t2 < item.t2)) {
-                lastSag = item;
-            }
         }
         return lastSag;
     }
