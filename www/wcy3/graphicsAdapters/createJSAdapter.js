@@ -17,7 +17,8 @@ var TQ = TQ || {};
         sy: 1,
         M: TQ.Matrix2D.I(),
         IM: TQ.Matrix2D.I(),   // Inverse Matrix, 逆矩阵
-        visible: true  // 没有animeTrack， 没有M， 都应该是可见的
+        visible: true,  // 没有animeTrack， 没有M， 都应该是可见的
+        alpha: 1
     };
 
     function getDefaultRootTsr() {
