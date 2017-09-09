@@ -169,7 +169,7 @@ TQ = TQ || {};
         // * SAG和自由绘制的动画是互斥的， 每个元素只能选其一，不能混合
         // * SAG元素的idle时间是弹性的，= 场景总长度 - 本元素inSagMax， 但是， 最少 5s (防止，简单场景只有进场， 没有停留时间)
         if (this.hasSag) {
-            var tIdleDuration = DEFAULT_SAG_IDLE_LENGTH;
+            var tIdleDuration = DEFAULT_SAG_IDLE_LENGTH/1000;
             tMax = tMax + tIdleDuration;
         }
 
