@@ -200,8 +200,7 @@ window.TQ = window.TQ || {};
                 break;
         }
 
-        track.hasSag = hasSag(track.x) || hasSag(track.y) || hasSag(track.sx) || hasSag(track.sy) ||
-            hasSag(track.rotation) || hasSag(track.alpha) || hasSag(track.visible);
+        track.updateSagFlag();
     };
 
     TrackRecorder.getSag = function (element, sagTypeId) {

@@ -10,7 +10,8 @@ TQ = TQ || {};
         this.initialize(desc);
     }
     var FALSE_NUM_0 = 0, // false
-        TRUE_NUM_1 = 1;
+        TRUE_NUM_1 = 1,
+        DEFAULT_SAG_IDLE_LENGTH = 5000; // 每个元素，最少持续5s钟（包括入场，idle和出场）
     var p = AnimeTrack.prototype;
     p.erase = function(track) {
         if (this.x) this.x.erase();
@@ -162,6 +163,16 @@ TQ = TQ || {};
         this.forEachChannel(function(channel){
             tMax = Math.max(tMax, channel.calculateLastFrame());
         });
+
+        ///基本假设：
+        // * 对于SAG，  此时的tMax只是tInSagMax， 没有包括idleSag的时间
+        // * SAG和自由绘制的动画是互斥的， 每个元素只能选其一，不能混合
+        // * SAG元素的idle时间是弹性的，= 场景总长度 - 本元素inSagMax， 但是， 最少 5s (防止，简单场景只有进场， 没有停留时间)
+        if (this.hasSag) {
+            var tIdleDuration = DEFAULT_SAG_IDLE_LENGTH;
+            tMax = tMax + tIdleDuration;
+        }
+
         return tMax;
     };
 
@@ -190,6 +201,19 @@ TQ = TQ || {};
         AnimeTrack.hideToNow(ele, t);
         var track = ele.animeTrack;
         TQ.TrackRecorder.recordOneChannel(track, track.visible, t + lifeTime, FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
+    };
+
+    p.updateSagFlag = function() {
+        this.hasSag = hasSag(this.x) ||
+            hasSag(this.y) ||
+            hasSag(this.sx) ||
+            hasSag(this.sy) ||
+            hasSag(this.rotation) ||
+            hasSag(this.alpha) ||
+            hasSag(this.visible) ||
+            hasSag(this.colorR) ||
+            hasSag(this.colorG) ||
+            hasSag(this.colorB);
     };
 
     TQ.AnimeTrack = AnimeTrack;
