@@ -14,6 +14,7 @@
     "crypto": "0.0.3",
     "del": "^2.0.2",
     "fs": "0.0.2",
+    "gulp-angular-gettext": "^2.2.0",
     "gulp-header": "^1.7.1",
     "gulp-if": "^2.0.0",
     "gulp-load-plugins": "^1.0.0-rc.1",

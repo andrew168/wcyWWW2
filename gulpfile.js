@@ -4,7 +4,9 @@
 var srcPath = 'E:\\projects\\WcyCore\\www',
     dstPath1 = 'E:\\projects\\cardforvote\\www',
     dstPath2 = 'E:\\projects\\cardforvote\\ksWww';
-var gulp = require('gulp');
+var gulp = require('gulp'),
+    gettext = require('gulp-angular-gettext');
+
 var $ = require('gulp-load-plugins')(); //jshint ignore:line
 var uglifyjs = require("uglify-js");
 var fs = require('fs');
@@ -95,4 +97,36 @@ gulp.task('default', ['config', 'copy_debug_tools', 'copy_build_tools'], functio
 gulp.task('hot_sync', ['config', 'copy_debug_tools', 'copy_build_tools'], function() {
     console.log("hot sync souce to voteCard");
     gulp.start('wcylib_concat');
+});
+
+gulp.task('extract_string_const', function(){
+    var source = ['E:\\projects\\WcyCore\\www\\wcy3App\\wcyService.js'];
+    // var source = ['www\\wcy3\\stringConstExtractDemo.js'];
+    // var source = ['www\\wcy3\\**\\*.js'];
+    return gulp.src(source)
+        .pipe(gettext.extract('template.pot', {
+            "startDelim": '"',
+            "endDelim": '"',
+            "markerName": "",
+            "markerNames": [],
+            "moduleName": "Locale",
+            "moduleMethodString": "getStr",
+            "moduleMethodPlural": "getStr",
+            "attribute": "",
+            "attributes": [],
+            "lineNumbers": true,
+            "format": "javascript",
+            "defaultLanguage": false,
+            "requirejs": false
+        }))
+        .pipe(gulp.dest('po/'));
+});
+
+gulp.task('translations', function () {
+    return gulp.src('po/**/*.po')
+        .pipe(gettext.compile({
+            // options to pass to angular-gettext-tools...
+            format: 'json'
+        }))
+        .pipe(gulp.dest('dist/translations/'));
 });
