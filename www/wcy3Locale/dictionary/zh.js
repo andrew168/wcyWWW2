@@ -1,4 +1,5 @@
-var dict = {
+var TQ = TQ || {};
+TQ.LocaleDict = {
     'is loading...': '正在加载...',
     'uploading...': '努力上传中...',
     'please install': '请下载安装',
@@ -15,5 +16,8 @@ var dict = {
     'the animation of this element is out of limit!': '该元素的动画超长， 请尽快保存!',
     'please select an object first!': '请先选择物体！',
     'hey, the network connection lost': '哎呀，网络有问题？',
-
 };
+
+if (TQ.Locale) { // 如果localeManager先加载成了
+    TQ.Locale.setDictionary(TQ.LocaleDict);
+}
