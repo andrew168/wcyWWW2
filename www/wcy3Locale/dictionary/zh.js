@@ -1,5 +1,6 @@
 var TQ = TQ || {};
 TQ.LocaleDict = {
+    'new': '新建',
     'is loading...': '正在加载...',
     'uploading...': '努力上传中...',
     'please install': '请下载安装',

@@ -324,4 +324,7 @@ function DashCtrl(
     $scope.makeOrder = function() {
         TQ.Pay.showButton();
     }
+    $scope.getStr = function(tag) {
+        return TQ.Locale.getStr(tag);
+    }
 }
