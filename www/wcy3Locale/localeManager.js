@@ -3,12 +3,26 @@
  */
 var TQ = TQ || {};
 TQ.Locale = (function () {
-    var dict = TQ.LocaleDict;
-    var Locale = {
+    "use strict";
+    var dict = {};
+    var self = {
+        setLang: setLang,
         setDictionary : setDictionary,
         getStr: getStr
     };
 
+    function setLang(lang) {
+        var $http = angular.element(document.body).injector().get('$http');
+        $http({
+            method: 'GET',
+            url: '/dictionary/' + lang +'.json'
+        }).then(function onSuccess(response) {
+            var data = (response.status === 200) ? response.data : [];
+            if (typeof data === 'object') {
+                dict = data;
+            }
+        });
+    }
     function setDictionary(newDict) {
         dict = newDict;
     }
@@ -18,8 +32,5 @@ TQ.Locale = (function () {
         return dict[tag] || tag;
     }
 
-    if (TQ.LocaleDict) { // 如果dict先加载成功
-        dict = TQ.LocaleDict;
-    }
-    return Locale;
+    return self;
 }());
