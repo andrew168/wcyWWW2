@@ -37,19 +37,25 @@ TQ.Log = (function () {
     function close() {logLevel = self.CLOSE;}
     function setLevel(level) { logLevel = level;}
     function trace(str) {  //  只用于跟踪调试, (改info为trace), 不能直接出现在 release版中,
-      console.log(str);
+      debugInfo(str);
     }
 
     function criticalError(str) {
-        if (level >= self.CRITICAL_LEVEL) console.error(str);
+        if (logLevel >= self.CRITICAL_LEVEL) {
+            console.error(str);
+        }
     }
 
     function error(str) {
-        if (logLevel >= self.ERROR_LEVEL) console.error(str);
+        if (logLevel >= self.ERROR_LEVEL) {
+            console.error(str);
+        }
     }
 
     function warn(str) {
-        if (logLevel >= self.WARN_LEVEL) console.warn(str);
+        if (logLevel >= self.WARN_LEVEL) {
+            console.warn(str);
+        }
     }
 
     function depreciated(str) {
@@ -57,22 +63,28 @@ TQ.Log = (function () {
             if (!str) {
                 str = "";
             }
-            console.error("this is depreciated. " + str);
+            error("this is depreciated. " + str);
         }
     }
 
     function debugInfo(str) {
-        console.info(str);
+        if (logLevel >= self.INFO_LEVEL) {
+            console.info(str);
+        }
     }
 
     function tsrDebugInfo(msg, obj) {
-        debugInfo(msg + "("+ obj.x.toFixed(2) + "," + obj.y.toFixed(2) + "), Scale(" +
-            obj.sx.toFixed(2) + "," + obj.sy.toFixed(2) + "), A:" + obj.rotation.toFixed(2));
+        if (logLevel >= self.INFO_LEVEL) {
+            debugInfo(msg + "(" + obj.x.toFixed(2) + "," + obj.y.toFixed(2) + "), Scale(" +
+                obj.sx.toFixed(2) + "," + obj.sy.toFixed(2) + "), A:" + obj.rotation.toFixed(2));
+        }
     }
 
     function matrixDebugInfo(msg, m) {
-        debugInfo(msg + "matrix translation: " + m.elements[0][2].toFixed(20) + ", " +
-            m.elements[1][2].toFixed(20) + " " + m.elements[2][2].toFixed(20));
+        if (logLevel >= self.INFO_LEVEL) {
+            debugInfo(msg + "matrix translation: " + m.elements[0][2].toFixed(20) + ", " +
+                m.elements[1][2].toFixed(20) + " " + m.elements[2][2].toFixed(20));
+        }
     }
 
     function alertError(str) {
@@ -102,13 +114,17 @@ TQ.Log = (function () {
         if (!str) {
             str = "";
         }
-        console.error("必须升级到：" + str);
+        if (logLevel >= self.ERROR_LEVEL) {
+            console.error("必须升级到：" + str);
+        }
     }
 
     // init
     if (logLevel >= self.INFO_LEVEL) {
         self.info = self.out = function (str) {
-            console.log(str);
+            if (logLevel >= self.INFO_LEVEL) {
+                console.log(str);
+            }
         };
     } else {
         self.debugInfo = self.info = self.out = function () {

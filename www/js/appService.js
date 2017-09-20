@@ -67,7 +67,11 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     }
 
     function doInit() {
-            if (_initialized) {
+        //remove_debugger_begin
+        //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
+        //remove_debugger_end
+
+        if (_initialized) {
                 TQ.Log.error("Duplicated call in _init");
                 return;
             }
