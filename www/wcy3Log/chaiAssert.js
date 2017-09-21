@@ -3302,7 +3302,7 @@ module.exports = function (chai, util) {
    * Asserts that a function does not changes the value of a property
    *
    *     var obj = { val: 10 };
-   *     var fn = function() { console.log('foo'); };
+   *     var fn = function() { TQ.Log.debugInfo('foo'); };
    *     assert.doesNotChange(fn, obj, 'val');
    *
    * @name doesNotChange

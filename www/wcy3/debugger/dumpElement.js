@@ -49,7 +49,7 @@ var TQDebugger = TQDebugger || {};
         if (!_eleSelected) {
             _eleSelected = TQ.SelectSet.peekLatestEditableEle();
             if (!_eleSelected) {
-                console.log("select an element, first!");
+                TQ.Log.debugInfo("select an element, first!");
             }
         }
         return _eleSelected;
@@ -88,7 +88,7 @@ var TQDebugger = TQDebugger || {};
         var pos = e.getPositionInWorld();
         msg += "In World: x = " + pos.x.toFixed(1) + " y=" + pos.y.toFixed(1);
 
-        console.log(msg);
+        TQ.Log.debugInfo(msg);
         if (e.children && e.children.length > 0) {
             dumpArray(depth + 1, e.children);
         }

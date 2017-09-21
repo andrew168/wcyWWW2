@@ -85,122 +85,122 @@ function FileService($cordovaFile, DeviceService) {
         $cordovaFile.getFreeDiskSpace()
             .then(function (success) {
                 // success in kilobytes
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         // CHECK
         $cordovaFile.checkDir(rootFolder, "demoDir1")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         $cordovaFile.checkFile(rootFolder, "demoFile1.txt")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         // CREATE
         $cordovaFile.createDir(rootFolder, "demoDir1", false)
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         $cordovaFile.createFile(rootFolder + "/demoDir1", "demoFile2.txt", true)
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         // WRITE
         $cordovaFile.writeFile(rootFolder, "demoFile3.txt", "demo data huge buffer end", true)
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         // READ
         $cordovaFile.readAsText(rootFolder, "demoFile3.txt")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         $cordovaFile.writeExistingFile(rootFolder, "demoFile3.txt", "overriteFile")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         // READ
         $cordovaFile.readAsText(rootFolder, "demoFile3.txt")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         // MOVE
         $cordovaFile.moveDir(rootFolder, "dir", cordova.file.tempDirectory, "demoDir1")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         $cordovaFile.moveFile(rootFolder, "demoFile3.txt", cordova.file.tempDirectory)
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         // COPY
         $cordovaFile.copyDir(rootFolder, "dir", cordova.file.tempDirectory, "demoDir1")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         $cordovaFile.copyFile(rootFolder, "demoFile3.txt", cordova.file.tempDirectory, "demoFile2.txt")
             .then(function (success) {
-                console.log(success);
+                TQ.Log.debugInfo(success);
             }, function (error) {
-                console.log(error);
+                TQ.Log.error(error);
             });
 
         /*            // REMOVE
          $cordovaFile.removeDir(rootFolder, "demoDir1")
          .then(function (success) {
-         console.log(success);
+         TQ.Log.debugInfo(success);
          }, function (error) {
-         console.log(error);
+         TQ.Log.error(error);
          });
 
          $cordovaFile.removeFile(rootFolder +"/demoDir1", "demoFile1.txt")
          .then(function (success) {
-         console.log(success);
+         TQ.Log.debugInfo(success);
          }, function (error) {
-         console.log(error);
+         TQ.Log.error(error);
          });
 
          $cordovaFile.removeRecursively(rootFolder, "demoDir1")
          .then(function (success) {
-         console.log(success);
+         TQ.Log.debugInfo(success);
          }, function (error) {
-         console.log(error);
+         TQ.Log.error(error);
          });
          */
     }

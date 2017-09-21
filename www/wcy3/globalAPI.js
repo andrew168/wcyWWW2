@@ -193,7 +193,7 @@ window.TQ = window.TQ || {};
 
     // type: 烟火的种类，默认1,      系统保留扩展其它取值）
     WCY.firework = function(type) {
-        console.log(type);
+        TQ.Log.debugInfo(type);
     };
 
     //------------- 以下的函数用于配置系统参数 -------------------------

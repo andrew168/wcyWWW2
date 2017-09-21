@@ -117,7 +117,7 @@ var TQ = TQ || {};
 
     function disableBrowserZooming() {
         document.addEventListener('mousewheel', function (e) {
-            // console.log(e.type, e.deltaX, e.deltaY, e.wheelDeltaX, e.wheelDeltaY);
+            // TQ.Log.debugInfo(e.type, e.deltaX, e.deltaY, e.wheelDeltaX, e.wheelDeltaY);
             e.preventDefault();
         });
     }
@@ -131,7 +131,7 @@ var TQ = TQ || {};
         document.addEventListener('touchstart', disableScroll, true);
 
         function disableScroll(e) {
-            // console.log(e.type, e.target.tagName, e.srcElement.tagName, e.currentTarget ? e.currentTarget.tagName: 'None',
+            // TQ.Log.debugInfo(e.type, e.target.tagName, e.srcElement.tagName, e.currentTarget ? e.currentTarget.tagName: 'None',
             //     e.target.nodeName, e.srcElement.nodeName, e.currentTarget ? e.currentTarget.nodeName: 'None');
             var whiteList = ["BUTTON", 'INPUT', 'TEXTAREA'];
             var tag = "";
@@ -146,7 +146,7 @@ var TQ = TQ || {};
     }
 
     function notHandled(e) {
-        console.log("event not handled: " + e.type + ", " + (e.touches? e.touches.length: 0));
+        TQ.Log.debugInfo("event not handled: " + e.type + ", " + (e.touches? e.touches.length: 0));
     }
 
     function hasStarted() {

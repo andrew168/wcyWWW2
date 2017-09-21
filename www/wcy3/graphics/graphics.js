@@ -82,7 +82,7 @@ TQ.Graphics = (function () {
             _canvas.height = h;
         }
         if (!!currScene) {
-            console.log(TQ.State.viewportWidth, TQ.State.viewportHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
+            TQ.Log.debugInfo(TQ.State.viewportWidth, TQ.State.viewportHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
         }
         return canvasStyle;
     }

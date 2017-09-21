@@ -59,7 +59,7 @@ var TQ = TQ || {};
         e.preventDefault();
         var result = stage.hitTest(evt.stageX, evt.stageY);
         if (result) {
-            console.log("OK!");
+            TQ.Log.debugInfo("OK!");
         }
     }
 
@@ -93,7 +93,7 @@ var TQ = TQ || {};
         if (startEle.isMarker()) {
             // startEle.limitHostNoRotation();
         }
-        // console.log("element selected: " + startEle.getType() + ", Id=" + startEle.id);
+        // TQ.Log.debugInfo("element selected: " + startEle.getType() + ", Id=" + startEle.id);
         _showFloatToolbar(startEle.getType());
         TQ.AnimationManager.reset(startEle);
         resetStartParams(e);
@@ -144,7 +144,7 @@ var TQ = TQ || {};
             document.addEventListener('mouseup', onKeyUp);
         }
 
-        console.log("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
+        TQ.Log.debugInfo("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
         TQ.CommandMgr.startNewOperation();
         updateStartElement(e);
         e.stopPropagation();
@@ -185,7 +185,7 @@ var TQ = TQ || {};
             startEle = null;
         }
 
-        console.log("touch end, or mouse up " + TQ.Utility.getTouchNumbers(e));
+        TQ.Log.debugInfo("touch end, or mouse up " + TQ.Utility.getTouchNumbers(e));
     }
 
     function onMouseDown(e) {
@@ -218,7 +218,7 @@ var TQ = TQ || {};
         }
 
         if (!startEle) {
-            console.log("not started, force to start in onDrag!");
+            TQ.Log.debugInfo("not started, force to start in onDrag!");
             return onTouchStart(e);
         }
         if (!startEle) {
@@ -258,7 +258,7 @@ var TQ = TQ || {};
         }
 
         if (!startEle) {
-            console.log("pinch..." + TQ.Utility.getTouchNumbers(e));
+            TQ.Log.debugInfo("pinch..." + TQ.Utility.getTouchNumbers(e));
         } else {
             if (e.type.indexOf('rotate') >=0) {
                 /*
@@ -267,12 +267,12 @@ var TQ = TQ || {};
                  * ** 逆时针是负！！！！
                  */
                 deltaTrsa.ang = startEle.dc2World({rotation: e.gesture.rotation}).rotation;
-                console.log("rotate: " + deltaTrsa.ang);
+                TQ.Log.debugInfo("rotate: " + deltaTrsa.ang);
             } else if (e.type.indexOf('pinch') >= 0) {
                 deltaTrsa.scale.determineScale(startEle, e);
-                console.log("pinch" + deltaTrsa.scale.x + "," + deltaTrsa.scale.y);
+                TQ.Log.debugInfo("pinch" + deltaTrsa.scale.x + "," + deltaTrsa.scale.y);
             } else {
-                console.log("not pinch, rotate: " + e.type);
+                TQ.Log.debugInfo("not pinch, rotate: " + e.type);
             }
             var newScaleX = startTrsa.scale.sx * deltaTrsa.scale.sx,
                 newScaleY = startTrsa.scale.sy * deltaTrsa.scale.sy;

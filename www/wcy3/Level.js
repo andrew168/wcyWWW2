@@ -590,7 +590,7 @@ window.TQ = window.TQ || {};
             this.cleanStage();
         } else {
             // is loading
-            console.log("is loading, or not loaded!");
+            TQ.Log.debugInfo("is loading, or not loaded!");
         }
         TQ.SoundMgr.removeAll();
         TQ.ParticleMgr.removeAll();

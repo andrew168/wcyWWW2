@@ -120,7 +120,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     desc.src = res.url;
                     TQ.SceneEditor.addItem(desc);
                 }, function (err) {
-                    console.log(err);
+                    TQ.Log.error(err);
                 })
                 .finally(TQ.MessageBox.hide);
         } else {
@@ -365,7 +365,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         var q = $q.defer();
         function onSelectOne() {
-            console.log('changed');
+            TQ.Log.debugInfo('changed');
             var files = domEle.files;
             if ((files.length > 0)) {
                 q.resolve({aFile:files[0], matType: matType, useDevice: useDevice});
@@ -454,7 +454,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function insertMat(data) {
         return uploadMat(data).
             then(addItemByData, function (err) {
-                console.log(err);
+                TQ.Log.error(err);
             })
             .finally(TQ.MessageBox.hide);
     }
@@ -471,7 +471,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             TQ.Log.alertInfo("微信InsertLocal：" + JSON.stringify(aFile));
             processOneMat(aFile, matType);
         }, function (err) {
-            console.log(err);
+            TQ.Log.error(err);
         });
     }
 
@@ -771,7 +771,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     // type: 烟火的种类，默认1,      系统保留扩展其它取值）
     function firework(type) {
-        console.log(type);
+        TQ.Log.debugInfo(type);
     }
 
     //------------- 以下的函数用于配置系统参数 -------------------------

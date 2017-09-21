@@ -4,7 +4,7 @@
 
 (function () {
     TQ.Scene.upgradeToLatest = function(objJson) {
-        console.log("upgrade: old version: " + (!objJson.version? "No" : objJson.version));
+        TQ.Log.debugInfo("upgrade: old version: " + (!objJson.version? "No" : objJson.version));
         if (!objJson.version || isV_Format(objJson.version)) { // no version, V1, V2, V3
             switch (objJson.version) {
                 case TQ.Scene.VER3:
@@ -26,7 +26,7 @@
         }
 
         // now it's latest
-        console.log(" upgrade result: version = " + objJson.version + ", designed region(W,H)： W = " +
+        TQ.Log.debugInfo(" upgrade result: version = " + objJson.version + ", designed region(W,H)： W = " +
             objJson.designatedWidth + ", H=" + objJson.designatedHeight + ")");
     };
 

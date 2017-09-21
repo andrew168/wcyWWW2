@@ -185,7 +185,7 @@ function DashCtrl(
         $cordovaImagePicker.getPictures(options)
             .then(function (results) {
                 for (var i = 0; i < results.length; i++) {
-                    console.log('Image URI: ' + results[i]);
+                    TQ.Log.debugInfo('Image URI: ' + results[i]);
                     x += 50;
                     y += 50;
                     EditorService.insertBkImage(results[i], x, y);
@@ -285,11 +285,11 @@ function DashCtrl(
         $cordovaSocialSharing
             .share(message, subject, file, link) // Share via native share sheet
             .then(function (result) {
-                console.log('fb success!');
-                console.log(result);
+                TQ.Log.debugInfo('fb success!');
+                TQ.Log.debugInfo(result);
             }, function (err) {
-                console.log('fb error!');
-                console.log(err);
+                TQ.Log.debugInfo('fb error!');
+                TQ.Log.error(err);
             });
     };
 
@@ -301,11 +301,11 @@ function DashCtrl(
         $cordovaSocialSharing
             .shareViaFacebook(message, image, link)
             .then(function (result) {
-                console.log('fb success!');
-                console.log(result);
+                TQ.Log.debugInfo('fb success!');
+                TQ.Log.debugInfo(result);
             }, function (err) {
-                console.log('fb error!');
-                console.log(err);
+                TQ.Log.debugInfo('fb error!');
+                TQ.Log.error(err);
             });
     };
 

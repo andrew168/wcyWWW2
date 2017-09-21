@@ -151,7 +151,7 @@ function WCY($http, FileService, WxService, NetService) {
         function _onReceivedWcyList(res) {
             var data = res.data;
             if (data) {
-                console.log(data);
+                TQ.Log.debugInfo(data);
             } else {
                 TQ.Log.error("wrong logic");
             }
@@ -247,11 +247,11 @@ function WCY($http, FileService, WxService, NetService) {
         if (!content) {
             $http.get(url, {})
                 .success(function (data, status, headers, config) {
-                    console.log(data);
+                    TQ.Log.debugInfo(data);
                     content = JSON.stringify(data);
                     _openInJson(data);
                 }).error(function (data, status, headers, config) {
-                    console.log(data);
+                    TQ.Log.debugInfo(data);
                 });
         } else {
             var fileInfo = {name: filename, content: content};
@@ -326,7 +326,7 @@ function WCY($http, FileService, WxService, NetService) {
                 TQ.MessageBox.hide();
             }
 
-            console.log(data);
+            TQ.Log.debugInfo(data);
         }
     }
 
@@ -346,7 +346,7 @@ function WCY($http, FileService, WxService, NetService) {
 
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
             TQUtility.triggerEvent(document.body, TQ.Scene.EVENT_SAVED);
-            console.log(data);
+            TQ.Log.debugInfo(data);
             TQ.MessageBox.hide();
         }
 
@@ -399,7 +399,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _onFail(data) {
-        console.log(data);
+        TQ.Log.debugInfo(data);
         TQ.MessageBox.prompt(TQ.Locale.getStr('hey, the network connection lost'));
     }
 

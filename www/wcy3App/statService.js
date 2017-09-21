@@ -16,25 +16,25 @@ function StatService($timeout, $http) {
     }
 
     function report(status) {
-        console.log("started");
+        TQ.Log.debugInfo("started");
         // 服务器收不到本页面#以后的内容（SPA应用的特点！！！）， 所以， 必须 把本页面url中的hash上传
         // 而且， 参数取值中，不能含特殊字符， 例如：#，/等
         $http.get(TQ.Config.TEST_HOST + '/share' + "?hash=" + status + location.hash.substr(2), {})
             .success(function (data, status, headers, config) {
-                console.log(data);
+                TQ.Log.debugInfo(data);
             }).error(function (data, status, headers, config) {
-                console.log(data);
+                TQ.Log.debugInfo(data);
             });
     }
 
     function validShow() {
-        console.log("valid");
+        TQ.Log.debugInfo("valid");
         //ToDo： 确认是有效的， 例如： 画面是可见的， 具有focus，等
         report('valid');
     }
 
     function completed() {
-        console.log("completed");
+        TQ.Log.debugInfo("completed");
     }
     return {
         startToShow: startToShow,

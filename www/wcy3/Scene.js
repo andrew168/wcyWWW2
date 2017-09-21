@@ -193,7 +193,7 @@ TQ = TQ || {};
         TQ.MessageBox.hide();
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNum()); //level ID 超界
         this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
-        console.log("entering level " + this.currentLevelId);
+        TQ.Log.debugInfo("entering level " + this.currentLevelId);
         this.selectLevel(this.currentLevelId);
         this.currentLevel.show();
         this.isDirty = true;
@@ -654,7 +654,7 @@ TQ = TQ || {};
                 for (i=0; i< num; i++) {
                     pt.levels[i].resourceReady = true;
                 }
-                console.log("All asset loaded!");
+                TQ.Log.debugInfo("All asset loaded!");
 
                 pt.isDirty = true;
                 if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {

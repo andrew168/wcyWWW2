@@ -72,7 +72,7 @@ window.TQ = window.TQ || {};
 
     var w = setTimeout(function() { // give external JS 1 second of time to load
 
-        console.log('Starting');
+        TQ.Log.debugInfo('Starting');
 
         var canvas = document.getElementById("mycanvas");
         var context = canvas.getContext('2d');
@@ -82,7 +82,7 @@ window.TQ = window.TQ || {};
         var count     = 0;
 
         function showResults() {
-            console.log('Finishing');
+            TQ.Log.debugInfo('Finishing');
             encoder.finish();
             var binary_gif = encoder.stream().getData();
             var data_url = 'data:image/gif;base64,'+encode64(binary_gif);
@@ -95,7 +95,7 @@ window.TQ = window.TQ || {};
         encoder.start();
 
         var grabber = setInterval(function(){
-            console.log('Grabbing '+count);
+            TQ.Log.debugInfo('Grabbing '+count);
             count++;
 
             if (count>grabLimit) {

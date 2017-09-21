@@ -156,7 +156,7 @@ window.TQ = window.TQ || {};
     }
 
     function doIK(element, offset, ev, isSimpleRotation) {
-        console.log("ele.id =", element.id, "offest = ", JSON.stringify(offset));
+        TQ.Log.debugInfo("ele.id =", element.id, "offest = ", JSON.stringify(offset));
         isSimpleRotationMode = isSimpleRotation;
         var target  = TQ.SelectSet.peek();
         if (target == null) {

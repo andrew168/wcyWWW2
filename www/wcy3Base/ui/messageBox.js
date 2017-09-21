@@ -54,11 +54,11 @@ TQ.MessageBox = (function() {
     }
 
     function onCancel() {
-        console.log("cancelled!");
+        TQ.Log.debugInfo("cancelled!");
     }
 
     function onOk() {
-        console.log("Ok!");
+        TQ.Log.debugInfo("Ok!");
     }
 
     function prompt(msg) {

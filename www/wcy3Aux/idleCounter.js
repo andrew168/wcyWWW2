@@ -29,7 +29,7 @@ TQ.IdleCounter = (function() {
         if (evt) {
             msg += evt.type;
         }
-        console.log(msg);
+        TQ.Log.debugInfo(msg);
         watchDog = setTimeout(stop, IDLE_DURATION);
     }
 

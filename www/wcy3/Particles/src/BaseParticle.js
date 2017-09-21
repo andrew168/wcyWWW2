@@ -153,7 +153,7 @@
 
     p._debugText = function (text) {
         if (this.debugMode) {
-            console.log(text);
+            TQ.Log.debugInfo(text);
         }
     };
 

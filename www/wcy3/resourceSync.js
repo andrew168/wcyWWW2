@@ -30,7 +30,7 @@ this.TQ.ResourceSync = (function () {
 
         angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
             .then(function (res) {
-                console.log(res.url);
+                TQ.Log.debugInfo(res.url);
                 ele.jsonObj.src = res.url;
                 numActiveTasks--;
                 tryShowCompleteInfo();
@@ -39,7 +39,7 @@ this.TQ.ResourceSync = (function () {
 
     function tryShowCompleteInfo() {
         if (numActiveTasks <= 0) {
-            console.log("background sync completed!");
+            TQ.Log.debugInfo("background sync completed!");
         }
     }
 })();

@@ -46,7 +46,7 @@ TQ = TQ || {};
             // video.currentTime = 0;  //  可以回到 头部
             video.pause();
         }
-        // console.log("stop it : " + video.paused);
+        // TQ.Log.debugInfo("stop it : " + video.paused);
     };
 
     p.play = function() {
@@ -54,7 +54,7 @@ TQ = TQ || {};
         if (video.paused) {
             video.play();
         }
-        // console.log("play it : " + video.paused);
+        // TQ.Log.debugInfo("play it : " + video.paused);
     };
 
     var _createVideoElement = function(src) {

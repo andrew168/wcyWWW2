@@ -66,7 +66,7 @@ var TQ = TQ || {};
             return;
         }
         isWatching = true;
-        console.log("start watch...");
+        TQ.Log.debugInfo("start watch...");
         setTimeout(function() { // 避免延后一点， 避免被preview按钮的操作触发
             selectedEvents.forEach(function (item) {
                 document.addEventListener(item, onPreviewMenuOn);
@@ -79,7 +79,7 @@ var TQ = TQ || {};
             return;
         }
         isWatching = false;
-        console.log("stop watch!");
+        TQ.Log.debugInfo("stop watch!");
         selectedEvents.forEach(function(item) {
             document.removeEventListener(item, onPreviewMenuOn);
         });

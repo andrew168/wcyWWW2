@@ -72,7 +72,7 @@ TQ.TimerUI = (function () {
     }
     function onMouseAction (event, ui) {
         t = ui.value;
-        // console.log("Mouse Action: t10 = " + t10);
+        // TQ.Log.debugInfo("Mouse Action: t10 = " + t10);
         displayTime(t);
         syncToCounter();
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放

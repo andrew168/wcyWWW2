@@ -33,7 +33,7 @@ window.TQ = window.TQ || {};
                 return p.start(xx, yy);
             }
             if (__user_level == 8) {
-                console.log(xx + ", " + yy);
+                TQ.Log.debugInfo(xx + ", " + yy);
             }
             if (p.buffer.length >= p._LENGTH) {
                 p.buffer.shift();

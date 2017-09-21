@@ -84,7 +84,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
         function onLoadedSuccess(data, status, headers, config) {
             file.result = data;
-            console.log(data);
+            TQ.Log.debugInfo(data);
             data.type = matType;
             updateMat(data);
             q.resolve(data);
@@ -97,7 +97,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         if (option && !option.useBackgroundMode) {
             TQ.MessageBox.showWaiting(TQ.Locale.getStr('uploading...'));
         }
-        // console.log(JSON.stringify(signData)); // 图像数据太大
+        // TQ.Log.debugInfo(JSON.stringify(signData)); // 图像数据太大
         signData.api_key = TQ.Config.Cloudinary.api_key;
         var res;
         if (isLocalFile(fileOrBuffer)) {
@@ -165,14 +165,14 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             TQ.Log.alertInfo("Get 3");
             $cordovaFileTransfer.download(urlSource, urlTarget, options, trustHosts)
                 .then(function (result) {
-                    console.log(result);
+                    TQ.Log.debugInfo(result);
                     onSuccess(result);
                 }, function (err) {
-                    console.log(err);
+                    TQ.Log.error(err);
                     onError(err);
                 }, function (progress) {
                     var ratio = progress.loaded / progress.total;
-                    console.log(ratio + ": " + progress);
+                    TQ.Log.debugInfo(ratio + ": " + progress);
                     // $timeout(function () {
                     // $scope_downloadProgress = (progress.loaded / progress.total) * 100;
                     // })
@@ -186,7 +186,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     function put(path) {
         console.error('depreciated??? replace by post??');
         var url = urlConcat(baseUrl, path);
-        console.log("put " + path + " to ===> " + url);
+        TQ.Log.debugInfo("put " + path + " to ===> " + url);
     }
 
     var counter = 100;
@@ -225,12 +225,12 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function update(path) {
         var url = urlConcat(baseUrl, path);
-        console.log("update: " + path + " to ==> " + url);
+        TQ.Log.debugInfo("update: " + path + " to ==> " + url);
     }
 
     function del(path) {  // delete is reserved key word!!!
         var url = urlConcat(baseUrl, path);
-        console.log("delete: " + url);
+        TQ.Log.debugInfo("delete: " + url);
     }
 
     function initialize() {

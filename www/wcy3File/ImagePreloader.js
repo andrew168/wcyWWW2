@@ -63,6 +63,6 @@ function init111() {
 }
 
 function handleFileLoad2222(event) {
-    console.log(event);
+    TQ.Log.debugInfo(event);
     document.body.appendChild(event.result);
 }
