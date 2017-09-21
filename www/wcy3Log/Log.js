@@ -37,23 +37,35 @@ TQ.Log = (function () {
     function close() {logLevel = self.CLOSE;}
     function setLevel(level) { logLevel = level;}
     function trace(str) {  //  只用于跟踪调试, (改info为trace), 不能直接出现在 release版中,
-      debugInfo(str);
+        for (var i = 1; i < arguments.length; i++) {
+            str += "," + arguments[i];
+        }
+        debugInfo(str);
     }
 
     function criticalError(str) {
         if (logLevel >= self.CRITICAL_LEVEL) {
+            for (var i = 1; i < arguments.length; i++) {
+                str += "," + arguments[i];
+            }
             console.error(str);
         }
     }
 
     function error(str) {
         if (logLevel >= self.ERROR_LEVEL) {
+            for (var i = 1; i < arguments.length; i++) {
+                str += "," + arguments[i];
+            }
             console.error(str);
         }
     }
 
     function warn(str) {
         if (logLevel >= self.WARN_LEVEL) {
+            for (var i = 1; i < arguments.length; i++) {
+                str += "," + arguments[i];
+            }
             console.warn(str);
         }
     }
@@ -63,12 +75,18 @@ TQ.Log = (function () {
             if (!str) {
                 str = "";
             }
+            for (var i = 1; i < arguments.length; i++) {
+                str += "," + arguments[i];
+            }
             error("this is depreciated. " + str);
         }
     }
 
     function debugInfo(str) {
         if (logLevel >= self.INFO_LEVEL) {
+            for (var i = 1; i < arguments.length; i++) {
+                str += "," + arguments[i];
+            }
             console.info(str);
         }
     }
@@ -92,6 +110,11 @@ TQ.Log = (function () {
         if (typeof str != "string") {
             str = JSON.stringify(str);
         }
+
+        for (var i = 1; i < arguments.length; i++) {
+            str += "," + arguments[i];
+        }
+
         if (TQ.Config.hasWx && TQ.Config.WX_DEBUG_ENABLED) {
             alert("wx调试__" + str);
         } else {
@@ -103,6 +126,10 @@ TQ.Log = (function () {
         if (typeof str != "string") {
             str = JSON.stringify(str);
         }
+        for (var i = 1; i < arguments.length; i++) {
+            str += "," + arguments[i];
+        }
+
         if (TQ.Config.hasWx && TQ.Config.WX_DEBUG_ENABLED) {
             alert("wx调试__" + str);
         } else {
@@ -111,10 +138,14 @@ TQ.Log = (function () {
     }
 
     function upgrade(str) {
-        if (!str) {
-            str = "";
-        }
         if (logLevel >= self.ERROR_LEVEL) {
+            if (!str) {
+                str = "";
+            }
+            for (var i = 1; i < arguments.length; i++) {
+                str += "," + arguments[i];
+            }
+
             console.error("必须升级到：" + str);
         }
     }
@@ -123,6 +154,9 @@ TQ.Log = (function () {
     if (logLevel >= self.INFO_LEVEL) {
         self.info = self.out = function (str) {
             if (logLevel >= self.INFO_LEVEL) {
+                for (var i = 1; i < arguments.length; i++) {
+                    str += "," + arguments[i];
+                }
                 console.log(str);
             }
         };
