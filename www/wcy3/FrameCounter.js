@@ -24,7 +24,9 @@ window.TQ = window.TQ || {};
         STOP = 0,
         baseStep = NORMAL_SPEED,
         step = baseStep,
-        abOptions = null;
+        abOptions = null,
+        newTimestamp,
+        lastTimestamp;
 
     FrameCounter.isNew = true;  // 新的时刻, 需要更新数据
     FrameCounter.v = 0;
@@ -129,8 +131,10 @@ window.TQ = window.TQ || {};
             return;
         }
 
-        var delta = step;
+        newTimestamp = Date.now();
+        var delta = (newTimestamp - lastTimestamp) * FrameCounter.defaultFPS/1000;
         FrameCounter.v = FrameCounter.v + delta;
+        lastTimestamp = newTimestamp;
 
         if (abOptions) {
             if (FrameCounter.t() > abOptions.tEnd) {
@@ -183,6 +187,7 @@ window.TQ = window.TQ || {};
     // state: 不能由外部改变, 必须是update自己改变, 以保持其唯一性
     FrameCounter.play = function ()
     {
+        lastTimestamp = Date.now();
         requestState = GO;
         //ToDo: 暂时关闭GIF文件的生成
         /* if (TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL])
