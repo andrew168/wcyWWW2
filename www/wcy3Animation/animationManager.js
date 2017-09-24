@@ -7,8 +7,6 @@ TQ.AnimationManager = (function () {
     'use strict';
     var UNLIMIT = 99999999,
         MIN_MOVE_TIME = 0.1,
-        FLY_IN_POS_0 = -100, // 从屏幕外开始
-        FLY_OUT_POS_1 = -100, // 到屏幕外结束
         DEFAULT_DELAY = 0,
         DEFAULT_DURATION = 16; //frames
 
@@ -266,7 +264,8 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("left in");
         var posInWorld = ele.getPositionInWorld(),
-            sag = composeFlyInSag(SagType.LEFT_IN, FLY_IN_POS_0, posInWorld.x);
+            startPos = - ele.getBBoxData().width,
+            sag = composeFlyInSag(SagType.LEFT_IN, startPos, posInWorld.x);
                 return recordSag(sag);
     }
 
@@ -291,7 +290,8 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("bottom in");
         var posInWorld = ele.getPositionInWorld(),
-            sag = composeFlyInSag(SagType.BOTTOM_IN, FLY_IN_POS_0, posInWorld.y);
+            startPos = -ele.getBBoxData().height,
+            sag = composeFlyInSag(SagType.BOTTOM_IN, startPos, posInWorld.y);
         return recordSag(sag);
     }
 
@@ -316,7 +316,8 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("left out");
         var posInWorld = ele.getPositionInWorld(),
-            sag = composeFlyOutSag(SagType.LEFT_OUT, posInWorld.x, FLY_OUT_POS_1);
+            endPos = - ele.getBBoxData().width,
+            sag = composeFlyOutSag(SagType.LEFT_OUT, posInWorld.x, endPos);
         return recordSag(sag);
     }
 
@@ -342,7 +343,8 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("bottom out");
         var posInWorld = ele.getPositionInWorld(),
-            sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, FLY_OUT_POS_1);
+            endPos = -ele.getBBoxData().height,
+            sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, endPos);
         return recordSag(sag);
     }
 
@@ -367,7 +369,7 @@ TQ.AnimationManager = (function () {
         }
 
         var endSx = ele.getScaleInWorld().sx,
-            startSx = 0.1 * endSx,
+            startSx = 0.01 * endSx,
             sag = composeFlyInSag(SagType.SCALE_IN, startSx, endSx);
         return recordSag(sag);
     }
@@ -380,7 +382,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("scale out");
         var startSx = ele.getScaleInWorld().sx,
-            endSx = 0.1 * startSx,
+            endSx = 0.01 * startSx,
             sag = composeFlyOutSag(SagType.SCALE_OUT, startSx, endSx);
         return recordSag(sag);
     }
