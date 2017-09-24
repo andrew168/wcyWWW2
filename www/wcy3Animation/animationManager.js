@@ -264,7 +264,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("left in");
         var posInWorld = ele.getPositionInWorld(),
-            startPos = - ele.getBBoxData().width,
+            startPos = - ele.getBBoxRadiusInWorld(),
             sag = composeFlyInSag(SagType.LEFT_IN, startPos, posInWorld.x);
                 return recordSag(sag);
     }
@@ -277,7 +277,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("right in");
         var posInWorld = ele.getPositionInWorld(),
-            startPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width,
+            startPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxRadiusInWorld(),
             sag = composeFlyInSag(SagType.RIGHT_IN, startPos, posInWorld.x);
         return recordSag(sag);
     }
@@ -290,7 +290,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("bottom in");
         var posInWorld = ele.getPositionInWorld(),
-            startPos = -ele.getBBoxData().height,
+            startPos = -ele.getBBoxRadiusInWorld(),
             sag = composeFlyInSag(SagType.BOTTOM_IN, startPos, posInWorld.y);
         return recordSag(sag);
     }
@@ -303,7 +303,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("top in");
         var posInWorld = ele.getPositionInWorld(),
-            startPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
+            startPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxRadiusInWorld(),
             sag = composeFlyInSag(SagType.TOP_IN, startPos, posInWorld.y);
         return recordSag(sag);
     }
@@ -316,7 +316,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("left out");
         var posInWorld = ele.getPositionInWorld(),
-            endPos = - ele.getBBoxData().width,
+            endPos = - ele.getBBoxRadiusInWorld(),
             sag = composeFlyOutSag(SagType.LEFT_OUT, posInWorld.x, endPos);
         return recordSag(sag);
     }
@@ -329,7 +329,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("right out");
         var posInWorld = ele.getPositionInWorld(),
-            endPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxData().width,
+            endPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxRadiusInWorld(),
             sag = composeFlyOutSag(SagType.RIGHT_OUT, posInWorld.x, endPos);
 
         return recordSag(sag);
@@ -343,7 +343,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("bottom out");
         var posInWorld = ele.getPositionInWorld(),
-            endPos = -ele.getBBoxData().height,
+            endPos = -ele.getBBoxRadiusInWorld(),
             sag = composeFlyOutSag(SagType.BOTTOM_OUT, posInWorld.y, endPos);
         return recordSag(sag);
     }
@@ -356,7 +356,7 @@ TQ.AnimationManager = (function () {
 
         TQ.Log.debugInfo("top out");
         var posInWorld = ele.getPositionInWorld(),
-            endPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxData().height,
+            endPos = TQ.Graphics.getCanvasHeight() + ele.getBBoxRadiusInWorld(),
             sag = composeFlyOutSag(SagType.TOP_OUT, posInWorld.y, endPos);
         return recordSag(sag);
     }

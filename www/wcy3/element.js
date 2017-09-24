@@ -1110,6 +1110,16 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.getBBoxRadiusInWorld = function () {
+        var w = this.getWidth(),
+            h = this.getHeight(),
+            boxInObjectXLen = w / 2 * (1 + Math.abs(0.5 - this.jsonObj.pivotX)),
+            boxInObjectYLen = h / 2 * (1 + Math.abs(0.5 - this.jsonObj.pivotY)),
+            bBoxInWorld = this.object2World({x: boxInObjectXLen, y: boxInObjectYLen});
+
+        return Math.sqrt(bBoxInWorld.x * bBoxInWorld.x + bBoxInWorld.y * bBoxInWorld.y);
+    };
+
     p.createBBox = function(sx, sy, rotation, w, h) {
         var shape = new createjs.Shape();
         shape.rotation = rotation;
