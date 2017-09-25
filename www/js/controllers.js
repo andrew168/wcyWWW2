@@ -11,6 +11,21 @@ function DashCtrl(
             AppService, MatLibService, UserService) {
 
     var vm = this;
+    $scope.font = {
+        selectedValue: null,
+        selectedSingle: 'Samantha',
+        selectedSingleKey: '5'
+    };
+
+    $scope.fontSizes = [
+        {value: 1, size: '1'},
+        {value: 2, size: '2'},
+        {value: 3, size: '3'},
+        {value: 4, size: '4'},
+        {value: 5, size: '5'},
+        {value: 6, size: '6'},
+        {value: 7, size: '7'}];
+
     $scope.localImage1 = null;
     $scope.localImage2 = null;
     $scope.data = {};

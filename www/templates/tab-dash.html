@@ -197,8 +197,18 @@
                 <button class="button button-positive" ng-click="am.rightOut($event)" ng-show="false">右边飞出</button>
                 <button class="button button-positive" ng-click="am.bottomOut($event)" ng-show="false">底边飞出</button>
                 <button class="button button-positive" ng-click="am.topOut($event)" ng-show="false">上边飞出</button>
+                <ui-select ng-model="font.selected" theme="select2" style="min-width: 100px;"
+                           on-select="onSelectCallback($item, $model)" title="Choose a size">
+                    <ui-select-match placeholder="Select a size">{{$select.selected.size}}
+                    </ui-select-match>
+                    <ui-select-choices repeat="font in fontSizes"
+                                       position='down'>
+                        <div value="font.value" ng-bind-html="font.size | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+
                 <button
-                    class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}" ng-show="false">
+                    class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}">
                     Pick text color
                 </button>
 
