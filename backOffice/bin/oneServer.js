@@ -21,6 +21,7 @@
         // 实测：
         // ** 如果不指定maxAge，则返回304代码，表明未修改， 在reload时候使用cache
         // ** 如果指定maxAge，则返回200代码。 在reload时候也使用cache
+        noCacheOptions = {maxAge:'0'},
         cacheOptions ={maxAge: '300d'}; // 300 days,
 
     function start(newAppConfig) {
@@ -137,7 +138,11 @@
         console.log("client path (dynamic): " + clientPath);
         console.log("client path (static): " + clientPathStatic);
 
-        app.use(express.static(clientPath, cacheOptions));
+        //专指的规则放在前面
+        app.use('/css', express.static(path.join(__dirname, './../../www/css'), cacheOptions));
+        app.use('/wcy3', express.static(path.join(__dirname, './../../www/wcy3'), cacheOptions));
+        // 泛指的规则放在后面，（适用于其余文件， 除了前面专指的规则之外的）
+        app.use(express.static(clientPath, noCacheOptions));
         app.use('/static', express.static(clientPathStatic, cacheOptions));
     }
 
