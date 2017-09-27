@@ -111,6 +111,8 @@ window.TQ = window.TQ || {};
                 deltaY = TQ.SpringEffect.cal(sag, t - dampingT0);
             }
             t = dampingT0;
+        } else if (t < sag.t1) {
+            t = sag.t1;
         }
         return sag.value0 + (t - sag.t1) * sag.actualSpeed + deltaY;
     }
