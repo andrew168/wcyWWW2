@@ -394,6 +394,7 @@ window.TQ = window.TQ || {};
         // 处理特殊情况, 只有1帧:
         if (channel.t.length <= 1) {
             assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0); //只有1帧
+            channel.tid1 = channel.tid2 = 0;
             return;
         }
 
@@ -406,15 +407,11 @@ window.TQ = window.TQ || {};
             }
         }
 
-        if (tid1 > 0 ) {
-            channel.t.splice(0, tid1);
-            channel.value.splice(0, tid1);
-            channel.c.splice(0, tid1);
-        }
-
-        channel.value[0] = TQ.TrackDecoder.calOneChannel(track, channel, t);
-        channel.t[0] = t;
-
+        channel.value[tid1] = TQ.TrackDecoder.calOneChannel(track, channel, t);
+        channel.t[tid1] = t;
+        channel.t = channel.t.splice(tid1, 1);
+        channel.value = channel.value.splice(tid1, 1);
+        channel.c = channel.c.splice(tid1, 1);
         channel.tid1 = channel.tid2 = 0;
     }
 
