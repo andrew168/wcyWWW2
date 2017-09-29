@@ -408,7 +408,7 @@ window.TQ = window.TQ || {};
         }
 
         channel.value[tid1] = TQ.TrackDecoder.calOneChannel(track, channel, t);
-        channel.t[tid1] = t;
+        channel.t[tid1] = (TQ.Config.insertAtT0On ? 0 : t);
         channel.t = channel.t.splice(tid1, 1);
         channel.value = channel.value.splice(tid1, 1);
         channel.c = channel.c.splice(tid1, 1);
