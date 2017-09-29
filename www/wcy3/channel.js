@@ -27,8 +27,8 @@ window.TQ = window.TQ || {};
     p.value = [];
     p.c = [];
     p.initialize = function (value, interpolationStyle) {
-        var t = TQ.FrameCounter.t();
         if ((value.value == undefined) || (value.value == null)){
+            var t = TQ.FrameCounter.t();
             this.t = [t];  // 只有一帧, 不能搞出来2
             this.value = [value];
             this.c = [interpolationStyle];
@@ -40,8 +40,9 @@ window.TQ = window.TQ || {};
                 this.sags = value.sags;
             }
         }
-        this.tid1 = (value.tid1 == undefined) ? 0: value.tid1;
-        this.tid2 = (value.tid2 == undefined) ? 0: value.tid2;
+
+        this.tid1 = 0; // 这是2个临时变量，现在是fixedUp阶段，不需要恢复存盘前的 tid1、2,
+        this.tid2 = 0;
     };
 
     p.erase = function () {
