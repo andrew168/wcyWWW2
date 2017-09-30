@@ -8,7 +8,7 @@ function UserService($http) {
     var user = TQ.userProfile;
 
     function canAutoLogin() {
-        return  ((!!user.name) && (!!user.ID) && (!!user.keepMeLogin));
+        return  ((!!user.name) && (!!user.ID) && (!user.needManualLogin));
     }
 
     function tryAutoLogin() {
@@ -22,6 +22,10 @@ function UserService($http) {
         var url = TQ.Config.AUTH_HOST + '/user/login/' + name + '/' + psw;
         return $http.get(url)
             .then(onLoginDone);
+    }
+
+    function logout(name) {
+        onLogoutDone();
     }
 
     function signUp(name, psw, displayName) {
@@ -46,6 +50,7 @@ function UserService($http) {
         var data = netPkg.data;
         if (data.result === TQ.Const.SUCCESS) {
             user.loggedIn = true;
+            user.needManualLogin = false;
             user.name = data.name;
             user.ID = data.ID;
             user.displayName = data.displayName;
@@ -63,6 +68,13 @@ function UserService($http) {
         }
     }
 
+    function onLogoutDone(netPkg) {
+        user.loggedIn = false;
+        user.needManualLogin = true;
+        user.isValidName = true;
+        user.saveToCache();
+    }
+
     function onSignUpDone(netPkg) {
         onLoginDone(netPkg);
     }
@@ -72,6 +84,7 @@ function UserService($http) {
         tryAutoLogin: tryAutoLogin,
         checkName: checkName,
         login: login,
+        logout: logout,
         signUp: signUp
     }
 }

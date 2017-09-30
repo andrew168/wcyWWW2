@@ -4,7 +4,7 @@
 var TQ = TQ || {};
 TQ.userProfile = (function() {
     var self = {
-        keepMeLogin: true,
+        needManualLogin: true,
         loggedIn: false,  // 没有login，其余的信息都无意义
         isSignUping: false,
         displayName: "",
@@ -23,14 +23,14 @@ TQ.userProfile = (function() {
         self.name = readCache('user_name', "");
         self.displayName = readCache('user_displayName', "");
         self.ID = readCache('user_ID', "");
-        self.keepMeLogin = TQ.Base.Utility.readCacheWithParse('user_keepMeLogin', false);
+        self.needManualLogin = TQ.Base.Utility.readCacheWithParse('user_needManualLogin', self.needManualLogin);
     }
 
     function saveToCache() {
         writeCache('user_name', self.name);
         writeCache('user_displayName', self.displayName);
         writeCache('user_ID', self.ID);
-        writeCache('user_keepMeLogin', self.keepMeLogin);
+        writeCache('user_needManualLogin', self.needManualLogin);
     }
 
     readFromCache();
