@@ -39,6 +39,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         // play & preview
         preview: preview,
+        previewCurrentLevel: previewCurrentLevel,
         play: play,
         stop: stop,
         replay: replay,
@@ -702,9 +703,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }, 100);
     }
 
-    function preview () {
+    function preview (options) {
         state.isPreviewMode = true;
-        replay();
+        replay(options);
+    }
+
+    function previewCurrentLevel() {
+        preview({thisLevelOnly: true});
     }
 
     function play() {
@@ -726,8 +731,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.PreviewMenu.startWatch();
     }
 
-    function replay() {
-       TQ.Scene.doReplay();
+    function replay(option) {
+       TQ.Scene.doReplay(option);
        _onPlay();
     }
 

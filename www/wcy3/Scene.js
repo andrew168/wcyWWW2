@@ -176,6 +176,8 @@ TQ = TQ || {};
                 currScene.gotoLevel(0);
             }
             TQ.FrameCounter.gotoBeginning();
+        } else if (options.thisLevelOnly) {
+            TQ.FrameCounter.gotoBeginning();
         } else {
             TQ.FrameCounter.setABOptions(options);
             TQ.FrameCounter.goto(options.tStart);
