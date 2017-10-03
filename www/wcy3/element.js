@@ -10,6 +10,7 @@ window.TQ = window.TQ || {};
         BITMAP: "Bitmap",
         BITMAP_ANIMATION: "BitmapAnimation",
         BUTTON: "BUTTON",
+        BBOX: "BBOX",
         GROUP: "Group",
         GROUP_FILE: "GroupFile",
         JOINT_MARKER: "JointMarker",
@@ -800,7 +801,7 @@ window.TQ = window.TQ || {};
         }
         visSum = visSum || Element.showHidenObjectFlag;
         this.doShow(visSum);
-    },
+    };
 
     p.doShow = function (visSum) {
         if (!this.displayObj) {
@@ -1285,7 +1286,7 @@ window.TQ = window.TQ || {};
     };
 
     p.afterToJSON = function () {
-        if (this.isMarker()) {
+        if (!this.isEditable()) {
             return;
         }
         var data = this.jsonData;
@@ -1950,6 +1951,32 @@ window.TQ = window.TQ || {};
         }
 
         return this.animeTrack.getInSagName();
+    };
+
+    p.hasBBox = function() {
+        if (this.decorations) {
+            this.decorations.some(function(item) {
+                return item.hasFlag(Element.BBOX);
+            })
+        }
+
+        return false;
+    };
+
+    p.getBBox = function () {
+        var bbox = null;
+        if (this.decorations) {
+            this.decorations.some(function (item) {
+                if (item.hasFlag(Element.BBOX)) {
+                    bbox = item;
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+        }
+
+        return bbox;
     };
 
     TQ.Element = Element;

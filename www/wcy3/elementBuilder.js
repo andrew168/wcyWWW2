@@ -35,6 +35,8 @@ window.TQ = window.TQ || {};
                 return new TQ.TextElement(level, desc);
             case DescType.TEXT_BUBBLE:
                 return new TQ.TextBubble(level, desc, host);
+            case DescType.BBOX:
+                return new TQ.BBox(level, desc, host);
             case DescType.RAIN:
             case DescType.SNOW:
             case DescType.FULLSCREEN_EFFECT_PARTICLE:
