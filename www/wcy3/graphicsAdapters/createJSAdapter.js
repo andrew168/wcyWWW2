@@ -69,6 +69,7 @@ var TQ = TQ || {};
     CreateJSAdapter.toDeviceCoord = function (displayObj, jsonObj) {
         if (!this.justMoved) {
         }
+        TQ.Log.debugInfo(this.jsonObj.type + ', jsonObj(x,y) = ' + this.jsonObj.x + ',' + this.jsonObj.y );
         this.justMoved = false;
         var obj_dc = this.world2Dc();
         displayObj.x = obj_dc.x;
@@ -300,7 +301,7 @@ var TQ = TQ || {};
         tsrWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
         tsrWorld.visible = parent.isVis;
         tsrWorld.alpha = tsrWorld.alpha * parent.alpha;
-        TQ.Log.matrixDebugInfo("parent: ", parent.M);
+        // TQ.Log.matrixDebugInfo("parent: ", parent.M);
         TQ.Log.matrixDebugInfo(this.id + ": ", tsrWorld.M);
     };
 

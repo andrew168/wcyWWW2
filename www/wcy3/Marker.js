@@ -154,5 +154,9 @@ TQ = TQ || {};
         return false;
     };
 
+    p.toJSON = function () { // 不保存
+        return null;
+    };
+
     TQ.Marker = Marker;
 }());

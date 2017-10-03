@@ -17,6 +17,7 @@ TQ.Graphics = (function () {
         drawBubble: drawBubble,
         drawCircle: drawCircle,
         drawRect: drawRect,
+        drawRectC: drawRectC,
         drawStar: drawStar,
         getCanvas: getCanvas,
         getCanvasBkgColor: getCanvasBkgColor,
@@ -108,14 +109,18 @@ TQ.Graphics = (function () {
         drawPolygon(shape, geoModel);
     }
 
-    function drawRect(shape, x0,y0, w, h) {
+    function drawRect(shape, x0,y0, w, h, radius) {
+        var xc = x0 + w/2,
+            yc = y0 + h/2;
+        drawRectC(shape, xc, yc, w, h, radius);
+    }
+
+    function drawRectC(shape, xc, yc, w, h, radius) {
         // 左下角， + pivot
         var thickness = 1,
             edgeColor = "#000";
-        var radius = 2;
-        var xc = x0 - w/2,
-            yc = y0 - h/2;
 
+        radius = (radius === undefined) ? 2 : radius;
         shape.graphics.ss(thickness).beginStroke(edgeColor).
             drawRoundRect(xc, yc, w, h, radius).
             endFill();
