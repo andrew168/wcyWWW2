@@ -15,6 +15,7 @@ window.TQ = window.TQ || {};
         GROUP_FILE: "GroupFile",
         JOINT_MARKER: "JointMarker",
         FULLSCREEN_EFFECT_PARTICLE: "fullscreenEffectParticle",
+        POINT: "Point",
         RAIN: "RainEffect", // TBD
         SNOW: "SnowEffect", // TBD
         RECTANGLE: "Rectangle",

@@ -78,6 +78,7 @@ TQ = TQ || {};
         TQ.Log.matrixDebugInfo("bbox", host.jsonObj.M);
         objPts.forEach(function (pt) {
             pt = host.object2World(pt);
+            TQ.Point.attachTo(host, pt);
             if ((bbox.xmin === undefined) || (bbox.xmin > pt.x)) {
                 bbox.xmin = pt.x;
             }
@@ -155,7 +156,7 @@ TQ = TQ || {};
             type: TQ.ElementType.BBOX,
             x: 0,
             y: 0,
-            sx: -1,
+            sx: 1,
             sy: 1,
             rotation: 0
         };
@@ -163,7 +164,6 @@ TQ = TQ || {};
         jsonObj.pivotY = 0;
         return jsonObj;
     }
-
 
     BBox.attachTo = function (host) {
         TQ.AssertExt.isNotNull(host);
