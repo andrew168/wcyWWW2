@@ -59,16 +59,21 @@ TQ = TQ || {};
     };
 
     p.createModal = function () {
+        var hasPoint = false;
+        if (this.host.has(TQ.ElementType.POINT)) {
+            hasPoint = true;
+        }
+
         var bbox = {},
             host = this.host,
-            pivotX = 0, // host.jsonObj.pivotX,
-            pivotY = 0, // host.jsonObj.pivotY,
+            pivotX = host.jsonObj.pivotX,
+            pivotY = host.jsonObj.pivotY,
             w = host.getWidth(),
             h = host.getHeight(),
             x1 = -pivotX * w,
             y1 = -pivotY * h,
-            x2 = w - x1,
-            y2 = h - y1,
+            x2 = x1 + w,
+            y2 = y1 + h,
             objPts = [
                 {x: x1, y: y1},
                 {x: x2, y: y1},
@@ -77,8 +82,10 @@ TQ = TQ || {};
 
         TQ.Log.matrixDebugInfo("bbox", host.jsonObj.M);
         objPts.forEach(function (pt) {
+            if (!hasPoint) {
+                TQ.Point.attachTo(host, {obj: pt, world: null});
+            }
             pt = host.object2World(pt);
-            TQ.Point.attachTo(host, pt);
             if ((bbox.xmin === undefined) || (bbox.xmin > pt.x)) {
                 bbox.xmin = pt.x;
             }
