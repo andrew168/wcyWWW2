@@ -9,7 +9,7 @@ TQ = TQ || {};
      * 没有旋转，固定大小, 位置可变。
      * 不可修改形状和大小
      */
-    var POINT_RADIUS = 100;
+    var POINT_RADIUS = 10;
     function Point(level, desc, host) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
         this.host = host;
@@ -21,9 +21,10 @@ TQ = TQ || {};
     p.constructor = Point; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
     p._parent_update = p.update;
 
-    p.update = function (t, noRecording) {
-        this.jsonObj.x = this.anchor.x;
-        this.jsonObj.y = this.anchor.y;
+    p.update = function () {
+        this.anchor.world = this.host.object2World(this.anchor.obj);
+        this.jsonObj.x = this.anchor.world.x;
+        this.jsonObj.y = this.anchor.world.y;
         this.setTRSAVZ();
         this.dirty = this.dirty2 = false;
     };
@@ -49,11 +50,10 @@ TQ = TQ || {};
 
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
-        var jsonObj = this.jsonObj;
         var s = new createjs.Shape();
         this.loaded = true;
-        s.x = 0; /////// jsonObj.x;
-        s.y = 0; /////// jsonObj.y;
+        s.x = 0;
+        s.y = 0;
         this.displayObj = s;
         this.createModal();
         this._afterItemLoaded();
@@ -88,7 +88,11 @@ TQ = TQ || {};
         return null;
     };
 
-    p.recycle = p.moveToTop = p.reset = function () {
+    p.recycle = function () {
+        var aMarker = this;
+        aMarker.removeFromStage();
+    };
+    p.moveToTop = p.reset = function () {
     };
 
     function compose(host) {
@@ -113,6 +117,7 @@ TQ = TQ || {};
                 point = TQ.Element.build(host.level, desc, host);
             point.anchor = anchor;
             host.attachDecoration([point]);
+            point.update(); //必须update以计算坐标
         }
     };
 
