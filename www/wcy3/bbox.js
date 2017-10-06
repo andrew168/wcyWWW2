@@ -14,6 +14,7 @@ TQ = TQ || {};
         TQ.Element.call(this, level, desc); // 调用父类的初始化函数， 在子类构造函数中
     }
 
+    var showPointOn = false;
     var p = BBox.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
 
     p.constructor = BBox; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
@@ -82,7 +83,7 @@ TQ = TQ || {};
 
         TQ.Log.matrixDebugInfo("bbox", host.jsonObj.M);
         objPts.forEach(function (pt) {
-            if (!hasPoint) {
+            if (!hasPoint && showPointOn) {
                 TQ.Point.attachTo(host, {obj: pt, world: null});
             }
             pt = host.object2World(pt);
