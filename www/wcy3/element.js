@@ -1986,7 +1986,7 @@ window.TQ = window.TQ || {};
         var bbox = null;
         if (this.decorations) {
             this.decorations.some(function (item) {
-                if (item.is(Element.BBOX)) {
+                if (item.is(DescType.BBOX)) {
                     bbox = item;
                     return true;
                 } else {

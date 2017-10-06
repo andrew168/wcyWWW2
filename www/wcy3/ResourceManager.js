@@ -346,6 +346,9 @@ this.TQ = this.TQ || {};
                 }
             }
             for (var i = 0; i < numChildren; i++) {
+                if (!desc.children[i]) {
+                    continue;
+                }
                 RM.addElementDesc(desc.children[i], onChildReady);
             }
         }
@@ -389,6 +392,9 @@ this.TQ = this.TQ || {};
         if (!!desc.children) {  // 先调入子孙的资源， 以便于执行callback
             for (var i = 0; i < desc.children.length; i++) {
                 TQ.Assert.isTrue(false, "addElementDesc or hasElementDesc???");
+                if (!desc.children[i]) {
+                    continue;
+                }
                 if (RM.addElementDesc(desc.children[i])) {
                     result = false;
                 }
