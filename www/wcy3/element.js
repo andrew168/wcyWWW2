@@ -619,13 +619,15 @@ window.TQ = window.TQ || {};
             child.parent = null;
         }
 
-        //迫使元素回到世界坐标系标示
-        TQ.DirtyFlag.setElement(this);
-        child.forceToRecord();
-        this.forceToRecord();  // 迫使系统更新child的位置数据位相对坐标
-        child.setFlag(Element.TO_RELATIVE_POSE);
-        var t = TQ.FrameCounter.t();
-        child.update(t);
+        if (child.isEditable()) {// 忽略marker， point等
+            //迫使元素回到世界坐标系标示
+            TQ.DirtyFlag.setElement(this);
+            child.forceToRecord();
+            this.forceToRecord();  // 迫使系统更新child的位置数据位相对坐标
+            child.setFlag(Element.TO_RELATIVE_POSE);
+            var t = TQ.FrameCounter.t();
+            child.update(t);
+        }
         return child;
     };
 
@@ -680,7 +682,14 @@ window.TQ = window.TQ || {};
         marker.setFlag(Element.TO_RELATIVE_POSE | Element.CLEAR_ANIMATATION); // 迫使他记录所有的track,
         var isInObjectSpace = true;
         this.addChild(marker, isInObjectSpace);
-        this.decorations = decs;
+        if (!this.decorations) {
+            this.decorations = decs;
+        } else {
+            var decorations = this.decorations;
+            decs.forEach(function(item) {
+                decorations.push(item);
+            });
+        }
         marker.show(true);
         marker.moveToTop();
     };
