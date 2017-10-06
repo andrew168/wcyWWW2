@@ -1728,6 +1728,10 @@ window.TQ = window.TQ || {};
         return (!((this.animeTrack == undefined) || (this.animeTrack == null)));
     };
 
+    p.is = function(type) {
+        return (this.jsonObj.type === type);
+    };
+
     p.isLoaded = function () {
         return this.loaded;
     };
@@ -1955,20 +1959,25 @@ window.TQ = window.TQ || {};
     };
 
     p.hasBBox = function() {
+        return this.has(DescType.BBOX);
+    };
+
+    p.has = function(type) {
+        var result = false;
         if (this.decorations) {
-            this.decorations.some(function(item) {
-                return item.hasFlag(Element.BBOX);
+            this.decorations.some(function (item) {
+                return (result = item.is(type));
             })
         }
 
-        return false;
+        return result;
     };
 
     p.getBBox = function () {
         var bbox = null;
         if (this.decorations) {
             this.decorations.some(function (item) {
-                if (item.hasFlag(Element.BBOX)) {
+                if (item.is(Element.BBOX)) {
                     bbox = item;
                     return true;
                 } else {
