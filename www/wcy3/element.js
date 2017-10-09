@@ -1287,7 +1287,10 @@ window.TQ = window.TQ || {};
             data.children = [];
             for (var i = 0; i < this.children.length; i++) {
                 if (!this.children[i].isMarker()) {
-                    data.children.push(this.children[i].toJSON());
+                    var childJson = this.children[i].toJSON();
+                    if (childJson) {
+                        data.children.push(childJson);
+                    }
                 }
             }
         }
