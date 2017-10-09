@@ -218,7 +218,9 @@ window.TQ = window.TQ || {};
         }
         if (jsonObj.children) {
             for (var i = 0; i < jsonObj.children.length; i++) {
-                Element.liftZ(jsonObj.children[i], zBase);
+                if (jsonObj.children[i]) {
+                    Element.liftZ(jsonObj.children[i], zBase);
+                }
             }
         }
     };
@@ -427,7 +429,9 @@ window.TQ = window.TQ || {};
     p.setupChildren = function () {
         if (!(!this.jsonObj.children)) {
             for (var i = 0; i < this.jsonObj.children.length; i++) {
-                this.addChild(this.jsonObj.children[i]);
+                if (this.jsonObj.children[i]) {
+                    this.addChild(this.jsonObj.children[i]);
+                }
             }
         }
     };

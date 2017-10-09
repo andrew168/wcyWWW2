@@ -114,6 +114,10 @@ TQ = TQ || {};
 
     };
 
+    p.getBBoxTopRight = function() {
+        return {x: this.jsonObj.bbox.xmax, y: this.jsonObj.bbox.ymax};
+    };
+
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
         var jsonObj = this.jsonObj;
