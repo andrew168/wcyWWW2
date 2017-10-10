@@ -152,7 +152,8 @@ window.TQ = window.TQ || {};
         for (var i = 0; i < elements.length; i++) {
             // var marker = elements[i].detachDecoration();
             elements[i].persist(); // 记录zIndex, 就在此层次clone, 把原来的物体抬高1个层次.
-            var desc = JSON.parse(JSON.stringify(elements[i].jsonObj));
+            var desc = JSON.parse(JSON.stringify(elements[i]));
+            elements[i].afterToJSON();
             Level.removeMarker(desc);
             var newEle;
             if (elements[i].parent == null) {
