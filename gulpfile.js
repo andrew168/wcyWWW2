@@ -90,11 +90,17 @@ gulp.task('copy_build_tools', function () {
         .pipe(gulp.dest(dstPath2));
 });
 
-gulp.task('default', ['config', 'copy_debug_tools', 'copy_build_tools'], function () {
+gulp.task('copy_dictionary', function () {
+    return gulp.src(srcPath + "\\dictionary\\*.*")
+        .pipe(gulp.dest(dstPath1 + "\\dictionary\\"))
+        .pipe(gulp.dest(dstPath2 + "\\dictionary\\"));
+});
+
+gulp.task('default', ['config', 'copy_debug_tools', 'copy_build_tools', 'copy_dictionary'], function () {
     gulp.start('build');
 });
 
-gulp.task('hot_sync', ['config', 'copy_debug_tools', 'copy_build_tools'], function() {
+gulp.task('hot_sync', ['config', 'copy_debug_tools', 'copy_build_tools', 'copy_dictionary'], function() {
     console.log("hot sync souce to voteCard");
     gulp.start('wcylib_concat');
 });
