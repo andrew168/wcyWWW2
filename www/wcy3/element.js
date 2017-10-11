@@ -10,10 +10,12 @@ window.TQ = window.TQ || {};
         BITMAP: "Bitmap",
         BITMAP_ANIMATION: "BitmapAnimation",
         BUTTON: "BUTTON",
+        BBOX: "BBOX",
         GROUP: "Group",
         GROUP_FILE: "GroupFile",
         JOINT_MARKER: "JointMarker",
         FULLSCREEN_EFFECT_PARTICLE: "fullscreenEffectParticle",
+        POINT: "Point",
         RAIN: "RainEffect", // TBD
         SNOW: "SnowEffect", // TBD
         RECTANGLE: "Rectangle",
@@ -216,7 +218,9 @@ window.TQ = window.TQ || {};
         }
         if (jsonObj.children) {
             for (var i = 0; i < jsonObj.children.length; i++) {
-                Element.liftZ(jsonObj.children[i], zBase);
+                if (jsonObj.children[i]) {
+                    Element.liftZ(jsonObj.children[i], zBase);
+                }
             }
         }
     };
@@ -425,7 +429,9 @@ window.TQ = window.TQ || {};
     p.setupChildren = function () {
         if (!(!this.jsonObj.children)) {
             for (var i = 0; i < this.jsonObj.children.length; i++) {
-                this.addChild(this.jsonObj.children[i]);
+                if (this.jsonObj.children[i]) {
+                    this.addChild(this.jsonObj.children[i]);
+                }
             }
         }
     };
@@ -617,13 +623,15 @@ window.TQ = window.TQ || {};
             child.parent = null;
         }
 
-        //迫使元素回到世界坐标系标示
-        TQ.DirtyFlag.setElement(this);
-        child.forceToRecord();
-        this.forceToRecord();  // 迫使系统更新child的位置数据位相对坐标
-        child.setFlag(Element.TO_RELATIVE_POSE);
-        var t = TQ.FrameCounter.t();
-        child.update(t);
+        if (child.isEditable()) {// 忽略marker， point等
+            //迫使元素回到世界坐标系标示
+            TQ.DirtyFlag.setElement(this);
+            child.forceToRecord();
+            this.forceToRecord();  // 迫使系统更新child的位置数据位相对坐标
+            child.setFlag(Element.TO_RELATIVE_POSE);
+            var t = TQ.FrameCounter.t();
+            child.update(t);
+        }
         return child;
     };
 
@@ -678,7 +686,14 @@ window.TQ = window.TQ || {};
         marker.setFlag(Element.TO_RELATIVE_POSE | Element.CLEAR_ANIMATATION); // 迫使他记录所有的track,
         var isInObjectSpace = true;
         this.addChild(marker, isInObjectSpace);
-        this.decorations = decs;
+        if (!this.decorations) {
+            this.decorations = decs;
+        } else {
+            var decorations = this.decorations;
+            decs.forEach(function(item) {
+                decorations.push(item);
+            });
+        }
         marker.show(true);
         marker.moveToTop();
     };
@@ -800,7 +815,7 @@ window.TQ = window.TQ || {};
         }
         visSum = visSum || Element.showHidenObjectFlag;
         this.doShow(visSum);
-    },
+    };
 
     p.doShow = function (visSum) {
         if (!this.displayObj) {
@@ -1272,7 +1287,10 @@ window.TQ = window.TQ || {};
             data.children = [];
             for (var i = 0; i < this.children.length; i++) {
                 if (!this.children[i].isMarker()) {
-                    data.children.push(this.children[i].toJSON());
+                    var childJson = this.children[i].toJSON();
+                    if (childJson) {
+                        data.children.push(childJson);
+                    }
                 }
             }
         }
@@ -1285,7 +1303,7 @@ window.TQ = window.TQ || {};
     };
 
     p.afterToJSON = function () {
-        if (this.isMarker()) {
+        if (!this.isEditable()) {
             return;
         }
         var data = this.jsonData;
@@ -1726,6 +1744,10 @@ window.TQ = window.TQ || {};
         return (!((this.animeTrack == undefined) || (this.animeTrack == null)));
     };
 
+    p.is = function(type) {
+        return (this.jsonObj.type === type);
+    };
+
     p.isLoaded = function () {
         return this.loaded;
     };
@@ -1950,6 +1972,37 @@ window.TQ = window.TQ || {};
         }
 
         return this.animeTrack.getInSagName();
+    };
+
+    p.hasBBox = function() {
+        return this.has(DescType.BBOX);
+    };
+
+    p.has = function(type) {
+        var result = false;
+        if (this.decorations) {
+            this.decorations.some(function (item) {
+                return (result = item.is(type));
+            })
+        }
+
+        return result;
+    };
+
+    p.getBBox = function () {
+        var bbox = null;
+        if (this.decorations) {
+            this.decorations.some(function (item) {
+                if (item.is(DescType.BBOX)) {
+                    bbox = item;
+                    return true;
+                } else {
+                    return false;
+                }
+            })
+        }
+
+        return bbox;
     };
 
     TQ.Element = Element;

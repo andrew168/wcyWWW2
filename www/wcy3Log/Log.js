@@ -100,8 +100,8 @@ TQ.Log = (function () {
 
     function matrixDebugInfo(msg, m) {
         if (logLevel >= self.INFO_LEVEL) {
-            debugInfo(msg + "matrix translation: " + m.elements[0][2].toFixed(20) + ", " +
-                m.elements[1][2].toFixed(20) + " " + m.elements[2][2].toFixed(20));
+            debugInfo(msg + "matrix translation: " + m.elements[0][2].toFixed(3) + ", " +
+                m.elements[1][2].toFixed(3) + " " + m.elements[2][2].toFixed(3));
         }
     }
 
@@ -133,7 +133,7 @@ TQ.Log = (function () {
         if (TQ.Config.hasWx && TQ.Config.WX_DEBUG_ENABLED) {
             alert("wx调试__" + str);
         } else {
-            info(str);
+            self.info(str);
         }
     }
 

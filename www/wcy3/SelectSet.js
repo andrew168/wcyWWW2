@@ -443,7 +443,13 @@ TQ = TQ || {};
 
     SelectSet.attachDecoration = function(ele){
         if (!ele.decorations) {
-            ele.attachMarker();
+            if (ele.isEditable()) {
+                if (TQ.Config.useMarkerOn) {
+                    ele.attachMarker();
+                } else {
+                    TQ.BBox.attachTo(ele);
+                }
+            }
         }
     };
 

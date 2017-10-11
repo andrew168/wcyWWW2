@@ -479,6 +479,10 @@ window.TQ = window.TQ || {};
         return (Math.abs(x - y) < 0.01);
     };
 
+    Utility.equalBoxSize = function (box1, box2) {
+        return ((Math.abs(box1.w - box2.w) < 0.01) && (Math.abs(box1.h - box2.h) < 0.01));
+    };
+
     // private
     function getNativeEvent(e) {
         var e0 = e.nativeEvent;
