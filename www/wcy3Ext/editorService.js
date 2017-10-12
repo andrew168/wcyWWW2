@@ -798,7 +798,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function setColor(colorPicker) {
-        state.color = '#' + colorPicker.toString();
+        if ((typeof colorPicker === 'string') && colorPicker[0]==='#') {
+            state.color = colorPicker;
+        } else {
+            state.color = '#' + colorPicker.toString();
+        }
         updateColorPanel();
         var selectedElement = TQ.SelectSet.peek();
         if (selectedElement && selectedElement.isText()) {
