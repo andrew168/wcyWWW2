@@ -14,6 +14,7 @@ TQ = TQ || {};
         TQ.Element.call(this, level, desc); // 调用父类的初始化函数， 在子类构造函数中
     }
 
+    BBox.CHANGED = 'bbox changed';
     var showPointOn = false;
     var p = BBox.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
 
@@ -60,7 +61,8 @@ TQ = TQ || {};
     };
 
     p.createModal = function () {
-        var hasPoint = false;
+        var hasPoint = false,
+            boxChanged = false;
         if (this.host.has(TQ.ElementType.POINT)) {
             hasPoint = true;
         }
@@ -108,10 +110,15 @@ TQ = TQ || {};
         if (!this.jsonObj.bbox || !TQ.Utility.equalBoxSize(this.jsonObj.bbox, bbox)) {
             this.jsonObj.bbox = bbox;
             this.createImage();
-        } else {
+            boxChanged = true;
+        } else if (!TQ.Utility.equalBox(this.jsonObj.bbox, bbox)) {
             this.jsonObj.bbox = bbox;
+            boxChanged = true;
         }
 
+        if (boxChanged && host.getBBox()) {
+            TQ.Base.Utility.triggerEvent(document, BBox.CHANGED, {element: host});
+        }
     };
 
     p.getBBoxTopRight = function() {
