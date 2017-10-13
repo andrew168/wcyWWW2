@@ -518,6 +518,23 @@ window.TQ = window.TQ || {};
         return '#' + number2Hex(r) + number2Hex(g) + number2Hex(b);
     };
 
+    Utility.world2css = function (x, y) {
+        // window的左下角是（0,0）
+        var canvas = TQ.Graphics.getCanvas(),
+            canvasStyle = getComputedStyle(canvas, null),
+            xCanvasOriginInCss = removePx(canvasStyle.left),
+            yCanvasOriginInCss = removePx(canvasStyle.bottom),
+            sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth,
+            sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight;
+
+        return {x: x / sx + xCanvasOriginInCss,
+            y: y / sy + yCanvasOriginInCss};
+    };
+
+    function removePx(xInCss) {
+        return Number(xInCss.replace("px", ""));
+    }
+
     function number2Hex(n) {
         var str = n.toString(16).toUpperCase();
         if (n === 0) {
