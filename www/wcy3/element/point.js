@@ -119,6 +119,8 @@ TQ = TQ || {};
             host.attachDecoration([point]);
             point.update(); //必须update以计算坐标
         }
+
+        return point;
     };
 
     Point.detachFrom = function (host) {
