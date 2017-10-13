@@ -1117,14 +1117,6 @@ window.TQ = window.TQ || {};
         }
     };
 
-    p.getBBoxData = function() {
-        // 简单的BBox, 为未考虑TRSA， 在世界坐标系下
-        return {
-            width: this.getWidth(),
-            height: this.getHeight()
-        }
-    };
-
     p.getBBoxRadiusInWorld = function () {
         var w = this.getWidth(),
             h = this.getHeight(),
@@ -1990,11 +1982,15 @@ window.TQ = window.TQ || {};
     };
 
     p.getBBox = function () {
-        var bbox = null;
+        return this.getDecor(DescType.BBOX);
+    };
+
+    p.getDecor = function (type) {
+        var decor = null;
         if (this.decorations) {
             this.decorations.some(function (item) {
-                if (item.is(DescType.BBOX)) {
-                    bbox = item;
+                if (item.is(type)) {
+                    decor = item;
                     return true;
                 } else {
                     return false;
@@ -2002,7 +1998,7 @@ window.TQ = window.TQ || {};
             })
         }
 
-        return bbox;
+        return decor;
     };
 
     TQ.Element = Element;
