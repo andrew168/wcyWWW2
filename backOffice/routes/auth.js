@@ -37,7 +37,7 @@ router.post('/login', function (req, res) {
             if (!isMatch) {
                 return resError2(res, 401, 'Invalid email and/or password');
             }
-            res.send({token: createJWT(user)});
+            resUserToken2(res, user);
         });
     });
 });
@@ -64,14 +64,57 @@ router.post('/signup', function (req, res) {
             email: email,
             password: req.body.password
         });
-        user.save(function (err, result) {
-            if (err) {
-                return resError2(res, 500, err.message);
-            }
-            res.send({token: createJWT(result)});
+        saveAndResponse(user, res);
+    });
+});
+
+router.get('/api/me', ensureAuthenticated, function (req, res) {
+    User.findById(req.user, function (err, user) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        }
+
+        res.send(user);
+    });
+});
+
+router.put('/api/me', ensureAuthenticated, function (req, res) {
+    User.findById(req.user, function (err, user) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        }
+
+        if (!user) {
+            return resError2(res, 400, 'User not found');
+        }
+        user.displayName = req.body.displayName || user.displayName;
+        user.email = req.body.email || user.email;
+        user.save(function (err) {
+            res.status(200).end();
         });
     });
 });
+
+function ensureAuthenticated(req, res, next) {
+    if (!req.header('Authorization')) {
+        return resError2(res, 401, 'Please make sure your request has an Authorization header');
+    }
+    var token = req.header('Authorization').split(' ')[1];
+
+    var payload = null;
+    try {
+        payload = jwt.decode(token, config.TOKEN_SECRET);
+    }
+    catch (err) {
+        return resError2(res, 401, err.message);
+    }
+
+    if (payload.exp <= moment().unix()) {
+        return resError2(res, 401, 'Token has expired');
+    }
+    req.user = payload.sub;
+    next();
+}
 
 router.post('/facebook', function (req, res) {
     var fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
@@ -116,8 +159,7 @@ router.post('/facebook', function (req, res) {
     });
 
     function resUserToken(user) {
-        var token = createJWT(user);
-        res.send({token: token});
+        resUserToken2(res, user);
     }
 
     function resError(msg) {
@@ -131,12 +173,7 @@ router.post('/facebook', function (req, res) {
         //及时更新user的名字和pic， 以保持与fb一致
         userModel.picture = userModel.picture || 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large';
         userModel.displayName = userModel.displayName || profile.name;
-        userModel.save(function (err, userModel) {
-            if (err) {
-                resError(err.message);
-            }
-            callback(userModel._doc);
-        });
+        saveAndResponse(user, res);
     }
 
     function createUser(profile, callback) {
@@ -147,12 +184,7 @@ router.post('/facebook', function (req, res) {
         user.facebook = profile.id;
         user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
         user.displayName = profile.name;
-        user.save(function (err, userModel) {
-            if (err) {
-                return resError(err.message);
-            }
-            callback(userModel._doc); // doc ?? user
-        });
+        saveAndResponse(user, res);
     }
 
 });
@@ -168,6 +200,20 @@ function createJWT(user) {
 
 function resError2(res, statusCode, msg) {
     return res.status(statusCode).send({message: msg});
+}
+
+function resUserToken2(res, user) {
+    var token = createJWT(user);
+    res.send({token: token});
+}
+
+function saveAndResponse(user, res) {
+    user.save(function (err, userModel) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        }
+        resUserToken2(res, userModel);
+    });
 }
 
 module.exports = router;
