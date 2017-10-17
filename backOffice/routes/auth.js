@@ -56,6 +56,7 @@ function failedOrOldPswUser(req, res) {
 
         user.email = email;
         user.password = req.body.password;
+        user.psw = ""; // 删除就psw
         saveAndResponse(user, res);
     });
 }
