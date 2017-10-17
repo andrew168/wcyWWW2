@@ -77,7 +77,7 @@
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
         app.use(loggerMorgan('dev'));
         app.use(bodyParser.json());
-        app.use(bodyParser.urlencoded({extended: false}));
+        app.use(bodyParser.urlencoded({extended: true}));
         app.use(cookieParser());
 
 //CORS middleware
