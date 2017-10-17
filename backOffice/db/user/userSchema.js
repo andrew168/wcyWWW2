@@ -7,6 +7,10 @@ var userSchema = new Schema({
     name: {type: String, index: 1, required: true, unique: true},// 登录用的名字， 必须唯一，可以是email账号
     displayName: {type: String, default:""},
     psw: {type:String, required: true, default:"123abc"},
+    email: {type: String, unique: true, lowercase: true},
+    picture: String,
+    facebook: String,
+
     score: {type: Number, default: 0}, // 实时统计并显示？
     signUpAt: {type: Date, default: Date.now},
     privilege: {type: Number, default: 3} // 权限， 1: 普通用户， 可以 播放1， 创作2，

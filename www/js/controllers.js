@@ -1,11 +1,11 @@
 angular.module('starter').controller('DashCtrl', DashCtrl);
-DashCtrl.$inject = ['$scope', '$timeout', 'WCY', '$cordovaImagePicker',
+DashCtrl.$inject = ['$scope', '$auth', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
         'AppService', 'MatLibService', 'UserService'];
 
 function DashCtrl(
-            $scope, $timeout, WCY, $cordovaImagePicker,
+            $scope, $auth, $timeout, WCY, $cordovaImagePicker,
             $cordovaSocialSharing,
             FileService, NetService, DeviceService, WxService, EditorService,
             AppService, MatLibService, UserService) {
@@ -93,6 +93,16 @@ function DashCtrl(
 
     $scope.testLogin = function() {
         UserService.login('user' + testUserId, 'pswww' + testUserId);
+    };
+
+    $scope.testFbLogin = function () {
+        $auth.authenticate('facebook')
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
     };
 
     $scope.deleteLevel = function(id) {

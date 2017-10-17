@@ -14,6 +14,7 @@ var appConfig = {
         {name:'AudioMat', schema:'../db/material/audioMatSchema.js', ctrl:'../db/material/audioMatController.js'}
     ],
     routesMap: [
+        {url: 'auth', filePath: './../routes/auth'},
         {url: 'index55', filePath: './../routes/index33'},
         // {url: 'users', filePath: './../routes/users'},
         {url: 'getCSignature', filePath: './../routes/getCSignature'},
