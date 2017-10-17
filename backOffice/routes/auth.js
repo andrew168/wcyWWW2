@@ -14,6 +14,65 @@ var config = {
     FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || '806ead2d9cf4864704ffd3f970353f4c'
 };
 
+router.post('/login', function (req, res) {
+    var email = req.body.email;
+    if (email) {
+        email = email.toLocaleLowerCase();
+    } else {
+        return resError2(res, 500, "email is empty！");
+    }
+    User.findOne({email: req.body.email}, '+password', function (err, user) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        }
+
+        if (!user) {
+            return resError2(res, 401, 'Invalid email and/or password');
+        }
+        user.comparePassword(req.body.password, function (err, isMatch) {
+            if (err) {
+                return resError2(res, 500, err.message);
+            }
+
+            if (!isMatch) {
+                return resError2(res, 401, 'Invalid email and/or password');
+            }
+            res.send({token: createJWT(user)});
+        });
+    });
+});
+
+router.post('/signup', function (req, res) {
+    var email = req.body.email;
+    if (email) {
+        email = email.toLocaleLowerCase();
+    } else {
+        return resError2(res, 500, "email is empty！");
+    }
+
+    User.findOne({email: email}, function (err, existingUser) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        }
+
+        if (existingUser) {
+            return resError2(res, 409, 'Email is already taken');
+        }
+        var user = new User({
+            name: email, // email or phone number
+            displayName: req.body.displayName,
+            email: email,
+            password: req.body.password
+        });
+        user.save(function (err, result) {
+            if (err) {
+                return resError2(res, 500, err.message);
+            }
+            res.send({token: createJWT(result)});
+        });
+    });
+});
+
 router.post('/facebook', function (req, res) {
     var fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
     var accessTokenUrl = 'https://graph.facebook.com/v2.5/oauth/access_token';
@@ -27,12 +86,20 @@ router.post('/facebook', function (req, res) {
 
     // Step 1. Exchange authorization code for access token.
     request.get({url: accessTokenUrl, qs: params, json: true}, function (err, response, accessToken) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        }
+
         if (response.statusCode !== 200) {
             return resError(accessToken.error.message);
         }
 
         // Step 2. Retrieve profile information about the current user.
         request.get({url: graphApiUrl, qs: accessToken, json: true}, function (err, response, profile) {
+            if (err) {
+                return resError2(res, 500, err.message);
+            }
+
             if (response.statusCode !== 200) {
                 return resError(profile.error.message);
             }
@@ -43,7 +110,7 @@ router.post('/facebook', function (req, res) {
                 } else if (existingUser) {
                     return updateUser(existingUser, profile, resUserToken);
                 }
-                return createUser(profile, resUserToken);
+                    return createUser(profile, resUserToken);
             });
         });
     });
@@ -54,7 +121,7 @@ router.post('/facebook', function (req, res) {
     }
 
     function resError(msg) {
-        return res.status(500).send({message: msg});
+        resError2(res, 500, msg);
     }
 
     function updateUser(userModel, profile, callback) {
@@ -97,6 +164,10 @@ function createJWT(user) {
         exp: moment().add(14, 'days').unix()
     };
     return jwt.encode(payload, config.TOKEN_SECRET);
+}
+
+function resError2(res, statusCode, msg) {
+    return res.status(statusCode).send({message: msg});
 }
 
 module.exports = router;

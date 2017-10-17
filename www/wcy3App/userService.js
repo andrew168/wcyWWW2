@@ -3,8 +3,8 @@
  */
 
 angular.module('starter').factory("UserService", UserService);
-UserService.$inject = ['$http'];
-function UserService($http) {
+UserService.$inject = ['$http', '$auth'];
+function UserService($http, $auth) {
     var user = TQ.userProfile;
 
     function canAutoLogin() {
@@ -19,9 +19,8 @@ function UserService($http) {
     }
 
     function login(name, psw) {
-        var url = TQ.Config.AUTH_HOST + '/user/login/' + name + '/' + psw;
-        return $http.get(url)
-            .then(onLoginDone);
+        $auth.login({email: name.toLowerCase(), password: psw}).
+            then(onLoginDone);
     }
 
     function logout(name) {
@@ -29,10 +28,8 @@ function UserService($http) {
     }
 
     function signUp(name, psw, displayName) {
-        return $http({
-            method: 'POST',
-            url: TQ.Config.AUTH_HOST + '/user/signup/' + name + '/' + psw + '/' + displayName
-        }).then(onSignUpDone);
+        $auth.signup({email: name.toLowerCase(), password: psw, displayName: displayName}).
+            then(onSignUpDone);
     }
 
     function checkName(name) {
@@ -47,6 +44,11 @@ function UserService($http) {
     }
 
     function onLoginDone(netPkg) {
+        $http.get('/auth/api/me').
+            then(onApiMe);
+    }
+
+    function onApiMe(netPkg) {
         var data = netPkg.data;
         if (data.result === TQ.Const.SUCCESS) {
             user.loggedIn = true;
