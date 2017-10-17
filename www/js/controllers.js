@@ -95,6 +95,7 @@ function DashCtrl(
 
     $scope.testLogin = function() {
         UserService.login(email, 'pswww' + testUserId);
+        // UserService.login('toronto1111', 'toronto1111');
     };
 
     $scope.testFbLogin = function () {

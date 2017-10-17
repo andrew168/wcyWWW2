@@ -27,7 +27,7 @@ router.post('/login', function (req, res) {
         }
 
         if (!user) {
-            return resError2(res, 401, 'Invalid email and/or password');
+            return failedOrOldPswUser(req, res);
         }
         user.comparePassword(req.body.password, function (err, isMatch) {
             if (err) {
@@ -41,6 +41,25 @@ router.post('/login', function (req, res) {
         });
     });
 });
+
+function failedOrOldPswUser(req, res) {
+    var email = req.body.email.toLocaleLowerCase();
+
+    User.findOne({name: email, psw: req.body.password}, function (err, user) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        }
+
+        if (!user) {
+            return resError2(res, 401, 'Invalid email and/or password');
+        }
+
+        user.email = email;
+        user.password = req.body.password;
+        saveAndResponse(user, res);
+    });
+}
+
 
 router.post('/signup', function (req, res) {
     var email = req.body.email;
