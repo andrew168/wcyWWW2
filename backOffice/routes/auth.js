@@ -4,7 +4,16 @@ var express = require('express'),
     jwt = require('jwt-simple'),
     moment = require('moment'),
     mongoose = require('mongoose'),
-    User = mongoose.model('User');
+    User = mongoose.model('User'),
+    Const = require('../base/const'),
+    utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
+    status = require('../common/status'),
+    netCommon = require('../common/netCommonFunc'),
+    fs = require('fs'),
+    userController = require('../db/user/userController');
+
+var composeErrorPkg = userController.composeErrorPkg,
+    composeUserPkg = userController.composeUserPkg;
 
 var config = {
     // App Settings
@@ -23,7 +32,8 @@ router.post('/login', function (req, res) {
     }
     User.findOne({email: req.body.email}, '+password', function (err, user) {
         if (err) {
-            return resError2(res, 500, err.message);
+            var pkg = composeErrorPkg(err, Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT);
+            return resError2(res, 500, pkg);
         }
 
         if (!user) {
@@ -61,7 +71,6 @@ function failedOrOldPswUser(req, res) {
     });
 }
 
-
 router.post('/signup', function (req, res) {
     var email = req.body.email;
     if (email) {
@@ -70,13 +79,38 @@ router.post('/signup', function (req, res) {
         return resError2(res, 500, "email is empty！");
     }
 
+    var name = email,
+        psw = req.body.password || null,
+        displayName = req.body.displayname || null;
+
+    // status.logUser(req);
+    var errorID = Const.ERROR.NO;
+    if (!isValidFormat(displayName)) {
+        errorID = Const.ERROR.DISPLAY_NAME_INVALID;
+    } else if (!isValidFormat(name)) {
+        errorID = Const.ERROR.NAME_IS_INVALID;
+    } else if (!isValidFormat(psw)) {
+        errorID = Const.ERROR.PASSWORD_IS_INVALID;
+    }
+
+    if (errorID !== Const.ERROR.NO) {
+        return sendBackErrorInfo1({result: false, errorID: errorID});
+    }
+
+    function sendBackErrorInfo1(data) {
+        status.onSignUp(req, res, data);
+        res.send(data);
+    }
+
     User.findOne({email: email}, function (err, existingUser) {
         if (err) {
             return resError2(res, 500, err.message);
         }
 
         if (existingUser) {
-            return resError2(res, 409, 'Email is already taken');
+            errorID = Const.ERROR.NAME_IS_INVALID_OR_TAKEN;
+            var pkg = composeErrorPkg('Email is already taken', errorID);
+            return resError2(res, 409, pkg);
         }
         var user = new User({
             name: email, // email or phone number
@@ -94,7 +128,7 @@ router.get('/api/me', ensureAuthenticated, function (req, res) {
             return resError2(res, 500, err.message);
         }
 
-        res.send(user);
+        res.send(composeUserPkg(user));
     });
 });
 
@@ -173,7 +207,7 @@ router.post('/facebook', function (req, res) {
                 } else if (existingUser) {
                     return updateUser(existingUser, profile, resUserToken);
                 }
-                    return createUser(profile, resUserToken);
+                return createUser(profile, resUserToken);
             });
         });
     });
@@ -186,14 +220,14 @@ router.post('/facebook', function (req, res) {
         resError2(res, 500, msg);
     }
 
-    function updateUser(userModel, profile, callback) {
+    function updateUser(userModel, profile) {
         if (userModel.facebook !== profile.id) {
             console.log(userModel._id + ": this user has 1+ facebook account? " + userModel.facebook + ', ' + profile.id);
         }
         //及时更新user的名字和pic， 以保持与fb一致
         userModel.picture = userModel.picture || 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large';
         userModel.displayName = userModel.displayName || profile.name;
-        saveAndResponse(user, res);
+        saveAndResponse(userModel, res);
     }
 
     function createUser(profile, callback) {
@@ -219,6 +253,9 @@ function createJWT(user) {
 }
 
 function resError2(res, statusCode, msg) {
+    if (typeof msg === 'string') {
+        msg = JSON.stringify(composeErrorPkg(msg, Const.ERROR.GENERAL_ERROR));
+    }
     return res.status(statusCode).send({message: msg});
 }
 
@@ -227,13 +264,18 @@ function resUserToken2(res, user) {
     res.send({token: token});
 }
 
-function saveAndResponse(user, res) {
-    user.save(function (err, userModel) {
+function saveAndResponse(userModel, res) {
+    userModel.save(function (err, userModel) {
         if (err) {
-            return resError2(res, 500, err.message);
+            var pkg = composeErrorPkg(err, Const.ERROR_NAME_EXIST_OR_INVALID_FORMAT);
+            return resError2(res, 500, pkg);
         }
         resUserToken2(res, userModel);
     });
+}
+
+function isValidFormat(name) {
+    return ((name) && (name.length > 8));
 }
 
 module.exports = router;

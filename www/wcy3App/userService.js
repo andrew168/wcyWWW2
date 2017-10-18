@@ -8,18 +8,16 @@ function UserService($http, $auth) {
     var user = TQ.userProfile;
 
     function canAutoLogin() {
-        return  ((!!user.name) && (!!user.ID) && (!user.needManualLogin));
+        return  $auth.isAuthenticated();
     }
 
     function tryAutoLogin() {
         TQ.AssertExt.invalidLogic(canAutoLogin(), "must call canAutoLogin to determine");
-        var url = TQ.Config.AUTH_HOST + '/user/autologin/' + user.name + '/' + user.ID;
-        return $http.get(url)
-            .then(onLoginDone);
+        return onLoginDone();
     }
 
     function login(name, psw) {
-        $auth.login({email: name.toLowerCase(), password: psw}).
+        return $auth.login({email: name.toLowerCase(), password: psw}).
             then(onLoginDone);
     }
 
@@ -44,13 +42,13 @@ function UserService($http, $auth) {
     }
 
     function onLoginDone(netPkg) {
-        $http.get('/auth/api/me').
+        return $http.get('/auth/api/me').
             then(onApiMe);
     }
 
     function onApiMe(netPkg) {
         var data = netPkg.data;
-        if (data.result === TQ.Const.SUCCESS) {
+        if (netPkg.status === TQ.Const.STATUS200) {
             user.loggedIn = true;
             user.needManualLogin = false;
             user.name = data.name;

@@ -5,6 +5,8 @@ var TQ = TQ || {};
 TQ.Const = {
     SUCCESS: 1,
     FAILED: 0,
+    STATUS200: 200,
+    STATUS409: 409,
 
     NO_RECORDING_TRUE: true,
     NO_RECORDING_FALSE: false,
