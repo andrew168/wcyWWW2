@@ -81,7 +81,7 @@ router.post('/signup', function (req, res) {
 
     var name = email,
         psw = req.body.password || null,
-        displayName = req.body.displayname || null;
+        displayName = req.body.displayName || null;
 
     // status.logUser(req);
     var errorID = Const.ERROR.NO;
