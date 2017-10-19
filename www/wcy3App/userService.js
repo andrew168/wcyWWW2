@@ -13,12 +13,12 @@ function UserService($http, $auth) {
 
     function tryAutoLogin() {
         TQ.AssertExt.invalidLogic(canAutoLogin(), "must call canAutoLogin to determine");
-        return onLoginDone();
+        return getProfile();
     }
 
     function login(name, psw) {
         return $auth.login({email: name.toLowerCase(), password: psw}).
-            then(onLoginDone);
+            then(getProfile);
     }
 
     function logout(name) {
@@ -41,7 +41,7 @@ function UserService($http, $auth) {
         user.isValidName = (data.result === TQ.Const.SUCCESS);
     }
 
-    function onLoginDone(netPkg) {
+    function getProfile() {
         return $http.get('/auth/api/me').
             then(onApiMe);
     }
@@ -76,13 +76,14 @@ function UserService($http, $auth) {
     }
 
     function onSignUpDone(netPkg) {
-        onLoginDone(netPkg);
+        getProfile(netPkg);
     }
 
     return {
         canAutoLogin: canAutoLogin,
         tryAutoLogin: tryAutoLogin,
         checkName: checkName,
+        getProfile: getProfile,
         login: login,
         logout: logout,
         signUp: signUp
