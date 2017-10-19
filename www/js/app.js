@@ -57,6 +57,14 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
             clientId: '273410813018932'
         });
 
+        $authProvider.twitter({
+            url: '/auth/twitter',
+            authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+            redirectUri: window.location.origin,
+            oauthType: '1.0',
+            popupOptions: {width: 495, height: 645}
+        });
+
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router
         // Set up the various states which the app can be in.

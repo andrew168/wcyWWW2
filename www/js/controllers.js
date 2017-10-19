@@ -108,6 +108,16 @@ function DashCtrl(
             });
     };
 
+    $scope.testTwitterLogin = function () {
+        $auth.authenticate('twitter')
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (response) {
+                console.log(response);
+            });
+    };
+
     $scope.deleteLevel = function(id) {
         EditorService.deleteLevel(id);
     };
