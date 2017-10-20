@@ -107,12 +107,12 @@ router.post('/signup', function (req, res) {
         res.send(data);
     }
 
-    User.findOne({email: email}, function (err, existingUser) {
+    User.findOne({email: email}, function (err, user) {
         if (err) {
             return resError2(res, 500, err.message);
         }
 
-        if (existingUser) {
+        if (user) {
             errorID = Const.ERROR.NAME_IS_INVALID_OR_TAKEN;
             var pkg = composeErrorPkg('Email is already taken', errorID);
             return resError2(res, 409, pkg);
@@ -206,11 +206,11 @@ router.post('/facebook', function (req, res) {
                 return resError(profile.error.message);
             }
 
-            User.findOne({facebook: profile.id}, function (err, existingUser) {
+            User.findOne({facebook: profile.id}, function (err, user) {
                 if (err) {
                     return resError(err.message);
-                } else if (existingUser) {
-                    return updateUser(existingUser, profile, resUserToken);
+                } else if (user) {
+                    return updateUser(user, profile, resUserToken);
                 }
                 return createUser(profile, resUserToken);
             });
@@ -299,8 +299,8 @@ router.post('/twitter', function (req, res) {
 
                 // Step 5a. Link user accounts.
                 if (req.header('Authorization')) {
-                    User.findOne({twitter: profile.id}, function (err, existingUser) {
-                        if (existingUser) {
+                    User.findOne({twitter: profile.id}, function (err, user) {
+                        if (user) {
                             return res.status(409).send({message: 'There is already a Twitter account that belongs to you'});
                         }
 
@@ -323,9 +323,9 @@ router.post('/twitter', function (req, res) {
                     });
                 } else {
                     // Step 5b. Create a new user account or return an existing one.
-                    User.findOne({twitter: profile.id}, function (err, existingUser) {
-                        if (existingUser) {
-                            return res.send({token: createJWT(existingUser)});
+                    User.findOne({twitter: profile.id}, function (err, user) {
+                        if (user) {
+                            return res.send({token: createJWT(user)});
                         }
 
                         var user = new User();
