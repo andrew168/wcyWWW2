@@ -14,6 +14,14 @@ exports.ERROR = {
     GENERAL_ERROR: 99
 };
 
+exports.HTTP = {
+    STATUS_200_OK: 200,
+    STATUS_400_BAD_REQUEST: 400,
+    STATUS_401_UNAUTHORIZED: 401,
+    STATUS_409_CONFLICT: 409,
+    STATUS_500_INTERNAL_SERVER_ERROR: 500
+};
+
 exports.AUTH = {
     FACEBOOK: 'facebook',
     TWITTER: 'twitter'
