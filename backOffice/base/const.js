@@ -22,10 +22,18 @@ exports.HTTP = {
     STATUS_500_INTERNAL_SERVER_ERROR: 500
 };
 
-exports.AUTH = {
+var AUTH = {
     FACEBOOK: 'facebook',
-    TWITTER: 'twitter'
+    TWITTER: 'twitter',
+    GOOGLE: 'google'
 };
 
+var AUTH_PREFIX = {};
+AUTH_PREFIX[AUTH.FACEBOOK] = 'fb';
+AUTH_PREFIX[AUTH.TWITTER] = 'tt';
+AUTH_PREFIX[AUTH.GOOGLE] = 'gg';
+
+exports.AUTH = AUTH;
+exports.AUTH_PREFIX = AUTH_PREFIX;
 exports.SUCCESS = 1;
 exports.FAILED = 0;

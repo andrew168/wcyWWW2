@@ -22,7 +22,7 @@ var config = {
 
     // OAuth 2.0
     FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || '806ead2d9cf4864704ffd3f970353f4c',
-    GOOGLE_SECRET: '9wnvTJA3XgPbt6g2 - bNa3zLn',
+    GOOGLE_SECRET: '1rtxnrU822p6jdCYbywmfQYQ',
 
     // OAuth 1.0
     TWITTER_KEY: process.env.TWITTER_KEY || '5BrblmjAPGKbxnfAqo8nFjF6t',
@@ -207,45 +207,43 @@ router.post('/facebook', function (req, res) {
                 return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, profile.error.message);
             }
 
-            return responseUserInfo(res, {facebook: profile.id}, profile, Const.AUTH.FACEBOOK);
+            var requestToLink = !!req.header('Authorization'),
+                unifiedProfile = unifyProfile(
+                    profile.id,
+                    profile.email,
+                    profile.displayName,
+                    'https://graph.facebook.com/' + profile.id + '/picture?type=large'
+                    // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
+                );
+            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
         });
     });
 });
 
-function responseUserInfo(res, condition, profile, authName) {
-    User.findOne(condition, function (err, user) {
+function responseUserInfo(res, req, condition, profile, authName, requestToLink) {
+    User.findOne(condition, onFound);
+    function onFound(err, user) {
         if (err) {
             return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
         } else if (user) {
             user = updateUser(user, profile, authName);
         } else {
-            user = createUser(profile, authName);
+            if (requestToLink && req) { // 未发现已经link好的账号，
+                var token = req.header('Authorization').split(' ')[1];
+                var payload = jwt.decode(token, config.TOKEN_SECRET);
+                condition = {_id: payload.sub};
+                return responseUserInfo(res, null, condition, profile, authName, requestToLink);
+            } else {
+                user = createUser(profile, authName);
+            }
         }
         return saveAndResponse(res, user);
-    });
+    }
 }
 
-function updateUser(userModel, profile, autherName) {
-    var prefix = null;
-    switch (autherName) {
-        case Const.AUTH.FACEBOOK:
-            prefix = "fb";
-            if (!!userModel.facebook && (userModel.facebook !== profile.id)) {
-                console.log(userModel._id + ": this userModel has 1+ facebook account? " + userModel.facebook + ', ' + profile.id);
-            }
-            userModel.facebook = profile.id;
-            userModel.picture = userModel.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
-            // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
-            break;
-        case Const.AUTH.TWITTER:
-            prefix = "tt";
-            userModel.twitter = profile.id;
-            userModel.picture = userModel.picture || profile.profile_image_url_https.replace('_normal', '');
-            break;
-        default :
-            console.error("未知的Auth应用:" + autherName)
-    }
 
+function updateUser(userModel, profile, authName) {
+    var prefix = Const.AUTH_PREFIX[authName];
     userModel.name = userModel.name || (prefix + profile.id);
     userModel.psw = userModel.psw || (prefix + profile.id);
     userModel.email = userModel.email || profile.email;
@@ -320,12 +318,21 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
             oauth: profileOauth,
             json: true
         }, function (err, response, profile) {
-            return responseUserInfo(res, {twitter: profile.id}, profile, Const.AUTH.TWITTER);
+            var requestToLink = !!req.header('Authorization'),
+                unifiedProfile = unifyProfile(
+                    profile.id,
+                    profile.email,
+                    profile.displayName,
+                    profile.profile_image_url_https.replace('_normal', '')
+                    // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
+                );
+
+            return responseUserInfo(res, req, {twitter: unifiedProfile.id}, unifiedProfile, Const.AUTH.TWITTER, requestToLink);
         });
     });
 }
 
-app.post('/google', function (req, res) {
+router.post('/google', function (req, res) {
     var accessTokenUrl = 'https://accounts.google.com/o/oauth2/token';
     var peopleApiUrl = 'https://www.googleapis.com/plus/v1/people/me/openIdConnect';
     var params = {
@@ -347,42 +354,14 @@ app.post('/google', function (req, res) {
                 return res.status(500).send({message: profile.error.message});
             }
             // Step 3a. Link user accounts.
-            if (req.header('Authorization')) {
-                User.findOne({google: profile.sub}, function (err, existingUser) {
-                    if (existingUser) {
-                        return res.status(409).send({message: 'There is already a Google account that belongs to you'});
-                    }
-                    var token = req.header('Authorization').split(' ')[1];
-                    var payload = jwt.decode(token, config.TOKEN_SECRET);
-                    User.findById(payload.sub, function (err, user) {
-                        if (!user) {
-                            return res.status(400).send({message: 'User not found'});
-                        }
-                        user.google = profile.sub;
-                        user.picture = user.picture || profile.picture.replace('sz=50', 'sz=200');
-                        user.displayName = user.displayName || profile.name;
-                        user.save(function () {
-                            var token = createJWT(user);
-                            res.send({token: token});
-                        });
-                    });
-                });
-            } else {
-                // Step 3b. Create a new user account or return an existing one.
-                User.findOne({google: profile.sub}, function (err, existingUser) {
-                    if (existingUser) {
-                        return res.send({token: createJWT(existingUser)});
-                    }
-                    var user = new User();
-                    user.google = profile.sub;
-                    user.picture = profile.picture.replace('sz=50', 'sz=200');
-                    user.displayName = profile.name;
-                    user.save(function (err) {
-                        var token = createJWT(user);
-                        res.send({token: token});
-                    });
-                });
-            }
+            var requestToLink = !!req.header('Authorization'),
+                unifiedProfile = unifyProfile(
+                    profile.sub, // 不是id！！！， google 用sub代替id
+                    profile.email,
+                    profile.displayName,
+                    profile.picture.replace('sz=50', 'sz=200')
+                );
+            return responseUserInfo(res, req, {google: unifiedProfile.id}, unifiedProfile, Const.AUTH.GOOGLE, requestToLink);
         });
     });
 });
@@ -420,6 +399,15 @@ function saveAndResponse(res, userModel) {
 
 function isValidFormat(name) {
     return ((name) && (name.length > 8));
+}
+
+function unifyProfile(id, email, displayName, pictureUrl) {
+    return {
+        id: id,
+        email: email,
+        displayName: displayName,
+        picture: pictureUrl
+    };
 }
 
 module.exports = router;
