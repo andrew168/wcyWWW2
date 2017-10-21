@@ -206,7 +206,7 @@ router.post('/facebook', function (req, res) {
                 return resError(profile.error.message);
             }
 
-            return responseUserInfo(res, {facebook: profile.id}, Const.AUTH.FACEBOOK);
+            return responseUserInfo(res, {facebook: profile.id}, profile, Const.AUTH.FACEBOOK);
         });
     });
 
@@ -215,7 +215,7 @@ router.post('/facebook', function (req, res) {
     }
 });
 
-function responseUserInfo(res, condition, authName) {
+function responseUserInfo(res, condition, profile, authName) {
     User.findOne(condition, function (err, user) {
         if (err) {
             return resError2(res, 500, err.message);
@@ -323,7 +323,7 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
             oauth: profileOauth,
             json: true
         }, function (err, response, profile) {
-             return responseUserInfo(res, {twitter: profile.id}, Const.AUTH.TWITTER);
+             return responseUserInfo(res, {twitter: profile.id}, profile,  Const.AUTH.TWITTER);
         });
     });
 }
