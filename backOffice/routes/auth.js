@@ -244,6 +244,12 @@ function responseUserInfo(res, req, condition, profile, authName, requestToLink)
 
 function updateUser(userModel, profile, authName) {
     var prefix = Const.AUTH_PREFIX[authName];
+    if (userModel.name === (prefix + 'undefined')) {
+        userModel.name = null;
+    }
+    if (userModel.psw === (prefix + 'undefined')) {
+        userModel.psw = null;
+    }
     userModel.name = userModel.name || (prefix + profile.id);
     userModel.psw = userModel.psw || (prefix + profile.id);
     userModel.email = userModel.email || profile.email;
