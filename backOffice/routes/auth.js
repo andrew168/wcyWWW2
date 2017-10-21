@@ -189,22 +189,14 @@ router.post('/facebook', function (req, res) {
 
     // Step 1. Exchange authorization code for access token.
     request.get({url: accessTokenUrl, qs: params, json: true}, function (err, response, accessToken) {
-        if (err) {
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
-        }
-
-        if (response.statusCode !== Const.HTTP.STATUS_200_OK) {
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, accessToken.error.message);
+        if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+            return responseError500(res, err, accessToken);
         }
 
         // Step 2. Retrieve profile information about the current user.
         request.get({url: graphApiUrl, qs: accessToken, json: true}, function (err, response, profile) {
-            if (err) {
-                return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
-            }
-
-            if (response.statusCode !== Const.HTTP.STATUS_200_OK) {
-                return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, profile.error.message);
+            if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+                return responseError500(res, err, profile);
             }
 
             var requestToLink = !!req.header('Authorization'),
@@ -240,7 +232,6 @@ function responseUserInfo(res, req, condition, profile, authName, requestToLink)
         return saveAndResponse(res, user);
     }
 }
-
 
 function updateUser(userModel, profile, authName) {
     var prefix = Const.AUTH_PREFIX[authName];
@@ -280,6 +271,10 @@ router.post('/twitter', function (req, res) {
 
         // Step 1. Obtain request token for the authorization popup.
         request.post({url: requestTokenUrlTwitter, oauth: requestTokenOauth}, function (err, response, body) {
+            if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+                return responseError500(res, err, body);
+            }
+
             var oauthToken = qs.parse(body);
             console.log('oauth_token: ' + oauthToken.oauth_token);
             console.log('oauth_verifier: ' + oauthToken.oauth_verifier);
@@ -308,6 +303,10 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
 
     // Step 3. Exchange oauth token and oauth verifier for access token.
     request.post({url: accessTokenUrlTwitter, oauth: accessTokenOauth}, function (err, response, accessToken) {
+        if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+            return responseError500(res, err, accessToken);
+        }
+
         accessToken = qs.parse(accessToken);
 
         var profileOauth = {
@@ -351,14 +350,19 @@ router.post('/google', function (req, res) {
 
     // Step 1. Exchange authorization code for access token.
     request.post(accessTokenUrl, {json: true, form: params}, function (err, response, token) {
+        if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+            return responseError500(res, err, token);
+        }
+
         var accessToken = token.access_token;
         var headers = {Authorization: 'Bearer ' + accessToken};
 
         // Step 2. Retrieve profile information about the current user.
         request.get({url: peopleApiUrl, headers: headers, json: true}, function (err, response, profile) {
-            if (profile.error) {
-                return res.status(500).send({message: profile.error.message});
+            if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+                return responseError500(res, err, profile);
             }
+
             // Step 3a. Link user accounts.
             var requestToLink = !!req.header('Authorization'),
                 unifiedProfile = unifyProfile(
@@ -386,6 +390,11 @@ function responseError(res, statusCode, msg) {
         msg = JSON.stringify(composeErrorPkg(msg, Const.ERROR.GENERAL_ERROR));
     }
     return res.status(statusCode).send({message: msg});
+}
+
+function responseError500(res, err, data) {
+    var errDesc = (err) ? err.message : data.error.message;
+    return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
 }
 
 function resUserToken2(res, user) {
