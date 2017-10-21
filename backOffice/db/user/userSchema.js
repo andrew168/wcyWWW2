@@ -12,6 +12,7 @@ var userSchema = new Schema({
     email: {type: String, unique: true, lowercase: true},
     picture: String,
     facebook: String,
+    twitter: String,
 
     score: {type: Number, default: 0}, // 实时统计并显示？
     signUpAt: {type: Date, default: Date.now},

@@ -62,6 +62,8 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
             authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
             redirectUri: window.location.origin,
             oauthType: '1.0',
+            // oauth_token: '920796548572868608-0LZ8K881BA6XiesnqIFfkYiYL5YlRLc',
+            // oauth_verifier: "abcd123",
             popupOptions: {width: 495, height: 645}
         });
 

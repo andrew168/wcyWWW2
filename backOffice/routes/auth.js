@@ -219,36 +219,43 @@ router.post('/facebook', function (req, res) {
         });
     });
 
-    function resUserToken(user) {
-        resUserToken2(res, user);
-    }
-
     function resError(msg) {
         resError2(res, 500, msg);
     }
-
-    function updateUser(userModel, profile, autherName) {
-        if (userModel.facebook !== profile.id) {
-            console.log(userModel._id + ": this user has 1+ facebook account? " + userModel.facebook + ', ' + profile.id);
-        }
-        //及时更新user的名字和pic， 以保持与fb一致
-        userModel.picture = userModel.picture || 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large';
-        userModel.displayName = userModel.displayName || profile.name;
-        saveAndResponse(userModel, res);
-    }
-
-    function createUser(profile, autherName) {
-        var user = new User();
-        user.name = user.name || ("fb" + profile.id);
-        user.psw = user.psw || ("fb" + profile.id);
-        user.email = user.email || profile.email;
-        user.facebook = profile.id;
-        user.picture = 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
-        user.displayName = profile.name;
-        saveAndResponse(user, res);
-    }
-
 });
+
+function updateUser(userModel, profile, autherName) {
+    var prefix = null;
+    switch (autherName) {
+        case Const.AUTH.FACEBOOK:
+            prefix = "fb";
+            if (!!userModel.facebook && (userModel.facebook !== profile.id)) {
+                console.log(userModel._id + ": this userModel has 1+ facebook account? " + userModel.facebook + ', ' + profile.id);
+            }
+            userModel.facebook = profile.id;
+            userModel.picture = userModel.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
+                                                  // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
+            break;
+        case Const.AUTH.TWITTER:
+            prefix = "tt";
+            userModel.twitter = profile.id;
+            userModel.picture = userModel.picture || profile.profile_image_url_https.replace('_normal', '');
+            break;
+        default :
+            console.error("未知的Auth应用:" + autherName)
+    }
+
+    userModel.name = userModel.name || (prefix + profile.id);
+    userModel.psw = userModel.psw || (prefix + profile.id);
+    userModel.email = userModel.email || profile.email;
+    userModel.displayName = userModel.displayName || profile.name;
+    return userModel;
+}
+
+function createUser(profile, autherName) {
+    var userModel = new User();
+    return updateUser(userModel, profile, autherName);
+}
 
 var requestTokenUrlTwitter = 'https://api.twitter.com/oauth/request_token';
 var accessTokenUrlTwitter = 'https://api.twitter.com/oauth/access_token';
@@ -261,23 +268,37 @@ router.post('/twitter', function (req, res) {
         var requestTokenOauth = {
             consumer_key: config.TWITTER_KEY,
             consumer_secret: config.TWITTER_SECRET,
+            // 在授权通过，但是不允许获取用户资料的情况下， 调用此url
+            // 如果允许获取用户资料，则不调用此url
             callback: req.body.redirectUri
         };
 
         // Step 1. Obtain request token for the authorization popup.
         request.post({url: requestTokenUrlTwitter, oauth: requestTokenOauth}, function (err, response, body) {
             var oauthToken = qs.parse(body);
+            console.log('oauth_token: ' + oauthToken.oauth_token);
+            console.log('oauth_verifier: ' + oauthToken.oauth_verifier);
 
             // Step 2. Send OAuth token back to open the authorization screen.
+            if (oauthToken.oauth_callback_confirmed === 'true') {
+                // 必须返回这些Token， Twitter才会向用户显示授权请求信息
                 res.send(oauthToken);
-        });
             } else {
+                return resError2(res, 500, "Authentication failed!");
+            }
+        });
+    } else {
+        return doTwitterPart2(req, res, req.body.oauth_token, req.body.oauth_verifier);
+    }
+});
+
+function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
     // Part 2 of 2: Second request after Authorize app is clicked.
     var accessTokenOauth = {
         consumer_key: config.TWITTER_KEY,
         consumer_secret: config.TWITTER_SECRET,
-            token: req.body.oauth_token,
-            verifier: req.body.oauth_verifier
+        token: oauth_token,
+        verifier: oauth_verifier
     };
 
     // Step 3. Exchange oauth token and oauth verifier for access token.
@@ -314,36 +335,28 @@ router.post('/twitter', function (req, res) {
                             return res.status(400).send({message: 'User not found'});
                         }
 
-                            user.twitter = profile.id;
-                            user.email = profile.email;
-                            user.displayName = user.displayName || profile.name;
-                            user.picture = user.picture || profile.profile_image_url_https.replace('_normal', '');
-                            user.save(function (err) {
-                                res.send({token: createJWT(user)});
-                            });
+                        user = updateUser(user, profile, Const.AUTH.TWITTER);
+                        return saveAndResponse(res, user);
                     });
                 });
             } else {
                 // Step 5b. Create a new user account or return an existing one.
                 User.findOne({twitter: profile.id}, function (err, user) {
-                    if (user) {
-                        return res.send({token: createJWT(user)});
+                    if (err) {
+                        return resError2(res, 500, err.message);
                     }
 
-                        var user = new User();
-                        user.twitter = profile.id;
-                        user.email = profile.email;
-                        user.displayName = profile.name;
-                        user.picture = profile.profile_image_url_https.replace('_normal', '');
-                        user.save(function () {
-                            res.send({token: createJWT(user)});
+                    if (user) {
+                        return resUserToken2(res, user);
+                    }
+
+                    user = createUser(profile, Const.AUTH.TWITTER);
+                    return saveAndResponse(res, user);
                 });
-                    });
             }
         });
     });
 }
-});
 
 function createJWT(user) {
     var payload = {

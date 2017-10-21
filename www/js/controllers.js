@@ -118,6 +118,10 @@ function DashCtrl(
             });
     };
 
+    $scope.testLogout = function() {
+        $auth.logout();
+    };
+
     $scope.deleteLevel = function(id) {
         EditorService.deleteLevel(id);
     };
