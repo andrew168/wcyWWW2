@@ -206,16 +206,7 @@ router.post('/facebook', function (req, res) {
                 return resError(profile.error.message);
             }
 
-            User.findOne({facebook: profile.id}, function (err, user) {
-                if (err) {
-                    return resError(err.message);
-                } else if (user) {
-                    user = updateUser(user, profile, Const.AUTH.FACEBOOK);
-                } else {
-                    user = createUser(profile, Const.AUTH.FACEBOOK);
-                }
-                return saveAndResponse(res, user);
-            });
+            return responseUserInfo(res, {facebook: profile.id}, Const.AUTH.FACEBOOK);
         });
     });
 
@@ -223,6 +214,19 @@ router.post('/facebook', function (req, res) {
         resError2(res, 500, msg);
     }
 });
+
+function responseUserInfo(res, condition, authName) {
+    User.findOne(condition, function (err, user) {
+        if (err) {
+            return resError2(res, 500, err.message);
+        } else if (user) {
+            user = updateUser(user, profile, authName);
+        } else {
+            user = createUser(profile, authName);
+        }
+        return saveAndResponse(res, user);
+    });
+}
 
 function updateUser(userModel, profile, autherName) {
     var prefix = null;
@@ -319,41 +323,7 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
             oauth: profileOauth,
             json: true
         }, function (err, response, profile) {
-
-            // Step 5a. Link user accounts.
-            if (req.header('Authorization')) {
-                User.findOne({twitter: profile.id}, function (err, user) {
-                    if (user) {
-                        return res.status(409).send({message: 'There is already a Twitter account that belongs to you'});
-                    }
-
-                    var token = req.header('Authorization').split(' ')[1];
-                    var payload = jwt.decode(token, config.TOKEN_SECRET);
-
-                    User.findById(payload.sub, function (err, user) {
-                        if (!user) {
-                            return res.status(400).send({message: 'User not found'});
-                        }
-
-                        user = updateUser(user, profile, Const.AUTH.TWITTER);
-                        return saveAndResponse(res, user);
-                    });
-                });
-            } else {
-                // Step 5b. Create a new user account or return an existing one.
-                User.findOne({twitter: profile.id}, function (err, user) {
-                    if (err) {
-                        return resError2(res, 500, err.message);
-                    }
-
-                    if (user) {
-                        return resUserToken2(res, user);
-                    }
-
-                    user = createUser(profile, Const.AUTH.TWITTER);
-                    return saveAndResponse(res, user);
-                });
-            }
+             return responseUserInfo(res, {twitter: profile.id}, Const.AUTH.TWITTER);
         });
     });
 }
