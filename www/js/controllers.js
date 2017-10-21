@@ -98,18 +98,8 @@ function DashCtrl(
         // UserService.login('toronto1111', 'toronto1111');
     };
 
-    $scope.testFbLogin = function () {
-        $auth.authenticate('facebook')
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (response) {
-                console.log(response);
-            });
-    };
-
-    $scope.testTwitterLogin = function () {
-        $auth.authenticate('twitter')
+    $scope.testLogin = function(authName) {
+        $auth.authenticate(authName)
             .then(function (response) {
                 console.log(response);
             })

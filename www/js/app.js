@@ -57,6 +57,10 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
             clientId: '273410813018932'
         });
 
+        $authProvider.google({
+            clientId: '143028246441-qvsoi6ug4qnfg5mtl5rd8jfjjrb5itcj.apps.googleusercontent.com'
+        });
+
         $authProvider.twitter({
             url: '/auth/twitter',
             authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
