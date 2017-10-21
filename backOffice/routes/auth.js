@@ -33,12 +33,12 @@ router.post('/login', function (req, res) {
     if (email) {
         email = email.toLocaleLowerCase();
     } else {
-        return resError2(res, 500, "email is empty！");
+        return responseError(res, 500, "email is empty！");
     }
     User.findOne({email: req.body.email}, '+password', function (err, user) {
         if (err) {
             var pkg = composeErrorPkg(err, Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT);
-            return resError2(res, 500, pkg);
+            return responseError(res, 500, pkg);
         }
 
         if (!user) {
@@ -46,11 +46,11 @@ router.post('/login', function (req, res) {
         }
         user.comparePassword(req.body.password, function (err, isMatch) {
             if (err) {
-                return resError2(res, 500, err.message);
+                return responseError(res, 500, err.message);
             }
 
             if (!isMatch) {
-                return resError2(res, 401, 'Invalid email and/or password');
+                return responseError(res, 401, 'Invalid email and/or password');
             }
             resUserToken2(res, user);
         });
@@ -62,11 +62,11 @@ function failedOrOldPswUser(req, res) {
 
     User.findOne({name: email, psw: req.body.password}, function (err, user) {
         if (err) {
-            return resError2(res, 500, err.message);
+            return responseError(res, 500, err.message);
         }
 
         if (!user) {
-            return resError2(res, 401, 'Invalid email and/or password');
+            return responseError(res, 401, 'Invalid email and/or password');
         }
 
         user.email = email;
@@ -81,7 +81,7 @@ router.post('/signup', function (req, res) {
     if (email) {
         email = email.toLocaleLowerCase();
     } else {
-        return resError2(res, 500, "email is empty！");
+        return responseError(res, 500, "email is empty！");
     }
 
     var name = email,
@@ -109,13 +109,13 @@ router.post('/signup', function (req, res) {
 
     User.findOne({email: email}, function (err, user) {
         if (err) {
-            return resError2(res, 500, err.message);
+            return responseError(res, 500, err.message);
         }
 
         if (user) {
             errorID = Const.ERROR.NAME_IS_INVALID_OR_TAKEN;
             var pkg = composeErrorPkg('Email is already taken', errorID);
-            return resError2(res, 409, pkg);
+            return responseError(res, 409, pkg);
         }
         var user = new User({
             name: email, // email or phone number
@@ -130,7 +130,7 @@ router.post('/signup', function (req, res) {
 router.get('/api/me', ensureAuthenticated, function (req, res) {
     User.findById(req.user, function (err, user) {
         if (err) {
-            return resError2(res, 500, err.message);
+            return responseError(res, 500, err.message);
         }
 
         res.send(composeUserPkg(user));
@@ -140,11 +140,11 @@ router.get('/api/me', ensureAuthenticated, function (req, res) {
 router.put('/api/me', ensureAuthenticated, function (req, res) {
     User.findById(req.user, function (err, user) {
         if (err) {
-            return resError2(res, 500, err.message);
+            return responseError(res, 500, err.message);
         }
 
         if (!user) {
-            return resError2(res, 400, 'User not found');
+            return responseError(res, 400, 'User not found');
         }
         user.displayName = req.body.displayName || user.displayName;
         user.email = req.body.email || user.email;
@@ -156,7 +156,7 @@ router.put('/api/me', ensureAuthenticated, function (req, res) {
 
 function ensureAuthenticated(req, res, next) {
     if (!req.header('Authorization')) {
-        return resError2(res, 401, 'Please make sure your request has an Authorization header');
+        return responseError(res, 401, 'Please make sure your request has an Authorization header');
     }
     var token = req.header('Authorization').split(' ')[1];
 
@@ -165,11 +165,11 @@ function ensureAuthenticated(req, res, next) {
         payload = jwt.decode(token, config.TOKEN_SECRET);
     }
     catch (err) {
-        return resError2(res, 401, err.message);
+        return responseError(res, 401, err.message);
     }
 
     if (payload.exp <= moment().unix()) {
-        return resError2(res, 401, 'Token has expired');
+        return responseError(res, 401, 'Token has expired');
     }
     req.user = payload.sub;
     next();
@@ -189,36 +189,32 @@ router.post('/facebook', function (req, res) {
     // Step 1. Exchange authorization code for access token.
     request.get({url: accessTokenUrl, qs: params, json: true}, function (err, response, accessToken) {
         if (err) {
-            return resError2(res, 500, err.message);
+            return responseError(res, 500, err.message);
         }
 
         if (response.statusCode !== 200) {
-            return resError(accessToken.error.message);
+            return responseError(res, 500, accessToken.error.message);
         }
 
         // Step 2. Retrieve profile information about the current user.
         request.get({url: graphApiUrl, qs: accessToken, json: true}, function (err, response, profile) {
             if (err) {
-                return resError2(res, 500, err.message);
+                return responseError(res, 500, err.message);
             }
 
             if (response.statusCode !== 200) {
-                return resError(profile.error.message);
+                return responseError(res, 500, profile.error.message);
             }
 
             return responseUserInfo(res, {facebook: profile.id}, profile, Const.AUTH.FACEBOOK);
         });
     });
-
-    function resError(msg) {
-        resError2(res, 500, msg);
-    }
 });
 
 function responseUserInfo(res, condition, profile, authName) {
     User.findOne(condition, function (err, user) {
         if (err) {
-            return resError2(res, 500, err.message);
+            return responseError(res, 500, err.message);
         } else if (user) {
             user = updateUser(user, profile, authName);
         } else {
@@ -238,7 +234,7 @@ function updateUser(userModel, profile, autherName) {
             }
             userModel.facebook = profile.id;
             userModel.picture = userModel.picture || 'https://graph.facebook.com/' + profile.id + '/picture?type=large';
-                                                  // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
+            // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
             break;
         case Const.AUTH.TWITTER:
             prefix = "tt";
@@ -288,7 +284,7 @@ router.post('/twitter', function (req, res) {
                 // 必须返回这些Token， Twitter才会向用户显示授权请求信息
                 res.send(oauthToken);
             } else {
-                return resError2(res, 500, "Authentication failed!");
+                return responseError(res, 500, "Authentication failed!");
             }
         });
     } else {
@@ -323,7 +319,7 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
             oauth: profileOauth,
             json: true
         }, function (err, response, profile) {
-             return responseUserInfo(res, {twitter: profile.id}, profile,  Const.AUTH.TWITTER);
+            return responseUserInfo(res, {twitter: profile.id}, profile, Const.AUTH.TWITTER);
         });
     });
 }
@@ -337,7 +333,7 @@ function createJWT(user) {
     return jwt.encode(payload, config.TOKEN_SECRET);
 }
 
-function resError2(res, statusCode, msg) {
+function responseError(res, statusCode, msg) {
     if (typeof msg === 'string') {
         msg = JSON.stringify(composeErrorPkg(msg, Const.ERROR.GENERAL_ERROR));
     }
@@ -353,7 +349,7 @@ function saveAndResponse(res, userModel) {
     userModel.save(function (err, userModel) {
         if (err) {
             var pkg = composeErrorPkg(err, Const.ERROR_NAME_EXIST_OR_INVALID_FORMAT);
-            return resError2(res, 500, pkg);
+            return responseError(res, 500, pkg);
         }
         resUserToken2(res, userModel);
     });
