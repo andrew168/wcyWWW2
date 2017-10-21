@@ -14,5 +14,10 @@ exports.ERROR = {
     GENERAL_ERROR: 99
 };
 
+exports.AUTH = {
+    FACEBOOK: 'facebook',
+    TWITTER: 'twitter'
+};
+
 exports.SUCCESS = 1;
 exports.FAILED = 0;

@@ -72,7 +72,7 @@ function failedOrOldPswUser(req, res) {
         user.email = email;
         user.password = req.body.password;
         user.psw = ""; // 删除就psw
-        saveAndResponse(user, res);
+        saveAndResponse(res, user);
     });
 }
 
@@ -123,7 +123,7 @@ router.post('/signup', function (req, res) {
             email: email,
             password: req.body.password
         });
-        saveAndResponse(user, res);
+        saveAndResponse(res, user);
     });
 });
 
@@ -210,9 +210,11 @@ router.post('/facebook', function (req, res) {
                 if (err) {
                     return resError(err.message);
                 } else if (user) {
-                    return updateUser(user, profile, resUserToken);
+                    user = updateUser(user, profile, Const.AUTH.FACEBOOK);
+                } else {
+                    user = createUser(profile, Const.AUTH.FACEBOOK);
                 }
-                return createUser(profile, resUserToken);
+                return saveAndResponse(res, user);
             });
         });
     });
@@ -225,7 +227,7 @@ router.post('/facebook', function (req, res) {
         resError2(res, 500, msg);
     }
 
-    function updateUser(userModel, profile) {
+    function updateUser(userModel, profile, autherName) {
         if (userModel.facebook !== profile.id) {
             console.log(userModel._id + ": this user has 1+ facebook account? " + userModel.facebook + ', ' + profile.id);
         }
@@ -235,7 +237,7 @@ router.post('/facebook', function (req, res) {
         saveAndResponse(userModel, res);
     }
 
-    function createUser(profile, callback) {
+    function createUser(profile, autherName) {
         var user = new User();
         user.name = user.name || ("fb" + profile.id);
         user.psw = user.psw || ("fb" + profile.id);
@@ -248,10 +250,11 @@ router.post('/facebook', function (req, res) {
 
 });
 
+var requestTokenUrlTwitter = 'https://api.twitter.com/oauth/request_token';
+var accessTokenUrlTwitter = 'https://api.twitter.com/oauth/access_token';
+var profileUrlTwitter = 'https://api.twitter.com/1.1/account/verify_credentials.json';
+
 router.post('/twitter', function (req, res) {
-    var requestTokenUrl = 'https://api.twitter.com/oauth/request_token';
-    var accessTokenUrl = 'https://api.twitter.com/oauth/access_token';
-    var profileUrl = 'https://api.twitter.com/1.1/account/verify_credentials.json';
 
     // Part 1 of 2: Initial request from Satellizer.
     if (!req.body.oauth_token || !req.body.oauth_verifier) {
@@ -262,55 +265,54 @@ router.post('/twitter', function (req, res) {
         };
 
         // Step 1. Obtain request token for the authorization popup.
-        request.post({url: requestTokenUrl, oauth: requestTokenOauth}, function (err, response, body) {
+        request.post({url: requestTokenUrlTwitter, oauth: requestTokenOauth}, function (err, response, body) {
             var oauthToken = qs.parse(body);
 
             // Step 2. Send OAuth token back to open the authorization screen.
-            res.send(oauthToken);
+                res.send(oauthToken);
         });
-    } else {
-        // Part 2 of 2: Second request after Authorize app is clicked.
-        var accessTokenOauth = {
-            consumer_key: config.TWITTER_KEY,
-            consumer_secret: config.TWITTER_SECRET,
+            } else {
+    // Part 2 of 2: Second request after Authorize app is clicked.
+    var accessTokenOauth = {
+        consumer_key: config.TWITTER_KEY,
+        consumer_secret: config.TWITTER_SECRET,
             token: req.body.oauth_token,
             verifier: req.body.oauth_verifier
+    };
+
+    // Step 3. Exchange oauth token and oauth verifier for access token.
+    request.post({url: accessTokenUrlTwitter, oauth: accessTokenOauth}, function (err, response, accessToken) {
+        accessToken = qs.parse(accessToken);
+
+        var profileOauth = {
+            consumer_key: config.TWITTER_KEY,
+            consumer_secret: config.TWITTER_SECRET,
+            token: accessToken.oauth_token,
+            token_secret: accessToken.oauth_token_secret,
         };
 
-        // Step 3. Exchange oauth token and oauth verifier for access token.
-        request.post({url: accessTokenUrl, oauth: accessTokenOauth}, function (err, response, accessToken) {
+        // Step 4. Retrieve user's profile information and email address.
+        request.get({
+            url: profileUrlTwitter,
+            qs: {include_email: true},
+            oauth: profileOauth,
+            json: true
+        }, function (err, response, profile) {
 
-            accessToken = qs.parse(accessToken);
+            // Step 5a. Link user accounts.
+            if (req.header('Authorization')) {
+                User.findOne({twitter: profile.id}, function (err, user) {
+                    if (user) {
+                        return res.status(409).send({message: 'There is already a Twitter account that belongs to you'});
+                    }
 
-            var profileOauth = {
-                consumer_key: config.TWITTER_KEY,
-                consumer_secret: config.TWITTER_SECRET,
-                token: accessToken.oauth_token,
-                token_secret: accessToken.oauth_token_secret,
-            };
+                    var token = req.header('Authorization').split(' ')[1];
+                    var payload = jwt.decode(token, config.TOKEN_SECRET);
 
-            // Step 4. Retrieve user's profile information and email address.
-            request.get({
-                url: profileUrl,
-                qs: {include_email: true},
-                oauth: profileOauth,
-                json: true
-            }, function (err, response, profile) {
-
-                // Step 5a. Link user accounts.
-                if (req.header('Authorization')) {
-                    User.findOne({twitter: profile.id}, function (err, user) {
-                        if (user) {
-                            return res.status(409).send({message: 'There is already a Twitter account that belongs to you'});
+                    User.findById(payload.sub, function (err, user) {
+                        if (!user) {
+                            return res.status(400).send({message: 'User not found'});
                         }
-
-                        var token = req.header('Authorization').split(' ')[1];
-                        var payload = jwt.decode(token, config.TOKEN_SECRET);
-
-                        User.findById(payload.sub, function (err, user) {
-                            if (!user) {
-                                return res.status(400).send({message: 'User not found'});
-                            }
 
                             user.twitter = profile.id;
                             user.email = profile.email;
@@ -319,14 +321,14 @@ router.post('/twitter', function (req, res) {
                             user.save(function (err) {
                                 res.send({token: createJWT(user)});
                             });
-                        });
                     });
-                } else {
-                    // Step 5b. Create a new user account or return an existing one.
-                    User.findOne({twitter: profile.id}, function (err, user) {
-                        if (user) {
-                            return res.send({token: createJWT(user)});
-                        }
+                });
+            } else {
+                // Step 5b. Create a new user account or return an existing one.
+                User.findOne({twitter: profile.id}, function (err, user) {
+                    if (user) {
+                        return res.send({token: createJWT(user)});
+                    }
 
                         var user = new User();
                         user.twitter = profile.id;
@@ -335,12 +337,12 @@ router.post('/twitter', function (req, res) {
                         user.picture = profile.profile_image_url_https.replace('_normal', '');
                         user.save(function () {
                             res.send({token: createJWT(user)});
-                        });
+                });
                     });
-                }
-            });
+            }
         });
-    }
+    });
+}
 });
 
 function createJWT(user) {
@@ -364,7 +366,7 @@ function resUserToken2(res, user) {
     res.send({token: token});
 }
 
-function saveAndResponse(userModel, res) {
+function saveAndResponse(res, userModel) {
     userModel.save(function (err, userModel) {
         if (err) {
             var pkg = composeErrorPkg(err, Const.ERROR_NAME_EXIST_OR_INVALID_FORMAT);
