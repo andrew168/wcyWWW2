@@ -39,10 +39,10 @@
                 wechat: {
                     name: 'wechat',
                     url: '/auth/wechat',
-                    authorizationEndpoint: 'https://www.wechat.com/v2.5/dialog/oauth', //?????
+                    authorizationEndpoint: 'https://open.weixin.qq.com/connect/oauth2/authorize', //?????
                     redirectUri: window.location.origin + '/',
                     requiredUrlParams: ['display', 'scope'],
-                    scope: ['email'],
+                    scope: ['snsapi_login'], //['email'],
                     scopeDelimiter: ',',
                     display: 'popup',
                     oauthType: '2.0',
