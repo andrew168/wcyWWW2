@@ -351,7 +351,7 @@ window.TQ = window.TQ || {};
         this.elements = [];
         this.state = TQBase.LevelState.INITING;
         for (var i = 0; i < ((jsonElements != null) && (jsonElements.length)); i++) {
-            if (!!jsonElements[i]) {
+            if (TQ.Element.isValidDesc(jsonElements[i])) {
                 this.addElementDirect(TQ.Element.build(this, jsonElements[i]));
             }
         }
@@ -696,7 +696,7 @@ window.TQ = window.TQ || {};
 
     p.getTime = function() { return this.tMaxFrame;};
     p.setT0 = function(t0) { this.t0 = t0;};
-    p.getT0 = function(t0) { return this.t0;};
+    p.getT0 = function() { return this.t0;};
 
     p.isEmpty = function() {
         return (!this.elements || (this.elements.length <= 0));
