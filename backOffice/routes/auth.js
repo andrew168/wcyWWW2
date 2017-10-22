@@ -216,8 +216,6 @@ router.post('/wechat', function (req, res) {
             // access_token拥有较短的有效期，
             // 可以使用refresh_token进行刷新，refresh_token有效期为30天，
             // 当refresh_token失效之后，需要用户重新授权。
-
-
             // Step 2. Retrieve profile information about the current user.
             var profileApiUrl = 'https://api.weixin.qq.com/sns/userinfo?' +
                 'access_token=' + webAuth_access_token +

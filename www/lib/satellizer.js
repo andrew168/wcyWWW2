@@ -39,14 +39,16 @@
                 wechat: {
                     name: 'wechat',
                     url: '/auth/wechat',
-                    authorizationEndpoint: 'https://open.weixin.qq.com/connect/oauth2/authorize', //?????
+                    // endpoint就是授权url的基本部分， 加参数之前的，
+                    authorizationEndpoint: 'https://open.weixin.qq.com/connect/oauth2/authorize',
                     redirectUri: window.location.origin + '/',
-                    requiredUrlParams: ['display', 'scope'],
-                    scope: ['snsapi_login'], //['email'],
+                    requiredUrlParams: ['scope', 'state'],
+                    scope: ['snsapi_userinfo'], // ['snsapi_login'], //['email'],
                     scopeDelimiter: ',',
-                    display: 'popup',
                     oauthType: '2.0',
-                    popupOptions: {width: 580, height: 400}
+                    state: 'STATE1122',
+                    suffix: '#wechat_redirect',
+                    sameWindow: true
                 },
                 google: {
                     name: 'google',
@@ -752,16 +754,30 @@
                     _this.SatellizerStorage.set(stateName, state);
                 }
                 var url = [_this.defaults.authorizationEndpoint, _this.buildQueryString()].join('?');
-                _this.SatellizerPopup.open(url, name, popupOptions, redirectUri).then(function (oauth) {
-                    if (responseType === 'token' || !url) {
-                        return resolve(oauth);
-                    }
-                    if (oauth.state && oauth.state !== _this.SatellizerStorage.get(stateName)) {
-                        return reject(new Error('The value returned in the state parameter does not match the state value from your original ' +
-                            'authorization code request.'));
-                    }
-                    resolve(_this.exchangeForToken(oauth, userData));
-                }).catch(function (error) { return reject(error); });
+                if (_this.defaults.suffix) {
+                    url += _this.defaults.suffix;
+                }
+
+                if (_this.defaults.sameWindow) {
+                    _this.$http.get(url).then(function() {
+                        console.log("OK");
+                    }).catch(function (data1, data2, data3) {
+                        console.log('BAD');
+                    })
+                } else {
+                    _this.SatellizerPopup.open(url, name, popupOptions, redirectUri).then(function (oauth) {
+                        if (responseType === 'token' || !url) {
+                            return resolve(oauth);
+                        }
+                        if (oauth.state && oauth.state !== _this.SatellizerStorage.get(stateName)) {
+                            return reject(new Error('The value returned in the state parameter does not match the state value from your original ' +
+                                'authorization code request.'));
+                        }
+                        resolve(_this.exchangeForToken(oauth, userData));
+                    }).catch(function (error) {
+                        return reject(error);
+                    });
+                }
             });
         };
         OAuth2.prototype.exchangeForToken = function (oauthData, userData) {

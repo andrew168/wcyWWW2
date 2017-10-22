@@ -61,6 +61,10 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
             clientId: '143028246441-qvsoi6ug4qnfg5mtl5rd8jfjjrb5itcj.apps.googleusercontent.com'
         });
 
+        $authProvider.wechat({
+            appid: 'wx5fe65e70536d0258'
+        });
+
         $authProvider.twitter({
             url: '/auth/twitter',
             authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
