@@ -42,7 +42,13 @@
                     // endpoint就是授权url的基本部分， 加参数之前的，
                     authorizationEndpoint: 'https://open.weixin.qq.com/connect/oauth2/authorize',
                     redirectUri: window.location.origin + '/',
+                    defaultUrlParams: ['appid', 'redirect_uri', 'response_type'],
                     requiredUrlParams: ['scope', 'state'],
+                    responseParams: {
+                        code: 'code',
+                        openid: 'openid',
+                        redirectUri: 'redirectUri'
+                    },
                     scope: ['snsapi_userinfo'], // ['snsapi_login'], //['email'],
                     scopeDelimiter: ',',
                     oauthType: '2.0',
