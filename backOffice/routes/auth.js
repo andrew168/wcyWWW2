@@ -178,6 +178,42 @@ function ensureAuthenticated(req, res, next) {
     next();
 }
 
+router.post('/facebook', function (req, res) {
+    var fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
+    var accessTokenUrl = 'https://graph.facebook.com/v2.5/oauth/access_token';
+    var graphApiUrl = 'https://graph.facebook.com/v2.5/me?fields=' + fields.join(',');
+    var params = {
+        code: req.body.code,
+        client_id: req.body.clientId,
+        client_secret: "806ead2d9cf4864704ffd3f970353f4c",
+        redirect_uri: req.body.redirectUri
+    };
+
+    // Step 1. Exchange authorization code for access token.
+    request.get({url: accessTokenUrl, qs: params, json: true}, function (err, response, accessToken) {
+        if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+            return responseError500(res, err, accessToken);
+        }
+
+        // Step 2. Retrieve profile information about the current user.
+        request.get({url: graphApiUrl, qs: accessToken, json: true}, function (err, response, profile) {
+            if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+                return responseError500(res, err, profile);
+            }
+
+            var requestToLink = !!req.header('Authorization'),
+                unifiedProfile = unifyProfile(
+                    profile.id,
+                    profile.email,
+                    profile.displayName,
+                    'https://graph.facebook.com/' + profile.id + '/picture?type=large'
+                    // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
+                );
+            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
+        });
+    });
+});
+
 router.post('/wechat', function (req, res) {
     // 参考： https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842
     var redirect_uri = req.body.redirectUri,
