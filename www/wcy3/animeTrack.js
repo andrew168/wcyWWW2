@@ -86,7 +86,7 @@ TQ = TQ || {};
 
         if (!desc.animeTrack.visible) { // 即时添加的元素
             this.visible = new TQ.OneChannel(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
-            if (!TQ.FrameCounter.isAtBeginning()) {
+            if (!TQ.Config.insertAtT0On && !TQ.FrameCounter.isAtBeginning() ) {
                 TQ.TrackRecorder.recordOneChannel(this, this.visible, 0.0, FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
             }
         } else { // 从文件中读入的元素
