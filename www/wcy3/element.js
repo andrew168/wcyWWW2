@@ -108,6 +108,14 @@ window.TQ = window.TQ || {};
     p.children = [];  //  注意： 缺省是空数组， 不是null， 确保每一个参数都有缺省值！！！
     p.animeTrack = {}; // 只是数组指针, 和jsonObj 共用数据, 没有重复
 
+    // 静态函数
+    Element.isValidDesc = function(desc) {
+        var srcNotNull = [DescType.BITMAP, DescType.BITMAP_ANIMATION, DescType.SOUND];
+        return !(!desc ||
+        (!desc.src && (srcNotNull.indexOf(desc.type) >=0)));
+    };
+
+    // 成员函数
     p.show = function (isVisible) {
         this.jsonObj.isVis = isVisible;
         if (this.displayObj) {
