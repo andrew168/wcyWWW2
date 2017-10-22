@@ -23,6 +23,8 @@ var config = {
     // OAuth 2.0
     FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || '806ead2d9cf4864704ffd3f970353f4c',
     GOOGLE_SECRET: '1rtxnrU822p6jdCYbywmfQYQ',
+    WECHAT_APPID: 'wx5fe65e70536d0258',
+    WECHAT_SECRET: '393e38d14682d6e2ee524dbc96b080bf',
 
     // OAuth 1.0
     TWITTER_KEY: process.env.TWITTER_KEY || '5BrblmjAPGKbxnfAqo8nFjF6t',
@@ -176,38 +178,65 @@ function ensureAuthenticated(req, res, next) {
     next();
 }
 
-router.post('/facebook', function (req, res) {
-    var fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
-    var accessTokenUrl = 'https://graph.facebook.com/v2.5/oauth/access_token';
-    var graphApiUrl = 'https://graph.facebook.com/v2.5/me?fields=' + fields.join(',');
-    var params = {
-        code: req.body.code,
-        client_id: req.body.clientId,
-        client_secret: "806ead2d9cf4864704ffd3f970353f4c",
-        redirect_uri: req.body.redirectUri
-    };
+router.post('/wechat', function (req, res) {
+    // 参考： https://mp.weixin.qq.com/wiki?t=resource/res_main&id=mp1421140842
+    var redirect_uri = req.body.redirectUri,
+        getCodeUrl = 'https://open.weixin.qq.com/connect/oauth2/authorize?' +
+            'appid=' + config.WECHAT_APPID +
+            '&redirect_uri=' + redirect_uri +
+            '&response_type=code' +
+            '&scope=' + 'snsapi_login' +  //snsapi_userinfo,  snsapi_base
+            '&state=' + 'STATE123' + // 可以任意取值
+            '#wechat_redirect';
+    // 如果用户同意授权，页面将跳转至 redirect_uri/?code=CODE&state=STATE。
+    // code只能使用一次，5分钟未被使用自动过期。
+    // code作为换取access_token的票据，每次用户授权带上的code将不一样.
+    //尤其注意：由于公众号的secret和获取到的access_token安全级别都非常高，
+    // 必须只保存在服务器，不允许传给客户端。
+    // 后续刷新access_token、通过access_token获取用户信息等步骤，也必须从服务器发起。
 
-    // Step 1. Exchange authorization code for access token.
-    request.get({url: accessTokenUrl, qs: params, json: true}, function (err, response, accessToken) {
+    request.get({url: getCodeUrl, qs: {}, json: true}, function (err, response, data) {
         if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
-            return responseError500(res, err, accessToken);
+            return responseError500(res, err, data);
         }
 
-        // Step 2. Retrieve profile information about the current user.
-        request.get({url: graphApiUrl, qs: accessToken, json: true}, function (err, response, profile) {
+        var code2TokenUrl = 'https://api.weixin.qq.com/sns/oauth2/access_token?' +
+                'appid=' + config.WECHAT_APPID +
+                '&secret=' + config.WECHAT_SECRET +
+                '&data=' + readQs(url, 'data') +
+                '&grant_type=authorization_code';
+
+        request.get({url: code2TokenUrl, qs: {}, json: true}, function (err, response, data) {
             if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
-                return responseError500(res, err, profile);
+                return responseError500(res, err, data);
             }
 
-            var requestToLink = !!req.header('Authorization'),
-                unifiedProfile = unifyProfile(
-                    profile.id,
-                    profile.email,
-                    profile.displayName,
-                    'https://graph.facebook.com/' + profile.id + '/picture?type=large'
-                    // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
-                );
-            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
+            var webAuth_access_token = data.access_token,
+                openid = data.openid;
+            // access_token拥有较短的有效期，
+            // 可以使用refresh_token进行刷新，refresh_token有效期为30天，
+            // 当refresh_token失效之后，需要用户重新授权。
+
+
+            // Step 2. Retrieve profile information about the current user.
+            var profileApiUrl = 'https://api.weixin.qq.com/sns/userinfo?' +
+                'access_token=' + webAuth_access_token +
+                '&openid=' + openid +
+                '&lang=zh_CN';
+            request.get({url: profileApiUrl, qs: {}, json: true}, function (err, response, profile) {
+                if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {
+                    return responseError500(res, err, profile);
+                }
+
+                var requestToLink = !!req.header('Authorization'),
+                    unifiedProfile = unifyProfile(
+                        profile.openid,
+                        null, // email， nice to have, 不能是必须的，因为很多微信用户就没有email
+                        profile.nickName,
+                        profile.headimgurl
+                    );
+                return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
+            });
         });
     });
 });
@@ -423,6 +452,11 @@ function unifyProfile(id, email, displayName, pictureUrl) {
         displayName: displayName,
         picture: pictureUrl
     };
+}
+
+function readQs(url, paraName) {
+    var queryString = url.substr(url.indexOf('?') + 1);
+    return qs.parse(queryString)[paraName];
 }
 
 module.exports = router;

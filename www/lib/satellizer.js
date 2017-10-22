@@ -36,6 +36,18 @@
                     oauthType: '2.0',
                     popupOptions: { width: 580, height: 400 }
                 },
+                wechat: {
+                    name: 'wechat',
+                    url: '/auth/wechat',
+                    authorizationEndpoint: 'https://www.wechat.com/v2.5/dialog/oauth', //?????
+                    redirectUri: window.location.origin + '/',
+                    requiredUrlParams: ['display', 'scope'],
+                    scope: ['email'],
+                    scopeDelimiter: ',',
+                    display: 'popup',
+                    oauthType: '2.0',
+                    popupOptions: {width: 580, height: 400}
+                },
                 google: {
                     name: 'google',
                     url: '/auth/google',
@@ -250,6 +262,9 @@
         });
         AuthProvider.prototype.facebook = function (options) {
             angular.extend(this.SatellizerConfig.providers.facebook, options);
+        };
+        AuthProvider.prototype.wechat = function (options) {
+            angular.extend(this.SatellizerConfig.providers.wechat, options);
         };
         AuthProvider.prototype.google = function (options) {
             angular.extend(this.SatellizerConfig.providers.google, options);
