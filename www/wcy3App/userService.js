@@ -18,7 +18,8 @@ function UserService($http, $auth) {
 
     function login(name, psw) {
         return $auth.login({email: name.toLowerCase(), password: psw}).
-            then(getProfile);
+            then(getProfile).
+            catch(onGetProfileFailed);
     }
 
     function authenticate(authName) {
@@ -33,13 +34,15 @@ function UserService($http, $auth) {
 
     function signUp(name, psw, displayName) {
         $auth.signup({email: name.toLowerCase(), password: psw, displayName: displayName}).
-            then(onSignUpDone);
+            then(onSignUpDone).
+            catch(onGetProfileFailed);
     }
 
     function checkName(name) {
         var url = TQ.Config.AUTH_HOST + '/user/checkname/' + name;
         $http.get(url)
-            .then(onCheckNameDone);
+            .then(onCheckNameDone).
+            catch(onGetProfileFailed);
     }
 
     function onCheckNameDone(netPkg) {
