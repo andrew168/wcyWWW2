@@ -3,25 +3,28 @@
  */
 
 angular.module('starter').factory("UserService", UserService);
-UserService.$inject = ['$http'];
-function UserService($http) {
+UserService.$inject = ['$http', '$auth'];
+function UserService($http, $auth) {
     var user = TQ.userProfile;
 
     function canAutoLogin() {
-        return  ((!!user.name) && (!!user.ID) && (!user.needManualLogin));
+        return  $auth.isAuthenticated();
     }
 
     function tryAutoLogin() {
         TQ.AssertExt.invalidLogic(canAutoLogin(), "must call canAutoLogin to determine");
-        var url = TQ.Config.AUTH_HOST + '/user/autologin/' + user.name + '/' + user.ID;
-        return $http.get(url)
-            .then(onLoginDone);
+        return getProfile();
     }
 
     function login(name, psw) {
-        var url = TQ.Config.AUTH_HOST + '/user/login/' + name + '/' + psw;
-        return $http.get(url)
-            .then(onLoginDone);
+        return $auth.login({email: name.toLowerCase(), password: psw}).
+            then(getProfile);
+    }
+
+    function authenticate(authName) {
+        $auth.authenticate(authName).
+            then(getProfile).
+            catch(onGetProfileFailed);
     }
 
     function logout(name) {
@@ -29,10 +32,8 @@ function UserService($http) {
     }
 
     function signUp(name, psw, displayName) {
-        return $http({
-            method: 'POST',
-            url: TQ.Config.AUTH_HOST + '/user/signup/' + name + '/' + psw + '/' + displayName
-        }).then(onSignUpDone);
+        $auth.signup({email: name.toLowerCase(), password: psw, displayName: displayName}).
+            then(onSignUpDone);
     }
 
     function checkName(name) {
@@ -46,9 +47,15 @@ function UserService($http) {
         user.isValidName = (data.result === TQ.Const.SUCCESS);
     }
 
-    function onLoginDone(netPkg) {
+    function getProfile() {
+        return $http.get('/auth/api/me').
+            then(onGetProfileSuccess).
+            catch(onGetProfileFailed);
+    }
+
+    function onGetProfileSuccess(netPkg) {
         var data = netPkg.data;
-        if (data.result === TQ.Const.SUCCESS) {
+        if (netPkg.status === TQ.Const.STATUS200) {
             user.loggedIn = true;
             user.needManualLogin = false;
             user.name = data.name;
@@ -56,7 +63,15 @@ function UserService($http) {
             user.displayName = data.displayName;
             user.isValidName = true;
             user.saveToCache();
+            TQ.Log.debugInfo("login successfully!  welcome "+ user.displayName + ", " + user.name);
         } else {
+            onGetProfileFailed(netPkg);
+        }
+    }
+
+    function onGetProfileFailed(netPkg) {
+        var data = netPkg.data;
+        if (data && data.errorID) {
             user.displayNameError = (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID === data.errorID) ||
                 (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID_OR_TAKEN === data.errorID);
             user.nameError = (TQ.Protocol.ERROR.NAME_IS_INVALID === data.errorID) ||
@@ -64,8 +79,9 @@ function UserService($http) {
                 (TQ.Protocol.ERROR.NAME_IS_INVALID_OR_TAKEN === data.errorID);
             user.passwordError = (TQ.Protocol.ERROR.PASSWORD_IS_INVALID === data.errorID) ||
                 (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
-            user.loggedIn = false;
         }
+        user.loggedIn = false;
+        TQ.Log.debugInfo("login failed!");
     }
 
     function onLogoutDone(netPkg) {
@@ -76,13 +92,15 @@ function UserService($http) {
     }
 
     function onSignUpDone(netPkg) {
-        onLoginDone(netPkg);
+        getProfile(netPkg);
     }
 
     return {
+        authenticate: authenticate,
         canAutoLogin: canAutoLogin,
         tryAutoLogin: tryAutoLogin,
         checkName: checkName,
+        getProfile: getProfile,
         login: login,
         logout: logout,
         signUp: signUp

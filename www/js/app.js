@@ -3,7 +3,8 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFileUpload', 'ui.select'])
+angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFileUpload',
+    'ui.select', 'satellizer'])
     .run(function($ionicPlatform, DeviceService, AppService) {
         $ionicPlatform.ready(function() {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
@@ -48,9 +49,31 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngCookies', 'ngFi
      $mdGestureProvider.skipClickHijack();
      })
      */
-    .config(function($stateProvider, $urlRouterProvider, $compileProvider) {
+    .config(function($stateProvider, $urlRouterProvider, $authProvider, $compileProvider) {
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|file|filesystem):/);
+
+        $authProvider.facebook({
+            clientId: '273410813018932'
+        });
+
+        $authProvider.google({
+            clientId: '143028246441-qvsoi6ug4qnfg5mtl5rd8jfjjrb5itcj.apps.googleusercontent.com'
+        });
+
+        $authProvider.wechat({
+            appid: 'wx5fe65e70536d0258'
+        });
+
+        $authProvider.twitter({
+            url: '/auth/twitter',
+            authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
+            redirectUri: window.location.origin,
+            oauthType: '1.0',
+            // oauth_token: '920796548572868608-0LZ8K881BA6XiesnqIFfkYiYL5YlRLc',
+            // oauth_verifier: "abcd123",
+            popupOptions: {width: 495, height: 645}
+        });
 
         // Ionic uses AngularUI Router which uses the concept of states
         // Learn more here: https://github.com/angular-ui/ui-router

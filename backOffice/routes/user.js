@@ -13,7 +13,6 @@ var userController = require('../db/user/userController');
 router.post('/signup/:name/:psw/:displayname', signUp);
 router.get('/checkname/:name', checkName);
 router.get('/login/:name/:psw', login);
-router.get('/autoLogin/:name/:ID', autoLogin);
 router.get('/list', getList);
 router.get('/privilege/:ID/:privilegeCode', setPrivilege);
 

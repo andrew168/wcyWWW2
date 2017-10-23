@@ -1,11 +1,11 @@
 angular.module('starter').controller('DashCtrl', DashCtrl);
-DashCtrl.$inject = ['$scope', '$timeout', 'WCY', '$cordovaImagePicker',
+DashCtrl.$inject = ['$scope', '$auth', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
         'AppService', 'MatLibService', 'UserService'];
 
 function DashCtrl(
-            $scope, $timeout, WCY, $cordovaImagePicker,
+            $scope, $auth, $timeout, WCY, $cordovaImagePicker,
             $cordovaSocialSharing,
             FileService, NetService, DeviceService, WxService, EditorService,
             AppService, MatLibService, UserService) {
@@ -86,13 +86,24 @@ function DashCtrl(
         EditorService.addLevel();
     };
 
-    var testUserId = 100005;
+    var testUserId = "TestAuth100007",
+        email = testUserId + "@udoido.com";
+
     $scope.testSignUp = function () {
-        UserService.signUp('user'+testUserId, 'pswww' + testUserId, 'disp' + testUserId);
+        UserService.signUp(email, 'pswww' + testUserId, 'disp' + testUserId);
     };
 
     $scope.testLogin = function() {
-        UserService.login('user' + testUserId, 'pswww' + testUserId);
+        UserService.login(email, 'pswww' + testUserId);
+        // UserService.login('toronto1111', 'toronto1111');
+    };
+
+    $scope.testAuthenticate = function(authName) {
+        UserService.authenticate(authName);
+    };
+
+    $scope.testLogout = function() {
+        $auth.logout();
     };
 
     $scope.deleteLevel = function(id) {
