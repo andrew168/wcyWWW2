@@ -189,8 +189,12 @@ function WCY($http, FileService, WxService, NetService) {
         });
     }
 
+    var tryCounter = 0;
     function uploadScreenshot() {
         if (!_ssSign) {
+            if (tryCounter > 2) {
+                return TQ.Log.debugInfo("failed to uploadScreen after tried 2 times");
+            }
             return save().then(uploadScreenshot);
         }
 
