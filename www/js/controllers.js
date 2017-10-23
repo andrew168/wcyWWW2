@@ -98,14 +98,8 @@ function DashCtrl(
         // UserService.login('toronto1111', 'toronto1111');
     };
 
-    $scope.testLogin = function(authName) {
-        $auth.authenticate(authName)
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (response) {
-                console.log(response);
-            });
+    $scope.testAuthenticate = function(authName) {
+        UserService.authenticate(authName);
     };
 
     $scope.testLogout = function() {

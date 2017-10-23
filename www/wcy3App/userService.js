@@ -21,6 +21,12 @@ function UserService($http, $auth) {
             then(getProfile);
     }
 
+    function authenticate(authName) {
+        $auth.authenticate(authName).
+            then(getProfile).
+            catch(onGetProfileFailed);
+    }
+
     function logout(name) {
         onLogoutDone();
     }
@@ -43,10 +49,11 @@ function UserService($http, $auth) {
 
     function getProfile() {
         return $http.get('/auth/api/me').
-            then(onApiMe);
+            then(onGetProfileSuccess).
+            catch(onGetProfileFailed);
     }
 
-    function onApiMe(netPkg) {
+    function onGetProfileSuccess(netPkg) {
         var data = netPkg.data;
         if (netPkg.status === TQ.Const.STATUS200) {
             user.loggedIn = true;
@@ -56,16 +63,24 @@ function UserService($http, $auth) {
             user.displayName = data.displayName;
             user.isValidName = true;
             user.saveToCache();
+            TQ.Log.debugInfo("login successfully!  welcome "+ user.displayName + ", " + user.name);
         } else {
-            user.displayNameError = (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID === data.errorID) ||
-                (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID_OR_TAKEN === data.errorID);
-            user.nameError = (TQ.Protocol.ERROR.NAME_IS_INVALID === data.errorID) ||
-                (TQ.Protocol.ERROR.NAME_IS_TAKEN === data.errorID) ||
-                (TQ.Protocol.ERROR.NAME_IS_INVALID_OR_TAKEN === data.errorID);
-            user.passwordError = (TQ.Protocol.ERROR.PASSWORD_IS_INVALID === data.errorID) ||
-                (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
-            user.loggedIn = false;
+            onGetProfileFailed(netPkg);
         }
+    }
+
+    function onGetProfileFailed(netPkg) {
+        var data = netPkg.data;
+        user.displayNameError = (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID === data.errorID) ||
+            (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID_OR_TAKEN === data.errorID);
+        user.nameError = (TQ.Protocol.ERROR.NAME_IS_INVALID === data.errorID) ||
+            (TQ.Protocol.ERROR.NAME_IS_TAKEN === data.errorID) ||
+            (TQ.Protocol.ERROR.NAME_IS_INVALID_OR_TAKEN === data.errorID);
+        user.passwordError = (TQ.Protocol.ERROR.PASSWORD_IS_INVALID === data.errorID) ||
+            (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
+        user.loggedIn = false;
+
+        TQ.Log.debugInfo("login failed!");
     }
 
     function onLogoutDone(netPkg) {
@@ -80,6 +95,7 @@ function UserService($http, $auth) {
     }
 
     return {
+        authenticate: authenticate,
         canAutoLogin: canAutoLogin,
         tryAutoLogin: tryAutoLogin,
         checkName: checkName,
