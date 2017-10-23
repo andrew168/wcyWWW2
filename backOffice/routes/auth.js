@@ -456,7 +456,7 @@ function responseError(res, statusCode, msg) {
 }
 
 function responseError500(res, err, data) {
-    var errDesc = (err) ? err.message : data.error.message;
+    var errDesc = (err) ? err.message : (data.error ? data.error.message : 'unknown error');
     return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
 }
 

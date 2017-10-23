@@ -71,15 +71,16 @@ function UserService($http, $auth) {
 
     function onGetProfileFailed(netPkg) {
         var data = netPkg.data;
-        user.displayNameError = (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID === data.errorID) ||
-            (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID_OR_TAKEN === data.errorID);
-        user.nameError = (TQ.Protocol.ERROR.NAME_IS_INVALID === data.errorID) ||
-            (TQ.Protocol.ERROR.NAME_IS_TAKEN === data.errorID) ||
-            (TQ.Protocol.ERROR.NAME_IS_INVALID_OR_TAKEN === data.errorID);
-        user.passwordError = (TQ.Protocol.ERROR.PASSWORD_IS_INVALID === data.errorID) ||
-            (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
+        if (data && data.errorID) {
+            user.displayNameError = (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID === data.errorID) ||
+                (TQ.Protocol.ERROR.DISPLAY_NAME_INVALID_OR_TAKEN === data.errorID);
+            user.nameError = (TQ.Protocol.ERROR.NAME_IS_INVALID === data.errorID) ||
+                (TQ.Protocol.ERROR.NAME_IS_TAKEN === data.errorID) ||
+                (TQ.Protocol.ERROR.NAME_IS_INVALID_OR_TAKEN === data.errorID);
+            user.passwordError = (TQ.Protocol.ERROR.PASSWORD_IS_INVALID === data.errorID) ||
+                (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
+        }
         user.loggedIn = false;
-
         TQ.Log.debugInfo("login failed!");
     }
 
