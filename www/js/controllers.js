@@ -94,8 +94,12 @@ function DashCtrl(
     };
 
     $scope.testLogin = function() {
-        UserService.login(email, 'pswww' + testUserId);
+        UserService.login('toronto1111', 'toronto1111');
         // UserService.login('toronto1111', 'toronto1111');
+    };
+
+    $scope.testLogin2222 = function () {
+        UserService.login('toronto2222', 'toronto2222');
     };
 
     $scope.testAuthenticate = function(authName) {

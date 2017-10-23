@@ -55,7 +55,7 @@ router.post('/login', function (req, res) {
             if (!isMatch) {
                 return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
             }
-            resUserToken2(res, user);
+            resUserToken2(req, res, user);
         });
     });
 });
@@ -75,7 +75,7 @@ function failedOrOldPswUser(req, res) {
         user.email = email;
         user.password = req.body.password;
         user.psw = ""; // 删除就psw
-        saveAndResponse(res, user);
+        saveAndResponse(req, res, user);
     });
 }
 
@@ -126,7 +126,7 @@ router.post('/signup', function (req, res) {
             email: email,
             password: req.body.password
         });
-        saveAndResponse(res, user);
+        saveAndResponse(req, res, user);
     });
 });
 
@@ -299,7 +299,7 @@ function responseUserInfo(res, req, condition, profile, authName, requestToLink)
                 user = createUser(profile, authName);
             }
         }
-        return saveAndResponse(res, user);
+        return saveAndResponse(req, res, user);
     }
 }
 
@@ -467,18 +467,20 @@ function responseError500(res, err, data) {
     return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
 }
 
-function resUserToken2(res, user) {
-    var token = createJWT(user);
-    res.send({token: token});
+function resUserToken2(req, res, user) {
+    var token = createJWT(user),
+        userInfo = composeUserPkg(user);
+    status.onSignUp(req, res, userInfo);
+    res.send({token: token, data: userInfo});
 }
 
-function saveAndResponse(res, userModel) {
+function saveAndResponse(req, res, userModel) {
     userModel.save(function (err, userModel) {
         if (err) {
             var pkg = composeErrorPkg(err, Const.ERROR_NAME_EXIST_OR_INVALID_FORMAT);
             return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, pkg);
         }
-        resUserToken2(res, userModel);
+        resUserToken2(req, res, userModel);
     });
 }
 
