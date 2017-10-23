@@ -34,7 +34,7 @@ function UserService($http, $auth) {
 
     function signUp(name, psw, displayName) {
         $auth.signup({email: name.toLowerCase(), password: psw, displayName: displayName}).
-            then(onSignUpDone).
+            then(getProfile).
             catch(onGetProfileFailed);
     }
 
@@ -92,10 +92,6 @@ function UserService($http, $auth) {
         user.needManualLogin = true;
         user.isValidName = true;
         user.saveToCache();
-    }
-
-    function onSignUpDone(netPkg) {
-        getProfile(netPkg);
     }
 
     return {
