@@ -132,8 +132,15 @@ router.post('/signup', function (req, res) {
 
 router.get('/api/me', ensureAuthenticated, function (req, res) {
     User.findById(req.user, function (err, user) {
+        var errDesc;
         if (err) {
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
+            errDesc = err.message;
+        } else if (!user) {
+            errDesc = "No user found with this token";
+        }
+
+        if (errDesc) {
+            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
         }
 
         res.send(composeUserPkg(user));
@@ -237,10 +244,10 @@ router.post('/wechat', function (req, res) {
         }
 
         var code2TokenUrl = 'https://api.weixin.qq.com/sns/oauth2/access_token?' +
-                'appid=' + config.WECHAT_APPID +
-                '&secret=' + config.WECHAT_SECRET +
-                '&data=' + readQs(url, 'data') +
-                '&grant_type=authorization_code';
+            'appid=' + config.WECHAT_APPID +
+            '&secret=' + config.WECHAT_SECRET +
+            '&data=' + readQs(url, 'data') +
+            '&grant_type=authorization_code';
 
         request.get({url: code2TokenUrl, qs: {}, json: true}, function (err, response, data) {
             if (err || (response.statusCode !== Const.HTTP.STATUS_200_OK)) {

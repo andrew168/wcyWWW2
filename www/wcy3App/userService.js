@@ -84,6 +84,7 @@ function UserService($http, $auth) {
                 (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
         }
         user.loggedIn = false;
+        $auth.logout(); // 本地也远程server切换时候遗留的token
         TQ.Log.debugInfo("login failed!");
     }
 
