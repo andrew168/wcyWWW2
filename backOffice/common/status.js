@@ -15,44 +15,49 @@ var user = {
     timesCalled: 0
 };
 
-function onSignUp(req, res, data) {
-    var user = {};
-    if (!!data.result && data.loggedIn) {
-        var tokenID = getCookieNumber(req, 'tokenID', 0),
-            token = getCookieString(req, 'token', 0);
-        user.loggedIn = true;
-        user.ID = data.ID;
-        user.name = data.name;
-        user.isRegistered = true;
-        user.displayName = data.displayName;
-        user.canApprove = data.canApprove;
-        user.canRefine = data.canRefine;
-        user.canBan = data.canBan;
-        user.canAdmin = data.canAdmin;
-        //case： 在同一台机器上， 分别用不同的账号，登录， 退出
-        if (onlineUsers.isValidToken(token, tokenID, user)) {
-            user.tokenID = tokenID;
-            user.token = token;
-        } else {
-            onlineUsers.obsolete(tokenID);
-            user.tokenID = generateTokenID(user);
-            user.token = generateToken(user);
-            onlineUsers.add(user);
-        }
-        setUserCookie(user, res);
+function onLoginSucceed(req, res, data) {
+    var tokenID = getCookieNumber(req, 'tokenID', 0),
+        token = getCookieString(req, 'token', 0),
+        user = {
+            loggedIn: true,
+            ID: data.ID,
+            name: data.name,
+            isRegistered: true,
+            displayName: data.displayName,
+            canApprove: data.canApprove,
+            canRefine: data.canRefine,
+            canBan: data.canBan,
+            canAdmin: data.canAdmin
+        };
+
+    //case： 在同一台机器上， 分别用不同的账号，登录， 退出
+    if (onlineUsers.isValidToken(token, tokenID, user)) {
+        user.tokenID = tokenID;
+        user.token = token;
     } else {
-        user.loggedIn = false;
-        user.ID = 0;
-        user.name = ANONYMOUS;
-        user.isRegistered = false;
-        user.displayName = ANONYMOUS;
-        user.canApprove = false;
-        user.canRefine = false;
-        user.canBan = false;
-        user.canAdmin = false;
-        user.tokenID = 0;
-        user.token = null;
+        onlineUsers.obsolete(tokenID);
+        user.tokenID = generateTokenID(user);
+        user.token = generateToken(user);
+        onlineUsers.add(user);
     }
+    setUserCookie(user, res);
+}
+
+function onLoginFailed(req, res, data) {
+    var user = {
+        loggedIn: false,
+        ID: 0,
+        name: ANONYMOUS,
+        isRegistered: false,
+        displayName: ANONYMOUS,
+        canApprove: false,
+        canRefine: false,
+        canBan: false,
+        canAdmin: false,
+        tokenID: 0,
+        token: null
+    };
+    setUserCookie(user, res);
 }
 
 function logUser(user, req, res, callback) {
@@ -78,9 +83,15 @@ function checkUser(req, res, callback) {
 function setUserCookie(user, res, callback) {
     try {
         user.timesCalled++;
-        res.cookie('userID', user.ID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-        res.cookie('tokenID', user.tokenID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-        res.cookie('token', user.token, {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
+        if (!user.tokenID || !user.token) {
+            res.clearCookie('token');
+            res.clearCookie('tokenID');
+            res.clearCookie('userID');
+        } else {
+            res.cookie('userID', user.ID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
+            res.cookie('tokenID', user.tokenID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
+            res.cookie('token', user.token, {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
+        }
         res.cookie('timesCalled', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
         // res.cookie('isPlayOnly', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, path: '/'});
         res.clearCookie('oldCookie1');
@@ -179,4 +190,6 @@ exports.getUserIDfromCookie = getUserIDfromCookie;
 exports.checkUser = checkUser;
 exports.logUser = logUser;
 exports.setUserCookie = setUserCookie;
-exports.onSignUp = onSignUp;
+exports.onLoginSucceed = onLoginSucceed;
+exports.onLoginFailed = onLoginFailed;
+

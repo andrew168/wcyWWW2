@@ -106,7 +106,8 @@ router.post('/signup', function (req, res) {
     }
 
     function sendBackErrorInfo1(data) {
-        status.onSignUp(req, res, data);
+        data = composeUserPkg(data);
+        status.onLoginFailed(req, res, data);
         res.send(data);
     }
 
@@ -143,7 +144,9 @@ router.get('/api/me', ensureAuthenticated, function (req, res) {
             return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
         }
 
-        res.send(composeUserPkg(user));
+        var userInfo = composeUserPkg(user);
+        status.onLoginSucceed(req, res, userInfo);
+        res.send(userInfo);
     });
 });
 
@@ -470,7 +473,7 @@ function responseError500(res, err, data) {
 function resUserToken2(req, res, user) {
     var token = createJWT(user),
         userInfo = composeUserPkg(user);
-    status.onSignUp(req, res, userInfo);
+    status.onLoginSucceed(req, res, userInfo);
     res.send({token: token, data: userInfo});
 }
 
