@@ -29,6 +29,7 @@ function UserService($http, $auth) {
     }
 
     function logout(name) {
+        $auth.logout();
         onLogoutDone();
     }
 

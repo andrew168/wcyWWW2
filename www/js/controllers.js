@@ -107,7 +107,7 @@ function DashCtrl(
     };
 
     $scope.testLogout = function() {
-        $auth.logout();
+        UserService.logout();
     };
 
     $scope.deleteLevel = function(id) {

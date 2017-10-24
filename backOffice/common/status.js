@@ -29,10 +29,17 @@ function onSignUp(req, res, data) {
         user.canRefine = data.canRefine;
         user.canBan = data.canBan;
         user.canAdmin = data.canAdmin;
-        user.tokenID = tokenID || generateTokenID(user);
-        user.token = token || generateToken(user);
+        //case： 在同一台机器上， 分别用不同的账号，登录， 退出
+        if (onlineUsers.isValidToken(token, tokenID, user)) {
+            user.tokenID = tokenID;
+            user.token = token;
+        } else {
+            onlineUsers.obsolete(tokenID);
+            user.tokenID = generateTokenID(user);
+            user.token = generateToken(user);
+            onlineUsers.add(user);
+        }
         setUserCookie(user, res);
-        onlineUsers.add(user);
     } else {
         user.loggedIn = false;
         user.ID = 0;

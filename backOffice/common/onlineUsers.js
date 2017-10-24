@@ -37,8 +37,8 @@ function get(id) {
     return users[id];
 }
 
-function remove() {
-
+function obsolete(tokenID) {
+    delete users[tokenID];
 }
 
 function getValidUser(tokenID, token, userID) {
@@ -52,6 +52,10 @@ function getValidUser(tokenID, token, userID) {
         candidate = null;
     }
     return candidate;
+}
+
+function isValidToken(oldToken, oldTokenID, user) {
+    return !!getValidUser(oldToken, oldTokenID, user.ID);
 }
 
 function save(callback) {
@@ -101,4 +105,5 @@ exports.hasStopped = hasStopped;
 exports.save = save;
 exports.restore = restore;
 exports.getValidUser = getValidUser;
-exports.remove = remove;
+exports.isValidToken = isValidToken;
+exports.obsolete = obsolete;
