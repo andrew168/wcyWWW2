@@ -192,12 +192,12 @@ function WCY($http, FileService, WxService, NetService) {
     var tryCounter = 0;
     function uploadScreenshot() {
         if (!_ssSign) {
-            if (tryCounter > 2) {
+            if (tryCounter++ > 2) {
                 return TQ.Log.debugInfo("failed to uploadScreen after tried 2 times");
             }
             return save().then(uploadScreenshot);
         }
-
+        tryCounter = 0;
         var data = TQ.ScreenShot.getDataWithBkgColor();
         TQ.AssertExt.invalidLogic(!!_ssSign);
         return NetService.doUploadImage(_ssSign, data).
