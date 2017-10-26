@@ -43,7 +43,7 @@ function doInit(app, appConfig, callback) {
                 console.log("try connect after close");
                 setTimeout(function() {
                     tryToConnect();
-                }, 200);
+                }, 3000);
             }
         }
 
