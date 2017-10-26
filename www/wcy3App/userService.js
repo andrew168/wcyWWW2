@@ -29,8 +29,8 @@ function UserService($http, $auth) {
     }
 
     function logout(name) {
-        $auth.logout();
-        onLogoutDone();
+        return $auth.logout().
+            then(onLogoutDone);
     }
 
     function signUp(name, psw, displayName) {

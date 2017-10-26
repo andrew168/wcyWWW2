@@ -104,7 +104,10 @@ function DashCtrl(
     };
 
     $scope.testLogout = function() {
-        UserService.logout();
+        UserService.logout().
+        then(function() {
+                TQ.Log.debugInfo('logout successfully!');
+            });
     };
 
     $scope.deleteLevel = function(id) {
