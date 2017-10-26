@@ -581,7 +581,7 @@ window.TQ = window.TQ || {};
     };
 
     p.exit = function () {
-        TQ.SelectSet.clear();
+        TQ.SelectSet.empty();
         if (this.isEditMode()) {
             this.calculateLastFrame();
         }

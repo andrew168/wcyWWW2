@@ -105,14 +105,13 @@ TQ = TQ || {};
     };
 
     /*
-    删除当前选中的所有元素
+     删除当前选中的所有元素
      */
-    SelectSet.delete = function() {
-        SelectSet.clear(true);
-        TQ.DirtyFlag.setScene();
+    SelectSet.delete = function () {
+        SelectSet.clear(true, true);
     };
 
-    SelectSet.clear = function(withDelete) {
+    SelectSet.clear = function(withDelete, withEvent) {
         var cmd;
         if (withDelete) {
             cmd = new TQ.CompositeCommand();
@@ -142,6 +141,13 @@ TQ = TQ || {};
         SelectSet.members.splice(0); // 删除全部选中的物体;
         selectedMarkers.splice(0);
         latestElement = null;
+        if (withDelete || withEvent) {
+            TQ.DirtyFlag.setScene();
+        }
+
+        if (withEvent) {
+            TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+        }
     };
 
     SelectSet.updateDecorations = function(show) {
@@ -347,9 +353,7 @@ TQ = TQ || {};
 
     SelectSet.empty = function() {
         if (SelectSet.members.length > 0) {
-            SelectSet.clear();
-            TQ.DirtyFlag.setScene();
-            TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+            SelectSet.clear(false, true);
         }
         TQ.AssertExt.invalidLogic(selectedMarkers.length === 0);
     };

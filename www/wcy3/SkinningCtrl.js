@@ -37,7 +37,7 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.PleaseSelectHost, SkinningCtrl._hostObj);
         if ((skin != null) && (skin.displayObj.id != SkinningCtrl._hostObj.displayObj.id)) {
             SkinningCtrl._scene.skinning(SkinningCtrl._hostObj, skin);
-            TQ.SelectSet.clear();
+            TQ.SelectSet.empty();
             SkinningCtrl.end();
             // SkinningCtrl.hasNew = true;
         }
