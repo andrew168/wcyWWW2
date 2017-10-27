@@ -34,7 +34,7 @@ function UserService($http, $auth) {
     }
 
     function signUp(name, psw, displayName) {
-        $auth.signup({email: name.toLowerCase(), password: psw, displayName: displayName}).
+        return $auth.signup({email: name.toLowerCase(), password: psw, displayName: displayName}).
             then(getProfile).
             catch(onGetProfileFailed);
     }

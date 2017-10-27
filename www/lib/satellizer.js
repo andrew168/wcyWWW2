@@ -516,12 +516,16 @@
             });
         };
         Local.prototype.signup = function (user, options) {
+            var _this = this;
             if (options === void 0) { options = {}; }
             options.url = options.url ? options.url : joinUrl(this.SatellizerConfig.baseUrl, this.SatellizerConfig.signupUrl);
             options.data = user || options.data;
             options.method = options.method || 'POST';
             options.withCredentials = options.withCredentials || this.SatellizerConfig.withCredentials;
-            return this.$http(options);
+            return this.$http(options).then(function (response) {
+                _this.SatellizerShared.setToken(response);
+                return response;
+            });
         };
         Local.$inject = ['$http', 'SatellizerConfig', 'SatellizerShared'];
         return Local;

@@ -86,11 +86,15 @@ function DashCtrl(
         EditorService.addLevel();
     };
 
-    var testUserId = "TestAuth100007",
-        email = testUserId + "@udoido.com";
+    var testUserId = 90005; // // "TestAuth100007",
 
     $scope.testSignUp = function () {
-        UserService.signUp(email, 'pswww' + testUserId, 'disp' + testUserId);
+        testUserId++;
+        email = testUserId + "@udoido.com";
+        UserService.signUp(email, 'pswwwwww' + testUserId, 'display' + testUserId).
+            then(function (data) {
+                console.log("signUp successfully!" + data);
+            });
     };
 
     $scope.testLogin = function (id) {
