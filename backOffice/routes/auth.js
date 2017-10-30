@@ -8,28 +8,14 @@ var express = require('express'),
     Const = require('../base/const'),
     utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
     status = require('../common/status'),
-    netCommon = require('../common/netCommonFunc'),
+    authHelper = require('./authHelper'),
+    config = authHelper.config,
     fs = require('fs'),
     qs = require('qs'),
     userController = require('../db/user/userController');
 
 var composeErrorPkg = userController.composeErrorPkg,
     composeUserPkg = userController.composeUserPkg;
-
-var config = {
-    // App Settings
-    TOKEN_SECRET: 'cAroUG07p3qA04UYI1HWSheHaH4GIrK_JXsZ5Hjj1ST5KI4wZm-B2mHQU7LueA2U', // JWT's secret,
-
-    // OAuth 2.0
-    FACEBOOK_SECRET: process.env.FACEBOOK_SECRET || '806ead2d9cf4864704ffd3f970353f4c',
-    GOOGLE_SECRET: '1rtxnrU822p6jdCYbywmfQYQ',
-    WECHAT_APPID: 'wx5fe65e70536d0258',
-    WECHAT_SECRET: '393e38d14682d6e2ee524dbc96b080bf',
-
-    // OAuth 1.0
-    TWITTER_KEY: process.env.TWITTER_KEY || '5BrblmjAPGKbxnfAqo8nFjF6t',
-    TWITTER_SECRET: process.env.TWITTER_SECRET || 'dvHK06QeB68s0CfBkWvTDYiPYZLnf9xOTNKL7FLe2gqVgMgEv4'
-};
 
 router.post('/login', function (req, res) {
     var email = req.body.email;
@@ -131,7 +117,7 @@ router.post('/signup', function (req, res) {
     });
 });
 
-router.get('/api/me', ensureAuthenticated, function (req, res) {
+router.get('/api/me', authHelper.ensureAuthenticated, function (req, res) {
     User.findById(req.user, function (err, user) {
         var errDesc;
         if (err) {
@@ -150,7 +136,7 @@ router.get('/api/me', ensureAuthenticated, function (req, res) {
     });
 });
 
-router.put('/api/me', ensureAuthenticated, function (req, res) {
+router.put('/api/me', authHelper.ensureAuthenticated, function (req, res) {
     User.findById(req.user, function (err, user) {
         if (err) {
             return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
@@ -166,27 +152,6 @@ router.put('/api/me', ensureAuthenticated, function (req, res) {
         });
     });
 });
-
-function ensureAuthenticated(req, res, next) {
-    if (!req.header('Authorization')) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
-    }
-    var token = req.header('Authorization').split(' ')[1];
-
-    var payload = null;
-    try {
-        payload = jwt.decode(token, config.TOKEN_SECRET);
-    }
-    catch (err) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, err.message);
-    }
-
-    if (payload.exp <= moment().unix()) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Token has expired');
-    }
-    req.user = payload.sub;
-    next();
-}
 
 router.post('/facebook', function (req, res) {
     var fields = ['id', 'email', 'first_name', 'last_name', 'link', 'name'];
@@ -459,10 +424,7 @@ function createJWT(user) {
 }
 
 function responseError(res, statusCode, msg) {
-    if (typeof msg === 'string') {
-        msg = JSON.stringify(composeErrorPkg(msg, Const.ERROR.GENERAL_ERROR));
-    }
-    return res.status(statusCode).send({message: msg});
+    return authHelper.responseError(res, statusCode, msg);
 }
 
 function responseError500(res, err, data) {
