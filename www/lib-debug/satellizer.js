@@ -944,12 +944,13 @@
     var Interceptor = (function () {
         function Interceptor(SatellizerConfig, SatellizerShared, SatellizerStorage) {
             var _this = this,
-                whiteList = ['/auth/api/me', SatellizerConfig.loginUrl, SatellizerConfig.signupUrl, SatellizerConfig.unlinkUrl];
+                whiteList = ['/wcy', '/auth/api/me', SatellizerConfig.loginUrl, SatellizerConfig.signupUrl, SatellizerConfig.unlinkUrl];
             this.SatellizerConfig = SatellizerConfig;
             this.SatellizerShared = SatellizerShared;
             this.SatellizerStorage = SatellizerStorage;
             this.request = function (config) {
-                if (whiteList.indexOf(config.url) <0 || config['skipAuthorization']) {
+                var pathname = TQUtility.parsePathname(config.url);
+                if (whiteList.indexOf(pathname) <0 || config['skipAuthorization']) {
                     return config;
                 }
                 if (_this.SatellizerShared.isAuthenticated() && _this.SatellizerConfig.httpInterceptor()) {

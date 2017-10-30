@@ -15,6 +15,7 @@ var TQUtility; //
 
     Utility.isIOS = isIOS;
     Utility.isAndroid = isAndroid;
+    Utility.parsePathname = parsePathname;
 
     Utility.isObject = function(obj) {
         return (typeof obj === 'object');
@@ -97,6 +98,10 @@ var TQUtility; //
         parser.href = url;
         return parser;
     };
+
+    function parsePathname(url) {
+        return Utility.urlParser(url).pathname;
+    }
 
     Utility.urlComposer = function(path, host, protocol) {
         var ANDROID_PATH_PREFIX = '/android_asset/www';

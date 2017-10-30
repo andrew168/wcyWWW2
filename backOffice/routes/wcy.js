@@ -10,6 +10,7 @@ var express = require('express'),
     fs = require('fs'),
     opusController = require('../db/opus/opusController'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
+    authHelper = require('./authHelper'),
 
     WCY_DEPOT = "/data/wcydepot/";
 
@@ -27,8 +28,9 @@ router.get('/:shareCode', function(req, res, next) {
     sendBackWcy(req, res, wcyId);
 });
 
-router.post('/', function(req, res, next) {
-    var user = status.getUserInfo(req, res);
+router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
+    var userId = req.user,
+        user = (!userId) ? null: status.getUserInfoByID(userId);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
@@ -52,7 +54,7 @@ router.post('/', function(req, res, next) {
                 // 入库， 并获取新wcyID，
                 function onSavedToDB(_wcyId, ssPath) {
                     wcyId = _wcyId;
-                    _saveWcy(req, res, wcyId, ssPath, wcyData);
+                    _saveWcy(req, res, user, wcyId, ssPath, wcyData);
                 }
                 opusController.add(user.ID, ssPath, templateID, onSavedToDB, null);
             } else {
@@ -61,7 +63,7 @@ router.post('/', function(req, res, next) {
         }
 });
 
-function _saveWcy(req, res, wcyId, ssPath, wcyData) {
+function _saveWcy(req, res, user, wcyId, ssPath, wcyData) {
     fs.writeFile(wcyId2Filename(wcyId), wcyData, onWriteCompleted);
     function onWriteCompleted(err) {
         var msg;
@@ -72,13 +74,12 @@ function _saveWcy(req, res, wcyId, ssPath, wcyData) {
             msg = "The file was saved!";
         }
         console.log(msg);
-        resWcySaved(req, res, wcyId, ssPath, msg);
+        resWcySaved(req, res, user, wcyId, ssPath, msg);
     }
 }
 
-function resWcySaved(req, res, wcyId, ssPath, msg) {
-    var user = status.getUserInfo(req, res),
-        shareId = 0,
+function resWcySaved(req, res, user, wcyId, ssPath, msg) {
+    var shareId = 0,
         shareCode = utils.composeShareCode(shareId, wcyId, user.ID);
     if (!user) {
         return netCommon.notLogin(req, res);
