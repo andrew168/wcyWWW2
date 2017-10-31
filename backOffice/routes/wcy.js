@@ -30,7 +30,7 @@ router.get('/:shareCode', function(req, res, next) {
 
 router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     var userId = req.user,
-        user = (!userId) ? null: status.getUserInfoByID(userId);
+        user = (!userId) ? null: status.getUserInfoById(userId);
     if (!user) {
         return netCommon.notLogin(req, res);
     }

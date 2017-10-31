@@ -171,7 +171,7 @@ function getUserInfo(req, res) {
     return candidate;
 }
 
-function getUserInfoByID(userID) {
+function getUserInfoById(userID) {
     var candidate = null;
     if (!isNewUser(userID)) {
         candidate = onlineUsers.getValidUserById(userID);
@@ -195,7 +195,7 @@ function generateToken(user) {
 }
 
 exports.getUserInfo = getUserInfo;
-exports.getUserInfoByID = getUserInfoByID;
+exports.getUserInfoById = getUserInfoById;
 exports.getUserIDfromCookie = getUserIDfromCookie;
 exports.checkUser = checkUser;
 exports.logUser = logUser;
