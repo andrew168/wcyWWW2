@@ -21,16 +21,16 @@ router.param('shareCode', function (req, res, next, id) {
     next();
 });
 
-router.get('/:shareCode', function(req, res, next) {
+router.get('/:shareCode', function (req, res) {
     var shareCode = req.params.shareCode || 0;
     console.log("shareCode =", shareCode);
     var wcyId = utils.decomposeShareCode(shareCode).wcyId;
     sendBackWcy(req, res, wcyId);
 });
 
-router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
-    var userId = req.user,
-        user = (!userId) ? null: status.getUserInfoById(userId);
+router.post('/', function (req, res) {
+    var userId = authHelper.getUserId(req, res),
+        user = (!userId) ? null : status.getUserInfoById(userId);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
@@ -38,36 +38,37 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
-        //ToDo:@@@
-        var templateID = 0,
-            wcyDataObj = req.body,
-            wcyData = JSON.stringify(wcyDataObj),
-            ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
+    //ToDo:@@@
+    var templateID = 0,
+        wcyDataObj = req.body,
+        wcyData = JSON.stringify(wcyDataObj),
+        ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
 
-        if (!wcyData) {
-            var msg = "wrong format: must have wcyId, and wcyData!";
-            console.log(msg);
-            res.send(msg);
-        } else {
-            var wcyId = req.query.wcyId || 0;
-            if (isNewWcy(wcyId)) { // 新作品，
-                // 入库， 并获取新wcyID，
-                function onSavedToDB(_wcyId, ssPath) {
-                    wcyId = _wcyId;
-                    _saveWcy(req, res, user, wcyId, ssPath, wcyData);
-                }
-                opusController.add(user.ID, ssPath, templateID, onSavedToDB, null);
-            } else {
-                opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDB);
+    if (!wcyData) {
+        var msg = "wrong format: must have wcyId, and wcyData!";
+        console.log(msg);
+        res.send(msg);
+    } else {
+        var wcyId = req.query.wcyId || 0;
+        if (isNewWcy(wcyId)) { // 新作品，
+            // 入库， 并获取新wcyID，
+            function onSavedToDB(_wcyId, ssPath) {
+                wcyId = _wcyId;
+                _saveWcy(req, res, user, wcyId, ssPath, wcyData);
             }
+
+            opusController.add(user.ID, ssPath, templateID, onSavedToDB, null);
+        } else {
+            opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDB);
         }
+    }
 });
 
 function _saveWcy(req, res, user, wcyId, ssPath, wcyData) {
     fs.writeFile(wcyId2Filename(wcyId), wcyData, onWriteCompleted);
     function onWriteCompleted(err) {
         var msg;
-        if(err) {
+        if (err) {
             msg = err;
             return console.log(err);
         } else {
@@ -90,7 +91,7 @@ function resWcySaved(req, res, user, wcyId, ssPath, msg) {
         public_id: imageUtils.screenshotId2Name(wcyId)
     };
     cSignature.sign(data);
-    res.send({wcyId: wcyId, ssPath: ssPath, ssSign: data, shareCode:shareCode, msg:msg});
+    res.send({wcyId: wcyId, ssPath: ssPath, ssSign: data, shareCode: shareCode, msg: msg});
 }
 
 /// private function:
@@ -173,7 +174,7 @@ function sendBackWcy(req, res, wcyId) {
         }
 
         // if (user && user.isRegistered) {
-            response(req, res, data, wcyId, authorData);
+        response(req, res, data, wcyId, authorData);
         //} else {
         //    response(req, res, data, wcyId, authorData);
         //    console.log("对于非注册用户， 如何处理？");

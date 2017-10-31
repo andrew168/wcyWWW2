@@ -1,6 +1,7 @@
 /**
  * Created by Andrewz on 10/30/17.
  */
+var INAVLID_USER = 0;
 var jwt = require('jwt-simple'),
     moment = require('moment'),
     mongoose = require('mongoose'),
@@ -29,6 +30,18 @@ function ensureAuthenticated(req, res, next) {
     if (!req.header('Authorization')) {
         return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
     }
+    var userId = getUserId(req, res);
+    if (userId === INAVLID_USER) {
+        return;
+    }
+    next();
+}
+
+function getUserId(req, res) {
+    if (!req.header('Authorization')) {
+        responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
+        return INAVLID_USER;
+    }
     var token = req.header('Authorization').split(' ')[1];
 
     var payload = null;
@@ -36,14 +49,16 @@ function ensureAuthenticated(req, res, next) {
         payload = jwt.decode(token, config.TOKEN_SECRET);
     }
     catch (err) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, err.message);
+        responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, err.message);
+        return INAVLID_USER;
     }
 
     if (payload.exp <= moment().unix()) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Token has expired');
+        responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Token has expired');
+        return INAVLID_USER;
     }
     req.user = payload.sub;
-    next();
+    return req.user;
 }
 
 function responseError(res, statusCode, msg) {
@@ -53,6 +68,7 @@ function responseError(res, statusCode, msg) {
     return res.status(statusCode).send({message: msg});
 }
 
-exports.ensureAuthenticated = ensureAuthenticated;
-exports.responseError = responseError;
 exports.config = config;
+exports.ensureAuthenticated = ensureAuthenticated;
+exports.getUserId = getUserId;
+exports.responseError = responseError;
