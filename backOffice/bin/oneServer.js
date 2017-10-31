@@ -102,7 +102,7 @@
 
         function inWhiteList(ext) {
             var whiteList = ['.css', '.js', '.ttf', '.html', '.jpg', '.png', '.gif',
-                '.mp4', '.wav', '.mp3'];
+                '.mp4', '.wav', '.mp3', '.map'];
 
             for (var i = 0; i < whiteList.length; i++) {
                 if (ext.indexOf(whiteList[i]) >= 0 ) {
@@ -125,11 +125,10 @@
             } else {
                 if (userStat) { // 可能尚未启动userStat, 因为需要启动db的支持，比较慢
                     var user = userStat.getUserInfo(req, res);
-                    if (!user) {
-                        next();
-                    } else {
-                        userStat.logUser(user, req, res, next);
+                    if (user) {
+                        userStat.logUser(user, req, res);
                     }
+                    next();
                 }
             }
         });
