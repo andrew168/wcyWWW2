@@ -29,8 +29,11 @@ router.get('/:shareCode', function (req, res) {
 });
 
 router.post('/', function (req, res) {
-    var userId = authHelper.getUserId(req, res),
-        user = (!userId) ? null : status.getUserInfoById(userId);
+    var userId = authHelper.getUserId(req, res);
+    if (!userId) { // 没有authentication信息， 在getUserId中已经response了
+        return;
+    }
+    var user = (!userId) ? null : status.getUserInfoById(userId);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
