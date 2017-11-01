@@ -23,7 +23,7 @@ function UserService($http, $auth) {
     }
 
     function authenticate(authName) {
-        $auth.authenticate(authName).
+        return $auth.authenticate(authName).
             then(getProfile).
             catch(onGetProfileFailed);
     }
