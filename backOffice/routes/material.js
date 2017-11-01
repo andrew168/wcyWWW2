@@ -79,7 +79,7 @@ router.get('/list/:matType', function(req, res, next) {
     status.logUser(user, req, res);
     getMatController(matType).getList(user.ID, matType, onGotList, onFail);
     function onGotList(list) {
-        console.log(JSON.stringify(list));
+        // console.log(JSON.stringify(list));
         res.json(list);
     }
 

@@ -17,12 +17,12 @@ function add(aUser) {
         return;
     }
 
-    console.log("before add:" + JSON.stringify(users));
+    // console.log("before add:" + JSON.stringify(users));
     console.log("before add2:" + JSON.stringify(users[aUser.tokenID]));
     console.log("new user:" + JSON.stringify(aUser));
     users[aUser.tokenID] = aUser; // 兼容之前的， will be 废弃
     users[aUser.ID] = aUser; //新添加的用户， 不再使用token做索引，而是用ID
-    console.log("after :" + JSON.stringify(users));
+    // console.log("after :" + JSON.stringify(users));
     console.log("after add2:" + JSON.stringify(users[aUser.tokenID]));
 }
 
@@ -95,7 +95,7 @@ function restore() {
         }
         dataReady = true;
 
-        console.log("restored users = " + JSON.stringify(users));
+        // console.log("restored users = " + JSON.stringify(users));
     }
     try {
         fs.readFile(tempFileName, 'utf8', setup);
