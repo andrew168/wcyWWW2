@@ -7,8 +7,7 @@
 //
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
-    pictureMatSchema = require('./pictureMatSchema.js'),
-    PictureMat = mongoose.model('PictureMat', pictureMatSchema.schema);
+    PictureMat = mongoose.model('PictureMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
 function get(userId, callback) {

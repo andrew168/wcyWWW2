@@ -6,8 +6,7 @@ var LATEST_OPUS_NUM = 100;
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
     dbCommon = require('../dbCommonFunc.js'),
-    opusSchema = require('./opusSchema.js'),
-    Opus = mongoose.model('Opus', opusSchema.schema);
+    Opus = mongoose.model('Opus'); // 获取已经定义的model，（定义见opusSchema的setup)
 var STATE_PRIVATE = 10,
     STATE_APPLY_TO_PUBLISH = 20, // 必须经过批准才能公开， 防止 出乱子，
     STATE_APPROVED_TO_PUBLISH = 30, //
@@ -126,7 +125,8 @@ function getAuthor(opusId, onCompleted) {
                 author = {ID: 1};
             } else {
                 console.log(doc);
-                author = {ID: doc.userId,
+                author = {
+                    ID: doc.userId,
                     timestamp: doc.timestamp,
                     lastModified: doc.lastModified,
                     ssPath: doc.ssPath,
