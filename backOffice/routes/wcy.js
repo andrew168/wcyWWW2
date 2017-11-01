@@ -54,15 +54,15 @@ router.post('/', function (req, res) {
     } else {
         var wcyId = req.query.wcyId || 0;
         if (isNewWcy(wcyId)) { // 新作品，
-            // 入库， 并获取新wcyID，
-            function onSavedToDB(_wcyId, ssPath) {
-                wcyId = _wcyId;
-                _saveWcy(req, res, user, wcyId, ssPath, wcyData);
-            }
-
             opusController.add(user.ID, ssPath, templateID, onSavedToDB, null);
         } else {
             opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDB);
+        }
+
+        // 入库， 并获取新wcyID，
+        function onSavedToDB(_wcyId, ssPath) {
+            wcyId = _wcyId;
+            _saveWcy(req, res, user, wcyId, ssPath, wcyData);
         }
     }
 });

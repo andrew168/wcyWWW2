@@ -25,6 +25,7 @@ function get(id) {
 }
 
 function add(userID, ssPath, templateID, onSuccess, onError) {
+    console.info("enter add");
     var aOpus = new Opus({
         userId: userID,
         ssPath: ssPath,
@@ -98,10 +99,12 @@ function getList(user, callback) {
 
 // 也更新wcy的记录，
 function updateScreenshot(userId, id, path, onSuccess, onError) {
+    console.info("enter update Screenshot");
     Opus.findOne({_id: id, userId: userId})
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found!' + id}); // 可能是不同的UserId，不能覆盖他人的作品
+                console.error("opusID = " + id + 'userId = ' + userId); // 可能是不同的UserId，不能覆盖他人的作品
+                console.error(id + ' opus not found!'); // 可能是不同的UserId，不能覆盖他人的作品
                 add(userId, path, id, onSuccess, onError); // 因此， 以建立新文件， 注明是以他人的作品为模板的
             } else {
                 console.log(data);
