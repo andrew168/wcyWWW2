@@ -29,10 +29,10 @@ var raw = function (args) {
 };
 
 /**
- * @synopsis ǩ���㷨
+ * @synopsis 签名算法
  *
- * @param jsapi_ticket ����ǩ���� jsapi_ticket
- * @param url ����ǩ���� url ��ע����붯̬��ȡ������ hardcode
+ * @param jsapi_ticket 用于签名的 jsapi_ticket
+ * @param url 用于签名的 url ，注意必须动态获取，不能 hardcode
  *
  * @returns
  */
