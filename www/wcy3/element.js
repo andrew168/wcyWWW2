@@ -707,6 +707,10 @@ window.TQ = window.TQ || {};
     };
 
     p.detachDecoration = function () {
+        if (this.hasBBox()) {
+            TQ.BBox.detachFrom(this);
+        }
+
         if (!this.decorations) {
             return null;
         }
@@ -723,6 +727,25 @@ window.TQ = window.TQ || {};
             marker.recycle();
         }
         return decorations;
+    };
+
+    p.detachOneDecoration = function (marker) {
+        if (!this.decorations) {
+            return null;
+        }
+        assertNotNull(TQ.Dictionary.FoundNull, this.decorations);
+        var id = this.decorations.indexOf(marker);
+        this.decorations.splice(id, 1);
+        marker.show(false);
+        marker.displayObj.visible = false;
+        marker.host = null;
+        marker.level = null;
+        this.removeChild(marker);
+        if (marker.isBBox()) {
+            marker.removeFromStage();
+        } else {
+            marker.recycle();
+        }
     };
 
     p.getImageResource = function(item, jsonObj) {

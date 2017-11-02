@@ -194,11 +194,12 @@ TQ = TQ || {};
     };
 
     BBox.detachFrom = function (host) {
-        TQ.AssertExt.invalidLogic(host && host.hasBBox);
+        TQ.AssertExt.isNotNull(host);
+        TQ.AssertExt.isNotNull(host.hasBBox);
         if (host && host.hasBBox()) {
             var bbox = host.getBBox();
-            host.removeChild(bbox);
             bbox.doShow(false);
+            host.detachOneDecoration(bbox);
         }
     };
 
