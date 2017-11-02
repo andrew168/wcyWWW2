@@ -332,7 +332,7 @@ TQ = TQ || {};
             // assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode);
         }
 
-        if (!ele.isJoint() && !ele.isMarker() && isPart(ele)) {
+        if (!ele.isJoint() && !ele.isEditorEle() && isPart(ele)) {
             if ((!TQ.InputCtrl.inSubobjectMode) || TQ.InputCtrl.showMarkerOnly) {
                 if (ele.parent != null) return TQ.SelectSet.getEditableEle(ele.parent);
             }

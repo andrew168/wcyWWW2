@@ -216,15 +216,17 @@ TQ.Graphics = (function () {
     }
 
     // stage
-    function findEditableElementBelowZ(z) {
+    function findEditableElementBelowZ(z, direction) {
         var displayObj,
-            ele;
+            ele,
+            step = (direction > 0)? 1: -1,
+            num = stageContainer.getNumChildren();
 
         do {
             displayObj = stageContainer.getChildAt(z);
             ele = (!displayObj) ? null:  displayObj.ele;
-            z--;
-        } while ((z >= 0) && ele.isMarker());
+            z += step;
+        } while ((z >= 0) && (z < num)  && (ele.isEditorEle()));
 
         while (ele && ele.parent) {
             ele = ele.parent;

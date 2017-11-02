@@ -374,7 +374,7 @@ window.TQ = window.TQ || {};
     p.fillGap2 = function() {
         var desc = this.jsonObj;
         if ((desc.sx == undefined)|| (desc.sy == undefined)) {
-            if (this.isMarker()) {
+            if (this.isEditorEle()) {
                 this.markerScaleOne(desc);
             } else {
                 this.scaleOne(desc);
@@ -1205,7 +1205,7 @@ window.TQ = window.TQ || {};
 
     p._afterItemLoaded = function (resource) {
         this.fillGap2();
-        if (this.autoFitFlag && !this.isMarker() && !this.isVirtualObject()) {
+        if (this.autoFitFlag && !this.isEditorEle() && !this.isVirtualObject()) {
             this.autoFit(resource);
         }
 
@@ -1286,7 +1286,7 @@ window.TQ = window.TQ || {};
         if (this.children != null) {
             data.children = [];
             for (var i = 0; i < this.children.length; i++) {
-                if (!this.children[i].isMarker()) {
+                if (!this.children[i].isEditorEle()) {
                     var childJson = this.children[i].toJSON();
                     if (childJson) {
                         data.children.push(childJson);
@@ -1753,7 +1753,15 @@ window.TQ = window.TQ || {};
     };
 
     p.isComposed = function() {
-        return (this.children && this.children.length >0 && !this.children[0].isMarker());
+        if (!this.children || this.children.length < 1) {
+            return false;
+        }
+
+        var hasNonEditorElement = false;
+        this.children.some(function (child) {
+            return (hasNonEditorElement = !child.isEditorEle());// 找到一个true就终止循环
+        });
+        return hasNonEditorElement;
     };
 
     p.isClipPoint = function () {
@@ -1816,6 +1824,17 @@ window.TQ = window.TQ || {};
     p.isMarker = function () {
         return false;
     };
+
+    p.isBBox = function () {
+        return false;
+    };
+
+    p.isEditorEle = function () {
+        // 只是给Editor用的临时元素， 比如：用于亮显选中元素转轴点的marker， 边界框BBox等等，
+        // 这种元素， 不能保存到文件中， 也不出现在截图中， 在Z图层升降中，也忽略他们
+        return (this.isBBox() || this.isMarker());
+    };
+
     p.isVirtualObject = function () { // 虚拟物体包括： Group(displayObj 非空), 声音(displayObj 为空)，等
         if (!this.displayObj) {
             return this.isSound();
@@ -1905,7 +1924,7 @@ window.TQ = window.TQ || {};
 
         for (var i = 0; i < n; i++) {
             child = this.children[i];
-            if (child.isMarker()) {
+            if (child.isEditorEle()) {
                 continue;
             }
             maxZ = Math.max(maxZ, child.getZ());
@@ -1925,7 +1944,7 @@ window.TQ = window.TQ || {};
 
         for (var i = 0; i < n; i++) {
             child = this.children[i];
-            if (child.isMarker()) {
+            if (child.isEditorEle()) {
                 continue;
             }
             minZ = Math.min(minZ, child.getZ());

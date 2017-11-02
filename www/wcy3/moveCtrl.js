@@ -81,7 +81,7 @@ TQ.MoveCtrl = (function () {
             }
         }
 
-        var ele = TQ.Graphics.findEditableElementBelowZ(newZ);
+        var ele = TQ.Graphics.findEditableElementBelowZ(newZ, newZ - oldZ);
         if (!ele) {
             step = 0;
         } else if (ele.isComposed()) {
@@ -155,7 +155,7 @@ TQ.MoveCtrl = (function () {
             if (!!ele.children) {
                 for (var i=0; i< ele.children.length; i++) {
                     var child = ele.children[i];
-                    if (!child.isMarker()) {
+                    if (!child.isEditorEle()) {
                         _doMoveZ(child, step);
                     }
                 }
