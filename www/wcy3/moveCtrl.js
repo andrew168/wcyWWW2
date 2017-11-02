@@ -84,10 +84,8 @@ TQ.MoveCtrl = (function () {
         var ele = TQ.Graphics.findEditableElementBelowZ(newZ, newZ - oldZ);
         if (!ele) {
             step = 0;
-        } else if (ele.isComposed()) {
-            newZ = (step > 0) ? ele.getMaxZ() : ele.getMinZ();
-            step = newZ - oldZ;
         } else {
+            newZ = (step > 0) ? ele.getMaxZ() : ele.getMinZ();
             step = newZ - oldZ;
         }
         return step;
