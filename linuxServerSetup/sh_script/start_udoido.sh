@@ -16,12 +16,12 @@ fi
 
 echo "#### for node ####"
 not_found=0
-pgrep node || not_found=1
+ps -aefw | grep "/data/wwwz/card2/backoffice/bin/server.js" | grep -v " grep "|| not_found=1
 
 if [ ${not_found} = 1 ] ; then
     echo "not found node"
-    nohup /usr/local/node/bin/node  /data/wwwz/card2/backoffice/bin/server.js  &
+		node -v
+    nohup node  /data/wwwz/card2/backoffice/bin/server.js  &
 else
     echo "find node"
 fi
-
