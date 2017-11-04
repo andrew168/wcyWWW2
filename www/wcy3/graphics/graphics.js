@@ -28,6 +28,7 @@ TQ.Graphics = (function () {
         getButtonHeight: getButtonHeight,
         getBottomBarHeight: getBottomBarHeight,
         getScreenWidth: getScreenWidth,
+        getScreenHeight: getScreenHeight,
         getStage: getStage,
         setCanvas: setCanvas,
         findEditableElementBelowZ: findEditableElementBelowZ
@@ -81,6 +82,10 @@ TQ.Graphics = (function () {
 
     function getScreenWidth() {
         return TQ.State.viewportWidth;
+    }
+
+    function getScreenHeight() {
+        return TQ.State.viewportHeight;
     }
 
     function getCanvasBkgColor() {
