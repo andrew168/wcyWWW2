@@ -83,6 +83,9 @@ function UserService($http, $auth) {
                 (TQ.Protocol.ERROR.NAME_IS_INVALID_OR_TAKEN === data.errorID);
             user.passwordError = (TQ.Protocol.ERROR.PASSWORD_IS_INVALID === data.errorID) ||
                 (TQ.Protocol.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT === data.errorID);
+            if (!user.displayNameError || user.nameError) {
+                user.passwordError = true;
+            }
         }
         user.loggedIn = false;
         $auth.logout(); // 本地也远程server切换时候遗留的token

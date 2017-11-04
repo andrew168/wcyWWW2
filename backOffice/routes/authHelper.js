@@ -63,9 +63,9 @@ function getUserId(req, res) {
 
 function responseError(res, statusCode, msg) {
     if (typeof msg === 'string') {
-        msg = JSON.stringify(composeErrorPkg(msg, Const.ERROR.GENERAL_ERROR));
+        msg = composeErrorPkg(msg, Const.ERROR.GENERAL_ERROR);
     }
-    return res.status(statusCode).send({message: msg});
+    return res.status(statusCode).send(msg);
 }
 
 exports.config = config;
