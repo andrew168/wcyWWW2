@@ -531,6 +531,14 @@ window.TQ = window.TQ || {};
             y: y / sy + yCanvasOriginInCss};
     };
 
+    Utility.world2cssFromTop = function (x, y) {
+        var pos = Utility.world2css(x,y);
+        return {
+            x: pos.x,
+            y: window.innerHeight - pos.y
+        };
+    };
+
     function removePx(xInCss) {
         return Number(xInCss.replace("px", ""));
     }
