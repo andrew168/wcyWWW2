@@ -22,9 +22,3 @@
   /data/wwwz/card2
   /data/wcydepot  （数据库）
   /logs/udoido
-
-
-
-
-
-
