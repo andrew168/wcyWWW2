@@ -364,10 +364,6 @@ window.TQ = window.TQ || {};
         // 清除M和IM, 过去的版本中,可能输出了这些数值.
         // 他们如果没有 对象化, 就会阻碍 Matrix.multiply()
         desc.IM = desc.M = null;
-
-        // 强制补全动画轨迹, 应为这是存放物体坐标的地方.!!! 2013-3-1
-        desc.animeTrack = new TQ.AnimeTrack(desc);
-        TQ.AnimeTrack.validate(desc.animeTrack);
         return desc;
     };
 
@@ -380,6 +376,13 @@ window.TQ = window.TQ || {};
                 this.scaleOne(desc);
             }
         }
+    };
+
+    p.fillGapAtferAutoFit = function () {
+        var desc = this.jsonObj;
+        // 强制补全动画轨迹, 必须在autoFit之后。
+        desc.animeTrack = new TQ.AnimeTrack(desc);
+        TQ.AnimeTrack.validate(desc.animeTrack);
     };
 
     Element.type2eType = function (type) {
@@ -1239,6 +1242,7 @@ window.TQ = window.TQ || {};
         if (this.displayObj) { //声音元素， 没有displayObj
             this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
         }
+        this.fillGapAtferAutoFit();
         this.animeTrack = this.jsonObj.animeTrack;
         if (this.level.isStageReady()) {
             if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
