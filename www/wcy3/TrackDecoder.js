@@ -153,7 +153,7 @@ window.TQ = window.TQ || {};
         } else if (t >= t2) { //  上超界，
             v = v2;
         } else {
-            if (channel.c[channel.tid2] == TrackDecoder.LINE_INTERPOLATION) { // 0： interpolation
+            if (channel.c[channel.tid2] == TQ.Channel.LINE_INTERPOLATION) { // 0： interpolation
                 v = ((t - t1) * (v1 - v2) / (t1 - t2)) + v1;
             } else {
                 v = v1;
