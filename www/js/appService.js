@@ -41,7 +41,10 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     }
 
     function determineWorkingRegion() {
-        var h = TQ.State.viewportHeight,
+        // top bar的min-height是 11vmin
+        var topBarHeight = Math.ceil(0.11 * Math.min(TQ.State.viewportHeight, TQ.State.viewportWidth)),
+            bottomBarHeight = topBarHeight,
+            h = TQ.State.viewportHeight - topBarHeight - bottomBarHeight,
             w = TQ.State.viewportWidth,
             designated = !currScene ? TQ.Scene.getDesignatedRegionDefault(): currScene.getDesignatedRegion();
 
@@ -56,6 +59,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
 
         TQ.Config.workingRegionX0 = Math.round((TQ.State.viewportWidth - TQ.Config.workingRegionWidth) / 2);
         TQ.Config.workingRegionY0 = Math.round((TQ.State.viewportHeight - TQ.Config.workingRegionHeight) / 2);
+        TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight)/2);
     }
 
     function _init() {
