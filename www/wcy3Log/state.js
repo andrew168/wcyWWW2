@@ -6,13 +6,13 @@
  * Copyright Tuqiang Tech
  * Created at : 12-11-14 下午12:42
  */
-window.TQ = window.TQ || {};
+var TQ = TQ || {};
 
 (function () {
     function State() {
     }
 
-    State.viewportWidth = null;
-    State.viewportHeight = null;
-    window.TQ.State = State;
+    State.viewportWidth = window.innerWidth;
+    State.viewportHeight = window.innerHeight;
+    TQ.State = State;
 }());
