@@ -332,7 +332,12 @@ TQ = TQ || {};
             // assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode);
         }
 
-        if (!ele.isJoint() && !ele.isEditorEle() && isPart(ele)) {
+        // BBox 总是不可编辑的
+        if (ele.isBBox()) {
+            if (ele.parent != null) return TQ.SelectSet.getEditableEle(ele.parent);
+        }
+        //marker仅仅在 移动pivot点的时候，是可以编辑的
+        if (!ele.isJoint() && !ele.isMarker() && isPart(ele)) {
             if ((!TQ.InputCtrl.inSubobjectMode) || TQ.InputCtrl.showMarkerOnly) {
                 if (ele.parent != null) return TQ.SelectSet.getEditableEle(ele.parent);
             }
