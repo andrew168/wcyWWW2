@@ -10,6 +10,8 @@ var TQ = TQ || {};
 
 (function () {
     // 状态参数，及其getter、setter都定义在此
+    // State中的参数都是实时生成的， 可以覆盖，下次再调入的时候， 可以恢复。
+    // 区别: Config中的参数都是预先定义的， 不可以覆盖的
     function State() {
     }
 
