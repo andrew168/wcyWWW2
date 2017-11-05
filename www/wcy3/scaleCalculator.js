@@ -35,14 +35,15 @@ TQ = TQ || {};
         // TQ.Log.warn("gesture: (dx, dy):" + gesture.deltaX + ', ' + gesture.deltaY + '  velocity(x, y)' + gesture.velocityX + ', ' + gesture.velocityY);
 
         // 变换到物体空间
-        var dObj = ele.dWorld2Object({x: dx, y: dy});
+        var TANGENT_22_DEGREE = 2.4752;
+        var dObj = ele.dDc2Object({x: dx, y: dy});
         dx = Math.abs(dObj.x);
         dy = Math.abs(dObj.y);
 
         var opType;
-        if ((dx > dy) && (dx > (4 * dy))) {
+        if ((dx > dy) && (dx > (TANGENT_22_DEGREE * dy))) {
             opType = OP_TYPE.SCALE_X;
-        } else if ((dy > dx) && (dy > (4 * dx))) {
+        } else if ((dy > dx) && (dy > (TANGENT_22_DEGREE * dx))) {
             opType = OP_TYPE.SCALE_Y;
         } else {
             opType = OP_TYPE.SCALE_XY;

@@ -254,6 +254,21 @@ var TQ = TQ || {};
         return {x: displacementInObj.x - originInObject.x, y: displacementInObj.y - originInObject.y};
     };
 
+    CreateJSAdapter.dDc2Object = function (ptDc) {
+        var p0Dc = {x: 0, y:0, rotation: 0},
+            p0World = this.dc2World2(p0Dc),
+            ptWorld = this.dc2World2(ptDc),
+            p0Object = this.world2Object(p0World),
+            ptObject = this.world2Object(ptWorld);
+
+
+        return {
+            x: ptObject.x - p0Object.x,
+            y: ptObject.y - p0Object.y,
+            rotation: ptObject.rotation - p0Object.rotation
+        };
+    };
+
     CreateJSAdapter.parentWorld2Object = function (ptWorld) {
         if (!ptWorld) {
             ptWorld = this.jsonObj;
