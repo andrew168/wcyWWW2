@@ -24,11 +24,6 @@ TQ.Graphics = (function () {
         getCanvasWidth: getCanvasWidth,
         getCanvasHeight: getCanvasHeight,
         getCanvasStyle: getCanvasStyle,
-        getTopBarHeight: getTopBarHeight,
-        getButtonHeight: getButtonHeight,
-        getBottomBarHeight: getBottomBarHeight,
-        getScreenWidth: getScreenWidth,
-        getScreenHeight: getScreenHeight,
         getStage: getStage,
         setCanvas: setCanvas,
         findEditableElementBelowZ: findEditableElementBelowZ
@@ -52,18 +47,6 @@ TQ.Graphics = (function () {
         return canvasStyle;
     }
 
-    function getTopBarHeight() {
-        return TQ.State.topBarHeight;
-    }
-
-    function getBottomBarHeight() {
-        return TQ.State.bottomBarHeight;
-    }
-
-    function getButtonHeight() {
-        return TQ.State.buttonHeight;
-    }
-
     function getCanvasWidth() {
         if (!canvasStyle) {
             canvasStyle = setCanvas();
@@ -78,14 +61,6 @@ TQ.Graphics = (function () {
         }
         var heigth = canvasStyle.height.replace("px", "");
         return parseFloat(heigth);
-    }
-
-    function getScreenWidth() {
-        return TQ.State.innerWidth;
-    }
-
-    function getScreenHeight() {
-        return TQ.State.innerHeight;
     }
 
     function getCanvasBkgColor() {
