@@ -9,10 +9,14 @@
 var TQ = TQ || {};
 
 (function () {
+    // 状态参数，及其getter、setter都定义在此
     function State() {
     }
 
     State.innerWidth = window.innerWidth;
     State.innerHeight = window.innerHeight;
+    State.bottomBarHeight = 0;
+    State.topBarHeight = 0;
+    State.buttonHeight = 0;
     TQ.State = State;
 }());
