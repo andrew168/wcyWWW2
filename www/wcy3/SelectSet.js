@@ -246,6 +246,13 @@ TQ = TQ || {};
         if (SelectSet.isEmpty()) {
             return;
         }
+
+        SelectSet.members.forEach(function (ele) {
+            if (ele.hasBBox()) {
+                TQ.BBox.detachFrom(ele);
+            }
+        });
+
         var firstEle = SelectSet.members[0];
         if (firstEle.isJoint()) {
             unjoint();

@@ -72,7 +72,7 @@ TQ = TQ || {};
         // 普通group只炸开1层，
         // 关节：炸开整条链
         var parts = [];
-        TQ.BBox.detachFrom(this);
+        TQ.Assert.isTrue(!this.hasBBox(), "必须先把BBox去除");
         if (this.children) {
             while (this.children.length > 0) {
                 var child = this.removeChild(this.children[0]);
