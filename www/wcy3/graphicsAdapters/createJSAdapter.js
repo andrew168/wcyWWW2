@@ -178,6 +178,31 @@ var TQ = TQ || {};
         };
     };
 
+    CreateJSAdapter.dc2World2 = function (ptDc) {
+        // DC坐标：是event中的(pageX, pageY)，window的innerWidth和Height坐标系，不含address bar， 原点在左上角，
+        // World坐标： Canvas上的实际绘图区，
+        var sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth, // 把当前device尺寸，映射到  target尺寸
+            sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight,
+            x0d = (TQ.State.innerWidth - TQ.Config.workingRegionWidth)/2,
+            y0d = TQ.State.topBarHeight + TQ.Config.workingRegionHeight;
+
+        if (ptDc.x === undefined) {
+            ptDc.x = 0;
+        }
+        if (ptDc.y === undefined) {
+            ptDc.y = 0;
+        }
+        if (ptDc.rotation === undefined) {
+            ptDc.rotation = 0;
+        }
+
+        return {
+            x: (ptDc.x - x0d) * sx,
+            y: (y0d - ptDc.y) * sy,
+            rotation: -ptDc.rotation
+        };
+    };
+
     CreateJSAdapter.world2Dc = function (ptWorld) {
         var sx = TQ.Config.workingRegionWidth / currScene.getDesignatedWidth(), // 把target尺寸映射到device尺寸
             sy = TQ.Config.workingRegionHeight / currScene.getDesignatedHeight(),
