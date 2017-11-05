@@ -65,6 +65,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // element modification (text, sound, image...)
         getFontSize: getFontSize,
         setSize: setSize,
+        setFontLevel: setFontLevel,
         setColor: setColor,
         eraseAnimeTrack:eraseAnimeTrack,
 
@@ -784,12 +785,21 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.Marker.RADIUS = radius;
     }
 
+    function setFontLevel(level) {
+        var selectedElement = TQ.SelectSet.peek();
+        if (selectedElement && selectedElement.isText()) {
+            state.fontLevel = level;
+            TQ.CommandMgr.directDo(new TQ.SetSizeCommand(selectedElement, getFontSize()));
+        }
+    }
+
     function setSize() {
         var selectedElement = TQ.SelectSet.peek();
         if (selectedElement  && selectedElement.isText()) {
             TQ.CommandMgr.directDo(new TQ.SetSizeCommand(selectedElement, getFontSize()));
         }
     }
+
 
     function updateColorPanel() {
         if (_colorPanel) {
