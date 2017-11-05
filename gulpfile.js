@@ -52,7 +52,9 @@ gulp.task('wcylib_concat', function () {
         .pipe(gulp.dest('dist'))
         .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
         .pipe(gulp.dest(dstPath1 + '\\lib'))
+        .pipe(gulp.dest(dstPath1 + '\\lib-debug'))
         .pipe(gulp.dest(dstPath2 + '\\lib'));
+
 });
 
 gulp.task('wcylib_minify', ['wcylib_concat'], function () {
