@@ -30,23 +30,23 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         }
 
     function updateDeviceInfo() {
-        if ((TQ.State.viewportWidth === window.innerWidth) &&
-            (TQ.State.viewportHeight === window.innerHeight)) {  // no change
+        if ((TQ.State.innerWidth === window.innerWidth) &&
+            (TQ.State.innerHeight === window.innerHeight)) {  // no change
             return false;
         }
 
-        TQ.State.viewportWidth = window.innerWidth;
-        TQ.State.viewportHeight = window.innerHeight;
+        TQ.State.innerWidth = window.innerWidth;
+        TQ.State.innerHeight = window.innerHeight;
         return true;
     }
 
     function determineWorkingRegion() {
         // top bar的min-height是 11vmin
-        var buttonHeight = Math.ceil(0.11 * Math.min(TQ.State.viewportHeight, TQ.State.viewportWidth)),
+        var buttonHeight = Math.ceil(0.11 * Math.min(TQ.State.innerHeight, TQ.State.innerWidth)),
             topBarHeight = buttonHeight,
             bottomBarHeight = topBarHeight,
-            h = TQ.State.viewportHeight - topBarHeight - bottomBarHeight,
-            w = TQ.State.viewportWidth,
+            h = TQ.State.innerHeight - topBarHeight - bottomBarHeight,
+            w = TQ.State.innerWidth,
             designated = !currScene ? TQ.Scene.getDesignatedRegionDefault(): currScene.getDesignatedRegion();
 
 
@@ -59,8 +59,8 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
         }
 
-        TQ.Config.workingRegionX0 = Math.round((TQ.State.viewportWidth - TQ.Config.workingRegionWidth) / 2);
-        TQ.Config.workingRegionY0 = Math.round((TQ.State.viewportHeight - TQ.Config.workingRegionHeight) / 2);
+        TQ.Config.workingRegionX0 = Math.round((TQ.State.innerWidth - TQ.Config.workingRegionWidth) / 2);
+        TQ.Config.workingRegionY0 = Math.round((TQ.State.innerHeight - TQ.Config.workingRegionHeight) / 2);
         TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight)/2);
         TQ.State.bottomBarHeight = bottomBarHeight;
         TQ.State.topBarHeight = topBarHeight;

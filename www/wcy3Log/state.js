@@ -12,7 +12,7 @@ var TQ = TQ || {};
     function State() {
     }
 
-    State.viewportWidth = window.innerWidth;
-    State.viewportHeight = window.innerHeight;
+    State.innerWidth = window.innerWidth;
+    State.innerHeight = window.innerHeight;
     TQ.State = State;
 }());

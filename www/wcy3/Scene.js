@@ -49,8 +49,8 @@ TQ = TQ || {};
         var designated;
         if (TQUtility.isMobile()) {
             designated = {
-                w: TQ.State.viewportWidth,
-                h: TQ.State.viewportHeight
+                w: TQ.State.innerWidth,
+                h: TQ.State.innerHeight
             }
         } else {
             designated = {
