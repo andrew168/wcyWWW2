@@ -20,5 +20,45 @@ var TQ = TQ || {};
     State.bottomBarHeight = 0;
     State.topBarHeight = 0;
     State.buttonHeight = 0;
+    State.determineWorkingRegion = determineWorkingRegion;
+    State.updateDeviceInfo = updateDeviceInfo;
+
+    function determineWorkingRegion() {
+        // top bar的min-height是 11vmin
+        var buttonHeight = Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth)),
+            topBarHeight = buttonHeight,
+            bottomBarHeight = topBarHeight,
+            h = State.innerHeight - topBarHeight - bottomBarHeight,
+            w = State.innerWidth,
+            designated = !currScene ? TQ.Scene.getDesignatedRegionDefault() : currScene.getDesignatedRegion();
+
+        scaleMin = Math.min(w / designated.w, h / designated.h);
+        TQ.Config.workingRegionWidth = scaleMin * designated.w;
+        TQ.Config.workingRegionHeight = scaleMin * designated.h;
+        if (TQ.Config.workingRegionHeight > TQ.Config.workingRegionWidth) {
+            TQ.Config.orientation = TQ.Config.ORIENTATION_PORTRAIT;
+        } else {
+            TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
+        }
+
+        TQ.Config.workingRegionX0 = Math.round((State.innerWidth - TQ.Config.workingRegionWidth) / 2);
+        TQ.Config.workingRegionY0 = Math.round((State.innerHeight - TQ.Config.workingRegionHeight) / 2);
+        TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight) / 2);
+        State.bottomBarHeight = bottomBarHeight;
+        State.topBarHeight = topBarHeight;
+        State.buttonHeight = buttonHeight;
+    }
+
+    function updateDeviceInfo() {
+        if ((State.innerWidth === window.innerWidth) &&
+            (State.innerHeight === window.innerHeight)) {  // no change
+            return false;
+        }
+
+        State.innerWidth = window.innerWidth;
+        State.innerHeight = window.innerHeight;
+        return true;
+    }
+
     TQ.State = State;
 }());

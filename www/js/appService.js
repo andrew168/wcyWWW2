@@ -18,8 +18,8 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             _onAppStarted = null; // onAppStartDefault;
 
         function configCanvas() {
-            updateDeviceInfo();
-            determineWorkingRegion();
+            TQ.State.updateDeviceInfo();
+            TQ.State.determineWorkingRegion();
             TQ.Graphics.setCanvas();
             if (currScene) {
                 TQ.DirtyFlag.setScene();
@@ -28,44 +28,6 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight +")"
                 + "orientation = " + TQ.Config.orientation);
         }
-
-    function updateDeviceInfo() {
-        if ((TQ.State.innerWidth === window.innerWidth) &&
-            (TQ.State.innerHeight === window.innerHeight)) {  // no change
-            return false;
-        }
-
-        TQ.State.innerWidth = window.innerWidth;
-        TQ.State.innerHeight = window.innerHeight;
-        return true;
-    }
-
-    function determineWorkingRegion() {
-        // top bar的min-height是 11vmin
-        var buttonHeight = Math.ceil(0.11 * Math.min(TQ.State.innerHeight, TQ.State.innerWidth)),
-            topBarHeight = buttonHeight,
-            bottomBarHeight = topBarHeight,
-            h = TQ.State.innerHeight - topBarHeight - bottomBarHeight,
-            w = TQ.State.innerWidth,
-            designated = !currScene ? TQ.Scene.getDesignatedRegionDefault(): currScene.getDesignatedRegion();
-
-
-        scaleMin = Math.min(w / designated.w, h / designated.h);
-        TQ.Config.workingRegionWidth = scaleMin * designated.w;
-        TQ.Config.workingRegionHeight = scaleMin * designated.h;
-        if (TQ.Config.workingRegionHeight > TQ.Config.workingRegionWidth) {
-            TQ.Config.orientation = TQ.Config.ORIENTATION_PORTRAIT;
-        } else {
-            TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
-        }
-
-        TQ.Config.workingRegionX0 = Math.round((TQ.State.innerWidth - TQ.Config.workingRegionWidth) / 2);
-        TQ.Config.workingRegionY0 = Math.round((TQ.State.innerHeight - TQ.Config.workingRegionHeight) / 2);
-        TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight)/2);
-        TQ.State.bottomBarHeight = bottomBarHeight;
-        TQ.State.topBarHeight = topBarHeight;
-        TQ.State.buttonHeight = buttonHeight;
-    }
 
     function _init() {
         if (UserService.canAutoLogin()) {
