@@ -33,15 +33,15 @@ window.TQ = window.TQ || {};
 
     function limitToAcuteAngle(angle) {
         var absAngle = Math.abs(angle);
-        if (absAngle > 180) {
+        while (absAngle > 180) {
             if (angle < 0) {
                 angle = 360 + angle;
             } else {
                 angle = -360 + angle;
             }
+            absAngle = Math.abs(angle);
         }
 
-        absAngle = Math.abs(angle);
         if (absAngle > 180) {
             console.error("应该是锐角" + angle);
         }
