@@ -412,6 +412,8 @@ function WCY($http, FileService, WxService, NetService) {
         var data = res.data;
         parseCommonData(data);
         TQ.WCY.isPlayOnly = data.isPlayOnly;
+        TQ.State.isPlayOnly = data.isPlayOnly;
+        TQ.State.determineWorkingRegion();
         TQ.WCY.authorID = data.authorID;
         if (!!data.data) {
             _openInJson(data.data);

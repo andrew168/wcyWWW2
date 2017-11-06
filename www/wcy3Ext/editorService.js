@@ -148,7 +148,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isPreviewMode = null;
         state.isPreviewMenuOn = false;
         state.isPlayMode = null;
-        state.isPlaying = false;
+        TQ.State.isPlaying = false;
         state.isMCopying = false;
         TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
         TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
@@ -699,7 +699,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
 
         $timeout(function () { // 用timeout迫使angularjs 刷新UI
-            state.isPlaying = false;
+            TQ.State.isPlaying = false;
+            AppService.configCanvas();
         }, 100);
     }
 
@@ -725,7 +726,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         forceToRefreshUI();
         TQ.TouchManager.stop();
         $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
-            state.isPlaying = true;
+            TQ.State.isPlaying = true;
+            AppService.configCanvas();
         }, 100);
         TQ.IdleCounter.start(TQ.PreviewMenu.hide);
         TQ.PreviewMenu.startWatch();
@@ -937,11 +939,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (!$timeout) {
             setTimeout(doUpdate, 300);
         } else {
-            setTimeout(doUpdate, 300);
+            $timeout(doUpdate, 300);
         }
 
         function doUpdate() {
-            state.isPlaying = TQ.FrameCounter.isPlaying();
+            if (TQ.State.isPlaying !== TQ.FrameCounter.isPlaying()) {
+                TQ.State.isPlaying = TQ.FrameCounter.isPlaying();
+                AppService.configCanvas();
+            }
         }
     }
 
