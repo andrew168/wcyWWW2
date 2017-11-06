@@ -184,7 +184,7 @@ var TQ = TQ || {};
         var sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth, // 把当前device尺寸，映射到  target尺寸
             sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight,
             x0d = (TQ.State.innerWidth - TQ.Config.workingRegionWidth)/2,
-            y0d = TQ.State.topBarHeight + TQ.Config.workingRegionHeight;
+            y0d = TQ.State.innerHeight - (TQ.State.innerHeight - TQ.Config.workingRegionHeight)/2;
 
         if (ptDc.x === undefined) {
             ptDc.x = 0;
