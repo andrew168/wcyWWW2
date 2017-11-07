@@ -66,6 +66,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         getFontSize: getFontSize,
         setSize: setSize,
         setFontLevel: setFontLevel,
+        decreaseFontLevel: decreaseFontLevel,
+        increaseFontLevel: increaseFontLevel,
         setColor: setColor,
         eraseAnimeTrack:eraseAnimeTrack,
 
@@ -792,6 +794,26 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (selectedElement && selectedElement.isText()) {
             state.fontLevel = level;
             TQ.CommandMgr.directDo(new TQ.SetSizeCommand(selectedElement, getFontSize()));
+        }
+    }
+
+    function increaseFontLevel() {
+        var selectedElement = TQ.SelectSet.peek();
+        if (selectedElement && selectedElement.isText()) {
+            state.fontLevel = fontSize2Level(selectedElement.getFontSize());
+            state.fontLevel++;
+            setFontLevel(state.fontLevel);
+        }
+    }
+
+    function decreaseFontLevel() {
+        var selectedElement = TQ.SelectSet.peek();
+        if (selectedElement && selectedElement.isText()) {
+            state.fontLevel = fontSize2Level(selectedElement.getFontSize());
+            if (state.fontLevel >=1) {
+                state.fontLevel--;
+                setFontLevel(state.fontLevel);
+            }
         }
     }
 
