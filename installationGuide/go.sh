@@ -5,27 +5,27 @@
 # 放到： wwwz/card2/www目录下
 #
 cd /data/wwwz/card2/www
-mv /home/guopengch/releaseAll1.0.0.zip .
+mv /home/andrewzhi/releaseAll1.0.0.zip .
 unzip -o releaseAll1.0.0.zip
 rm releaseAll1.0.0.zip
 
-mv /home/guopengch/wwwArts.zip .
+mv /home/andrewzhi/wwwArts.zip .
 unzip -o wwwArts.zip
 rm wwwArts.zip
 
-mv /home/guopengch/www.zip .
+mv /home/andrewzhi/www.zip .
 unzip -o www.zip
 rm www.zip
 
 #
 # 前台：搬移 index和lib
-# 
+#
 
 #
 # 后台：
 #
 cd /data/wwwz/card2/backoffice
-mv /home/guopengch/backOffice.zip .
+mv /home/andrewzhi/backOffice.zip .
 unzip -o backOffice.zip
 rm backOffice.zip
 
@@ -34,7 +34,7 @@ rm backOffice.zip
 #
 
 cd /data/wwwz/card2/wwwKs
-mv /home/guopengch/wwwKs.zip .
+mv /home/andrewzhi/wwwKs.zip .
 unzip -o wwwKs.zip
 rm wwwKs.zip
 
