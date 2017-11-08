@@ -138,8 +138,8 @@
         console.log("client path (static): " + clientPathStatic);
 
         //专指的规则放在前面
-        app.use('/css', express.static(path.join(__dirname, './../../www/css'), cacheOptions));
-        app.use('/wcy3', express.static(path.join(__dirname, './../../www/wcy3'), cacheOptions));
+        app.use('/css', express.static(path.join(__dirname, appConfig.wwwRoot + '/css'), cacheOptions));
+        app.use('/wcy3', express.static(path.join(__dirname, appConfig.wwwRoot + '/wcy3'), cacheOptions));
         // 泛指的规则放在后面，（适用于其余文件， 除了前面专指的规则之外的）
         app.use(express.static(clientPath, noCacheOptions));
         app.use('/static', express.static(clientPathStatic, cacheOptions));
@@ -158,7 +158,7 @@
             if (!isStatePath(req.baseUrl)) {
                 next(req, res);
             } else {
-                res.sendFile(path.join(__dirname, './../../www/index.html'));
+                res.sendFile(path.join(__dirname, appConfig.wwwRoot + '/index.html'));
             }
         }
 
@@ -296,9 +296,9 @@
 
     function startLocalSimulator(app) {
         // 在没有网络的情况下， 模仿 cloud图片服务器，
-        app.use('/eplan/image/upload/mcImages', express.static(path.join(__dirname, './../../www/mcImages'), cacheOptions));
-        app.use('/eplan/image/upload/v1456716657', express.static(path.join(__dirname, './../../www/mcImages'), cacheOptions));
-        app.use('/eplan/image/upload', express.static(path.join(__dirname, './../../www/mcImages'), cacheOptions));
+        app.use('/eplan/image/upload/mcImages', express.static(path.join(__dirname, appConfig.wwwRoot + '/mcImages'), cacheOptions));
+        app.use('/eplan/image/upload/v1456716657', express.static(path.join(__dirname, appConfig.wwwRoot + '/mcImages'), cacheOptions));
+        app.use('/eplan/image/upload', express.static(path.join(__dirname, appConfig.wwwRoot + '/mcImages'), cacheOptions));
     }
 
     function getApp() {
