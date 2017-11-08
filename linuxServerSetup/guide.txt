@@ -14,6 +14,34 @@
 
 3) 把sh_script目录下的脚步复制到 linux服务器的/data/shell/目录下
 
+(注意：这两个文件，以及下面这些属于system或per-user的shell启动文件中，都不能输入输出信息：
+.bashrc, .profile, /etc/csh.cshrc, .login, etc.
+ 否则，污染protocol，导致下面的错误：
+ * ssh的sftp连不上,不能使用，
+ * -bash: /dev/null: Permission denied）
+（例如: 在 statrt_udoido.sh中,使用 命令"node -v", 显示node的版本）
+
+(echo 似乎可以）
+
+因为SSH登录系统是非交互的，其中的任何输入输出都会污染protocol，导致sftp不能使用。
+可是在SSH登录时，系统又要执行.bashrc文件，它往往引用./etc/bashrc, 并进一步引用
+/etc/profile.d/下面的所有.sh命令 (见bash联机手册)
+
+其它的解决办法：在.bashrc文件中，测试一下是交互SHELL还是非交互的，如果是非交互的，则直接退出即可。
+一般在.bashrc文件的最前边加入下面这行就可以了：
+[ -z "$PS1" ] && return （经测试通过，在Centos 5上）
+或者：
+[ $- != *i* ] && return
+
+Q: 如果出现错误： “-bash: /dev/null: Permission denied”
+A：用这个命令消除：
+ #rm -f /dev/null; mknod -m 666 /dev/null c 1 3
+
+因为"/dev/null"属性应该是crw-rw-rw-, 可能是由于前述sh错误导致其属性或内容的被修改了，删除它， 重建一个，
+（需要用root账号）
+
+（https://unix.stackexchange.com/questions/146633/bash-dev-null-permission-denied）
+
 4) 编辑root用户的定时任务， 内容与文件crontab_setting.txt 一致
    $crontab -e
 

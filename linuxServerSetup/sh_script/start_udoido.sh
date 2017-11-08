@@ -8,7 +8,7 @@ pgrep mongod || not_found=1
 
 if [ ${not_found} = 1 ] ; then
     echo "not found mongod"
-    killall node		
+    killall node
     nohup mongod &
 else
     echo "find mongod"
@@ -20,7 +20,6 @@ ps -aefw | grep "/data/wwwz/card2/backoffice/bin/server.js" | grep -v " grep "||
 
 if [ ${not_found} = 1 ] ; then
     echo "not found node"
-		node -v
     nohup node  /data/wwwz/card2/backoffice/bin/server.js  &
 else
     echo "find node"
