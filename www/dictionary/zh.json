@@ -1,6 +1,10 @@
 {
     "new": "新建",
     "is loading...": "正在加载...",
+    "matBackground": "背景",
+    "matMusic": "音乐",
+    "matCharacter": "人物",
+    "matProp": "道具",
     "uploading...": "努力上传中...",
     "please install": "请下载安装",
     "chrome": "谷歌浏览器",

@@ -4,15 +4,25 @@
 var TQ = TQ || {};
 TQ.Locale = (function () {
     "use strict";
-    var dict = {};
-    var self = {
-        setLang: setLang,
-        setDictionary : setDictionary,
-        getStr: getStr
-    };
+    var defaultLang = 'en',
+        currentLang = null,
+        dict = {},
+        self = {
+            getStr: getStr,
+            initialize: initialize,
+            setLang: setLang
+        };
 
     function setLang(lang) {
-        var $http = angular.element(document.body).injector().get('$http');
+        if (currentLang && (currentLang === lang)) {
+            return;
+        }
+        var injector = angular.element(document.body).injector();
+        if (!injector) {
+            return;
+        }
+        currentLang = lang;
+        var $http = injector.get('$http');
         $http({
             method: 'GET',
             url: '/dictionary/' + lang +'.json'
@@ -23,13 +33,14 @@ TQ.Locale = (function () {
             }
         });
     }
-    function setDictionary(newDict) {
-        dict = newDict;
-    }
 
     function getStr(tag) {
         TQ.AssertExt.isNotNull(dict);
         return dict[tag] || tag;
+    }
+
+    function initialize() {
+        setLang(defaultLang); // 不能立即用， 因为angular的模块尚未inject
     }
 
     return self;

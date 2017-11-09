@@ -1,3 +1,7 @@
 {
+    "matBackground": "Background",
+    "matMusic": "Music",
+    "matCharacter": "Character",
+    "matProp": "Prop",
     "new": "new"
 }
