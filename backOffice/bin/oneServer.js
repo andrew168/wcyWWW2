@@ -147,7 +147,7 @@
 
     function setupBasicRoutes(app, appConfig) {
         if (Config.useCloundServerSimulator) {
-            startLocalSimulator(app);
+            startLocalSimulator(app, appConfig);
         }
 
         //* 把 SAP 中的 state都映射到起始页
@@ -294,7 +294,7 @@
         useCloundServerSimulator: true
     };
 
-    function startLocalSimulator(app) {
+    function startLocalSimulator(app, appConfig) {
         // 在没有网络的情况下， 模仿 cloud图片服务器，
         app.use('/eplan/image/upload/mcImages', express.static(path.join(__dirname, appConfig.wwwRoot + '/mcImages'), cacheOptions));
         app.use('/eplan/image/upload/v1456716657', express.static(path.join(__dirname, appConfig.wwwRoot + '/mcImages'), cacheOptions));
