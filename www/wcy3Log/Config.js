@@ -175,7 +175,7 @@ window.TQ = window.TQ || {};
     // 素材服务器的参数
     var matServerCloundary = {
         MAT_UPLOAD_API: "https://api.cloudinary.com/v1_1/" + Config.Cloudinary.name + "/upload",
-        MAT_HOST: 'http://res.cloudinary.com', // /eplan/image/upload';
+        MAT_HOST: 'https://res.cloudinary.com', // /eplan/image/upload';
         IMAGES_CORE_PATH: 'eplan/image/upload/',
         SOUNDS_PATH: 'eplan/video/upload/' //从 localhost的根目录开始, 不是 E盘的根目录
     };

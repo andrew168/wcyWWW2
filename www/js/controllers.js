@@ -149,12 +149,12 @@ function DashCtrl(
     };
 
     $scope.insertProp = function() {
-        EditorService.insertPeopleImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+        EditorService.insertPeopleImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
         300, 300);
     };
 
     $scope.insertBkImage = function () {
-        EditorService.insertBkImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+        EditorService.insertBkImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
             300, 300);
     };
 
