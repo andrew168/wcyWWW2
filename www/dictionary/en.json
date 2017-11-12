@@ -1,6 +1,6 @@
 {
-    "postpone": "s", // start
-    "duration": "d", // duration
+    "postpone": "s",
+    "duration": "d",
     "clickToEdit": "click to edit",
     "matBackground": "Background",
     "matMusic": "Music",
