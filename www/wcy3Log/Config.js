@@ -14,6 +14,8 @@ window.TQ = window.TQ || {};
     Config.MAX_FILE_SIZE = 1024000; // 1M;
     // 陈永添加的配置， begin ---
     var host=window.location.host,
+        thisDomain = host,
+        httpProtocol = window.location.protocol,// 'https:' or 'http:'
         rootDomain = (host.indexOf('udoido.com') >=0) ? 'udoido.com': 'udoido.cn',
         api_domain='api.' + rootDomain;
 
@@ -150,6 +152,7 @@ window.TQ = window.TQ || {};
     // Config.MAT_HOST = 'http://www.' + rootDomain; // for new material (mXXXX),
     // Config.MAT_HOST = 'http://bone.' + rootDomain;   // for old material(pXXXX), before transfer
     Config.MAT_HOST = 'http://show.' + rootDomain;   // for old material(pXXXX), before transfer
+    Config.MAT_CORE_HOST = httpProtocol + '//' + thisDomain;   // for old material(pXXXX), before transfer
     Config.MAT_UPLOAD_API;  // 上传mats所用的url，具体取值，见下面的 两种配置
 
     // 作品服务器
