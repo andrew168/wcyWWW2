@@ -1,6 +1,7 @@
 var debug = require('debug')('iCardSvr2:vHostServer');
 var http = require('http'),
     https = require('https'),
+    cors = require('cors'),
     vhost = require('vhost'),
     compression = require('compression'),
     express = require('express'),
@@ -17,6 +18,7 @@ function init() {
     var optionForSecuredServer = {
         //证书信息
     };
+    app.use(cors());
     app.use(compression());
     vHostServer = http.createServer(app);
     vSecuredServer = https.createServer(optionForSecuredServer, app);
