@@ -16,6 +16,7 @@
     "express": "*",
     "express-graceful-exit": "^0.4.0",
     "fs": "0.0.2",
+    "https": "^1.0.0",
     "jade": "~1.11.0",
     "jssha": "1.6.0",
     "jwt-simple": "^0.5.1",

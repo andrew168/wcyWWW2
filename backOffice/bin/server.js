@@ -1,24 +1,25 @@
 var debug = require('debug')('iCardSvr2:vHostServer');
-var http = require('http');
-var vhost = require('vhost');
-var compression = require('compression'),
+var http = require('http'),
+    https = require('https'),
+    vhost = require('vhost'),
+    compression = require('compression'),
     express = require('express'),
     gracefulExit = require('express-graceful-exit'),
     onlineUsers = require('../common/onlineUsers');
 
-var vHostServer;
+var vHostServer, vSecuredServer;
 var config = {port: 80};
 var app = express();
 var shuttingDown = false;
 init();
 
 function init() {
-    /**
-     * Create HTTP vHostServer.
-     */
-
+    var optionForSecuredServer = {
+        //证书信息
+    };
     app.use(compression());
     vHostServer = http.createServer(app);
+    vSecuredServer = https.createServer(optionForSecuredServer, app);
     app.use(gracefulExit.middleware(app)); //!!! gracefulExit 必须是app的第一个配置
     console.info("process.env.PORT = " + process.env.PORT);
     config.port = normalizePort(process.env.PORT || config.port);
@@ -55,6 +56,9 @@ function init() {
     vHostServer.listen(app.get('port'));
     vHostServer.on('error', onError);
     vHostServer.on('listening', onListening);
+    vSecuredServer.listen(443);
+    vSecuredServer.on('error', onError);
+    vSecuredServer.on('listening', onListeningSecuredServer);
     console.log("started, listen on: " + config.port);
 }
 
@@ -111,6 +115,14 @@ function onListening() {
     debug('Listening on ' + bind);
 }
 
+function onListeningSecuredServer() {
+    var addr = vSecuredServer.address();
+    var bind = typeof addr === 'string'
+        ? 'pipe ' + addr
+        : 'port ' + addr.port;
+    debug('Listening Secured Server on ' + bind);
+}
+
 function onShotdown() {
     if (shuttingDown) {
         return;
@@ -126,6 +138,13 @@ function onShotdown() {
 
     function onSaved() {
         console.log("shutting dwon server gracefully...!");
+        gracefulExit.gracefulExitHandler(app, vSecuredServer, {
+            // socketio: app.settings.socketio,
+            exitProcess: false,
+            suicideTimeout: 130 * 1000, // ms
+            callback: onShutdownSuccessfully
+        });
+
         gracefulExit.gracefulExitHandler(app, vHostServer, {
             // socketio: app.settings.socketio,
             exitProcess: false,
@@ -135,7 +154,11 @@ function onShotdown() {
     }
 }
 
+var shutdownCounter = 0;
 function onShutdownSuccessfully(statusCode) {
+    shutdownCounter ++;
     console.info("Shutdown successfully!" + statusCode);
-    process.exit(statusCode);
+    if (shutdownCounter >=2) { // 确认http和https都关闭了
+        process.exit(statusCode);
+    }
 }
