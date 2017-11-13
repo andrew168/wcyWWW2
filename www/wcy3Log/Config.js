@@ -15,6 +15,7 @@ window.TQ = window.TQ || {};
     // 陈永添加的配置， begin ---
     var host=window.location.host,
         thisDomain = host,
+        MAIN_SERVER_DOMAIN = 'udoido.cn', //用一个总后台，例如：用ali云服务器
         httpProtocol = window.location.protocol,// 'https:' or 'http:'
         rootDomain = (host.indexOf('udoido.com') >=0) ? 'udoido.com': 'udoido.cn',
         api_domain='api.' + rootDomain;
@@ -146,7 +147,7 @@ window.TQ = window.TQ || {};
 
     // 管理和控制服务器的参数
     //Config.MAN_HOST = 'http://man.' + rootDomain;   // 素材管理， 分配素材id
-    Config.MAN_HOST = 'http://show.' + rootDomain;   // 素材管理， 分配素材id
+    Config.MAN_HOST = 'http://show.' + MAIN_SERVER_DOMAIN;   // 素材管理， 分配素材id
 
     // 素材服务器的参数
     // Config.MAT_HOST = 'http://www.' + rootDomain; // for new material (mXXXX),
@@ -163,7 +164,7 @@ window.TQ = window.TQ || {};
 
     // 签名认证服务器
     // Config.AUTH_HOST = 'http://auth.' + rootDomain;
-    Config.AUTH_HOST = 'http://show.' + rootDomain;
+    Config.AUTH_HOST = 'http://show.' + MAIN_SERVER_DOMAIN;
 
     Config.cloundaryEnabled = true; // 选择使用哪一种配置： Cloundary云 或者阿里云的bone，
     Config.Cloudinary = {

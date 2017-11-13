@@ -12,10 +12,10 @@
 
     var Config = (function () {
         function Config() {
-            this.baseUrl = '/';
-            this.loginUrl = '/auth/login';
-            this.signupUrl = '/auth/signup';
-            this.unlinkUrl = '/auth/unlink/';
+            this.baseUrl = TQ.Config.AUTH_HOST + '/';
+            this.loginUrl = TQ.Config.AUTH_HOST + '/auth/login';
+            this.signupUrl = TQ.Config.AUTH_HOST + '/auth/signup';
+            this.unlinkUrl = TQ.Config.AUTH_HOST + '/auth/unlink/';
             this.tokenName = 'token';
             this.tokenPrefix = 'satellizer';
             this.tokenHeader = 'Authorization';
@@ -26,7 +26,7 @@
             this.providers = {
                 facebook: {
                     name: 'facebook',
-                    url: '/auth/facebook',
+                    url: TQ.Config.AUTH_HOST + '/auth/facebook',
                     authorizationEndpoint: 'https://www.facebook.com/v2.5/dialog/oauth',
                     redirectUri: window.location.origin + '/',
                     requiredUrlParams: ['display', 'scope'],
@@ -38,7 +38,7 @@
                 },
                 wechat: {
                     name: 'wechat',
-                    url: '/auth/wechat',
+                    url: TQ.Config.AUTH_HOST + '/auth/wechat',
                     // endpoint就是授权url的基本部分， 加参数之前的，
                     authorizationEndpoint: 'https://open.weixin.qq.com/connect/oauth2/authorize',
                     redirectUri: window.location.origin + '/',
@@ -58,7 +58,7 @@
                 },
                 google: {
                     name: 'google',
-                    url: '/auth/google',
+                    url: TQ.Config.AUTH_HOST + '/auth/google',
                     authorizationEndpoint: 'https://accounts.google.com/o/oauth2/auth',
                     redirectUri: window.location.origin,
                     requiredUrlParams: ['scope'],
@@ -73,7 +73,7 @@
                 },
                 github: {
                     name: 'github',
-                    url: '/auth/github',
+                    url: TQ.Config.AUTH_HOST + '/auth/github',
                     authorizationEndpoint: 'https://github.com/login/oauth/authorize',
                     redirectUri: window.location.origin,
                     optionalUrlParams: ['scope'],
@@ -84,7 +84,7 @@
                 },
                 instagram: {
                     name: 'instagram',
-                    url: '/auth/instagram',
+                    url: TQ.Config.AUTH_HOST + '/auth/instagram',
                     authorizationEndpoint: 'https://api.instagram.com/oauth/authorize',
                     redirectUri: window.location.origin,
                     requiredUrlParams: ['scope'],
@@ -94,7 +94,7 @@
                 },
                 linkedin: {
                     name: 'linkedin',
-                    url: '/auth/linkedin',
+                    url: TQ.Config.AUTH_HOST + '/auth/linkedin',
                     authorizationEndpoint: 'https://www.linkedin.com/uas/oauth2/authorization',
                     redirectUri: window.location.origin,
                     requiredUrlParams: ['state'],
@@ -106,7 +106,7 @@
                 },
                 twitter: {
                     name: 'twitter',
-                    url: '/auth/twitter',
+                    url: TQ.Config.AUTH_HOST + '/auth/twitter',
                     authorizationEndpoint: 'https://api.twitter.com/oauth/authenticate',
                     redirectUri: window.location.origin,
                     oauthType: '1.0',
@@ -114,7 +114,7 @@
                 },
                 twitch: {
                     name: 'twitch',
-                    url: '/auth/twitch',
+                    url: TQ.Config.AUTH_HOST + '/auth/twitch',
                     authorizationEndpoint: 'https://api.twitch.tv/kraken/oauth2/authorize',
                     redirectUri: window.location.origin,
                     requiredUrlParams: ['scope'],
@@ -126,7 +126,7 @@
                 },
                 live: {
                     name: 'live',
-                    url: '/auth/live',
+                    url: TQ.Config.AUTH_HOST + '/auth/live',
                     authorizationEndpoint: 'https://login.live.com/oauth20_authorize.srf',
                     redirectUri: window.location.origin,
                     requiredUrlParams: ['display', 'scope'],
@@ -138,7 +138,7 @@
                 },
                 yahoo: {
                     name: 'yahoo',
-                    url: '/auth/yahoo',
+                    url: TQ.Config.AUTH_HOST + '/auth/yahoo',
                     authorizationEndpoint: 'https://api.login.yahoo.com/oauth2/request_auth',
                     redirectUri: window.location.origin,
                     scope: [],
@@ -148,7 +148,7 @@
                 },
                 bitbucket: {
                     name: 'bitbucket',
-                    url: '/auth/bitbucket',
+                    url: TQ.Config.AUTH_HOST + '/auth/bitbucket',
                     authorizationEndpoint: 'https://bitbucket.org/site/oauth2/authorize',
                     redirectUri: window.location.origin + '/',
                     requiredUrlParams: ['scope'],
@@ -159,7 +159,7 @@
                 },
                 spotify: {
                     name: 'spotify',
-                    url: '/auth/spotify',
+                    url: TQ.Config.AUTH_HOST + '/auth/spotify',
                     authorizationEndpoint: 'https://accounts.spotify.com/authorize',
                     redirectUri: window.location.origin,
                     optionalUrlParams: ['state'],
