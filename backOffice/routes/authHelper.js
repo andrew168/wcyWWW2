@@ -31,14 +31,14 @@ function ensureAuthenticated(req, res, next) {
     if (!req.header('Authorization')) {
         return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
     }
-    var userId = getUserId(req, res);
-    if (userId === INAVLID_USER) {
+    var payload = getPayload(req, res);
+    if (payload === INAVLID_USER) {
         return;
     }
     next();
 }
 
-function getUserId(req, res) {
+function getPayload(req, res) {
     assert.ok(hasAuthInfo(req), "必须在Auth通过之后调用此");
     if (!hasAuthInfo(req)) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
@@ -59,9 +59,10 @@ function getUserId(req, res) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Token has expired');
         return INAVLID_USER;
     }
-    req.user = payload.sub;
+    req.user = payload.sub; // ToBeDelete
     req.userId = payload.sub; //ToDo: 准备更名
-    return req.user;
+    req.tokenId = payload.tokenId;
+    return payload;
 }
 
 function responseError(res, statusCode, msg) {
@@ -75,8 +76,21 @@ function hasAuthInfo(req) {
     return req.header('Authorization');
 }
 
+var tokeIdBase = -1,
+    tokeIdCounter = 0,
+    tokeIdSeries = 'A';
+
+function generateTokenId() {
+    if (tokeIdBase < 0) {
+        tokeIdBase = Date.now();
+    }
+    tokeIdCounter++;
+    return tokeIdSeries + tokeIdBase + tokeIdSeries + tokeIdCounter;
+}
+
 exports.config = config;
+exports.getPayload = getPayload;
 exports.ensureAuthenticated = ensureAuthenticated;
-exports.getUserId = getUserId;
+exports.generateTokenId = generateTokenId;
 exports.hasAuthInfo = hasAuthInfo;
 exports.responseError = responseError;

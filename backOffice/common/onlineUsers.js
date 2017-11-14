@@ -11,19 +11,17 @@ var fs = require('fs'),
     readyToStop = false,
     users = null;
 
-function add(aUser) {
+function add(aUser, tokenId) {
     if (!users) {
         console.error(" not ready");
         return;
     }
 
     // console.log("before add:" + JSON.stringify(users));
-    console.log("before add2:" + JSON.stringify(users[aUser.tokenID]));
+    console.log("before add2:" + JSON.stringify(users[tokenId]));
     console.log("new user:" + JSON.stringify(aUser));
-    users[aUser.tokenID] = aUser; // 兼容之前的， will be 废弃
-    users[aUser.ID] = aUser; //新添加的用户， 不再使用token做索引，而是用ID
-    // console.log("after :" + JSON.stringify(users));
-    console.log("after add2:" + JSON.stringify(users[aUser.tokenID]));
+    users[tokenId] = aUser;  // 3rd: 用tokenId做索引
+    console.log("after add2:" + JSON.stringify(users[tokenId]));
 }
 
 function get(id) {
@@ -38,22 +36,22 @@ function get(id) {
     return users[id];
 }
 
-function obsolete(tokenID) {
-    delete users[tokenID];
+function obsolete(tokenId) {
+    delete users[tokenId];
 }
 
-function getValidUser(tokenID, token, userID) {
+function getValidUser(tokenId, userId) {
     if (!users) {
         console.error(" not ready");
         return null;
     }
 
-    //ToDo:  第三代： tokenID, 支持用户同时在多个机器，多个浏览器，多个window user下使用。
-    var candidate = users[userID]; // 第二代： userID
+    //第三代： tokenId, 支持用户同时在多个机器，多个浏览器，多个window user下使用。
+    var candidate = users[tokenId]; // 第3代： userId
     if (!candidate) { // try  第一代tokenID style
-        candidate = users[tokenID];
+        candidate = users[userId];
     }
-    if (!candidate || (candidate.ID !== userID)) { // || (candidate.token !==token)) {
+    if (!candidate || (candidate.ID !== userId)) {
         candidate = null;
     }
     return candidate;
@@ -72,8 +70,8 @@ function getValidUserById(userID) {
     return candidate;
 }
 
-function isValidToken(oldToken, oldTokenID, user) {
-    return !!getValidUser(oldToken, oldTokenID, user.ID);
+function isValidToken(oldToken, user) {
+    return !!getValidUser(oldToken, user.ID);
 }
 
 function save(callback) {

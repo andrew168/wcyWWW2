@@ -18,10 +18,8 @@ var user = {
     timesCalled: 0
 };
 
-function onLoginSucceed(req, res, data) {
-    var tokenID = getCookieNumber(req, 'tokenID', 0),
-        token = getCookieString(req, 'token', 0),
-        user = {
+function onLoginSucceed(req, res, data, tokenId) {
+    var user = {
             loggedIn: true,
             ID: data.ID,
             name: data.name,
@@ -34,15 +32,7 @@ function onLoginSucceed(req, res, data) {
         };
 
     //case： 在同一台机器上， 分别用不同的账号，登录， 退出
-    if (onlineUsers.isValidToken(token, tokenID, user)) {
-        user.tokenID = tokenID;
-        user.token = token;
-    } else {
-        onlineUsers.obsolete(tokenID);
-        user.tokenID = generateTokenID(user);
-        user.token = generateToken(user);
-        onlineUsers.add(user);
-    }
+    onlineUsers.add(user, tokenId);
     setUserCookie(user, res);
 }
 
@@ -56,9 +46,7 @@ function onLoginFailed(req, res, data) {
         canApprove: false,
         canRefine: false,
         canBan: false,
-        canAdmin: false,
-        tokenID: 0,
-        token: null
+        canAdmin: false
     };
     setUserCookie(user, res);
 }
@@ -86,17 +74,7 @@ function checkUser(req, res, callback) {
 function setUserCookie(user, res, callback) {
     try {
         user.timesCalled++;
-        if (!user.tokenID || !user.token) {
-            res.clearCookie('token');
-            res.clearCookie('tokenID');
-            res.clearCookie('userID');
-        } else {
-            res.cookie('userID', user.ID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-            res.cookie('tokenID', user.tokenID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-            res.cookie('token', user.token, {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-        }
         res.cookie('timesCalled', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-        // res.cookie('isPlayOnly', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, path: '/'});
         res.clearCookie('oldCookie1');
     } catch (err) {
         console.error("checkUser is so slow that response has completed!");
@@ -162,26 +140,26 @@ function isNewUser(userID) {
 }
 
 function getUserInfo(req, res) {
-    var userID = getUserIDfromCookie(req, res),
-        tokenID = getCookieNumber(req, 'tokenID', 0),
-        token = getCookieString(req, 'token', 0),
-        candidate = null;
-
-    if (!isNewUser(userID) && tokenID && token) {
-        candidate = onlineUsers.getValidUser(tokenID, token, userID);
+    if (!authHelper.hasAuthInfo(req)) {
+        return null;
     }
-
-    return candidate;
+    return getUserInfo2(req, res);
 }
+
 function getUserInfo2(req, res) {
     assert.ok(authHelper.hasAuthInfo(req), "必须在Auth通过之后调用此");
-    var userID = authHelper.getUserId(req, res),
-        tokenID = getCookieNumber(req, 'tokenID', 0),
-        token = getCookieString(req, 'token', 0),
+    if (req.userId === undefined) {
+        var payload = authHelper.getPayload(req, res);
+        req.userId = payload.user;
+        req.tokenId = payload.tokenId;
+    }
+
+    var userId = req.userId,
+        tokenId = req.tokenId,
         candidate = null;
 
-    if (!isNewUser(userID)) {
-        candidate = onlineUsers.getValidUser(tokenID, token, userID);
+    if (!isNewUser(userId)) {
+        candidate = onlineUsers.getValidUser(tokenId, userId);
     }
 
     return candidate;
@@ -198,11 +176,6 @@ function getUserInfoById(userID) {
 
 function getUserIDfromCookie(req, res) {
     return getCookieNumber(req, 'userID', defaultUserID);
-}
-
-function generateTokenID(user) {
-    var t = new Date();
-    return user.ID + t.getTime();
 }
 
 function generateToken(user) {
