@@ -944,7 +944,7 @@
     var Interceptor = (function () {
         function Interceptor(SatellizerConfig, SatellizerShared, SatellizerStorage) {
             var _this = this,
-                whiteList = ['/wcy', '/auth/api/me',
+                whiteList = ['/material', '/wcy', '/auth/api/me',
                     SatellizerConfig.loginUrl, SatellizerConfig.signupUrl, SatellizerConfig.unlinkUrl];
             this.SatellizerConfig = SatellizerConfig;
             this.SatellizerShared = SatellizerShared;
