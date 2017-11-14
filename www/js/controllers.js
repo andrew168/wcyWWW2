@@ -2,13 +2,13 @@ angular.module('starter').controller('DashCtrl', DashCtrl);
 DashCtrl.$inject = ['$scope', '$auth', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
-        'AppService', 'MatLibService', 'UserService'];
+        'AppService', 'MatLibService', 'UserService', 'DataService'];
 
 function DashCtrl(
             $scope, $auth, $timeout, WCY, $cordovaImagePicker,
             $cordovaSocialSharing,
             FileService, NetService, DeviceService, WxService, EditorService,
-            AppService, MatLibService, UserService) {
+            AppService, MatLibService, UserService, DataService) {
 
     var vm = this;
     $scope.font = {
@@ -35,6 +35,7 @@ function DashCtrl(
 
     $scope.testShowMsg = testShowMsg;
     $scope.testPrompt = testPrompt;
+    $scope.testDataService = testDataService;
 
 
     // implementation, abc order
@@ -366,4 +367,9 @@ function DashCtrl(
     $scope.setLang = function (lang) {
         return TQ.Locale.setLang(lang);
     };
+
+    function testDataService() {
+        DataService.initialize();
+        DataService.getProps(10);
+    }
 }
