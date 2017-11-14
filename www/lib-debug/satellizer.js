@@ -944,14 +944,26 @@
     var Interceptor = (function () {
         function Interceptor(SatellizerConfig, SatellizerShared, SatellizerStorage) {
             var _this = this,
-                whiteList = ['/wcy', '/auth/api/me', SatellizerConfig.loginUrl, SatellizerConfig.signupUrl, SatellizerConfig.unlinkUrl];
+                whiteList = ['/wcy', '/wcyList/', '/wcyList', '/auth/api/me',
+                    SatellizerConfig.loginUrl, SatellizerConfig.signupUrl, SatellizerConfig.unlinkUrl];
             this.SatellizerConfig = SatellizerConfig;
             this.SatellizerShared = SatellizerShared;
             this.SatellizerStorage = SatellizerStorage;
+
+            function isWcyIO(pathname) {
+                return pathname.indexOf('/wcy/') >= 0;
+            }
+
+            function isMatIO(pathname) {
+                return pathname.indexOf('/material/list/') >= 0;
+            }
+
             this.request = function (config) {
                 var pathname = TQUtility.parsePathname(config.url);
                 if (whiteList.indexOf(pathname) <0 || config['skipAuthorization']) {
-                    return config;
+                    if (!isWcyIO(pathname) && !isMatIO(pathname)) {
+                        return config;
+                    }
                 }
                 if (_this.SatellizerShared.isAuthenticated() && _this.SatellizerConfig.httpInterceptor()) {
                     var tokenName = _this.SatellizerConfig.tokenPrefix ?
