@@ -31,7 +31,7 @@ router.get('/', authHelper.ensureAuthenticated, function(req, res, next) {
     }
 });
 
-router.get('/apply/:opusID', function (req, res, next) {
+router.get('/apply/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -42,7 +42,7 @@ router.get('/apply/:opusID', function (req, res, next) {
     res.json(msg);
 });
 
-router.get('/approve/:opusID', function (req, res, next) {
+router.get('/approve/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -60,7 +60,7 @@ router.get('/approve/:opusID', function (req, res, next) {
     res.json(msg);
 });
 
-router.get('/ban/:opusID', function (req, res, next) {
+router.get('/ban/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);

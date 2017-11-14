@@ -28,7 +28,7 @@ router.get('/:shareCode', function (req, res) {
 });
 
 router.post('/', authHelper.ensureAuthenticated, function (req, res) {
-    var userId = authHelper.getUserId(req, res);
+    var userId = req.userId; // 这是ensureAuthenticated写入的
     if (!userId) { // 没有authentication信息， 在getUserId中已经response了
         return;
     }
@@ -98,7 +98,7 @@ function resWcySaved(req, res, user, wcyId, ssPath, msg) {
 
 /// private function:
 function response(req, res, data, wcyId, authorData) {
-    var user = authHelper.hasAuthInfo(req) ?  status.getUserInfo2(req, res) : status.getUserInfo(req, res),
+    var user = authHelper.hasAuthInfo(req) ?  status.getUserInfo2(req, res) : null,
         userID = (!user) ? 0 : user.ID,
         url = req.headers.origin,
     // var url = req.headers.referer;

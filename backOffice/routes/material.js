@@ -24,7 +24,7 @@ var TYPE_BKG_IMAGE = 10, // 'bkgimage',
     TYPE_PEOPLE_IMAGE = 30, // 'peopleimage',
     TYPE_SOUND = 40; //,'audio';
 
-router.post('/', function(req, res, next) {
+router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
