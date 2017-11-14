@@ -1,9 +1,11 @@
 /**
  * Created by Andrewz on 1/24/2016.
  */
-var userController = require('../db/user/userController');
-var onlineUsers = require('./onlineUsers'),
+var assert = require('assert'),
+    userController = require('../db/user/userController'),
+    onlineUsers = require('./onlineUsers'),
     authHelper = require('../routes/authHelper');
+
 var ANONYMOUS = "anonymous",
     defaultUserID = 10,
     COOKIE_LIFE = (90*24*60*60*1000); // 90 days
@@ -172,6 +174,7 @@ function getUserInfo(req, res) {
     return candidate;
 }
 function getUserInfo2(req, res) {
+    assert.ok(authHelper.hasAuthInfo(req), "必须在Auth通过之后调用此");
     var userID = authHelper.getUserId(req, res),
         tokenID = getCookieNumber(req, 'tokenID', 0),
         token = getCookieString(req, 'token', 0),

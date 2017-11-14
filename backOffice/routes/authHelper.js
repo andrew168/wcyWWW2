@@ -4,6 +4,7 @@
 var INAVLID_USER = 0;
 var jwt = require('jwt-simple'),
     moment = require('moment'),
+    assert = require('assert'),
     mongoose = require('mongoose'),
     Const = require('../base/const'),
     status = require('../common/status'),
@@ -38,6 +39,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function getUserId(req, res) {
+    assert.ok(authHelper.hasAuthInfo(req), "必须在Auth通过之后调用此");
     if (!hasAuthInfo(req)) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
         return INAVLID_USER;
