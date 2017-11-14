@@ -150,7 +150,7 @@ function getUserInfo2(req, res) {
     assert.ok(authHelper.hasAuthInfo(req), "必须在Auth通过之后调用此");
     if (req.userId === undefined) {
         var payload = authHelper.getPayload(req, res);
-        req.userId = payload.user;
+        req.userId = payload.sub;
         req.tokenId = payload.tokenId;
     }
 
@@ -192,4 +192,3 @@ exports.logUser = logUser;
 exports.setUserCookie = setUserCookie;
 exports.onLoginSucceed = onLoginSucceed;
 exports.onLoginFailed = onLoginFailed;
-
