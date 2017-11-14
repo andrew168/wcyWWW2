@@ -944,24 +944,32 @@
     var Interceptor = (function () {
         function Interceptor(SatellizerConfig, SatellizerShared, SatellizerStorage) {
             var _this = this,
-                whiteList = ['/wcy', '/wcyList/', '/wcyList', '/auth/api/me',
+                whiteList = ['/wcy', '/auth/api/me',
                     SatellizerConfig.loginUrl, SatellizerConfig.signupUrl, SatellizerConfig.unlinkUrl];
             this.SatellizerConfig = SatellizerConfig;
             this.SatellizerShared = SatellizerShared;
             this.SatellizerStorage = SatellizerStorage;
 
-            function isWcyIO(pathname) {
-                return pathname.indexOf('/wcy/') >= 0;
-            }
+            function isKeyApi(pathname) {
+                var result = false,
+                    keyApis = [
+                    '/material/list/',
+                    '/user/list', '/user/privilege/',
+                    '/wcy/',
+                    '/wcyList/', ' /wcyList' // '/wcyList/ban/', '/wcyList/apply/', '/wcyList/approve/'
+                    ];
 
-            function isMatIO(pathname) {
-                return pathname.indexOf('/material/list/') >= 0;
+                keyApis.some(function (item) {
+                    return (result = pathname.indexOf(item) >= 0);
+                });
+
+                return result;
             }
 
             this.request = function (config) {
                 var pathname = TQUtility.parsePathname(config.url);
                 if (whiteList.indexOf(pathname) <0 || config['skipAuthorization']) {
-                    if (!isWcyIO(pathname) && !isMatIO(pathname)) {
+                    if (!isKeyApi(pathname)) {
                         return config;
                     }
                 }
