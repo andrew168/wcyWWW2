@@ -48,8 +48,12 @@ function getValidUser(tokenID, token, userID) {
         return null;
     }
 
-    var candidate = users[tokenID];
-    if (!candidate || (candidate.ID !== userID) || (candidate.token !==token)) {
+    //ToDo:  第三代： tokenID, 支持用户同时在多个机器，多个浏览器，多个window user下使用。
+    var candidate = users[userID]; // 第二代： userID
+    if (!candidate) { // try  第一代tokenID style
+        candidate = users[tokenID];
+    }
+    if (!candidate || (candidate.ID !== userID)) { // || (candidate.token !==token)) {
         candidate = null;
     }
     return candidate;

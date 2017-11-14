@@ -2,7 +2,8 @@
  * Created by Andrewz on 1/24/2016.
  */
 var userController = require('../db/user/userController');
-var onlineUsers = require('./onlineUsers');
+var onlineUsers = require('./onlineUsers'),
+    authHelper = require('../routes/authHelper');
 var ANONYMOUS = "anonymous",
     defaultUserID = 10,
     COOKIE_LIFE = (90*24*60*60*1000); // 90 days
@@ -170,6 +171,18 @@ function getUserInfo(req, res) {
 
     return candidate;
 }
+function getUserInfo2(req, res) {
+    var userID = authHelper.getUserId(req, res),
+        tokenID = getCookieNumber(req, 'tokenID', 0),
+        token = getCookieString(req, 'token', 0),
+        candidate = null;
+
+    if (!isNewUser(userID)) {
+        candidate = onlineUsers.getValidUser(tokenID, token, userID);
+    }
+
+    return candidate;
+}
 
 function getUserInfoById(userID) {
     var candidate = null;
@@ -195,8 +208,9 @@ function generateToken(user) {
 }
 
 exports.getUserInfo = getUserInfo;
+exports.getUserInfo2 = getUserInfo2;
 exports.getUserInfoById = getUserInfoById;
-exports.getUserIDfromCookie = getUserIDfromCookie;
+exports.getUserIDfromCookie = getUserIDfromCookie; //TBD
 exports.checkUser = checkUser;
 exports.logUser = logUser;
 exports.setUserCookie = setUserCookie;

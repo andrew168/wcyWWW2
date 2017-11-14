@@ -38,13 +38,13 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function getUserId(req, res) {
-    if (!req.header('Authorization')) {
+    if (!hasAuthInfo(req)) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
         return INAVLID_USER;
     }
     var token = req.header('Authorization').split(' ')[1];
 
-    var payload = null;
+    var payload = null; // payload是有效内容， token是被加密后的结果，
     try {
         payload = jwt.decode(token, config.TOKEN_SECRET);
     }
@@ -58,6 +58,7 @@ function getUserId(req, res) {
         return INAVLID_USER;
     }
     req.user = payload.sub;
+    req.userId = payload.sub; //ToDo: 准备更名
     return req.user;
 }
 
@@ -68,7 +69,12 @@ function responseError(res, statusCode, msg) {
     return res.status(statusCode).send(msg);
 }
 
+function hasAuthInfo(req) {
+    return req.header('Authorization');
+}
+
 exports.config = config;
 exports.ensureAuthenticated = ensureAuthenticated;
 exports.getUserId = getUserId;
+exports.hasAuthInfo = hasAuthInfo;
 exports.responseError = responseError;

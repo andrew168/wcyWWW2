@@ -15,6 +15,7 @@ var express = require('express'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
     status = require('../common/status'),
     fs = require('fs'),
+    authHelper = require('./authHelper'),
     pictureMatController = require('../db/material/pictureMatController'),
     audioMatController = require('../db/material/audioMatController');
 
@@ -66,9 +67,9 @@ router.param('matType', function (req, res, next, id) {
     next();
 });
 
-router.get('/list/:matType', function(req, res, next) {
+router.get('/list/:matType', authHelper.ensureAuthenticated, function(req, res, next) {
     var matType = req.params.matType,
-        user = status.getUserInfo(req, res);
+        user = status.getUserInfo2(req, res);
 
     if (!user) {
         return netCommon.notLogin(req, res);
