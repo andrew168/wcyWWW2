@@ -57,23 +57,6 @@ function getValidUser(tokenId, userId) {
     return candidate;
 }
 
-function getValidUserById(userID) {
-    if (!users) {
-        console.error(" not ready");
-        return null;
-    }
-
-    var candidate = users[userID];
-    if (!candidate || (candidate.ID !== userID)) {
-        candidate = null;
-    }
-    return candidate;
-}
-
-function isValidToken(oldToken, user) {
-    return !!getValidUser(oldToken, user.ID);
-}
-
 function save(callback) {
     function onSaved() {
         readyToStop = true;
@@ -121,6 +104,4 @@ exports.hasStopped = hasStopped;
 exports.save = save;
 exports.restore = restore;
 exports.getValidUser = getValidUser;
-exports.getValidUserById = getValidUserById;
-exports.isValidToken = isValidToken;
 exports.obsolete = obsolete;

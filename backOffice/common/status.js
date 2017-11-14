@@ -153,22 +153,14 @@ function getUserInfo2(req, res) {
         req.userId = payload.sub;
         req.tokenId = payload.tokenId;
     }
+    return getUserInfoByTokenId(req.tokenId, req.userId);
+}
 
-    var userId = req.userId,
-        tokenId = req.tokenId,
-        candidate = null;
+function getUserInfoByTokenId(tokenId, userId) {
+    var candidate = null;
 
     if (!isNewUser(userId)) {
         candidate = onlineUsers.getValidUser(tokenId, userId);
-    }
-
-    return candidate;
-}
-
-function getUserInfoById(userID) {
-    var candidate = null;
-    if (!isNewUser(userID)) {
-        candidate = onlineUsers.getValidUserById(userID);
     }
 
     return candidate;
@@ -178,14 +170,9 @@ function getUserIDfromCookie(req, res) {
     return getCookieNumber(req, 'userID', defaultUserID);
 }
 
-function generateToken(user) {
-    var t = new Date();
-    return user.ID + t.getTime() + "long";
-}
-
 exports.getUserInfo = getUserInfo;
 exports.getUserInfo2 = getUserInfo2;
-exports.getUserInfoById = getUserInfoById;
+exports.getUserInfoByTokenId = getUserInfoByTokenId;
 exports.getUserIDfromCookie = getUserIDfromCookie; //TBD
 exports.checkUser = checkUser;
 exports.logUser = logUser;

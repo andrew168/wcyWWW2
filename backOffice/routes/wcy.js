@@ -28,11 +28,11 @@ router.get('/:shareCode', function (req, res) {
 });
 
 router.post('/', authHelper.ensureAuthenticated, function (req, res) {
-    var userId = req.userId; // 这是ensureAuthenticated写入的
+    var userId = req.userId;// 这是ensureAuthenticated写入的
     if (!userId) { // 没有authentication信息， 在getUserId中已经response了
         return;
     }
-    var user = (!userId) ? null : status.getUserInfoById(userId);
+    var user = (!userId) ? null : status.getUserInfoByTokenId(req.tokenId, userId);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
