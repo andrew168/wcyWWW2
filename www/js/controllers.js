@@ -87,11 +87,11 @@ function DashCtrl(
         EditorService.addLevel();
     };
 
-    var testUserId = 90005; // // "TestAuth100007",
+    var testUserId = Date.now(); // // "TestAuth100007",
 
     $scope.testSignUp = function () {
         testUserId++;
-        email = testUserId + "@udoido.com";
+        email = 'T' + testUserId + "@udoido.com";
         UserService.signUp(email, 'pswwwwww' + testUserId, 'display' + testUserId).
             then(function (data) {
                 console.log("signUp successfully!" + data);
