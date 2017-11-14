@@ -39,7 +39,7 @@ function ensureAuthenticated(req, res, next) {
 }
 
 function getUserId(req, res) {
-    assert.ok(authHelper.hasAuthInfo(req), "必须在Auth通过之后调用此");
+    assert.ok(hasAuthInfo(req), "必须在Auth通过之后调用此");
     if (!hasAuthInfo(req)) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
         return INAVLID_USER;
