@@ -91,7 +91,7 @@ function DashCtrl(
 
     $scope.testSignUp = function () {
         testUserId++;
-        email = 'T' + testUserId + "@udoido.com";
+        email = 'T' + testUserId + "@samplexyz.com";
         UserService.signUp(email, 'pswwwwww' + testUserId, 'display' + testUserId).
             then(function (data) {
                 console.log("signUp successfully!" + data);

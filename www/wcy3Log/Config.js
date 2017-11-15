@@ -17,11 +17,10 @@ window.TQ = window.TQ || {};
         thisDomain = host,
         MAIN_SERVER_DOMAIN = 'udoido.cn', //用一个总后台，例如：用ali云服务器
         httpProtocol = window.location.protocol,// 'https:' or 'http:'
-        rootDomain = (host.indexOf('udoido.com') >=0) ? 'udoido.com': 'udoido.cn',
-        api_domain='api.' + rootDomain;
+        api_domain='api.' + MAIN_SERVER_DOMAIN;
 
-    if(host.indexOf('test.' + rootDomain) >=0){
-        api_domain='testapi.' + rootDomain;
+    if(host.indexOf('test.' + MAIN_SERVER_DOMAIN) >=0){
+        api_domain='testapi.' + MAIN_SERVER_DOMAIN;
     }
 
     //ToDo:AZ mobile
@@ -139,31 +138,31 @@ window.TQ = window.TQ || {};
     Config.TECH_TEST1_LOCAL_CACHE_ON = false;
     Config.LocalCacheEnabled = false;
 
-    //允许2个素材server， （即：udoido.com和 本网站）
+    //允许2个素材server， （即：MAIN_SERVER_DOMAIN 和 本网站）
     Config.TwoMatServerEnabled = false;
 
     // 入口服务器配置
-    Config.ENT_HOST = 'http://show.' + rootDomain;
+    Config.ENT_HOST = 'http://show.' + MAIN_SERVER_DOMAIN;
 
     // 管理和控制服务器的参数
-    //Config.MAN_HOST = 'http://man.' + rootDomain;   // 素材管理， 分配素材id
+    //Config.MAN_HOST = 'http://man.' + MAIN_SERVER_DOMAIN;   // 素材管理， 分配素材id
     Config.MAN_HOST = 'http://show.' + MAIN_SERVER_DOMAIN;   // 素材管理， 分配素材id
 
     // 素材服务器的参数
-    // Config.MAT_HOST = 'http://www.' + rootDomain; // for new material (mXXXX),
-    // Config.MAT_HOST = 'http://bone.' + rootDomain;   // for old material(pXXXX), before transfer
-    Config.MAT_HOST = 'http://show.' + rootDomain;   // for old material(pXXXX), before transfer
+    // Config.MAT_HOST = 'http://www.' + MAIN_SERVER_DOMAIN; // for new material (mXXXX),
+    // Config.MAT_HOST = 'http://bone.' + MAIN_SERVER_DOMAIN;   // for old material(pXXXX), before transfer
+    Config.MAT_HOST = 'http://show.' + MAIN_SERVER_DOMAIN;   // for old material(pXXXX), before transfer
     Config.MAT_CORE_HOST = httpProtocol + '//' + thisDomain;   // for old material(pXXXX), before transfer
     Config.MAT_UPLOAD_API;  // 上传mats所用的url，具体取值，见下面的 两种配置
 
     // 作品服务器
-    // Config.OPUS_HOST = 'http://opus.' + rootDomain;
-    Config.OPUS_HOST = 'http://show.' + rootDomain;
-    Config.TEST_HOST = 'http://test.' + rootDomain;
-    Config.BONE_HOST = 'http://bone.' + rootDomain;
+    // Config.OPUS_HOST = 'http://opus.' + MAIN_SERVER_DOMAIN;
+    Config.OPUS_HOST = 'http://show.' + MAIN_SERVER_DOMAIN;
+    Config.TEST_HOST = 'http://test.' + MAIN_SERVER_DOMAIN;
+    Config.BONE_HOST = 'http://bone.' + MAIN_SERVER_DOMAIN;
 
     // 签名认证服务器
-    // Config.AUTH_HOST = 'http://auth.' + rootDomain;
+    // Config.AUTH_HOST = 'http://auth.' + MAIN_SERVER_DOMAIN;
     Config.AUTH_HOST = 'http://show.' + MAIN_SERVER_DOMAIN;
 
     Config.cloundaryEnabled = true; // 选择使用哪一种配置： Cloundary云 或者阿里云的bone，
