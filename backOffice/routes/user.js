@@ -7,11 +7,12 @@ var Const = require('../base/const'),
     utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
     status = require('../common/status'),
     netCommon = require('../common/netCommonFunc'),
+    authHelper = require('./authHelper'),
     fs = require('fs');
 
 var userController = require('../db/user/userController');
-router.get('/list', getList);
-router.get('/privilege/:ID/:privilegeCode', setPrivilege);
+router.get('/list', authHelper.ensureAuthenticated, getList);
+router.get('/privilege/:ID/:privilegeCode', authHelper.ensureAuthenticated, setPrivilege);
 
 function getList(req, res, next) {
     var user = status.getUserInfo(req, res);

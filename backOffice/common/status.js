@@ -1,8 +1,11 @@
 /**
  * Created by Andrewz on 1/24/2016.
  */
-var userController = require('../db/user/userController');
-var onlineUsers = require('./onlineUsers');
+var assert = require('assert'),
+    userController = require('../db/user/userController'),
+    onlineUsers = require('./onlineUsers'),
+    authHelper = require('../routes/authHelper');
+
 var ANONYMOUS = "anonymous",
     defaultUserID = 10,
     COOKIE_LIFE = (90*24*60*60*1000); // 90 days
@@ -15,10 +18,8 @@ var user = {
     timesCalled: 0
 };
 
-function onLoginSucceed(req, res, data) {
-    var tokenID = getCookieNumber(req, 'tokenID', 0),
-        token = getCookieString(req, 'token', 0),
-        user = {
+function onLoginSucceed(req, res, data, tokenId) {
+    var user = {
             loggedIn: true,
             ID: data.ID,
             name: data.name,
@@ -31,15 +32,7 @@ function onLoginSucceed(req, res, data) {
         };
 
     //case： 在同一台机器上， 分别用不同的账号，登录， 退出
-    if (onlineUsers.isValidToken(token, tokenID, user)) {
-        user.tokenID = tokenID;
-        user.token = token;
-    } else {
-        onlineUsers.obsolete(tokenID);
-        user.tokenID = generateTokenID(user);
-        user.token = generateToken(user);
-        onlineUsers.add(user);
-    }
+    onlineUsers.add(user, tokenId);
     setUserCookie(user, res);
 }
 
@@ -53,9 +46,7 @@ function onLoginFailed(req, res, data) {
         canApprove: false,
         canRefine: false,
         canBan: false,
-        canAdmin: false,
-        tokenID: 0,
-        token: null
+        canAdmin: false
     };
     setUserCookie(user, res);
 }
@@ -83,17 +74,7 @@ function checkUser(req, res, callback) {
 function setUserCookie(user, res, callback) {
     try {
         user.timesCalled++;
-        if (!user.tokenID || !user.token) {
-            res.clearCookie('token');
-            res.clearCookie('tokenID');
-            res.clearCookie('userID');
-        } else {
-            res.cookie('userID', user.ID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-            res.cookie('tokenID', user.tokenID.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-            res.cookie('token', user.token, {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-        }
         res.cookie('timesCalled', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-        // res.cookie('isPlayOnly', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, path: '/'});
         res.clearCookie('oldCookie1');
     } catch (err) {
         console.error("checkUser is so slow that response has completed!");
@@ -159,22 +140,27 @@ function isNewUser(userID) {
 }
 
 function getUserInfo(req, res) {
-    var userID = getUserIDfromCookie(req, res),
-        tokenID = getCookieNumber(req, 'tokenID', 0),
-        token = getCookieString(req, 'token', 0),
-        candidate = null;
-
-    if (!isNewUser(userID) && tokenID && token) {
-        candidate = onlineUsers.getValidUser(tokenID, token, userID);
+    if (!authHelper.hasAuthInfo(req)) {
+        return null;
     }
-
-    return candidate;
+    return getUserInfo2(req, res);
 }
 
-function getUserInfoById(userID) {
+function getUserInfo2(req, res) {
+    assert.ok(authHelper.hasAuthInfo(req), "必须在Auth通过之后调用此");
+    if (req.userId === undefined) {
+        var payload = authHelper.getPayload(req, res);
+        req.userId = payload.sub;
+        req.tokenId = payload.tokenId;
+    }
+    return getUserInfoByTokenId(req.tokenId, req.userId);
+}
+
+function getUserInfoByTokenId(tokenId, userId) {
     var candidate = null;
-    if (!isNewUser(userID)) {
-        candidate = onlineUsers.getValidUserById(userID);
+
+    if (!isNewUser(userId)) {
+        candidate = onlineUsers.getValidUser(tokenId, userId);
     }
 
     return candidate;
@@ -184,22 +170,12 @@ function getUserIDfromCookie(req, res) {
     return getCookieNumber(req, 'userID', defaultUserID);
 }
 
-function generateTokenID(user) {
-    var t = new Date();
-    return user.ID + t.getTime();
-}
-
-function generateToken(user) {
-    var t = new Date();
-    return user.ID + t.getTime() + "long";
-}
-
 exports.getUserInfo = getUserInfo;
-exports.getUserInfoById = getUserInfoById;
-exports.getUserIDfromCookie = getUserIDfromCookie;
+exports.getUserInfo2 = getUserInfo2;
+exports.getUserInfoByTokenId = getUserInfoByTokenId;
+exports.getUserIDfromCookie = getUserIDfromCookie; //TBD
 exports.checkUser = checkUser;
 exports.logUser = logUser;
 exports.setUserCookie = setUserCookie;
 exports.onLoginSucceed = onLoginSucceed;
 exports.onLoginFailed = onLoginFailed;
-

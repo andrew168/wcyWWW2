@@ -92,10 +92,13 @@ window.TQ = window.TQ || {};
     };
 
     // 参见: Decorder的说明
-    TrackRecorder.recordSag = function (element, sag) {
+    TrackRecorder.recordSag = function (element, sags) {
         var track = element.animeTrack;
         TQ.AssertExt.invalidLogic(!!(track && track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
-        var SagType = TQ.AnimationManager.SagType;
+        var SagType = TQ.AnimationManager.SagType,
+            sag =sags[0],
+            sag2= (sags.length >= 2) ? sags[1] : sag;
+
         removeSameKindSag(track, sag.categoryID);
         switch (sag.typeID) {
             case SagType.FADE_IN:
@@ -106,7 +109,7 @@ window.TQ = window.TQ || {};
             case SagType.SCALE_IN:
             case SagType.SCALE_OUT:
                 recordOneSag(track.sx, sag);
-                recordOneSag(track.sy, sag);
+                recordOneSag(track.sy, sag2);
                 break;
 
             case SagType.ROTATE:

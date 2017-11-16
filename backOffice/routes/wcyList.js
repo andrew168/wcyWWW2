@@ -7,6 +7,7 @@ var express = require('express'),
     netCommon = require('../common/netCommonFunc'),
     status = require('../common/status'),
     fs = require('fs'),
+    authHelper = require('./authHelper'),
     opusController = require('../db/opus/opusController');
 
 // 定义RESTFull API（路径）中的参数， 形参
@@ -14,8 +15,8 @@ router.param('opusID', function (req, res, next, id) {
     next();
 });
 
-router.get('/', function(req, res, next) {
-    var user = status.getUserInfo(req, res);
+router.get('/', authHelper.ensureAuthenticated, function(req, res, next) {
+    var user = status.getUserInfo2(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
@@ -27,10 +28,11 @@ router.get('/', function(req, res, next) {
 
     function onFail(msg) {
         console.error("failed in getWcyList" + msg);
+        res.json([]);
     }
 });
 
-router.get('/apply/:opusID', function (req, res, next) {
+router.get('/apply/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -41,7 +43,7 @@ router.get('/apply/:opusID', function (req, res, next) {
     res.json(msg);
 });
 
-router.get('/approve/:opusID', function (req, res, next) {
+router.get('/approve/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -59,7 +61,7 @@ router.get('/approve/:opusID', function (req, res, next) {
     res.json(msg);
 });
 
-router.get('/ban/:opusID', function (req, res, next) {
+router.get('/ban/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);

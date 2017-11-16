@@ -168,6 +168,7 @@
                 <button class="button button-positive" ng-click="setLang('en')">{{getStr("en");}}</button>
                 <button class="button button-positive" ng-click="setLang('zh')">{{getStr("zh");}}</button>
                 <button class="button button-positive" ng-click="saveWorks()">保存</button>
+                <button class="button button-positive" ng-click="testDataService()">素材库读取</button>
                 <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()">重播</button>
                 <button class="button button-positive" ng-click="EditorService.preview()">预览</button>
                 <button class="button button-positive" ng-click="EditorService.previewCurrentLevel($event)">预览本节</button>
@@ -193,8 +194,8 @@
                 <button class="button button-positive" ng-click="es.moveCtrl.onMoveToTop($event)" ng-show="false">升升</button>
                 <button class="button button-positive" ng-click="es.moveCtrl.onMoveToBottom($event)" ng-show="false">降降</button>
                 <button class="button button-positive" ng-click="am.rotate($event)" ng-show="false">旋转</button>
-                <button class="button button-positive" ng-click="am.scaleIn($event)" ng-show="false">变大</button>
-                <button class="button button-positive" ng-click="am.scaleOut($event)" ng-show="false">变小</button>
+                <button class="button button-positive" ng-click="am.scaleIn($event)">变大</button>
+                <button class="button button-positive" ng-click="am.scaleOut($event)">变小</button>
                 <button class="button button-positive" ng-click="am.fadeIn($event)" ng-show="false">淡入</button>
                 <button class="button button-positive" ng-click="am.fadeOut($event)" ng-show="false">淡出</button>
                 <button class="button button-positive" ng-click="am.twinkle($event)" ng-show="false">闪烁</button>

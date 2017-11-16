@@ -2,13 +2,13 @@ angular.module('starter').controller('DashCtrl', DashCtrl);
 DashCtrl.$inject = ['$scope', '$auth', '$timeout', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
-        'AppService', 'MatLibService', 'UserService'];
+        'AppService', 'MatLibService', 'UserService', 'DataService'];
 
 function DashCtrl(
             $scope, $auth, $timeout, WCY, $cordovaImagePicker,
             $cordovaSocialSharing,
             FileService, NetService, DeviceService, WxService, EditorService,
-            AppService, MatLibService, UserService) {
+            AppService, MatLibService, UserService, DataService) {
 
     var vm = this;
     $scope.font = {
@@ -35,6 +35,7 @@ function DashCtrl(
 
     $scope.testShowMsg = testShowMsg;
     $scope.testPrompt = testPrompt;
+    $scope.testDataService = testDataService;
 
 
     // implementation, abc order
@@ -86,11 +87,11 @@ function DashCtrl(
         EditorService.addLevel();
     };
 
-    var testUserId = 90005; // // "TestAuth100007",
+    var testUserId = Date.now(); // // "TestAuth100007",
 
     $scope.testSignUp = function () {
         testUserId++;
-        email = testUserId + "@udoido.com";
+        email = 'T' + testUserId + "@samplexyz.com";
         UserService.signUp(email, 'pswwwwww' + testUserId, 'display' + testUserId).
             then(function (data) {
                 console.log("signUp successfully!" + data);
@@ -149,12 +150,12 @@ function DashCtrl(
     };
 
     $scope.insertProp = function() {
-        EditorService.insertPeopleImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+        EditorService.insertPeopleImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
         300, 300);
     };
 
     $scope.insertBkImage = function () {
-        EditorService.insertBkImage("http://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+        EditorService.insertBkImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
             300, 300);
     };
 
@@ -366,4 +367,9 @@ function DashCtrl(
     $scope.setLang = function (lang) {
         return TQ.Locale.setLang(lang);
     };
+
+    function testDataService() {
+        DataService.initialize();
+        DataService.getProps(10);
+    }
 }

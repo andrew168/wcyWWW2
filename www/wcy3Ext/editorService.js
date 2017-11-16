@@ -1144,7 +1144,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // "feed", 不需要
 
         if (!screenshotUrl) {
-            screenshotUrl = "http://res.cloudinary.com/eplan/image/upload/v1462412871/c161.jpg"
+            screenshotUrl = "https://res.cloudinary.com/eplan/image/upload/v1462412871/c161.jpg"
         }
 
         FB.ui(
@@ -1153,7 +1153,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 name: 'A Picture is Worth a Thousand Words -- idiom',
                 link: url,
                 picture: screenshotUrl,
-                // picture: "http://res.cloudinary.com/eplan/image/upload/v1462418136/c162.png",
+                // picture: "https://res.cloudinary.com/eplan/image/upload/v1462418136/c162.png",
                 description: "If a picture is worth a thousand words...an animation is worth a Million.",
                 caption: "U do I do, it's better and better.   -- UDOIDO",
                 message: "" // not supported by FB?
