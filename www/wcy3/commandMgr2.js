@@ -43,7 +43,7 @@ window.TQ = window.TQ || {};
         _timerID = -1;
     };
 
-    CommandMgr.startNewOperation = function() {
+    CommandMgr.startNewOperation = function () {
         _lastCmd = null;  // 每一次start新操作的时候， 设置此值， 以阻止合并。
     };
 

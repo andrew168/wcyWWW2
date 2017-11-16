@@ -2,7 +2,7 @@
  * Created by Andrewz on 6/17/2016.
  */
 var TQ = TQ || {};
-TQ.MessageBox = (function() {
+TQ.MessageBox = (function () {
     var isShowingByForce = false,
         msgList = [],
         timer = null;
@@ -80,7 +80,7 @@ TQ.MessageBox = (function() {
 
     function onDuration() {
         isShowingByForce = false;
-        if (msgList.length <=0) {
+        if (msgList.length <= 0) {
             return hide();
         }
 
@@ -98,3 +98,4 @@ TQ.MessageBox = (function() {
 })();
 
 TQ.MessageBubble = TQ.MessageBox;  // 为了兼容老的代码，被代替了，
+
