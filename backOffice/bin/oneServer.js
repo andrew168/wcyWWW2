@@ -118,18 +118,17 @@
             // console.log("I'm first!!! for any path, 除了以上的路径");
             var url = req.url.split(/[?,#]/)[0],
                 ext = url.substr(url.lastIndexOf('.')),
-                ext = ext.toLocaleLowerCase();
+                user;
 
+            ext = ext.toLocaleLowerCase();
             if (inWhiteList(ext)) {
                 next();
             } else {
-                if (userStat) { // 可能尚未启动userStat, 因为需要启动db的支持，比较慢
-                    var user = userStat.getUserInfo(req, res);
-                    if (user) {
-                        userStat.logUser(user, req, res);
-                    }
-                    next();
+                if (userStat && req.header('Authorization') &&
+                    (user = userStat.getUserInfo(req, res))) { // 可能尚未启动userStat, 因为需要启动db的支持，比较慢
+                    userStat.logUser(user, req, res);
                 }
+                next();
             }
         });
 

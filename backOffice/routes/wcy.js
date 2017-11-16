@@ -11,7 +11,6 @@ var express = require('express'),
     opusController = require('../db/opus/opusController'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
     authHelper = require('./authHelper'),
-
     WCY_DEPOT = "/data/wcydepot/";
 
 var defaultWcyData = '{"levels":[{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true}],"version":"V2","isDirty":false,"filename":"wcy01","title":"wcy01","currentLevelId":0,"alias":"gameScene","remote":true,"isPreloading":false,"overlay":{"elements":[],"FPS":20,"tMaxFrame":200,"_t":0,"name":"overlay","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false},"currentLevel":{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true},"stage":null}';
@@ -28,12 +27,12 @@ router.get('/:shareCode', function (req, res) {
     sendBackWcy(req, res, wcyId);
 });
 
-router.post('/', function (req, res) {
-    var userId = authHelper.getUserId(req, res);
+router.post('/', authHelper.ensureAuthenticated, function (req, res) {
+    var userId = req.userId;// 这是ensureAuthenticated写入的
     if (!userId) { // 没有authentication信息， 在getUserId中已经response了
         return;
     }
-    var user = (!userId) ? null : status.getUserInfoById(userId);
+    var user = (!userId) ? null : status.getUserInfoByTokenId(req.tokenId, userId);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
@@ -99,7 +98,7 @@ function resWcySaved(req, res, user, wcyId, ssPath, msg) {
 
 /// private function:
 function response(req, res, data, wcyId, authorData) {
-    var user = status.getUserInfo(req, res),
+    var user = authHelper.hasAuthInfo(req) ?  status.getUserInfo2(req, res) : null,
         userID = (!user) ? 0 : user.ID,
         url = req.headers.origin,
     // var url = req.headers.referer;

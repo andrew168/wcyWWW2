@@ -4,6 +4,7 @@
 var INAVLID_USER = 0;
 var jwt = require('jwt-simple'),
     moment = require('moment'),
+    assert = require('assert'),
     mongoose = require('mongoose'),
     Const = require('../base/const'),
     status = require('../common/status'),
@@ -30,21 +31,22 @@ function ensureAuthenticated(req, res, next) {
     if (!req.header('Authorization')) {
         return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
     }
-    var userId = getUserId(req, res);
-    if (userId === INAVLID_USER) {
+    var payload = getPayload(req, res);
+    if (payload === INAVLID_USER) {
         return;
     }
     next();
 }
 
-function getUserId(req, res) {
-    if (!req.header('Authorization')) {
+function getPayload(req, res) {
+    assert.ok(hasAuthInfo(req), "必须在Auth通过之后调用此");
+    if (!hasAuthInfo(req)) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
         return INAVLID_USER;
     }
     var token = req.header('Authorization').split(' ')[1];
 
-    var payload = null;
+    var payload = null; // payload是有效内容， token是被加密后的结果，
     try {
         payload = jwt.decode(token, config.TOKEN_SECRET);
     }
@@ -57,8 +59,10 @@ function getUserId(req, res) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Token has expired');
         return INAVLID_USER;
     }
-    req.user = payload.sub;
-    return req.user;
+    req.user = payload.sub; // ToBeDelete
+    req.userId = payload.sub; //ToDo: 准备更名
+    req.tokenId = payload.tokenId;
+    return payload;
 }
 
 function responseError(res, statusCode, msg) {
@@ -68,7 +72,25 @@ function responseError(res, statusCode, msg) {
     return res.status(statusCode).send(msg);
 }
 
+function hasAuthInfo(req) {
+    return req.header('Authorization');
+}
+
+var tokeIdBase = -1,
+    tokeIdCounter = 0,
+    tokeIdSeries = 'A';
+
+function generateTokenId() {
+    if (tokeIdBase < 0) {
+        tokeIdBase = Date.now();
+    }
+    tokeIdCounter++;
+    return tokeIdSeries + tokeIdBase + tokeIdSeries + tokeIdCounter;
+}
+
 exports.config = config;
+exports.getPayload = getPayload;
 exports.ensureAuthenticated = ensureAuthenticated;
-exports.getUserId = getUserId;
+exports.generateTokenId = generateTokenId;
+exports.hasAuthInfo = hasAuthInfo;
 exports.responseError = responseError;

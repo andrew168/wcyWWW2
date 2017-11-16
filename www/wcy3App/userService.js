@@ -52,7 +52,7 @@ function UserService($http, $auth) {
     }
 
     function getProfile() {
-        return $http.get('/auth/api/me').
+        return $http.get(TQ.Config.AUTH_HOST + '/auth/api/me').
             then(onGetProfileSuccess).
             catch(onGetProfileFailed);
     }

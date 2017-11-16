@@ -418,9 +418,11 @@ router.post('/google', function (req, res) {
     });
 });
 
-function createJWT(user) {
+function createJWT(user, tokenId) {
     var payload = {
+        salt: Math.round(Math.random() * 1000),
         sub: user._id,
+        tokenId: tokenId,
         iat: moment().unix(),
         exp: moment().add(14, 'days').unix()
     };
@@ -437,9 +439,10 @@ function responseError500(res, err, data) {
 }
 
 function resUserToken2(req, res, user) {
-    var token = createJWT(user),
+    var tokenId = authHelper.generateTokenId(),
+        token = createJWT(user, tokenId),
         userInfo = composeUserPkg(user);
-    status.onLoginSucceed(req, res, userInfo);
+    status.onLoginSucceed(req, res, userInfo, tokenId);
     res.send({token: token, data: userInfo});
 }
 
