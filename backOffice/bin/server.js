@@ -4,6 +4,7 @@ var http = require('http'),
     cors = require('cors'),
     vhost = require('vhost'),
     compression = require('compression'),
+    fs = require('fs'),
     express = require('express'),
     gracefulExit = require('express-graceful-exit'),
     onlineUsers = require('../common/onlineUsers');
@@ -15,8 +16,12 @@ var shuttingDown = false;
 init();
 
 function init() {
+    var cert_Folder = "/data/wwwz";
     var optionForSecuredServer = {
         //证书信息
+        ca: fs.readFileSync( cert_Folder + "/show_udoido_cn.ca-bundle"),
+        key: fs.readFileSync(cert_Folder + "/udoido.cn-myserver.key"),
+        cert: fs.readFileSync(cert_Folder + "/show_udoido_cn.crt")
     };
     app.use(cors());
     app.use(compression());
@@ -60,7 +65,7 @@ function init() {
     vHostServer.listen(app.get('port'));
     vHostServer.on('error', onError);
     vHostServer.on('listening', onListening);
-    vSecuredServer.listen(443);
+    vSecuredServer.listen(443); // 9443 简单？ 用于调试？
     vSecuredServer.on('error', onError);
     vSecuredServer.on('listening', onListeningSecuredServer);
     console.log("started, listen on: " + config.port);
