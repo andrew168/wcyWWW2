@@ -449,6 +449,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function mCopyToggle() {
+        if (TQ.SelectSet.isEmpty() && !state.isMCopying) {
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
+        }
+
         state.isMCopying = !state.isMCopying;
         currCmd = (state.isMCopying) ? CMD_MCOPYING_BEGIN : CMD_MCOPYING_END;
         TQ.TouchManager.updateOps(state);
