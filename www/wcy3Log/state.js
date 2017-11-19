@@ -15,6 +15,7 @@ var TQ = TQ || {};
     function State() {
     }
 
+    State.isPlayOnly = false; // 阻止显示菜单， 直到确认是edit状态
     State.innerWidth = window.innerWidth;
     State.innerHeight = window.innerHeight;
     State.bottomBarHeight = 0;

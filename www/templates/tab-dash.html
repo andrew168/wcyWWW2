@@ -149,10 +149,12 @@
 
 
         <!-- ** style="display: none" -->
+
         <div class="float-tool_new toolbar-layer" style="display: block">
             <!-- 作品 -->
             <div id="pay-button-div"> </div>
             <div style="display: block">
+                <div ng-show="state.isPlayOnly">编辑状态</div>
                 <button class="button button-positive" ng-click="makeOrder()">下订单</button>
                 <button class="button button-positive" ng-click="testSignUp()">注册</button>
                 <button class="button button-positive" ng-click="testLogin('1111')">登录</button>
