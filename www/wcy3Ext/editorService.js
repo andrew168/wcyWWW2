@@ -21,7 +21,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         lastCmd = CMD_UNKNOWN,
         currCmd = CMD_UNKNOWN;
 
-    var isPlayOnly = false;
     var canvas;
 
     var state = TQ.State;
