@@ -165,8 +165,13 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertProp = function() {
-        EditorService.insertPeopleImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
+        EditorService.insertPropImage("https://res.cloudinary.com/eplan/image/upload/v1509928224/c67.png",
         300, 300);
+    };
+
+    $scope.insertPeople = function () {
+        EditorService.insertPeopleImage("https://res.cloudinary.com/eplan/image/upload/v1501348053/c29.png",
+            300, 300);
     };
 
     $scope.insertBkImage = function () {
