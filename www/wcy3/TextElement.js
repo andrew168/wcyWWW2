@@ -114,7 +114,9 @@ window.TQ = window.TQ || {};
         // hitArea 会随宿主物体的变换而变换， 所以，可以重用
         txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
         this._afterItemLoaded();
-        this.setTRSAVZ();
+        if (this.hasFlag(TQ.Element.IN_STAGE)) {
+            this.setTRSAVZ();
+        }
     };
 
     p.hasBubble = function() {

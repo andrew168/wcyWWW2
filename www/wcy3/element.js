@@ -821,6 +821,11 @@ window.TQ = window.TQ || {};
     };
 
     p.setTRSAVZ = function () {
+        if (this.isBitmap() && !this.hasFlag(TQ.Element.IN_STAGE)) {
+            // loaded， 在stageBuffer， 但是尚未正式进入stage
+            return;
+        }
+
         var jsonObj = this.jsonObj;
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //"世界坐标值jsonOb不能为空"
         if (!this.isSound()) { //"显示对象displayObj不能为空"
@@ -828,7 +833,7 @@ window.TQ = window.TQ || {};
         }
         if (jsonObj.isVis && !this.isVirtualObject() && !this.hasFlag(Element.IN_STAGE)) {
             //飞线: 谁在使用这种情况?, 顶多在Show的时候检查"
-            TQ.Log.warn(TQ.Dictionary.INVALID_LOGIC + ":setTRSAVZ一个不在DOM的元素：" + this.jsonObj.src);
+            TQ.Log.warn(TQ.Dictionary.INVALID_LOGIC + ":setTRSAVZ元素loaded，在Buffer，尚未进stage：" + this.jsonObj.src);
             return;
         }
 

@@ -32,7 +32,7 @@ TQ = TQ || {};
         this.jsonObj.y = this.jsonObj.bbox.yc;
         this.jsonObj.pivotX = 0.5;
         this.jsonObj.pivotY = -0.5;
-        this.setTRSAVZ();
+            this.setTRSAVZ();
         TQ.Log.debugInfo("BBOX: jsonObj = " + this.jsonObj.x + ',' + this.jsonObj.y);
         this.dirty = this.dirty2 = false;
     };
@@ -135,7 +135,9 @@ TQ = TQ || {};
         this.displayObj = s;
         this.createModal();
         this._afterItemLoaded();
-        this.setTRSAVZ();
+        if (this.hasFlag(TQ.Element.IN_STAGE)) {
+            this.setTRSAVZ();
+        }
     };
 
     p.apply = function (ele) {
