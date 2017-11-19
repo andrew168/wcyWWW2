@@ -350,11 +350,13 @@ window.TQ = window.TQ || {};
         var jsonElements = this.elements;
         this.elements = [];
         this.state = TQBase.LevelState.INITING;
+        TQ.StageBuffer.open();
         for (var i = 0; i < ((jsonElements != null) && (jsonElements.length)); i++) {
             if (TQ.Element.isValidDesc(jsonElements[i])) {
                 this.addElementDirect(TQ.Element.build(this, jsonElements[i]));
             }
         }
+        TQ.StageBuffer.close();
         // ToDo: 是否应该分多个level, 来启动?
         TQ.SoundMgr.start();
         jsonElements = null;
@@ -635,7 +637,7 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setLevel(this);
         this.itemCounter++;
         if (this.isStageReady()) {
-            assertTrue("应该只在临时添加的时候, 才调用", !TQ.StageBuffer.isBatchMode);
+            // assertTrue("应该只在临时添加的时候, 才调用", !TQ.StageBuffer.isBatchMode);
             item.addItemToStage();
         } else {
             // 正在 loading, 或者fixup, 由update来控制状态
