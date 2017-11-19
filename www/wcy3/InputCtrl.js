@@ -64,6 +64,7 @@ window.TQ = window.TQ || {};
         });
         TQ.InputMap.registerAction(TQ.InputMap.SHOW_ALL_HIDEN_OBJECT_KEY,  function() {
             TQ.Element.showHidenObjectFlag = !TQ.Element.showHidenObjectFlag;
+            TQ.DirtyFlag.requestToUpdateAll();
         });
 
         TQ.InputMap.registerAction(TQ.InputMap.PLAY_STOP_KEY,  function() {
