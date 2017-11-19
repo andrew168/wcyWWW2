@@ -24,11 +24,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var isPlayOnly = false;
     var canvas;
 
-    var state = {            // undo/redo
-        hasUndo: TQ.CommandMgr.hasUndo, // function
-        hasRedo: TQ.CommandMgr.hasUndo // function
-    };
-
+    var state = TQ.State;
+    state.hasUndo = TQ.CommandMgr.hasUndo; // function
+    state.hasRedo = TQ.CommandMgr.hasUndo; // function
     initialize();
 
     return {
