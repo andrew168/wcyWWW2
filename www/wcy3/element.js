@@ -1562,11 +1562,14 @@ window.TQ = window.TQ || {};
         if (this.jsonObj.isClipPoint == false) {
             assertArray(TQ.Dictionary.INVALID_LOGIC, this.children); // "children可以是空数组[], 但不能为null，或undefined"
             for (var i = 0; i < this.children.length; i++) {
+                var child = this.children[i];
+                var noRecordingInChild = !TQ.InputCtrl.inSubobjectMode || !(child.dirty || child.dirty2 || child.isUserControlling());
                 // 传播dirty标志, 迫使child更新; dirty2的子关节不记录track
                 if (this.dirty || this.dirty2) this.children[i].dirty = true;
                 if (!(this.isMarker() && this.children[i].isUserControlling())) {
                     TQ.Log.debugInfo("update children");
-                    this.children[i].update(t, true); // 对孩子的传播，都是被动的，纯更新，不记录。
+                    this.children[i].update(t, noRecordingInChild); //如果孩子被操作，则应该允许孩子记录，虽然父不记录。
+                    // 对孩子的传播，都是被动的，纯更新，不记录。
                 }
             }
         }
