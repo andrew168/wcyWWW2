@@ -1,11 +1,10 @@
 angular.module('starter').controller('DashCtrl', DashCtrl);
-DashCtrl.$inject = ['$scope', '$auth', '$timeout', 'WCY', '$cordovaImagePicker',
+DashCtrl.$inject = ['$scope', '$stateParams', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
         'AppService', 'MatLibService', 'UserService', 'DataService'];
 
-function DashCtrl(
-            $scope, $auth, $timeout, WCY, $cordovaImagePicker,
+function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
             $cordovaSocialSharing,
             FileService, NetService, DeviceService, WxService, EditorService,
             AppService, MatLibService, UserService, DataService) {
@@ -48,7 +47,22 @@ function DashCtrl(
     }
 
     // AppService.onAppStarting(onAppStaring);
-    // AppService.onAppStarted(onAppStarted);
+    AppService.onAppStarted(onAppStarted);
+
+    function onAppStarted() {
+        //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
+        var opus = $stateParams.shareCode || TQ.Utility.getUrlParam('opus');
+        WCY.setOnStarted(function () {
+            TQ.Graphics.setCanvas(); // ！！ 必须在device ready 之后， 才能设置canas， 否则ipad的长宽信息错位。
+        });
+
+        if (opus) {
+            WCY.getWcy(opus);
+        } else {
+            WCY.start();
+        }
+    }
+
     if (TQ.Config.TECH_TEST1_LOCAL_CACHE_ON) {
         $(document).ready(function () {
             $('#clear_cache').click(function (e) {
@@ -62,6 +76,7 @@ function DashCtrl(
             });
         });
     }
+
 
     // WCY.test();
     $scope.params = 0;
