@@ -84,7 +84,7 @@ function WCY($http, FileService, WxService, NetService) {
         _stopAutoSave();
     }
 
-    function save() {
+    function save(forkIt) {
         if (!TQ.userProfile.loggedIn) {
             return TQ.MessageBox.prompt("Login in first!");
         }
@@ -92,7 +92,7 @@ function WCY($http, FileService, WxService, NetService) {
             saveToCache();
         }
         //ToDo: if (has wifi)
-        return upload().then(onSavedSuccess);
+        return upload(forkIt).then(onSavedSuccess);
     }
 
     function saveToCache() {
@@ -170,7 +170,7 @@ function WCY($http, FileService, WxService, NetService) {
         return !!currScene.ssPath;
     }
 
-    function upload() {
+    function upload(forkIt) {
         TQ.Assert.isDefined(_wcyId);
         _wcyId = (_wcyId === -1) ? 0 : _wcyId;
         TQ.Assert.isTrue(_wcyId >= 0);
@@ -180,7 +180,7 @@ function WCY($http, FileService, WxService, NetService) {
         return $http({
             method: 'POST',
             // url: AUTH_HOST + wechat/sign?url=' + url,
-            url: TQ.Config.OPUS_HOST + '/wcy' + params,
+            url: TQ.Config.OPUS_HOST + '/wcy' + params + (forkIt? "/fork": ""),
             headers: {
                 // 'Token' : myToken, // 必须同源，才能用Token
                 'Content-Type': 'application/json'
@@ -208,6 +208,17 @@ function WCY($http, FileService, WxService, NetService) {
     function edit(sceneID) {
         TQ.WCY.isPlayOnly = false;
         return _load(sceneID);
+    }
+
+    function forkIt() {
+        currScene.isPlayOnly = false;
+        TQ.WCY.isPlayOnly = false;
+        return save(true); // 要求fork 当前作品 //服务器不处理
+    }
+
+    function cloneIt() { // clone 是fork自己
+        _wcyId = TQ.Config.INVALID_WCY_ID;
+        save(true); // 要求fork 当前作品 //服务器不处理
     }
 
     function show(sceneID) {
@@ -451,6 +462,8 @@ function WCY($http, FileService, WxService, NetService) {
         start: start,  // start a new one, or load previous one (edited or played)
         create: create,
         save: save,
+        forkIt: forkIt,
+        cloneIt: cloneIt,
         setAsNew: setAsNew,
         startAutoSave: startAutoSave,
         uploadScreenshot: uploadScreenshot,

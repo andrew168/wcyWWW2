@@ -46,6 +46,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // pause: doPause,
 
         // opus ==> WCY
+        cloneIt: WCY.cloneIt,
+        forkIt: forkIt,
 
         // level
         addLevel: addLevel,
@@ -915,6 +917,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function toAddMode() {
         TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
         TQ.SelectSet.empty();
+
         if (state.isPreviewMode) {
             state.isPreviewMode = false;
             TQ.IdleCounter.remove(onPreviewMenuOff);
@@ -923,6 +926,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             TQ.PreviewMenu.stopWatch();
         }
         updateMode(true);
+    }
+
+    function forkIt() {
+        WCY.forkIt().
+            then(toAddMode());
     }
 
     function setColorPanel(panel){
@@ -1212,6 +1220,4 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         //ToDo: 　Joint, group
     }
-
-
 }
