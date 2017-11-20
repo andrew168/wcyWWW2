@@ -53,9 +53,13 @@ TQ = TQ || {};
                 h: TQ.State.innerHeight
             }
         } else {
+            if (!TQ.State.designatedWidth || !TQ.State.designatedHeight) {
+                TQ.State.designatedWidth = TQ.Config.designatedWidth;
+                TQ.State.designatedHeight = TQ.Config.designatedHeight;
+            }
             designated = {
-                w: TQ.Config.designatedWidth,
-                h: TQ.Config.designatedHeight
+                w: TQ.State.designatedWidth,
+                h: TQ.State.designatedHeight
             }
         }
         return designated;
@@ -604,8 +608,9 @@ TQ = TQ || {};
             this.version = objJson.version;
         }
 
+        var designated;
         if (!objJson.designatedWidth || !objJson.designatedHeight) {
-            var designated = Scene.getDesignatedRegionDefault();
+            designated = Scene.getDesignatedRegionDefault();
         } else {
             designated = {
                 w: objJson.designatedWidth,

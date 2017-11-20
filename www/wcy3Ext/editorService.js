@@ -103,6 +103,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         setColorPanel: setColorPanel,
         toAddMode: toAddMode,
         reset: reset,
+        setWorkingRegion: setWorkingRegion,
         onEventByToolbar : onEventByToolbar,
 
         // particle Effect
@@ -771,6 +772,18 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.Config.zoomX = TQ.Config.zoomY = 1;
     }
 
+    function setWorkingRegion(w, h,  asDefault) {
+        if (currScene) {
+            currScene.setDesignatedSize({w: w, h: h});
+        }
+
+        if (asDefault) {
+            state.designatedWidth = w;
+            state.designatedHeight = h;
+        }
+
+        $timeout(onResize);
+    }
     //只用于插入录音，
     //    在开始录音的时候，先记录当时场景的id和当时时间t0，以供本函数使用。
     // 在指定的场景levelID，指定的时间t0，插入所制的声音资源,
@@ -1185,4 +1198,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         //ToDo: 　Joint, group
     }
+
+
 }
