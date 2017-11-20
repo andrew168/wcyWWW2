@@ -74,10 +74,20 @@ TQ.Graphics = (function () {
         }
         var w = Math.round(TQ.Config.workingRegionWidth),
             h = Math.round(TQ.Config.workingRegionHeight);
+
+        if (!TQ.State.backgroundColor) {
+            TQ.State.backgroundColor = TQ.Config.BACKGROUND_COLOR;
+        }
+        if (currScene) {
+            if (!currScene.backgroundColor) {
+                currScene.backgroundColor = TQ.State.backgroundColor;
+            }
+        }
         canvasStyle.width = w + "px";
         canvasStyle.height = h + "px";
         canvasStyle.top = Math.round(TQ.Config.workingRegionY0) + "px";
         canvasStyle.left = Math.round(TQ.Config.workingRegionX0) + "px";
+        canvasStyle.backgroundColor = (currScene)? currScene.backgroundColor: TQ.State.backgroundColor;
         if (_canvas) {
             _canvas.width = w;
             _canvas.height = h;

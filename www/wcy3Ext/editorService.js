@@ -104,6 +104,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         toAddMode: toAddMode,
         reset: reset,
         setWorkingRegion: setWorkingRegion,
+        setBackgroundColor: setBackgroundColor,
         onEventByToolbar : onEventByToolbar,
 
         // particle Effect
@@ -784,6 +785,19 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         $timeout(onResize);
     }
+
+    function setBackgroundColor(bkgColor, asDefault) {
+        if (currScene) {
+            currScene.backgroundColor = bkgColor;
+        }
+
+        if (asDefault) {
+            state.backgroundColor = bkgColor;
+        }
+
+        $timeout(onResize);
+    }
+
     //只用于插入录音，
     //    在开始录音的时候，先记录当时场景的id和当时时间t0，以供本函数使用。
     // 在指定的场景levelID，指定的时间t0，插入所制的声音资源,

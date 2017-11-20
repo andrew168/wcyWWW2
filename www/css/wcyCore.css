@@ -96,7 +96,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    background-color: lightskyblue;
+    background-color: lightskyblue; /* 会被ng-style动态替换 */
 
     overflow: hidden;
     -webkit-backface-visibility: hidden;
