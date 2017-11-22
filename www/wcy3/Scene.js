@@ -17,6 +17,10 @@ TQ = TQ || {};
     Scene.VER3_3 = 3.3; // designated区域 大于1*1
     Scene.VER_LATEST = Scene.VER3_3;
     var p = Scene.prototype;
+    var _levelTs = [],
+        _levelTe = [],
+        _tMax;
+
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
     p.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
     p.title = null;  // title是微创意的标题，
@@ -329,6 +333,10 @@ TQ = TQ || {};
         return ((this.currentLevelId + 1) >= this.levelNum());
     };
 
+    p.hasAnimation = function () {
+        return ((this.levels.length === 1) && this.levels[0].hasAnimation());
+    };
+
     p.gotoLevel = function (id) {
         this.isDirty = true;
         id = (id >= this.levelNum()) ? (this.levelNum() - 1) : id;
@@ -386,6 +394,8 @@ TQ = TQ || {};
         //   $('#stop').trigger('click');
         this.setEditor();
         _tMax = 0;
+        _levelTe.splice(0);
+        _levelTs.splice(0);
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
         this.title = "";  // 必须reset, 因为currScene在New新作品的时候， reuse了
         this.filename = null;
@@ -842,9 +852,6 @@ TQ = TQ || {};
         return JSON.stringify(empty);
     }
 
-    var _levelTs = [],
-        _levelTe = [],
-        _tMax = 200;
     p.updateLevelRange = function() {
         var i = 0,
             ts = 0,
@@ -863,6 +870,10 @@ TQ = TQ || {};
 
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
+            if (!level.dataReady) {
+                continue;
+            }
+
             ts = te;
             te = ts + level.tMaxFrame;
 
@@ -876,7 +887,12 @@ TQ = TQ || {};
         }
 
         if (Math.abs(_tMax - te) > 0.1) {
-            _tMax = te;
+            if (this.hasAnimation()) {
+                _tMax = te;
+            } else {
+                _tMax = 0;
+            }
+
             TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
         }
     };
