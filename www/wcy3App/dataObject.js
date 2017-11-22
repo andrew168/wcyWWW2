@@ -4,7 +4,7 @@
 
 function DataService(list) {
     var IMAGE_COLUMN_NUMBER = 3,
-        THUMBAIL_EXP = "w_100,h_100/",
+        THUMBAIL_EXP = "w_100,h_100,c_limit/",
         vm = this,
         currentPageID = 0,
         pages = [];
