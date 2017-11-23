@@ -16,6 +16,7 @@ window.TQ = window.TQ || {};
     var host=window.location.host,
         thisDomain = host,
         MAIN_SERVER_DOMAIN = 'udoido.cn', //用一个总后台，例如：用ali云服务器
+        COM_DOMAIN = 'udoido.com',
         httpProtocol = window.location.protocol,// 'https:' or 'http:'
         api_domain='api.' + MAIN_SERVER_DOMAIN;
 
@@ -158,6 +159,7 @@ window.TQ = window.TQ || {};
     // 作品服务器
     // Config.OPUS_HOST = httpProtocol + '//opus.' + MAIN_SERVER_DOMAIN;
     Config.OPUS_HOST = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN;
+    Config.OPUS_HOST_FB = httpProtocol + '//show.' + COM_DOMAIN;
     Config.TEST_HOST = httpProtocol + '//test.' + MAIN_SERVER_DOMAIN;
     Config.BONE_HOST = httpProtocol + '//bone.' + MAIN_SERVER_DOMAIN;
 

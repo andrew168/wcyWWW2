@@ -1173,7 +1173,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             shareFbWeb();
         }
 
-        var url = TQUtility.urlConcat(TQ.Config.OPUS_HOST, "?opus=" + WCY.getShareCode()),
+        var url = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB, "?opus=" + WCY.getShareCode()),
             screenshotUrl =  WCY.getScreenshotUrl();
 
         //ToDo: （需要去掉page中的tag吗？）
