@@ -126,7 +126,7 @@ window.TQ = window.TQ || {};
 
     //
     Config.hasWx = true;  //如果在微信之外使用，则自动关闭此功能： 支持微信服务器绑定，绑定到 udoido
-    Config.hasFacebook = false; // 中国没有fb,
+    Config.hasFacebook = true; // 中国没有fb,
     Config.wx = {appId: 'wx5fe65e70536d0258'}; // udoido
     Config.hasAudioRecording = false;  // 没有录音功能
     Config.ChromeFileEnabled = true;

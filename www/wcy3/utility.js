@@ -267,6 +267,11 @@ window.TQ = window.TQ || {};
         return request.QueryString(param);
     };
 
+    Utility.isFbAvailable = function() {
+        var host = window.location.host.toLowerCase();
+        return (host.indexOf('udoido.cn') < 0);
+    };
+
     Utility.getUserID = function () {
         var userID=TQ.Init.uid;
         if (userID == "") {

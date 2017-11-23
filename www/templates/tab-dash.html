@@ -172,6 +172,21 @@
                 <button class="button button-positive" ng-click="setLang('en')">{{getStr("en");}}</button>
                 <button class="button button-positive" ng-click="setLang('zh')">{{getStr("zh");}}</button>
                 <button class="button button-positive" ng-click="saveWorks()">保存</button>
+
+                <!-- 微信 -->
+                <div style="display: inline-block">
+                    <button class="button button-positive" ng-click="shareWeb()">WebShare</button>
+                    <button class="button button-positive" ng-click="share()">分享1</button>
+                    <button class="button button-positive" ng-click="shareFB()">分享到FB</button>
+                    <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
+                    <div
+                        class="fb-like btn-md"
+                        data-share="true"
+                        data-width="450"
+                        data-show-faces="true">
+                    </div>
+                </div>
+
                 <button class="button button-positive" ng-click="EditorService.forkIt()">ForkIt</button>
                 <button class="button button-positive" ng-click="EditorService.cloneIt()">CloneIt</button>
                 <button class="button button-positive" ng-click="testDataService()">素材库读取</button>
@@ -269,21 +284,6 @@
                 <button class="button button-positive" ng-click="testCreateLevel()">Add New Level</button>
                 <button class="button button-positive" ng-click="gotoPreLevel()">Pre</button>
                 <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
-            </div>
-
-            <!-- 微信 -->
-            <div style="display: block">
-                <button class="button button-positive" ng-click="shareWeb()">WebShare</button>
-                <button class="button button-positive" ng-click="share()">分享1</button>
-                <button class="button button-positive" ng-click="shareFB()">分享到FB</button>
-                <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
-
-                <div
-                    class="fb-like btn-md"
-                    data-share="true"
-                    data-width="450"
-                    data-show-faces="true">
-                </div>
             </div>
 
             <div style="display: none">
