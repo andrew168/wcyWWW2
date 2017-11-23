@@ -187,7 +187,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 StatService.startToShow();
             }
 
-            if (TQ.Config.hasFacebook && TQ.Utility.isFbAvailable()) {
+            state.fbAvailable = TQ.Config.hasFacebook && TQ.Utility.isFbAvailable();
+            if (state.fbAvailable) {
                 TQ.LazyLoading.loadOne("/wcy3Social/fb.js");
             }
             // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
