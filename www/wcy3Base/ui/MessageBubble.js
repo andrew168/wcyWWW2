@@ -24,8 +24,7 @@ window.TQ = window.TQ || {};
 
     MessageBubble.show = function (defaultvalue, button1, callback1, button2, callback2)
     {
-        MYJS.alert_obj.alert("Test 信息", "OK", null, null);
-        return;
+        return MYJS.alert_obj.alert("Test 信息", "OK", null, null);
     };
 
     TQ.MessageBubble = MessageBubble;

@@ -12,6 +12,12 @@ window.TQ = window.TQ || {};
     Config.MAX_UNDO_STEP = 100;
     Config.MAX_KEYFRAME = 2000;
     Config.MAX_FILE_SIZE = 1024000; // 1M;
+
+    // 素材限制:
+    Config.MAT_MAX_FILE_SIZE = 500000;// 100K
+    Config.MAT_MAX_WIDTH = 500;
+    Config.MAT_MAX_HEIGHT = 800;
+
     // 陈永添加的配置， begin ---
     var host=window.location.host,
         thisDomain = host,
@@ -42,11 +48,11 @@ window.TQ = window.TQ || {};
     Config.BACKGROUND_COLOR = "lightskyblue"; // HTML5的#系列颜色只有#FFF,不是#FFFFFF.
     Config.workingRegionX0 = 0;  // in device 坐标系 // ToDo: 1)初始化, 按照分辨率来. 2)响应窗口尺寸变化 (window.screen.width - 960) /2;
     Config.workingRegionY0 = 0;
-    Config.workingRegionWidth = 751; // 舞台的尺寸（当前设备的, 从设备中读出）
-    Config.workingRegionHeight = 550;
-    Config.designatedWidth = 1024; // 414; //1093; //360; // 目标设备的尺寸,默认是（360*640），由系统从作品中动态读出，
+    Config.workingRegionWidth = 414; //751; // 舞台的尺寸（当前设备的, 从设备中读出）
+    Config.workingRegionHeight = 736; //550;
+    Config.designatedWidth = 414; // 1024; // 414; //1093; //360; // 目标设备的尺寸,默认是（360*640），由系统从作品中动态读出，
                                   // 旧文件升级时候的缺省是(751， 550),
-    Config.designatedHeight = 748; // 736; //615; // 640;
+    Config.designatedHeight = 736; //748; // 736; //615; // 640;
     Config.snapOn = false; // true;
     Config.snapAngleOn = false; // true;
     Config.snapDX = 10;

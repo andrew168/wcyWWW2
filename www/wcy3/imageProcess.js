@@ -46,6 +46,11 @@ var TQ = TQ || {};
         }
 
         function onload () {
+            var errorCode = 0;
+            if ((ele.width > TQ.Config.MAT_MAX_WIDTH)  || (ele.height > TQ.Config.MAT_MAX_HEIGHT)) {
+                errorCode = 1;
+            }
+
             var scale = determineScale(ele),
                 ctx,
                 neededHeight = Math.round(ele.height * scale / 8) * 8,
@@ -66,7 +71,7 @@ var TQ = TQ || {};
             var xc = 0, yc =0;
             ctx.drawImage(ele, xc, yc, neededWidth, neededHeight);
             if (callback) {
-                callback({name:filename, data: _canvas.toDataURL("image/png")});
+                callback({errorCode: errorCode, name:filename, data: _canvas.toDataURL("image/png")});
             }
         }
     }

@@ -288,7 +288,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             then(function (data) {
                 TQ.SceneEditor.addItemByFile(data, matType);
             }, errorReport).
-            finally(TQ.MessageBox.hide);
+            finally(function() {
+                $timeout(TQ.MessageBox.hide, 1000);
+            });
     }
 
     function selectLocalFile(matType, useDevice) {

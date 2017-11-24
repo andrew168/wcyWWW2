@@ -61,6 +61,10 @@ var currScene = null;
         var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
         var needToSave = true;
 
+        if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
+            return TQ.MessageBubble.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+        }
+
         if (matType === TQ.MatType.SOUND) {
             if (!TQUtility.isSoundFile(aFile)) {
                 var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
@@ -71,7 +75,12 @@ var currScene = null;
         } else {
             TQ.ImageProcess.start(aFile, options,
                 function (buffer) {
-                    addItemByImageData(buffer.data, matType, needToSave);
+                    if (!!buffer.errorCode && buffer.errorCode !== 0) {
+                        TQ.MessageBubble.show("Resource file width and height should less than: " +
+                            TQ.Config.MAT_MAX_WIDTH + '*' + TQ.Config.MAT_MAX_HEIGHT);
+                    } else {
+                        addItemByImageData(buffer.data, matType, needToSave);
+                    }
                 });
         }
     };
