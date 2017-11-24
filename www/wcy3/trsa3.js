@@ -139,6 +139,7 @@ var TQ = TQ || {};
     }
 
     function onTouchOrDragStart(e) { // ==mouse的onPressed，
+        onKeyUp(); // 确保删除old handler
         if (e.type === 'mousedown') {
             document.addEventListener('keyup', onKeyUp);
             document.addEventListener('mouseup', onKeyUp);
@@ -204,11 +205,7 @@ var TQ = TQ || {};
     }
 
     function onDrag(e) {  //// ==mouse的onMove，
-        if ((e.type === 'mousemove') && !startEle) {
-            return;
-        }
-
-        if (isDithering) {// || (TQ.SelectSet.isInMultiCmd() && startEle && !startEle.isMarker())) {
+        if (e.type === 'mousemove') {
             return;
         }
 
@@ -217,24 +214,12 @@ var TQ = TQ || {};
             return;
         }
 
-        if (!startEle) {
-            TQ.Log.debugInfo("not started, force to start in onDrag!");
-            return onTouchOrDragStart(e);
-        }
-        if (!startEle) {
-            return updateStartElement(e);
-        } else if (startTrsa.needReset) {
-            return resetStartParams(e);
-        }
-
         e = touch2StageXY(e);
-
-        if (!startEle) {
+        if (!startEle || !isValidOp(e)) {
             console.error(e.type + ": Drag, no selected..., " + TQ.Utility.getTouchNumbers(e));
         } else {
             e.stopPropagation();
             e.preventDefault();
-
             TQBase.Trsa.do(startEle, startLevel, startOffsetInDcExt, e);
         }
     }
