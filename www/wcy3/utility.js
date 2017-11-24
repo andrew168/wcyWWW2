@@ -54,11 +54,14 @@ window.TQ = window.TQ || {};
       return defaultValue;
     };
 
-    Utility.forceExt = function (str) {
+    Utility.forceExt = function (str, newExtension) {
+        if (!newExtension) {
+            newExtension = TQ.Config.EXTENSION;
+        }
         if  (str.indexOf('.') > 0) {
-            str =  (str.substr(0, str.indexOf('.')) + TQ.Config.EXTENSION);
+            str =  (str.substr(0, str.indexOf('.')) + newExtension);
         } else {
-            str =  (str + TQ.Config.EXTENSION);
+            str =  (str + newExtension);
         }
         return str;
     };
@@ -149,7 +152,7 @@ window.TQ = window.TQ || {};
     };
 
     Utility.isSoundResource = function (url) {
-        var formats = [".wav", ".mp3", ".ogg"];
+        var formats = [".wav", ".mp3", ".ogg", ".3gp"]; // 3gp是手机录音结果
         var str = Utility.getExtension(url).toLowerCase();
         for (var i = 0; i < formats.length; i++) {
             if ((str === formats[i] )) {

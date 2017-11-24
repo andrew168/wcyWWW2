@@ -65,8 +65,14 @@ function DataService(list) {
                     items[i].thumbPath = null;
                     items[i].path = null;
                 } else {
-                    items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(items[i].path));
-                    items[i].path = TQ.RM.toFullPathFs(items[i].path);
+                    var oldPath = items[i].path;
+                    if (TQ.Utility.isSoundResource(oldPath)) { //force to convert to mp3
+                        oldPath = TQ.Utility.forceExt(oldPath, ".mp3");
+                    } else if (!TQ.Utility.isImage(oldPath)) {
+                        TQ.Log.error("Found unknown format:" + oldPath);
+                    }
+                    items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(oldPath));
+                    items[i].path = TQ.RM.toFullPathFs(oldPath);
                 }
             }
         }
@@ -148,7 +154,7 @@ function DataService(list) {
 
     function toThumbNail(path) {
         TQ.Assert.isTrue(path[0] != '/', "not separator");
-        return  THUMBAIL_EXP + path;
+        return  (TQ.Utility.isImage(path) ? THUMBAIL_EXP: "") + path;
     }
 
     function fromThumbNail(path) {
