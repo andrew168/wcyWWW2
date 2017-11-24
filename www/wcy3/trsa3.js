@@ -8,11 +8,11 @@ var TQ = TQ || {};
     }
 
     Trsa3.mCopy = mCopy;
-    Trsa3.onTouchStart = onTouchStart;
+    Trsa3.onTouchStart = onTouchOrDragStart;
     Trsa3.onMouseDown = onMouseDown;
     Trsa3.onPinchAndRotate = onPinchAndRotate;
     Trsa3.onTouchStage = onTouchStage;
-    Trsa3.onTouchEnd = onTouchEnd;
+    Trsa3.onTouchEnd = onTouchOrDragEnd;
     Trsa3.onMouseUp = onMouseUp;
     Trsa3.onRelease = onRelease;
     Trsa3.onDrag = onDrag;
@@ -138,7 +138,7 @@ var TQ = TQ || {};
         deltaTrsa.ang = 0;
     }
 
-    function onTouchStart(e) { // ==mouse的onPressed，
+    function onTouchOrDragStart(e) { // ==mouse的onPressed，
         if (e.type === 'mousedown') {
             document.addEventListener('keyup', onKeyUp);
             document.addEventListener('mouseup', onKeyUp);
@@ -168,7 +168,7 @@ var TQ = TQ || {};
         document.removeEventListener('mouseup', onKeyUp);
     }
 
-    function onTouchEnd(e) {// ==mouse的onUp，
+    function onTouchOrDragEnd(e) {// ==mouse的onUp，
         if (e.type === 'mouseup') {
             document.removeEventListener('keyup', onKeyUp);
             TQ.TouchManager.detachHandler('mousemove', onDrag);
@@ -190,12 +190,12 @@ var TQ = TQ || {};
 
     function onMouseDown(e) {
         TQ.InputMap.updateSpecialKey(e);
-        return onTouchStart(e);
+        return onTouchOrDragStart(e);
     }
 
     function onMouseUp(e) {
         TQ.InputMap.updateSpecialKey(e);
-        return onTouchEnd(e);
+        return onTouchOrDragEnd(e);
     }
 
     function onRelease() {
@@ -219,7 +219,7 @@ var TQ = TQ || {};
 
         if (!startEle) {
             TQ.Log.debugInfo("not started, force to start in onDrag!");
-            return onTouchStart(e);
+            return onTouchOrDragStart(e);
         }
         if (!startEle) {
             return updateStartElement(e);
@@ -239,25 +239,31 @@ var TQ = TQ || {};
         }
     }
 
+    function isValidOp(e) {
+        var result = true;
+        e.stopPropagation();
+        e.preventDefault();
+        if (isDithering) {
+            return (result = false);
+        }
+
+        if (!startEle) {
+            // 首次选中， 不能立即TRSA， 下一个event吧， 以避免TRSA开始时的突变
+            updateStartElement(e);
+            result = false;
+        } else if (startTrsa.needReset) {
+            resetStartParams(e);
+            result = false;
+        }
+        return result;
+    }
+
     function onPinchAndRotate(e) {
         if (TQ.SelectSet.isInMultiCmd()) {
             return;
         }
 
-        e.stopPropagation();
-        e.preventDefault();
-        if (isDithering) {
-            return;
-        }
-
-        if (!startEle) {
-            // 首次选中， 不能立即TRSA， 下一个event吧， 以避免TRSA开始时的突变
-            return updateStartElement(e);
-        } else if (startTrsa.needReset) {
-            return resetStartParams(e);
-        }
-
-        if (!startEle) {
+        if (!startEle || !isValidOp(e)) {
             TQ.Log.debugInfo("pinch..." + TQ.Utility.getTouchNumbers(e));
         } else {
             if (e.type.indexOf('rotate') >=0) {
