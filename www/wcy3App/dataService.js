@@ -6,9 +6,9 @@
 
 (function() {
     angular.module('starter').factory('DataService', DataService);
-    DataService.$inject = ['$http'];
-
-    function DataService($http) {
+    DataService.$inject = ['$rootScope', '$http'];
+    DataService.EVENT_DATA_READY = "data ready";
+    function DataService($rootScope, $http) {
         var readCacheWithParse = TQ.Base.Utility.readCacheWithParse;
         var writeCache = TQ.Base.Utility.writeCache;
         var initialized = false;
@@ -225,6 +225,7 @@
         function onDataReady() {
             propsMyWork1 = readCacheWithParse(MY_WORKS, []);
             workCounter = readCacheWithParse("workCounter", 0);
+            $rootScope.$broadcast("DataService.EVENT_DATA_READY");
         }
 
         function reload() { // 用于 登录之后的刷新
