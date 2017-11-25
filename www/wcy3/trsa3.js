@@ -215,11 +215,11 @@ var TQ = TQ || {};
         }
 
         e = touch2StageXY(e);
+        e.stopPropagation();
+        e.preventDefault();
         if (!startEle || !isValidOp(e)) {
             console.error(e.type + ": Drag, no selected..., " + TQ.Utility.getTouchNumbers(e));
         } else {
-            e.stopPropagation();
-            e.preventDefault();
             TQBase.Trsa.do(startEle, startLevel, startOffsetInDcExt, e);
         }
     }
