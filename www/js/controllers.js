@@ -114,9 +114,12 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.testLogin = function (id) {
-        UserService.login('toronto' + id, 'toronto' + id);
-        // UserService.login('toronto1111', 'toronto1111');
-        //UserService.login('user' + testUserId, 'pswww' + testUserId);
+        UserService.login('toronto' + id, 'toronto' + id).
+        then(function() {
+                if (TQ.userProfile.loggedIn) {
+                    DataService.reload();
+                }
+            });
     };
 
     $scope.testAuthenticate = function(authName) {
