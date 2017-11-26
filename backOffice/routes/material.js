@@ -19,6 +19,7 @@ var express = require('express'),
     pictureMatController = require('../db/material/pictureMatController'),
     audioMatController = require('../db/material/audioMatController');
 
+var MAT_SHARE_FLAG_DEFAULT = false;
 var TYPE_BKG_IMAGE = 10, // 'bkgimage',
     TYPE_PROP_IMAGE = 20, // 'propimage',
     TYPE_PEOPLE_IMAGE = 30, // 'peopleimage',
@@ -117,7 +118,7 @@ function createMatId(req, res, matType, originalFilename) {
 
             // ToDo:
             var ip = null;
-            var isShared = false;
+            var isShared = MAT_SHARE_FLAG_DEFAULT;
             getMatController(matType).add(user.ID, originalFilename, matType, ip, isShared, onSavedToDB, null);
         } else {
             console.log("must be new material");

@@ -40,7 +40,7 @@ function getList(userId, typeId, callback) {
         condition ={$and: [{"isBanned": false}, {"typeId": typeId}]};
 
     if (userLimit) {
-        // condition.$and.push(userLimit);
+        condition.$and.push(userLimit);
     }
 
     PictureMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
@@ -87,7 +87,7 @@ function doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError) {
         typeId: typeId,
         name: picName,
         ip: ip,
-        isShared: true // isShared//ToDo:@@test only
+        isShared: isShared
     });
 
     aDoc.save(function(err, doc) {
