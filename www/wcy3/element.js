@@ -686,11 +686,11 @@ window.TQ = window.TQ || {};
             return;
         }
         this.persist();
-        // var originalZ = this.jsonObj.zIndex;
+        var originalZ = this.jsonObj.zIndex;
         this.jsonObj.src = newSkinImg;
         this._doRemoveFromStage();
         this.persist();
-        // this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1
+        this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1
         this._isNewSkin = true;
         this._doLoad(this.jsonObj);
     };
@@ -1280,7 +1280,7 @@ window.TQ = window.TQ || {};
             // assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
             TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
             if ((this.jsonObj.zIndex != null) && (this.jsonObj.zIndex >= 0)) { // 原来是group, 没有皮肤, 所以是-1;
-                this.getContainer().setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
+                // this.getContainer().setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
             }
             this._isNewSkin = false;
         } else {
@@ -2024,6 +2024,10 @@ window.TQ = window.TQ || {};
             }
         }
 
+        if (this._isNewSkin) {
+            // 正在换皮肤..., 旧的已经从stage移除，新的尚未进来
+            return this.jsonObj.zIndex;
+        }
         assertTrue(TQ.INVALID_LOGIC + "没有可见物体的group", false);
         return z;
     };
