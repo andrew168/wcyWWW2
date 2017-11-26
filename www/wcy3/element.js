@@ -681,6 +681,20 @@ window.TQ = window.TQ || {};
         skin.TBD = true;
     };
 
+    p.changeSkin = function (newSkinImg) {
+        if (!this.isBitmap()) {
+            return;
+        }
+        this.persist();
+        // var originalZ = this.jsonObj.zIndex;
+        this.jsonObj.src = newSkinImg;
+        this._doRemoveFromStage();
+        this.persist();
+        // this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1
+        this._isNewSkin = true;
+        this._doLoad(this.jsonObj);
+    };
+
     p.attachMarker = function(){
         this.attachDecoration([TQ.Marker.getOne()]);
     };
@@ -1263,7 +1277,7 @@ window.TQ = window.TQ || {};
 
         if ((this._isNewSkin)) { // 编程哲学: 多少 是, 少用 非, 复合一般人的思维逻辑, 通顺.
             TQ.Log.out("element._afterItemLoaded"); // , 应该只在临时添加的时候, 才调用
-            assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
+            // assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
             TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
             if ((this.jsonObj.zIndex != null) && (this.jsonObj.zIndex >= 0)) { // 原来是group, 没有皮肤, 所以是-1;
                 this.getContainer().setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
@@ -1783,6 +1797,10 @@ window.TQ = window.TQ || {};
 
     p.is = function(type) {
         return (this.jsonObj.type === type);
+    };
+
+    p.isBackground = function() {
+        return !!this.jsonObj.isBackground;
     };
 
     p.isLoaded = function () {

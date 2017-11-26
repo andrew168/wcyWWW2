@@ -7,6 +7,7 @@ window.TQ = window.TQ || {};
 (function () {
     var DEFAULT_MAX_FRAME = 60;
     function Level(description) {
+        this.background = null;
         this.latestElement = null; // 最新生成的复合物体
         this.tMaxFrame = DEFAULT_MAX_FRAME; // 该level的最后一帧动画的时间(单位是: 帧), 以该Level的头为0帧.
         this.t0 = 0;
@@ -231,6 +232,10 @@ window.TQ = window.TQ || {};
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       // 记录新创建的元素到elements
       this.elements.push(ele);
+      if (ele.isBackground()) {
+        TQ.AssertExt.invalidLogic(!this.background, "应该只有1个背景");
+        this.background = ele;
+      }
       TQ.DirtyFlag.setLevel(this);
       // ToDo: 暂时关闭， 还需要多调试
       // if (! (ele.isSound() || ele.isGroupFile() || ele.isButton()) ) {
@@ -257,6 +262,10 @@ window.TQ = window.TQ || {};
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, (i >=0) && (i < this.elements.length) ); // 数组超界
         TQ.DirtyFlag.setElement(this);
         return (this.elements.splice(i, 1))[0];
+    };
+
+    p.getBackground = function() {
+        return this.background;
     };
 
     p.getElement = function (id) {

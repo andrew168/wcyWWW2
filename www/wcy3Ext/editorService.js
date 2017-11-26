@@ -507,7 +507,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function insertBkImage(filename, x, y) {
-        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y};
+        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y,
+            zIndex:0, isBackground: true};
         addItem(desc, TQ.MatType.BKG);
     }
 
