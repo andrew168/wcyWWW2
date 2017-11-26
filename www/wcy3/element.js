@@ -1251,31 +1251,33 @@ window.TQ = window.TQ || {};
     };
 
     p._afterItemLoaded = function (resource) {
-        this.fillGap2();
-        if (this.autoFitFlag && !this.isEditorEle() && !this.isVirtualObject()) {
-            this.autoFit(resource);
-        }
+        if (!this._isNewSkin) {
+            this.fillGap2();
+            if (this.autoFitFlag && !this.isEditorEle() && !this.isVirtualObject()) {
+                this.autoFit(resource);
+            }
 
-        if (this.isNewlyAdded) {
-            this.forceToRecord();
-        }
+            if (this.isNewlyAdded) {
+                this.forceToRecord();
+            }
 
-        if (this.displayObj) { //声音元素， 没有displayObj
-            this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
-        }
-        this.fillGapAtferAutoFit();
-        this.animeTrack = this.jsonObj.animeTrack;
-        if (this.level.isStageReady()) {
-            if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
-                if (!this.jsonObj.isVis) {
-                    TQ.AnimeTrack.hide(this, this.jsonObj.t0); // 适合于3D视图，长期隐藏
-                } else {
-                    TQ.AnimeTrack.hideToNow(this, this.jsonObj.t0);
+            if (this.displayObj) { //声音元素， 没有displayObj
+                this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
+            }
+            this.fillGapAtferAutoFit();
+            this.animeTrack = this.jsonObj.animeTrack;
+            if (this.level.isStageReady()) {
+                if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
+                    if (!this.jsonObj.isVis) {
+                        TQ.AnimeTrack.hide(this, this.jsonObj.t0); // 适合于3D视图，长期隐藏
+                    } else {
+                        TQ.AnimeTrack.hideToNow(this, this.jsonObj.t0);
+                    }
                 }
             }
         }
 
-        if ((this._isNewSkin)) { // 编程哲学: 多少 是, 少用 非, 复合一般人的思维逻辑, 通顺.
+        if (this._isNewSkin) { // 编程哲学: 多用 是, 少用 非, 符合一般人的思维逻辑, 通顺.
             TQ.Log.out("element._afterItemLoaded"); // , 应该只在临时添加的时候, 才调用
             // assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
             TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
