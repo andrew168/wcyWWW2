@@ -31,7 +31,16 @@ var TQDebugger = TQDebugger || {};
 
 
     function dumpAll() {
-        dumpArray(0, currScene.currentLevel.elements);
+        dumpArray(0, currScene.currentLevel.elements.sort(sortByZIndex));
+    }
+
+    function sortByZIndex(e1, e2) {
+        if (e1.jsonObj.zIndex > e2.jsonObj.zIndex) {
+            return 1;
+        } else if (e1.jsonObj.zIndex < e2.jsonObj.zIndex) {
+            return -1;
+        }
+        return 0;
     }
 
     function dumpSelected() {
