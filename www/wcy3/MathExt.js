@@ -28,10 +28,10 @@ window.TQ = window.TQ || {};
 
     MathExt.minZIndex = function (upperEle, ele, z) {
         if ((!ele) || (!ele.hasFlag(TQ.Element.IN_STAGE))) return upperEle;
-        if (ele.jsonObj.zIndex >= z) {
+        if (ele.getZ() >= z) {
             if (!upperEle) {
                 upperEle = ele;
-            } else if (upperEle.jsonObj.zIndex >= ele.jsonObj.zIndex) {
+            } else if (upperEle.getZ() >= ele.getZ()) {
                 upperEle = ele;
             }
         }
