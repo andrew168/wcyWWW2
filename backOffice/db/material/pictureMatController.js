@@ -127,8 +127,16 @@ function update(id, path, callback) {
         });
 }
 
-function ban(id, playerID, callback) {
-    PictureMat.findOne({$and: [{_id: id}, {userId: playerID}]})
+function ban(id, user, callback) {
+    var onlyMine = {userId: user.ID},
+        condition = {$and: [{_id: id}]};
+
+    if (user.canAdmin || user.canBan) {// 如果 有权admin或Ban， 不加 userId的限制
+    } else {
+        condition.$and.push(onlyMine);
+    }
+
+    PictureMat.findOne(condition)
         .exec(function (err, data) {
             if (!data) {
                 console.error(404, {msg: 'not found! : ' + id + ", or not belong to this user: " + playerID});

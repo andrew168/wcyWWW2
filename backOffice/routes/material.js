@@ -151,7 +151,7 @@ function banMatId(req, res, matType, matId) {
         sendBack(data, res);
     }
 
-    getMatController(matType).ban(matId, user.ID, onSavedToDB);
+    getMatController(matType).ban(matId, user, onSavedToDB);
 }
 
 function getMatIds(req, res, matType) {
@@ -176,7 +176,10 @@ function isNewMaterial(mat_id) {
 }
 
 function getMatType(req) {
-    return req.body.type || TYPE_BKG_IMAGE;
+    if (!req.body.matType) {
+        console.warn("需要定义 matType");
+    }
+    return req.body.matType || TYPE_BKG_IMAGE;
 }
 
 function getMatController(type) {
