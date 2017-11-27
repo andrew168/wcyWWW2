@@ -685,6 +685,15 @@ window.TQ = window.TQ || {};
         if (!this.isBitmap()) {
             return;
         }
+
+        var imgReady = TQ.RM.hasResourceReady(newSkinImg);
+        if (!imgReady) {
+            var self = this;
+            return TQ.RM.addItem(newSkinImg, function() {
+                self.changeSkin(newSkinImg);
+            });
+        }
+
         this.persist();
         var originalZ = this.jsonObj.zIndex;
         this.jsonObj.src = newSkinImg;
