@@ -272,13 +272,17 @@ TQ = TQ || {};
             }
         }
 
-        var ele = TQ.Element.build(level, desc);
-        assertTrue(TQ.INVALID_LOGIC, ele.level == level);
-        ele.level = level;
-        var thisScene = this;
-        TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.ADD_ITEM,
-            thisScene, ele, ele));
-
+        var ele;
+        if (desc.isBackground && (ele = level.getBackground())) {
+            ele.changeSkin(desc.src);
+        } else {
+            ele = TQ.Element.build(level, desc);
+            assertTrue(TQ.INVALID_LOGIC, ele.level == level);
+            ele.level = level;
+            var thisScene = this;
+            TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.ADD_ITEM,
+                thisScene, ele, ele));
+        }
         return ele;
     };
 

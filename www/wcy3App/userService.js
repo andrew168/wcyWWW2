@@ -67,6 +67,10 @@ function UserService($http, $auth) {
             user.displayName = data.displayName;
             user.isValidName = true;
             user.saveToCache();
+            user.canAdmin = data.canAdmin;
+            user.canApprove = data.canApprove;
+            user.canBan = data.canBan;
+            user.canRefine = data.canRefine;
             TQ.Log.debugInfo("login successfully!  welcome "+ user.displayName + ", " + user.name);
         } else {
             onGetProfileFailed(netPkg);

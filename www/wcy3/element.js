@@ -681,6 +681,29 @@ window.TQ = window.TQ || {};
         skin.TBD = true;
     };
 
+    p.changeSkin = function (newSkinImg) {
+        if (!this.isBitmap()) {
+            return;
+        }
+
+        var imgReady = TQ.RM.hasResourceReady(newSkinImg);
+        if (!imgReady) {
+            var self = this;
+            return TQ.RM.addItem(newSkinImg, function() {
+                self.changeSkin(newSkinImg);
+            });
+        }
+
+        this.persist();
+        var originalZ = this.jsonObj.zIndex;
+        this.jsonObj.src = newSkinImg;
+        this._doRemoveFromStage();
+        this.persist();
+        this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1
+        this._isNewSkin = true;
+        this._doLoad(this.jsonObj);
+    };
+
     p.attachMarker = function(){
         this.attachDecoration([TQ.Marker.getOne()]);
     };
@@ -1237,36 +1260,38 @@ window.TQ = window.TQ || {};
     };
 
     p._afterItemLoaded = function (resource) {
-        this.fillGap2();
-        if (this.autoFitFlag && !this.isEditorEle() && !this.isVirtualObject()) {
-            this.autoFit(resource);
-        }
+        if (!this._isNewSkin) {
+            this.fillGap2();
+            if (this.autoFitFlag && !this.isEditorEle() && !this.isVirtualObject()) {
+                this.autoFit(resource);
+            }
 
-        if (this.isNewlyAdded) {
-            this.forceToRecord();
-        }
+            if (this.isNewlyAdded) {
+                this.forceToRecord();
+            }
 
-        if (this.displayObj) { //声音元素， 没有displayObj
-            this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
-        }
-        this.fillGapAtferAutoFit();
-        this.animeTrack = this.jsonObj.animeTrack;
-        if (this.level.isStageReady()) {
-            if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
-                if (!this.jsonObj.isVis) {
-                    TQ.AnimeTrack.hide(this, this.jsonObj.t0); // 适合于3D视图，长期隐藏
-                } else {
-                    TQ.AnimeTrack.hideToNow(this, this.jsonObj.t0);
+            if (this.displayObj) { //声音元素， 没有displayObj
+                this.displayObj.isClipPoint = this.jsonObj.isClipPoint;
+            }
+            this.fillGapAtferAutoFit();
+            this.animeTrack = this.jsonObj.animeTrack;
+            if (this.level.isStageReady()) {
+                if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
+                    if (!this.jsonObj.isVis) {
+                        TQ.AnimeTrack.hide(this, this.jsonObj.t0); // 适合于3D视图，长期隐藏
+                    } else {
+                        TQ.AnimeTrack.hideToNow(this, this.jsonObj.t0);
+                    }
                 }
             }
         }
 
-        if ((this._isNewSkin)) { // 编程哲学: 多少 是, 少用 非, 复合一般人的思维逻辑, 通顺.
+        if (this._isNewSkin) { // 编程哲学: 多用 是, 少用 非, 符合一般人的思维逻辑, 通顺.
             TQ.Log.out("element._afterItemLoaded"); // , 应该只在临时添加的时候, 才调用
-            assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
+            // assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
             TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
             if ((this.jsonObj.zIndex != null) && (this.jsonObj.zIndex >= 0)) { // 原来是group, 没有皮肤, 所以是-1;
-                this.getContainer().setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
+                // this.getContainer().setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
             }
             this._isNewSkin = false;
         } else {
@@ -1785,6 +1810,10 @@ window.TQ = window.TQ || {};
         return (this.jsonObj.type === type);
     };
 
+    p.isBackground = function() {
+        return !!this.jsonObj.isBackground;
+    };
+
     p.isLoaded = function () {
         return this.loaded;
     };
@@ -2006,6 +2035,10 @@ window.TQ = window.TQ || {};
             }
         }
 
+        if (this._isNewSkin) {
+            // 正在换皮肤..., 旧的已经从stage移除，新的尚未进来
+            return this.jsonObj.zIndex;
+        }
         assertTrue(TQ.INVALID_LOGIC + "没有可见物体的group", false);
         return z;
     };

@@ -62,6 +62,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         onDelete: onDelete,
 
         // element modification (text, sound, image...)
+        changeSkin: changeSkin,
         getFontSize: getFontSize,
         setSize: setSize,
         setFontLevel: setFontLevel,
@@ -507,7 +508,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function insertBkImage(filename, x, y) {
-        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y};
+        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y,
+            zIndex:0, isBackground: true};
         addItem(desc, TQ.MatType.BKG);
     }
 
@@ -1121,6 +1123,24 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             evt.preventDefault();
             TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
             TQ.SelectSet.delete();
+        }
+    }
+
+    function changeSkin(newSkinUrl) {
+        if (TQ.SelectSet.isEmpty()) {
+            return TQ.MessageBox.show(TQ.Locale.getStr('select the element to be changed!'));
+        }
+
+        var ele = TQ.SelectSet.peekLatestEditableEle();
+        if (ele.isPinned()) {
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked', function() {
+                ele.pinIt();
+                changeSkin(newSkinUrl);
+            }))
+        }
+
+        if (ele.isBitmap()) {
+            ele.changeSkin(newSkinUrl);
         }
     }
 

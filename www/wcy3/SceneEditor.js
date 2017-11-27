@@ -76,8 +76,8 @@ var currScene = null;
             TQ.ImageProcess.start(aFile, options,
                 function (buffer) {
                     if (!!buffer.errorCode && buffer.errorCode !== 0) {
-                        TQ.MessageBubble.show("Resource file width and height should less than: " +
-                            TQ.Config.MAT_MAX_WIDTH + '*' + TQ.Config.MAT_MAX_HEIGHT);
+                        TQ.MessageBubble.show("Image file's width and height should <= " +
+                            TQ.Config.MAT_MAX_WIDTH + ' by ' + TQ.Config.MAT_MAX_HEIGHT);
                     } else {
                         addItemByImageData(buffer.data, matType, needToSave);
                     }

@@ -40,7 +40,7 @@ function getList(userId, typeId, callback) {
         condition ={$and: [{"isBanned": false}, {"typeId": typeId}]};
 
     if (userLimit) {
-        // condition.$and.push(userLimit);
+        condition.$and.push(userLimit);
     }
 
     PictureMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
@@ -87,7 +87,7 @@ function doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError) {
         typeId: typeId,
         name: picName,
         ip: ip,
-        isShared: true // isShared//ToDo:@@test only
+        isShared: isShared
     });
 
     aDoc.save(function(err, doc) {
@@ -127,8 +127,16 @@ function update(id, path, callback) {
         });
 }
 
-function ban(id, playerID, callback) {
-    PictureMat.findOne({$and: [{_id: id}, {userId: playerID}]})
+function ban(id, user, callback) {
+    var onlyMine = {userId: user.ID},
+        condition = {$and: [{_id: id}]};
+
+    if (user.canAdmin || user.canBan) {// 如果 有权admin或Ban， 不加 userId的限制
+    } else {
+        condition.$and.push(onlyMine);
+    }
+
+    PictureMat.findOne(condition)
         .exec(function (err, data) {
             if (!data) {
                 console.error(404, {msg: 'not found! : ' + id + ", or not belong to this user: " + playerID});

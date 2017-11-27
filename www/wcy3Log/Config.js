@@ -14,9 +14,9 @@ window.TQ = window.TQ || {};
     Config.MAX_FILE_SIZE = 1024000; // 1M;
 
     // 素材限制:
-    Config.MAT_MAX_FILE_SIZE = 500000;// 100K
-    Config.MAT_MAX_WIDTH = 500;
-    Config.MAT_MAX_HEIGHT = 800;
+    Config.MAT_MAX_FILE_SIZE = 5*1024*1024;// 5M
+    Config.MAT_MAX_WIDTH = 480; //414  // 414 * 736 iphone 6+,  // 480 * 853, samsung G5
+    Config.MAT_MAX_HEIGHT = 856; // 736
 
     // 陈永添加的配置， begin ---
     var host=window.location.host,

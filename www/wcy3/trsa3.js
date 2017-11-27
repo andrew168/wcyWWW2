@@ -218,7 +218,7 @@ var TQ = TQ || {};
         e.stopPropagation();
         e.preventDefault();
         if (!startEle || !isValidOp(e)) {
-            console.error(e.type + ": Drag, no selected..., " + TQ.Utility.getTouchNumbers(e));
+            TQ.Log.debugInfo(e.type + ": Drag, no selected..., " + TQ.Utility.getTouchNumbers(e));
         } else {
             TQBase.Trsa.do(startEle, startLevel, startOffsetInDcExt, e);
         }
