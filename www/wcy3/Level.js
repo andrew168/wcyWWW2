@@ -250,6 +250,10 @@ window.TQ = window.TQ || {};
     */
     p.deleteElementAt = function(i) {
         var ele = this.removeElementAt(i);
+        if (this.background === ele) {
+            this.background = null;
+        }
+
         if (ele != null) {
 			ele.removeFromStage();
         	TQ.GarbageCollector.add(ele);
