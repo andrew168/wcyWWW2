@@ -2,6 +2,7 @@
  * Created by admin on 12/5/2015.
  */
 var express = require('express'),
+    fbPageTemplate = require('./fbPageTemplate'),
     router = express.Router(),
     utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
     imageUtils = require('../common/imageUtils'), // 后缀.js可以省略，Node会自动查找，
@@ -11,7 +12,9 @@ var express = require('express'),
     opusController = require('../db/opus/opusController'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
     authHelper = require('./authHelper'),
-    WCY_DEPOT = "/data/wcydepot/";
+    WCY_DEPOT = "/data/wcydepot/",
+    FB_PAGE_DEPOT = '../www/opus',
+    FB_PAGE_ROOT = 'http://www.udoido.cn/opus'; // fs的当前目录是服务器的根目录
 
 var defaultWcyData = '{"levels":[{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true}],"version":"V2","isDirty":false,"filename":"wcy01","title":"wcy01","currentLevelId":0,"alias":"gameScene","remote":true,"isPreloading":false,"overlay":{"elements":[],"FPS":20,"tMaxFrame":200,"_t":0,"name":"overlay","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false},"currentLevel":{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true},"stage":null}';
 
@@ -35,6 +38,11 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
     var user = (!userId) ? null : status.getUserInfoByTokenId(req.tokenId, userId);
     if (!user) {
         return netCommon.notLogin(req, res);
+    }
+
+    var shareCode = req.params.shareCode || 0;
+    if (shareCode) {
+        return shareToFB(shareCode, req, res);
     }
 
     console.log("params: " + JSON.stringify(req.params));
@@ -64,6 +72,20 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
             _saveWcy(req, res, user, wcyId, ssPath, wcyData);
         }
     }
+});
+
+router.post('/:shareCode', authHelper.ensureAuthenticated, function (req, res) {
+    var userId = req.userId;// 这是ensureAuthenticated写入的
+    if (!userId) { // 没有authentication信息， 在getUserId中已经response了
+        return;
+    }
+    var user = (!userId) ? null : status.getUserInfoByTokenId(req.tokenId, userId),
+        shareCode = req.params.shareCode || 0;
+
+    if (!user || !shareCode) {
+        return netCommon.notLogin(req, res);
+    }
+    return shareToFB(shareCode, req, res);
 });
 
 function _saveWcy(req, res, user, wcyId, ssPath, wcyData) {
@@ -181,6 +203,30 @@ function sendBackWcy(req, res, wcyId) {
         //    response(req, res, data, wcyId, authorData);
         //    console.log("对于非注册用户， 如何处理？");
         //}
+    }
+}
+
+function shareToFB(shareCode, req, res) {
+    var pageShortPath = '/' + shareCode + '.html',
+        pageFileName = FB_PAGE_DEPOT + pageShortPath,
+        pageUrl = FB_PAGE_ROOT + pageShortPath,
+        spaUrl = 'http://www.udoido.com/#/opus/' + shareCode, // single page app url
+        imageUrl = req.body.ssPath || null,
+        fbPage;
+
+    fbPage = fbPageTemplate.createPage(pageUrl, spaUrl, imageUrl);
+
+    fs.writeFile(pageFileName, fbPage, onWriteCompleted);
+    function onWriteCompleted(err) {
+        var msg;
+        if (err) {
+            msg = err + "in " + shareCode;
+        } else {
+            msg = shareCode + ": The page created!";
+        }
+
+        console.log(msg);
+        res.send({msg: msg});
     }
 }
 

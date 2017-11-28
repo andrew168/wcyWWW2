@@ -139,8 +139,10 @@
         console.log("client path (static): " + clientPathStatic);
 
         //专指的规则放在前面
-        app.use('/css', express.static(path.join(__dirname, appConfig.wwwRoot + '/css'), cacheOptions));
-        app.use('/wcy3', express.static(path.join(__dirname, appConfig.wwwRoot + '/wcy3'), cacheOptions));
+        var staticPaths = ['/opus', '/css', '/wcy3'];
+        staticPaths.forEach(function(item) {
+            app.use(item, express.static(path.join(__dirname, appConfig.wwwRoot + item), cacheOptions));
+        });
         // 泛指的规则放在后面，（适用于其余文件， 除了前面专指的规则之外的）
         app.use(express.static(clientPath, noCacheOptions));
         app.use('/static', express.static(clientPathStatic, cacheOptions));
