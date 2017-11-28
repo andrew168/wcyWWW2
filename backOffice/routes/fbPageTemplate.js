@@ -11,7 +11,8 @@ var $PAGE_URL = 'http://www.udoido.cn/opus/0_839_9749_1511749528598.html',
     $IMAGE_WIDTH = '1280',
     $IMAGE_HEIGHT = '848';
 function init() {
-    // fs 的当前目录是服务器的根, 而require的当前目录是本js文件所在的目录
+    // !!! fs 的当前目录是服务器的根,
+    // !!!而require的当前目录是本js文件所在的目录
     fs.readFile("./resource/fbPageTemplate.html", 'utf8', onDataReady);
     function onDataReady(err, data) {
         if (err ) {
