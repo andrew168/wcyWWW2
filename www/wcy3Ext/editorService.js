@@ -16,7 +16,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         _colorPanel = null,
         _lastSelected = null,
         fileElement = null,
-        _tryToSave = false,
+        isSharingToFB = false,
         domEle = null,
         lastCmd = CMD_UNKNOWN,
         currCmd = CMD_UNKNOWN;
@@ -1167,22 +1167,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function shareFbWeb() {
-        if (_tryToSave) {
+        if (isSharingToFB) {
             console.error("系统正在忙。。。。");
             return;
         }
 
         if (!WCY.getShareCode()) {
-            if (!_tryToSave) {
-                _tryToSave = true;
-                if (WCY.hasSsPath()) {
-                    return WCY.save().then(doIt);
-                } else {
-                    return WCY.uploadScreenshot().then(doItAndSave);
-                }
-            } else {
-                return TQ.MessageBox.show(TQ.Locale.getStr('please save first'));
+            isSharingToFB = true;
+            if (WCY.hasSsPath()) {
+                return WCY.save().then(doIt);
             }
+            return WCY.uploadScreenshot().then(doItAndSave);
         }
 
         function doItAndSave() {
@@ -1191,11 +1186,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
 
         function doIt() {
-            _tryToSave = false;
+            isSharingToFB = false;
             shareFbWeb();
         }
 
-        var url = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB, "?opus=" + WCY.getShareCode()),
+        var spaUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB, "?opus=" + WCY.getShareCode()),
+            staticUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB_STATIC, "/opus/" + WCY.getShareCode() + ".html"),
             screenshotUrl =  WCY.getScreenshotUrl();
 
         //ToDo: （需要去掉page中的tag吗？）
@@ -1206,17 +1202,20 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             screenshotUrl = "https://res.cloudinary.com/eplan/image/upload/v1462412871/c161.jpg"
         }
 
-        FB.ui(
-            {
-                method: 'feed',
-                name: 'A Picture is Worth a Thousand Words -- idiom',
-                link: url,
-                picture: screenshotUrl,
-                // picture: "https://res.cloudinary.com/eplan/image/upload/v1462418136/c162.png",
-                description: "If a picture is worth a thousand words...an animation is worth a Million.",
-                caption: "U do I do, it's better and better.   -- UDOIDO",
-                message: "" // not supported by FB?
-            });
+        WCY.createHtmlPage(screenshotUrl).then(doFbShare);
+        function doFbShare() {
+            FB.ui(
+                {
+                    method: 'feed',
+                    name: 'A Picture is Worth a Thousand Words -- idiom',
+                    link: staticUrl,
+                    picture: screenshotUrl,
+                    // picture: "https://res.cloudinary.com/eplan/image/upload/v1462418136/c162.png",
+                    description: "A picture is worth a thousand words, an animation is worth a million.",
+                    caption: "U do I do, together, we make it better and better.   -- UDOIDO",
+                    message: "" // not supported by FB?
+                });
+        }
     }
 
     function errorReport(pkg) {

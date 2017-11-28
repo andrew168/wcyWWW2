@@ -95,6 +95,20 @@ function WCY($http, FileService, WxService, NetService) {
         return upload(forkIt).then(onSavedSuccess);
     }
 
+    function createHtmlPage(screenshotUrl) {
+        var bodyData = {ssPath: screenshotUrl},
+            params = '?wcyId=' + _wcyId;
+
+        return $http({
+            method: 'POST',
+            url: TQ.Config.OPUS_HOST + '/wcy/' + _shareCode + params,
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            data: bodyData
+        });
+    }
+
     function saveToCache() {
         TQ.Assert.isObject(currScene);
         var data = currScene.getData();
@@ -462,6 +476,7 @@ function WCY($http, FileService, WxService, NetService) {
         start: start,  // start a new one, or load previous one (edited or played)
         create: create,
         save: save,
+        createHtmlPage: createHtmlPage,
         forkIt: forkIt,
         cloneIt: cloneIt,
         setAsNew: setAsNew,

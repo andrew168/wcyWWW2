@@ -166,6 +166,7 @@ window.TQ = window.TQ || {};
     // Config.OPUS_HOST = httpProtocol + '//opus.' + MAIN_SERVER_DOMAIN;
     Config.OPUS_HOST = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN;
     Config.OPUS_HOST_FB = httpProtocol + '//show.' + COM_DOMAIN;
+    Config.OPUS_HOST_FB_STATIC = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN; // 因为com服务器暂时没有后台
     Config.TEST_HOST = httpProtocol + '//test.' + MAIN_SERVER_DOMAIN;
     Config.BONE_HOST = httpProtocol + '//bone.' + MAIN_SERVER_DOMAIN;
 
