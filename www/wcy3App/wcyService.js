@@ -96,15 +96,11 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function createHtmlPage(screenshotUrl) {
-        var bodyData = {ssPath: screenshotUrl},
-            params = '?wcyId=' + _wcyId;
+        var bodyData = {ssPath: screenshotUrl};
 
         return $http({
             method: 'POST',
-            url: TQ.Config.OPUS_HOST + '/wcy/' + _shareCode + params,
-            headers: {
-                'Content-Type': 'application/json'
-            },
+            url: TQ.Config.OPUS_HOST + '/wcy/' + _shareCode,
             data: bodyData
         });
     }
