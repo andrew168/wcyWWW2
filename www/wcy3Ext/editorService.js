@@ -188,10 +188,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 StatService.startToShow();
             }
 
-            state.fbAvailable = TQ.Config.hasFacebook && TQ.Utility.isFbAvailable();
-            if (state.fbAvailable) {
-                TQ.LazyLoading.loadOne("/wcy3Social/fb.js");
-            }
+            TQ.LazyLoading.loadOne("/wcy3Social/fb.js");
+
             // TQ.TouchManager.addHandler('swipeleft', gotoPreviousLevel);
             // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
         }
