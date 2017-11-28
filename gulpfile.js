@@ -92,6 +92,12 @@ gulp.task('copy_build_tools', function () {
         .pipe(gulp.dest(dstPath2));
 });
 
+gulp.task('copy_lazyLoad_files', function () {
+    return gulp.src(srcPath + "\\wcy3Social\\*.*")
+        .pipe(gulp.dest(dstPath1 + "\\wcy3Social"))
+        .pipe(gulp.dest(dstPath2 + "\\wcy3Social"));
+});
+
 gulp.task('copy_dictionary', function () {
     return gulp.src(srcPath + "\\dictionary\\*.*")
         .pipe(gulp.dest(dstPath1 + "\\dictionary\\"))

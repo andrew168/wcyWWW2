@@ -6,7 +6,8 @@ TQ.SocialFB = (function(){
     window.fbAsyncInit = function() {
         FB.init({
             appId      : '273410813018932',
-            xfbml      : true,
+            autoLogAppEvents: true,
+            xfbml      : false, // 不必parse我的DOM， 因为我没有使用FB的其它plugins
             version    : 'v2.11'
         });
     };
@@ -19,7 +20,9 @@ TQ.SocialFB = (function(){
             tooSlow = !TQ.State.fbAvailable;
         }
 
-        TQ.LazyLoading.loadOne('//connect.facebook.net/en_US/sdk.js', function() {
+        //var sdkUrl = "https://connect.facebook.net/en_US/sdk/debug.js";
+        var sdkUrl = '//connect.facebook.net/en_US/sdk.js';
+        TQ.LazyLoading.loadOne(sdkUrl, function() {
             if (!tooSlow) {
                 TQ.State.fbAvailable = true;
             }
