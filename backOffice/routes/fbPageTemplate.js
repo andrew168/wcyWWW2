@@ -13,7 +13,7 @@ var $PAGE_URL = 'http://www.udoido.cn/opus/0_839_9749_1511749528598.html',
 function init() {
     // !!! fs 的当前目录是服务器的根,
     // !!!而require的当前目录是本js文件所在的目录
-    fs.readFile("./resource/fbPageTemplate.html", 'utf8', onDataReady);
+    fs.readFile("/data/wwwz/card2/backoffice/resource/fbPageTemplate.html", 'utf8', onDataReady);
     function onDataReady(err, data) {
         if (err ) {
             console.log(err);

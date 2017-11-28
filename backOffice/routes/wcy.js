@@ -13,7 +13,7 @@ var express = require('express'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
     authHelper = require('./authHelper'),
     WCY_DEPOT = "/data/wcydepot/",
-    FB_PAGE_DEPOT = '../www/opus',
+    FB_PAGE_DEPOT = '/data/wwwz/card2/www/opus',
     FB_PAGE_ROOT = 'http://www.udoido.cn/opus'; // fs的当前目录是服务器的根目录
 
 var defaultWcyData = '{"levels":[{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true}],"version":"V2","isDirty":false,"filename":"wcy01","title":"wcy01","currentLevelId":0,"alias":"gameScene","remote":true,"isPreloading":false,"overlay":{"elements":[],"FPS":20,"tMaxFrame":200,"_t":0,"name":"overlay","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false},"currentLevel":{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true},"stage":null}';
@@ -220,7 +220,7 @@ function shareToFB(shareCode, req, res) {
     function onWriteCompleted(err) {
         var msg;
         if (err) {
-            msg = err + "in " + shareCode;
+            msg = err.toString() + "in " + shareCode;
         } else {
             msg = shareCode + ": The page created!";
         }
