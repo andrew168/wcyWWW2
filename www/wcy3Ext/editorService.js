@@ -1206,14 +1206,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         function doFbShare() {
             FB.ui(
                 {
+                    app_id : "273410813018932",
                     method: 'feed',
                     name: 'A Picture is Worth a Thousand Words -- idiom',
+                    redirect_uri: spaUrl,
                     link: staticUrl,
-                    picture: screenshotUrl,
-                    // picture: "https://res.cloudinary.com/eplan/image/upload/v1462418136/c162.png",
-                    description: "A picture is worth a thousand words, an animation is worth a million.",
-                    caption: "U do I do, together, we make it better and better.   -- UDOIDO",
                     message: "" // not supported by FB?
+                    // picture, description, captions 等废弃了，--- Jul 17, 2017
                 });
         }
     }
