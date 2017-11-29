@@ -214,7 +214,7 @@ function shareToFB(shareCode, req, res) {
         imageUrl = req.body.ssPath || null,
         fbPage;
 
-    fbPage = fbPageTemplate.createPage(pageUrl, spaUrl, imageUrl);
+    fbPage = fbPageTemplate.createPage(pageUrl, imageUrl);
 
     fs.writeFile(pageFileName, fbPage, onWriteCompleted);
     function onWriteCompleted(err) {

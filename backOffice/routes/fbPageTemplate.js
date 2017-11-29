@@ -27,10 +27,10 @@ function toTemplate(content) {
     return content;
 }
 
-function createPage(pageUrl, spaUrl, imageUrl) {
+function createPage(pageUrl, imageUrl) {
     return fbPage.replace(new RegExp($PAGE_URL, 'g'), pageUrl).
         replace(new RegExp($IMAGE_URL, 'g'), imageUrl).
-        replace($SAP_URL, spaUrl);
+        replace($SAP_URL, pageUrl + '?play=true');
 }
 
 init();

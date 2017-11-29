@@ -138,6 +138,15 @@
         console.log("client path (dynamic): " + clientPath);
         console.log("client path (static): " + clientPathStatic);
 
+        // "/opus/0_839_9749_1511749528598.html"
+        app.get(/\/opus\/.*\.html/, function(req, res, next){
+            if (req.query.play || req.params.play) {
+                var shareCode=req.originalUrl.split(/[.|\/]/)[2];
+                return res.redirect('http://show.udoido.com/#/opus/'+shareCode);
+            }
+            next(req, res);
+        });
+
         //专指的规则放在前面
         var staticPaths = ['/opus', '/css', '/wcy3'];
         staticPaths.forEach(function(item) {
