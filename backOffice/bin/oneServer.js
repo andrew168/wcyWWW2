@@ -141,20 +141,26 @@
         // "/opus/0_839_9749_1511749528598.html"
         app.get(/\/opus\/.*\.html/, function(req, res, next){
             if (req.query.play || req.params.play) {
-                var shareCode=req.originalUrl.split(/[.|\/]/)[2];
-                return res.redirect('http://show.udoido.com/#/opus/'+shareCode);
+                return redirectToMainApp(req, res);
             }
-            next(req, res);
+
+            var staticFileHandler = express.static(path.join(__dirname, appConfig.wwwRoot + '/opus'));
+            return staticFileHandler(req, res, next);
         });
 
         //专指的规则放在前面
-        var staticPaths = ['/opus', '/css', '/wcy3'];
+        var staticPaths = ['/css', '/wcy3'];
         staticPaths.forEach(function(item) {
             app.use(item, express.static(path.join(__dirname, appConfig.wwwRoot + item), cacheOptions));
         });
         // 泛指的规则放在后面，（适用于其余文件， 除了前面专指的规则之外的）
         app.use(express.static(clientPath, noCacheOptions));
         app.use('/static', express.static(clientPathStatic, cacheOptions));
+    }
+
+    function redirectToMainApp(req, res) {
+        var shareCode = req.originalUrl.split(/[.|\/]/)[2];
+        return res.redirect('http://show.udoido.com/#/opus/' + shareCode);
     }
 
     function setupBasicRoutes(app, appConfig) {
@@ -167,7 +173,9 @@
         app.use('/opus/*', state2index);
 
         function state2index(req, res) {
-            if (!isStatePath(req.baseUrl)) {
+            if (isSharedPageHtml(req)) {
+                return redirectToMainApp(req, res);
+            } else if (!isStatePath(req.baseUrl)) {
                 next(req, res);
             } else {
                 res.sendFile(path.join(__dirname, appConfig.wwwRoot + '/index.html'));
@@ -321,6 +329,10 @@
         var t = new Date();
         return "udoido-" + appName + t.getTime() + '-' + t.getFullYear() + '-' + (t.getMonth() + 1) + '-' + t.getDate() +
                 '-' + t.getHours() + '-' + t.getMinutes() + ".log"
+    }
+
+    function isSharedPageHtml(req) {
+        return (req.originalUrl && (req.originalUrl.toLowerCase().indexOf('.html') >= 0));
     }
 
     exports.start = start;
