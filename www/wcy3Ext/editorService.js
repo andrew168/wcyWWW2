@@ -1190,7 +1190,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         var spaUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB, "?opus=" + WCY.getShareCode()),
             staticUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB_STATIC, "/opus/" + WCY.getShareCode() + ".html"),
-            screenshotUrl =  WCY.getScreenshotUrl();
+            screenshotUrl =  WCY.getScreenshotUrl(),
+            redirectUrlParams = '',
+            linkParams = '';  //'?play=true'
 
         //ToDo: （需要去掉page中的tag吗？）
         // "share" 需要page中的tag支持，
@@ -1200,6 +1202,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             screenshotUrl = "https://res.cloudinary.com/eplan/image/upload/v1462412871/c161.jpg"
         }
 
+
         WCY.createHtmlPage(screenshotUrl).then(doFbShare);
         function doFbShare() {
             FB.ui(
@@ -1207,8 +1210,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     app_id : "273410813018932",
                     method: 'feed',
                     name: 'A Picture is Worth a Thousand Words -- idiom',
-                    redirect_uri: spaUrl,
-                    link: staticUrl,
+                    redirect_uri: staticUrl + redirectUrlParams,
+                    link: staticUrl + linkParams,
                     message: "" // not supported by FB?
                     // picture, description, captions 等废弃了，--- Jul 17, 2017
                 });
