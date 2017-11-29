@@ -403,10 +403,25 @@ window.TQ = window.TQ || {};
             return;
         }
 
-        var jsonElements = this.elements;
+        var jsonElements = this.elements,
+            foundInvalidElement = false;
+
         if (!!jsonElements) {
             for (var i = 0; i < jsonElements.length; i++) {
-                TQ.RM.addElementDesc(jsonElements[i]);
+                if (!jsonElements[i]) {
+                    foundInvalidElement = true;
+                    jsonElements[i] = null;
+                } else {
+                    TQ.RM.addElementDesc(jsonElements[i]);
+                }
+            }
+        }
+
+        if (foundInvalidElement) { //删除非法element
+            for (i = jsonElements.length - 1; i>=0; i--) {
+                if (!jsonElements[i]) {
+                    jsonElements.splice(i, 1);
+                }
             }
         }
     };
