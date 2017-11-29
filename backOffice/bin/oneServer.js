@@ -144,6 +144,10 @@
                 return redirectToMainApp(req, res);
             }
 
+            if (!isBot(req, res, next)) {
+                return redirectToMainApp(req, res);
+            }
+
             var staticFileHandler = express.static(path.join(__dirname, appConfig.wwwRoot + '/opus'));
             return staticFileHandler(req, res, next);
         });
@@ -333,6 +337,53 @@
 
     function isSharedPageHtml(req) {
         return (req.originalUrl && (req.originalUrl.toLowerCase().indexOf('.html') >= 0));
+    }
+
+    function isBot(req, res, next) {
+        var knownBots = ["baiduspider", "facebookexternalhit", "twitterbot",
+            "rogerbot", "linkedinbot", "embedly|quora\ link\ preview",
+            "howyoubot", "outbrain", "pinterest", "slackbot",
+            "vkShare", "W3C_Validator"],
+            foundBot = false,
+            botReqUrl = "",
+            botName = "",
+            urlRequest = req.url,
+            userAgent = req.get('User-Agent');
+
+        console.info('user Agent:' + userAgent);
+        console.info('user_source: ' + userAgent.source);
+        console.info('request_url: ' + urlRequest);
+
+        /* Lets start with ?_escaped_fragment_=, this seems to be a standard, if we have this is part of the request,
+         it should be either a search engine or a social media site askign for open graph rich sharing info
+         */
+        if (urlRequest.search("\\?_escaped_fragment_=") != -1) { // bot who support # hashtag fragment
+            botName = "ESCAPED_FRAGMENT_REQ";
+            foundBot = true; //It says its a bot, so we believe it, lest figure out if it has a request before or after
+            var reqBits = urlRequest.split("?_escaped_fragment_=");
+            console.log(reqBits[1].length);
+            if (reqBits[1].length == 0) { //If 0 length, any request is infront
+                botReqUrl = reqBits[0];
+            } else {
+                botReqUrl = reqBits[1];
+            }
+        } else {
+            knownBots.some(function(item) {
+                if (userAgent.search(item) != -1) {
+                    foundBot = true;
+                    botReqUrl = urlRequest;
+                    botName = item;
+                    return true;
+                }
+                return false;
+            })
+        }
+
+
+        if (foundBot == true) {
+            console.info({botID: botName, botReq: botReqUrl});
+        }
+        return foundBot;
     }
 
     exports.start = start;
