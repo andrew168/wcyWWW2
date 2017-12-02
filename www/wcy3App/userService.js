@@ -5,7 +5,8 @@
 angular.module('starter').factory("UserService", UserService);
 UserService.$inject = ['$http', '$auth'];
 function UserService($http, $auth) {
-    var user = TQ.userProfile;
+    var user = TQ.userProfile,
+        userList = [];
 
     function canAutoLogin() {
         return  $auth.isAuthenticated();
@@ -44,6 +45,21 @@ function UserService($http, $auth) {
         $http.get(url)
             .then(onCheckNameDone).
             catch(onGetProfileFailed);
+    }
+
+    function setAdmin(userId) {
+        if (user.canAdmin) {
+            return $http.get(TQ.Config.AUTH_HOST + '/user/privilege/' + userId + '/15');
+        }
+    }
+
+    function getUserList() {
+        if (user.canAdmin) {
+            return $http.get(TQ.Config.AUTH_HOST + '/user/list')
+                .then(function(netPkg) {
+                    userList = netPkg.data;
+                });
+        }
     }
 
     function onCheckNameDone(netPkg) {
@@ -109,6 +125,8 @@ function UserService($http, $auth) {
         tryAutoLogin: tryAutoLogin,
         checkName: checkName,
         getProfile: getProfile,
+        getUserList: getUserList,
+        setAdmin: setAdmin,
         login: login,
         logout: logout,
         signUp: signUp

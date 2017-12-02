@@ -103,6 +103,10 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     var testUserId = Date.now(); // // "TestAuth100007",
+    $scope.setAdmin = function() {
+        // UserService.setAdmin('1759');
+        UserService.getUserList();
+    };
 
     $scope.testSignUp = function () {
         testUserId++;

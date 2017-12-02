@@ -29,7 +29,7 @@ var config = {
 
 function ensureAuthenticated(req, res, next) {
     if (!req.header('Authorization')) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Please make sure your request has an Authorization header');
+        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Not authorized');
     }
     var payload = getPayload(req, res);
     if (payload === INAVLID_USER) {

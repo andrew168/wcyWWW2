@@ -1,7 +1,8 @@
 /**
  * Created by Andrewz on 4/19/2017.
  */
-var Const = require('../base/const'),
+var DEFAULT_ADMIN = 'systemAdmin',// ToDo: 在设置系统管理员之后， 可以删除此账号
+    Const = require('../base/const'),
     express = require('express'),
     router = express.Router(),
     utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
@@ -42,7 +43,7 @@ function setPrivilege(req, res, next) {
 
     // user.canAdmin = true;
 
-    if (!privilegeCode || !clientID || !user.canAdmin) {
+    if (!privilegeCode || !clientID || (!user.canAdmin && user.name !== DEFAULT_ADMIN)) {
         return onCompleted("not allowed or wrong parameters!");
     } else {
         privilegeCode = parseInt(privilegeCode);
