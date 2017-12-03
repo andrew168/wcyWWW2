@@ -408,11 +408,12 @@ window.TQ = window.TQ || {};
 
         if (!!jsonElements) {
             for (var i = 0; i < jsonElements.length; i++) {
-                if (!jsonElements[i]) {
+                var desc = jsonElements[i];
+                if (!desc || isBlob(desc)) {
                     foundInvalidElement = true;
                     jsonElements[i] = null;
                 } else {
-                    TQ.RM.addElementDesc(jsonElements[i]);
+                    TQ.RM.addElementDesc(desc);
                 }
             }
         }
@@ -425,6 +426,10 @@ window.TQ = window.TQ || {};
             }
         }
     };
+
+    function isBlob(desc) {
+        return desc && desc.src && (desc.src.indexOf('blob:') >=0);
+    }
 
     p.addAllItems = function () {
         // add到stage， == 显示，show
