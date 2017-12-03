@@ -79,7 +79,7 @@ router.get('/list/:matType', authHelper.ensureAuthenticated, function(req, res, 
     matType = (!matType) ? 10 : parseInt(matType);
     console.log("type = " + matType);
     status.logUser(user, req, res);
-    getMatController(matType).getList(user.ID, matType, onGotList, onFail);
+    getMatController(matType).getList(user.ID, matType, onGotList, onFail, user.canAdmin);
     function onGotList(list) {
         // console.log(JSON.stringify(list));
         res.json(list);

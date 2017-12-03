@@ -35,11 +35,11 @@ function get(userId, callback) {
     });
 }
 
-function getList(userId, typeId, callback) {
+function getList(userId, typeId, callback, isAdmin) {
     var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
         condition ={$and: [{"isBanned": false}, {"typeId": typeId}]};
 
-    if (userLimit) {
+    if (userLimit && !isAdmin) {
         condition.$and.push(userLimit);
     }
 

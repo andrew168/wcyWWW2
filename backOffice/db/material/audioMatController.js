@@ -46,12 +46,12 @@ function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
     });
 }
 
-function getList(userId, typeId, callback) {
-    var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]};
-    condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
+function getList(userId, typeId, callback, isAdmin) {
+    var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
+        condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
 
-    if (userLimit) {
-        // condition.$and.push(userLimit);
+    if (userLimit && !isAdmin) {
+        condition.$and.push(userLimit);
     }
 
     AudioMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
