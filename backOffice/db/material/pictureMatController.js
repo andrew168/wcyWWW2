@@ -23,7 +23,7 @@ function get(userId, callback) {
             var num = data.length,
                 i;
 
-            for (i= 0; i < num; i++) {
+            for (i = 0; i < num; i++) {
                 var doc1 = data[i];
                 if (!doc1.path) {
                     continue;
@@ -35,9 +35,9 @@ function get(userId, callback) {
     });
 }
 
-function getList(userId, typeId, callback, isAdmin) {
+function getList(userId, typeId, onSuccess, isAdmin) {
     var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
-        condition ={$and: [{"isBanned": false}, {"typeId": typeId}]};
+        condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
 
     if (userLimit && !isAdmin) {
         condition.$and.push(userLimit);
@@ -52,12 +52,14 @@ function getList(userId, typeId, callback, isAdmin) {
             data.forEach(copyItem);
         }
 
-        callback(result);
+        onSuccess(result);
         function copyItem(model) {
             var item = model._doc;
             if (item.path) {
-                result.push({id: item._id, name:item.name, path: item.path, authorID: item.userId,
-                    isShared: item.isShared, time: item.timestamp});
+                result.push({
+                    id: item._id, name: item.name, path: item.path, authorID: item.userId,
+                    isShared: item.isShared, time: item.timestamp
+                });
             }
         }
     }
@@ -90,7 +92,7 @@ function doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError) {
         isShared: isShared
     });
 
-    aDoc.save(function(err, doc) {
+    aDoc.save(function (err, doc) {
         utils.onSave(err, doc, onSuccess, onError);
     });
 }
@@ -116,7 +118,7 @@ function update(id, path, callback) {
                 data.set('path', path);
                 data.save(function (err, data) {
                     if (!err) {
-                        if (callback){
+                        if (callback) {
                             callback(data._doc._id);
                         }
                     } else {
@@ -160,4 +162,4 @@ exports.add = add;
 exports.get = get;
 exports.getList = getList;
 exports.update = update;
-exports.ban= ban;
+exports.ban = ban;

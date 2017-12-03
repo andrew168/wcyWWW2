@@ -24,7 +24,7 @@ function get(userId, callback) {
             var num = data.length,
                 i;
 
-            for (i= 0; i < num; i++) {
+            for (i = 0; i < num; i++) {
                 result.push(data[i]._doc.path);
             }
             callback(result);
@@ -41,12 +41,12 @@ function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
         isShared: isShared
     });
 
-    aDoc.save(function(err, doc) {
+    aDoc.save(function (err, doc) {
         utils.onSave(err, doc, onSuccess, onError);
     });
 }
 
-function getList(userId, typeId, callback, isAdmin) {
+function getList(userId, typeId, onSuccess, isAdmin) {
     var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
         condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
 
@@ -63,12 +63,14 @@ function getList(userId, typeId, callback, isAdmin) {
             data.forEach(copyItem);
         }
 
-        callback(result);
+        onSuccess(result);
         function copyItem(model1) {
             var item = model1._doc;
             if (item.path) {
-                result.push({id: item._id, name:item.name, path: item.path, authorID: item.userId,
-                    isShared: item.isShared, time: item.timestamp});
+                result.push({
+                    id: item._id, name: item.name, path: item.path, authorID: item.userId,
+                    isShared: item.isShared, time: item.timestamp
+                });
             }
         }
     }
@@ -85,7 +87,7 @@ function update(id, path, callback) {
                 data.set('path', path);
                 data.save(function (err, data) {
                     if (!err) {
-                        if (callback){
+                        if (callback) {
                             callback(data._id);
                         }
                     } else {
