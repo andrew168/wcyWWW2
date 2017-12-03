@@ -41,9 +41,14 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         option = option || {};
         var q = $q.defer();
         TQ.Assert.isTrue(!!file, "文件不能为null");
+        option.type = matType; // ToDo: delete type, which is replaced by matType
+        if (!option.matType || (option.matType !== option.type)) {
+            option.matType = option.type;
+            TQ.Log.error("must define matType");
+        }
+
         if (isLocalFile(file)) {
             option.filename = file.name;
-            option.type = matType;
             if (!!file.isWx) {
                 TQ.Log.alertInfo("isWx");
                 TQ.Log.alertInfo(JSON.stringify(file));
@@ -53,11 +58,9 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             var filename = hasFileName(file) ? file.name :
                 (isFullPath(file) ? file : getImageNameWithoutExt());
             option.filename = filename;
-            option.type = matType;
             option.tags = 'myphotoalbum';
             option.context = 'photo=' + "No";
         }
-
         createMatId(option)
             .success(onMatIdCreated)
             .error(onError);
@@ -85,7 +88,8 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         function onLoadedSuccess(data, status, headers, config) {
             file.result = data;
             TQ.Log.debugInfo(data);
-            data.type = matType;
+            data.type = matType; // ToDo: delete type, which is replaced by matType
+            data.matType = matType;
             updateMat(data);
             q.resolve(data);
         }
@@ -206,7 +210,8 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         var data2 = {
             path: TQ.RM.toRelative(data.url),
             public_id: data.public_id,
-            type: data.type
+            matType: data.type,
+            type: data.type // ToDo: delete type, which is replaced by matType
         };
 
         return $http.post(C_MAN_URL, angular.toJson(data2)).
