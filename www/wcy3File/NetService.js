@@ -41,7 +41,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         option = option || {};
         var q = $q.defer();
         TQ.Assert.isTrue(!!file, "文件不能为null");
-        option.type = matType; // ToDo: delete type, which is replaced by matType
         if (!option.matType || (option.matType !== option.type)) {
             option.matType = option.type;
             TQ.Log.error("must define matType");
@@ -210,13 +209,12 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         var data2 = {
             path: TQ.RM.toRelative(data.url),
             public_id: data.public_id,
-            matType: data.type,
-            type: data.type // ToDo: delete type, which is replaced by matType
+            matType: data.type
         };
 
         return $http.post(C_MAN_URL, angular.toJson(data2)).
             then(function (pkg) {
-                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.type});
+                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data2.matType});
             });
     }
 
@@ -224,7 +222,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         data.ban = true;
         return $http.post(C_MAN_URL, angular.toJson(data)).
             then(function (pkg) { // 发出event， 好让dataService等更新自己
-                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.type});
+                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
             });
     }
 
