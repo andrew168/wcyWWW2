@@ -76,16 +76,16 @@ function hasAuthInfo(req) {
     return req.header('Authorization');
 }
 
-var tokeIdBase = -1,
-    tokeIdCounter = 0,
-    tokeIdSeries = 'A';
+var tokenIdBase = -1,
+    tokenIdCounter = 0,
+    tokenIdSeries = 'A';
 
 function generateTokenId() {
-    if (tokeIdBase < 0) {
-        tokeIdBase = Date.now();
+    if (tokenIdBase < 0) {
+        tokenIdBase = Date.now();
     }
-    tokeIdCounter++;
-    return tokeIdSeries + tokeIdBase + tokeIdSeries + tokeIdCounter;
+    tokenIdCounter++;
+    return tokenIdSeries + tokenIdBase + tokenIdSeries + tokenIdCounter;
 }
 
 exports.config = config;
