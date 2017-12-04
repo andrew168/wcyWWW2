@@ -41,10 +41,10 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         option = option || {};
         var q = $q.defer();
         TQ.Assert.isTrue(!!file, "文件不能为null");
-        if (!option.matType || (option.matType !== option.type)) {
-            option.matType = option.type;
-            TQ.Log.error("must define matType");
+        if (option.type !== undefined) {
+            TQ.Log.error("==> upgrade: type to matType");
         }
+        option.matType = matType;
 
         if (isLocalFile(file)) {
             option.filename = file.name;
