@@ -20,6 +20,7 @@ function add(aUser, tokenId) {
     // console.log("before add:" + JSON.stringify(users));
     console.log("before add2:" + JSON.stringify(users[tokenId]));
     console.log("new user:" + JSON.stringify(aUser));
+    obsoleteExistingToken(aUser);
     users[tokenId] = aUser;  // 3rd: 用tokenId做索引
     console.log("after add2:" + JSON.stringify(users[tokenId]));
 }
@@ -66,6 +67,7 @@ function save(callback) {
     }
 
     if (users) {
+        obsoleteStaleToken();
         fs.writeFile(tempFileName, JSON.stringify(users), onSaved);
     } else {
         onSaved();
@@ -78,6 +80,7 @@ function restore() {
         if (!users) { // 防止 "null"
             users = {};
         }
+        obsoleteStaleToken();
         dataReady = true;
 
         // console.log("restored users = " + JSON.stringify(users));
@@ -97,6 +100,28 @@ function hasStopped() {
     return readyToStop;
 }
 
+function obsoleteExistingToken(aUser) {
+// each user can only have one token in the same time
+    var ids = Object.keys(users);
+    ids.forEach(function (id) {
+        if (users[id].ID === aUser.ID) {
+            obsolete(id);
+        }
+    })
+}
+
+function obsoleteStaleToken() {
+    var ids = Object.keys(users);
+    ids.forEach(function(id) {
+        if (!isValidTokenId(id)) {
+            obsolete(id);
+        }
+    })
+}
+
+function isValidTokenId(token) {
+    return (token[0] ==='A'); // 当前有效的token是A字体， （暂时未判断有效期）
+}
 exports.add = add;
 exports.get = get;
 exports.isReady = isReady;

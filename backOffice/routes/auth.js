@@ -135,7 +135,7 @@ router.get('/api/me', authHelper.ensureAuthenticated, function (req, res) {
         }
 
         var userInfo = composeUserPkg(user);
-        status.onLoginSucceed(req, res, userInfo);
+        status.onLoginSucceed(req, res, userInfo, req.tokenId); //
         res.send(userInfo);
     });
 });

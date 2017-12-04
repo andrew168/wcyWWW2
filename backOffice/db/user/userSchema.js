@@ -7,7 +7,7 @@ var userSchema = new Schema({
     // _id: 由autoIncrement.plugin自动添加的， 唯一递增正整数 > 0, 数据库记录自然编号
     name: {type: String, index: 1, required: true, unique: true},// 登录用的名字， 必须唯一，可以是email账号
     displayName: {type: String, default:""},
-    psw: {type:String, required: true, default:"123abc"},
+    psw: {type:String, default:"123abc"}, // 不再是required
     password: {type: String, select: false}, // 代替psw，逐步废弃psw
     email: {type: String, unique: true, lowercase: true},
     picture: String,

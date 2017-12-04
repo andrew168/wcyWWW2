@@ -49,7 +49,7 @@ function UserService($http, $auth) {
 
     function setAdmin(userId) {
         if (user.canAdmin) {
-            return $http.get(TQ.Config.AUTH_HOST + '/user/privilege/' + userId + '/15');
+            return $http.get(TQ.Config.AUTH_HOST + '/user/privilege/' + userId + '/255');
         }
     }
 
