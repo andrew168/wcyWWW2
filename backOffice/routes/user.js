@@ -43,7 +43,7 @@ function setPrivilege(req, res, next) {
 
     // user.canAdmin = true;
 
-    if (!privilegeCode || !clientID || (!user.canAdmin && user.name !== DEFAULT_ADMIN)) {
+    if (!privilegeCode || !clientID || (!user.canAdmin && user.name.toLowerCase() !== DEFAULT_ADMIN.toLowerCase())) {
         return onCompleted("not allowed or wrong parameters!");
     } else {
         privilegeCode = parseInt(privilegeCode);
