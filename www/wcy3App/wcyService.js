@@ -153,21 +153,6 @@ function WCY($http, FileService, WxService, NetService) {
         return getWcy(wcyId2ShareCode(wcyId), false);
     }
 
-    function getWcyList() {
-        var url = TQ.Config.OPUS_HOST + '/wcylist/';
-        $http.get(url)
-            .then(_onReceivedWcyList, _onFail);
-
-        function _onReceivedWcyList(res) {
-            var data = res.data;
-            if (data) {
-                TQ.Log.debugInfo(data);
-            } else {
-                TQ.Log.error("wrong logic");
-            }
-        }
-    }
-
     function getShareCode() {
         return _shareCode;
     }
@@ -481,7 +466,6 @@ function WCY($http, FileService, WxService, NetService) {
         edit: edit,  // open for edit
         getWcy: getWcy,
         getWcyById: getWcyById,
-        getWcyList: getWcyList,
         getShareCode: getShareCode,
         getScreenshotUrl: getScreenshotUrl,
         hasSsPath: hasSsPath,

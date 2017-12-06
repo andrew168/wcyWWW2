@@ -959,8 +959,9 @@
                     '/wcyList/', ' /wcyList' // '/wcyList/ban/', '/wcyList/apply/', '/wcyList/approve/'
                     ];
 
+                pathname = pathname.toLowerCase();
                 keyApis.some(function (item) {
-                    return (result = pathname.indexOf(item) >= 0);
+                    return (result = pathname.indexOf(item.toLowerCase()) >= 0);
                 });
 
                 return result;

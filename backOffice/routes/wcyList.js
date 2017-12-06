@@ -27,7 +27,7 @@ router.get('/', authHelper.ensureAuthenticated, function(req, res, next) {
     }
 
     function onFail(msg) {
-        console.error("failed in getWcyList" + msg);
+        console.error("failed in get wcyList" + msg);
         res.json([]);
     }
 });
