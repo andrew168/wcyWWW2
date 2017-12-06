@@ -126,15 +126,6 @@ DBMain.stop = function() {
     console.log("DB disconnected correctly!");
 };
 
-var insertDocument = function (db, callback) {
-    var newUser = new Users({
-        name: 'andrew' + (new Date()).getTime(),
-        score: 100
-    });
-
-    newUser.save(showDocument);
-};
-
 function showDocument(err, doc) {
     console.log("result: " + err);
     console.log("saved doc is: ", doc);
@@ -157,7 +148,6 @@ function onError(e) {
     }
 }
 
-DBMain.testAdd = insertDocument;
 DBMain.testSearch = findUser;
 DBMain.init = init;
 module.exports = DBMain;
