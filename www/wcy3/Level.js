@@ -48,11 +48,8 @@ window.TQ = window.TQ || {};
 
     p.onSelected = function()
     {
-        TQ.FrameCounter.initialize(this._t, this.FPS, this);
-        if (!TQBase.LevelState.isOperatingTimerUI()) {
-            TQ.TimerUI.initialize();
-        } else {
-            this._t = TQ.FrameCounter.t();
+        if (this.dataReady) {
+            this.setupTimer2();
         }
   //      this.state = TQBase.LevelState.NOT_INIT;
 //        this.dataReady = false;
@@ -323,6 +320,7 @@ window.TQ = window.TQ || {};
     p.onLoaded = function () {
         this.state = TQBase.LevelState.LOADED;
         this.build();  // 从Resource 到 canvas
+        this.setupTimer2();
         if (this.isWaitingForShow) {
           TQ.Log.info("onLoaded" + this.name);
           this.doShow();
@@ -374,6 +372,7 @@ window.TQ = window.TQ || {};
         TQ.SoundMgr.start();
         jsonElements = null;
         this.dataReady = true;
+        this.calculateLastFrame();
     };
 
     p.fixupButtons = function() {
@@ -524,6 +523,7 @@ window.TQ = window.TQ || {};
 
         // 非播放状态
         if (this.isDirty) {
+            this.calculateLastFrame();
             stage.update();
         }
         if (this.dirtyZ) {
@@ -686,13 +686,22 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.setupTimer2 = function() {
+        TQ.FrameCounter.initialize(this._t, this.FPS, this);
+        if (!TQBase.LevelState.isOperatingTimerUI()) {
+            TQ.TimerUI.initialize();
+        } else {
+            this._t = TQ.FrameCounter.t();
+        }
+    };
+
     // 自动拓展微动漫的时间
-    p.calculateLastFrame = function() {
+    p.calculateRealLastFrame = function() {
         if (!this.dataReady) return this.tMaxFrame;
         // 在退出本level的时候才调用，以更新时间，
         //  ToDo: ?? 在编辑本Level的时候， 这个值基本上是没有用的
         var tLastFrame = 0;
-        for (var i=0; i< this.elements.length; i ++ ) {
+        for (var i = 0; i < this.elements.length; i++) {
             assertNotNull(TQ.Dictionary.FoundNull, this.elements[i]);
             if (!this.elements[i].calculateLastFrame) {
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
@@ -700,6 +709,11 @@ window.TQ = window.TQ || {};
                 tLastFrame = Math.max(tLastFrame, this.elements[i].calculateLastFrame());
             }
         }
+        return tLastFrame;
+    };
+
+    p.calculateLastFrame = function () {
+        var tLastFrame = this.calculateRealLastFrame();
         if (!isStaticImage(tLastFrame)) {
             this.tMaxFrame = TQ.FrameCounter.t2f(tLastFrame);
         }
@@ -750,6 +764,8 @@ window.TQ = window.TQ || {};
     p.isEditMode = function() {
         return (this.state === TQBase.LevelState.EDITING);
     };
-
+    p.hasAnimation = function() {
+        return !isStaticImage(this.tMaxFrame);
+    };
     TQ.Level = Level;
 }());
