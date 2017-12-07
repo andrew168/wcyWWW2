@@ -155,6 +155,7 @@ TQ = TQ || {};
 
     p.update = function (t) {
         TQ.SceneEditor.updateMode();
+        this.updateLevelRange();
         // 谁都可以 要求Update， 不只是Player
         if (this.currentLevel != null) {
             this.currentLevel.update(t);
@@ -173,8 +174,6 @@ TQ = TQ || {};
                 }
             }
         }
-
-        this.updateLevelRange();
     };
 
     p.updateTimeTable = function () {
@@ -922,6 +921,9 @@ TQ = TQ || {};
     };
 
     function localT2Global(t) {
+        if (!_levelTs || _levelTs.length <= currScene.currentLevelId) {
+            return (t = 0);
+        }
         return  (t + _levelTs[currScene.currentLevelId]);
     }
 
