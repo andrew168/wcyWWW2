@@ -17,7 +17,8 @@ TQ.TimerUI = (function () {
             '<label id="timer-axis-value" class="toolbar-layer ui-font-md inline"></label>';
 
     return {
-        initialize: initialize
+        initialize: initialize,
+        setGlobalTime: setGlobalTime
     };
 
     function initialize () {
@@ -70,6 +71,13 @@ TQ.TimerUI = (function () {
         TQ.FrameCounter.cmdGotoFrame(TQ.Scene.globalT2local(t));
         TQ.DirtyFlag.requestToUpdateAll();
     }
+
+    function setGlobalTime(globalV) {
+        t = globalV;
+        syncToCounter();
+        update(true);
+    }
+
     function onMouseAction (event, ui) {
         t = ui.value;
         // TQ.Log.debugInfo("Mouse Action: t10 = " + t10);

@@ -16,6 +16,7 @@ TQ = TQ || {};
     Scene.VER3_1 = 3.1; // 采用指定分辨率的世界坐标系(以像素为单位)， 替代归一化世界坐标系
     Scene.VER3_3 = 3.3; // designated区域 大于1*1
     Scene.VER_LATEST = Scene.VER3_3;
+    var stateStack= [];
     var p = Scene.prototype;
     var _levelTs = [],
         _levelTe = [],
@@ -42,6 +43,28 @@ TQ = TQ || {};
     Scene.localT2Global = localT2Global;
     Scene.globalT2local = globalT2local;
     Scene.getTMax = getTMax;
+
+    Scene.saveState = saveState;
+    Scene.restoreState = restoreState;
+
+    function saveState() {
+        stateStack.push({vT:Scene.localT2Global(TQ.FrameCounter.v), levelId: currScene.currentLevelId});
+    }
+
+    function restoreState() {
+        var state;
+
+        do {
+            state = stateStack.pop();
+        } while (stateStack.length > 0);
+
+        if (state) {
+            TQ.TimerUI.setGlobalTime(state.vT);
+        } else {
+            TQ.Log.error("state is null");
+        }
+    }
+
     p.getDesignatedRegion = function () {
         return {
             w: this.getDesignatedWidth(),
@@ -174,6 +197,8 @@ TQ = TQ || {};
         }
         if (TQ.FrameCounter.isPlaying()) {
             currScene.stop();
+        } else {
+            saveState();
         }
         if (currScene.currentLevel && currScene.currentLevel.isEditMode()) {
             currScene.currentLevel.calculateLastFrame();
@@ -357,7 +382,7 @@ TQ = TQ || {};
                     _self.doGotoLevel(id);
                 }
             } else {
-                TQ.AssertExt.invalidLogic(false, "已经在本level，不变切换");
+                TQ.Log.debugInfo("已经在本level，不变切换");
             }
         }
     };

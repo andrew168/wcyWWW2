@@ -101,10 +101,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // editor
         forceToRefreshUI: forceToRefreshUI,
         setAddMode: setAddMode,
+        toAddMode: toAddMode,
         setModifyMode: setModifyMode,
         getTextCursor: getTextCursor,
         setColorPanel: setColorPanel,
-        toAddMode: toAddMode,
         reset: reset,
         setWorkingRegion: setWorkingRegion,
         setBackgroundColor: setBackgroundColor,
@@ -918,17 +918,20 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function toAddMode() {
-        TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
-        TQ.SelectSet.empty();
-
-        if (state.isPreviewMode) {
-            state.isPreviewMode = false;
-            TQ.IdleCounter.remove(onPreviewMenuOff);
-            TQ.TouchManager.start();
-            onPreviewMenuOff();
-            TQ.PreviewMenu.stopWatch();
-        }
-        updateMode(true);
+        TQ.Scene.restoreState();
+        $timeout(function() {
+                TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
+                TQ.SelectSet.empty();
+                if (state.isPreviewMode) {
+                    state.isPreviewMode = false;
+                    TQ.IdleCounter.remove(onPreviewMenuOff);
+                    TQ.TouchManager.start();
+                    onPreviewMenuOff();
+                    TQ.PreviewMenu.stopWatch();
+                }
+                updateMode(true);
+                forceToRefreshUI();
+            }, 100);
     }
 
     function forkIt() {
