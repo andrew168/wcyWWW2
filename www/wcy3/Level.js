@@ -34,8 +34,7 @@ window.TQ = window.TQ || {};
         this.elements = description.elements;
         this.FPS = (!description.FPS) ? TQ.FrameCounter.defaultFPS : description.FPS;
         this.tMaxFrame = (!description.tMaxFrame)? this.tMaxFrame : description.tMaxFrame;
-        this._t = (!description._t) ? 0 : description._t;
-        this.setupTimer();
+        this._t = 0; // _t是临时变量， 每次播放都不同，没必要fixedUp 起止
         assertNotNull(TQ.Dictionary.FoundNull, description.name);
         this.name = description.name;
         this.itemCounter = 0;
