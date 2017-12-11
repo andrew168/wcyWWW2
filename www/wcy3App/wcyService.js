@@ -30,6 +30,7 @@ function WCY($http, FileService, WxService, NetService) {
     // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
     var user = TQ.userProfile;
     var _AUTO_SAVE_NAME = '_auto_save_name_',
+        isSaving = false,
         _FILENAME = '_filename_',
         _SHARE_CODE_ = '_shareCode',
         _WCY_ID_ = "_wcy_id",
@@ -92,7 +93,10 @@ function WCY($http, FileService, WxService, NetService) {
             saveToCache();
         }
         //ToDo: if (has wifi)
-        return upload(forkIt).then(onSavedSuccess);
+        isSaving = true;
+        return upload(forkIt).then(onSavedSuccess).finally(function(){
+            isSaving = false;
+        });
     }
 
     function createHtmlPage(screenshotUrl) {
@@ -285,7 +289,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _autoSave() {
-        if (_autoSaveStopped || currScene.hasSavedToCache || !TQ.SceneEditor.needToSave() || !isSafe()) {
+        if (isSaving || _autoSaveStopped || currScene.hasSavedToCache || !TQ.SceneEditor.needToSave() || !isSafe()) {
         } else {
             TQ.Assert.isObject(currScene);
             var data = currScene.getData();
