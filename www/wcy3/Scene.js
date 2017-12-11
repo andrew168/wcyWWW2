@@ -5,6 +5,7 @@ TQ = TQ || {};
         this.levels = [];
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
         this.version = Scene.VER_LATEST;
+        this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         this.isDirty = true;
     }
@@ -23,7 +24,6 @@ TQ = TQ || {};
         _tMax;
 
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
-    p.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
     p.title = null;  // title是微创意的标题，
     p.description = null; // 内容描述，摘要， 用于微信分享，FB分享的简介文字
     p.ssPath = null;
@@ -394,13 +394,20 @@ TQ = TQ || {};
 
     p.open = function (fileInfo) {
         p.isPlayOnly = (fileInfo.isPlayOnly === undefined)? false : fileInfo.isPlayOnly;
-        TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
+        TQ.MessageBox.showWaiting(TQ.Locale.getStr('prepare to open...'));
         this.reset();
-        this.filename = fileInfo.filename;
+        this.setFilename(fileInfo.filename);
         this.screenshotName = fileInfo.screenshotName;
         this.title = null;
         // 删除 旧的Levels。
-        this.onsceneload = this.showLevel;
+
+        var self = this;
+        function onOpened() {
+            self.showLevel();
+            TQ.MessageBox.hide();
+        }
+
+        this.onsceneload = onOpened;
 
         if (!fileInfo.content &&
             (fileInfo.name === TQ.Config.UNNAMED_SCENE)) {
@@ -918,6 +925,18 @@ TQ = TQ || {};
                 _tMax = te;
             TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
         }
+    };
+
+    p.setFilename = function (name) {
+        return this.filename = name;
+    };
+
+    p.setFilenameById = function (wcyId) {
+        return this.filename = wcyId;
+    };
+
+    p.hasFilename = function () {
+        return (this.filename && (this.filename !== TQ.Config.UNNAMED_SCENE));
     };
 
     function localT2Global(t) {

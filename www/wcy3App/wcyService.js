@@ -69,13 +69,13 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function setAsNew() {
-        _wcyId = 0; // 能够从新分配一个作品ID
+        _wcyId = TQ.Config.INVALID_WCY_ID; // 能够从新分配一个作品ID
         _ssSign = null;
         _shareCode = null;
         writeCache(_SHARE_CODE_, _shareCode);
         writeCache(_WCY_ID_, _wcyId);
-        if (!!currScene && !!currScene.filename) {
-            currScene.filename = TQ.Config.UNNAMED_SCENE;
+        if (currScene) {
+            currScene.setFilename(TQ.Config.UNNAMED_SCENE);
             writeCache(_FILENAME, currScene.filename);
         }
     }
@@ -212,11 +212,12 @@ function WCY($http, FileService, WxService, NetService) {
     function forkIt() {
         currScene.isPlayOnly = false;
         TQ.WCY.isPlayOnly = false;
+        setAsNew();
         return save(true); // 要求fork 当前作品 //服务器不处理
     }
 
     function cloneIt() { // clone 是fork自己
-        _wcyId = TQ.Config.INVALID_WCY_ID;
+        setAsNew();
         save(true); // 要求fork 当前作品 //服务器不处理
     }
 
@@ -358,6 +359,7 @@ function WCY($http, FileService, WxService, NetService) {
                 currScene.setSsPath(data.ssPath);
             }
 
+            currScene.setFilenameById(data.wcyId);
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
             TQUtility.triggerEvent(document.body, TQ.Scene.EVENT_SAVED);
             TQ.Log.debugInfo(data);
