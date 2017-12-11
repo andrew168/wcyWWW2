@@ -319,8 +319,12 @@ window.TQ = window.TQ || {};
     p.onLoaded = function () {
         this.state = TQBase.LevelState.LOADED;
         this.build();  // 从Resource 到 canvas
-        this.setupTimer2();
+        if (this.isActive() && !this.isOverlay()) {
+            this.setupTimer2();
+        }
+
         if (this.isWaitingForShow) {
+          this.isWaitingForShow = false;
           TQ.Log.info("onLoaded" + this.name);
           this.doShow();
         }
@@ -331,7 +335,6 @@ window.TQ = window.TQ || {};
         TQ.Log.info("doShow level, name = :" + this.name);
         if (this.dataReady) {
             TQ.Log.info("data ready");
-            this.isWaitingForShow = false;
             this.onLevelCreated();
         } else {
             TQ.AssertExt.invalidLogic(true, "应该先调用show");
@@ -757,7 +760,11 @@ window.TQ = window.TQ || {};
     };
 
     p.isActive = function() {
-        return (currScene && currScene.currentLevel === this)
+        return (currScene && (currScene.currentLevel === this) || (this.isWaitingForShow));
+    };
+
+    p.isOverlay = function() {
+        return false;
     };
 
     p.isEditMode = function() {

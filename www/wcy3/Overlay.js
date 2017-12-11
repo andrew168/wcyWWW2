@@ -39,5 +39,9 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.isOverlay = function() {
+        return true;
+    };
+
     TQ.Overlay = Overlay;
 }());
