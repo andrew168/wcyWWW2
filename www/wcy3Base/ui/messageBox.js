@@ -36,7 +36,7 @@ TQ.MessageBox = (function () {
             timer = setTimeout(onDuration, options.duration);
         }
 
-        Modal.open(options);
+        openDialog(options);
     }
 
     function getInstance() {
@@ -50,7 +50,7 @@ TQ.MessageBox = (function () {
         }
 
         isShowingByForce = false;
-        Modal.close();
+        closeDialog();
     }
 
     function onCancel() {
@@ -70,12 +70,12 @@ TQ.MessageBox = (function () {
     }
 
     function show(str) {
-        doShow({content: str});
+        doShow({unsafeMessage: str});
     }
 
     function toast(str) {
         var duration = 1000;
-        doShow({content: str, duration: duration});
+        doShow({unsafeMessage: str, duration: duration});
     }
 
     function onDuration() {
@@ -94,6 +94,37 @@ TQ.MessageBox = (function () {
     function showWaiting(msg) {
         var htmlStr = '<img src="/public/images/loading.gif"> ' + msg;
         show(htmlStr);
+    }
+
+    function openDialog(options) {
+        // {content: msg, onOk: onOk, onCancel: onCancel, duration: duration}
+        var vexOptions = {
+            message: options.content,
+            unsafeMessage: options.unsafeMessage,
+            callback: function (value) {
+                if (value) {
+                    console.log('Ok');
+                    if (onOk) {
+                        onOk();
+                    }
+                } else {
+                    console.log('canceled!');
+                    if (onCancel) {
+                        onCancel();
+                    }
+                }
+            }
+        };
+
+        if (!options.onCancel) {
+            vex.dialog.alert(vexOptions);
+        } else {
+            vex.dialog.confirm(vexOptions);
+        }
+    }
+
+    function closeDialog() {
+        vex.closeAll();
     }
 })();
 
