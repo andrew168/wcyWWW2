@@ -13,6 +13,7 @@ TQ.MessageBox = (function () {
         prompt: prompt,
         confirm: confirm,
         show: show,
+        show2: show2,
         showWaiting: showWaiting,
         toast: toast
     };
@@ -36,7 +37,7 @@ TQ.MessageBox = (function () {
             timer = setTimeout(onDuration, options.duration);
         }
 
-        openDialog(options);
+        show2(options);
     }
 
     function getInstance() {
@@ -50,7 +51,7 @@ TQ.MessageBox = (function () {
         }
 
         isShowingByForce = false;
-        closeDialog();
+        doHide();
     }
 
     function onCancel() {
@@ -96,25 +97,39 @@ TQ.MessageBox = (function () {
         show(htmlStr);
     }
 
-    function openDialog(options) {
+    function show2(options) {
         // {content: msg, onOk: onOk, onCancel: onCancel, duration: duration}
-        var vexOptions = {
-            message: options.content,
-            unsafeMessage: options.unsafeMessage,
-            callback: function (value) {
-                if (value) {
-                    console.log('Ok');
-                    if (onOk) {
-                        onOk();
-                    }
-                } else {
-                    console.log('canceled!');
-                    if (onCancel) {
-                        onCancel();
+        var buttons = [],
+            vexOptions = {
+                message: options.content,
+                showCloseButton: !!options.showCloseButton,
+                unsafeMessage: options.unsafeMessage,
+                className: getClassName(options),
+                callback: function (value) {
+                    if (value) {
+                        console.log('Ok');
+                        if (options.onOk) {
+                            options.onOk();
+                        }
+                    } else {
+                        console.log('canceled!');
+                        if (options.onCancel) {
+                            options.onCancel();
+                        }
                     }
                 }
-            }
-        };
+            };
+
+        if (options.okText) {
+            buttons.push($.extend({}, vex.dialog.buttons.YES, {text: options.okText}));
+        }
+        if (options.cancelText) {
+            buttons.push($.extend({}, vex.dialog.buttons.NO, {text: options.cancelText}));
+        }
+
+        if (buttons.length > 0) {
+            vexOptions.buttons = buttons;
+        }
 
         if (!options.onCancel) {
             vex.dialog.alert(vexOptions);
@@ -123,7 +138,25 @@ TQ.MessageBox = (function () {
         }
     }
 
-    function closeDialog() {
+    function getClassName(options) {
+        var name = 'vex-theme-default';
+        if (options.position) {
+            switch (options.position) {
+                case 'top':
+                    name = 'vex-theme-top';
+                    break;
+                case 'bottom':
+                    name = 'vex-theme-bottom-right-corner';
+                    break;
+                default :
+                    break;
+            }
+        }
+
+        return name;
+    }
+
+    function doHide() {
         vex.closeAll();
     }
 })();
