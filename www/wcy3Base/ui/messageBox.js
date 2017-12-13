@@ -104,6 +104,7 @@ TQ.MessageBox = (function () {
                 message: options.content,
                 showCloseButton: !!options.showCloseButton,
                 unsafeMessage: options.unsafeMessage,
+                overlayClosesOnClick: !!options.overlayClosesOnClick,
                 className: getClassName(options),
                 callback: function (value) {
                     if (value) {
@@ -119,6 +120,10 @@ TQ.MessageBox = (function () {
                     }
                 }
             };
+
+        if (options.overlayClassName) {
+            vexOptions.overlayClassName = options.overlayClassName;
+        }
 
         if (options.okText) {
             buttons.push($.extend({}, vex.dialog.buttons.YES, {text: options.okText}));
