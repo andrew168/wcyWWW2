@@ -7,13 +7,13 @@
 (function() {
     angular.module('starter').factory('DataService', DataService);
     DataService.$inject = ['$rootScope', '$http'];
-    DataService.EVENT_DATA_READY = "data ready";
     function DataService($rootScope, $http) {
         var readCacheWithParse = TQ.Base.Utility.readCacheWithParse;
         var writeCache = TQ.Base.Utility.writeCache;
         var initialized = false;
         var MY_WORKS = "_myWorks_";
-        var IMAGE_COLUMN_NUMBER = 3;
+        var IMAGE_COLUMN_NUMBER = 3,
+            EVENT_DATA_READY = "data ready";
         var READY_BKG_IMAGE = 0x01,
             READY_PROP_IMAGE = 0x02,
             READY_PEOPLE_IMAGE = 0x04,
@@ -225,7 +225,7 @@
         function onDataReady() {
             propsMyWork1 = readCacheWithParse(MY_WORKS, []);
             workCounter = readCacheWithParse("workCounter", 0);
-            $rootScope.$broadcast(DataService.EVENT_DATA_READY);
+            $rootScope.$broadcast(EVENT_DATA_READY);
         }
 
         function reload() { // 用于 登录之后的刷新
@@ -233,6 +233,7 @@
         }
 
         return {
+            EVENT_DATA_READY: EVENT_DATA_READY,
             initialize: initialize,
             getProps: getProps,
             getSounds: getSounds,
