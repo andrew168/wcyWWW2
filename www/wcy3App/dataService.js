@@ -225,7 +225,7 @@
         function onDataReady() {
             propsMyWork1 = readCacheWithParse(MY_WORKS, []);
             workCounter = readCacheWithParse("workCounter", 0);
-            $rootScope.$broadcast("DataService.EVENT_DATA_READY");
+            $rootScope.$broadcast(DataService.EVENT_DATA_READY);
         }
 
         function reload() { // 用于 登录之后的刷新
