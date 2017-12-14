@@ -37,21 +37,21 @@ TQ.MessageBox = (function () {
             timer = setTimeout(onDuration, options.duration);
         }
 
-        show2(options);
+        return show2(options);
     }
 
     function getInstance() {
         return instance;
     }
 
-    function hide() {
+    function hide(ref) {
         if (timer) {
             clearTimeout(timer);
             timer = null;
         }
 
         isShowingByForce = false;
-        doHide();
+        doHide(ref);
     }
 
     function onCancel() {
@@ -137,10 +137,9 @@ TQ.MessageBox = (function () {
         }
 
         if (!options.onCancel) {
-            vex.dialog.alert(vexOptions);
-        } else {
-            vex.dialog.confirm(vexOptions);
+            return vex.dialog.alert(vexOptions);
         }
+        return vex.dialog.confirm(vexOptions);
     }
 
     function getClassName(options) {
@@ -161,8 +160,12 @@ TQ.MessageBox = (function () {
         return name;
     }
 
-    function doHide() {
-        vex.closeAll();
+    function doHide(ref) {
+        if (!ref) {
+            vex.closeAll();
+        } else {
+            vex.close(ref);
+        }
     }
 })();
 
