@@ -78,9 +78,11 @@
 .vex-content {
     box-shadow: 5px 5px 5px grey;
     border: 2px solid blue;
-  -webkit-animation: vex-fadein .5s;
-  animation: vex-fadein .5s;
-  background: #fff; }
+    -webkit-animation: vex-fadein .5s;
+    animation: vex-fadein .5s;
+    background: #fff;
+    pointer-events: auto; /*与ionic的modal可以共存了*/
+}
 
 .vex.vex-closing .vex-content {
   -webkit-animation: vex-fadeout .5s forwards;
