@@ -51,7 +51,8 @@
   right: 0;
   bottom: 0;
   left: 0;
-  height: 0;}
+  height: 0;
+}
 
 .vex-scrollbar-measure {
   position: absolute;
