@@ -335,7 +335,7 @@ function WCY($http, FileService, WxService, NetService) {
         if (!!data) {
             if (!!data.url) {
                 currScene.setSsPath(data.url);
-                TQ.MessageBox.prompt(TQ.Locale.getStr('screenshot uploaded successfully!'));
+                TQ.MessageBox.toast(TQ.Locale.getStr('screenshot uploaded successfully!'));
                 save();
             } else {
                 TQ.MessageBox.hide();

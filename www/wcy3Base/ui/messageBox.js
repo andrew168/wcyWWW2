@@ -4,12 +4,19 @@
 var TQ = TQ || {};
 TQ.MessageBox = (function () {
     var isShowingByForce = false,
+        toastInstance,
+        progressInstance,
+        promptInstance,
+        confirmInstance,
+        showInstance,
         msgList = [],
         timer = null;
+
 
     var instance = {
         getInstance: getInstance,
         hide: hide,
+        hideProgressBox: hideProgressBox,
         prompt: prompt,
         confirm: confirm,
         show: show,
@@ -63,26 +70,28 @@ TQ.MessageBox = (function () {
     }
 
     function prompt(msg) {
-        doShow({content: msg, onOk: onOk, onCancel: onCancel});
+        return (promptInstance = doShow({content: msg, onOk: onOk, onCancel: onCancel}));
     }
 
     function confirm(options) {
-        doShow(options);
+        return (confirmInstance = doShow(options));
     }
 
     function show(str) {
-        doShow({unsafeMessage: str});
+        return (showInstance = doShow({unsafeMessage: str}));
     }
 
     function toast(str) {
         var duration = 1000;
-        doShow({unsafeMessage: str, duration: duration});
+        return (toastInstance = doShow({unsafeMessage: str, duration: duration}));
     }
 
     function onDuration() {
         isShowingByForce = false;
+        hide(toastInstance);
+        toastInstance = null;
         if (msgList.length <= 0) {
-            return hide();
+            return;
         }
 
         var oldList = msgList;
@@ -94,7 +103,7 @@ TQ.MessageBox = (function () {
 
     function showWaiting(msg) {
         var htmlStr = '<img src="/public/images/loading.gif"> ' + msg;
-        show(htmlStr);
+        return (progressInstance = doShow({unsafeMessage: htmlStr}));
     }
 
     function show2(options) {
@@ -162,9 +171,35 @@ TQ.MessageBox = (function () {
 
     function doHide(ref) {
         if (!ref) {
-            vex.closeAll();
+            hideProgressBox();
+            if (showInstance) {
+                vex.close(showInstance);
+                showInstance = null;
+            }
+
+            if (promptInstance) {
+                vex.close(promptInstance);
+                promptInstance = null;
+            }
+
+            if (confirmInstance) {
+                vex.close(confirmInstance);
+                confirmInstance = null;
+            }
+
+            if (toastInstance) {
+                vex.close(toastInstance);
+                toastInstance = null;
+            }
         } else {
             vex.close(ref);
+        }
+    }
+
+    function hideProgressBox() {
+        if (progressInstance) {
+            hide(progressInstance);
+            progressInstance = null;
         }
     }
 })();

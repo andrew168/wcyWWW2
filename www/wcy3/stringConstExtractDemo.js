@@ -9,7 +9,7 @@ TQ.MoveCtrl = (function () {
     function initialize() {
         TQ.MessageBox.toast(TQ.Locale.getStr('already in lowest layer!'));
         TQ.MessageBox.toast(TQ.Locale.getStr("couldn't move any more！"));
-        TQ.MessageBox.prompt(TQ.Locale.getStr('screenshot uploaded successfully!'));
+        TQ.MessageBox.toast(TQ.Locale.getStr('screenshot uploaded successfully!'));
     }
 
     return _self;
