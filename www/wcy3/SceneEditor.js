@@ -62,7 +62,7 @@ var currScene = null;
         var needToSave = true;
 
         if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-            return TQ.MessageBubble.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
         }
 
         if (matType === TQ.MatType.SOUND) {
@@ -76,7 +76,7 @@ var currScene = null;
             TQ.ImageProcess.start(aFile, options,
                 function (buffer) {
                     if (!!buffer.errorCode && buffer.errorCode !== 0) {
-                        TQ.MessageBubble.show("Image file's width and height should <= " +
+                        TQ.MessageBox.show("Image file's width and height should <= " +
                             TQ.Config.MAT_MAX_WIDTH + ' by ' + TQ.Config.MAT_MAX_HEIGHT);
                     } else {
                         addItemByImageData(buffer.data, matType, needToSave);

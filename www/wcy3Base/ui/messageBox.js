@@ -18,8 +18,8 @@ TQ.MessageBox = (function () {
         hide: hide,
         hideProgressBox: hideProgressBox,
         prompt: prompt,
-        confirm: confirm,
-        show: show,
+        confirm: confirm, // 有OK和Cancel两个按钮
+        show: show, // show 就是alert，只有OK按钮
         show2: show2,
         showWaiting: showWaiting,
         toast: toast
