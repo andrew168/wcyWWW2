@@ -363,7 +363,6 @@ function WCY($http, FileService, WxService, NetService) {
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
             TQUtility.triggerEvent(document.body, TQ.Scene.EVENT_SAVED);
             TQ.Log.debugInfo(data);
-            TQ.MessageBox.hide();
         }
 
         if (!res) {
