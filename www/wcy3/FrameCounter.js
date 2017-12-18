@@ -31,7 +31,7 @@ window.TQ = window.TQ || {};
     FrameCounter.isNew = true;  // 新的时刻, 需要更新数据
     FrameCounter.v = 0;
     FrameCounter.defaultFPS = 20;
-    FrameCounter.max = 120 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
+    FrameCounter.max = 3 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
     FrameCounter.cmdGotoFrame = cmdGotoFrame;
 
     var _FPS = FrameCounter.defaultFPS,  // 下划线是内部变量, 禁止外面引用
