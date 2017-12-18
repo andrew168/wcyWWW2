@@ -25,6 +25,7 @@ TQ.MessageBox = (function () {
         toast: toast
     };
 
+    initVex();
     return instance;
 
     function isEqualMsg(options1, options2) {
@@ -202,6 +203,12 @@ TQ.MessageBox = (function () {
             progressInstance = null;
         }
     }
+
+    function initVex() {
+        // popstate事件不close
+        vex.defaultOptions.closeAllOnPopState = false;
+    }
+
 })();
 
 TQ.MessageBubble = TQ.MessageBox;  // 为了兼容老的代码，被代替了，
