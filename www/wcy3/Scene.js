@@ -525,6 +525,7 @@ TQ = TQ || {};
         if (!levelContent) {
             var levelName = levelNum; // levelNum只是一个流水号， 暂时没有其它用途
             levelContent = new TQ.Level({name: levelName});
+            levelContent.onLoaded(); // 新建立的，没有任何元素， 所以,直接调用onLoaded, 以设置dataReady等标志
         }
         this.levels.splice(id, 0, levelContent);
         return this.levelNum() - 1;
