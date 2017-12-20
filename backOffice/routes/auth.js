@@ -82,21 +82,26 @@ router.post('/signup', function (req, res) {
         displayName = req.body.displayName || null;
 
     // status.logUser(req);
-    var errorID = Const.ERROR.NO;
+    var errorID = Const.ERROR.NO,
+        errorMsg = '';
+
     if (!isValidFormat(displayName)) {
         errorID = Const.ERROR.DISPLAY_NAME_INVALID;
+        errorMsg = 'invalid display name';
     } else if (!isValidFormat(name)) {
         errorID = Const.ERROR.NAME_IS_INVALID;
+        errorMsg = 'invalid name';
     } else if (!isValidFormat(psw)) {
         errorID = Const.ERROR.PASSWORD_IS_INVALID;
+        errorMsg = 'invalid password format';
     }
 
     if (errorID !== Const.ERROR.NO) {
-        return sendBackErrorInfo1({result: false, errorID: errorID});
+        return sendBackErrorInfo1(errorMsg, errorID);
     }
 
-    function sendBackErrorInfo1(data) {
-        data = composeUserPkg(data);
+    function sendBackErrorInfo1(msg, errorID) {
+        var data = composeErrorPkg(msg, errorID);
         status.onLoginFailed(req, res, data);
         res.send(data);
     }
