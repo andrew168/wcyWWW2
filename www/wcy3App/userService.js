@@ -36,8 +36,16 @@ function UserService($http, $auth) {
 
     function signUp(name, psw, displayName) {
         return $auth.signup({email: name.toLowerCase(), password: psw, displayName: displayName}).
-            then(getProfile).
+            then(onSignUp).
             catch(onGetProfileFailed);
+    }
+
+    function onSignUp(netPkg) {
+        var data = netPkg.data;
+        if (data && data.errorID) {
+            return onGetProfileFailed(netPkg);
+        }
+        return getProfile();
     }
 
     function checkName(name) {
