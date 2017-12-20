@@ -70,8 +70,17 @@ TQ.MessageBox = (function () {
         TQ.Log.debugInfo("Ok!");
     }
 
-    function prompt(msg) {
-        return (promptInstance = doShow({content: msg, onOk: onOk, onCancel: onCancel}));
+    function prompt(msg, onOk1, onCancel1) {
+        var option = {
+            unsafeMessage: msg,
+            onOk: onOk1? onOk1: onOk
+        };
+
+        if (onCancel1) {
+            option.onCancel = onCancel1;
+        }
+
+        return (promptInstance = doShow(option));
     }
 
     function confirm(options) {
