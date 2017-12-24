@@ -31,6 +31,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     return {
         state: state,
         canvasStyle: TQ.Graphics.getCanvasStyle(),
+        updateControllers: updateControllers,
 
         banMat: NetService.banMat,
 
@@ -194,6 +195,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
         }
 
+        updateControllers();
+    }
+
+    function updateControllers() { // 在login和fork之后， 都需要使用
         if (!TQ.TouchManager.hasInitialized() && !TQ.WCY.isPlayOnly) {
             TQ.TouchManager.initialize();
         }
