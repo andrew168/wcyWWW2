@@ -136,6 +136,7 @@ window.TQ = window.TQ || {};
     Config.hasFacebook = true; // 中国没有fb,
     Config.wx = {appId: 'wx5fe65e70536d0258'}; // udoido
     Config.hasAudioRecording = false;  // 没有录音功能
+    Config.hasPaypal = false; //暂时关闭 paypal， 不需要它和T-shirt功能
     Config.ChromeFileEnabled = true;
     Config.useCloundServerSimulator = true;
     Config.useCreateJsTouch = false;
