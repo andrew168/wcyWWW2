@@ -9,7 +9,7 @@ window.TQ = window.TQ || {};
     function WCY() {
 
     }
-    WCY.isPlayOnly = false;
+    WCY.isPlayOnly = true;
     WCY.currentScene = null;
     WCY.getCurrentScene = function() {
         return WCY.currentScene;
