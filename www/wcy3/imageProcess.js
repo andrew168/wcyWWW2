@@ -9,7 +9,7 @@ var TQ = TQ || {};
 (function(lib){
     function ImageProcess() {
     }
-    var IMAGE_MAX_LENGTH = 1280;
+
     var _canvas = null;
 
     function start(file, options, callback) {
@@ -30,17 +30,15 @@ var TQ = TQ || {};
         }
         ele.src = url;
 
-        function determineScale(img) {
+        function determineScale(img) {//只缩小， 不放大
             var scale = 1;
 
-            if (img.height > img.width) {
-                if (img.height > IMAGE_MAX_LENGTH) {
-                    scale = IMAGE_MAX_LENGTH / img.height;
-                }
-            } else {
-                if (img.width > IMAGE_MAX_LENGTH) {
-                    scale = IMAGE_MAX_LENGTH / img.width;
-                }
+            if (img.height > TQ.Config.MAT_MAX_HEIGHT) {
+                scale = Math.min(1, TQ.Config.MAT_MAX_HEIGHT / img.height);
+            }
+
+            if (img.width > TQ.Config.MAT_MAX_WIDTH) {
+                scale = Math.min(scale, TQ.Config.MAT_MAX_WIDTH / img.width);
             }
             return scale;
         }

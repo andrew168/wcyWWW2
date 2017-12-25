@@ -76,8 +76,11 @@ var currScene = null;
             TQ.ImageProcess.start(aFile, options,
                 function (buffer) {
                     if (!!buffer.errorCode && buffer.errorCode !== 0) {
-                        TQ.MessageBox.show("Image file's width and height should <= " +
-                            TQ.Config.MAT_MAX_WIDTH + ' by ' + TQ.Config.MAT_MAX_HEIGHT);
+                        TQ.MessageBox.prompt("Image file's width and height should <= " +
+                            TQ.Config.MAT_MAX_WIDTH + " by " + TQ.Config.MAT_MAX_HEIGHT + ", do you want to resize automatically?",
+                        function () {
+                            addItemByImageData(buffer.data, matType, needToSave);
+                        }, function(){});
                     } else {
                         addItemByImageData(buffer.data, matType, needToSave);
                     }
