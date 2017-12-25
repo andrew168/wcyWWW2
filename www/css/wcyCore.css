@@ -21,6 +21,9 @@
     z-index: 7520;
 }
 
+.toolbar-layer-middle {
+    z-index: 7500;
+}
 .toolbar-layer {
     z-index:7000;
 }
