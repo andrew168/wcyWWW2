@@ -113,7 +113,7 @@ TQ.MessageBox = (function () {
 
     function showWaiting(msg) {
         var htmlStr = '<img src="/public/images/loading.gif"> ' + msg;
-        return (progressInstance = doShow({unsafeMessage: htmlStr}));
+        return (progressInstance = doShow({unsafeMessage: htmlStr, position: 'bottom'}));
     }
 
     function show2(options) {
