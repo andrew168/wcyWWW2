@@ -33,19 +33,19 @@ var TQ = TQ || {};
         function determineScale(img) {//只缩小， 不放大
             var scale = 1;
 
-            if (img.height > TQ.Config.MAT_MAX_HEIGHT) {
-                scale = Math.min(1, TQ.Config.MAT_MAX_HEIGHT / img.height);
+            if (img.height > TQ.Config.designatedHeight) {
+                scale = Math.min(1, TQ.Config.designatedHeight / img.height);
             }
 
-            if (img.width > TQ.Config.MAT_MAX_WIDTH) {
-                scale = Math.min(scale, TQ.Config.MAT_MAX_WIDTH / img.width);
+            if (img.width > TQ.Config.designatedWidth) {
+                scale = Math.min(scale, TQ.Config.designatedWidth / img.width);
             }
             return scale;
         }
 
         function onload () {
             var errorCode = 0;
-            if ((ele.width > TQ.Config.MAT_MAX_WIDTH)  || (ele.height > TQ.Config.MAT_MAX_HEIGHT)) {
+            if ((ele.width > TQ.Config.designatedWidth)  || (ele.height > TQ.Config.designatedHeight)) {
                 errorCode = 1;
             }
 
