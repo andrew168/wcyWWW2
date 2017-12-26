@@ -76,6 +76,7 @@ this.TQ = this.TQ || {};
         RM.preloader.installPlugin(createjs.FlashAudioPlugin);
         RM.preloader.installPlugin(ImagePreloader);
         RM.preloader.installPlugin(createjs.Sound);
+        RM.preloader.setMaxConnections(10);
 
         if (TQ.Base.Utility.isMobileDevice()) {
             RM.preloader.installPlugin(createjs.CordovaAudioLoader);
