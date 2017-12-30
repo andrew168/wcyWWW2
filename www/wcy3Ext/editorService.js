@@ -718,6 +718,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function preview (options) {
+        TQ.SelectSet.empty(); // 清楚选中的元素， 和highlight
         setPreviewMode();
         replay(options);
     }
