@@ -990,7 +990,7 @@ window.TQ = window.TQ || {};
             }
         }
 
-        TQ.TrackRecorder.erase(this);
+        this.animeTrack.erase();
         TQ.DirtyFlag.setElement(this);
     };
 

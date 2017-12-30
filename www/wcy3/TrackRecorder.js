@@ -244,10 +244,6 @@ window.TQ = window.TQ || {};
         }
     };
 
-    TrackRecorder.erase = function (element) {
-        element.animeTrack.erase();
-    };
-
     function hasSag(track) {
         return (track.sags  && track.sags.length > 0);
     }
