@@ -213,11 +213,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
 
         if (!TQ.TouchManager.hasStarted() && !TQ.WCY.isPlayOnly) {
-            TQ.SceneEditor.startTouchMgr();
+            TQ.TouchManager.start();
         }
 
         if (TQ.TouchManager.hasStarted() && TQ.WCY.isPlayOnly) {
-            TQ.SceneEditor.stopTouchMgr();
+            TQ.TouchManager.stop();
         }
     }
 
