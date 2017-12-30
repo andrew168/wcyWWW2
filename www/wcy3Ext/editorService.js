@@ -196,6 +196,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
 
         updateControllers();
+
+        if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
+            // TQ.MessageBox.showOk(TQ.Locale.getStr('please use rotate to get better result'), preview);
+            preview();
+        }
+
+        if (currScene && !currScene.isPlayOnly) {
+            WCY.startAutoSave();
+        }
     }
 
     function updateControllers() { // 在login和fork之后， 都需要使用
@@ -209,15 +218,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         if (TQ.TouchManager.hasStarted() && TQ.WCY.isPlayOnly) {
             TQ.SceneEditor.stopTouchMgr();
-        }
-
-        if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
-            // TQ.MessageBox.showOk(TQ.Locale.getStr('please use rotate to get better result'), preview);
-            preview();
-        }
-
-        if (currScene && !currScene.isPlayOnly) {
-            WCY.startAutoSave();
         }
     }
 
