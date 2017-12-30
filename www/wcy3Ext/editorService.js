@@ -148,7 +148,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         // editor's mode
         if (state.isPlayOnly) {
-            setPreviewMode();
+            if (currScene && currScene.isEmpty()) {
+                setAddMode();
+            } else {
+                setPreviewMode();
+            }
         } else {
             setAddMode();
         }
