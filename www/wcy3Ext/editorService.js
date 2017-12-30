@@ -147,10 +147,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isFont = false;
 
         // editor's mode
-        state.isAddMode = true;
+        setAddMode();
         state.isRecording = false; // must be in AddMode
-        state.isModifyMode = null;
-        state.isPreviewMode = null;
         state.isPreviewMenuOn = false;
         state.isPlayMode = null;
         TQ.State.isPlaying = false;
