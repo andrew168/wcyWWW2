@@ -256,7 +256,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function onPreviewMenuOn() {
         $timeout(function () {
             TQ.IdleCounter.remove(TQ.PreviewMenu.hide);
-            TQ.TouchManager.start();
         });
     }
 
