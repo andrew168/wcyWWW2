@@ -70,7 +70,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         decreaseFontLevel: decreaseFontLevel,
         increaseFontLevel: increaseFontLevel,
         setColor: setColor,
-        eraseAnimeTrack:eraseAnimeTrack,
+        eraseAnimeTrack: TQ.SelectSet.eraseAnimeTrack,
 
         // UI操作部分， 更改了元素的state， 所有，必须 调用 updateMode()，以更新UI
         hideOrShow :hideOrShow ,
@@ -898,10 +898,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function hideOrShow () {
         TQ.SelectSet.show(false);
         updateMode();
-    }
-
-    function eraseAnimeTrack() {
-        TQ.SelectSet.eraseAnimeTrack();
     }
 
     // for bottom bar;

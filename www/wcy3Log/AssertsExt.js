@@ -75,7 +75,7 @@ function assertNotUndefined(msg, actual) {
 }
 
 function assertEqualsDelta(msg, expected, actual, epsilon) {
-    TQ.assert.closeTo(actual, expected, epsilon, msg);
+    TQ.Assert.closeTo(actual, expected, epsilon, msg);
 }
 
 function assertArray(msg, actual) {
