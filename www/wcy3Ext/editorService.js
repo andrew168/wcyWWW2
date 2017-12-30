@@ -147,7 +147,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isFont = false;
 
         // editor's mode
-        setAddMode();
+        if (state.isPlayOnly) {
+            setPreviewMode();
+        } else {
+            setAddMode();
+        }
         state.isRecording = false; // must be in AddMode
         state.isPreviewMenuOn = false;
         state.isPlayMode = null;
@@ -714,7 +718,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function preview (options) {
-        state.isPreviewMode = true;
+        setPreviewMode();
         replay(options);
     }
 
@@ -933,6 +937,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             }, 100);
     }
 
+    function setPreviewMode() {
+        state.isPreviewMode = true;
+        state.isAddMode = false;
+        state.isModifyMode = false;
+    }
+
     function forkIt() {
         WCY.forkIt().
             then(toAddMode);
@@ -979,8 +989,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 updatePlayingState();
             }
         } else {
-            state.isAddMode = false;
-            state.isModifyMode = false;
+            setPreviewMode();
             state.isPlayMode = false;
             updatePlayingState();
             hasChanged = true;
