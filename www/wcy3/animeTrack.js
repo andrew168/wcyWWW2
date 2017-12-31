@@ -13,7 +13,7 @@ TQ = TQ || {};
         TRUE_NUM_1 = 1,
         DEFAULT_SAG_IDLE_LENGTH = 5000; // 每个元素，最少持续5s钟（包括入场，idle和出场）
     var p = AnimeTrack.prototype;
-    p.erase = function(track) {
+    p.erase_TBD = function(track) {
         if (this.x) this.x.erase();
         if (this.y) this.y.erase();
         if (this.rotation) this.rotation.erase();

@@ -990,10 +990,10 @@ window.TQ = window.TQ || {};
             }
         }
 
-        if (this.animeTrack) {
-            this.animeTrack.erase();
-            TQ.DirtyFlag.setElement(this);
-        }
+        this.animeTrack = null;
+        this.jsonObj.animeTrack = null;
+        TQ.DirtyFlag.setElement(this);
+        this.updateRecord(TQ.FrameCounter.t());
     };
 
     p.deleteChild = function (ele) {

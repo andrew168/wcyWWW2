@@ -298,7 +298,6 @@ TQ = TQ || {};
     };
 
     SelectSet.eraseAnimeTrack = function() {
-        TQ.FrameCounter.gotoBeginning();
         for (var i = 0; i< SelectSet.members.length; i++) {
             var ele = SelectSet.members[i];
             assertNotNull(TQ.Dictionary.FoundNull, ele);
