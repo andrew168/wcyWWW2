@@ -301,7 +301,11 @@ TQ = TQ || {};
         for (var i = 0; i< SelectSet.members.length; i++) {
             var ele = SelectSet.members[i];
             assertNotNull(TQ.Dictionary.FoundNull, ele);
-            if (ele.isValid()) ele.eraseAnimeTrack();
+            if (ele.isValid()) {
+                ele.eraseAnimeTrack();
+                ele.updateRecord2(0);
+            }
+
         }
     };
 

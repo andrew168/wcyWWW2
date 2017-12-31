@@ -983,7 +983,8 @@ window.TQ = window.TQ || {};
         if (this.isPinned()) {
             return;
         }
-
+        this.animeTrack = null;
+        this.jsonObj.animeTrack = null;
         if (this.children != null) {
             for (var i = 0; i < this.children.length; i++) {
                 this.children[i].eraseAnimeTrack();
@@ -992,8 +993,17 @@ window.TQ = window.TQ || {};
 
         this.animeTrack = null;
         this.jsonObj.animeTrack = null;
+        this.forceToRecord();
         TQ.DirtyFlag.setElement(this);
-        this.updateRecord(TQ.FrameCounter.t());
+    };
+
+    p.updateRecord2 = function (t) {
+        this.updateRecord(t);
+        if (this.children != null) {
+            for (var i = 0; i < this.children.length; i++) {
+                this.children[i].updateRecord2(t);
+            }
+        }
     };
 
     p.deleteChild = function (ele) {
