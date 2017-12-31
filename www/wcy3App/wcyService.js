@@ -100,12 +100,16 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function createHtmlPage(screenshotUrl) {
-        var bodyData = {ssPath: screenshotUrl};
+        var shareData = {
+            ssPath: screenshotUrl,
+            title: currScene.title,
+            description: currScene.description
+        };
 
         return $http({
             method: 'POST',
             url: TQ.Config.OPUS_HOST + '/wcy/' + _shareCode,
-            data: bodyData
+            data: shareData
         });
     }
 

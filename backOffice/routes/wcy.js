@@ -211,10 +211,14 @@ function shareToFB(shareCode, req, res) {
         pageFileName = FB_PAGE_DEPOT + pageShortPath,
         pageUrl = FB_PAGE_ROOT + pageShortPath,
         spaUrl = 'http://www.udoido.com/#/opus/' + shareCode, // single page app url
-        imageUrl = req.body.ssPath || null,
+        shareData = {
+            imageUrl: req.body.ssPath || null,
+            title: req.body.title || null,
+            description: req.body.description || null
+        },
         fbPage;
 
-    fbPage = fbPageTemplate.createPage(pageUrl, imageUrl);
+    fbPage = fbPageTemplate.createPage(pageUrl, shareData);
 
     fs.writeFile(pageFileName, fbPage, onWriteCompleted);
     function onWriteCompleted(err) {
