@@ -807,8 +807,8 @@ TQ = TQ || {};
     p.updateShareData = function() {
         var level1 = (this.levelNum() > 0) ? this.levels[0] : null;
         if (level1) {
-            this.title = level1.getText(0);
-            this.description = level1.getText(1);
+            this.title = this.title || level1.getText(0);
+            this.description = this.description || level1.getText(1);
             if (!this.description) {
                 this.description = this.title;
             }
