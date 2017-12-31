@@ -906,7 +906,7 @@ TQ = TQ || {};
 
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
-            if (!level.dataReady) {
+            if (!level.dataReady && (level.tMaxFrame === undefined)) {
                 continue;
             }
 
