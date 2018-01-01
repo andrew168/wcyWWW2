@@ -249,6 +249,7 @@ window.TQ = window.TQ || {};
     }
 
     TrackRecorder.recordOneChannel = function (track, channel, t, v, interpolationMethod) {
+        assertDepreciated(TQ.Dictionary.isDepreciated + "， 移到了channel类中的record！");
         assertNotNull(TQ.Dictionary.FoundNull, channel);
         assertNotUndefined(TQ.Dictionary.FoundNull, channel.tid1);
         assertNotNull(TQ.Dictionary.FoundNull,channel.tid1);
