@@ -8,15 +8,20 @@ window.TQ = window.TQ || {};
 (function () {
 
     var fns = null;
-    function GenCommand(CMD_SCALE, ele, newValue, oldValue) {
+    function GenCommand(cmdIDorArray, ele, newValue, oldValue) {
         if (!fns) {
             GenCommand.initialize();
         }
         this.receiver = ele;
         this.newValue = newValue;
         this.oldValue = oldValue;
-        this.dofn = fns[CMD_SCALE].dofn;
-        this.undofn = fns[CMD_SCALE].undofn;
+        if (Array.isArray(cmdIDorArray)) {
+            this.dofn = cmdIDorArray[0];
+            this.undofn = cmdIDorArray[1];
+        } else {
+            this.dofn = fns[cmdIDorArray].dofn;
+            this.undofn = fns[cmdIDorArray].undofn;
+        }
     }
     GenCommand.SCALE = "cmd_scale";
     GenCommand.SCALE_AND_ROTATE = "cmd_scale_rotate";
