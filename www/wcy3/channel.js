@@ -49,7 +49,7 @@ window.TQ = window.TQ || {};
         assertNotUndefined(TQ.Dictionary.FoundNull, this.tid1);
         assertNotNull(TQ.Dictionary.FoundNull, this.tid1);
         interpolationMethod = (interpolationMethod == null) ? TQ.Channel.LINE_INTERPOLATION : interpolationMethod;
-        TQ.TrackDecoder.searchInterval(t, this);
+        this.searchInterval(t, this);
         var tid1 = this.tid1;
         var tid2 = this.tid2;
 
@@ -86,6 +86,49 @@ window.TQ = window.TQ || {};
         this.c.splice(id, 0, interpolationMethod);
         this.value.splice(id, 0, v);
         return v;
+    };
+
+    p.searchInterval = function (t) {
+        assertValid(TQ.Dictionary.INVALID_PARAMETER, this.tid1);  //"有效的数组下标"
+        // 处理特殊情况, 只有1帧:
+        if (this.t.length <= 1) {
+            assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.tid1 == 0); //只有1帧
+            this.tid1 = this.tid2 = 0;
+            return;
+        }
+
+        // 确定下边界: t1, 比 t小
+        var tid1 = this.tid1;
+        if (t < this.t[tid1]) {
+            for (; t <= this.t[tid1]; tid1--) {
+                if (tid1 <= 0) {
+                    tid1 = 0;
+                    break;
+                }
+            }
+        }
+        var tid2 = TQ.MathExt.range(tid1 + 1, 0, (this.t.length - 1));
+
+        // 确定上边界: t2, 比 t大, 同时,容错, 跳过错误的轨迹数据, 在中间的
+        if (t > this.t[tid2]) {  //  1) 下边界太小了, 不是真正的下边界; 2) 在录制时间段之外;
+            for (; t > this.t[tid2]; tid2++) {
+                if (this.t[tid1] > this.t[tid2]) {
+                    //TQ.Log.out("data error, skip t=" + t + " t1=" + this.t[tid1] +" t2 = " + this.t[tid2] +" id1=" +tid1 + " tid2=" +tid2);
+                }
+                if (tid2 >= (this.t.length - 1)) {
+                    tid2 = this.t.length - 1;
+                    break;
+                }
+            }
+        }
+
+        tid1 = TQ.MathExt.range(tid2 - 1, 0, (this.t.length - 1));
+        if (this.t[tid1] > this.t[tid2]) {  // 容错, 发现错误的轨迹数据, 在末尾
+            // TQ.Log.out("data error, skip t=" + t + " t1=" + this.t[tid1] +" t2 = " + this.t[tid2] +" id1=" +tid1 + " tid2=" +tid2);
+            tid2 = tid1;
+        }
+        this.tid1 = tid1;
+        this.tid2 = tid2;
     };
 
     p.erase = function () {

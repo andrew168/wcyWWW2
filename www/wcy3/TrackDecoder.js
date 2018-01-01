@@ -129,7 +129,7 @@ window.TQ = window.TQ || {};
 
     function calTrack(track, channel, t)
     {
-        TrackDecoder.searchInterval(t, channel);
+        channel.searchInterval(t);
         if (track.hasSag) {
             return channel.value[0];
         } else if (channel.tid1 == channel.tid2) {
@@ -160,51 +160,7 @@ window.TQ = window.TQ || {};
             }
         }
         return v;
-    };
-
-    TrackDecoder.searchInterval = function(t, channel)
-    {
-        assertValid(TQ.Dictionary.INVALID_PARAMETER, channel.tid1);  //"有效的数组下标"
-        // 处理特殊情况, 只有1帧:
-        if (channel.t.length<=1) {
-            assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0 ); //只有1帧
-            channel.tid1 = channel.tid2 = 0;
-            return;
-        }
-
-        // 确定下边界: t1, 比 t小
-        var tid1 = channel.tid1;
-        if (t < channel.t[tid1]) {
-            for (; t <= channel.t[tid1]; tid1--) {
-                if (tid1 <= 0) {
-                    tid1 = 0;
-                    break;
-                }
-            }
-        }
-        var tid2 = TQ.MathExt.range(tid1 + 1, 0, (channel.t.length -1));
-
-        // 确定上边界: t2, 比 t大, 同时,容错, 跳过错误的轨迹数据, 在中间的
-        if ( t > channel.t[tid2]) {  //  1) 下边界太小了, 不是真正的下边界; 2) 在录制时间段之外;
-            for (; t > channel.t[tid2]; tid2++) {
-                if ( channel.t[tid1] >  channel.t[tid2]) {
-                    //TQ.Log.out("data error, skip t=" + t + " t1=" + channel.t[tid1] +" t2 = " + channel.t[tid2] +" id1=" +tid1 + " tid2=" +tid2);
-                }
-                if (tid2 >= (channel.t.length -1)) {
-                    tid2 = channel.t.length -1;
-                    break;
-                }
-            }
-        }
-
-        tid1 = TQ.MathExt.range(tid2 - 1, 0, (channel.t.length -1));
-        if (channel.t[tid1] > channel.t[tid2]) {  // 容错, 发现错误的轨迹数据, 在末尾
-            // TQ.Log.out("data error, skip t=" + t + " t1=" + channel.t[tid1] +" t2 = " + channel.t[tid2] +" id1=" +tid1 + " tid2=" +tid2);
-            tid2 = tid1;
-        }
-        channel.tid1 = tid1;
-        channel.tid2 = tid2;
-    };
+    }
 
     TQ.TrackDecoder = TrackDecoder;
 }());
