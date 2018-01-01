@@ -15,6 +15,14 @@ TQ.CommandMgr.setTextProperty = function (option) {
             oldOption[prop] = jsonObj[prop];
         });
 
+        if (option.toggleBold) {
+            oldOption.toggleBold = option.toggleBold;
+        }
+
+        if (option.toggleItalic) {
+            oldOption.toggleItalic = option.toggleItalic;
+        }
+
         return new TQ.GenCommand(['setProperty', 'setProperty'], ele, newOption, oldOption);
     }
 

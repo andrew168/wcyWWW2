@@ -13,13 +13,14 @@ window.TQ = window.TQ || {};
 
     Utility.toCssFont = function(option) {
         // Any valid value for the CSS font attribute is acceptable (ex. "bold 36px Arial").
-      var result = option.fontSize + "px " + option.fontFace;
+      var result = "";
         if (option.bold) {
-            result += ' bold';
+            result += 'bold ';
         }
         if (option.italic) {
-            result += ' italic';
+            result += 'italic ';
         }
+        result +=option.fontSize + "px " + option.fontFace;
       return result;
     };
 
