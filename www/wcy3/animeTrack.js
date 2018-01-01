@@ -99,6 +99,15 @@ TQ = TQ || {};
         }
     };
 
+    p.trim = function(t1, t2) {
+        var self = this;
+        Object.keys(this).forEach(function(prop){
+            if (self[prop] instanceof  TQ.Channel) {
+                self[prop].trim(t1, t2);
+            }
+        })
+    };
+
     p.getInSagName = function() {
         if (!this.hasSag) {
             return null;

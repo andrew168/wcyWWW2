@@ -997,6 +997,22 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setElement(this);
     };
 
+    p.trim = function(t1, t2) {
+        if (t1 < 0) {
+            t1 = 0;
+        }
+
+        if (t1 > t2) {
+            return;
+        }
+
+        if (this.animeTrack) {
+            this.animeTrack.trim(t1, t2);
+        }
+        this.forceToRecord();
+        this.updateRecord2(t1);
+    };
+
     p.updateRecord2 = function (t) {
         this.updateRecord(t);
         if (this.children != null) {

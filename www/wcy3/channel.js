@@ -131,6 +131,43 @@ window.TQ = window.TQ || {};
         this.tid2 = tid2;
     };
 
+    p.trim = function (t1, t2) {
+        var id1, id2;
+        this.searchInterval(t1);
+        id1 = this.tid1;
+        this.searchInterval(t2);
+        id2 = this.tid2;
+        if ((id1 > id2) || (id2 === 0)) {// 空的channel，
+            return;
+        }
+
+        if (t1 < this.t[id1]) { //左出界
+            id1--; // 减1， 确保[0]被cut
+        }
+
+        if (this.t[id2] < t2) { //右出界
+            var BIG_NUMBER = 100;
+            id2 += BIG_NUMBER; // 大的数字， 确保都cut掉
+        }
+        //要保留tid1, 也要保留tid2，中间的n=tid2- tid1 - 1不保存
+        if ((id1+1) < this.t.length) {
+            this.t.splice(id1 + 1, id2 - id1 - 1);
+            this.value.splice(id1 + 1, id2 - id1 - 1);
+            this.c.splice(id1 + 1, id2 - id1 - 1);
+        }
+
+        // maintain tid1,tid2
+        if (this.t.length <= 1) {
+            this.tid1 = this.tid2 = 0;
+        }
+
+        if (t1 < 0) {
+            t1 = 0;
+        }
+
+        this.searchInterval(t1);
+    };
+
     p.erase = function () {
         assertEqualsDelta("t == 0, //ToDo:这是不是错误的限制？", 0, TQ.FrameCounter.t(), 0.001);
         this.initialize(this.value[0]);  // 简单地丢弃原来的轨迹数组, 重新建立一个新的
