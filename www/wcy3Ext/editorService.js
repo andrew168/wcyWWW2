@@ -67,6 +67,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         getFontSize: getFontSize,
         setSize: setSize,
         setFontLevel: setFontLevel,
+        setTextProperty: setTextProperty,
         decreaseFontLevel: decreaseFontLevel,
         increaseFontLevel: increaseFontLevel,
         setColor: setColor,
@@ -836,6 +837,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             state.fontLevel = level;
             TQ.CommandMgr.directDo(new TQ.SetSizeCommand(selectedElement, getFontSize()));
         }
+    }
+
+    function setTextProperty(option) {
+        TQ.CommandMgr.directDo(TQ.CommandMgr.setTextProperty(option));
     }
 
     function increaseFontLevel() {
