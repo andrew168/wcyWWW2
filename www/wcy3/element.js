@@ -1002,7 +1002,7 @@ window.TQ = window.TQ || {};
             t1 = 0;
         }
 
-        if (t1 > t2) {
+        if (t1 >= t2) {
             return;
         }
 

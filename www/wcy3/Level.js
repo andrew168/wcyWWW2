@@ -668,6 +668,22 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.trim = function (t1, t2) {
+        if (t1 < 0) {
+            t1 = 0;
+        }
+
+        if (t1 >= t2) {
+            return;
+        }
+
+        this.elements.forEach(function(ele) {
+            if (ele) {
+                ele.trim(t1, t2);
+            }
+        })
+    };
+
     p.onItemLoaded = function (item) {
         TQ.DirtyFlag.setLevel(this);
         this.itemCounter++;
