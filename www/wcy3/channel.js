@@ -156,6 +156,14 @@ window.TQ = window.TQ || {};
             this.c.splice(id1 + 1, id2 - id1 - 1);
         }
 
+        var tArray= this.t,
+            dt = t2 - t1;
+        this.t.forEach(function(id) {
+            if (tArray[id] >= t2) {
+                tArray[id] -= dt;
+            }
+        });
+
         // maintain tid1,tid2
         if (this.t.length <= 1) {
             this.tid1 = this.tid2 = 0;
@@ -235,7 +243,6 @@ window.TQ = window.TQ || {};
         tMax = this.t[0];
         if (num > 1) { // 数据合理性检查
             for (var i = 1; i < num; i++) {
-                assertTrue(TQ.Dictionary.INVALID_LOGIC, tMax <= this.t[i]);
                 tMax = Math.max(tMax, this.t[i]);
             }
         }
