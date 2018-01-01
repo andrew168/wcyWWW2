@@ -252,44 +252,7 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, channel);
         assertNotUndefined(TQ.Dictionary.FoundNull, channel.tid1);
         assertNotNull(TQ.Dictionary.FoundNull,channel.tid1);
-        interpolationMethod = (interpolationMethod==null)? TQ.Channel.LINE_INTERPOLATION : interpolationMethod;
-        TQ.TrackDecoder.searchInterval(t, channel);
-        var tid1 = channel.tid1;
-        var tid2 = channel.tid2;
-
-        // 相等的情况, 只修改原来帧的值, 不增加新的帧
-        var EPSILON = 0.01;
-        var rewrite = false;
-        if (track.hasSag) {
-            id = 0;
-            rewrite = true;
-        } else if ( Math.abs(t - channel.t[tid1]) < EPSILON ) {
-            id = tid1;
-            rewrite = true;
-        } else if ( Math.abs(t - channel.t[tid2]) < EPSILON ) {
-            id = tid2;
-            rewrite = true;
-        }
-
-        if (rewrite) {
-            channel.value[id] = v;
-            channel.c[id] = interpolationMethod;
-            return v;
-        }
-
-		    // 以下添加新的帧
-        var id = tid2;      // 在tid2位置插入: 正好查到区间内 [t1, t, t2]
-        if (t >= channel.t[tid2]) { // 在末尾插入 [t1, t2, t]
-            id = tid2+1;
-        } else if (t < channel.t[tid1]) { // 在前面插入 [t, t1, t2]
-            id = tid1;
-        }
-
-        // 直接记录, 不优化
-        channel.t.splice(id, 0, t);
-        channel.c.splice(id, 0, interpolationMethod);
-        channel.value.splice(id, 0, v);
-        return v;
+        return channel.record(track, t, v, interpolationMethod);
     };
 
     function removeOneSag(channel, sagTypeId) {

@@ -45,6 +45,49 @@ window.TQ = window.TQ || {};
         this.tid2 = 0;
     };
 
+    p.record = function (track, t, v, interpolationMethod) {
+        assertNotUndefined(TQ.Dictionary.FoundNull, this.tid1);
+        assertNotNull(TQ.Dictionary.FoundNull, this.tid1);
+        interpolationMethod = (interpolationMethod == null) ? TQ.Channel.LINE_INTERPOLATION : interpolationMethod;
+        TQ.TrackDecoder.searchInterval(t, this);
+        var tid1 = this.tid1;
+        var tid2 = this.tid2;
+
+        // 相等的情况, 只修改原来帧的值, 不增加新的帧
+        var EPSILON = 0.01;
+        var rewrite = false;
+        if (track.hasSag) {
+            id = 0;
+            rewrite = true;
+        } else if (Math.abs(t - this.t[tid1]) < EPSILON) {
+            id = tid1;
+            rewrite = true;
+        } else if (Math.abs(t - this.t[tid2]) < EPSILON) {
+            id = tid2;
+            rewrite = true;
+        }
+
+        if (rewrite) {
+            this.value[id] = v;
+            this.c[id] = interpolationMethod;
+            return v;
+        }
+
+        // 以下添加新的帧
+        var id = tid2;      // 在tid2位置插入: 正好查到区间内 [t1, t, t2]
+        if (t >= this.t[tid2]) { // 在末尾插入 [t1, t2, t]
+            id = tid2 + 1;
+        } else if (t < this.t[tid1]) { // 在前面插入 [t, t1, t2]
+            id = tid1;
+        }
+
+        // 直接记录, 不优化
+        this.t.splice(id, 0, t);
+        this.c.splice(id, 0, interpolationMethod);
+        this.value.splice(id, 0, v);
+        return v;
+    };
+
     p.erase = function () {
         assertEqualsDelta("t == 0, //ToDo:这是不是错误的限制？", 0, TQ.FrameCounter.t(), 0.001);
         this.initialize(this.value[0]);  // 简单地丢弃原来的轨迹数组, 重新建立一个新的
