@@ -31,49 +31,49 @@ window.TQ = window.TQ || {};
 
         TQ.AssertExt.invalidLogic(!!(track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
         if (element.hasFlag(TQ.Element.ROTATING)) {
-            TrackRecorder.recordOneChannel(track, track.rotation, t, TQ.Pose.rotation, TrackRecorder.style);
+            track.rotation.record(track, t, TQ.Pose.rotation, TrackRecorder.style);
         }
 
         if (element.hasFlag(TQ.Element.TRANSLATING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track, track.x, t, TQ.Pose.x, TrackRecorder.style);
+                track.x.record(track, t, TQ.Pose.x, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.TRANSLATING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track, track.y, t, TQ.Pose.y, TrackRecorder.style);
+                track.y.record(track, t, TQ.Pose.y, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.SCALING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track, track.sx, t, TQ.Pose.sx, TrackRecorder.style);
+                track.sx.record(track, t, TQ.Pose.sx, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.SCALING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track, track.sy, t, TQ.Pose.sy, TrackRecorder.style);
+                track.sy.record(track, t, TQ.Pose.sy, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.VISIBLE_CHANGED)) { // 允许改变关节物体各个关节的可见性
-            TrackRecorder.recordOneChannel(track, track.visible, t, TQ.Pose.visible, TQ.Channel.JUMP_INTERPOLATION);
+            track.visible.record(track, t, TQ.Pose.visible, TQ.Channel.JUMP_INTERPOLATION);
             element.clearFlag(TQ.Element.VISIBLE_CHANGED);
         }
 
         if (element.hasFlag(TQ.Element.ALPHAING)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track, track.alpha, t, TQ.Pose.alpha, TrackRecorder.style);
+                track.alpha.record(track, t, TQ.Pose.alpha, TrackRecorder.style);
             }
         }
 
         if (element.hasFlag(TQ.Element.COLOR_CHANGED)) {
             if (!element.isJoint() || TQ.InputCtrl.inSubobjectMode) {
-                TrackRecorder.recordOneChannel(track, track.colorR, t, TQ.Utility.getColorR(TQ.Pose.color), TrackRecorder.style);
-                TrackRecorder.recordOneChannel(track, track.colorG, t, TQ.Utility.getColorG(TQ.Pose.color), TrackRecorder.style);
-                TrackRecorder.recordOneChannel(track, track.colorB, t, TQ.Utility.getColorB(TQ.Pose.color), TrackRecorder.style);
+                track.colorR.record(track, t, TQ.Utility.getColorR(TQ.Pose.color), TrackRecorder.style);
+                track.colorG.record(track, t, TQ.Utility.getColorG(TQ.Pose.color), TrackRecorder.style);
+                track.colorB.record(track, t, TQ.Utility.getColorB(TQ.Pose.color), TrackRecorder.style);
             }
         }
 
