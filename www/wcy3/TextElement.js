@@ -58,15 +58,15 @@ window.TQ = window.TQ || {};
     p.parent_setColor = p.setColor;
     p.setColor = function(fontColor) {
         this.parent_setColor(fontColor);
-        this.setText(null, null, null, fontColor);
+        this.setProperty({fontColor: fontColor});
     };
 
     p.setSize = function(fontSize) {
-        this.setText(null, null, fontSize);
+        this.setProperty({fontSize: fontSize});
     };
 
-    p.setFont = function(fontFamily) {
-        this.setText(null, fontFamily);
+    p.setFont = function(fontFace) {
+        this.setProperty({fontFace: fontFace});
     };
 
     p.setText = function (str, fontFamily, fontSize, fontColor) {
@@ -78,20 +78,39 @@ window.TQ = window.TQ || {};
             if (str) {
                 txtObj.text = this.jsonObj.text = str;
             }
+        }
 
-            if (fontColor) {
-                txtObj.color = this.jsonObj.color = fontColor;
+        this.setProperty({text: str, fontFace: fontFamily, fontSize: fontSize, fontColor: fontColor});
+    };
+
+    p.setProperty = function(option) {
+        if (this.displayObj != null) {
+            var txtObj = this.displayObj;
+            if (option.text) {
+                txtObj.text = this.jsonObj.text = option.text;
             }
 
-            if (fontSize) {
-                this.jsonObj.fontSize = fontSize;
+            if (option.fontColor) {
+                txtObj.color = this.jsonObj.color = option.fontColor;
             }
 
-            if (fontFamily){
-                this.jsonObj.fontFace = fontFamily;
+            if (option.fontSize) {
+                this.jsonObj.fontSize = option.fontSize;
             }
 
-            txtObj.font = TQ.Utility.toCssFont(this.jsonObj.fontSize, this.jsonObj.fontFace);
+            if (option.fontFace) {
+                this.jsonObj.fontFace = option.fontFace;
+            }
+
+            if (option.toggleBold) {
+                this.jsonObj.bold = !this.jsonObj.bold;
+            }
+
+            if (option.toggleItalic) {
+                this.jsonObj.italic = !this.jsonObj.italic;
+            }
+
+            txtObj.font = TQ.Utility.toCssFont(this.jsonObj);
 
             // hitArea 不会根据str内容来更新， 所以：
             txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
@@ -103,7 +122,7 @@ window.TQ = window.TQ || {};
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
         var jsonObj = this.jsonObj;
-        var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj.fontSize, jsonObj.fontFace), jsonObj.color);
+        var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj), jsonObj.color);
         this.loaded = true;
         if (jsonObj.textAlign == null) {
             txtObj.textAlign = jsonObj.textAlign;

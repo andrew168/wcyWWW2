@@ -11,8 +11,16 @@ window.TQ = window.TQ || {};
 
     }
 
-    Utility.toCssFont = function(size, face) {
-      return (size + "px " + face);
+    Utility.toCssFont = function(option) {
+        // Any valid value for the CSS font attribute is acceptable (ex. "bold 36px Arial").
+      var result = option.fontSize + "px " + option.fontFace;
+        if (option.bold) {
+            result += ' bold';
+        }
+        if (option.italic) {
+            result += ' italic';
+        }
+      return result;
     };
 
     // 从text的HTML字串中获取tag标签中 attr属性的值
