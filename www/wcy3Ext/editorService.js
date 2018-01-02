@@ -268,9 +268,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function onPreviewMenuOn() {
-        forceToRenderSlider();
         $timeout(function () {
             TQ.IdleCounter.remove(TQ.PreviewMenu.hide);
+            forceToRenderSlider();
         });
     }
 
