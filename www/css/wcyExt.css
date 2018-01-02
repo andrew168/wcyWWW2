@@ -3,11 +3,11 @@
     position: fixed;
     left: 5%;
     top: 70%;
-    height: 2px;
+    height: 0px;
     width: 60%;
     color: red; /* lightgrey; */
     background-color: yellow; /* lightcyan; */
-    pointer-events: none;
+    /* pointer-events: none; */
     /* overflow-x: hidden; */
     /* white-space: nowrap */
 }

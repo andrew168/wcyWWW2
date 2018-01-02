@@ -13,8 +13,7 @@
         </div>
         -->
         <!-- END OF Config.TECH_TEST1_LOCAL_CACHE_ON -->
-
-        <div class="float-tool">
+    <div class="float-tool">
             <div class="new-left-button functionButton">
                 <div class="fn-left">
                     <button title={{getLocale('wcy_gongneng_button_17')}} class="bn-new-icon" id="tbHideShow">
@@ -145,10 +144,13 @@
             <input type="text" id="sceneID" name='sceneID' ng-model="data.sceneID" required>
             </div>
 
-        <div id="timer-bar-div" class="toolbar-layer" ng-show="state.isPreviewMenuOn"></div>
-
-
-        <!-- ** style="display: none" -->
+            <div id="timer-bar-div" class="toolbar-layer" ng-show="state.isPreviewMenuOn">
+                <rzslider
+                    data-rz-slider-model="rangeSlider.minValue"
+                    data-rz-slider-options="rangeSlider.options">
+                </rzslider>
+            </div>
+    <!-- ** style="display: none" -->
 
         <div class="float-tool_new toolbar-layer" style="display: block">
             <!-- 作品 -->
@@ -259,6 +261,8 @@
                 <button class="button button-positive" ng-click="gotoPreLevel()" ng-show="false">前一个level</button>
                 <button class="button button-positive" ng-click="gotoNextLevel()" ng-show="false">后一个level</button>
             </div>
+
+
             <div style="display:none"> <!-- all, passed -->
             <button class="button button-positive" ng-click="testInsert()">Insert</button>
             <button class="button button-positive" ng-click="EditorService.mCopyToggle()">mCopy</button>

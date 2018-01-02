@@ -4,19 +4,27 @@
 
 var TQ = TQ || {};
 TQ.TimerUI = (function () {
+    var MIN_DURATION = 2; // 10 frames, ==> 0.5s
     var isUserControlling = false,
         initialized = false,
-        t = 0,
-        tMin = 0,
-        tMaxFrame = 0,
-        tEle = null,
-        tMinEle = null,
-        bodyEle = null;
-
-    var htmlStr = '<div id="timer-slider-2"></div>' +
-            '<label id="timer-axis-value" class="toolbar-layer ui-font-md inline"></label>';
+        rangeSlider = {
+            minValue: 10,
+            options: {
+                floor: 0,
+                ceil: 100,
+                step: 1,
+                minRange: MIN_DURATION,
+                maxRange: MIN_DURATION,
+                pushRange: true,
+                // translate: onTranslate,
+                onStart: onMouseStart,
+                onEnd: onMouseStop,
+                onChange: onMouseAction, // onChange,
+            }
+        };
 
     return {
+        rangeSlider: rangeSlider,
         initialize: initialize,
         setGlobalTime: setGlobalTime
     };
@@ -28,30 +36,9 @@ TQ.TimerUI = (function () {
         }
 
         initialized = true;
-        t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
-        tMin = 0;
-        tMaxFrame = Math.ceil(TQ.Scene.getTMax());
-        var containerDiv = document.getElementById("timer-bar-div");
-        TQ.AssertExt.isNotNull(containerDiv);
-        containerDiv.innerHTML = htmlStr;
-        bodyEle = $("#timer-slider-2");
-        tEle = document.getElementById('timer-axis-value');
-        tMinEle = document.getElementById('time-slider-min-value');
-
-        bodyEle.slider({
-            orientation: "horizontal",
-            range: "min",
-            min: tMin,
-            max: tMaxFrame,
-            value: t,   // 1个滑块
-            // values: [t10, tMax/2],    // 2个滑块
-            start: onMouseStart,
-            slide: onMouseAction,
-            change: onChange,
-            stop: onMouseStop
-        });
-
-        displayTime(t);
+        rangeSlider.minValue = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        rangeSlider.options.floor = 0;
+        rangeSlider.options.ceil = Math.ceil(TQ.Scene.getTMax());
         TQ.FrameCounter.addHook(update);
         document.addEventListener(TQ.EVENT.SCENE_TIME_RANGE_CHANGED, onRangeChanged, false);
     }
@@ -60,59 +47,41 @@ TQ.TimerUI = (function () {
         isUserControlling = true;
     }
 
-    function onMouseStop (event, ui) {
-        t = ui.value;
-        syncToCounter();
+    function onMouseStop (sliderId, modalValue) {
+        syncToCounter(modalValue);
         isUserControlling = false;
     }
 
-    function syncToCounter() {
+    function syncToCounter(t) {
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
         TQ.FrameCounter.cmdGotoFrame(TQ.Scene.globalT2local(t));
         TQ.DirtyFlag.requestToUpdateAll();
     }
 
     function setGlobalTime(globalV) {
-        t = globalV;
-        syncToCounter();
+        syncToCounter(globalV);
         update(true);
     }
 
-    function onMouseAction (event, ui) {
-        t = ui.value;
+    function onMouseAction(sliderId, modelValue, highValue, pointerType) {
         // TQ.Log.debugInfo("Mouse Action: t10 = " + t10);
-        displayTime(t);
-        syncToCounter();
+        syncToCounter(modelValue);
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
-    }
-
-    function onChange () {
-        displayTime(t);
     }
 
     function update (forceToUpdate) {
         if (forceToUpdate || !isUserControlling) {
             if (forceToUpdate || TQ.FrameCounter.isNew) {
-                t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
-                bodyEle.slider("value", t);
+                rangeSlider.minValue = TQ.Scene.localT2Global(TQ.FrameCounter.v);
             }
         }
     }
 
-    function displayTime (t) {
-        // tEle.innerText
-        tEle.textContent = t.toFixed(0).toString() + '/' + tMaxFrame.toString();
-    }
-
     function onRangeChanged() {
-        t = TQ.Scene.localT2Global(TQ.FrameCounter.v);
-        tMin = 0;
-        tMaxFrame = Math.ceil(TQ.Scene.getTMax());
+        rangeSlider.minValue = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        rangeSlider.options.floor = 0;
+        rangeSlider.options.ceil = Math.ceil(TQ.Scene.getTMax());
 
-        if (bodyEle) {
-            bodyEle.slider('option', 'min', tMin);
-            bodyEle.slider('option', 'max', tMaxFrame);
-            update (true);
-        }
+        update(true);
     }
 }());

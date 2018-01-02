@@ -171,6 +171,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         reset();
         $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
         $rootScope.$on(TQ.EVENT.REFRESH_UI, forceToRefreshUI);
+        forceToRenderSlider();
+    }
+
+    function forceToRenderSlider() {
+        $timeout(function () { // 初始化slider模块
+            $rootScope.$broadcast('rzSliderForceRender');
+        });
     }
 
     function onSelectSetChange() {
@@ -261,6 +268,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function onPreviewMenuOn() {
+        forceToRenderSlider();
         $timeout(function () {
             TQ.IdleCounter.remove(TQ.PreviewMenu.hide);
         });
