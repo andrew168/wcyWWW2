@@ -143,6 +143,14 @@
 
             <input type="text" id="sceneID" name='sceneID' ng-model="data.sceneID" required>
             </div>
+            <div id="timeline-trim-div" class="toolbar-layer">
+                <rzslider
+                    data-rz-slider-model="timelineSlider.minValue"
+                    data-rz-slider-high="timelineSlider.maxValue"
+                    data-rz-slider-options="timelineSlider.options">
+                </rzslider>
+                <button class="ion-scissors" ng-click="EditorService.trim();">AAA</button>
+            </div>
 
             <div id="timer-bar-div" class="toolbar-layer" ng-show="state.isPreviewMenuOn">
                 <rzslider

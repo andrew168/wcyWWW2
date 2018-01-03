@@ -12,6 +12,19 @@
     /* white-space: nowrap */
 }
 
+#timeline-trim-div {
+    position: fixed;
+    left: 5%;
+    top: 50%;
+    height: 0px;
+    width: 60%;
+    color: red; /* lightgrey; */
+    background-color: yellow; /* lightcyan; */
+    /* pointer-events: none; */
+    /* overflow-x: hidden; */
+    /* white-space: nowrap */
+}
+
 #timer-slider-2 {
     position: relative;
     height: 2px;

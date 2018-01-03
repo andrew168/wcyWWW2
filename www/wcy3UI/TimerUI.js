@@ -9,12 +9,13 @@ TQ.TimerUI = (function () {
         initialized = false,
         rangeSlider = {
             minValue: 10,
+            maxValue: 20,
             options: {
                 floor: 0,
                 ceil: 100,
                 step: 1,
                 minRange: MIN_DURATION,
-                maxRange: MIN_DURATION,
+                // maxRange: MIN_DURATION,
                 pushRange: true,
                 // translate: onTranslate,
                 onStart: onMouseStart,
@@ -24,6 +25,8 @@ TQ.TimerUI = (function () {
         };
 
     return {
+        getT1: getT1,
+        getT2: getT2,
         rangeSlider: rangeSlider,
         initialize: initialize,
         setGlobalTime: setGlobalTime
@@ -89,4 +92,13 @@ TQ.TimerUI = (function () {
 
         update(true);
     }
+
+    function getT1() {
+        return TQ.Scene.globalT2local(TQ.FrameCounter.f2t(rangeSlider.minValue));
+    }
+
+    function getT2() {
+        return TQ.Scene.globalT2local(TQ.FrameCounter.f2t(rangeSlider.maxValue));
+    }
+
 }());
