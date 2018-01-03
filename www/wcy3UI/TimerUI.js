@@ -19,7 +19,7 @@ TQ.TimerUI = (function () {
                 // translate: onTranslate,
                 onStart: onMouseStart,
                 onEnd: onMouseStop,
-                onChange: onMouseAction, // onChange,
+                onChange: onMouseAction // onChange,
             }
         };
 
@@ -40,7 +40,12 @@ TQ.TimerUI = (function () {
         rangeSlider.options.floor = 0;
         rangeSlider.options.ceil = Math.ceil(TQ.Scene.getTMax());
         TQ.FrameCounter.addHook(update);
+        // 迫使系统render slider
         document.addEventListener(TQ.EVENT.SCENE_TIME_RANGE_CHANGED, onRangeChanged, false);
+        var editorService = angular.element(document.body).injector().get('EditorService');
+        if (editorService && editorService.forceToRenderSlider) {
+            editorService.forceToRenderSlider();
+        }
     }
 
     function onMouseStart () {
