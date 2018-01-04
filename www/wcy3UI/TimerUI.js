@@ -27,6 +27,7 @@ TQ.TimerUI = (function () {
     return {
         getT1: getT1,
         getT2: getT2,
+        onTrimCompleted: onTrimCompleted,
         rangeSlider: rangeSlider,
         initialize: initialize,
         setGlobalTime: setGlobalTime
@@ -45,10 +46,7 @@ TQ.TimerUI = (function () {
         TQ.FrameCounter.addHook(update);
         // 迫使系统render slider
         document.addEventListener(TQ.EVENT.SCENE_TIME_RANGE_CHANGED, onRangeChanged, false);
-        var editorService = angular.element(document.body).injector().get('EditorService');
-        if (editorService && editorService.forceToRenderSlider) {
-            editorService.forceToRenderSlider();
-        }
+        onRangeChanged();
     }
 
     function onMouseStart () {
@@ -90,7 +88,16 @@ TQ.TimerUI = (function () {
         rangeSlider.options.floor = 0;
         rangeSlider.options.ceil = Math.ceil(TQ.Scene.getTMax());
 
+        var editorService = angular.element(document.body).injector().get('EditorService');
+        if (editorService && editorService.forceToRenderSlider) {
+            editorService.forceToRenderSlider();
+        }
+
         update(true);
+    }
+
+    function onTrimCompleted() {
+        rangeSlider.maxValue = rangeSlider.minValue;
     }
 
     function getT1() {

@@ -681,7 +681,12 @@ window.TQ = window.TQ || {};
             if (ele) {
                 ele.trim(t1, t2);
             }
-        })
+        });
+
+        TQ.DirtyFlag.setLevel(this);
+        this.calculateLastFrame();
+        this.calculateRealLastFrame();
+        TQ.TimerUI.onTrimCompleted();
     };
 
     p.onItemLoaded = function (item) {

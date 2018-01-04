@@ -158,11 +158,11 @@ window.TQ = window.TQ || {};
 
         var tArray= this.t,
             dt = t2 - t1;
-        this.t.forEach(function(id) {
-            if (tArray[id] >= t2) {
-                tArray[id] -= dt;
+        for (var i = 0; i < tArray.length; i++) {
+            if (tArray[i] > t1 ) {
+                tArray[i] -= dt;
             }
-        });
+        }
 
         // maintain tid1,tid2
         if (this.t.length <= 1) {
