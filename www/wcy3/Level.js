@@ -683,10 +683,11 @@ window.TQ = window.TQ || {};
             }
         });
 
+        TQ.TimerUI.onTrimCompleted();
+        TQ.FrameCounter.trim(t1, t2);
         TQ.DirtyFlag.setLevel(this);
         this.calculateLastFrame();
         this.calculateRealLastFrame();
-        TQ.TimerUI.onTrimCompleted();
     };
 
     p.onItemLoaded = function (item) {
