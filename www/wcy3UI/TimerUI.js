@@ -53,8 +53,13 @@ TQ.TimerUI = (function () {
         isUserControlling = true;
     }
 
-    function onMouseStop (sliderId, modalValue) {
-        syncToCounter(modalValue);
+
+    function onMouseStop(sliderId, modelValue, highValue, pointerType) {
+        if (TQ.State.showTrimTimeline) {
+            syncToCounter(highValue);
+        } else {
+            syncToCounter(modelValue);
+        }
         isUserControlling = false;
     }
 
@@ -71,7 +76,11 @@ TQ.TimerUI = (function () {
 
     function onMouseAction(sliderId, modelValue, highValue, pointerType) {
         // TQ.Log.debugInfo("Mouse Action: t10 = " + t10);
-        syncToCounter(modelValue);
+        if (TQ.State.showTrimTimeline) {
+            syncToCounter(highValue);
+        } else {
+            syncToCounter(modelValue);
+        }
         //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
     }
 
@@ -98,6 +107,7 @@ TQ.TimerUI = (function () {
 
     function onTrimCompleted() {
         rangeSlider.maxValue = rangeSlider.minValue;
+        setGlobalTime(rangeSlider.minValue);
     }
 
     function getT1() {
