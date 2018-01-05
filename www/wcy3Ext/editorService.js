@@ -73,6 +73,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         increaseFontLevel: increaseFontLevel,
         setColor: setColor,
         eraseAnimeTrack: TQ.SelectSet.eraseAnimeTrack,
+        turnOnTrim: turnOnTrim,
         trim: trim,
 
         // UI操作部分， 更改了元素的state， 所有，必须 调用 updateMode()，以更新UI
@@ -148,6 +149,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isVisible = true;
         state.isLocked = false;
         state.isFont = false;
+        state.showTimer = true; //false;
+        state.showTrimTimer = false; //false;
 
         // editor's mode
         if (state.isPlayOnly) {
@@ -872,6 +875,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
     }
 
+    function turnOnTrim() {
+        state.showTrimTimer = true;
+        TQ.TimerUI.rangeSlider.maxValue = TQ.TimerUI.rangeSlider.minValue;
+        forceToRenderSlider();
+        $timeout(forceToRenderSlider, 100);
+    }
+
     function trim() {
         var selectedElement = TQ.SelectSet.peek(),
             t1 = TQ.TimerUI.getT1(),
@@ -890,6 +900,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             } else if (currScene && currScene.currentLevel) {
                 currScene.currentLevel.trim(t1, t2);
             }
+
+            state.showTrimTimer = false;
+            TQ.TimerUI.rangeSlider.maxValue = TQ.TimerUI.rangeSlider.minValue;
+            forceToRenderSlider();
+            $timeout(forceToRenderSlider, 100);
         }, function (){});
     }
 
