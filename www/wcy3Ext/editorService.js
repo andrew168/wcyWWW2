@@ -150,7 +150,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isLocked = false;
         state.isFont = false;
         state.showTimer = true; //false;
-        state.showTrimTimer = false; //false;
+        state.showTrimTimeline = false; //false;
 
         // editor's mode
         if (state.isPlayOnly) {
@@ -876,7 +876,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function turnOnTrim() {
-        state.showTrimTimer = true;
+        state.showTrimTimeline = true;
         TQ.TimerUI.rangeSlider.maxValue = TQ.TimerUI.rangeSlider.minValue;
         forceToRenderSlider();
         $timeout(forceToRenderSlider, 100);
@@ -901,7 +901,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 currScene.currentLevel.trim(t1, t2);
             }
 
-            state.showTrimTimer = false;
+            state.showTrimTimeline = false;
             TQ.TimerUI.rangeSlider.maxValue = TQ.TimerUI.rangeSlider.minValue;
             forceToRenderSlider();
             $timeout(forceToRenderSlider, 100);

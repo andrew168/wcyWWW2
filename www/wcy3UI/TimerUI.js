@@ -4,7 +4,7 @@
 
 var TQ = TQ || {};
 TQ.TimerUI = (function () {
-    var MIN_DURATION = 2; // 10 frames, ==> 0.5s
+    var MIN_DURATION = 0; // 10 frames, ==> 0.5s
     var isUserControlling = false,
         initialized = false,
         rangeSlider = {
