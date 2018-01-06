@@ -20,7 +20,7 @@ TQ = TQ || {};
     var stateStack= [];
     var p = Scene.prototype;
     var _levelTs = [],
-        _levelTe = [],
+        _levelTe= [],
         _tMax;
 
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
@@ -48,7 +48,7 @@ TQ = TQ || {};
     Scene.restoreState = restoreState;
 
     function saveState() {
-        stateStack.push({vT:Scene.localT2Global(TQ.FrameCounter.v), levelId: currScene.currentLevelId});
+        stateStack.push({tT:Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
     }
 
     function restoreState() {
@@ -59,7 +59,7 @@ TQ = TQ || {};
         } while (stateStack.length > 0);
 
         if (state) {
-            TQ.TimerUI.setGlobalTime(state.vT);
+            TQ.TimerUI.setGlobalTime(state.tT);
         } else {
             TQ.Log.error("state is null");
         }
@@ -911,7 +911,7 @@ TQ = TQ || {};
             }
 
             ts = te;
-            te = ts + level.tMaxFrame;
+            te = ts + TQ.FrameCounter.f2t(level.tMaxFrame);
 
             if (i  < _levelTs.length) {
                 _levelTs[i] = ts;

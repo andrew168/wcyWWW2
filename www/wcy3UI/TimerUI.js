@@ -40,9 +40,9 @@ TQ.TimerUI = (function () {
         }
 
         initialized = true;
-        rangeSlider.minValue = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        rangeSlider.minValue = TQ.FrameCounter.t2f(TQ.Scene.localT2Global(TQ.FrameCounter.t()));
         rangeSlider.options.floor = 0;
-        rangeSlider.options.ceil = Math.ceil(TQ.Scene.getTMax());
+        rangeSlider.options.ceil = Math.ceil(TQ.FrameCounter.t2f(TQ.Scene.getTMax()));
         TQ.FrameCounter.addHook(update);
         // 迫使系统render slider
         document.addEventListener(TQ.EVENT.SCENE_TIME_RANGE_CHANGED, onRangeChanged, false);
@@ -63,13 +63,15 @@ TQ.TimerUI = (function () {
         isUserControlling = false;
     }
 
-    function syncToCounter(t) {
+    function syncToCounter(v) {
+        var t = TQ.FrameCounter.f2t(v);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        TQ.FrameCounter.cmdGotoFrame(TQ.Scene.globalT2local(t));
+        TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(TQ.Scene.globalT2local(t)));
         TQ.DirtyFlag.requestToUpdateAll();
     }
 
-    function setGlobalTime(globalV) {
+    function setGlobalTime(globalT) {
+        var globalV = TQ.FrameCounter.t2f(globalT);
         syncToCounter(globalV);
         update(true);
     }
@@ -87,15 +89,15 @@ TQ.TimerUI = (function () {
     function update (forceToUpdate) {
         if (forceToUpdate || !isUserControlling) {
             if (forceToUpdate || TQ.FrameCounter.isNew) {
-                rangeSlider.minValue = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+                rangeSlider.minValue = TQ.FrameCounter.t2f(TQ.Scene.localT2Global(TQ.FrameCounter.t()));
             }
         }
     }
 
     function onRangeChanged() {
-        rangeSlider.minValue = TQ.Scene.localT2Global(TQ.FrameCounter.v);
+        rangeSlider.minValue = TQ.FrameCounter.t2f(TQ.Scene.localT2Global(TQ.FrameCounter.t()));
         rangeSlider.options.floor = 0;
-        rangeSlider.options.ceil = Math.ceil(TQ.Scene.getTMax());
+        rangeSlider.options.ceil = Math.ceil(TQ.FrameCounter.t2f(TQ.Scene.getTMax()));
 
         var editorService = angular.element(document.body).injector().get('EditorService');
         if (editorService && editorService.forceToRenderSlider) {
@@ -107,7 +109,7 @@ TQ.TimerUI = (function () {
 
     function onTrimCompleted() {
         rangeSlider.maxValue = rangeSlider.minValue;
-        setGlobalTime(rangeSlider.minValue);
+        setGlobalTime(TQ.FrameCounter.f2t(rangeSlider.minValue));
     }
 
     function getT1() {
