@@ -75,6 +75,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         eraseAnimeTrack: TQ.SelectSet.eraseAnimeTrack,
         turnOnTrim: turnOnTrim,
         trim: trim,
+        increaseTimeline: increaseTimeline,
+        decreaseTimeline: decreaseTimeline,
 
         // UI操作部分， 更改了元素的state， 所有，必须 调用 updateMode()，以更新UI
         hideOrShow :hideOrShow ,
@@ -950,6 +952,22 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             rightLevel.calculateLastFrame();
             rightLevel.calculateRealLastFrame();
         }
+    }
+
+    function increaseTimeline() {
+        var level = currScene.currentLevel;
+        level.increaseTime();
+        level.calculateLastFrame();
+        level.calculateRealLastFrame();
+        $timeout(forceToRenderSlider, 100);
+    }
+
+    function decreaseTimeline() {
+        var level = currScene.currentLevel;
+        level.decreaseTime();
+        level.calculateLastFrame();
+        level.calculateRealLastFrame();
+        $timeout(forceToRenderSlider, 100);
     }
 
     function setSize() {

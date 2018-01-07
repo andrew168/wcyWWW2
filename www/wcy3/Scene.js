@@ -906,12 +906,17 @@ TQ = TQ || {};
 
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
-            if (!level.dataReady && (level.tMaxFrame === undefined)) {
+            if (!level.dataReady) {
+                continue;
+            }
+
+            if (level.tMaxFrame === undefined) {
+                TQ.AssertExt.invalidLogic(false, "new use case?");
                 continue;
             }
 
             ts = te;
-            te = ts + TQ.FrameCounter.f2t(level.tMaxFrame);
+            te = ts + TQ.FrameCounter.f2t(level.getTime());
 
             if (i  < _levelTs.length) {
                 _levelTs[i] = ts;
@@ -947,8 +952,12 @@ TQ = TQ || {};
         }
 
         if (_levelTs.length <= currScene.currentLevelId) {
-            TQ.Log.debugWarn(t);
-            return _levelTs[_levelTs.length - 1];
+            if (_levelTs.length > 0) {
+                return _levelTs[_levelTs.length - 1];
+            } else {
+                TQ.Log.debugWarn('not initialized' + t);
+                return 0;
+            }
         }
 
         return  (t + _levelTs[currScene.currentLevelId]);
