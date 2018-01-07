@@ -941,9 +941,16 @@ TQ = TQ || {};
     };
 
     function localT2Global(t) {
-        if (!_levelTs || _levelTs.length <= currScene.currentLevelId) {
+        if (!_levelTs) {
+            TQ.Log.debugWarn(t);
             return (t = 0);
         }
+
+        if (_levelTs.length <= currScene.currentLevelId) {
+            TQ.Log.debugWarn(t);
+            return _levelTs[_levelTs.length - 1];
+        }
+
         return  (t + _levelTs[currScene.currentLevelId]);
     }
 

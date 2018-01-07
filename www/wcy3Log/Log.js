@@ -22,6 +22,7 @@ TQ.Log = (function () {
         debugInfo: debugInfo,
         depreciated: depreciated,
         warn: warn,
+        debugWarn: debugWarn,
         error: error,
         criticalError: criticalError,
         trace: trace,
@@ -68,6 +69,10 @@ TQ.Log = (function () {
             }
             console.warn(str);
         }
+    }
+
+    function debugWarn(str) {
+        warn("debug warn: special use case:" + str);
     }
 
     function depreciated(str) {
