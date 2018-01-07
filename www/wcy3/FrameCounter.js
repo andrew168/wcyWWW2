@@ -254,8 +254,12 @@ window.TQ = window.TQ || {};
         FrameCounter.max = newMax;
     };
 
-    FrameCounter.trim = function (t1, t2) {
-        FrameCounter.max -= FrameCounter.t2f(t2 - t1);
+    FrameCounter.trim = function (tObj1, tObj2) {
+        if (tObj1.levelId === tObj2.levelId) {
+            FrameCounter.max -= FrameCounter.t2f(tObj2.t - tObj1.t);
+        } else { // in tObj2.levelId,
+            FrameCounter.max -= tObj2.t;
+        }
     };
 
     var stateReceiver = null;

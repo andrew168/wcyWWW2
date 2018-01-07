@@ -25,8 +25,8 @@ TQ.TimerUI = (function () {
         };
 
     return {
-        getT1: getT1,
-        getT2: getT2,
+        getTObject1: getTObject1,
+        getTObject2: getTObject2,
         onTrimCompleted: onTrimCompleted,
         rangeSlider: rangeSlider,
         initialize: initialize,
@@ -66,7 +66,8 @@ TQ.TimerUI = (function () {
     function syncToCounter(v) {
         var t = TQ.FrameCounter.f2t(v);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(TQ.Scene.globalT2local(t)));
+        var tObj = TQ.Scene.globalT2local(t);
+        TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(tObj.t));
         TQ.DirtyFlag.requestToUpdateAll();
     }
 
@@ -112,12 +113,12 @@ TQ.TimerUI = (function () {
         setGlobalTime(TQ.FrameCounter.f2t(rangeSlider.minValue));
     }
 
-    function getT1() {
-        return TQ.Scene.globalT2local(TQ.FrameCounter.f2t(rangeSlider.minValue));
+    function getTObject1() {
+        return TQ.Scene.globalT2local(TQ.FrameCounter.f2t(rangeSlider.minValue), true);
     }
 
-    function getT2() {
-        return TQ.Scene.globalT2local(TQ.FrameCounter.f2t(rangeSlider.maxValue));
+    function getTObject2() {
+        return TQ.Scene.globalT2local(TQ.FrameCounter.f2t(rangeSlider.maxValue), true);
     }
 
 }());

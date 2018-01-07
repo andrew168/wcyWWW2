@@ -884,28 +884,66 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function trim() {
         var selectedElement = TQ.SelectSet.peek(),
-            t1 = TQ.TimerUI.getT1(),
-            t2 = TQ.TimerUI.getT2();
+            tObj1 = TQ.TimerUI.getTObject1(),
+            tObj2 = TQ.TimerUI.getTObject2(),
+            tTemp;
 
-        if (t1 > t2) {
-            var tt = t1;
-            t1 = t2;
-            t2 = t1;
-            t1 = tt;
+        if ((tObj1.levelId > tObj2.levelId) ||
+            ((tObj1.levelId === tObj2.levelId) && (tObj1.t > tObj2.t))) {
+            tTemp = tObj1;
+            tObj1 = tObj2;
+            tObj2 = tTemp;
         }
 
         TQ.MessageBox.prompt("This operation is not revertable, Are you sure? <br/>Apply to all objects", function () {
-            if (selectedElement) {
-                selectedElement.trim(t1, t2);
+            $timeout(onOK);
+        }, function (){});
+
+        function onOK() {
+            if (selectedElement && (tObj1.levelId === tObj2.levelId)) {
+                selectedElement.trim(tObj1.t, tObj2.t);
             } else if (currScene && currScene.currentLevel) {
-                currScene.currentLevel.trim(t1, t2);
+                doTrim(tObj1, tObj2);
             }
 
             state.showTrimTimeline = false;
             TQ.TimerUI.rangeSlider.maxValue = TQ.TimerUI.rangeSlider.minValue;
             forceToRenderSlider();
             $timeout(forceToRenderSlider, 100);
-        }, function (){});
+        }
+    }
+
+    function doTrim(tObj1, tObj2) {
+        var MAX_LENGTH = 99999.0;
+        var leftLevel, rightLevel;
+        if (tObj1.levelId == tObj2.levelId) {
+            leftLevel = currScene.getLevel(tObj1.levelId);
+            leftLevel.trim(tObj1.t, tObj2.t);
+        } else {
+            rightLevel = currScene.getLevel(tObj2.levelId);
+            rightLevel.trim(0, tObj2.t);
+            TQ.DirtyFlag.setLevel(rightLevel);
+            rightLevel.calculateLastFrame();
+            rightLevel.calculateRealLastFrame();
+            var levelId = tObj2.levelId - 1;
+            while (levelId > tObj1.levelId) {
+                currScene.deleteLevel(levelId);
+                levelId --;
+            }
+            leftLevel = currScene.getLevel(levelId);
+            leftLevel.trim(tObj1.t, MAX_LENGTH);
+        }
+
+        TQ.TimerUI.onTrimCompleted();
+        TQ.FrameCounter.trim(tObj1, tObj2);
+        TQ.DirtyFlag.setLevel(leftLevel);
+        leftLevel.calculateLastFrame();
+        leftLevel.calculateRealLastFrame();
+        if (rightLevel) {
+            TQ.DirtyFlag.setLevel(rightLevel);
+            rightLevel.calculateLastFrame();
+            rightLevel.calculateRealLastFrame();
+        }
     }
 
     function setSize() {

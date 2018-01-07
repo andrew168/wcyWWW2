@@ -20,7 +20,7 @@ TQ = TQ || {};
     var stateStack= [];
     var p = Scene.prototype;
     var _levelTs = [],
-        _levelTe= [],
+        _levelTe = [],
         _tMax;
 
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
@@ -966,17 +966,16 @@ TQ = TQ || {};
         return 0;
     }
 
-    function globalT2local(t) {
+    function globalT2local(t, skipLevelChange) {
         var id = currScene.currentLevelId;
-        var i;
         if ((t < _levelTs[id]) || (t > _levelTe[id])) {
             id = findLevel(t);
-            if (id != currScene.currentLevelId) {
+            if (!skipLevelChange && (id != currScene.currentLevelId)) {
                 currScene.gotoLevel(id);
             }
         }
 
-        return t - _levelTs[id];
+        return {levelId: id, t: t - _levelTs[id]};
     }
 
     function getTMax() {
