@@ -8,8 +8,8 @@ TQ.TimerUI = (function () {
     var isUserControlling = false,
         initialized = false,
         rangeSlider = {
-            minValue: 10,
-            maxValue: 20,
+            minValue: 0,
+            maxValue: 0,
             options: {
                 floor: 0,
                 ceil: 100,

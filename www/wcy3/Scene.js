@@ -8,6 +8,7 @@ TQ = TQ || {};
         this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         this.isDirty = true;
+        this.tMax = 0;
     }
     Scene.EVENT_READY = "sceneReady";
     Scene.EVENT_SAVED = "sceneSaved";
@@ -20,8 +21,7 @@ TQ = TQ || {};
     var stateStack= [];
     var p = Scene.prototype;
     var _levelTs = [],
-        _levelTe = [],
-        _tMax;
+        _levelTe = [];
 
     TQ.EventHandler.initialize(p); // 为它添加事件处理能力
     p.title = null;  // title是微创意的标题，
@@ -245,6 +245,7 @@ TQ = TQ || {};
             }
             thisScene.state = TQBase.LevelState.RUNNING;
             thisScene.handleEvent(Scene.EVENT_READY);
+            thisScene.updateLevelRange();
             TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_READY);
             TQ.MessageBox.hide();
             this.isDirty = true;
@@ -428,7 +429,7 @@ TQ = TQ || {};
     p.reset = function () { // 在打开文件，或者创建新文件的时候， 重新设置环境
         //   $('#stop').trigger('click');
         this.setEditor();
-        _tMax = 0;
+        this.tMax = 0;
         _levelTe.splice(0);
         _levelTs.splice(0);
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
@@ -670,6 +671,7 @@ TQ = TQ || {};
         this.currentLevelId = objJson.currentLevelId;
         this.currentLevelId = 0; //ToDo: 迫使系统总是打开第一个场景
         this.title = (!objJson.title) ? null : objJson.title;
+        this.tMax = (objJson.tMax === undefined)? this.tMax : objJson.tMax;
 
         if (this.title == null) {
             this.title = this.filename;
@@ -904,9 +906,11 @@ TQ = TQ || {};
             _levelTs.splice(this.levels.length);
         }
 
+        var wholeSceneReady = true;
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
             if (!level.dataReady) {
+                wholeSceneReady = false;
                 continue;
             }
 
@@ -927,8 +931,8 @@ TQ = TQ || {};
             }
         }
 
-        if (Math.abs(_tMax - te) > 0.1) {
-                _tMax = te;
+        if (Math.abs(this.tMax - te) > 0.1) {
+            this.tMax = (wholeSceneReady) ? te : Math.max(this.tMax, te);
             TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
         }
     };
@@ -955,8 +959,10 @@ TQ = TQ || {};
             if (_levelTs.length > 0) {
                 return _levelTs[_levelTs.length - 1];
             } else {
-                TQ.Log.debugWarn('not initialized' + t);
-                return 0;
+                if (t> 0) {
+                    TQ.Log.debugWarn('not initialized' + t);
+                }
+                return t;
             }
         }
 
@@ -995,7 +1001,7 @@ TQ = TQ || {};
     }
 
     function getTMax() {
-        return _tMax;
+        return (!currScene) ? 0: currScene.tMax;
     }
 
     TQ.Scene = Scene;
