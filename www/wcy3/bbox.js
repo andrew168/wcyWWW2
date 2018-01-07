@@ -83,7 +83,10 @@ TQ = TQ || {};
                 {x: x2, y: y2},
                 {x: x1, y: y2}];
 
-        TQ.Log.matrixDebugInfo("bbox", host.jsonObj.M);
+        if (host.jsonObj.M) {
+            TQ.Log.matrixDebugInfo("bbox", host.jsonObj.M);
+        }
+
         objPts.forEach(function (pt) {
             if (!hasPoint && showPointOn) {
                 TQ.Point.attachTo(host, {obj: pt, world: null});
