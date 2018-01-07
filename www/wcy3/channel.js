@@ -146,7 +146,7 @@ window.TQ = window.TQ || {};
         }
 
         if (this.t[id2] < t2) { //右出界
-            var BIG_NUMBER = 100;
+            var BIG_NUMBER = 65535;// 因为自动拍摄的数据量很大，
             id2 += BIG_NUMBER; // 大的数字， 确保都cut掉
         }
         //要保留tid1, 也要保留tid2，中间的n=tid2- tid1 - 1不保存
