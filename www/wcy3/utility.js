@@ -575,5 +575,22 @@ window.TQ = window.TQ || {};
         TQ.Assert.isTrue(color[0] === '#', '颜色格式必须是#AABBCC');
     }
 
+    var isDithering = false;
+    function ditherStart() {
+        isDithering = true;
+        setTimeout(ditherEnd, 200);
+    }
+
+    function ditherEnd() {
+        isDithering = false;
+    }
+
+    function preventDither() {
+        var readyToGo = !isDithering;
+        ditherStart();
+        return readyToGo;
+    }
+
+    Utility.preventDither = preventDither;
     TQ.Utility = Utility;
 }());

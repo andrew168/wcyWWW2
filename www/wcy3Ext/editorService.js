@@ -883,6 +883,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function trim() {
+        if (!TQ.Utility.preventDither()) {
+            return;
+        }
+        console.warn("TRIM command: ...", tObj1, tObj2);
         var selectedElement = TQ.SelectSet.peek(),
             tObj1 = TQ.TimerUI.getTObject1(),
             tObj2 = TQ.TimerUI.getTObject2(),
@@ -900,6 +904,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }, function (){});
 
         function onOK() {
+            console.warn("TRIM: onOK...", tObj1, tObj2);
             if (selectedElement && (tObj1.levelId === tObj2.levelId)) {
                 selectedElement.trim(tObj1.t, tObj2.t);
             } else if (currScene && currScene.currentLevel) {
@@ -914,6 +919,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function doTrim(tObj1, tObj2) {
+        console.warn("TRIM: ...", tObj1, tObj2);
         var MAX_LENGTH = 99999.0;
         var leftLevel, rightLevel;
         if (tObj1.levelId == tObj2.levelId) {
