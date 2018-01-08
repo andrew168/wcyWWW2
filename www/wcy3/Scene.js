@@ -179,14 +179,14 @@ TQ = TQ || {};
     p.updateTimeTable = function () {
         // update 当前level的时间
         if (!TQ.SceneEditor.isEditMode()) {  //录制的时候， 自动延长 本场景的时间长度
-            TQ.FrameCounter.max = this.currentLevel.getTime();
+            TQ.FrameCounter.setMaxByT(this.currentLevel.getTime());
         }
 
         // update 其它level的 相对时间点
         var t = 0;
         for (var i = 0; i < this.levels.length; i++) {
             this.levels[i].setT0(t);
-            t += TQ.FrameCounter.t2f(this.levels[i].getTime());
+            t += this.levels[i].getTime();
         }
     };
 
@@ -897,8 +897,8 @@ TQ = TQ || {};
             level = null;
 
         // for recording
-        if (this.currentLevel && (this.currentLevel.getTime() < TQ.FrameCounter.max)) {
-            this.currentLevel.setTime(TQ.FrameCounter.max);
+        if (this.currentLevel && (this.currentLevel.getTime() < TQ.FrameCounter.maxTime())) {
+            this.currentLevel.setTime(TQ.FrameCounter.maxTime());
         }
 
         if (_levelTe.length > this.levels.length ) {
@@ -920,7 +920,7 @@ TQ = TQ || {};
             }
 
             ts = te;
-            te = ts + TQ.FrameCounter.f2t(level.getTime());
+            te = ts + level.getTime();
 
             if (i  < _levelTs.length) {
                 _levelTs[i] = ts;

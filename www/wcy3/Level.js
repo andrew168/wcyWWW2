@@ -5,7 +5,7 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    var DEFAULT_MAX_FRAME = 60;
+    var DEFAULT_MAX_FRAME = 3; // seconds
     function Level(description) {
         this.background = null;
         this.latestElement = null; // 最新生成的复合物体
@@ -733,12 +733,11 @@ window.TQ = window.TQ || {};
     };
 
     p.calculateLastFrame = function () {
-        var tLastFrame = this.calculateRealLastFrame();
-        if (!isStaticImage(tLastFrame)) {
-            this.tMaxFrame = TQ.FrameCounter.t2f(tLastFrame);
-            this.tMaxCapacity = Math.max(this.tMaxCapacity, this.tMaxFrame);
+        this.tMaxFrame = this.calculateRealLastFrame();
+        if (this.tMaxCapacity < this.tMaxFrame) {
+            this.tMaxCapacity = this.tMaxFrame;
         }
-        return TQ.FrameCounter.f2t(this.tMaxFrame);
+        return this.tMaxFrame;
     };
 
     function isStaticImage(tLastFrame) {
@@ -747,14 +746,24 @@ window.TQ = window.TQ || {};
 
     p.increaseTime = function() {
         var oldMax = this.tMaxCapacity,
-            newMax = Math.max(1, Math.round(1.2 * oldMax));
+            newMax = 1.2 * oldMax;
+        if (newMax < 1) {
+            newMax = 1;
+        }
         this.setCapacity(newMax);
         TQ.DirtyFlag.setLevel(this);
     };
 
     p.decreaseTime = function () {
         var oldMax = this.tMaxCapacity,
-            newMax = Math.max(1, Math.round(oldMax/1.2));
+            newMax = Math.max(0, Math.round(oldMax/1.2));
+        if (newMax === oldMax) {
+            if ((newMax > 2)) {
+                newMax--;
+            } else {
+                newMax = newMax / 2;
+            }
+        }
         this.setCapacity(newMax);
         TQ.DirtyFlag.setLevel(this);
     };
@@ -771,7 +780,7 @@ window.TQ = window.TQ || {};
         if (t >= this.tMaxFrame) {
             this.tMaxCapacity = t;
             if (this.isActive()) {
-                TQ.FrameCounter.setMax(this.tMaxCapacity);
+                TQ.FrameCounter.setMaxByT(this.tMaxCapacity);
             }
         }
     };

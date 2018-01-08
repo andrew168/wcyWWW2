@@ -60,7 +60,7 @@ window.TQ = window.TQ || {};
         FrameCounter.v = t0 * FPS;
         _FPS = FPS;
         currLevel = level;
-        FrameCounter.max = level.getTime();
+        FrameCounter.max = t2f(level.getTime());
         TQ.InputMap.registerAction(TQ.InputMap.LAST_FRAME_KEY,
             function () {
                 level.setTime(FrameCounter.v);
@@ -82,9 +82,10 @@ window.TQ = window.TQ || {};
         return (frameNumber / _FPS);
     };
 
-    FrameCounter.t2f = function(t) {
+    FrameCounter.t2f = t2f;
+    function t2f(t) {
         return (t * _FPS);
-    };
+    }
 
     FrameCounter.forward = function ()
     {
@@ -254,9 +255,13 @@ window.TQ = window.TQ || {};
         FrameCounter.max = newMax;
     };
 
+    FrameCounter.setMaxByT = function (tMax) {
+        FrameCounter.max = Math.round(t2f(tMax));
+    };
+
     FrameCounter.trim = function (tObj1, tObj2) {
         if (tObj1.levelId === tObj2.levelId) {
-            FrameCounter.max -= FrameCounter.t2f(tObj2.t - tObj1.t);
+            FrameCounter.max -= t2f(tObj2.t - tObj1.t);
         } else { // in tObj2.levelId,
             FrameCounter.max -= tObj2.t;
         }

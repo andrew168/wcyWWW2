@@ -37,8 +37,8 @@ TQ = TQ || {};
     p.play = function (t) {
         this.tc = t;  // 发布命令command的时间是 tc
         this.state = Action.PLAYING;
-        this.T = TQ.FrameCounter.f2t(this.F);
-        this.ts = TQ.FrameCounter.f2t(this.fs);
+        this.T = this.F;
+        this.ts = this.fs;
         this.tcn = this.tc + (this.n * this.T);   // tcn 是周期性的tc， 第n次播放时的相对起点
         this.te = this.tcn + this.T;
     };
