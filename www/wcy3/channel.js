@@ -246,7 +246,7 @@ window.TQ = window.TQ || {};
                 if (sag) {
                     switch (sag.categoryID) {
                         case TQ.AnimationManager.SagCategory.IN:
-                            tInMax = Math.max(sag.t2);
+                            tInMax = Math.max(tInMax, sag.t2);
                             break;
                         case TQ.AnimationManager.SagCategory.IDLE:
                             // ToDo: idle时间是弹性的， = 总时间 - 入场时间 - 离场时间
@@ -260,7 +260,7 @@ window.TQ = window.TQ || {};
                 }
             });
 
-            tMax = tInMax + tOutMax;
+            tMax = Math.max(tInMax, tOutMax);
             return tMax;
         }
 
