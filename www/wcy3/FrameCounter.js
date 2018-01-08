@@ -247,6 +247,7 @@ window.TQ = window.TQ || {};
 
     FrameCounter.reset = function () {
         requestState = null;
+        FrameCounter.max = 3 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
         FrameCounter.v = 0;
         state = STOP;
     };
