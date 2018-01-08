@@ -768,9 +768,14 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setLevel(this);
     };
 
-    p.setTime = function (t) {
+    p.setTime = function (t, forceChangeCapacity) {
         this.tMaxFrame = t;
-        this.tMaxCapacity = Math.max(this.tMaxCapacity, this.tMaxFrame);
+        if (forceChangeCapacity) {
+            this.tMaxCapacity = t;
+        } else {
+            this.tMaxCapacity = Math.max(this.tMaxCapacity, this.tMaxFrame);
+        }
+
         if (this.isActive()) {
             TQ.FrameCounter.setMax(this.tMaxFrame);
         }

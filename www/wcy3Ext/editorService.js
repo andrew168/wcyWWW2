@@ -907,9 +907,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         function onOK() {
             console.warn("TRIM: onOK...", tObj1, tObj2);
-            if (selectedElement && (tObj1.levelId === tObj2.levelId)) {
-                selectedElement.trim(tObj1.t, tObj2.t);
-            } else if (currScene && currScene.currentLevel) {
+            //if (selectedElement && (tObj1.levelId === tObj2.levelId)) {
+            //    selectedElement.trim(tObj1.t, tObj2.t);
+            //} else
+
+            if (currScene && currScene.currentLevel) {
                 doTrim(tObj1, tObj2);
             }
 
@@ -952,6 +954,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             rightLevel.calculateLastFrame();
             rightLevel.calculateRealLastFrame();
         }
+        currScene.currentLevel.setTime(TQ.FrameCounter.maxTime(), true);
     }
 
     function increaseTimeline() {
