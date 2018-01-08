@@ -17,7 +17,7 @@ TQ.TimerUI = (function () {
                 minRange: MIN_DURATION,
                 // maxRange: MIN_DURATION,
                 pushRange: true,
-                // translate: onTranslate,
+                translate: onTranslate,
                 onStart: onMouseStart,
                 onEnd: onMouseStop,
                 onChange: onMouseAction // onChange,
@@ -121,4 +121,20 @@ TQ.TimerUI = (function () {
         return TQ.Scene.globalT2local(TQ.FrameCounter.f2t(rangeSlider.maxValue), true);
     }
 
+    function onTranslate(value, id, which) {
+        TQ.Log.debugInfo(value + ',' + id + ',' + which);
+        var t,
+            result;
+        t = TQ.FrameCounter.f2t(value);
+        if ((which === 'model') ||(which === 'high')) {
+            result = t.toFixed(1);
+        } else {
+            if (which === 'floor') {
+                result = t.toFixed(0) + '';
+            } else if (which === 'ceil') {
+                result = t.toFixed(0) + 's';
+            }
+        }
+        return result;
+    }
 }());
