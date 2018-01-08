@@ -132,6 +132,10 @@ window.TQ = window.TQ || {};
     };
 
     p.trim = function (t1, t2) {
+        if (this.hasSag()) {
+            return this.trimSags(t1, t2);
+        }
+
         var id1, id2;
         this.searchInterval(t1);
         id1 = this.tid1;
@@ -174,6 +178,30 @@ window.TQ = window.TQ || {};
         }
 
         this.searchInterval(t1);
+    };
+
+    p.trimSags = function (t1, t2) {
+        var self = this,
+            hasSag = false,
+            dt = t2 - t1;
+        this.sags.forEach(function (sag) {
+            if (sag) {
+                if (((sag.t1 < t1) && (t1 < sag.t2)) ||
+                    ((sag.t1 < t2) && (t2 < sag.t2))) {
+                    self.removeOneCategorySag(sag.categoryID);
+                } else {
+                    hasSag = true;
+                    if (t1 < sag.t1) {
+                        sag.t1 -= dt;
+                        sag.t2 -= dt;
+                    }
+                }
+            }
+        });
+
+        if (!hasSag) {
+            delete(this.sags);
+        }
     };
 
     p.erase = function () {
@@ -270,6 +298,10 @@ window.TQ = window.TQ || {};
     p.getInSagType = function () {
         var sag = this.getInSag();
         return (sag) ? sag.typeID : null;
+    };
+
+    p.hasSag = function() {
+        return (this.sags && this.sags.length > 0);
     };
 
     TQ.OneChannel = Channel;
