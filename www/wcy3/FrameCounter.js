@@ -252,11 +252,7 @@ window.TQ = window.TQ || {};
         state = STOP;
     };
 
-    FrameCounter.setMax = function (newMax) {
-        FrameCounter.max = newMax;
-    };
-
-    FrameCounter.setMaxByT = function (tMax) {
+    FrameCounter.setTMax = function (tMax) {
         FrameCounter.max = Math.round(t2f(tMax));
     };
 

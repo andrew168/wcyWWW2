@@ -179,7 +179,7 @@ TQ = TQ || {};
     p.updateTimeTable = function () {
         // update 当前level的时间
         if (!TQ.SceneEditor.isEditMode()) {  //录制的时候， 自动延长 本场景的时间长度
-            TQ.FrameCounter.setMaxByT(this.currentLevel.getTime());
+            TQ.FrameCounter.setTMax(this.currentLevel.getTime());
         }
 
         // update 其它level的 相对时间点

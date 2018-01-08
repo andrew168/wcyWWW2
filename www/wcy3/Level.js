@@ -777,7 +777,7 @@ window.TQ = window.TQ || {};
         }
 
         if (this.isActive()) {
-            TQ.FrameCounter.setMax(this.tMaxFrame);
+            TQ.FrameCounter.setTMax(this.tMaxFrame);
         }
     };
 
@@ -785,7 +785,7 @@ window.TQ = window.TQ || {};
         if (t >= this.tMaxFrame) {
             this.tMaxCapacity = t;
             if (this.isActive()) {
-                TQ.FrameCounter.setMaxByT(this.tMaxCapacity);
+                TQ.FrameCounter.setTMax(this.tMaxCapacity);
             }
         }
     };
