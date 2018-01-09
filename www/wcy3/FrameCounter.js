@@ -254,6 +254,9 @@ window.TQ = window.TQ || {};
 
     FrameCounter.setTMax = function (tMax) {
         FrameCounter.max = Math.round(t2f(tMax));
+        if (FrameCounter.v > FrameCounter.max) {
+            FrameCounter.v = FrameCounter.max;
+        }
     };
 
     FrameCounter.trim = function (tObj1, tObj2) {
