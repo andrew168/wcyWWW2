@@ -151,7 +151,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.isVisible = true;
         state.isLocked = false;
         state.isFont = false;
-        state.showTimer = true; //false;
+        state.showTimer = false;
         state.showTrimTimeline = false; //false;
 
         // editor's mode
