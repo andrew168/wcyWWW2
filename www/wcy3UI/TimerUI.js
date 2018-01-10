@@ -7,6 +7,7 @@ TQ.TimerUI = (function () {
     var MIN_DURATION = 0; // 10 frames, ==> 0.5s
     var isUserControlling = false,
         initialized = false,
+        unitSeries = [0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100, 500, 1000, 5000], // * 20 frame per second
         rangeSlider = {
             minValue: 0,
             maxValue: 0,
@@ -14,6 +15,8 @@ TQ.TimerUI = (function () {
                 floor: 0,
                 ceil: 100,
                 step: 1,
+                showTicks: true,
+                ticksArray: [10, 20, 30],
                 minRange: MIN_DURATION,
                 // maxRange: MIN_DURATION,
                 pushRange: true,
@@ -39,10 +42,15 @@ TQ.TimerUI = (function () {
             return;
         }
 
+        for (var i = 0; i < unitSeries.length; i++) {
+            unitSeries[i] *= TQ.FrameCounter.defaultFPS;
+        }
+
         initialized = true;
         rangeSlider.minValue = TQ.FrameCounter.t2f(TQ.Scene.localT2Global(TQ.FrameCounter.t()));
         rangeSlider.options.floor = 0;
         rangeSlider.options.ceil = Math.ceil(TQ.FrameCounter.t2f(TQ.Scene.getTMax()));
+        updateTicksArray();
         TQ.FrameCounter.addHook(update);
         // 迫使系统render slider
         document.addEventListener(TQ.EVENT.SCENE_TIME_RANGE_CHANGED, onRangeChanged, false);
@@ -99,6 +107,7 @@ TQ.TimerUI = (function () {
         rangeSlider.minValue = TQ.FrameCounter.t2f(TQ.Scene.localT2Global(TQ.FrameCounter.t()));
         rangeSlider.options.floor = 0;
         rangeSlider.options.ceil = Math.ceil(TQ.FrameCounter.t2f(TQ.Scene.getTMax()));
+        updateTicksArray();
 
         var editorService = angular.element(document.body).injector().get('EditorService');
         if (editorService && editorService.forceToRenderSlider) {
@@ -136,5 +145,36 @@ TQ.TimerUI = (function () {
             }
         }
         return result;
+    }
+
+    function updateTicksArray() {
+        if (rangeSlider.options.ceil <= 1) {
+            return;
+        }
+
+        var totalLength = rangeSlider.options.ceil,
+            minUnit = totalLength / 20,
+            maxUnit = totalLength / 5,
+            ideaUnit = 1,
+            ticks = [];
+        unitSeries.some(function (unit) {
+            ideaUnit = unit;
+            return ((minUnit <= unit) && (unit <= maxUnit));
+        });
+
+        for (var v = ideaUnit; v < totalLength; v += ideaUnit) {
+            ticks.push(v);
+        }
+
+        if (ticks.length < 1) {
+            return;
+        }
+
+        var oldTicksArray = rangeSlider.options.ticksArray;
+        if ((oldTicksArray.length < 1) ||
+            (oldTicksArray.length !== ticks.length) ||
+            (oldTicksArray[oldTicksArray.length - 1] !== ticks[ticks.length - 1])) {
+            rangeSlider.options.ticksArray = ticks;
+        }
     }
 }());

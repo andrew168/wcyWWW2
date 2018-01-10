@@ -744,9 +744,21 @@ window.TQ = window.TQ || {};
         return (tLastFrame < 0.1);
     }
 
+    var stepSeries = [1, 2, 5, 10, 20, 50, 100, 500, 1000, 5000];
+    function findStep(delta) {
+        var ideaStep = 1;
+        stepSeries.some(function (step) {
+            if (delta > step) {
+                ideaStep = step;
+            }
+            return (delta < step);
+        });
+
+        return ideaStep;
+    }
     p.increaseTime = function() {
         var oldMax = this.tMaxCapacity,
-            newMax = 1.2 * oldMax;
+            newMax = oldMax + findStep(oldMax * 0.2);
         if (newMax < 1) {
             newMax = 1;
         }
@@ -756,7 +768,7 @@ window.TQ = window.TQ || {};
 
     p.decreaseTime = function () {
         var oldMax = this.tMaxCapacity,
-            newMax = Math.max(0, Math.round(oldMax/1.2));
+            newMax = oldMax - findStep(oldMax * (1 - 1/1.2));
         if (newMax === oldMax) {
             if ((newMax > 2)) {
                 newMax--;
