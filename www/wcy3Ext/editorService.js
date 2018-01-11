@@ -534,6 +534,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function insertText(message, x, y) {
+        if (!state.fontFace) {
+            state.fontFace = TQ.Config.fontFace;
+        }
+
         var desc = {
             src: null,
             text: message,
@@ -542,6 +546,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             x: x,
             y: y,
             fontSize: getFontSize(), // 必须是像素坐标，在designated坐标系
+            fontFace: state.fontFace,
             color: state.color
         };
 

@@ -91,15 +91,15 @@ window.TQ = window.TQ || {};
             }
 
             if (option.fontColor) {
-                txtObj.color = this.jsonObj.color = option.fontColor;
+                TQ.State.color = txtObj.color = this.jsonObj.color = option.fontColor;
             }
 
             if (option.fontSize) {
-                this.jsonObj.fontSize = option.fontSize;
+                TQ.State.fontSize = this.jsonObj.fontSize = option.fontSize;
             }
 
             if (option.fontFace) {
-                this.jsonObj.fontFace = option.fontFace;
+                TQ.State.fontFace = this.jsonObj.fontFace = option.fontFace;
             }
 
             if (option.toggleBold) {
