@@ -13,10 +13,12 @@ var TQ = TQ || {};
         mCopyOps = null;
 
     function addHandler(gesture, handler) {
+        TQ.AssertExt.invalidLogic(!canvas, "canvas is not initialized!");
         ionic.EventController.onGesture(gesture, handler, canvas);
     }
 
     function detachHandler(gesture, handler) {
+        TQ.AssertExt.invalidLogic(!canvas, "canvas is not initialized!");
         ionic.EventController.off(gesture, handler, canvas);
     }
 
