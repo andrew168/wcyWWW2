@@ -60,6 +60,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         if (opus) {
             WCY.getWcy(opus);
         } else {
+            EditorService.initialize();
             WCY.start();
         }
     }

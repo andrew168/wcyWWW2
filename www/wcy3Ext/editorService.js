@@ -26,7 +26,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var state = TQ.State;
     state.hasUndo = TQ.CommandMgr.hasUndo; // function
     state.hasRedo = TQ.CommandMgr.hasUndo; // function
-    initialize();
 
     return {
         state: state,
@@ -106,6 +105,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         emptySelectSet:emptySelectSet,
 
         // editor
+        initialize: initialize,
         forceToRefreshUI: forceToRefreshUI,
         setAddMode: setAddMode,
         toAddMode: toAddMode,
