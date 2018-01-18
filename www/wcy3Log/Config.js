@@ -200,10 +200,21 @@ window.TQ = window.TQ || {};
         SOUNDS_PATH: "mcSounds/" //从 localhost的根目录开始, 不是 E盘的根目录
     };
 
-    if (Config.cloundaryEnabled) {
-        $.extend(Config, matServerCloundary);
+    var copyProp;
+    if ((typeof $ === 'undefined') || (typeof $.extend === 'undefined')) {
+        copyProp = function (dst, src) {
+            Object.keys(matServerBone).forEach(function (prop) {
+                Config[prop] = matServerBone[prop];
+            })
+        }
     } else {
-        $.extend(Config, matServerBone);
+        copyProp = $.extend;
+    }
+
+    if (Config.cloundaryEnabled) {
+        copyProp(Config, matServerCloundary);
+    } else {
+        copyProp(Config, matServerBone);
     }
 
     window.TQ.Config = Config;
