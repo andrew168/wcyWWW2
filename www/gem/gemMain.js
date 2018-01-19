@@ -25,9 +25,9 @@ angular.module('starter', ['ionic', 'ngCookies'])
 
                 function composeWxShareData() {
                     return {
-                        title: "稷山板枣的营养价值",
-                        ssPath: "http://show.udoido.cn/gem/red-date_files/image009.jpg",
-                        desc: "俗话说：“一日吃三枣，终生不显老”、“一日三枣，不黄不老”“日吃十个枣，医生不用找”",
+                        title: getTitle(),
+                        ssPath: getFirstImageUrl(),
+                        desc: getDesc(),
                         code: "no code"
                     }
                 }
@@ -41,3 +41,47 @@ angular.module('starter', ['ionic', 'ngCookies'])
         $compileProvider.aHrefSanitizationWhitelist(/^\s*(https?|ftp|mailto|chrome-extension):/);
         $compileProvider.imgSrcSanitizationWhitelist(/^\s*(https?|local|data|file|filesystem):/);
     });
+
+
+function getTitle() {
+    var titleEle = document.getElementsByTagName("title");
+    if (titleEle && titleEle.length > 0 && titleEle[0]) {
+        return titleEle[0]['outerText'];
+    }
+    return "UdoIdo";
+}
+
+function getDesc() {
+    return getMetaValue('description');
+}
+
+
+function getMetaValue(name) {
+    var metaEle = document.getElementsByTagName("meta"),
+        desc = "UdoIdo";
+    if (metaEle && metaEle.length > 0) {
+        for (i = 0; i < metaEle.length; i++) {
+            var ele = metaEle[i];
+            if (ele['name'] === name) {
+                desc = ele['content'];
+                break;
+            }
+        }
+    }
+    return desc;
+}
+
+function getFirstImageUrl() {
+    var imgEles = document.getElementsByTagName("img"),
+        imgUrl = null;
+    if (imgEles && imgEles.length > 0) {
+        for (i = 0; i < imgEles.length; i++) {
+            var ele = imgEles[i];
+            if (ele['src']) {
+                imgUrl = ele['src'];
+                break;
+            }
+        }
+    }
+    return imgUrl;
+}
