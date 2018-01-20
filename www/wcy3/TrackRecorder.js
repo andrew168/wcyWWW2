@@ -149,7 +149,7 @@ window.TQ = window.TQ || {};
         }
 
         if (!track.hasSag) {
-            trimTrack(track, TQ.FrameCounter.t());
+            // trimTrack(track, TQ.FrameCounter.t());
             track.hasSag = true;
         }
 
