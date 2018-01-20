@@ -171,7 +171,7 @@ TQ.AnimationManager = (function () {
         TQ.Log.debugInfo("rotate");
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
         var endAngle = ele.getRotation(),
             startAngle = endAngle - 360,
@@ -182,7 +182,7 @@ TQ.AnimationManager = (function () {
     function twinkle() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("twinkle");
@@ -260,7 +260,7 @@ TQ.AnimationManager = (function () {
     function leftIn() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("left in");
@@ -273,7 +273,7 @@ TQ.AnimationManager = (function () {
     function rightIn() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("right in");
@@ -286,7 +286,7 @@ TQ.AnimationManager = (function () {
     function bottomIn() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("bottom in");
@@ -299,7 +299,7 @@ TQ.AnimationManager = (function () {
     function topIn() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("top in");
@@ -312,7 +312,7 @@ TQ.AnimationManager = (function () {
     function leftOut() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("left out");
@@ -325,7 +325,7 @@ TQ.AnimationManager = (function () {
     function rightOut() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("right out");
@@ -339,7 +339,7 @@ TQ.AnimationManager = (function () {
     function bottomOut() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("bottom out");
@@ -352,7 +352,7 @@ TQ.AnimationManager = (function () {
     function topOut() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("top out");
@@ -366,7 +366,7 @@ TQ.AnimationManager = (function () {
         TQ.Log.debugInfo("scale in");
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         var endSx = ele.getScaleInWorld().sx,
@@ -381,7 +381,7 @@ TQ.AnimationManager = (function () {
     function scaleOut() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("scale out");
@@ -397,7 +397,7 @@ TQ.AnimationManager = (function () {
     function fadeIn() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("fade in");
@@ -410,7 +410,7 @@ TQ.AnimationManager = (function () {
     function fadeOut() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
 
         TQ.Log.debugInfo("fade out");
@@ -639,7 +639,7 @@ TQ.AnimationManager = (function () {
     function removeAllSags() {
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (!ele) {
-            return;
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
         TQ.TrackRecorder.removeAllSags(ele);
     }
