@@ -455,7 +455,8 @@ TQ.AnimationManager = (function () {
     function composeFlyOutSag(typeId, startPos, destinationPos) {
             // t1 = TQ.FrameCounter.t(), // end time
         var speed = getSpeed(typeId),
-            delay = state.delay,// fps,
+            vTime = TQ.FrameCounter.v,
+            delay = vTime,
             duration = state.duration, // fps
             t1 = delay / TQ.FrameCounter.defaultFPS,
             dampingDuration = TQ.SpringEffect.defaultConfig.dampingDuration, // seconds
