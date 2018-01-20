@@ -60,7 +60,10 @@ window.TQ = window.TQ || {};
         TQ.Log.tsrDebugInfo("TSR in Object " + ele.jsonObj.type + ele.id, tsrObj);
     };
 
-    TrackDecoder.calOneChannel = function (track, channel, t) {
+    TrackDecoder.calOneChannel = function (trackTBD, channel, t) {
+        // ToDo: 在Sag控制的时间段，用SAG， 否则用普通的
+        // * FlyIn: t < te;
+        // * FlyOut: ts < t
         var sag = findSag(channel, t);
         if (sag) {
             return calSag(sag, channel, t);
@@ -68,7 +71,7 @@ window.TQ = window.TQ || {};
 
         // ToDo: 没有track， 只有sag， 以sag的末尾状态保持下去
         // 在Sag结束的时候， 更新track， 以保存以sag的末尾状态保持下去
-        return calTrack(track, channel, t);
+        return calTrack(channel, t);
     };
 
     function findSag(channel, t) {
@@ -127,14 +130,12 @@ window.TQ = window.TQ || {};
         return 1;
     }
 
-    function calTrack(track, channel, t)
+    function calTrack(channel, t)
     {
         channel.searchInterval(t);
         if (channel.hasSag()) {
             return channel.value[0];
         } else if (channel.tid1 == channel.tid2) {
-            // assertTrue("只有1帧或者时间出现负增长, ",track.tid1 == 0 );
-            // track.tid1 = 0;
             return channel.value[channel.tid1];
         }
         var t1 = channel.t[channel.tid1];

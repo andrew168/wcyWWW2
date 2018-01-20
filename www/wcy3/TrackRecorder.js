@@ -148,11 +148,7 @@ window.TQ = window.TQ || {};
                 track.outSagType = sag.type;
         }
 
-        if (!track.hasSag) {
-            // trimTrack(track, TQ.FrameCounter.t());
-            track.hasSag = true;
-        }
-
+        track.hasSag = true;
         adjustIdleSagTime(track);
     };
 
@@ -328,6 +324,7 @@ window.TQ = window.TQ || {};
         }
 
         channel.sags[sag.categoryID] = sag; // ToDo: 仅支持1个入场，1个出场动画，1个idle
+
         // track.sags.sort(compareSag);
     }
 
@@ -340,20 +337,7 @@ window.TQ = window.TQ || {};
         return 0;
     }
 
-    function trimTrack(track, t) {
-        trimOneChannel(track, track.x, t);
-        trimOneChannel(track, track.y, t);
-        trimOneChannel(track, track.sx, t);
-        trimOneChannel(track, track.sy, t);
-        trimOneChannel(track, track.rotation, t);
-        trimOneChannel(track, track.alpha, t);
-        trimOneChannel(track, track.visible, t);
-        trimOneChannel(track, track.colorR, t);
-        trimOneChannel(track, track.colorG, t);
-        trimOneChannel(track, track.colorB, t);
-    }
-
-    function trimOneChannel(track, channel, t) {
+    function trimOneChannel(channel, t) {
         // 处理特殊情况, 只有1帧:
         if (channel.t.length <= 1) {
             assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0); //只有1帧
@@ -370,7 +354,7 @@ window.TQ = window.TQ || {};
             }
         }
 
-        channel.value[tid1] = TQ.TrackDecoder.calOneChannel(track, channel, t);
+        channel.value[tid1] = TQ.TrackDecoder.calOneChannel(null, channel, t);
         channel.t[tid1] = (TQ.Config.insertAtT0On ? 0 : t);
         channel.t = channel.t.splice(tid1, 1);
         channel.value = channel.value.splice(tid1, 1);
