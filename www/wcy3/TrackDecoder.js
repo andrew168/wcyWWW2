@@ -75,7 +75,7 @@ window.TQ = window.TQ || {};
     };
 
     function findSag(channel, t) {
-        if (!channel.sags) {
+        if (!channel.hasSag()) {
             return null;
         }
 
@@ -89,13 +89,22 @@ window.TQ = window.TQ || {};
             if (!item) {
                 continue;
             }
-
-            if ((t < item.t2) && (item.categoryID === SagCategory.IN)) { // in SAG
-                return item;
-            }
-
-            if ((item.t1 <= t) && (t <= item.t2)) { // idle SAG
-                return item;
+            lastSag = item;
+            switch (item.categoryID) {
+                case SagCategory.IN:
+                    if ((t < item.t2)) {
+                        return item;
+                    }
+                    break;
+                case SagCategory.OUT:
+                    if (item.t1 < t) {
+                        return item;
+                    }
+                    break;
+                default:
+                    if ((item.t1 <= t) && (t <= item.t2)) { // idle SAG
+                        return item;
+                    }
             }
         }
         return lastSag;
