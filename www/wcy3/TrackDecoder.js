@@ -130,7 +130,7 @@ window.TQ = window.TQ || {};
     function calTrack(track, channel, t)
     {
         channel.searchInterval(t);
-        if (track.hasSag) {
+        if (channel.hasSag()) {
             return channel.value[0];
         } else if (channel.tid1 == channel.tid2) {
             // assertTrue("只有1帧或者时间出现负增长, ",track.tid1 == 0 );

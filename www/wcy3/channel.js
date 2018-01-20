@@ -56,7 +56,7 @@ window.TQ = window.TQ || {};
         // 相等的情况, 只修改原来帧的值, 不增加新的帧
         var EPSILON = 0.01;
         var rewrite = false;
-        if (track.hasSag) {
+        if (this.hasSag()) {
             id = 0;
             rewrite = true;
         } else if (Math.abs(t - this.t[tid1]) < EPSILON) {
