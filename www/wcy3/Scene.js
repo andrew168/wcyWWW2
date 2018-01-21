@@ -997,7 +997,7 @@ TQ = TQ || {};
             }
         }
 
-        return {levelId: id, t: t - _levelTs[id]};
+        return {levelId: id, t: t - _levelTs[id], gt: t};
     }
 
     function getTMax() {

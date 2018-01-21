@@ -8,7 +8,7 @@ TQ.AnimationManager = (function () {
     var UNLIMIT = 99999999,
         MIN_MOVE_TIME = 0.1,
         DEFAULT_DELAY = 0,
-        DEFAULT_DURATION = 16; //frames
+        DEFAULT_DURATION = TQ.FrameCounter.f2t(16); //frames
 
     var SagCategory = {
             IN: 1,
@@ -138,8 +138,6 @@ TQ.AnimationManager = (function () {
             ele = TQ.SelectSet.peekLatestEditableEle();
             if (!ele) {
                 state.hasSag = false;
-                state.delay = DEFAULT_DELAY;
-                state.duration = DEFAULT_DURATION;
                 return false;
             }
         }
@@ -160,10 +158,6 @@ TQ.AnimationManager = (function () {
         num += checkSag(ele, SagType.FADE_OUT);
         num += checkSag(ele, SagType.TWINKLE);
         state.hasSag = (num > 0);
-        if (!state.hasSag) {
-            state.delay = DEFAULT_DELAY;
-            state.duration = DEFAULT_DURATION;
-        }
         return true;
     }
 
@@ -423,11 +417,11 @@ TQ.AnimationManager = (function () {
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
         var speed = getSpeed(typeId),
-            delay = state.delay,// fps,
-            duration = state.duration, // fps
-            t1 = delay / TQ.FrameCounter.defaultFPS,
+            delay = TQ.TimerUI.getTObject1().t,// seconds
+            duration = (TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt), // seconds
+            t1 = delay,
             dampingDuration = TQ.SpringEffect.defaultConfig.dampingDuration, // seconds
-            t2 = t1 + (duration / TQ.FrameCounter.defaultFPS),
+            t2 = t1 + duration,
             velocity,
             dt = t2 - t1 - dampingDuration;
         if (dt < MIN_MOVE_TIME) {
@@ -453,14 +447,12 @@ TQ.AnimationManager = (function () {
     }
 
     function composeFlyOutSag(typeId, startPos, destinationPos) {
-            // t1 = TQ.FrameCounter.t(), // end time
         var speed = getSpeed(typeId),
-            vTime = TQ.FrameCounter.v,
-            delay = vTime,
-            duration = state.duration, // fps
-            t1 = delay / TQ.FrameCounter.defaultFPS,
+            delay = TQ.TimerUI.getTObject1().t,
+            duration = (TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt), // seconds
+            t1 = delay,
             dampingDuration = TQ.SpringEffect.defaultConfig.dampingDuration, // seconds
-            t2 = t1 + (duration / TQ.FrameCounter.defaultFPS),
+            t2 = t1 + duration,
             velocity,
             dt = t2 - t1 - dampingDuration;
         if (dt < MIN_MOVE_TIME) {
@@ -624,8 +616,6 @@ TQ.AnimationManager = (function () {
                 fn = type2fn(type);
             speeds[fn] = (sag) ? sag.speed : 2.5;
             if (sag) {
-                state.delay = sag.delay || DEFAULT_DELAY;
-                state.duration = sag.duration || DEFAULT_DURATION;
                 return 1;
             }
         }
