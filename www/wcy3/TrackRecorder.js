@@ -161,38 +161,39 @@ window.TQ = window.TQ || {};
 
     TrackRecorder.removeSag = function (element, sagTypeId) {
         var track = element.animeTrack;
-        var SagType = TQ.AnimationManager.SagType;
+        var SagType = TQ.AnimationManager.SagType,
+            SagCategory = TQ.AnimationManager.SagCategory;
         switch (sagTypeId) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
-                removeOneSag(track.alpha, sagTypeId);
+                track.alpha.removeOneSag(SagCategory.IN, sagTypeId);
                 break;
 
             case SagType.SCALE_IN:
             case SagType.SCALE_OUT:
-                removeOneSag(track.sx, sagTypeId);
-                removeOneSag(track.sy, sagTypeId);
+                track.sx.removeOneSag(SagCategory.IN, sagTypeId);
+                track.sy.removeOneSag(SagCategory.IN, sagTypeId);
                 break;
 
             case SagType.ROTATE:
-                removeOneSag(track.rotation, sagTypeId);
+                track.rotation.removeOneSag(SagCategory.IN, sagTypeId);
                 break;
             case SagType.LEFT_IN:
             case SagType.LEFT_OUT:
             case SagType.RIGHT_IN:
             case SagType.RIGHT_OUT:
-                removeOneSag(track.x, sagTypeId);
+                track.x.removeOneSag(SagCategory.IN, sagTypeId);
                 break;
 
             case SagType.TOP_IN:
             case SagType.TOP_OUT:
             case SagType.BOTTOM_IN:
             case SagType.BOTTOM_OUT:
-                removeOneSag(track.y, sagTypeId);
+                track.y.removeOneSag(SagCategory.IN, sagTypeId);
                 break;
 
             case SagType.TWINKLE:
-                removeOneSag(track.visible, sagTypeId);
+                track.visible.removeOneSag(SagCategory.IN, sagTypeId);
                 break;
             default:
                 break;
@@ -250,27 +251,6 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull,channel.tid1);
         return channel.record(track, t, v, interpolationMethod);
     };
-
-    function removeOneSag(channel, sagTypeId) {
-        if (!channel.sags) {
-            return TQ.AssertExt.invalidLogic(false, "sags已经为空");
-        }
-
-        var sags = channel.sags,
-            n = sags.length,
-            i;
-        for (i = 0; i < n; i++) {
-            var item = sags[i];
-            if (!item) {
-                continue;
-            }
-
-            if (item.typeID === sagTypeId) {
-                return sags.splice(i, 1);
-            }
-        }
-        return TQ.AssertExt.invalidLogic(false, "未找到");
-    }
 
     function removeAllSags(element) {
         var track = element.animeTrack;

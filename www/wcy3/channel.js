@@ -237,6 +237,25 @@ window.TQ = window.TQ || {};
         }
     };
 
+    p.removeOneSag = function (categoryID, typeID) {
+        if (!this.sags || this.sags.length <= 0) {
+            return;
+        }
+
+        var n = this.sags.length,
+            i;
+        for (i = 0; i < n; i++) {
+            var item = this.sags[i];
+            if (!item) {
+                continue;
+            }
+
+            if ((item.categoryID === categoryID) && (item.typeID === typeID)) {
+                return this.sags[i] = null;
+            }
+        }
+    };
+
     p.calculateLastFrame = function() {
         var tMax = 0,
             tInMax = 0,
