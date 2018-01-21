@@ -99,7 +99,6 @@ window.TQ = window.TQ || {};
             sag =sags[0],
             sag2= (sags.length >= 2) ? sags[1] : sag;
 
-        removeSameKindSag(track, sag.categoryID);
         switch (sag.typeID) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
