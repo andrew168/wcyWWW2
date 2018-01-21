@@ -263,18 +263,6 @@ window.TQ = window.TQ || {};
         track.visible.sags = null;
     }
 
-    function removeSameKindSag(track, categoryID) {
-        if (!track) {
-            return;
-        }
-
-        for (var prop in track) {
-            if (track[prop] && (track[prop] instanceof TQ.OneChannel)) {
-                track[prop].removeOneCategorySag(categoryID);
-            }
-        }
-    }
-
     function getOneSag(track, sagTypeId) {
         if (!track.sags) {
             return false;
