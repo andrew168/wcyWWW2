@@ -99,7 +99,7 @@ TQ.AnimationManager = (function () {
         ],
 
         instance = {
-            removePreviewedSag: removePreviewedSag,
+            previewAndRemoveLatest: previewAndRemoveLatest,
             state: state,
             speeds: speeds,
             SagCategory: SagCategory,
@@ -207,16 +207,26 @@ TQ.AnimationManager = (function () {
             sagId = TQ.TrackRecorder.recordSag(ele, sags);
         }
 
-        setTimeout(function () {
-            TQ.Scene.doReplay(composePreviewOptions(sags[0]));
-        }, 100);
-
         sagLatest = {
             sag: sags[0],
             ele: ele
         };
 
         return sagId;
+    }
+
+    function previewAndRemoveLatest() {
+        if (sagLatest && sagLatest.ele && sagLatest.sag) {
+            document.addEventListener(TQ.FrameCounter.EVENT_AB_PREVIEW_STOPPED, onABPreviewStopped);
+            setTimeout(function () {
+                TQ.Scene.doReplay(composePreviewOptions(sagLatest.sag));
+            }, 100);
+        }
+    }
+
+    function onABPreviewStopped() {
+        removePreviewedSag();
+        document.removeEventListener(TQ.FrameCounter.EVENT_AB_PREVIEW_STOPPED, onABPreviewStopped);
     }
 
     function composePreviewOptions(sag) {
