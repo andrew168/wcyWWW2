@@ -241,10 +241,6 @@ window.TQ = window.TQ || {};
         }
     };
 
-    function hasSag(track) {
-        return (track.sags  && track.sags.length > 0);
-    }
-
     TrackRecorder.recordOneChannel = function (track, channel, t, v, interpolationMethod) {
         assertDepreciated(TQ.Dictionary.isDepreciated + "， 移到了channel类中的record！");
         assertNotNull(TQ.Dictionary.FoundNull, channel);

@@ -211,7 +211,7 @@ window.TQ = window.TQ || {};
             setTimeout(function() {
                 FrameCounter.goto(tStop);
                 TQ.DirtyFlag.requestToUpdateAll();
-                TQ.Base.Utility.triggerEvent(document.body, FrameCounter.EVENT_AB_PREVIEW_STOPPED);
+                TQ.Base.Utility.triggerEvent(document, FrameCounter.EVENT_AB_PREVIEW_STOPPED);
             }, 100);
         } else {
             cmdGotoFrame(FrameCounter.v);

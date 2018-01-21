@@ -225,8 +225,8 @@ TQ.AnimationManager = (function () {
     }
 
     function onABPreviewStopped() {
-        removePreviewedSag();
         document.removeEventListener(TQ.FrameCounter.EVENT_AB_PREVIEW_STOPPED, onABPreviewStopped);
+        removePreviewedSag();
     }
 
     function composePreviewOptions(sag) {

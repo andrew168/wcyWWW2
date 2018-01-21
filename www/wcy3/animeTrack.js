@@ -213,16 +213,16 @@ TQ = TQ || {};
     };
 
     p.updateSagFlag = function() {
-        this.hasSag = hasSag(this.x) ||
-            hasSag(this.y) ||
-            hasSag(this.sx) ||
-            hasSag(this.sy) ||
-            hasSag(this.rotation) ||
-            hasSag(this.alpha) ||
-            hasSag(this.visible) ||
-            hasSag(this.colorR) ||
-            hasSag(this.colorG) ||
-            hasSag(this.colorB);
+        this.hasSag = this.x.hasSag() ||
+            this.y.hasSag() ||
+            this.sx.hasSag() ||
+            this.sy.hasSag() ||
+            this.rotation.hasSag() ||
+            this.alpha.hasSag() ||
+            this.visible.hasSag() ||
+            this.colorR.hasSag() ||
+            this.colorG.hasSag() ||
+            this.colorB.hasSag();
     };
 
     TQ.AnimeTrack = AnimeTrack;
