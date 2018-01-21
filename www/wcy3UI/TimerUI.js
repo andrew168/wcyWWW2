@@ -6,6 +6,7 @@ var TQ = TQ || {};
 TQ.TimerUI = (function () {
     var MIN_DURATION = 0; // 10 frames, ==> 0.5s
     var isUserControlling = false,
+        isSagPanel = false,
         initialized = false,
         unitSeries = [0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100, 500, 1000, 5000], // * 20 frame per second
         rangeSlider = {
@@ -32,6 +33,8 @@ TQ.TimerUI = (function () {
         getTObject2: getTObject2,
         onTrimCompleted: onTrimCompleted,
         rangeSlider: rangeSlider,
+        startSagPanel: startSagPanel,
+        stopSagPanel: stopSagPanel,
         initialize: initialize,
         setGlobalTime: setGlobalTime
     };
@@ -96,11 +99,19 @@ TQ.TimerUI = (function () {
     }
 
     function update (forceToUpdate) {
-        if (forceToUpdate || !isUserControlling) {
+        if (forceToUpdate || !(isUserControlling || isSagPanel)) {
             if (forceToUpdate || TQ.FrameCounter.isNew) {
                 rangeSlider.minValue = TQ.FrameCounter.t2f(TQ.Scene.localT2Global(TQ.FrameCounter.t()));
             }
         }
+    }
+
+    function startSagPanel() {
+        isSagPanel = true;
+    }
+
+    function stopSagPanel() {
+        isSagPanel = false;
     }
 
     function onRangeChanged() {
