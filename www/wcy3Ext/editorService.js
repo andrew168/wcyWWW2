@@ -73,6 +73,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         setColor: setColor,
         eraseAnimeTrack: TQ.SelectSet.eraseAnimeTrack,
         turnOnTrim: turnOnTrim,
+        turnOffTrim: turnOffTrim,
         trim: trim,
         increaseTimeline: increaseTimeline,
         decreaseTimeline: decreaseTimeline,
@@ -908,7 +909,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         TQ.MessageBox.prompt("This operation is not revertable, Are you sure? <br/>Apply to all objects", function () {
             $timeout(onOK);
-        }, function (){});
+        }, turnOffTrim);
 
         function onOK() {
             console.warn("TRIM: onOK...", tObj1, tObj2);
@@ -919,14 +920,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             if (currScene && currScene.currentLevel) {
                 doTrim(tObj1, tObj2);
             }
-
-            state.showTrimTimeline = false;
-            TQ.TimerUI.rangeSlider.maxValue = TQ.TimerUI.rangeSlider.minValue;
-            forceToRenderSlider();
-            $timeout(forceToRenderSlider, 100);
+            turnOffTrim();
         }
     }
 
+    function turnOffTrim() {
+        state.showTrimTimeline = false;
+        TQ.TimerUI.rangeSlider.maxValue = TQ.TimerUI.rangeSlider.minValue;
+        forceToRenderSlider();
+        $timeout(forceToRenderSlider, 100);
+    }
     function doTrim(tObj1, tObj2) {
         console.warn("TRIM: ...", tObj1, tObj2);
         var MAX_LENGTH = 99999.0;
