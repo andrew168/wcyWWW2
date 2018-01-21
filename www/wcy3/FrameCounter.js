@@ -28,6 +28,7 @@ window.TQ = window.TQ || {};
         newTimestamp,
         lastTimestamp;
 
+    FrameCounter.EVENT_AB_PREVIEW_STOPPED = 'ab preview stopped';
     FrameCounter.isNew = true;  // 新的时刻, 需要更新数据
     FrameCounter.v = 0;
     FrameCounter.defaultFPS = 20;
@@ -210,6 +211,7 @@ window.TQ = window.TQ || {};
             setTimeout(function() {
                 FrameCounter.goto(tStop);
                 TQ.DirtyFlag.requestToUpdateAll();
+                TQ.Base.Utility.triggerEvent(document.body, FrameCounter.EVENT_AB_PREVIEW_STOPPED);
             }, 100);
         } else {
             cmdGotoFrame(FrameCounter.v);

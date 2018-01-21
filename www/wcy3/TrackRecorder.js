@@ -159,41 +159,42 @@ window.TQ = window.TQ || {};
         });
     }
 
-    TrackRecorder.removeSag = function (element, sagTypeId) {
+    TrackRecorder.removeSag = function (element, sag) {
         var track = element.animeTrack;
         var SagType = TQ.AnimationManager.SagType,
-            SagCategory = TQ.AnimationManager.SagCategory;
+            sagTypeId = sag.typeID,
+            SagCategoryID = sag.categoryID;
         switch (sagTypeId) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
-                track.alpha.removeOneSag(SagCategory.IN, sagTypeId);
+                track.alpha.removeOneSag(SagCategoryID, sagTypeId);
                 break;
 
             case SagType.SCALE_IN:
             case SagType.SCALE_OUT:
-                track.sx.removeOneSag(SagCategory.IN, sagTypeId);
-                track.sy.removeOneSag(SagCategory.IN, sagTypeId);
+                track.sx.removeOneSag(SagCategoryID, sagTypeId);
+                track.sy.removeOneSag(SagCategoryID, sagTypeId);
                 break;
 
             case SagType.ROTATE:
-                track.rotation.removeOneSag(SagCategory.IN, sagTypeId);
+                track.rotation.removeOneSag(SagCategoryID, sagTypeId);
                 break;
             case SagType.LEFT_IN:
             case SagType.LEFT_OUT:
             case SagType.RIGHT_IN:
             case SagType.RIGHT_OUT:
-                track.x.removeOneSag(SagCategory.IN, sagTypeId);
+                track.x.removeOneSag(SagCategoryID, sagTypeId);
                 break;
 
             case SagType.TOP_IN:
             case SagType.TOP_OUT:
             case SagType.BOTTOM_IN:
             case SagType.BOTTOM_OUT:
-                track.y.removeOneSag(SagCategory.IN, sagTypeId);
+                track.y.removeOneSag(SagCategoryID, sagTypeId);
                 break;
 
             case SagType.TWINKLE:
-                track.visible.removeOneSag(SagCategory.IN, sagTypeId);
+                track.visible.removeOneSag(SagCategoryID, sagTypeId);
                 break;
             default:
                 break;

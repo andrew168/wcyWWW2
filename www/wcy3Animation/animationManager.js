@@ -39,10 +39,10 @@ TQ.AnimationManager = (function () {
             // opacity change
             FADE_IN: 'sag fade in',
             FADE_OUT: 'sag fade out'
-        };
+        },
+        sagLatest = null;
 
-    var removeSag = TQ.TrackRecorder.removeSag,
-        getSag = TQ.TrackRecorder.getSag,
+    var getSag = TQ.TrackRecorder.getSag,
         state = {
             delay: DEFAULT_DELAY,
             duration: DEFAULT_DURATION,
@@ -99,6 +99,7 @@ TQ.AnimationManager = (function () {
         ],
 
         instance = {
+            removePreviewedSag: removePreviewedSag,
             state: state,
             speeds: speeds,
             SagCategory: SagCategory,
@@ -134,6 +135,7 @@ TQ.AnimationManager = (function () {
     }
 
     function reset(ele) {
+        sagLatest = null;
         if (!ele) {
             ele = TQ.SelectSet.peekLatestEditableEle();
             if (!ele) {
@@ -208,6 +210,11 @@ TQ.AnimationManager = (function () {
         setTimeout(function () {
             TQ.Scene.doReplay(composePreviewOptions(sags[0]));
         }, 100);
+
+        sagLatest = {
+            sag: sags[0],
+            ele: ele
+        };
 
         return sagId;
     }
@@ -633,5 +640,12 @@ TQ.AnimationManager = (function () {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
         TQ.TrackRecorder.removeAllSags(ele);
+    }
+
+    function removePreviewedSag() {
+        if (sagLatest && sagLatest.ele && sagLatest.sag) {
+            TQ.TrackRecorder.removeSag(sagLatest.ele, sagLatest.sag);
+            sagLatest = null;
+        }
     }
 })();
