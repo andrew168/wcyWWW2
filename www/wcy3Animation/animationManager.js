@@ -108,8 +108,6 @@ TQ.AnimationManager = (function () {
             initialize: initialize,
             removeAllSags: removeAllSags,
             reset: reset,
-            save: save,
-
             rotate: rotate,
             twinkle: twinkle,
             scaleIn: scaleIn,
@@ -216,12 +214,12 @@ TQ.AnimationManager = (function () {
     }
 
     function previewAndRemoveLatest() {
-        if (sagLatest && sagLatest.ele && sagLatest.sag) {
-            document.addEventListener(TQ.FrameCounter.EVENT_AB_PREVIEW_STOPPED, onABPreviewStopped);
-            setTimeout(function () {
+        setTimeout(function () {
+            if (sagLatest && sagLatest.ele && sagLatest.sag) {
+                document.addEventListener(TQ.FrameCounter.EVENT_AB_PREVIEW_STOPPED, onABPreviewStopped);
                 TQ.Scene.doReplay(composePreviewOptions(sagLatest.sag));
-            }, 100);
-        }
+            }
+        });
     }
 
     function onABPreviewStopped() {
@@ -638,10 +636,6 @@ TQ.AnimationManager = (function () {
         }
 
         return 0;
-    }
-
-    function save() {
-        // ToDo:
     }
 
     function removeAllSags() {
