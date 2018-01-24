@@ -64,7 +64,7 @@ window.TQ = window.TQ || {};
         vMax = t2f(level.getTime());
         TQ.InputMap.registerAction(TQ.InputMap.LAST_FRAME_KEY,
             function () {
-                level.setTime(FrameCounter.v);
+                level.setTime(FrameCounter.t());
                 vMax = FrameCounter.v;
             }
         );
@@ -267,7 +267,7 @@ window.TQ = window.TQ || {};
         if (tObj1.levelId === tObj2.levelId) {
             vMax -= t2f(tObj2.t - tObj1.t);
         } else { // in tObj2.levelId,
-            vMax -= tObj2.t;
+            vMax -= t2f(tObj2.t);
         }
     };
 
