@@ -54,7 +54,7 @@ window.TQ = window.TQ || {};
         var tid2 = this.tid2;
 
         // 相等的情况, 只修改原来帧的值, 不增加新的帧
-        var EPSILON = 0.01;
+        var EPSILON = 0.025;
         var rewrite = false;
         if (this.hasSag()) {
             id = 0;

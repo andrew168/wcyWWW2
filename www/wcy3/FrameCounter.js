@@ -76,16 +76,18 @@ window.TQ = window.TQ || {};
 
     FrameCounter.t = function ()
     {
+        TQ.Assert(Math.abs(Math.round(FrameCounter.v) - FrameCounter.v) < 0.01, "必须是整数v");
         return FrameCounter.v / _FPS;
     };
 
     FrameCounter.f2t = function(frameNumber) {
+        TQ.Assert(Math.abs(Math.round(frameNumber) - frameNumber) < 0.01, "必须是整数v");
         return (frameNumber / _FPS);
     };
 
     FrameCounter.t2f = t2f;
     function t2f(t) {
-        return (t * _FPS);
+        return Math.round(t * _FPS);
     }
 
     FrameCounter.forward = function ()
@@ -134,7 +136,7 @@ window.TQ = window.TQ || {};
         }
 
         newTimestamp = Date.now();
-        var delta = (newTimestamp - lastTimestamp) * FrameCounter.defaultFPS/1000;
+        var delta = t2f((newTimestamp - lastTimestamp)/1000);
         FrameCounter.v = FrameCounter.v + delta;
         lastTimestamp = newTimestamp;
 
@@ -255,7 +257,7 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.setTMax = function (tMax) {
-        FrameCounter.max = Math.round(t2f(tMax));
+        FrameCounter.max = t2f(tMax);
         if (FrameCounter.v > FrameCounter.max) {
             FrameCounter.v = FrameCounter.max;
         }
