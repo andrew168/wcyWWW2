@@ -32,7 +32,7 @@ window.TQ = window.TQ || {};
     FrameCounter.isNew = true;  // 新的时刻, 需要更新数据
     FrameCounter.v = 0;
     FrameCounter.defaultFPS = 20;
-    FrameCounter.max = 3 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
+    var vMax = 3 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
     FrameCounter.cmdGotoFrame = cmdGotoFrame;
 
     var _FPS = FrameCounter.defaultFPS,  // 下划线是内部变量, 禁止外面引用
@@ -61,11 +61,11 @@ window.TQ = window.TQ || {};
         FrameCounter.v = t0 * FPS;
         _FPS = FPS;
         currLevel = level;
-        FrameCounter.max = t2f(level.getTime());
+        vMax = t2f(level.getTime());
         TQ.InputMap.registerAction(TQ.InputMap.LAST_FRAME_KEY,
             function () {
                 level.setTime(FrameCounter.v);
-                FrameCounter.max = FrameCounter.v;
+                vMax = FrameCounter.v;
             }
         );
     };
@@ -107,7 +107,7 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.gotoEnd = function() {
-        cmdGotoFrame(FrameCounter.max);
+        cmdGotoFrame(vMax);
     };
 
     FrameCounter.gotoFrame = function(v) {
@@ -144,17 +144,17 @@ window.TQ = window.TQ || {};
             if (FrameCounter.t() > abOptions.tEnd) {
                 FrameCounter.stop();
             }
-        } else if(FrameCounter.v > FrameCounter.max) {
+        } else if(FrameCounter.v > vMax) {
             if (_isRecording) {
-                FrameCounter.max += step;
+                vMax += step;
             } else {
-                FrameCounter.v = FrameCounter.max;
+                FrameCounter.v = vMax;
             }
         }
 
         if(FrameCounter.v < 0) {
             if (autoRewind) {
-                FrameCounter.v = FrameCounter.max;
+                FrameCounter.v = vMax;
             } else {
                 FrameCounter.v = 0;
             }
@@ -242,32 +242,32 @@ window.TQ = window.TQ || {};
     FrameCounter.isInverse = function () { return step < 0;};
     FrameCounter.isPlaying = function () { return (state == GO); };
     FrameCounter.isRequestedToStop = function () { return (requestState == STOP); };
-    FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= FrameCounter.max)); };
+    FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= vMax)); };
     FrameCounter.isAutoRewind = function () { return autoRewind; };
 
     FrameCounter.maxTime = function () {
-        return FrameCounter.max / _FPS;
+        return vMax / _FPS;
     };
 
     FrameCounter.reset = function () {
         requestState = null;
-        FrameCounter.max = 3 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
+        vMax = 3 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
         FrameCounter.v = 0;
         state = STOP;
     };
 
     FrameCounter.setTMax = function (tMax) {
-        FrameCounter.max = t2f(tMax);
-        if (FrameCounter.v > FrameCounter.max) {
-            FrameCounter.v = FrameCounter.max;
+        vMax = t2f(tMax);
+        if (FrameCounter.v > vMax) {
+            FrameCounter.v = vMax;
         }
     };
 
     FrameCounter.trim = function (tObj1, tObj2) {
         if (tObj1.levelId === tObj2.levelId) {
-            FrameCounter.max -= t2f(tObj2.t - tObj1.t);
+            vMax -= t2f(tObj2.t - tObj1.t);
         } else { // in tObj2.levelId,
-            FrameCounter.max -= tObj2.t;
+            vMax -= tObj2.t;
         }
     };
 
