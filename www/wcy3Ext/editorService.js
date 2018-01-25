@@ -219,8 +219,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         updateControllers();
 
         if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
-            // TQ.MessageBox.showOk(TQ.Locale.getStr('please use rotate to get better result'), preview);
-            preview();
+            if (TQUtility.isIOS()) {
+                TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), preview);
+            } else {
+                TQ.MessageBox.hide();
+                preview();
+            }
         }
 
         if (currScene && !currScene.isPlayOnly) {

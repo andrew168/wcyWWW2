@@ -242,7 +242,6 @@ TQ = TQ || {};
             thisScene.handleEvent(Scene.EVENT_READY);
             thisScene.updateLevelRange();
             TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_READY);
-            TQ.MessageBox.hide();
             this.isDirty = true;
         }
     };
