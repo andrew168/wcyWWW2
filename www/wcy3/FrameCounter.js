@@ -136,9 +136,11 @@ window.TQ = window.TQ || {};
         }
 
         newTimestamp = Date.now();
-        var delta = t2f((newTimestamp - lastTimestamp)/1000);
-        FrameCounter.v = FrameCounter.v + delta;
-        lastTimestamp = newTimestamp;
+        var vDelta = Math.abs(t2f((newTimestamp - lastTimestamp)/1000));
+        if (vDelta > 0.1) {
+            FrameCounter.v = FrameCounter.v + vDelta;
+            lastTimestamp = newTimestamp;
+        }
 
         if (abOptions) {
             if (FrameCounter.t() > abOptions.tEnd) {
