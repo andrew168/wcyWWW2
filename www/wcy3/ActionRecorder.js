@@ -18,6 +18,7 @@ window.TQ = window.TQ || {};
     ActionRecorder.record = function (element, actionName, t) {
         var track = element.animeTrack;
         var jsonObj = element.jsonObj;
+        t = TQ.FrameCounter.gridSnap(t);
 
         if (!actionName) {
             assertFalse(TQ.Dictionary.INVALID_LOGIC, !actionName);

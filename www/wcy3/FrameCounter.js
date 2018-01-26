@@ -76,18 +76,28 @@ window.TQ = window.TQ || {};
 
     FrameCounter.t = function ()
     {
-        TQ.Assert(Math.abs(Math.round(FrameCounter.v) - FrameCounter.v) < 0.01, "必须是整数v");
         return FrameCounter.v / _FPS;
     };
 
+    FrameCounter.tGrid = function () {
+        return Math.round(FrameCounter.v) / _FPS;
+    };
+
+    FrameCounter.gridSnap = function(t) {
+        return Math.round(t * 20) / 20;
+    };
+
     FrameCounter.f2t = function(frameNumber) {
-        TQ.Assert(Math.abs(Math.round(frameNumber) - frameNumber) < 0.01, "必须是整数v");
         return (frameNumber / _FPS);
+    };
+
+    FrameCounter.f2tGrid = function (frameNumber) {
+        return (Math.round(frameNumber) / _FPS);
     };
 
     FrameCounter.t2f = t2f;
     function t2f(t) {
-        return Math.round(t * _FPS);
+        return t * _FPS;
     }
 
     FrameCounter.forward = function ()

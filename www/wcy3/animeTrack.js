@@ -101,6 +101,8 @@ TQ = TQ || {};
 
     p.trim = function(t1, t2) {
         var self = this;
+        t1 = TQ.FrameCounter.gridSnap(t1);
+        t2 = TQ.FrameCounter.gridSnap(t2);
         Object.keys(this).forEach(function(prop){
             if (self[prop] instanceof  TQ.Channel) {
                 self[prop].trim(t1, t2);
@@ -186,26 +188,31 @@ TQ = TQ || {};
     };
 
     AnimeTrack.hideToNow = function(ele, t) {
+        t = TQ.FrameCounter.gridSnap(t);
         changeVisibility(ele, 0, FALSE_NUM_0, t, TRUE_NUM_1);
     };
 
     AnimeTrack.hide = function(ele, t) {
+        t = TQ.FrameCounter.gridSnap(t);
         changeVisibility(ele, 0, FALSE_NUM_0, t, FALSE_NUM_0);
     };
 
     AnimeTrack.unHide = function(ele, t) {
+        t = TQ.FrameCounter.gridSnap(t);
         changeVisibility(ele, 0, FALSE_NUM_0, t, TRUE_NUM_1);
     };
 
     function changeVisibility(ele, t1, vis1, t2, vis2) {
         var track = ele.animeTrack;
+        t1 = TQ.FrameCounter.gridSnap(t1);
+        t2 = TQ.FrameCounter.gridSnap(t2);
         track.visible.record(track, t1, vis1, TQ.Channel.JUMP_INTERPOLATION);
         track.visible.record(track, t2, vis2, TQ.Channel.JUMP_INTERPOLATION);
     }
 
     AnimeTrack.setButton = function(ele, t) {
         var lifeTime = 3/20; // 3 frame;
-        // var currentTime = TQ.FrameCounter.t();
+        t = TQ.FrameCounter.gridSnap(t);
         ele.animeTrack.visible.reset();
         AnimeTrack.hideToNow(ele, t);
         var track = ele.animeTrack;
