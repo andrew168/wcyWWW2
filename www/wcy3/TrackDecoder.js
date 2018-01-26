@@ -89,7 +89,6 @@ window.TQ = window.TQ || {};
             if (!item) {
                 continue;
             }
-            lastSag = item;
             switch (item.categoryID) {
                 case SagCategory.IN:
                     if ((t < item.t2)) {
