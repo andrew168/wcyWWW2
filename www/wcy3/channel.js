@@ -28,7 +28,7 @@ window.TQ = window.TQ || {};
     p.c = [];
     p.initialize = function (value, interpolationStyle) {
         if ((value.value == undefined) || (value.value == null)){
-            var t = (TQ.Config.insertAtT0On? 0: TQ.FrameCounter.t());
+            var t = (TQ.Config.insertAtT0On? 0: TQ.FrameCounter.tGrid());
             this.t = [t];  // 只有一帧, 不能搞出来2
             this.value = [value];
             this.c = [interpolationStyle];
@@ -54,7 +54,7 @@ window.TQ = window.TQ || {};
         var tid2 = this.tid2;
 
         // 相等的情况, 只修改原来帧的值, 不增加新的帧
-        var EPSILON = 0.01;
+        var EPSILON = 0.025;
         var rewrite = false;
         if (this.hasSag()) {
             id = 0;
@@ -205,7 +205,7 @@ window.TQ = window.TQ || {};
     };
 
     p.erase = function () {
-        assertEqualsDelta("t == 0, //ToDo:这是不是错误的限制？", 0, TQ.FrameCounter.t(), 0.001);
+        assertEqualsDelta("t == 0, //ToDo:这是不是错误的限制？", 0, TQ.FrameCounter.tGrid(), 0.001);
         this.initialize(this.value[0]);  // 简单地丢弃原来的轨迹数组, 重新建立一个新的
     };
 

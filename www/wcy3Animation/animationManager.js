@@ -432,10 +432,10 @@ TQ.AnimationManager = (function () {
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
         var speed = getSpeed(typeId),
-            delay = TQ.TimerUI.getTObject1().t,// seconds
-            duration = (TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt), // seconds
+            delay = TQ.FrameCounter.gridSnap(TQ.TimerUI.getTObject1().t),// seconds
+            duration = TQ.FrameCounter.gridSnap((TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt)), // seconds
             t1 = delay,
-            dampingDuration = TQ.SpringEffect.defaultConfig.dampingDuration, // seconds
+            dampingDuration = TQ.FrameCounter.gridSnap(TQ.SpringEffect.defaultConfig.dampingDuration), // seconds
             t2 = t1 + duration,
             velocity,
             dt = t2 - t1 - dampingDuration;
@@ -463,10 +463,10 @@ TQ.AnimationManager = (function () {
 
     function composeFlyOutSag(typeId, startPos, destinationPos) {
         var speed = getSpeed(typeId),
-            delay = TQ.TimerUI.getTObject1().t,
-            duration = (TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt), // seconds
+            delay = TQ.FrameCounter.gridSnap(TQ.TimerUI.getTObject1().t),
+            duration = TQ.FrameCounter.gridSnap((TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt)), // seconds
             t1 = delay,
-            dampingDuration = TQ.SpringEffect.defaultConfig.dampingDuration, // seconds
+            dampingDuration = TQ.FrameCounter.gridSnap(TQ.SpringEffect.defaultConfig.dampingDuration), // seconds
             t2 = t1 + duration,
             velocity,
             dt = t2 - t1 - dampingDuration;

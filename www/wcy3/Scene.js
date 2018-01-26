@@ -1,7 +1,9 @@
 TQ = TQ || {};
 (function () {
 
+    var self;
     function Scene() {
+        self = this;
         this.levels = [];
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
         this.version = Scene.VER_LATEST;
@@ -100,18 +102,11 @@ TQ = TQ || {};
     p.isUpdating = false;
     // 这是scene的主控程序
     var isStarted = false;
-    p.tick = function () {
-        if (!isStarted) {
-            this.start();
-            isStarted = true;
-        }
-    };
 
     p.start = function() {
-        var _this = this;
         requestAnimationFrame(function () {
-            _this.onTick();
-            _this.start();
+            self.onTick();
+            self.start();
         });
     };
 
@@ -247,7 +242,6 @@ TQ = TQ || {};
             thisScene.handleEvent(Scene.EVENT_READY);
             thisScene.updateLevelRange();
             TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_READY);
-            TQ.MessageBox.hide();
             this.isDirty = true;
         }
     };
@@ -373,13 +367,12 @@ TQ = TQ || {};
         if (this.currentLevel != null) {
             TQ.FloatToolbar.close();
             if (this.currentLevelId !== id) {
-                var _self = this;
                 if (TQ.PageTransition) {
-                    TQ.PageTransition.start(_self.currentLevelId, id, function() {
-                        _self.doGotoLevel(id);
+                    TQ.PageTransition.start(self.currentLevelId, id, function() {
+                        self.doGotoLevel(id);
                     })
                 } else {
-                    _self.doGotoLevel(id);
+                    self.doGotoLevel(id);
                 }
             } else {
                 TQ.Log.debugInfo("已经在本level，不变切换");
@@ -401,11 +394,15 @@ TQ = TQ || {};
         this.screenshotName = fileInfo.screenshotName;
         this.title = null;
         // 删除 旧的Levels。
-
-        var self = this;
         function onOpened() {
             self.showLevel();
             TQ.MessageBox.hide();
+            setTimeout(function() {
+                if (!isStarted) {
+                    self.start();
+                    isStarted = true;
+                }
+            });
         }
 
         this.onsceneload = onOpened;

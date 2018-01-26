@@ -60,7 +60,6 @@ this.TQ = this.TQ || {};
         TQ.DownloadManager.initialize();
         RM._hasCreated = true;
         RM.hasDefaultResource = false;
-        createjs.FlashAudioPlugin.swfPath = "../src/soundjs/"; // Initialize the base path from this document to the Flash Plugin
         if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3
             TQ.Base.Utility.isMobileDevice()) {
             createjs.Sound.registerPlugins([createjs.CordovaAudioPlugin, createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.FlashPlugin]);
@@ -73,7 +72,6 @@ this.TQ = this.TQ || {};
 
 		// Instantiate a queue.
         RM.preloader = new createjs.LoadQueue(true, null, true); // , "assets/");
-        RM.preloader.installPlugin(createjs.FlashAudioPlugin);
         RM.preloader.installPlugin(ImagePreloader);
         RM.preloader.installPlugin(createjs.Sound);
         RM.preloader.setMaxConnections(10);

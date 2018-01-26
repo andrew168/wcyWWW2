@@ -214,13 +214,6 @@ var currScene = null;
         initializeCoreModules();
         TQ.SceneEditor.loadScene(fileInfo);
         initializeControllers();
-        createjs.Ticker.setFPS(20);
-
-        // 让Scene来决定处理tick，它可以包括update和render。而stage的自动响应只包括render。
-        // createjs.Ticker.addListener(stage, false);
-        createjs.Ticker.addListener(currScene, false);
-
-        createjs.Ticker.addListener(window);
     }
 
     function initializeCoreModules() {

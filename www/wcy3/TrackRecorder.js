@@ -17,6 +17,7 @@ window.TQ = window.TQ || {};
 
     // 参见: Decorder的说明
     TrackRecorder.record = function (element, t) {
+        t = TQ.FrameCounter.gridSnap(t);
         var track = element.animeTrack;
         var jsonObj = element.jsonObj;
         // TQ.Pose 中已经是物体空间的值(在Update中调用的), 如果是成组的或者Bone运动,则是父物体坐标系下的值.
