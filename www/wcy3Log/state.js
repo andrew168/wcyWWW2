@@ -26,7 +26,7 @@ var TQ = TQ || {};
 
     function determineWorkingRegion() {
         // top bar的min-height是 11vmin
-        var buttonHeight = (TQ.WCY.isPlayOnly || State.isPlaying)? 0:  Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth)),
+        var buttonHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode)? 0:  Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth)),
             topBarHeight = buttonHeight,
             bottomBarHeight = topBarHeight,
             h = State.innerHeight - topBarHeight - bottomBarHeight,

@@ -156,14 +156,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.showTrimTimeline = false; //false;
 
         // editor's mode
-        if (state.isPlayOnly) {
-            if (currScene && currScene.isEmpty()) {
-                setAddMode();
-            } else {
-                setPreviewMode();
-            }
-        } else {
+        if (currScene && currScene.isEmpty()) {
             setAddMode();
+        } else {
+            setPreviewMode();
         }
         state.isRecording = false; // must be in AddMode
         state.isPreviewMenuOn = false;
@@ -171,8 +167,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.State.isPlaying = false;
         state.isMCopying = false;
         TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
-        TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
-        onResize();
     }
 
     function initialize() {
@@ -193,6 +187,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function onSceneReady() {
         reset();
+        TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
+        onResize();
         if (!_sceneReady) { // 新建WCY， 不属于此
             TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
             _sceneReady = true;

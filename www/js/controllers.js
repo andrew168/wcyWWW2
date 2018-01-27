@@ -53,10 +53,6 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     function onAppStarted() {
         //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
         var opus = $stateParams.shareCode || TQ.Utility.getUrlParam('opus');
-        WCY.setOnStarted(function () {
-            TQ.Graphics.setCanvas(); // ！！ 必须在device ready 之后， 才能设置canas， 否则ipad的长宽信息错位。
-        });
-
         EditorService.initialize();
         if (opus) {
             WCY.getWcy(opus);
