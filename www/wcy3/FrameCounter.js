@@ -80,11 +80,11 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.tGrid = function () {
-        return Math.round(FrameCounter.v) / _FPS;
+        return FrameCounter.gridSnap(FrameCounter.t())
     };
 
     FrameCounter.gridSnap = function(t) {
-        return Math.round(t * 20) / 20;
+        return Math.round(t * 100) / 100;
     };
 
     FrameCounter.f2t = function(frameNumber) {
@@ -92,7 +92,7 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.f2tGrid = function (frameNumber) {
-        return (Math.round(frameNumber) / _FPS);
+        return FrameCounter.gridSnap(FrameCounter.f2t());
     };
 
     FrameCounter.t2f = t2f;
@@ -146,11 +146,9 @@ window.TQ = window.TQ || {};
         }
 
         newTimestamp = Date.now();
-        var vDelta = Math.abs(t2f((newTimestamp - lastTimestamp)/1000));
-        if (vDelta > 0.1) {
-            FrameCounter.v = FrameCounter.v + vDelta;
-            lastTimestamp = newTimestamp;
-        }
+        var vDelta = t2f((newTimestamp - lastTimestamp)/1000);
+        FrameCounter.v = FrameCounter.v + vDelta;
+        lastTimestamp = newTimestamp;
 
         if (abOptions) {
             if (FrameCounter.t() > abOptions.tEnd) {
