@@ -98,8 +98,9 @@ TQ.MessageBox = (function () {
 
     function onDuration() {
         isShowingByForce = false;
-        hide(toastInstance);
+        var tempInstance = toastInstance;
         toastInstance = null;
+        hide(tempInstance);
         if (msgList.length <= 0) {
             return;
         }
@@ -181,25 +182,30 @@ TQ.MessageBox = (function () {
 
     function doHide(ref) {
         if (!ref) {
+            var tempInstance;
             hideProgressBox();
             if (showInstance) {
-                vex.close(showInstance);
+                tempInstance = showInstance;
                 showInstance = null;
+                vex.close(tempInstance);
             }
 
             if (promptInstance) {
-                vex.close(promptInstance);
+                tempInstance = promptInstance;
                 promptInstance = null;
+                vex.close(tempInstance); // 这个close， 还在调用callback，容易造成死循环
             }
 
             if (confirmInstance) {
-                vex.close(confirmInstance);
+                tempInstance = confirmInstance;
                 confirmInstance = null;
+                vex.close(tempInstance);
             }
 
             if (toastInstance) {
-                vex.close(toastInstance);
+                tempInstance = toastInstance;
                 toastInstance = null;
+                vex.close(tempInstance);
             }
         } else {
             vex.close(ref);
@@ -208,8 +214,9 @@ TQ.MessageBox = (function () {
 
     function hideProgressBox() {
         if (progressInstance) {
-            hide(progressInstance);
+            var tempInstance = progressInstance;
             progressInstance = null;
+            hide(tempInstance);
         }
     }
 
