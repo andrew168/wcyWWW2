@@ -608,7 +608,9 @@ window.TQ = window.TQ || {};
      */
     p.stop = function() {
         for (var i = 0; i < this.elements.length; i++) {
-            this.elements[i].stop();
+            if (this.elements[i].stop) {
+                this.elements[i].stop();
+            }
         }
     };
 
