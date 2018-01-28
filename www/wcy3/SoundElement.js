@@ -32,8 +32,11 @@ TQ = TQ || {};
     p._parent_doShow = p.doShow;
     p.doShow = function(isVisible) {
         this._parent_doShow(isVisible);
-        if (isVisible) this.play();
-        else this.stop();
+        if (isVisible) {
+            this.play();
+        } else {
+            this.stop();
+        }
     };
 
     SoundElement.composeResource = function (res) {
@@ -117,15 +120,10 @@ TQ = TQ || {};
     };
 
     p._doRemoveFromStage = function() {
-        if (this.isSound()) {
-            if (!this.isMultiScene) { // 支持跨场景的声音
-                this.stop();
-            }
-        } else {
-            this._parent_doRemoveFromStage();
+        if (!this.isMultiScene) { // 支持跨场景的声音
+            this.stop();
         }
     };
-
 
     p.play = function () {
         if (!this.instance) {
@@ -140,7 +138,10 @@ TQ = TQ || {};
 
         if ((!TQ.FrameCounter.isPlaying() || TQ.FrameCounter.isRequestedToStop())) return;
 
-        if (this.isPlaying()) return;
+        if (this.isPlaying()) {
+            return;
+        }
+
         if (this.isFirstTimePlay) {
             this.isFirstTimePlay = false;
             if (!this.t0) {
