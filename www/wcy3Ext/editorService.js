@@ -832,19 +832,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         $timeout(onResize);
     }
 
-    //只用于插入录音，
-    //    在开始录音的时候，先记录当时场景的id和当时时间t0，以供本函数使用。
-    // 在指定的场景levelID，指定的时间t0，插入所制的声音资源,
-    // 如果不指定levelID和t0，则在当前场景的当前时刻插入
-    function addResToStageCenter(res, levelID, t0) {
-        return addResToStageCenter(res, levelID, t0);
-    }
-
-    // type: 烟火的种类，默认1,      系统保留扩展其它取值）
-    function firework(type) {
-        TQ.Log.debugInfo(type);
-    }
-
     //------------- 以下的函数用于配置系统参数 -------------------------
     // 设置零件标志的大小， 默认是10：
     function setMarkerSize(radius) {

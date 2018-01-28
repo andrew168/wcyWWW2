@@ -143,14 +143,6 @@ window.TQ = window.TQ || {};
         WCY.currentScene.deleteElement(ele);
     };
 
-    //只用于插入录音，
-    //    在开始录音的时候，先记录当时场景的id和当时时间t0，以供本函数使用。
-    // 在指定的场景levelID，指定的时间t0，插入所制的声音资源,
-    // 如果不指定levelID和t0，则在当前场景的当前时刻插入
-    WCY.addResToStageCenter = function(res, levelID, t0) {
-        return addResToStageCenter(res, levelID, t0);
-    };
-
     WCY.getCurrentLevelID = function()
     {
       return WCY.currentScene.currentLevelId;
