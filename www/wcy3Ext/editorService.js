@@ -1046,19 +1046,21 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function toAddMode() {
         TQ.Scene.restoreState();
-        $timeout(function() {
-                TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
-                TQ.SelectSet.empty();
-                if (state.isPreviewMode) {
-                    state.isPreviewMode = false;
-                    TQ.IdleCounter.remove(onPreviewMenuOff);
-                    TQ.TouchManager.start();
-                    onPreviewMenuOff();
-                    TQ.PreviewMenu.stopWatch();
-                }
-                updateMode(true);
-                forceToRefreshUI();
-            }, 100);
+        $timeout(function () {
+            TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
+            TQ.SelectSet.empty();
+            if (state.isPreviewMode) {
+                state.isPreviewMode = false;
+                TQ.IdleCounter.remove(onPreviewMenuOff);
+                TQ.TouchManager.start();
+                onPreviewMenuOff();
+                TQ.PreviewMenu.stopWatch();
+            }
+            updateMode(true);
+            TQ.State.isPlaying = false;
+            AppService.configCanvas();
+            forceToRefreshUI();
+        }, 100);
     }
 
     function setPreviewMode() {
