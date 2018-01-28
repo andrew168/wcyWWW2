@@ -159,6 +159,10 @@ TQ = TQ || {};
         }
     };
 
+    p.forceToReplay = function() {
+        this.instance.play();
+    };
+
     // 计算元素插入点的绝对时刻（与当前level无关， 只与元素所在level有关），
     p.toGlobalTime = function(t) {
         return (this.level.getT0() + t);

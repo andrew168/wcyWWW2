@@ -105,8 +105,10 @@ TQ = TQ || {};
 
     p.start = function() {
         requestAnimationFrame(function () {
-            self.onTick();
-            self.start();
+            if (isStarted) {
+                self.onTick();
+                self.start();
+            }
         });
     };
 
@@ -200,6 +202,9 @@ TQ = TQ || {};
 
         if (!options) {
             if (currScene.currentLevelId !== 0) {
+                currScene.gotoLevel(0);
+            } else {
+                currScene.currentLevelId = -1;
                 currScene.gotoLevel(0);
             }
             TQ.FrameCounter.gotoBeginning();
@@ -367,7 +372,7 @@ TQ = TQ || {};
         if (this.currentLevel != null) {
             TQ.FloatToolbar.close();
             if (this.currentLevelId !== id) {
-                if (TQ.PageTransition) {
+                if (TQ.PageTransition && (this.currentLevelId >= 0)) {
                     TQ.PageTransition.start(self.currentLevelId, id, function() {
                         self.doGotoLevel(id);
                     })
@@ -829,6 +834,7 @@ TQ = TQ || {};
             this.currentLevel = null;
             this.currentLevelId = 0;
             this.onsceneload = null;
+            isStarted = false;
             return true;
         }
 

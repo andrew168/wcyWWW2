@@ -94,6 +94,15 @@ TQ = TQ || {};
         }
     };
 
+    SoundMgr.iosForceToResumeAll = function () {
+        for (var i = 0; i < SoundMgr.items.length; i++) {
+            var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+            if (ele.isVisible()) {
+                ele.forceToReplay();
+            }
+        }
+    };
+
     SoundMgr.removeAll = function()
     {
         // 只删除那些不跨场景的

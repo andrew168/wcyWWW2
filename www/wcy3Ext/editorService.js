@@ -216,7 +216,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
             if (TQUtility.isIOS()) {
-                TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), preview);
+                TQ.SoundMgr.stop();
+                TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function() {
+                    TQ.SoundMgr.iosForceToResumeAll();
+                    preview();
+                });
             } else {
                 TQ.MessageBox.hide();
                 preview();
