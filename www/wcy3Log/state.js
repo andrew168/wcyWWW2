@@ -26,8 +26,8 @@ var TQ = TQ || {};
 
     function determineWorkingRegion() {
         // top bar的min-height是 11vmin
-        var buttonHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode)? 0:  Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth)),
-            topBarHeight = buttonHeight,
+        State.buttonHeight = Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth));
+        var topBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode)? 0: State.buttonHeight,
             bottomBarHeight = topBarHeight,
             h = State.innerHeight - topBarHeight - bottomBarHeight,
             w = State.innerWidth,
@@ -47,7 +47,6 @@ var TQ = TQ || {};
         TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight) / 2);
         State.bottomBarHeight = bottomBarHeight;
         State.topBarHeight = topBarHeight;
-        State.buttonHeight = buttonHeight;
     }
 
     function updateDeviceInfo() {
