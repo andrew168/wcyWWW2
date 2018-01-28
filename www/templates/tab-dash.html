@@ -256,11 +256,6 @@
                     </ui-select-choices>
                 </ui-select>
 
-                <button
-                    class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}">
-                    Pick text color
-                </button>
-
                 <button class="button button-positive" my-click="uploadScreenshot()" ng-show="false">截屏上传</button>
                 <button class="button button-positive" my-click="EditorService.saveScreenShot()" ng-show="false">截屏保存</button>
 
@@ -283,12 +278,7 @@
             <button class="button button-positive" ng-click="insertLocalImageWithOrientation()">+朝向测试</button>
             <button class="button button-positive" ng-click="insertAlbum()">+图册</button>
             <button class="button button-positive" ng-click="insertFromCamera()">+相机</button>
-            <button class="button button-positive" ng-click="deleteElement()">删除</button>
-
-            <button class="button button-positive jscolor {valueElement:'chosen-value', onFineChange:'tqSetFontColor(this)'}">
-                Pick text color
-            </button>
-            <button class="button button-positive" ng-click="testShowMsg()">showMsg</button>
+            <button class="button button-positive" ng-click="deleteElement()">删除</button><button class="button button-positive" ng-click="testShowMsg()">showMsg</button>
             <button class="button button-positive" ng-click="testPrompt()">showMsgOK</button>
             <button class="button button-positive" ng-click="reloadN()">反复加载</button>
             <button class="button button-positive" ng-click="EditorService.insertSnow()">下雪</button>

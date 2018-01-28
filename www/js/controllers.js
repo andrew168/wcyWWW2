@@ -220,8 +220,6 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         }
     };
 
-    window.tqSetFontColor = $scope.setColor;
-
     $scope.insertFromCamera = function () {
         TQ.CameraService.insertFromCamera();
     };

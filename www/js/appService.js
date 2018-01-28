@@ -54,7 +54,6 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             }
             _initialized = true;
             TQ.Log.debugInfo("_init");
-            jscolor.installByClassName('jscolor');
             configCanvas();
             if (TQ.Config.LocalCacheEnabled) {
                 document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
