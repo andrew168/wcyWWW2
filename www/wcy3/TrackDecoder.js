@@ -141,9 +141,7 @@ window.TQ = window.TQ || {};
     function calTrack(channel, t)
     {
         channel.searchInterval(t);
-        if (channel.hasSag()) {
-            return channel.value[0];
-        } else if (channel.tid1 == channel.tid2) {
+        if (channel.tid1 == channel.tid2) {
             return channel.value[channel.tid1];
         }
         var t1 = channel.t[channel.tid1];
