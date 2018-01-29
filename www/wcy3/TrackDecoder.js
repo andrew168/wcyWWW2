@@ -71,7 +71,8 @@ window.TQ = window.TQ || {};
 
         // ToDo: 没有track， 只有sag， 以sag的末尾状态保持下去
         // 在Sag结束的时候， 更新track， 以保存以sag的末尾状态保持下去
-        return calTrack(channel, t);
+        var floorKfa = calTrack(channel, t);
+        return floorKfa.value;
     };
 
     function findSag(channel, t) {
@@ -103,9 +104,9 @@ window.TQ = window.TQ || {};
                 default:
                     if ((item.t1 <= t) && (t <= item.t2)) { // idle SAG
                         return item;
+                        }
                     }
             }
-        }
         return lastSag;
     }
 
@@ -140,9 +141,12 @@ window.TQ = window.TQ || {};
 
     function calTrack(channel, t)
     {
+        var floorKfa = {};
         channel.searchInterval(t);
         if (channel.tid1 == channel.tid2) {
-            return channel.value[channel.tid1];
+            floorKfa.t1 = floorKfa.t2 = channel.t[channel.tid1];
+            floorKfa.value = channel.value[channel.tid1];
+            return floorKfa;
         }
         var t1 = channel.t[channel.tid1];
         var t2 = channel.t[channel.tid2];
@@ -150,9 +154,12 @@ window.TQ = window.TQ || {};
         var v2 = channel.value[channel.tid2];
         var v = v1; //不插补， 脉冲替换, 适用于 正向播放， 不是倒放
 
+        floorKfa.t1 = t1;
+        floorKfa.t2 = t2;
         if (t1 > t2) {  // 容错, 发现错误的轨迹数据
             TQ.Log.out("Data Error, Skip t=" + t + " t1=" + t1 +" t2 = " + t2 +" id1=" +channel.tid1 + " tid2=" + channel.tid2);
-            return v1;
+            floorKfa.value = v1;
+            return floorKfa;
         }
 
         if (t <= t1) {  // 下超界
@@ -166,7 +173,8 @@ window.TQ = window.TQ || {};
                 v = v1;
             }
         }
-        return v;
+        floorKfa.value = v;
+        return floorKfa;
     }
 
     TQ.TrackDecoder = TrackDecoder;
