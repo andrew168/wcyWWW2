@@ -64,14 +64,22 @@ window.TQ = window.TQ || {};
         // ToDo: 在Sag控制的时间段，用SAG， 否则用普通的
         // * FlyIn: t < te;
         // * FlyOut: ts < t
-        var sag = findSag(channel, t);
-        if (sag) {
-            return calSag(sag, channel, t);
+        var floorSag = findSag(channel, t),
+            vSag;
+
+        if (floorSag && floorSag.sag) {
+            vSag = calSag(floorSag.sag, channel, t);
+            if (floorSag.t1 <= t && t <= floorSag.t) {
+                return vSag;
+            }
         }
 
         // ToDo: 没有track， 只有sag， 以sag的末尾状态保持下去
         // 在Sag结束的时候， 更新track， 以保存以sag的末尾状态保持下去
         var floorKfa = calTrack(channel, t);
+        if (floorSag && floorSag.sag && (floorKfa.t2 < t ) && (floorKfa.t2 < floorSag.t)) {
+            return vSag;
+        }
         return floorKfa.value;
     };
 
@@ -84,7 +92,10 @@ window.TQ = window.TQ || {};
             n = channel.sags.length,
             i,
             item,
-            lastSag = null;
+            floorSag = {
+                t: -1,
+                sag: null
+            };
         for (i = 0; i < n; i++) {
             item = channel.sags[i];
             if (!item) {
@@ -92,22 +103,49 @@ window.TQ = window.TQ || {};
             }
             switch (item.categoryID) {
                 case SagCategory.IN:
-                    if ((t < item.t2)) {
-                        return item;
+                    if (t < item.t2) {
+                        floorSag.t1 = 0;
+                        floorSag.t = item.t2;
+                        floorSag.sag = item;
+                        return floorSag;
+                    } else {
+                        if (floorSag.t < item.t2) {
+                            floorSag.t1 = 0;
+                            floorSag.t = item.t2;
+                            floorSag.sag = item;
+                        }
                     }
                     break;
                 case SagCategory.OUT:
                     if (item.t1 < t) {
-                        return item;
+                        floorSag.t1 = item.t1;
+                        floorSag.t = item.t2;
+                        floorSag.sag = item;
+                        return floorSag;
+                    } else {
+                        if (floorSag.t < item.t2) {
+                            floorSag.t1 = item.t1;
+                            floorSag.t = item.t2;
+                            floorSag.sag = item;
+                        }
                     }
                     break;
                 default:
                     if ((item.t1 <= t) && (t <= item.t2)) { // idle SAG
-                        return item;
+                        floorSag.t1 = item.t1;
+                        floorSag.t = item.t2;
+                        floorSag.sag = item;
+                        return floorSag;
+                    } else {
+                        if ((t > item.t2) && (floorSag.t < item.t2)) {
+                            floorSag.t1 = item.t1;
+                            floorSag.t = item.t2;
+                            floorSag.sag = item;
                         }
                     }
             }
-        return lastSag;
+        }
+        return floorSag;
     }
 
     function calSag(sag, channel, t) {
