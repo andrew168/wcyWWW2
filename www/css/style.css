@@ -16,3 +16,26 @@
     left: 150px;
 }
 
+#rem-test-text10 {
+    font-size: 10px;
+}
+
+#rem-test-text20 {
+    font-size: 20px;
+}
+
+#rem-test-text50 {
+    font-size: 50px;
+}
+
+#rem-test-text100 {
+    font-size: 100px;
+}
+
+#rem-test-text200 {
+    font-size: 200px;
+}
+
+#rem-test-text {
+    font-size: 60px;
+}

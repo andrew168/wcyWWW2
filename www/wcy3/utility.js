@@ -24,6 +24,10 @@ window.TQ = window.TQ || {};
       return result;
     };
 
+    Utility.getCssSize = function(cssValue) {
+        return parseFloat(cssValue.replace("px", ""));
+    };
+
     // 从text的HTML字串中获取tag标签中 attr属性的值
     Utility.extractAttr = function (tag, attr, str, defaultValue) {
       var reg1 =new RegExp("<" + tag + "[^<>]*?\\s" + attr + "=['\"]?(.*?)['\"]?\\s.*?>(.*?)</" +tag +">");

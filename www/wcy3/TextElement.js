@@ -109,11 +109,11 @@ window.TQ = window.TQ || {};
             if (option.toggleItalic) {
                 this.jsonObj.italic = !this.jsonObj.italic;
             }
-
+            TQ.TextElementWxAdapter.detectFontSizeFactor();
             txtObj.font = TQ.Utility.toCssFont(this.jsonObj);
 
             // hitArea 不会根据str内容来更新， 所以：
-            txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
+            txtObj.hitArea = this.createHitArea(txtObj.rotation, getMeasuredWidthModified(txtObj), this.getHeight());
 
             TQ.DirtyFlag.setElement(this);
         }
@@ -122,6 +122,7 @@ window.TQ = window.TQ || {};
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
         var jsonObj = this.jsonObj;
+        TQ.TextElementWxAdapter.detectFontSizeFactor();
         var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj), jsonObj.color);
         this.loaded = true;
         if (jsonObj.textAlign == null) {
@@ -130,8 +131,9 @@ window.TQ = window.TQ || {};
             txtObj.textAlign = "left";
         }
 
+        // alert("final size: \n original= " + txtObj.getMeasuredWidth() + ', \n modified =  ' + getMeasuredWidthModified(txtObj));
         // hitArea 会随宿主物体的变换而变换， 所以，可以重用
-        txtObj.hitArea = this.createHitArea(txtObj.rotation, txtObj.getMeasuredWidth(), this.getHeight());
+        txtObj.hitArea = this.createHitArea(txtObj.rotation, getMeasuredWidthModified(txtObj), this.getHeight());
         this._afterItemLoaded();
         if (this.hasFlag(TQ.Element.IN_STAGE)) {
             this.setTRSAVZ();
@@ -235,13 +237,20 @@ window.TQ = window.TQ || {};
     }
 
     p.getWidth = function () {
-        return this.displayObj.getMeasuredWidth();
+        return getMeasuredWidthModified(this.displayObj);
     };
 
     p.getHeight = function () {
-        var h = this.displayObj.getMeasuredHeight();
-        return h;
+        return getMeasuredHeightModified(this.displayObj);
     };
+
+    function getMeasuredWidthModified(txtObj) {
+        return txtObj.getMeasuredWidth() * TQ.TextElementWxAdapter.cssFontSizeFactor;
+    }
+
+    function getMeasuredHeightModified(txtObj) {
+        return txtObj.getMeasuredHeight() * TQ.TextElementWxAdapter.cssFontSizeFactor;
+    }
 
     TQ.TextElement = TextElement;
 }());

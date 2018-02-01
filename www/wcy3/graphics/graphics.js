@@ -51,16 +51,14 @@ TQ.Graphics = (function () {
         if (!canvasStyle) {
             canvasStyle = setCanvas();
         }
-        var width = canvasStyle.width.replace("px", "");
-        return parseFloat(width);
+        return TQ.Utility.getCssSize(canvasStyle.width);
     }
 
     function getCanvasHeight() {
         if (!canvasStyle) {
             canvasStyle = setCanvas();
         }
-        var heigth = canvasStyle.height.replace("px", "");
-        return parseFloat(heigth);
+        return TQ.Utility.getCssSize(canvasStyle.height);
     }
 
     function getCanvasBkgColor() {
