@@ -170,6 +170,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function initialize() {
+        TQ.TextElementWxAdapter.detectFontSizeFactor();
         reset();
         $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
         $rootScope.$on(TQ.EVENT.REFRESH_UI, forceToRefreshUI);

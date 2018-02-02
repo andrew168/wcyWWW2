@@ -109,7 +109,6 @@ window.TQ = window.TQ || {};
             if (option.toggleItalic) {
                 this.jsonObj.italic = !this.jsonObj.italic;
             }
-            TQ.TextElementWxAdapter.detectFontSizeFactor();
             txtObj.font = TQ.Utility.toCssFont(this.jsonObj);
 
             // hitArea 不会根据str内容来更新， 所以：
@@ -122,7 +121,6 @@ window.TQ = window.TQ || {};
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
         var jsonObj = this.jsonObj;
-        TQ.TextElementWxAdapter.detectFontSizeFactor();
         var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj), jsonObj.color);
         this.loaded = true;
         if (jsonObj.textAlign == null) {
