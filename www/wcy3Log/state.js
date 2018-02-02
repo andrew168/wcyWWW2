@@ -26,8 +26,21 @@ var TQ = TQ || {};
 
     function determineWorkingRegion() {
         // top bar的min-height是 11vmin
-        State.buttonHeight = Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth));
-        var topBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode)? 0: State.buttonHeight,
+        var buttonELe = document.getElementById('id-delete');
+
+        if (!buttonELe) {
+            buttonELe = document.getElementsByClassName("button")[0];
+        }
+
+        if (buttonELe) {
+            State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(buttonELe).height);
+        }
+
+        if (isNaN(State.buttonHeight) || !buttonELe) {
+            State.buttonHeight = Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth));
+        }
+
+        var topBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight,
             bottomBarHeight = topBarHeight,
             h = State.innerHeight - topBarHeight - bottomBarHeight,
             w = State.innerWidth,
