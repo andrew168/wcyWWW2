@@ -912,7 +912,7 @@ TQ = TQ || {};
         var wholeSceneReady = true;
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
-            if (!level.dataReady) {
+            if (!level.resourceReady) {
                 wholeSceneReady = false;
                 continue;
             }
