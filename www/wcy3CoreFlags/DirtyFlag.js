@@ -21,8 +21,12 @@ var TQ = TQ || {};
 
     function setElement(ele) {
         setElementOnly(ele);
-        currScene.isDirty = true;
-        currScene.currentLevel.isDirty = true;
+        if (currScene) {
+            currScene.isDirty = true;
+            if (currScene.currentLevel) {
+                currScene.currentLevel.isDirty = true;
+            }
+        }
     }
 
     function setLevel(level) {
