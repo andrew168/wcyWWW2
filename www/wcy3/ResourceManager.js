@@ -53,6 +53,16 @@ this.TQ = this.TQ || {};
     RM.dataReady = false;
     RM.completeOnceHandlers = [];
     RM.initialize = function() {
+        //var MAX_CONNECTIONS_PER_HOST={
+        //    'chrome': 6,
+        //    'safari': 6,
+        //    'firefox': 6,
+        //    'ie11': 8,
+        //    'chrome mobile': 6,
+        //    'safari mobile': 6,
+        //};
+        var maxConnectionsPerHost = 6;
+
         if (!!RM._hasCreated) { // 确保只创建一次
             return;
         }
@@ -74,7 +84,7 @@ this.TQ = this.TQ || {};
         RM.preloader = new createjs.LoadQueue(true, null, true); // , "assets/");
         RM.preloader.installPlugin(ImagePreloader);
         RM.preloader.installPlugin(createjs.Sound);
-        RM.preloader.setMaxConnections(10);
+        RM.preloader.setMaxConnections(maxConnectionsPerHost);
 
         if (TQ.Base.Utility.isMobileDevice()) {
             RM.preloader.installPlugin(createjs.CordovaAudioLoader);
