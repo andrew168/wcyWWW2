@@ -183,7 +183,7 @@ function WCY($http, FileService, WxService, NetService) {
         return $http({
             method: 'POST',
             // url: AUTH_HOST + wechat/sign?url=' + url,
-            url: TQ.Config.OPUS_HOST + '/wcy' + params + (forkIt? "/fork": ""),
+            url: TQ.Config.OPUS_HOST + '/wcy' + params + (forkIt? "&fork=true": ""),
             headers: {
                 // 'Token' : myToken, // 必须同源，才能用Token
                 'Content-Type': 'application/json'
