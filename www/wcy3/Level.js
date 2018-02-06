@@ -468,10 +468,10 @@ window.TQ = window.TQ || {};
 
     p.onLevelRunning  = null;
     p.onLevelCreated = function () {
-        if ((this.state == TQBase.LevelState.INITING) ||
-            (this.state == TQBase.LevelState.LOADED) ||
-            (this.state == TQBase.LevelState.EDITING) ||
-            (this.state == TQBase.LevelState.EXIT)) {
+        if ((this.state === TQBase.LevelState.INITING) ||
+            (this.state === TQBase.LevelState.LOADED) ||
+            (this.state === TQBase.LevelState.EDITING) ||
+            (this.state === TQBase.LevelState.EXIT)) {
 			 //后续场景loaded是通过RM完成的， 所以可能还是INITING状态
             this.setupTimer();
             // add all item to stage
@@ -483,7 +483,7 @@ window.TQ = window.TQ || {};
             if (this.onLevelRunning != null) this.onLevelRunning();
             TQ.DirtyFlag.setLevel(this);
         } else {
-            if (this.state !== TQBase.LevelState.EDITING) {
+            if ((this.state !== TQBase.LevelState.EDITING) && (this.state !== TQBase.LevelState.RUNNING)) {
                 assertNotHere(TQ.Dictionary.CurrentState + this.state);
             }
         }
