@@ -289,10 +289,31 @@ this.TQ = this.TQ || {};
         loadResource(resourcePath, resourcePath, RM.DATA_TYPE_SOUND, callback);
     }
 
+    var cloudinarySubdomains = [
+        'res-5.cloudinary.com',
+        'res-1.cloudinary.com',
+        'res-2.cloudinary.com',
+        'res-3.cloudinary.com',
+        'res-4.cloudinary.com'];
+
+    function accelerateByMultiHost(fullPath) {
+        var mainHost = 'res.cloudinary.com';
+        if (fullPath.indexOf(mainHost) > -1) {
+            try {
+                var idIndex = fullPath.lastIndexOf('.');
+                var fileId = parseInt(fullPath[idIndex - 1]) % 5;
+                return fullPath.replace(mainHost, cloudinarySubdomains[fileId]);
+            } catch (e) {
+
+            }
+        }
+        return fullPath;
+    }
+
     function addToPreloader(fullPath, resourceID, type) {
         RM.preloader.loadManifest([{
             type: type, // 对于本地声音， 必须加，因为blob类的url无法提供类别信息
-            src: fullPath,
+            src: accelerateByMultiHost(fullPath),
             id: resourceID,   // Sound资源的id是字符串, 不是数字
             data: 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
         }]);
