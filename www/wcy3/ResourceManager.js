@@ -80,7 +80,6 @@ this.TQ = this.TQ || {};
 
 		// Instantiate a queue.
         RM.preloader = new createjs.LoadQueue(true, null, true); // , "assets/");
-        RM.preloader.installPlugin(ImagePreloader);
         RM.preloader.installPlugin(createjs.Sound);
         RM.preloader.setMaxConnections(maxConnectionsPerHost);
 
