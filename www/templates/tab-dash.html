@@ -167,10 +167,10 @@
             <!-- 作品 -->
             <div id="pay-button-div"> </div>
             <div style="display: block">
-                <div ng-show="state.isPlayOnly">播放Only</div>
-                <button class="button button-positive" ng-click="makeOrder()">下订单</button>
-                <button class="button button-positive" ng-click="testSignUp()">注册</button>
-                <button class="button button-positive" ng-click="testLogin('1111')">登录</button>
+                <div ng-show="false && state.isPlayOnly">播放Only</div>
+                <button class="button button-positive" ng-click="makeOrder()" ng-show="false">下订单</button>
+                <button class="button button-positive" ng-click="testSignUp()" ng-show="false">注册</button>
+                <button class="button button-positive" ng-click="testLogin('1111')" ng-show="false">登录</button>
                 <button class="button button-positive" ng-click="testLogin('2222')" ng-show="false">22</button>
                 <button class="button button-positive" ng-click="testLogin('3333')" ng-show="false">33</button>
                 <button class="button button-positive" ng-click="testLogin('4444')" ng-show="false">44</button>
@@ -179,12 +179,12 @@
                 <button class="button button-positive" ng-click="testAuthenticate('google')" ng-show="false">google+登录</button>
                 <button class="button button-positive" ng-click="testAuthenticate('wechat')" ng-show="false">微信登录</button>
                 <button class="button button-positive" ng-click="setAdmin()" ng-show="false">setAdmin</button>
-                <button class="button button-positive" ng-click="testLogout()">logout</button>
-                <button class="button button-positive" ng-click="createWcy()">{{getStr("new");}}</button>
+                <button class="button button-positive" ng-click="testLogout()" ng-show="false">logout</button>
+                <button class="button button-positive" ng-click="createWcy()" ng-show="false">{{getStr("new");}}</button>
                 <button class="button button-positive" ng-click="EditorService.setWorkingRegion(414, 736, true)" ng-show="false">iPhone6+</button>
                 <button class="button button-positive" ng-click="EditorService.setBackgroundColor('red')" ng-show="false">红底色</button>
-                <button class="button button-positive" ng-click="setLang('en')">{{getStr("en");}}</button>
-                <button class="button button-positive" ng-click="setLang('zh')">{{getStr("zh");}}</button>
+                <button class="button button-positive" ng-click="setLang('en')" ng-show="false">{{getStr("en");}}</button>
+                <button class="button button-positive" ng-click="setLang('zh')" ng-show="false">{{getStr("zh");}}</button>
                 <button class="button button-positive" ng-click="saveWorks()">保存</button>
 
                 <!-- 微信 -->
@@ -192,7 +192,7 @@
                     <button class="button button-positive" ng-click="shareWeb()" ng-show="false">WebShare</button>
                     <button class="button button-positive" ng-click="share()" ng-show="false">分享1</button>
                     <button class="button button-positive" ng-click="shareFB()" ng-show="false">分享到FB</button>
-                    <button class="button button-positive" ng-click="shareWx()">分享到Wx</button>
+                    <button class="button button-positive" ng-click="shareWx()" ng-show="false">分享到Wx</button>
                     <div
                         class="fb-like btn-md"
                         data-share="true"
@@ -205,17 +205,18 @@
                 <button class="button button-positive" ng-click="EditorService.cloneIt()" ng-show="false">CloneIt</button>
                 <button class="button button-positive" ng-click="testDataService()" ng-show="false">素材库读取</button>
                 <button class="button button-positive" ng-click="EditorService.toAddMode()">编辑</button>
-                <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()">重播</button>
-                <button class="button button-positive" ng-click="EditorService.preview()">预览</button>
+                <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()" ng-show="false">重播</button>
+                <button class="button button-positive" ng-click="EditorService.preview()" ng-show="false">预览</button>
                 <button class="button button-positive" ng-click="EditorService.previewCurrentLevel($event)" ng-show="false">预览本节</button>
                 <button class="button button-positive" ng-click="EditorService.stop($event)" ng-show="false">stop</button>
                 <button class="button button-positive" ng-click="startRecord()" ng-show="false">开启录制 </button>
                 <button class="button button-positive" ng-click="stopRecord()" ng-show="false">停止录制 </button>
-                <button class="button button-positive" ng-click="insertBkImage()">背景</button>
-                <button class="button button-positive" ng-click="insertProp()">道具</button>
+                <button class="button button-positive" ng-click="insertBkImage()" ng-show="false">背景</button>
+                <button class="button button-positive" ng-click="insertProp()" ng-show="false">道具</button>
                 <button class="button button-positive" ng-click="insertPeople()">人物</button>
                 <button class="button button-positive" ng-click="testInsert()">文字</button>
-                <button class="button button-positive" ng-click="EditorService.changeSkin('https://res.cloudinary.com/eplan/image/upload/v1501348053/c29.png')">换皮肤</button>
+                <button class="button button-positive" ng-click="EditorService.changeSkin('https://res.cloudinary.com/eplan/image/upload/v1501348053/c29.png')"
+                        ng-show="false">换皮肤</button>
                 <button class="button button-positive" ng-click="insertRectangle()" ng-show="false">矩形</button>
                 <button class="button button-positive" ng-click="insertBkImageFromLocal()" ng-show="false">+本地背景</button>
                 <button class="button button-positive" ng-click="insertPropFromLocal()" ng-show="false">+本地道具</button>
@@ -235,19 +236,19 @@
                 <button class="button button-positive" ng-click="am.rotate($event)" ng-show="false">旋转</button>
                 <button class="button button-positive" ng-click="am.scaleIn($event)" ng-show="false">变大</button>
                 <button class="button button-positive" ng-click="am.scaleOut($event)" ng-show="false">变小</button>
-                <button class="button button-positive" ng-click="am.fadeIn($event)">淡入</button>
-                <button class="button button-positive" ng-click="am.fadeOut($event)">淡出</button>
+                <button class="button button-positive" ng-click="am.fadeIn($event)" ng-show="false">淡入</button>
+                <button class="button button-positive" ng-click="am.fadeOut($event)" ng-show="false">淡出</button>
                 <button class="button button-positive" ng-click="am.twinkle($event)" ng-show="false">闪烁</button>
-                <button class="button button-positive" ng-click="am.leftIn($event)">左边飞入</button>
+                <button class="button button-positive" ng-click="am.leftIn($event)" ng-show="false">左边飞入</button>
                 <button class="button button-positive" ng-click="am.rightIn($event)" ng-show="false">右边飞入</button>
                 <button class="button button-positive" ng-click="am.bottomIn($event)" ng-show="false">底边飞入</button>
-                <button class="button button-positive" ng-click="am.topIn($event)">上边飞入</button>
+                <button class="button button-positive" ng-click="am.topIn($event)" ng-show="false">上边飞入</button>
                 <button class="button button-positive" ng-click="am.leftOut($event)" ng-show="false">左边飞出</button>
                 <button class="button button-positive" ng-click="am.rightOut($event)" ng-show="false">右边飞出</button>
                 <button class="button button-positive" ng-click="am.bottomOut($event)" ng-show="false">底边飞出</button>
                 <button class="button button-positive" ng-click="am.topOut($event)" ng-show="false">上边飞出</button>
                 <ui-select ng-model="font.selected" theme="select2" style="min-width: 100px;"
-                           on-select="onSelectCallback($item, $model)" title="Choose a size">
+                           on-select="onSelectCallback($item, $model)" title="Choose a size" ng-show="false">
                     <ui-select-match placeholder="Select a size">{{$select.selected.size}}
                     </ui-select-match>
                     <ui-select-choices repeat="font in fontSizes"
@@ -261,7 +262,7 @@
 
                 <button class="button button-positive" ng-click="undo()" ng-show="false">undo</button>
                 <button class="button button-positive" ng-click="redo()" ng-show="false">redo</button>
-                <button class="button button-positive" ng-click="addLevel()">建立新level</button>
+                <button class="button button-positive" ng-click="addLevel()" ng-show="false">建立新level</button>
                 <button class="button button-positive" ng-click="deleteCurrentLevel()" ng-show="false">删除当前level</button>
                 <button class="button button-positive" ng-click="deleteLevel(2)" ng-show="false">删除level 2</button>
                 <button class="button button-positive" ng-click="gotoPreLevel()" ng-show="false">前一个level</button>
