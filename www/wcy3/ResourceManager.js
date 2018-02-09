@@ -36,16 +36,15 @@ this.TQ = this.TQ || {};
         RM = ResourceManager;
 
     RM.DATA_TYPE_SOUND = createjs.AbstractLoader.SOUND; // preloader lib中定义的
-    RM.NOSOUND = "p1.wav";
+    RM.NOSOUND = "https://res.cloudinary.com/eplan/video/upload/v1518142130/c50.wav";
     RM.NOPIC = "p1.png";
-    RM.NOSOUND_FULL = "p1.wav";
     RM.NOPIC_FULL = "p1.png";
     RM.BASE_PATH = null;
     // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
     RM.BASE_PATH = TQ.DownloadManager.FAST_SERVER;
     // NOPIC和NOSOUND是基本的文件， 总是在本服务器（手机的本APP， desktop的本服务器）
     RM.FULLPATH_NOPIC = urlConcat(TQ.Config.MAT_CORE_HOST, urlConcat("/" + TQ.Config.APP_SERVER_IMAGES_CORE_PATH, RM.NOPIC));
-    RM.FULLPATH_NOSOUND = urlConcat(TQ.Config.MAT_CORE_HOST, urlConcat("/" + TQ.Config.APP_SERVER_SOUNDS_PATH, RM.NOSOUND));
+    RM.FULLPATH_NOSOUND = RM.NOSOUND;
     RM.isEmpty = true;
     RM.items = [];
     RM.preloader = {};
