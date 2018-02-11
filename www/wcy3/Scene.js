@@ -14,6 +14,7 @@ TQ = TQ || {};
     }
     Scene.EVENT_READY = "sceneReady";
     Scene.EVENT_SAVED = "sceneSaved";
+    Scene.EVENT_END_OF_PLAY = "end_of_Play";
     Scene.VER1 = "V1";
     Scene.VER2 = "V2";
     Scene.VER3 = "V3"; // 采用归一化的坐标，记录保存wcy，以适应各种屏幕。
@@ -163,6 +164,7 @@ TQ = TQ || {};
                 if (this.isLastLevel()) {
                     if (!TQ.FrameCounter.isAutoRewind()) {
                         this.stop();
+                        TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_END_OF_PLAY);
                     } else if (!TQ.FrameCounter.isInverse()) {
                         this.doReplay();
                     }
