@@ -91,7 +91,7 @@ var currScene = null;
         img.onload = function() {
             var desc = {
                 data: img,
-                src: null, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN
+                src: null, type: "Bitmap", autoFit: determineAutoFit(matType)
             };
 
             var ele = SceneEditor.addItem(desc);
@@ -389,5 +389,13 @@ var currScene = null;
 
     function needToSave() {
         return (currScene && !currScene.isEmpty() && !currScene.isSaved);
+    }
+
+    function isBkg(matType) {
+        return (matType === TQ.MatType.BKG);
+    }
+
+    function determineAutoFit(matType) {
+        return isBkg(matType) ? TQ.Element.FitFlag.FULL_SCREEN: TQ.Element.FitFlag.WITHIN_FRAME;
     }
 }());
