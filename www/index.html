@@ -27,6 +27,14 @@
     <link href="/wcy3/pageTransition/css/animations.css" rel="stylesheet">
     <!-- endbuild -->
 
+
+    <!-- 从3rd CDN 加载， 不必打包 -->
+    <script
+        src="https://code.jquery.com/jquery-3.3.1.min.js"
+        integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8="
+        crossorigin="anonymous">
+    </script>
+
     <!-- 下面的lib与udoido重复， 不需要打包 wcy3all.css中-->
     <link href="./lib-debug-duplicated/rzslider.css" rel="stylesheet">
     <!-- end -->
@@ -53,7 +61,6 @@
     <script type="text/javascript" src="/lazyLoading.js"></script>
 
     <!-- build:js comLibBasic.js -->
-    <script type="text/javascript" src="/lib/jquery-1.9.1.min.js"></script>
     <script type="text/javascript" src="/lib/sylvester.min.js"></script>
     <!-- endbuild -->
 
@@ -68,8 +75,7 @@
     <!-- script type="text/javascript" src="/lib/modernizr-latest.js"></script -->
     <script type="text/javascript" src="/lib/jquery.cookie.js"></script>
     <!-- script type="text/javascript" src="/lib/jQueryRotateCompressed.2.2.js"></script  -->
-    <script type="text/javascript" src="/lib/jquery-ui-1.10.0.custom.min.js"></script>
-    <script type="text/javascript" src="/lib/jquery.ui.touch-punch.min.js"></script> <!-- 只有时间轴滑块用它 -->
+    <!-- 只有时间轴滑块用它 -->
     <script type="text/javascript" src="/lib/select/select.js"></script>
     <!-- endbuild -->
 
