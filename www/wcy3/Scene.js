@@ -372,18 +372,30 @@ TQ = TQ || {};
         id = (id >= this.levelNum()) ? (this.levelNum() - 1) : id;
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
-            TQ.FloatToolbar.close();
-            if (this.currentLevelId !== id) {
-                if (TQ.PageTransition && (this.currentLevelId >= 0)) {
-                    TQ.PageTransition.start(self.currentLevelId, id, function() {
-                        self.doGotoLevel(id);
-                    })
-                } else {
-                    self.doGotoLevel(id);
-                }
+            var level = self.levels[id];
+            level.resourceReady = true;
+            if (level.resourceReady) {
+                self.doTransition(id);
             } else {
-                TQ.Log.debugInfo("已经在本level，不变切换");
+                level.onResourceReady = function() {
+                    self.doTransition(id);
+                }
             }
+        }
+    };
+
+    p.doTransition = function(id) {
+        TQ.FloatToolbar.close();
+        if (this.currentLevelId !== id) {
+            if (TQ.PageTransition && (this.currentLevelId >= 0)) {
+                TQ.PageTransition.start(self.currentLevelId, id, function () {
+                    self.doGotoLevel(id);
+                })
+            } else {
+                self.doGotoLevel(id);
+            }
+        } else {
+            TQ.Log.debugInfo("已经在本level，不变切换");
         }
     };
 
@@ -700,7 +712,8 @@ TQ = TQ || {};
 
         (function (pt) {
             //start preloader
-            pt.startPreloader(pt, 0, num);
+            var levelToPreload = 0;
+            pt.startPreloader(pt, levelToPreload, num);
 
             // 设置each Level的resourceReady标志, and start show
             if (!TQ.RM.isEmpty) {
@@ -710,17 +723,27 @@ TQ = TQ || {};
             }
 
             function onResourceReady() {
-                for (i=0; i< num; i++) {
-                    pt.levels[i].resourceReady = true;
-                }
+                var level = pt.levels[levelToPreload];
+                level.resourceReady = true;
                 TQ.Log.debugInfo("All asset loaded!");
-
                 pt.isDirty = true;
-                if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
-                    pt.onsceneload();
+                setTimeout(function() {
+                    levelToPreload++;
+                    if (levelToPreload < num) {
+                        pt.startPreloader(pt, levelToPreload, num);
+                    }
+                });
+
+                if (levelToPreload === 0) {
+                    if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
+                        pt.onsceneload();
+                    }
+                } else {
+                    if (level.onResourceReady) {
+                        level.onResourceReady();
+                    }
                 }
             }
-
         })(this);
         displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
     };
@@ -750,7 +773,7 @@ TQ = TQ || {};
     };
 
     p.startPreloader = function (pt, i, num) {
-        for (; i < num; i++) {
+        if (i < num) {
             pt.levels[i].setupPreloader();
         }
     };
