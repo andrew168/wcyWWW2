@@ -157,6 +157,11 @@ function WCY($http, FileService, WxService, NetService) {
     function preloadWcy() {
         var shareString = TQ.Utility.getShareCodeFromUrl(),
             url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
+
+        if (!shareString) {
+            return;
+        }
+
         isPreloadingWcy = true;
         $http.get(url)
             .then(function(res){
