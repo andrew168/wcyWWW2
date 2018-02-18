@@ -39,7 +39,10 @@ function WCY($http, FileService, WxService, NetService) {
         _wcyId = TQ.Config.INVALID_WCY_ID, // 缺省-1， 表示没有保存的作品。，12345678;
         _shareCode = null,
         _ssSign = null,
-        _onStarted = null;
+        _onStarted = null,
+        preloadedWcyData = null,
+        isPreloadingWcy = false,
+        getWcyCalled = false;
 
     function isSafe() {
         return TQ.StageBuffer.isEmpty();
@@ -140,8 +143,30 @@ function WCY($http, FileService, WxService, NetService) {
 
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
         TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
+        if (!preloadedWcyData && !isPreloadingWcy) {
+            $http.get(url)
+                .then(_onReceivedWcyData, _onFail);
+        } else if (preloadedWcyData) {
+            _onReceivedWcyData(preloadedWcyData);
+            preloadedWcyData = null;
+        } else {
+            getWcyCalled = true;
+        }
+    }
+
+    function preloadWcy() {
+        var shareString = TQ.Utility.getShareCodeFromUrl(),
+            url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
+        isPreloadingWcy = true;
         $http.get(url)
-            .then(_onReceivedWcyData, _onFail);
+            .then(function(res){
+                isPreloadingWcy = false;
+                if (getWcyCalled) {
+                    _onReceivedWcyData(res);
+                } else {
+                    preloadedWcyData = res;
+                }
+            }, _onFail);
     }
 
     function wcyId2ShareCode(id) {
@@ -472,6 +497,7 @@ function WCY($http, FileService, WxService, NetService) {
         uploadScreenshot: uploadScreenshot,
         edit: edit,  // open for edit
         getWcy: getWcy,
+        preloadWcy: preloadWcy,
         getWcyById: getWcyById,
         getShareCode: getShareCode,
         getScreenshotUrl: getScreenshotUrl,

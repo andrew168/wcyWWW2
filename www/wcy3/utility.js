@@ -283,6 +283,18 @@ window.TQ = window.TQ || {};
         return request.QueryString(param);
     };
 
+    Utility.getShareCodeFromUrl = function() {
+        var hash = window.location.hash;
+        if (hash) {
+            var params = hash.split('/');
+            if (params.length >=3) {
+                return params[2];
+            }
+        }
+
+        return "";
+    };
+
     Utility.isFbAvailable = function() {
         var host = window.location.host.toLowerCase();
         return (host.indexOf('udoido.cn') < 0);
