@@ -373,7 +373,6 @@ TQ = TQ || {};
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
             var level = self.levels[id];
-            level.resourceReady = true;
             if (level.resourceReady) {
                 self.doTransition(id);
             } else {
@@ -730,6 +729,7 @@ TQ = TQ || {};
                 setTimeout(function() {
                     levelToPreload++;
                     if (levelToPreload < num) {
+                        TQ.RM.onCompleteOnce(onResourceReady);
                         pt.startPreloader(pt, levelToPreload, num);
                     }
                 });
