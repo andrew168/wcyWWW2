@@ -1328,12 +1328,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         //ToDo: （需要去掉page中的tag吗？）
         // "share" 需要page中的tag支持，
         // "feed", 不需要
-
-        if (!screenshotUrl) {
-            screenshotUrl = "https://res.cloudinary.com/eplan/image/upload/v1462412871/c161.jpg"
-        }
-
-
         WCY.createHtmlPage(screenshotUrl).then(doFbShare);
         function doFbShare() {
             FB.ui(
