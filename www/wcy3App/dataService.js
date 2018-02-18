@@ -24,29 +24,17 @@
             workCounter = 0;
 
         //在手机上，图片必须使用相对路径， 不能使用绝对路径！！！
-        var propsLocal = new TQ.DataObject([
-            {name: '道具', path: 'v1462412871/c161.jpg'},
-            {name: '道具', path: 'v1462418136/c162.png'}
-        ]);
+        var propsLocal = new TQ.DataObject();
 
         var propsAlbum = new TQ.DataObject();
 
         var propsCamera = new TQ.DataObject();
 
-        var propsPeople = new TQ.DataObject([
-            {name: '人物', path: 'p12504.png'}
-        ]);
+        var propsPeople = new TQ.DataObject();
 
-        var propsBackground = new TQ.DataObject([
-            {name: '背景1', path: 'p12504.png'},
-            {name: '背景2', path: 'v1453298300/67.jpg'}
-        ]);
+        var propsBackground = new TQ.DataObject();
 
-        var sounds = new TQ.DataObject([
-            {name: '测试声音Clound', path: 'v1465523220/c0.mp3'},
-            {name: '测试声音Clound', path: 'v1465523220/c0.mp3'},
-            {name: '测试声音Clound', path: 'v1465523220/c0.mp3'}
-        ]);
+        var sounds = new TQ.DataObject();
 
         var propsMyWork = new TQ.DataObject();
         var propsMyWork1 = new TQ.DataObject();
