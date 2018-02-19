@@ -686,7 +686,7 @@ TQ = TQ || {};
         this.currentLevelId = objJson.currentLevelId;
         this.currentLevelId = 0; //ToDo: 迫使系统总是打开第一个场景
         this.title = (!objJson.title) ? null : objJson.title;
-        this.tMax = (objJson.tMax === undefined)? this.tMax : objJson.tMax;
+        this.tMax = (objJson.tMax === undefined) ? this.tMax : objJson.tMax;
 
         if (this.title == null) {
             this.title = this.filename;
@@ -710,42 +710,40 @@ TQ = TQ || {};
         }
 
         (function (pt) {
-            //start preloader
-            var levelToPreload = 0;
-            pt.startPreloader(pt, levelToPreload, num);
+                //start preloader
+                var levelToPreload = 0;
+                // 设置each Level的resourceReady标志, and start show
+                TQ.RM.onCompleteOnce(makeOnLevelLoaded(levelToPreload));
+                pt.startPreloader(pt, levelToPreload, num);
+                function makeOnLevelLoaded(levelToPreload) {
+                    return function () {
+                        var level = pt.levels[levelToPreload];
+                        level.resourceReady = true;
+                        TQ.Log.debugInfo("All asset loaded!");
+                        pt.isDirty = true;
+                        setTimeout(function () {
+                            levelToPreload++;
+                            if (levelToPreload < num) {
+                                TQ.RM.onCompleteOnce(makeOnLevelLoaded(levelToPreload));
+                                pt.startPreloader(pt, levelToPreload, num);
+                            }
+                        });
 
-            // 设置each Level的resourceReady标志, and start show
-            if (!TQ.RM.isEmpty) {
-                TQ.RM.onCompleteOnce(onResourceReady);
-            } else {
-                onResourceReady();
-            }
-
-            function onResourceReady() {
-                var level = pt.levels[levelToPreload];
-                level.resourceReady = true;
-                TQ.Log.debugInfo("All asset loaded!");
-                pt.isDirty = true;
-                setTimeout(function() {
-                    levelToPreload++;
-                    if (levelToPreload < num) {
-                        TQ.RM.onCompleteOnce(onResourceReady);
-                        pt.startPreloader(pt, levelToPreload, num);
-                    }
-                });
-
-                if (levelToPreload === 0) {
-                    if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
-                        pt.onsceneload();
-                    }
-                } else {
-                    if (level.onResourceReady) {
-                        level.onResourceReady();
+                        if (levelToPreload === 0) {
+                            if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
+                                pt.onsceneload();
+                            }
+                        } else {
+                            if (level.onResourceReady) {
+                                level.onResourceReady();
+                            }
+                        }
                     }
                 }
             }
-        })(this);
-        displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
+        )
+    (this);
+    displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
     };
 
     p.setEditor = function () {
@@ -774,7 +772,11 @@ TQ = TQ || {};
 
     p.startPreloader = function (pt, i, num) {
         if (i < num) {
-            pt.levels[i].setupPreloader();
+            var level = pt.levels[i];
+            level.setupPreloader();
+            if (TQ.RM.isEmpty) {
+                TQ.RM.onCompleted();
+            }
         }
     };
 

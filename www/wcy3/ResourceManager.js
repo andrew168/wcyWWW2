@@ -110,7 +110,8 @@ this.TQ = this.TQ || {};
             RM.onFileLoad(resID, result, event);
         });
 
-        RM.preloader.addEventListener("complete",  function(event) {
+        RM.preloader.addEventListener("complete", onCompleted);
+        function onCompleted(event) {
             // 下载没有完成， 但是预加载的已经完成了。
             if (!TQ.DownloadManager.hasCompleted()) {
                 return;
@@ -118,13 +119,14 @@ this.TQ = this.TQ || {};
             TQ.Log.info(event.toString());
             RM.dataReady = true;
             var num = RM.completeOnceHandlers.length; // 防止动态添加的函数
-            for (; num > 0; num --) {
+            for (; num > 0; num--) {
                 var handler = RM.completeOnceHandlers.shift();
                 handler(event);
             }
             RM.isEmpty = true;
-        });
+        }
 
+        RM.preloader.onCompleted = onCompleted;
         RM.preloader.addEventListener("error",  function(event) {
             var item = event.data;
             assertTrue("缺少系统文件",
