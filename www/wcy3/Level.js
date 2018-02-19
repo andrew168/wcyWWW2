@@ -473,7 +473,9 @@ window.TQ = window.TQ || {};
             (this.state === TQBase.LevelState.EDITING) ||
             (this.state === TQBase.LevelState.EXIT)) {
 			 //后续场景loaded是通过RM完成的， 所以可能还是INITING状态
-            this.setupTimer();
+            if (!this.isOverlay()) {
+                this.setupTimer();
+            }
             // add all item to stage
             this.addAllItems();
             this.update(this._t);
@@ -540,7 +542,7 @@ window.TQ = window.TQ || {};
     p.updateState = function () {
       // TQ.Log.info("update state");
       if (this.state <= TQBase.LevelState.INITING) {
-        if (this.resourceReady || TQ.RM.isEmpty){
+        if (this.resourceReady){
           this.onLoaded();
         }
       }

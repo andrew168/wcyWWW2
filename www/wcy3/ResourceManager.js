@@ -112,6 +112,9 @@ this.TQ = this.TQ || {};
 
         RM.preloader.addEventListener("complete", onCompleted);
         function onCompleted(event) {
+            if (!event) {
+                event = {};
+            }
             // 下载没有完成， 但是预加载的已经完成了。
             if (!TQ.DownloadManager.hasCompleted()) {
                 return;
@@ -126,7 +129,7 @@ this.TQ = this.TQ || {};
             RM.isEmpty = true;
         }
 
-        RM.preloader.onCompleted = onCompleted;
+        RM.onCompleted = onCompleted;
         RM.preloader.addEventListener("error",  function(event) {
             var item = event.data;
             assertTrue("缺少系统文件",

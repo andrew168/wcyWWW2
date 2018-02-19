@@ -2,6 +2,7 @@ TQ = TQ || {};
 (function () {
 
     var self;
+
     function Scene() {
         self = this;
         this.levels = [];
@@ -12,6 +13,7 @@ TQ = TQ || {};
         this.isDirty = true;
         this.tMax = 0;
     }
+
     Scene.EVENT_READY = "sceneReady";
     Scene.EVENT_SAVED = "sceneSaved";
     Scene.EVENT_END_OF_PLAY = "end_of_Play";
@@ -21,7 +23,7 @@ TQ = TQ || {};
     Scene.VER3_1 = 3.1; // 采用指定分辨率的世界坐标系(以像素为单位)， 替代归一化世界坐标系
     Scene.VER3_3 = 3.3; // designated区域 大于1*1
     Scene.VER_LATEST = Scene.VER3_3;
-    var stateStack= [];
+    var stateStack = [];
     var p = Scene.prototype;
     var _levelTs = [],
         _levelTe = [];
@@ -51,7 +53,7 @@ TQ = TQ || {};
     Scene.restoreState = restoreState;
 
     function saveState() {
-        stateStack.push({tT:Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
+        stateStack.push({tT: Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
     }
 
     function restoreState() {
@@ -104,7 +106,7 @@ TQ = TQ || {};
     // 这是scene的主控程序
     var isStarted = false;
 
-    p.start = function() {
+    p.start = function () {
         requestAnimationFrame(function () {
             if (isStarted) {
                 self.onTick();
@@ -355,7 +357,7 @@ TQ = TQ || {};
         }
     };
 
-    p.isEmpty = function() {
+    p.isEmpty = function () {
         return (this.levelNum() <= 2 && this.currentLevel && this.currentLevel.isEmpty());
     };
 
@@ -376,14 +378,14 @@ TQ = TQ || {};
             if (level.resourceReady) {
                 self.doTransition(id);
             } else {
-                level.onResourceReady = function() {
+                level.onResourceReady = function () {
                     self.doTransition(id);
                 }
             }
         }
     };
 
-    p.doTransition = function(id) {
+    p.doTransition = function (id) {
         TQ.FloatToolbar.close();
         if (this.currentLevelId !== id) {
             if (TQ.PageTransition && (this.currentLevelId >= 0)) {
@@ -405,7 +407,7 @@ TQ = TQ || {};
     };
 
     p.open = function (fileInfo) {
-        p.isPlayOnly = (fileInfo.isPlayOnly === undefined)? false : fileInfo.isPlayOnly;
+        p.isPlayOnly = (fileInfo.isPlayOnly === undefined) ? false : fileInfo.isPlayOnly;
         TQ.MessageBox.showWaiting(TQ.Locale.getStr('prepare to open...'));
         this.reset();
         this.setFilename(fileInfo.filename);
@@ -415,7 +417,7 @@ TQ = TQ || {};
         function onOpened() {
             self.showLevel();
             TQ.MessageBox.hide();
-            setTimeout(function() {
+            setTimeout(function () {
                 if (!isStarted) {
                     self.start();
                     isStarted = true;
@@ -474,7 +476,7 @@ TQ = TQ || {};
         }
     };
 
-    p.setDesignatedSize = function(region) {
+    p.setDesignatedSize = function (region) {
         this.designatedWidth = region.w;
         this.designatedHeight = region.h;
         TQ.Config.snapDX = this.designatedWidth / 20;
@@ -482,7 +484,7 @@ TQ = TQ || {};
         TQ.Config.FONT_LEVEL_UNIT = Math.min(this.designatedWidth, this.designatedHeight) / 30;
     };
 
-    p.getDesignatedWidth = function() {
+    p.getDesignatedWidth = function () {
         return this.designatedWidth;
     };
 
@@ -560,7 +562,7 @@ TQ = TQ || {};
         var deleted = this.levels.splice(id, 1);
 
         if (this.currentLevelId > id) {
-            this.currentLevelId --;
+            this.currentLevelId--;
         }
         return deleted;
     };
@@ -713,19 +715,20 @@ TQ = TQ || {};
                 //start preloader
                 var levelToPreload = 0;
                 // 设置each Level的resourceReady标志, and start show
-                TQ.RM.onCompleteOnce(makeOnLevelLoaded(levelToPreload));
-                pt.startPreloader(pt, levelToPreload, num);
-                function makeOnLevelLoaded(levelToPreload) {
+                var level3 = (levelToPreload === num) ? pt.overlay : pt.levels[levelToPreload];
+                TQ.RM.onCompleteOnce(makeOnLevelLoaded(level3, levelToPreload));
+                pt.startPreloader(level3);
+                function makeOnLevelLoaded(level, levelToPreload) {
                     return function () {
-                        var level = pt.levels[levelToPreload];
                         level.resourceReady = true;
                         TQ.Log.debugInfo("All asset loaded!");
                         pt.isDirty = true;
                         setTimeout(function () {
                             levelToPreload++;
-                            if (levelToPreload < num) {
-                                TQ.RM.onCompleteOnce(makeOnLevelLoaded(levelToPreload));
-                                pt.startPreloader(pt, levelToPreload, num);
+                            if (levelToPreload <= num) {
+                                var level2 = (levelToPreload === num) ? pt.overlay : pt.levels[levelToPreload];
+                                TQ.RM.onCompleteOnce(makeOnLevelLoaded(level2, levelToPreload));
+                                pt.startPreloader(level2);
                             }
                         });
 
@@ -740,10 +743,9 @@ TQ = TQ || {};
                         }
                     }
                 }
-            }
-        )
-    (this);
-    displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
+            })
+        (this);
+        displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
     };
 
     p.setEditor = function () {
@@ -770,13 +772,12 @@ TQ = TQ || {};
         }
     };
 
-    p.startPreloader = function (pt, i, num) {
-        if (i < num) {
-            var level = pt.levels[i];
+    p.startPreloader = function (level) {
+        if (level) {
             level.setupPreloader();
-            if (TQ.RM.isEmpty) {
-                TQ.RM.onCompleted();
-            }
+        }
+        if (TQ.RM.isEmpty) {
+            TQ.RM.onCompleted();
         }
     };
 
