@@ -319,6 +319,7 @@ window.TQ = window.TQ || {};
     };
 
     p.onLoaded = function () {
+        this.resourceReady = true; // 适应于新建立的level， 他们没有元素，直接ready
         this.state = TQBase.LevelState.LOADED;
         this.build();  // 从Resource 到 canvas
         if (this.isActive() && !this.isOverlay()) {
