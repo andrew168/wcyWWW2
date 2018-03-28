@@ -408,7 +408,7 @@ TQ = TQ || {};
 
     p.open = function (fileInfo) {
         p.isPlayOnly = (fileInfo.isPlayOnly === undefined) ? false : fileInfo.isPlayOnly;
-        TQ.MessageBox.showWaiting(TQ.Locale.getStr('prepare to open...'));
+        // TQ.MessageBox.showWaiting(TQ.Locale.getStr('prepare to open...'));
         this.reset();
         this.setFilename(fileInfo.filename);
         this.screenshotName = fileInfo.screenshotName;
@@ -608,7 +608,7 @@ TQ = TQ || {};
 
     // JQuery Ajax version
     p.loadFromJson = function (filename, alias) {
-        TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
+        // TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
         (function (pt) {
             netOpen(filename, function (jqResponse) {
                 pt._jsonStrToScene(pt, jqResponse, alias);

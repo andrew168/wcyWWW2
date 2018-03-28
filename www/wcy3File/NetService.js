@@ -200,7 +200,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     var createMatId = function (option) {
         if (!option.useBackgroundMode) {
-            TQ.MessageBox.showWaiting(TQ.Locale.getStr('get material ID...'));
+            // TQ.MessageBox.showWaiting(TQ.Locale.getStr('get material ID...'));
         }
         return $http.post(C_MAN_URL, angular.toJson(option));
     };

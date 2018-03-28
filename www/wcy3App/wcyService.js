@@ -142,7 +142,7 @@ function WCY($http, FileService, WxService, NetService) {
         }
 
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
-        TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
+        // TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
         if (!preloadedWcyData && !isPreloadingWcy) {
             $http.get(url)
                 .then(_onReceivedWcyData, _onFail);
