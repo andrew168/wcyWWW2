@@ -9,6 +9,7 @@ var express = require('express'),
     status = require('../common/status'),
     netCommon = require('../common/netCommonFunc'),
     fs = require('fs'),
+    serverConfig = require('./../bin/serverConfig'),
     opusController = require('../db/opus/opusController'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
     authHelper = require('./authHelper'),
@@ -17,7 +18,9 @@ var express = require('express'),
     FB_PAGE_ROOT = 'http://www.udoido.cn/opus'; // fs的当前目录是服务器的根目录
 
 var defaultWcyData = '{"levels":[{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true}],"version":"V2","isDirty":false,"filename":"wcy01","title":"wcy01","currentLevelId":0,"alias":"gameScene","remote":true,"isPreloading":false,"overlay":{"elements":[],"FPS":20,"tMaxFrame":200,"_t":0,"name":"overlay","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false},"currentLevel":{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true},"stage":null}';
-
+if (serverConfig.isDevEnv) {
+    FB_PAGE_DEPOT = '../www/opus';
+}
 // 定义RESTFull API（路径）中的参数， 形参
 router.param('shareCode', function (req, res, next, id) {
     next();
