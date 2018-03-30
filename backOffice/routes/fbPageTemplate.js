@@ -1,7 +1,9 @@
 /**
  * Created by Andrewz on 11/27/17.
  */
-var fs = require('fs');
+var fs = require('fs'),
+    serverConfig = require('./../bin/serverConfig');
+
 var fbPage = null;
 var $PAGE_URL = 'http://www.udoido.cn/opus/0_839_9749_1511749528598.html',
     $SAP_URL = 'http://www.udoido.com/#/opus/0_839_9749_1511749528598.html',
@@ -17,7 +19,11 @@ var $PAGE_URL = 'http://www.udoido.cn/opus/0_839_9749_1511749528598.html',
 function init() {
     // !!! fs 的当前目录是服务器的根,
     // !!!而require的当前目录是本js文件所在的目录
-    fs.readFile("/data/wwwz/card2/backoffice/resource/fbPageTemplate.html", 'utf8', onDataReady);
+    var templateFile = '/data/wwwz/card2/backoffice/resource/fbPageTemplate.html';
+    if (serverConfig.isDevEnv) {
+        templateFile = "./resource/fbPageTemplate.html";
+    }
+    fs.readFile(templateFile, 'utf8', onDataReady);
     function onDataReady(err, data) {
         if (err ) {
             console.log(err);
