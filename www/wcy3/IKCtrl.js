@@ -151,7 +151,7 @@ window.TQ = window.TQ || {};
         angle = applyLimitation(child, child.jsonObj.rotation + angle);
         TQ.CommandMgr.directDo(new TQ.RotateCommand(child, angle));
         child.update(TQ.FrameCounter.t()); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
-        TQ.Log.info("ele.id " + child.id + ": angle = " + angle);
+        TQ.Log.info("IKRotate ele.id " + child.id + " @ angle = " + angle);
         TQ.DirtyFlag.setElement(child);
     }
 
@@ -164,10 +164,8 @@ window.TQ = window.TQ || {};
             return;
         }
 
-        var rDeviceX = ev.stageX;
-        var rDeviceY = ev.stageY;
-        var A = element.dc2World({x:rDeviceX, y:rDeviceY});
-        if (offset.firstTime == true) {
+        var A = element.dc2World(TQ.Utility.eventToDevice(ev));
+        if (offset.firstTime) {
           EObj = determineE(element, offset, ev);
           offset.firstTime = false;
         }
@@ -181,12 +179,12 @@ window.TQ = window.TQ || {};
                 return TQ.Log.debugInfo("achieved");
             }
         }
-    };
+    }
 
     function determineE(element, offset, ev) {
         // 求E点在element元素物体空间的坐标
         // 设备坐标 --》 世界坐标 --》 物体坐标。
-        var eDevice = {x: ev.stageX, y: ev.stageY},
+        var eDevice = TQ.Utility.eventToDevice(ev),
             eWorld = element.dc2World(eDevice);
         return element.world2Object(eWorld);
     }
