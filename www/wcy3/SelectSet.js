@@ -472,9 +472,8 @@ TQ = TQ || {};
             if (ele.isEditable()) {
                 if (TQ.Config.useMarkerOn) {
                     ele.attachMarker();
-                } else {
-                    TQ.BBox.attachTo(ele);
                 }
+                TQ.BBox.attachTo(ele);
             }
         }
     };
