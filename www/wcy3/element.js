@@ -1344,7 +1344,7 @@ window.TQ = window.TQ || {};
     };
 
     p.toJSON = function () {
-        if (!this.jsonObj) {
+        if (!this.jsonObj || !this.canSave()) {
             return null;
         }
         this.highlight(false);
@@ -1390,7 +1390,7 @@ window.TQ = window.TQ || {};
     };
 
     p.afterToJSON = function () {
-        if (!this.isEditable()) {
+        if (!this.isEditable() || !this.canSave()) {
             return;
         }
         var data = this.jsonData;
@@ -2080,6 +2080,10 @@ window.TQ = window.TQ || {};
     };
 
     p.isEditable = function() {
+        return true;
+    };
+
+    p.canSave = function () {
         return true;
     };
 

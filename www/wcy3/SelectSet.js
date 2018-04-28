@@ -216,13 +216,20 @@ TQ = TQ || {};
         });
     }
 
+    var oldStatue = {};
     function multiCmdJointIt() {
+
         return multiCmd(jointIt, {
             cmdBefore: function () {
+                oldStatue.inSubobjectMode = TQ.InputCtrl.inSubobjectMode;
+                oldStatue.useMarkerOn = TQ.Config.useMarkerOn;
+                TQ.Config.useMarkerOn = true;
                 TQ.InputCtrl.inSubobjectMode = true;
                 btnEffect.joint = "effect-working";
             },
             cmdAfter: function () {
+                TQ.InputCtrl.inSubobjectMode = oldStatue.inSubobjectMode;
+                TQ.Config.useMarkerOn = oldStatue.useMarkerOn;
                 btnEffect.joint = null;
             }
         });

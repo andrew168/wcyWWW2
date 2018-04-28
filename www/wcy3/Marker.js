@@ -151,6 +151,10 @@ TQ = TQ || {};
     };
 
     p.isEditable = function () {
+        return !!TQ.InputCtrl.inSubobjectMode;
+    };
+
+    p.canSave = function () {
         return false;
     };
 
