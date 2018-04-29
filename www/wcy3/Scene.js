@@ -166,7 +166,7 @@ TQ = TQ || {};
                 if (this.isLastLevel()) {
                     if (!TQ.FrameCounter.isAutoRewind()) {
                         this.stop();
-                        TQ.Log.checkPoint(Scene.EVENT_END_OF_PLAY + ' (event)');
+                        TQ.Log.checkPoint('Scene.EVENT_END_OF_PLAY');
                         TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_END_OF_PLAY);
                     } else if (!TQ.FrameCounter.isInverse()) {
                         this.doReplay();
