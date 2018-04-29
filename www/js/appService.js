@@ -62,7 +62,10 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 onFileSystemReady();
             }
             TQ.Log.checkPoint('file system ready');
-            TQ.Locale.initialize();
+            if (!TQ.Env || !TQ.Env.lang) {
+                TQ.Log.error('must setup default language!');
+            }
+            TQ.Locale.initialize(TQ.Env.lang);
             if (_state < STATE_STARTING) { // 由于autoLogin的影响， 可能此段函数被滞后了。
                 _state = STATE_STARTING
             }

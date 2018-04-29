@@ -39,8 +39,11 @@ TQ.Locale = (function () {
         return dict[tag] || tag;
     }
 
-    function initialize() {
-        setLang(defaultLang); // 不能立即用， 因为angular的模块尚未inject
+    function initialize(lang) {
+        if (!lang) {
+            lang = defaultLang;
+        }
+        setLang(lang); // 不能立即用， 因为angular的模块尚未inject
     }
 
     return self;
