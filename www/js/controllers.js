@@ -393,6 +393,10 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         return TQ.Locale.setLang(lang);
     };
 
+    $scope.$on(TQ.Scene.EVENT_END_OF_PLAY, function () {
+        EditorService.toAddMode()
+    });
+
     function testDataService() {
         DataService.initialize();
         DataService.getProps(10);

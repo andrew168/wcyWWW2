@@ -213,7 +213,7 @@
         function onDataReady() {
             propsMyWork1 = readCacheWithParse(MY_WORKS, []);
             workCounter = readCacheWithParse("workCounter", 0);
-            TQ.Log.checkPoint('event: ' + EVENT_DATA_READY);
+            TQ.Log.checkPoint('DataService.EVENT_DATA_READY');
             $rootScope.$broadcast(EVENT_DATA_READY);
         }
 
