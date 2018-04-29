@@ -326,16 +326,16 @@ window.TQ = window.TQ || {};
             this.setupTimer2();
         }
 
+        TQ.Log.checkPoint("onLoaded level:  " + this.name);
         if (this.isWaitingForShow) {
           this.isWaitingForShow = false;
-          TQ.Log.info("onLoaded" + this.name);
           this.doShow();
         }
         TQ.DirtyFlag.setLevel(this);
     };
 
     p.doShow = function () {
-        TQ.Log.info("doShow level, name = :" + this.name);
+        TQ.Log.checkPoint("doShow level: " + this.name);
         if (this.dataReady) {
             TQ.Log.info("data ready");
             this.onLevelCreated();
@@ -346,7 +346,7 @@ window.TQ = window.TQ || {};
     };
 
     p.show = function () {
-        TQ.Log.info("show level, name = :" + this.name);
+        TQ.Log.checkPoint("ask to show level: " + this.name);
         if (this.dataReady) {
             this.doShow();
         } else {

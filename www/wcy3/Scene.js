@@ -232,7 +232,7 @@ TQ = TQ || {};
         TQ.MessageBox.hide();
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNum()); //level ID 超界
         this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
-        TQ.Log.debugInfo("entering level " + this.currentLevelId);
+        TQ.Log.checkPoint("entering level " + this.currentLevelId);
         this.selectLevel(this.currentLevelId);
         this.currentLevel.show();
         this.isDirty = true;
@@ -416,7 +416,7 @@ TQ = TQ || {};
         this.title = null;
         // 删除 旧的Levels。
         function onOpened() {
-            TQ.Log.checkPoint('scene opened at least level 1');
+            TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);
             self.showLevel();
             TQ.MessageBox.hide();
             setTimeout(function () {
