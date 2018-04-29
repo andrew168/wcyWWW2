@@ -6,10 +6,12 @@ TQ.Locale = (function () {
     "use strict";
     var defaultLang = 'en',
         currentLang = null,
+        fondNewTag = false,
         dict = {},
         self = {
             getStr: getStr,
             initialize: initialize,
+            output: output,
             setLang: setLang
         };
 
@@ -36,7 +38,17 @@ TQ.Locale = (function () {
 
     function getStr(tag) {
         TQ.AssertExt.isNotNull(dict);
-        return dict[tag] || tag;
+        if (!dict[tag]) {
+            dict[tag] = tag2String(tag);
+            console.error("need translation: " + tag);
+            fondNewTag = true;
+        }
+
+        return dict[tag];
+    }
+
+    function tag2String(tag) {
+        return tag.replace(/-/g, ' ');
     }
 
     function initialize(lang) {
@@ -44,6 +56,14 @@ TQ.Locale = (function () {
             lang = defaultLang;
         }
         setLang(lang); // 不能立即用， 因为angular的模块尚未inject
+    }
+
+    function output() {
+        if (!fondNewTag) {
+            console.log('new new tag found!');
+        } else {
+            console.log(JSON.stringify(dict));
+        }
     }
 
     return self;
