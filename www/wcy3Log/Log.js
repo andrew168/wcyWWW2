@@ -17,6 +17,7 @@ TQ.Log = (function () {
         upgrade: upgrade,
         alertInfo: alertInfo,
         alertError: alertError,
+        checkPoint: checkPoint,
         matrixDebugInfo: matrixDebugInfo,
         tsrDebugInfo: tsrDebugInfo,
         debugInfo: debugInfo,
@@ -107,6 +108,12 @@ TQ.Log = (function () {
         if (logLevel >= self.INFO_LEVEL) {
             debugInfo(msg + "matrix translation: " + m.elements[0][2].toFixed(3) + ", " +
                 m.elements[1][2].toFixed(3) + " " + m.elements[2][2].toFixed(3));
+        }
+    }
+
+    function checkPoint(msg) {
+        if (logLevel >= self.INFO_LEVEL) {
+            debugInfo("checkpoint: " + msg);
         }
     }
 

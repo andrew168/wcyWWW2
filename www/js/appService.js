@@ -61,7 +61,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             } else {
                 onFileSystemReady();
             }
-
+            TQ.Log.checkPoint('file system ready');
             TQ.Locale.initialize();
             if (_state < STATE_STARTING) { // 由于autoLogin的影响， 可能此段函数被滞后了。
                 _state = STATE_STARTING
