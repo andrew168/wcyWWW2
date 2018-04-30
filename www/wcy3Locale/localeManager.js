@@ -7,6 +7,7 @@ TQ.Locale = (function () {
     var defaultLang = 'en',
         currentLang = null,
         fondNewTag = false,
+        dataReady = false,
         dict = {},
         self = {
             getStr: getStr,
@@ -32,11 +33,16 @@ TQ.Locale = (function () {
             var data = (response.status === 200) ? response.data : [];
             if (typeof data === 'object') {
                 dict = data;
+                dataReady = true;
             }
         });
     }
 
     function getStr(tag) {
+        if (!tag || !dataReady) { // null字串， 或者locale尚未初始化
+            return tag;
+        }
+
         TQ.AssertExt.isNotNull(dict);
         if (!dict[tag]) {
             dict[tag] = tag2String(tag);
