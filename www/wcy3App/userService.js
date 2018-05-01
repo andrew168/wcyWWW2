@@ -95,7 +95,7 @@ function UserService($http, $auth) {
             user.canApprove = data.canApprove;
             user.canBan = data.canBan;
             user.canRefine = data.canRefine;
-            TQ.Log.debugInfo("login successfully!  welcome "+ user.displayName + ", " + user.name);
+            TQ.Log.checkPoint("login successfully!  welcome "+ user.displayName + ", " + user.name);
         } else {
             onGetProfileFailed(netPkg);
         }

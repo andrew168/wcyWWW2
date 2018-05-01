@@ -155,6 +155,10 @@ TQ = TQ || {};
         return false;
     };
 
+    p.canSave = function () {
+        return false;
+    };
+
     p.getWidth = function () {
         return (this.jsonObj.bbox.w);
     };

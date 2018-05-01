@@ -231,8 +231,9 @@ window.TQ = window.TQ || {};
         return TQ.Config.workingRegionHeight - canvasY;
     };
 
-    Utility.toWorldCoordX = function (deviceX) {
-        return TQ.Config.workingRegionX0 + deviceX;
+    Utility.eventToDevice = function (evt) {
+        // 因为UDOIDO没有的工作区画布只占用一部分，所有需要从浏览器的stageX,Y坐标转为工作区的device坐标
+        return {x: evt.stageX - TQ.Config.workingRegionX0, y: evt.stageY - TQ.Config.workingRegionY0};
     };
 
     Utility.canvas2WindowX = function(x)

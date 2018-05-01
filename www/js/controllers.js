@@ -52,6 +52,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
 
     function onAppStarted() {
         //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
+        TQ.Log.checkPoint("App Started");
         var opus = $stateParams.shareCode || TQ.Utility.getUrlParam('opus');
         EditorService.initialize();
         if (opus) {
@@ -170,8 +171,9 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertProp = function() {
-        EditorService.insertPropImage("https://res.cloudinary.com/eplan/image/upload/v1509928224/c67.png",
-        300, 300);
+        // var prop = "https://res.cloudinary.com/eplan/image/upload/v1509928224/c67.png";
+        var prop = "https://res.cloudinary.com/eplan/image/upload/v1524949173/c2292.png";
+        EditorService.insertPropImage(prop, 300, 300);
     };
 
     $scope.insertPeople = function () {
@@ -390,6 +392,10 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     $scope.setLang = function (lang) {
         return TQ.Locale.setLang(lang);
     };
+
+    $scope.$on(TQ.Scene.EVENT_END_OF_PLAY, function () {
+        EditorService.toAddMode()
+    });
 
     function testDataService() {
         DataService.initialize();

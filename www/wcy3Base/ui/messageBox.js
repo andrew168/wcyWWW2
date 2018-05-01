@@ -121,9 +121,9 @@ TQ.MessageBox = (function () {
         // {content: msg, onOk: onOk, onCancel: onCancel, duration: duration}
         var buttons = [],
             vexOptions = {
-                message: options.content,
+                message: TQ.Locale.getStr(options.content),
                 showCloseButton: !!options.showCloseButton,
-                unsafeMessage: options.unsafeMessage,
+                unsafeMessage: TQ.Locale.getStr(options.unsafeMessage),
                 overlayClosesOnClick: !!options.overlayClosesOnClick,
                 className: getClassName(options),
                 callback: function (value) {

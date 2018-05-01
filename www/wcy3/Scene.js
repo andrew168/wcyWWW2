@@ -166,6 +166,7 @@ TQ = TQ || {};
                 if (this.isLastLevel()) {
                     if (!TQ.FrameCounter.isAutoRewind()) {
                         this.stop();
+                        TQ.Log.checkPoint('Scene.EVENT_END_OF_PLAY');
                         TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_END_OF_PLAY);
                     } else if (!TQ.FrameCounter.isInverse()) {
                         this.doReplay();
@@ -231,7 +232,7 @@ TQ = TQ || {};
         TQ.MessageBox.hide();
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNum()); //level ID 超界
         this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
-        TQ.Log.debugInfo("entering level " + this.currentLevelId);
+        TQ.Log.checkPoint("entering level " + this.currentLevelId);
         this.selectLevel(this.currentLevelId);
         this.currentLevel.show();
         this.isDirty = true;
@@ -415,6 +416,7 @@ TQ = TQ || {};
         this.title = null;
         // 删除 旧的Levels。
         function onOpened() {
+            TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);
             self.showLevel();
             TQ.MessageBox.hide();
             setTimeout(function () {
@@ -721,7 +723,7 @@ TQ = TQ || {};
                 function makeOnLevelLoaded(level, levelToPreload) {
                     return function () {
                         level.resourceReady = true;
-                        TQ.Log.debugInfo("All asset loaded!");
+                        TQ.Log.checkPoint("level asset loaded: " + level.name);
                         pt.isDirty = true;
                         setTimeout(function () {
                             levelToPreload++;

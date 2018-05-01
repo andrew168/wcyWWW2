@@ -24,10 +24,13 @@ window.TQ = window.TQ || {};
 
     var p = TextElement.prototype = new TQ.Element(null, null);
     p.parent_detachDecoration = p.detachDecoration;
+    p.parent_attachMarker = p.attachMarker;
     p.attachMarker = function () {
         var bubble = this.getTextBubble();
         if (bubble) {
             return bubble.attachAnchorMarker();
+        } else {
+            this.parent_attachMarker();
         }
     };
 
@@ -183,9 +186,12 @@ window.TQ = window.TQ || {};
         if (!desc.color)  desc.color = TQ.Config.color;
         return this.parent_fillGap(desc);
     };
-
+    p.parent_onMoveMarker = p.onMoveMarker;
     p.onMoveMarker = function(marker, ptWorld) { // keep anchor's position in world
-        //ToDo: 文本的pivot 与bubble对不上号
+        var bubble = this.getTextBubble();
+        if (!bubble) {//没有bubble的时候，可以修改text的pivot
+           this.parent_onMoveMarker(marker, ptWorld);
+        }
     };
 
     p.autoFit = function() {
