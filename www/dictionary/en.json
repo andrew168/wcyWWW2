@@ -109,5 +109,16 @@
   "How to hide/un-hide an element?": "How to hide/un hide an element?",
   "How to add new page": "How to add new page",
   "How to create a new opus for facebook, desktop or mobile?": "How to create a new opus for facebook, desktop or mobile?",
-  "You have no opus to show now. <br/> Click OK will open the <strong>\"Quick start\"</strong> tutorial, which will help you get up to speed": "You have no opus to show now. <br/> Click OK will open the <strong>\"Quick start\"</strong> tutorial, which will help you get up to speed"
+  "You have no opus to show now. <br/> Click OK will open the <strong>\"Quick start\"</strong> tutorial, which will help you get up to speed": "You have no opus to show now. <br/> Click OK will open the <strong>\"Quick start\"</strong> tutorial, which will help you get up to speed",
+  "OK": "OK",
+  "Cancel": "Cancel",
+  "8+-characters-and-numbers": "8+ characters and numbers",
+  "it's-invalid-or-already-taken": "it's invalid or already taken",
+  "invalid-user-name-or-password": "invalid user name or password",
+  "By-clicking": "By clicking",
+  "you agree": "you agree",
+  "our terms of service": "our terms of service",
+  "privacy policy": "privacy policy",
+  "We’ll occasionally send you account related emails": "We’ll occasionally send you account related emails",
+  "Sign-in-with": "Sign in with"
 }

@@ -165,5 +165,14 @@
   "Click OK to start play": "点击'开始'按钮开始播放",
   "OK": "确定",
   "Cancel": "取消",
-  "You have no opus to show now. <br/> Click OK will open the <strong>\"Quick start\"</strong> tutorial, which will help you get up to speed": "<br/>点击<strong>确定</strong> 按钮打开<strong>\"快速上手\"</strong> 指南，创作第一个作品"
+  "You have no opus to show now. <br/> Click OK will open the <strong>\"Quick start\"</strong> tutorial, which will help you get up to speed": "<br/>点击<strong>确定</strong> 按钮打开<strong>\"快速上手\"</strong> 指南，创作第一个作品",
+  "8+-characters-and-numbers": "8个以上的数字或字母",
+  "it's-invalid-or-already-taken": "用户名无效或已经被占用",
+  "invalid-user-name-or-password": "无效的用户名或口令",
+  "By-clicking": "点击",
+  "you agree": "你同意",
+  "our terms of service": "服务条款",
+  "privacy policy": "隐私政策",
+  "We’ll occasionally send you account related emails": "我们偶尔会email你关于你账号的信息",
+  "Sign-in-with": "登录通过"
 }
