@@ -26,22 +26,27 @@ var TQ = TQ || {};
 
     function determineWorkingRegion() {
         // top bar的min-height是 11vmin
-        var buttonELe = document.getElementById('id-delete');
-
-        if (!buttonELe) {
-            buttonELe = document.getElementsByClassName("button")[0];
-        }
-
-        if (buttonELe) {
-            State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(buttonELe).height);
-        }
-
-        if (isNaN(State.buttonHeight) || !buttonELe) {
-            State.buttonHeight = Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth));
+        var topBarEle = document.getElementById('id_top_bar'),
+            bottomBarEle = document.getElementById('id_bottom_bar'),
+            buttonEle;
+        if (!topBarEle && !bottomBarEle) {
+            buttonEle = document.getElementById('id-delete');
+            if (!buttonEle) {
+                buttonEle = document.getElementsByClassName("button")[0];
+            }
+            if (buttonEle) {
+                State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(buttonEle).height);
+            }
+            if (isNaN(State.buttonHeight) || !buttonEle) {
+                State.buttonHeight = Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth));
+            }
+        } else {
+            State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(topBarEle).height);
+            State.bottomBarHeight = TQ.Utility.getCssSize(window.getComputedStyle(bottomBarEle).height);
         }
 
         var topBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight,
-            bottomBarHeight = topBarHeight,
+            bottomBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.bottomBarHeight,
             h = State.innerHeight - topBarHeight - bottomBarHeight,
             w = State.innerWidth,
             designated = !currScene ? TQ.Scene.getDesignatedRegionDefault() : currScene.getDesignatedRegion();
