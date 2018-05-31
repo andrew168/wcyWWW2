@@ -613,7 +613,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function gotoLevel(id) {
         if (state.isAddMode || state.isModifyMode) {
             if (currScene && currScene.currentLevelId >=0) {
-                levelThumbs[currScene.currentLevelId] = TQ.ScreenShot.getThumbnail();
+                TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
             }
         }
         if (typeof id  === 'string') {

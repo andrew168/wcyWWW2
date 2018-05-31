@@ -31,11 +31,13 @@ window.TQ = window.TQ || {};
         return takeImage();
     };
 
-    ScreenShot.getThumbnail = function () {
+    ScreenShot.saveThumbnail = function (album, id) {
         var img = new Image();
+        img.onload = function () {
+            imageResize(album, id, img, 100, 100);
+        };
+
         img.src = takeImage();
-        imageResize(img, 100, 100);
-        return img;
     };
 
     ScreenShot.getDataWithBkgColor = function() {
@@ -74,7 +76,7 @@ window.TQ = window.TQ || {};
         return scale;
     }
 
-    function imageResize(img, maxWidth, maxHeight) {
+    function imageResize(album, id, img, maxWidth, maxHeight) {
         var scale = determineScale(img, maxWidth, maxHeight),
             ctx,
             neededHeight = Math.round(img.height * scale / 8) * 8,
@@ -90,8 +92,7 @@ window.TQ = window.TQ || {};
         ctx = canvasTemp.getContext("2d");
         var xc = 0, yc = 0;
         ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
-        img.src = canvasTemp.toDataURL("image/png");
-        return img;
+        album[id] = canvasTemp.toDataURL("image/png");
     }
 
     // ToDo: 支持GIF,
