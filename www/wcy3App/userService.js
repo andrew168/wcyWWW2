@@ -17,6 +17,11 @@ function UserService($http, $auth) {
         return getProfile();
     }
 
+    function tryAutoSignUp() {
+        var name = 'guest' + (new Date()).getTime();
+        return signUp(name, name, name);
+    }
+
     function login(name, psw) {
         return $auth.login({email: name.toLowerCase(), password: psw}).
             then(getProfile).
@@ -131,6 +136,7 @@ function UserService($http, $auth) {
         authenticate: authenticate,
         canAutoLogin: canAutoLogin,
         tryAutoLogin: tryAutoLogin,
+        tryAutoSignUp: tryAutoSignUp,
         checkName: checkName,
         getProfile: getProfile,
         getUserList: getUserList,

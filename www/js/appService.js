@@ -33,7 +33,8 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         if (UserService.canAutoLogin()) {
             UserService.tryAutoLogin().then(doInit);
         } else {
-            doInit();
+            UserService.tryAutoSignUp().then(doInit);
+            // doInit();
         }
     }
 
