@@ -15,7 +15,15 @@ var TQ = TQ || {};
     function State() {
     }
 
-    State.isPlayOnly = true; // 阻止显示菜单， 直到确认是edit状态
+    Object.defineProperty(State, 'isPlayOnly', {
+        get: function () {
+            return TQ.WCY.isPlayOnly;
+        },
+        set: function (x) {
+            TQ.WCY.isPlayOnly = x;
+        }
+    });
+
     State.innerWidth = window.innerWidth;
     State.innerHeight = window.innerHeight;
     State.bottomBarHeight = 0;
