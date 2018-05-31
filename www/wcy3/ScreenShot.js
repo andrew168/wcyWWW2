@@ -31,6 +31,13 @@ window.TQ = window.TQ || {};
         return takeImage();
     };
 
+    ScreenShot.getThumbnail = function () {
+        var img = new Image();
+        img.src = takeImage();
+        imageResize(img, 100, 100);
+        return img;
+    };
+
     ScreenShot.getDataWithBkgColor = function() {
         return takeImage(TQ.Graphics.getCanvasBkgColor());
     };
@@ -53,6 +60,39 @@ window.TQ = window.TQ || {};
             }
         });
     };
+
+    function determineScale(img, maxWidth, maxHeight) {//只缩小， 不放大
+        var scale = 1;
+
+        if (img.height > maxHeight) {
+            scale = Math.min(1, maxHeight / img.height);
+        }
+
+        if (img.width > maxWidth) {
+            scale = Math.min(scale, maxWidth / img.width);
+        }
+        return scale;
+    }
+
+    function imageResize(img, maxWidth, maxHeight) {
+        var scale = determineScale(img, maxWidth, maxHeight),
+            ctx,
+            neededHeight = Math.round(img.height * scale / 8) * 8,
+            neededWidth = Math.round(img.width * scale / 8) * 8,
+            canvasTemp;
+
+        if (!canvasTemp) {
+            canvasTemp = document.createElement("canvas");
+        }
+        canvasTemp.width = neededWidth;
+        canvasTemp.height = neededHeight;
+
+        ctx = canvasTemp.getContext("2d");
+        var xc = 0, yc = 0;
+        ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
+        img.src = canvasTemp.toDataURL("image/png");
+        return img;
+    }
 
     // ToDo: 支持GIF,
 /*

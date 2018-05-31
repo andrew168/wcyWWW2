@@ -23,12 +23,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     var canvas;
 
-    var state = TQ.State;
+    var state = TQ.State,
+        levelThumbs = [];
     state.hasUndo = TQ.CommandMgr.hasUndo; // function
     state.hasRedo = TQ.CommandMgr.hasUndo; // function
 
     return {
         state: state,
+        levelThumbs : levelThumbs,
         canvasStyle: TQ.Graphics.getCanvasStyle(),
         updateControllers: updateControllers,
         forceToRenderSlider: forceToRenderSlider,
@@ -609,6 +611,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
      直接跳转到第id个场景 (id >=0)
      */
     function gotoLevel(id) {
+        if (state.isAddMode || state.isModifyMode) {
+            if (currScene && currScene.currentLevelId >=0) {
+                levelThumbs[currScene.currentLevelId] = TQ.ScreenShot.getThumbnail();
+            }
+        }
         if (typeof id  === 'string') {
             id = Number(id);
         }
