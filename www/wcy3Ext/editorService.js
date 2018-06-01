@@ -1061,6 +1061,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             TQ.State.isPlaying = false;
             AppService.configCanvas();
             forceToRefreshUI();
+            $timeout(function () { //在UI（top bar等）更新之后，必须重新计算canvas大小，
+                AppService.configCanvas();
+                forceToRefreshUI();
+            });
         }, 100);
     }
 
