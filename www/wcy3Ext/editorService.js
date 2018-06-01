@@ -1064,8 +1064,33 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             $timeout(function () { //在UI（top bar等）更新之后，必须重新计算canvas大小，
                 AppService.configCanvas();
                 forceToRefreshUI();
+                if (currScene.levelNum() > levelThumbs.length) {
+                    $timeout(syncLevelThumbs);
+                }
             });
         }, 100);
+    }
+
+    function syncLevelThumbs() {
+        function checkOne(i) {
+            for (; i < currScene.levelNum(); i++) {
+                if (!levelThumbs[i]) {
+                    gotoLevel(i);
+                    break;
+                }
+            }
+            if (i < currScene.levelNum()) {
+                $timeout(function () {
+                    checkOne(i);
+                }, 100);
+            } else {
+                $timeout(function () {
+                    gotoLevel(0);
+                }, 50);
+            }
+        }
+
+        checkOne(0);
     }
 
     function setPreviewMode() {
