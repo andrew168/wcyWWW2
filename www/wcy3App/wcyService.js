@@ -40,6 +40,7 @@ function WCY($http, FileService, WxService, NetService) {
         _shareCode = null,
         _ssSign = null,
         _onStarted = null,
+        levelThumbs = [],
         preloadedWcyData = null,
         isPreloadingWcy = false,
         getWcyCalled = false;
@@ -67,6 +68,7 @@ function WCY($http, FileService, WxService, NetService) {
             option = {};
         }
         setAsNew();
+        levelThumbs.splice(0);
         TQ.SceneEditor.createScene(option);
         doStarted();
     }
@@ -141,6 +143,7 @@ function WCY($http, FileService, WxService, NetService) {
             stop();
         }
 
+        levelThumbs.splice(0);
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
         // TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
         if (!preloadedWcyData && !isPreloadingWcy) {
@@ -490,6 +493,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     return {
+        levelThumbs: levelThumbs,
         setOnStarted: setOnStarted,
         start: start,  // start a new one, or load previous one (edited or played)
         create: create,

@@ -24,13 +24,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var canvas;
 
     var state = TQ.State,
-        levelThumbs = [];
+        levelThumbs = WCY.levelThumbs;
     state.hasUndo = TQ.CommandMgr.hasUndo; // function
     state.hasRedo = TQ.CommandMgr.hasUndo; // function
 
     return {
         state: state,
-        levelThumbs : levelThumbs,
         canvasStyle: TQ.Graphics.getCanvasStyle(),
         updateControllers: updateControllers,
         forceToRenderSlider: forceToRenderSlider,
