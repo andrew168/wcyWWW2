@@ -23,8 +23,7 @@ function DataService(list) {
     reset();
 
     function reset() {
-        var page = null,
-            row = null;
+        var page = null;
 
         if (pages.length >= 1 ) {
             pages.splice(1, pages.length - 1);
@@ -34,16 +33,7 @@ function DataService(list) {
         }
 
         if (page.length >= 1) {
-            page.splice(1, page.length - 1);
-            row = page[0];
-            row.splice(0);
-        } else {
-            row = [];
-            page.push(row);
-        }
-
-        for (var i = 0; i < IMAGE_COLUMN_NUMBER; i++) {
-            row.push(null);
+            page.splice(0);
         }
 
         currentPageID = 0;
@@ -89,30 +79,19 @@ function DataService(list) {
 
     function prepareColumn(props_local, m) {
         var i,
-            page = pages[pages.length - 1],
-            row = page[page.length - 1];
-
-        if (row[0] === null) {
-            row.splice(0);
-        } else if (row[2] === null) {
-            TQ.AssertExt.invalidLogic(false, "已经有了搜索结果， 为什么要再执行到此？");
-            row.splice(0);
-        }
+            j,
+            page = pages[pages.length - 1];
 
         for (i = 0; i < props_local.length;) {
-            if (row.length >= 3) {
-                row = [];
-                if (page.length >= 3) {
-                    page = createPage();
-                }
-                page.push(row);
+            if (page.length >= 9) {
+                page = createPage();
             }
 
             for (j = 0; j < m; j++, i++) {
                 if (i < props_local.length) {
-                    row.push(props_local[i]);
-                } else {
-                    row.push(null);
+                    if (page.indexOf(props_local[i]) < 0) {
+                        page.push(props_local[i]);
+                    }
                 }
             }
         }
