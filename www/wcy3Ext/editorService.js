@@ -748,11 +748,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             currScene.stop();
             updateMode();
         }
-
-        $timeout(function () { // 用timeout迫使angularjs 刷新UI
-            TQ.State.isPlaying = false;
-            AppService.configCanvas();
-        }, 100);
+        TQ.State.isPlaying = false;
+        $timeout(function () { // 用timeout迫使angularjs 刷新UI,
+            // 只是stop，不涉及修改canvas
+        });
     }
 
     function preview (options) {
@@ -777,8 +776,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         updateMode();
         forceToRefreshUI();
         TQ.TouchManager.stop();
+        TQ.State.isPlaying = true;
         $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
-            TQ.State.isPlaying = true;
             AppService.configCanvas();
         }, 100);
         TQ.IdleCounter.start(TQ.PreviewMenu.hide);
