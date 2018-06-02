@@ -1078,14 +1078,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     break;
                 }
             }
-            if (i < currScene.levelNum()) {
+            if ((i+1) < currScene.levelNum()) {
                 $timeout(function () {
-                    checkOne(i);
-                }, 100);
+                    checkOne(i+1);
+                }, 500);
             } else {
                 $timeout(function () {
                     gotoLevel(0);
-                }, 50);
+                }, 500);
             }
         }
 
