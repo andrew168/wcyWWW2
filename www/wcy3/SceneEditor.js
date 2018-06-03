@@ -323,11 +323,6 @@ var currScene = null;
         localStorage.setItem("sceneName", filename);
     }
 
-    function addLevelTest() {
-        var levelId = currScene.addLevel();
-        currScene.gotoLevel(levelId);
-    }
-
     function addImage(desc) {
         TQ.Log.depreciated("replaced by: SceneEditor.addItem");
     }
