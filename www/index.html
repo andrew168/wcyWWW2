@@ -3,7 +3,8 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, width=device-width, minimal-ui">
+    <meta name="viewport"
+          content="initial-scale=1, minimum-scale=1, maximum-scale=1, user-scalable=no, width=device-width, minimal-ui">
     <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
     <meta http-equiv="Pragma" content="no-cache">
     <meta http-equiv="Expires" content="0">
@@ -77,7 +78,7 @@
     <script src="/lib-debug/satellizer.js"></script>
     <script src="/lib-debug/vex/js/vex.combined.js"></script>
     <script>vex.defaultOptions.className = 'vex-theme-default'</script>
-    <script type="text/javascript" src="/lib/ng-file-upload-all.min.js"></script>
+    <script type="text/javascript" src="/lib/ng-file-upload-all.min.js"></script> <!-- Upload 在NetService中使用 -->
     <!-- script type="text/javascript" src="/lib/modernizr-latest.js"></script -->
     <script type="text/javascript" src="/lib/jquery.cookie.js"></script>
     <!-- script type="text/javascript" src="/lib/jQueryRotateCompressed.2.2.js"></script  -->
@@ -87,15 +88,14 @@
 
     <!-- build:js wcy3all.js -->
     <!-- script type="text/javascript" src="/lib/gif.js"></script -->
-    <script type="text/javascript" src="/lib/soundjs-0.6.1.combined.js"></script>
-    <script type="text/javascript" src="/lib/cordovaaudioplugin-0.6.1.min.js"></script> <!-- IPAD 需要 -->
+    <script type="text/javascript" src="/lib/soundjs-0.6.1.min.js"></script>
+    <script type="text/javascript" src="/lib/cordovaaudioplugin-0.6.1.min.js"></script> <!-- IPAD 需要， android手机也需要 -->
     <script type="text/javascript" src="/lib/jweixin-1.0.0.js"></script>
-    <script type="text/javascript" src="/lib/load-image.all.js"></script>
 
     <!-- 测试代码区域 -->
     <!-- 矩阵运算库 -->
     <script type="text/javascript" src="/lib-debug/multiHostQue.js"></script>
-    <script type="text/javascript" src="/lib/preloadjs-0.6.1.combined.js"></script>
+    <script type="text/javascript" src="/lib/preloadjs-0.6.1.min.js"></script>
     <script type="text/javascript" src="/lib/easeljs-0.6.1.min.js"></script>
     <!-- script type="text/javascript" src="/lib/tweenjs-0.4.1.min.js"></script -->
 
@@ -120,7 +120,6 @@
     <!-- 源文件，只供调试用 -->
 
     <script type="text/javascript" src="/wcy3Aux/idleCounter.js"></script>
-    <script type="text/javascript" src="/lib/mobile-polyfill.js"></script>
     <script type="text/javascript" src="/wcy3/protocolConst.js"></script>
     <script type="text/javascript" src="/wcy3/const.js"></script>
     <script type="text/javascript" src="/wcy3CoreFlags/matType.js"></script>
