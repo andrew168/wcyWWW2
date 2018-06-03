@@ -4,6 +4,8 @@
 var TQ = TQ || {};
 TQ.PageTransitionEffect = (function () {
     var isAnimating = false,
+        watchDogMaxTime = 2000, // 超过2000ms，还没有结束动画， 则迫使结束
+        watchDogTask = -1,
         outPageEnd = false,
         inPageEnd = false,
         animEndEventNames = {
@@ -59,8 +61,17 @@ TQ.PageTransitionEffect = (function () {
         editorService = angular.element(document.body).injector().get('EditorService')
         TQ.Log.debugInfo("page transition start...");
         isAnimating = true;
+        watchDogTask = TQ.WatchDog.start(function () {
+            if (isAnimating) {// 此变量是易变的， 所以，必须显式地clear dog
+                onOutPageAnimeEnd();
+                onInPageAnimeEnd();
+            }
+        }, watchDogMaxTime);
+
         state.page1On = true;
-        outPage.on(animEndEventName, function () {
+        outPage.on(animEndEventName, onOutPageAnimeEnd);
+
+        function onOutPageAnimeEnd() {
             outPage.off(animEndEventName);
             outPageEnd = true;
             state.page1On = false;
@@ -68,17 +79,18 @@ TQ.PageTransitionEffect = (function () {
             if (inPageEnd) {
                 onEndAnimation(transition, callback);
             }
-        });
+        }
 
         attachEffect(outPage, transition.outClass);
 
-        inPage.on(animEndEventName, function () {
+        inPage.on(animEndEventName, onInPageAnimeEnd);
+        function onInPageAnimeEnd() {
             inPage.off(animEndEventName);
             inPageEnd = true;
             if (outPageEnd) {
                 onEndAnimation(transition, callback);
             }
-        });
+        }
 
         attachEffect(inPage, transition.inClass);
 
@@ -94,7 +106,7 @@ TQ.PageTransitionEffect = (function () {
         inPageEnd = false;
         isAnimating = false;
         TQ.Log.debugInfo("page transition end!");
-
+        TQ.WatchDog.clear(watchDogTask);
         setTimeout(function() {
             detachEffect(transition.outPage, transition.outClass);
             detachEffect(transition.inPage, transition.inClass);
