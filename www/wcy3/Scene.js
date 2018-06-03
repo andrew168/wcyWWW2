@@ -586,8 +586,26 @@ TQ = TQ || {};
      复制序号为srcId的场景的内容，并插入到序号dstId的场景之前，
      */
     p.copyTo = function (srcId, dstId) {
-        var content = this.levels[srcId];
-        return this.addLevel(dstId, content);
+        var srcLevel = this.levels[srcId],
+            jsonData,
+            newLevel;
+        srcLevel.prepareForJSONOut();
+        jsonData = JSON.stringify(srcLevel);
+        srcLevel.afterToJSON();
+        newLevel = new TQ.Level(jsonData);
+        return this.addLevel(dstId, newLevel);
+    };
+
+    p.duplicateCurrentLevel = function () {
+        // 新增的level, 紧随currentLevel之后，id+1， 并且，设置为新的currentLevel
+        var newLevelId = this.currentLevelId + 1,
+            newLevel;
+        this.copyTo(this.currentLevelId, newLevelId);
+        TQ.RM.onCompleteOnce(function () {
+            newLevel.resourceReady = true;
+        });
+        newLevel = this.getLevel(newLevelId);
+        this.startPreloader(newLevel);
     };
 
     // !!! can not recover, be careful!

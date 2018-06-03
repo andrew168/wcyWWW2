@@ -54,6 +54,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // level
         addLevel: addLevel,
         addLevelAt: addLevelAt,
+        duplicateCurrentLevel: duplicateCurrentLevel,
         deleteLevel: deleteLevel,
         deleteCurrentLevel: deleteCurrentLevel,
         gotoPreviousLevel: gotoPreviousLevel,
@@ -664,6 +665,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         return addLevelAt(currScene.currentLevelId + 1);
     }
 
+    function duplicateCurrentLevel() {
+        assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
+        if (!currScene) return;
+        var nextLevel = currScene.currentLevelId + 1;
+        currScene.duplicateCurrentLevel();
+        $timeout(function() {
+            gotoLevel(nextLevel);
+        });
+    }
+
     /*
      删除第id(id >=0）个场景， 并且把此后的场景前移。
      如果id超出边界（id < 0)，则忽略
@@ -1080,20 +1091,20 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function syncLevelThumbs() {
         function checkOne(i) {
             for (; i < currScene.levelNum(); i++) {
-                if (!levelThumbs[i]) {
-                    gotoLevel(i);
-                    break;
+            if (!levelThumbs[i]) {
+                        gotoLevel(i);
+                        break;
+                    }
                 }
-            }
             if ((i+1) < currScene.levelNum()) {
                 $timeout(function () {
                     checkOne(i+1);
                 }, 500);
-            } else {
-                $timeout(function () {
-                    gotoLevel(0);
-                }, 500);
-            }
+                } else {
+                    $timeout(function () {
+                        gotoLevel(0);
+                    }, 500);
+                }
         }
 
         checkOne(0);
