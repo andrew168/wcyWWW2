@@ -677,8 +677,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (id === currScene.currentLevelId) {
             deleteCurrentLevel();
         } else {
-            currScene.deleteLevel(id);
+            doDeleteLevelAndThumbs(id);
         }
+    }
+
+    function doDeleteLevelAndThumbs(id) {
+        currScene.deleteLevel(id);
+        levelThumbs.splice(id, 1);
     }
 
     function deleteCurrentLevel() {
@@ -704,7 +709,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             addLevelAt(0);
         }
         currScene.gotoLevel(nextLevel);
-        currScene.deleteLevel(id);
+        var self = this;
+        $timeout(function () {
+            self.deleteLevel(id);
+        });
     }
 
     /*
@@ -944,7 +952,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             rightLevel.calculateRealLastFrame();
             var levelId = tObj2.levelId - 1;
             while (levelId > tObj1.levelId) {
-                currScene.deleteLevel(levelId);
+                doDeleteLevelAndThumbs(levelId);
                 levelId --;
             }
             leftLevel = currScene.getLevel(levelId);
