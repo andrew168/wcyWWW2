@@ -16,6 +16,7 @@ window.TQ = window.TQ || {};
         this.initialize(description);
     }
 
+    Level.EVENT_START_SHOWING = 'level start showing';
     var p = Level.prototype;
     p.isDirty = false;  //  变量赋值应该放在最前面, 确保在使用之前已经赋值. 小函数放在最后, 很少看.
     p.isPreloading = false;
@@ -484,6 +485,9 @@ window.TQ = window.TQ || {};
             this.watchRestart();
             this.state = TQ.SceneEditor.getMode();
             if (this.onLevelRunning != null) this.onLevelRunning();
+            setTimeout(function () {
+                TQ.Base.Utility.triggerEvent(document, Level.EVENT_START_SHOWING);
+            });
             TQ.DirtyFlag.setLevel(this);
         } else {
             if ((this.state !== TQBase.LevelState.EDITING) && (this.state !== TQBase.LevelState.RUNNING)) {

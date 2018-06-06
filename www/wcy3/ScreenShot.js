@@ -92,7 +92,8 @@ window.TQ = window.TQ || {};
         ctx = canvasTemp.getContext("2d");
         var xc = 0, yc = 0;
         ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
-        album[id] = canvasTemp.toDataURL("image/png");
+        album[id] = {src: canvasTemp.toDataURL("image/png"),
+                     timestamp: Date.now()};
     }
 
     // ToDo: 支持GIF,

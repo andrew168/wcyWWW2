@@ -611,6 +611,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
      直接跳转到第id个场景 (id >=0)
      */
     function gotoLevel(id) {
+        TQ.Log.debugInfo("gotoLevel " + id);
         if (state.isAddMode || state.isModifyMode) {
             if (currScene && currScene.currentLevelId >=0) {
                 TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
@@ -1089,25 +1090,50 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function syncLevelThumbs() {
-        function checkOne(i) {
-            for (; i < currScene.levelNum(); i++) {
+        TQ.State.allowPageTransition = false;
+        // quick fill, to void undefined element in ng repeat;
+        var nowTimestamp = Date.now();
+        for (var i = 0; i < currScene.levelNum(); i++) {
             if (!levelThumbs[i]) {
+                levelThumbs[i] = {src:null, timestamp:i + nowTimestamp};
+            }
+        }
+
+        function makeCheckOne(i) {
+            return function () {
+                var j;
+                for (; i >= 0; i--) {
+                    if (!levelThumbs[i] || !levelThumbs[i].src) {
                         gotoLevel(i);
                         break;
                     }
                 }
-            if ((i+1) < currScene.levelNum()) {
-                $timeout(function () {
-                    checkOne(i+1);
-                }, 500);
+                j = i - 1;
+                if (j >= 0 && (j < currScene.levelNum())) {
+                    document.addEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
+                    function handleNextLevel() {
+                        document.removeEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
+                        makeCheckOne(j)();
+                    }
                 } else {
                     $timeout(function () {
                         gotoLevel(0);
+                        $timeout(function () {
+                            gotoLevel(0);
+                            TQ.State.allowPageTransition = true;
+                        }, 500);
                     }, 500);
                 }
+            };
         }
 
-        checkOne(0);
+        if (TQ.PageTransitionEffect.isBusy()) { // 防止再次进入
+            setTimeout(function () {
+                makeCheckOne(currScene.levelNum() - 1)();
+            }, 1000);
+        } else {
+            makeCheckOne(currScene.levelNum() - 1)();
+        }
     }
 
     function setPreviewMode() {

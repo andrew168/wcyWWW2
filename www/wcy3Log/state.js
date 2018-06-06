@@ -31,6 +31,7 @@ var TQ = TQ || {};
     State.buttonHeight = 0;
     State.determineWorkingRegion = determineWorkingRegion;
     State.updateDeviceInfo = updateDeviceInfo;
+    State.allowPageTransition = true;
 
     function determineWorkingRegion() {
         // top bar的min-height是 11vmin

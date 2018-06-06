@@ -389,7 +389,7 @@ TQ = TQ || {};
     p.doTransition = function (id) {
         TQ.FloatToolbar.close();
         if (this.currentLevelId !== id) {
-            if (TQ.PageTransition && (this.currentLevelId >= 0)) {
+            if (TQ.State.allowPageTransition && TQ.PageTransition && (this.currentLevelId >= 0)) {
                 TQ.PageTransition.start(self.currentLevelId, id, function () {
                     self.doGotoLevel(id);
                 })
