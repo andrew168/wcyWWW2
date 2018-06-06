@@ -32,9 +32,22 @@ this.TQ.ResourceSync = (function () {
             .then(function (res) {
                 TQ.Log.debugInfo(res.url);
                 ele.jsonObj.src = res.url;
+                force2Mp3(ele);
                 numActiveTasks--;
                 tryShowCompleteInfo();
             });
+    }
+
+    function force2Mp3(ele) {
+        // 利用Cloudinary的自动格式转换功能， 迫使录音文件3gp转换为MP3
+        // 从而， 可以播放
+        if (ele && ele.isSound() ) {
+            if (ele.jsonObj.src) {
+                var pos = ele.jsonObj.src.lastIndexOf('.'),
+                    root = ele.jsonObj.src.substr(0, pos);
+                ele.jsonObj.src = root + '.mp3';
+            }
+        }
     }
 
     function tryShowCompleteInfo() {
