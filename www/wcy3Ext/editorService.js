@@ -613,8 +613,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function gotoLevel(id) {
         TQ.Log.debugInfo("gotoLevel " + id);
         if (state.isAddMode || state.isModifyMode) {
-            if (currScene && currScene.currentLevelId >=0) {
+            if (currScene && currScene.currentLevelId >= 0) {
                 TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
+            }
+
+            document.addEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
+            function makeThumbnail() {
+                document.removeEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
+                if (!levelThumbs[currScene.currentLevelId]) {
+                    TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
+                    forceToRefreshUI();
+                }
             }
         }
         if (typeof id  === 'string') {
@@ -700,11 +709,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function deleteCurrentLevel() {
         if (currScene.levelNum() === 1) {
-            addLevel();
-            $timeout(function() {
-                deleteLevel(0);
-            });
-            return ;
+            // addLevel();
+            // $timeout(function() {
+            //     deleteLevel(0);
+            // });
+            return TQ.MessageBox.prompt('至少要有一个场景!');
         }
 
         assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
@@ -721,9 +730,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             addLevelAt(0);
         }
         currScene.gotoLevel(nextLevel);
-        var self = this;
         $timeout(function () {
-            self.deleteLevel(id);
+            deleteLevel(id);
         });
     }
 
