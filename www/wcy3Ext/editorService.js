@@ -314,7 +314,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function insertMatFromLocal(matType, useDevice) {
         if (WxService.isReady()) {
-            alert("请在浏览器中打开，以便于使用所有功能");
+            // alert("请在浏览器中打开，以便于使用所有功能");
             // return doInsertMatFromLocalWx(matType);
         }
 
