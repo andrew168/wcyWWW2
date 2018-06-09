@@ -321,9 +321,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
 
         if (useDevice && (matType === TQ.MatType.SOUND)) {
-            return TQ.AudioRecorder.start(function (data) {
-                TQ.SceneEditor.addItemByFile(data, matType);
-            });
+            if (TQ.AudioRecorder.isRecoding()) {
+                return TQ.AudioRecorder.stop();
+            } else {
+                return TQ.AudioRecorder.start(function (data) {
+                    TQ.SceneEditor.addItemByFile(data, matType);
+                });
+            }
         }
 
         return selectLocalFile(matType, useDevice).then(function (data) {

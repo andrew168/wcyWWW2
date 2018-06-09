@@ -147,9 +147,11 @@ var TQ = TQ || {};
 TQ.AudioRecorder = (function () {
     var recorder,
         initialized = false,
-        started = false;
+        started = false,
+        onStopCallback;
 
     return {
+        isRecoding: function () {return started; },
         init:init,
         start: start,
         stop: stop
@@ -181,12 +183,8 @@ TQ.AudioRecorder = (function () {
                 return;
             }
             started = true;
+            onStopCallback = callback;
             recorder.start();
-
-            setTimeout(function () {
-                stop(callback);
-            }, 2000);
-
         } else {
             setTimeout(function() {
                 start(callback);
@@ -194,23 +192,25 @@ TQ.AudioRecorder = (function () {
         }
     }
 
-    function stop(callback) {
+    function stop() {
         if (!initialized || !started) {
             return setTimeout(function () {
-                stop(callback);
+                stop();
             })
         }
 
         started = false;
-        if (!callback) {
-            callback = defaultCallback;
+        if (!onStopCallback) {
+            onStopCallback = defaultCallback;
         }
 
         recorder.stop();
-        recorder.getBlob(callback);
+        recorder.getBlob(onStopCallback);
+        onStopCallback = null;
     }
 
     function defaultCallback(blob) {
+        console.log("sound recorded: type = " + blob.type + ', size = ' + blob.size);
         var audio = document.createElement('audio');
         audio.src = URL.createObjectURL(blob);
         audio.controls = true;
