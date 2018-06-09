@@ -249,6 +249,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (TQ.TouchManager.hasStarted() && TQ.WCY.isPlayOnly) {
             TQ.TouchManager.stop();
         }
+
     }
 
     function onResize() {
@@ -318,10 +319,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             // return doInsertMatFromLocalWx(matType);
         }
 
-        return selectLocalFile(matType, useDevice).
-            then(function (data) {
-                TQ.SceneEditor.addItemByFile(data, matType);
-            }, errorReport);
+        return selectLocalFile(matType, useDevice).then(function (data) {
+            TQ.SceneEditor.addItemByFile(data, matType);
+        }, errorReport);
     }
 
     function selectLocalFile(matType, useDevice) {
@@ -518,7 +518,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function isProxyMat(url) {
-        return (url && (url.indexOf(TQ.Config.MAT_HOST) < 0));
+        var mainDomain = TQUtility.urlParser(url).origin;
+        return (url && (TQ.Config.whiteListMatHosts.indexOf(mainDomain) < 0));
     }
 
     function insertImage(filename, x, y, matType) {
