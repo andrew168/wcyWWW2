@@ -55,7 +55,7 @@ var currScene = null;
     }
 
     SceneEditor.addItemByFile = function (data, matType) {
-        var aFile = data.aFile;
+        var aFile = data.aFile || data;
         var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
         var needToSave = true;
 
@@ -64,10 +64,13 @@ var currScene = null;
         }
 
         if (matType === TQ.MatType.SOUND) {
-            if (!TQUtility.isSoundFile(aFile)) {
+            if (!TQUtility.isSoundFile(aFile) &&  !TQUtility.isBlob(aFile)) {
                 var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
                 TQ.MessageBox.show(str);
             } else {
+                if (aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
+                    return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+                }
                 addItemBySoundFile(aFile, matType, needToSave);
             }
         } else {
@@ -77,28 +80,14 @@ var currScene = null;
                     if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
                         TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
                             TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
-                        function () {
-                            addItemByImageData(buffer.data, matType, needToSave);
-                        }, function(){});
+                            function () {
+                                addItemByImageData(buffer.data, matType, needToSave);
+                            }, function () {
+                            });
                     } else {
                         addItemByImageData(buffer.data, matType, needToSave);
                     }
                 });
-        }
-    };
-
-    SceneEditor.addItemByBlob = function (blobData, matType) {
-        var needToSave = true;
-
-        if (blobData.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
-        }
-
-        if (!TQUtility.isBlob(blobData)) {
-            var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + blobData.type;
-            TQ.MessageBox.show(str);
-        } else {
-            addItemBySoundFile(blobData, matType, needToSave);
         }
     };
 

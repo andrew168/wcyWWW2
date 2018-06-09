@@ -173,6 +173,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function initialize() {
         TQ.TextElementWxAdapter.detectFontSizeFactor();
+        TQ.AudioRecorder.init();
         reset();
         $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
         $rootScope.$on(TQ.EVENT.REFRESH_UI, forceToRefreshUI);
@@ -317,6 +318,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (WxService.isReady()) {
             // alert("请在浏览器中打开，以便于使用所有功能");
             // return doInsertMatFromLocalWx(matType);
+        }
+
+        if (useDevice && (matType === TQ.MatType.SOUND)) {
+            return TQ.AudioRecorder.start(function (data) {
+                TQ.SceneEditor.addItemByFile(data, matType);
+            });
         }
 
         return selectLocalFile(matType, useDevice).then(function (data) {
