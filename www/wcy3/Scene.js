@@ -66,7 +66,7 @@ TQ = TQ || {};
         if (state) {
             TQ.TimerUI.setGlobalTime(state.tT);
         } else {
-            TQ.Log.error("state is null");
+            // TQ.Log.error("state is null"); // 首次进入toAddMode，state就是空的
         }
     }
 
