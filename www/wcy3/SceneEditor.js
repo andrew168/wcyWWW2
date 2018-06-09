@@ -71,9 +71,10 @@ var currScene = null;
                 addItemBySoundFile(aFile, matType, needToSave);
             }
         } else {
+            var stopReminder = true;
             TQ.ImageProcess.start(aFile, options,
                 function (buffer) {
-                    if (!!buffer.errorCode && buffer.errorCode !== 0) {
+                    if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
                         TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
                             TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
                         function () {
