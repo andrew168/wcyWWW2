@@ -151,7 +151,7 @@ TQ.AudioRecorder = (function () {
         onStopCallback;
 
     return {
-        isRecoding: function () {return started; },
+        isRecording: function () {return started; },
         init:init,
         start: start,
         stop: stop
