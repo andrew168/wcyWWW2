@@ -186,6 +186,10 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
             300, 300);
     };
 
+    $scope.insertSound = function () {
+        EditorService.insertSound('https://res-3.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3');
+    };
+
     $scope.insertRectangle = function () {
         // EditorService.insertRectangle(200, 400, 300, 300);
         // EditorService.insertRectangle(200, 400, 200, 200);
@@ -230,8 +234,8 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         EditorService.insertPropFromLocal();
     };
 
-    $scope.insertSoundFromLocal = function () {
-        EditorService.insertSoundFromLocal();
+    $scope.insertSoundFromLocal = function (useDevice) {
+        EditorService.insertSoundFromLocal(useDevice);
     };
 
     $scope.insertAlbum = function () {
