@@ -120,5 +120,18 @@
   "our terms of service": "our terms of service",
   "privacy policy": "privacy policy",
   "We’ll occasionally send you account related emails": "We’ll occasionally send you account related emails",
-  "Sign-in-with": "Sign in with"
+  "Sign-in-with": "Sign in with",
+  "Share": "Share",
+  "Title": "Title",
+  "Content": "Content",
+  "Save": "Save",
+  "Embed-to-website": "Embed to website",
+  "Copy-link": "Copy link",
+  "DIY": "DIY",
+  "Replay": "Replay",
+  "Close": "Close",
+  "uploading...": "uploading...",
+  "<img src=\"/public/images/loading.gif\"> uploading...": "<img src=\"/public/images/loading.gif\"> uploading...",
+  "already in lowest layer!": "already in lowest layer!",
+  "couldn't move any more！": "couldn't move any more！"
 }

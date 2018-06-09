@@ -85,7 +85,6 @@
   "previous-page": "前一页",
   "confirm-and-insert-all-selections-into-stage": "确认添加到舞台",
   "delete-this-image": "删除",
-  "close": "关闭",
   "background-images": "背景",
   "character-images": "人物",
   "prop-images": "道具",
@@ -174,5 +173,16 @@
   "our terms of service": "服务条款",
   "privacy policy": "隐私政策",
   "We’ll occasionally send you account related emails": "我们偶尔会email你关于你账号的信息",
-  "Sign-in-with": "登录通过"
+  "Sign-in-with": "登录通过",
+  "Share": "分享",
+  "Replay": "重播",
+  "DIY": "定制",
+  "Title": "标题",
+  "Content": "正文",
+  "Save": "保存",
+  "Embed-to-website": "嵌入到网页",
+  "Copy-link": "复制URL",
+  "Close": "关闭",
+  "already in lowest layer!": "到顶啦!",
+  "couldn't move any more！": "到底啦！"
 }
