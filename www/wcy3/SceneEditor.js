@@ -87,6 +87,21 @@ var currScene = null;
         }
     };
 
+    SceneEditor.addItemByBlob = function (blobData, matType) {
+        var needToSave = true;
+
+        if (blobData.size > TQ.Config.MAT_MAX_FILE_SIZE) {
+            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+        }
+
+        if (!TQUtility.isBlob(blobData)) {
+            var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + blobData.type;
+            TQ.MessageBox.show(str);
+        } else {
+            addItemBySoundFile(blobData, matType, needToSave);
+        }
+    };
+
     function addItemByImageData(image64Data, matType, needToSave) {
         var img = new Image();
         img.onload = function() {
@@ -103,8 +118,8 @@ var currScene = null;
         img.src = image64Data;
     }
 
-    function addItemBySoundFile(aFile, matType, needToSave) {
-        TQ.RM.loadSoundFromFile(aFile, function (result) {
+    function addItemBySoundFile(fileOrBlob, matType, needToSave) {
+        TQ.RM.loadSoundFromFile(fileOrBlob, function (result) {
             var desc = {
                 data: TQ.RM.getResource(result.item.id).res,
                 src: result.item.id, type: TQ.ElementType.SOUND
@@ -112,7 +127,7 @@ var currScene = null;
 
             var ele = SceneEditor.addItem(desc);
             if (needToSave) {
-                TQ.ResourceSync.local2Cloud(ele, aFile, matType);
+                TQ.ResourceSync.local2Cloud(ele, fileOrBlob, matType);
             }
         });
     }

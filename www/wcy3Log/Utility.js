@@ -191,6 +191,10 @@ var TQUtility; //
         return (aFile.type.indexOf('audio') >= 0);
     };
 
+    Utility.isBlob = function (blobData) {
+        return (blobData instanceof Blob);
+    };
+
     Utility.fileToUrl = function (file, options) {
         // convert blob, local file, to  url
         var url, oUrl;
