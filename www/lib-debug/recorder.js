@@ -104,7 +104,10 @@
             },
             function(error){ //失败回调
                 var msg;
-                switch(error.code || error.name){
+                switch(error.name || error.code){
+                    case 'SecurityError':
+                        msg = '安全错误，需要使用用https';
+                        break;
                     case 'PermissionDeniedError':
                     case 'PERMISSION_DENIED':
                     case 'NotAllowedError':
@@ -138,3 +141,79 @@
     //模块接口
     exports.Recorder = Recorder;
 })(window);
+
+
+var TQ = TQ || {};
+TQ.AudioRecorder = (function () {
+    var recorder,
+        initialized = false,
+        started = false;
+
+    return {
+        init:init,
+        start: start,
+        stop: stop
+    };
+
+    function init() {
+        recorder = new Recorder({
+            sampleRate: 44100, //采样频率，默认为44100Hz(标准MP3采样率)
+            bitRate: 128, //比特率，默认为128kbps(标准MP3质量)
+            success: onInitSuccess, //成功回调函数
+            error: function (msg) { //失败回调函数
+                alert(msg);
+            },
+            fix: function (msg) { //不支持H5录音回调函数
+                alert(msg);
+            }
+        });
+    }
+
+
+    function onInitSuccess() {
+        initialized = true;
+        console.log('succeed in Recorder init!');
+    }
+
+    function start(callback) {
+        if (initialized) {
+            if (started) {
+                return;
+            }
+            started = true;
+            recorder.start();
+
+            setTimeout(function () {
+                stop(callback);
+            }, 2000);
+
+        } else {
+            setTimeout(function() {
+                start(callback);
+            }, 100);  // 努力尝试
+        }
+    }
+
+    function stop(callback) {
+        if (!initialized || !started) {
+            return setTimeout(function () {
+                stop(callback);
+            })
+        }
+
+        started = false;
+        if (!callback) {
+            callback = defaultCallback;
+        }
+
+        recorder.stop();
+        recorder.getBlob(callback);
+    }
+
+    function defaultCallback(blob) {
+        var audio = document.createElement('audio');
+        audio.src = URL.createObjectURL(blob);
+        audio.controls = true;
+        document.appendChild(audio);
+    }
+})();
