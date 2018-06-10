@@ -44,7 +44,7 @@
                     realTimeWorker.postMessage({ cmd: 'encode', buf: array });
                 };
 
-                var realTimeWorker = new Worker('lib-debug/worker.js'); //开启后台线程
+                var realTimeWorker = new Worker('./worker.js'); //开启后台线程
                 realTimeWorker.onmessage = function(e){ //主线程监听后台线程，实时通信
                     switch(e.data.cmd){
                         case 'init':
