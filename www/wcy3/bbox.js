@@ -151,6 +151,10 @@ TQ = TQ || {};
         return true;
     };
 
+    p.isHighlighter = function () {
+        return true;
+    };
+
     p.isEditable = function () {
         return false;
     };
