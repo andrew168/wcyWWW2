@@ -321,7 +321,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
 
         if (useDevice && (matType === TQ.MatType.SOUND)) {
-            if (TQ.AudioRecorder.isRecording()) {
+            if (TQ.AudioRecorder.isRecording) {
                 return TQ.AudioRecorder.stop();
             } else {
                 return TQ.AudioRecorder.start(function (data) {

@@ -145,13 +145,18 @@
 
 var TQ = TQ || {};
 TQ.AudioRecorder = (function () {
+    var STATE_UNKNOWN = 0,
+        STATE_INITIALIZED = 1,
+        STATE_STARTED = 2,
+        STATE_PENDING = 3;
     var recorder,
-        initialized = false,
-        started = false,
+        state = STATE_UNKNOWN,
         onStopCallback;
 
     return {
-        isRecording: function () {return started; },
+        get isPending() { return state === STATE_PENDING; },
+        get isRecording() {return state === STATE_STARTED; },
+        accept: accept,
         init:init,
         start: start,
         stop: stop
@@ -173,16 +178,16 @@ TQ.AudioRecorder = (function () {
 
 
     function onInitSuccess() {
-        initialized = true;
+        state = STATE_INITIALIZED;
         console.log('succeed in Recorder init!');
     }
 
     function start(callback) {
-        if (initialized) {
-            if (started) {
+        if (state >= STATE_INITIALIZED) {
+            if (state === STATE_STARTED) {//不能重复开始，但是，如果有pending的， 则忽略它
                 return;
             }
-            started = true;
+            state = STATE_STARTED;
             onStopCallback = callback;
             recorder.start();
         } else {
@@ -193,13 +198,13 @@ TQ.AudioRecorder = (function () {
     }
 
     function stop() {
-        if (!initialized || !started) {
+        if (state < STATE_STARTED) {
             return setTimeout(function () {
                 stop();
             })
         }
 
-        started = false;
+        state = STATE_PENDING;
         if (!onStopCallback) {
             onStopCallback = defaultCallback;
         }
@@ -207,6 +212,10 @@ TQ.AudioRecorder = (function () {
         recorder.stop();
         recorder.getBlob(onStopCallback);
         onStopCallback = null;
+    }
+
+    function accept() {
+        state = STATE_INITIALIZED;
     }
 
     function defaultCallback(blob) {

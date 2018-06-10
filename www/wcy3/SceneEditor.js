@@ -16,6 +16,7 @@ var currScene = null;
     // 接口
     SceneEditor.turnOnEditor = turnOnEditor;
     SceneEditor.needToSave = needToSave;
+    SceneEditor.lastSoundElement = null;
 
     SceneEditor.showWcy = function (fileInfo) {
         if (fileInfo.isPlayOnly === undefined) {
@@ -116,6 +117,8 @@ var currScene = null;
             };
 
             var ele = SceneEditor.addItem(desc);
+            SceneEditor.lastSoundElement = ele;
+
             if (needToSave) {
                 TQ.ResourceSync.local2Cloud(ele, fileOrBlob, matType);
             }
@@ -399,6 +402,13 @@ var currScene = null;
     function isBkg(matType) {
         return (matType === TQ.MatType.BKG);
     }
+
+    SceneEditor.revokeLastSound = function () {
+        if (SceneEditor.lastSoundElement) {
+            currScene.deleteElement(SceneEditor.lastSoundElement);
+            SceneEditor.lastSoundElement = null;
+        }
+    };
 
     function determineAutoFit(matType) {
         return isBkg(matType) ? TQ.Element.FitFlag.FULL_SCREEN: TQ.Element.FitFlag.WITHIN_FRAME;
