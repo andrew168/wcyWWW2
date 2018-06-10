@@ -140,6 +140,10 @@ var currScene = null;
             setTimeout(function() { // 延时， 以确保元素建立好了，避免autoFit失效,
                 if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
                     TQ.SelectSet.add(ele);
+                } else {
+                    if (ele.isSound()) {
+                        TQ.SoundMgr.play(ele.jsonObj.src);
+                    }
                 }
             }, 200);
             return ele;
