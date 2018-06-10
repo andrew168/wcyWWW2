@@ -205,8 +205,8 @@
                 <button class="button button-positive" ng-click="EditorService.cloneIt()" ng-show="false">CloneIt</button>
                 <button class="button button-positive" ng-click="testDataService()" ng-show="false">素材库读取</button>
                 <button class="button button-positive" ng-click="EditorService.toAddMode()">编辑</button>
-                <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()" ng-show="false">重播</button>
-                <button class="button button-positive" ng-click="EditorService.preview()" ng-show="false">预览</button>
+                <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()">重播</button>
+                <button class="button button-positive" ng-click="EditorService.preview()">预览</button>
                 <button class="button button-positive" ng-click="EditorService.previewCurrentLevel($event)" ng-show="false">预览本节</button>
                 <button class="button button-positive" ng-click="EditorService.stop($event)" ng-show="false">stop</button>
                 <button class="button button-positive" ng-click="startRecord()" ng-show="false">开启录制 </button>
@@ -220,7 +220,9 @@
                 <button class="button button-positive" ng-click="insertRectangle()" ng-show="false">矩形</button>
                 <button class="button button-positive" ng-click="insertBkImageFromLocal()" ng-show="false">+本地背景</button>
                 <button class="button button-positive" ng-click="insertPropFromLocal()" ng-show="false">+本地道具</button>
-                <button class="button button-positive" ng-click="insertSoundFromLocal()" ng-show="false">+本地声音</button>
+                <button class="button button-positive" ng-click="insertSound()" ng-show="true">素材库声音</button>
+                <button class="button button-positive" ng-click="insertSoundFromLocal(false)" ng-show="true">本地声音</button>
+                <button class="button button-positive" ng-click="insertSoundFromLocal(true)" ng-show="true">录音</button>
                 <button class="button button-positive" ng-click="EditorService.attachTextBubble()" ng-show="false">加气泡</button>
                 <button class="button button-positive" ng-click="EditorService.detachTextBubble()" ng-show="false">删气泡</button>
                 <button class="btn-big ion-ios-copy-outline" ng-click="EditorService.mCopyToggle()" ng-show="false">mCopy</button>
