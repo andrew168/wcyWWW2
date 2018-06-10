@@ -26,6 +26,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     function uploadImages(files, onSuccess) {
         if (!files) return;
         var surplus = files.length;
+
         function _onSuccess() {
             if ((--surplus) == 0) {
                 onSuccess();
@@ -47,6 +48,9 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         option.matType = matType;
 
         if (isLocalFile(file)) {
+            if (!file.name) {
+                file.name = generateName(file);
+            }
             option.filename = file.name;
             if (!!file.isWx) {
                 TQ.Log.alertInfo("isWx");
@@ -79,9 +83,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         }
 
         function doUploadMat(signData) {
-            doUploadImage(signData, file, option).
-                success(onLoadedSuccess).
-                error(onError);
+            doUploadImage(signData, file, option).success(onLoadedSuccess).error(onError);
         }
 
         function onLoadedSuccess(data, status, headers, config) {
@@ -193,6 +195,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     var counter = 100;
+
     function getImageNameWithoutExt() {
         // the Cloundary will automatically add extion '.png'
         return "p" + (counter++);
@@ -212,18 +215,16 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             matType: data.type
         };
 
-        return $http.post(C_MAN_URL, angular.toJson(data2)).
-            then(function (pkg) {
-                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data2.matType});
-            });
+        return $http.post(C_MAN_URL, angular.toJson(data2)).then(function (pkg) {
+            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data2.matType});
+        });
     }
 
     function banMat(data) {
         data.ban = true;
-        return $http.post(C_MAN_URL, angular.toJson(data)).
-            then(function (pkg) { // 发出event， 好让dataService等更新自己
-                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
-            });
+        return $http.post(C_MAN_URL, angular.toJson(data)).then(function (pkg) { // 发出event， 好让dataService等更新自己
+            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
+        });
     }
 
     function update(path) {
@@ -243,6 +244,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     // private functions:
     function onDownload(evt) {
         var data = evt.data;
+
         function onSuccess() {
             TQ.DownloadManager.onCompleted(data);
         }
@@ -262,6 +264,22 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function hasFileName(file) {
         return (!!file.name);
+    }
+
+    function generateName(blobOrBuffer) {
+        var prefix = {
+                'audio': '配音',
+                'image': '照片'
+            },
+            dateString = (new Date()).toLocaleString().replace(/[^0-9]/g, '-');
+
+        if (blobOrBuffer.type) {
+            var words = blobOrBuffer.type.split('/'),
+                type = words[0],
+                extension = words[words.length - 1];
+        }
+
+        return prefix[type] + dateString + '.' + extension;
     }
 
     return {
