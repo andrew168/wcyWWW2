@@ -295,18 +295,15 @@ this.TQ = this.TQ || {};
     }
 
     var cloudinarySubdomains = [
-        'res-5.cloudinary.com',
-        'res-1.cloudinary.com',
-        'res-2.cloudinary.com',
-        'res-3.cloudinary.com',
-        'res-4.cloudinary.com'];
+        'res.cloudinary.com',
+        'res-3.cloudinary.com'];
 
     function accelerateByMultiHost(fullPath) {
         var mainHost = 'res.cloudinary.com';
         if (fullPath.indexOf(mainHost) > -1) {
             try {
                 var idIndex = fullPath.lastIndexOf('.');
-                var fileId = parseInt(fullPath[idIndex - 1]) % 5;
+                var fileId = parseInt(fullPath[idIndex - 1]) % 2;
                 return fullPath.replace(mainHost, cloudinarySubdomains[fileId]);
             } catch (e) {
 
