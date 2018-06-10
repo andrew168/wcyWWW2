@@ -36,7 +36,7 @@ this.TQ = this.TQ || {};
         RM = ResourceManager;
 
     RM.DATA_TYPE_SOUND = createjs.AbstractLoader.SOUND; // preloader lib中定义的
-    RM.NOSOUND = "https://res.cloudinary.com/eplan/video/upload/v1518142130/c50.wav";
+    RM.NOSOUND = "https://res.cloudinary.com/eplan/video/upload/v1528673918/c111.mp3";
     RM.NOPIC = "https://res.cloudinary.com/eplan/image/upload/v1518143410/c134.png";
     RM.BASE_PATH = null;
     // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
