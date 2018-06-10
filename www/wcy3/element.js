@@ -617,7 +617,8 @@ window.TQ = window.TQ || {};
     };
 
     p.removeChild = function (child) {
-        if (!child || this.isPinned() || !child.isHighlighter()) {
+        if (!child ||
+            (this.isPinned() && !child.isHighlighter())) {
             return null;
         }
         assertNotNull(TQ.Dictionary.FoundNull, this.children); // "应该有孩子"
