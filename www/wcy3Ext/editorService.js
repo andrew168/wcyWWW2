@@ -173,7 +173,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function initialize() {
         TQ.TextElementWxAdapter.detectFontSizeFactor();
-        TQ.AudioRecorder.init();
         reset();
         $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
         $rootScope.$on(TQ.EVENT.REFRESH_UI, forceToRefreshUI);
@@ -326,7 +325,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             } else {
                 return TQ.AudioRecorder.start(function (data) {
                     TQ.SceneEditor.addItemByFile(data, matType);
-                });
+                }, forceToRefreshUI);
             }
         }
 

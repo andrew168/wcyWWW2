@@ -157,32 +157,38 @@ TQ.AudioRecorder = (function () {
         get isPending() { return state === STATE_PENDING; },
         get isRecording() {return state === STATE_STARTED; },
         accept: accept,
-        init:init,
         start: start,
         stop: stop
     };
 
-    function init() {
+    function init(onSuccess, onError) {
         recorder = new Recorder({
             sampleRate: 44100, //采样频率，默认为44100Hz(标准MP3采样率)
             bitRate: 128, //比特率，默认为128kbps(标准MP3质量)
-            success: onInitSuccess, //成功回调函数
+            success: function () { // //成功回调函数
+                state = STATE_INITIALIZED;
+                console.log('录音设备初始化成功!');
+                if (onSuccess) {
+                    onSuccess();
+                }
+            },
+
             error: function (msg) { //失败回调函数
                 alert(msg);
+                if (onError) {
+                    onError();
+                }
             },
             fix: function (msg) { //不支持H5录音回调函数
                 alert(msg);
+                if (onError) {
+                    onError();
+                }
             }
         });
     }
 
-
-    function onInitSuccess() {
-        state = STATE_INITIALIZED;
-        console.log('succeed in Recorder init!');
-    }
-
-    function start(callback) {
+    function start(callback, refreshUI) {
         if (state >= STATE_INITIALIZED) {
             if (state === STATE_STARTED) {//不能重复开始，但是，如果有pending的， 则忽略它
                 return;
@@ -190,10 +196,13 @@ TQ.AudioRecorder = (function () {
             state = STATE_STARTED;
             onStopCallback = callback;
             recorder.start();
+            if (refreshUI) {
+                refreshUI();
+            }
         } else {
-            setTimeout(function() {
-                start(callback);
-            }, 100);  // 努力尝试
+            init(function() {
+                start(callback, refreshUI);
+            });
         }
     }
 
