@@ -4,6 +4,10 @@
 # 前台： 解压所有的zip文件（可能不存在）,
 # 放到： wwwz/card2/www目录下
 #
+mkdir /data
+mkdir /data/wwwz
+mkdir /data/wwwz/card2
+mkdir /data/wwwz/card2/www
 cd /data/wwwz/card2/www
 mv /home/andrewzhi/releaseAll1.0.0.zip .
 unzip -o releaseAll1.0.0.zip
