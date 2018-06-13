@@ -555,6 +555,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function insertText(message, x, y) {
+        if (!message) {
+            return TQ.Log.info("空字符串， 不必添加到画布");
+        }
         if (!state.fontFace) {
             state.fontFace = TQ.Config.fontFace;
         }
@@ -674,6 +677,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (!currScene) return;
 
         currScene.addLevel(id);
+        levelThumbs.splice(currScene.currentLevelId+1, 0, {src:null, timestamp:Date.now()});
         gotoLevel(id);
     }
 
