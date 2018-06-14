@@ -320,6 +320,18 @@ window.TQ = window.TQ || {};
 
     DeleteEleCommand.prototype.redo = DeleteEleCommand.prototype.do;
 
+    AbstractCommand.name2 = 'AbstractCommand';
+    CompositeCommand.name2 = 'CompositeCommand';
+    MoveCommand.name2 = 'MoveCommand';
+    MoveAnchorCommand.name2 = 'MoveAnchorCommand';
+    MovePivotCommand.name2 = 'MovePivotCommand';
+    ScaleCommand.name2 = 'ScaleCommand';
+    SetColorCommand.name2 = 'SetColorCommand';
+    SetSizeCommand.name2 = 'SetSizeCommand';
+    RotateCommand.name2 = 'RotateCommand';
+    SetTimeCommand.name2 = 'SetTimeCommand';
+    DeleteEleCommand.name2 = 'DeleteEleCommand';
+
     TQ.AbstractCommand = AbstractCommand;
     TQ.CompositeCommand = CompositeCommand;
     TQ.MoveCommand = MoveCommand;

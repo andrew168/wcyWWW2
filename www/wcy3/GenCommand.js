@@ -16,9 +16,11 @@ window.TQ = window.TQ || {};
         this.newValue = newValue;
         this.oldValue = oldValue;
         if (Array.isArray(cmdIDorArray)) {
+            this.type2 = cmdIDorArray[0];
             this.dofn = cmdIDorArray[0];
             this.undofn = cmdIDorArray[1];
         } else {
+            this.type2 = cmdIDorArray;
             this.dofn = fns[cmdIDorArray].dofn;
             this.undofn = fns[cmdIDorArray].undofn;
         }
@@ -37,7 +39,7 @@ window.TQ = window.TQ || {};
         fns[GenCommand.SCALE_AND_ROTATE] = {dofn: "scaleAndRotateTo",  undofn: "scaleAndRotateTo"};
         fns[GenCommand.MIN_JOINT_ANGLE] = {dofn: "setMinAngle",  undofn: "setMinAngle"};
         fns[GenCommand.MAX_JOINT_ANGLE] = {dofn: "setMaxAngle",  undofn: "setMaxAngle"};
-        fns[GenCommand.CHANGE_LAYER] = {dofn: "moveZ",  undofn: " moveToZ"};
+        fns[GenCommand.CHANGE_LAYER] = {dofn: "moveZ",  undofn: "moveToZ"};
         fns[GenCommand.SET_3D_OBJ] = {dofn: "attachTo",  undofn: "detach"};
         fns[GenCommand.ADD_ITEM] = {dofn: "addElementDirect",  undofn: "deleteElement"};
     };
@@ -56,6 +58,7 @@ window.TQ = window.TQ || {};
 
     GenCommand.prototype.redo = GenCommand.prototype.do;
 
+    GenCommand.name2='GenCommand';
     TQ.GenCommand = GenCommand;
 }());
 

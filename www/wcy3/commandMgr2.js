@@ -89,19 +89,19 @@ window.TQ = window.TQ || {};
     CommandMgr.mergeCommand = function (last, cmd) {
         if ((last != null) &&
             (_lastCmdGroupID === _cmdGroupID) &&
-            (last.constructor.name === cmd.constructor.name) &&
+            (last.constructor.name2 === cmd.constructor.name2) &&
             (last.receiver.id === cmd.receiver.id)) {
-            if ((last.constructor.name == "DeleteEleCommand") ||
-                (last.constructor.name == "CompositeCommand")) {
+            if ((last.constructor.name2 == "DeleteEleCommand") ||
+                (last.constructor.name2 == "CompositeCommand")) {
                 return null;
             } else {
-                switch (cmd.constructor.name) {
+                switch (cmd.constructor.name2) {
                     case 'MoveCommand':
                     case 'RotateCommand':
                         cmd.oldValue = last.oldValue;
                         break;
                     case 'GenCommand':
-                        if (cmd.dofn === last.dofn) {
+                        if (cmd.type2 === last.type2) {
                             cmd.oldValue = last.oldValue;
                         } else {
                             return null;
@@ -127,7 +127,7 @@ window.TQ = window.TQ || {};
 
     CommandMgr.directDo = function (cmd) {
         cmd.do();
-        if (cmd.constructor.name == "CompositeCommand") {
+        if (cmd.constructor.name2 == "CompositeCommand") {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, cmd.commands.length > 0);
         }
         if (!TQ.CompositeCommand.isOpen()) {
