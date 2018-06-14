@@ -94,9 +94,22 @@
                 _this.close = function () {
                     if (!stopped) {
                         _this.stop();
-                        processor = null;
+                    }
+                    if (microphone) {
+                        var tracks = microphone.mediaStream.getAudioTracks();
+                        tracks.forEach(function (track) {
+                            track.stop();
+                        });
+
+                        // microphone.stop();
                         microphone = null;
                     }
+                    if (processor) {
+                        // processor.stop();
+                        processor = null;
+                    }
+
+                    // stream.stop();
                     context.close(); // 关闭AudioContext并释放资源，以便于其它app使用声音设备
                 };
                 //获取blob格式录音文件
@@ -134,7 +147,7 @@
                         msg = '找不到麦克风设备';
                         break;
                     default:
-                        msg = '无法打开麦克风，异常信息:' + (error.code || error.name);
+                        msg = '无法打开麦克风，异常信息: error.code= ' + error.code + ', error.name=' + error.name;
                         break;
                 }
                 Util.log(msg);
