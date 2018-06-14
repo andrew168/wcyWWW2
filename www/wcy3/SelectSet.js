@@ -492,7 +492,7 @@ TQ = TQ || {};
 
     GroupCommand.prototype.do = function() {
         currScene.groupIt(this.receiver, this.newValue);
-        return(this.constructor.name + this.receiver);
+        return(this.constructor.name2 + this.receiver);
     };
 
     GroupCommand.prototype.undo = function() {
@@ -500,7 +500,7 @@ TQ = TQ || {};
             assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.receiver.length > 0);
             currScene.groupIt([this.receiver[0].parent], this.oldValue);
         }
-        return(this.constructor.name + this.receiver);
+        return(this.constructor.name2 + this.receiver);
     };
 
     GroupCommand.prototype.redo = GroupCommand.prototype.do;
@@ -518,12 +518,12 @@ TQ = TQ || {};
 
     JointCommand.prototype.do = function() {
         currScene.joint(this.receiver, this.newValue);
-        return(this.constructor.name + this.receiver);
+        return(this.constructor.name2 + this.receiver);
     };
 
     JointCommand.prototype.undo = function() {
         currScene.joint(this.receiver, this.oldValue);
-        return(this.constructor.name + this.receiver);
+        return(this.constructor.name2 + this.receiver);
     };
 
     JointCommand.prototype.redo = JointCommand.prototype.do;
@@ -542,15 +542,19 @@ TQ = TQ || {};
 
     HideCommand.prototype.do = function() {
         SelectSet.doShow(this.receiver, this.newValue);
-        return(this.constructor.name + this.receiver);
+        return(this.constructor.name2 + this.receiver);
     };
 
     HideCommand.prototype.undo = function() {
         SelectSet.doShow(this.receiver, this.oldValue);
-        return(this.constructor.name + this.receiver);
+        return(this.constructor.name2 + this.receiver);
     };
 
     HideCommand.prototype.redo = HideCommand.prototype.do;
+
+    GroupCommand.name2 = 'GroupCommand';
+    JointCommand.name2 = 'JointCommand';
+    HideCommand.name2 = 'HideCommand';
 
     TQ.GroupCommand = GroupCommand;
     TQ.JointCommand = JointCommand;
