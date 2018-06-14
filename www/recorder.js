@@ -20,9 +20,11 @@
     var Recorder = function(config){
 
         var _this = this;
+        var stopped = true;
         config = config || {}; //初始化配置对象
         config.sampleRate = config.sampleRate || 44100; //采样频率，默认为44100Hz(标准MP3采样率)
         config.bitRate = config.bitRate || 128; //比特率，默认为128kbps(标准MP3质量)
+
 
         Util.init();
 
@@ -77,6 +79,7 @@
                         microphone.connect(processor);
                         processor.connect(context.destination);
                         Util.log('开始录音');
+                        stopped = false;
                     }
                 };
                 //结束录音
@@ -85,7 +88,16 @@
                         microphone.disconnect();
                         processor.disconnect();
                         Util.log('录音结束');
+                        stopped = true;
                     }
+                };
+                _this.close = function () {
+                    if (!stopped) {
+                        _this.stop();
+                        processor = null;
+                        microphone = null;
+                    }
+                    context.close(); // 关闭AudioContext并释放资源，以便于其它app使用声音设备
                 };
                 //获取blob格式录音文件
                 _this.getBlob = function(onSuccess, onError){
@@ -157,6 +169,7 @@ TQ.AudioRecorder = (function () {
         get isPending() { return state === STATE_PENDING; },
         get isRecording() {return state === STATE_STARTED; },
         accept: accept,
+        close: close,
         start: start,
         stop: stop
     };
@@ -224,7 +237,11 @@ TQ.AudioRecorder = (function () {
     }
 
     function accept() {
-        state = STATE_INITIALIZED;
+        if (state === STATE_STARTED) {
+            stop();
+        }
+        recorder.close();
+        state = STATE_UNKNOWN;
     }
 
     function defaultCallback(blob) {
