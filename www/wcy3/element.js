@@ -695,16 +695,24 @@ window.TQ = window.TQ || {};
             });
         }
 
-        var imgReady = TQ.RM.hasResourceReady(newSkinImg);
-        if (!imgReady) {
-            return TQ.RM.addItem(newSkinImg, function() {
-                self.changeSkin(newSkinImg);
-            });
+        if (!(newSkinImg instanceof Image)) {
+            var imgReady = TQ.RM.hasResourceReady(newSkinImg);
+            if (!imgReady) {
+                return TQ.RM.addItem(newSkinImg, function () {
+                    self.changeSkin(newSkinImg);
+                });
+            }
         }
 
         this.persist();
         var originalZ = this.jsonObj.zIndex;
-        this.jsonObj.src = newSkinImg;
+        if (newSkinImg instanceof Image) {
+            this.jsonObj.src = null;
+            this.jsonObj.data = newSkinImg;
+        } else {
+            this.jsonObj.src = newSkinImg;
+        }
+
         this._doRemoveFromStage();
         this.persist();
         this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1

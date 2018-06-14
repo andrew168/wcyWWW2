@@ -303,7 +303,7 @@ TQ = TQ || {};
 
         var ele;
         if (desc.isBackground && (ele = level.getBackground())) {
-            ele.changeSkin(desc.src);
+            ele.changeSkin(desc.src || desc.data);
         } else {
             ele = TQ.Element.build(level, desc);
             assertTrue(TQ.INVALID_LOGIC, ele.level == level);
