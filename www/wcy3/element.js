@@ -687,9 +687,16 @@ window.TQ = window.TQ || {};
             return;
         }
 
+        var self = this;
+        if (self.isPinned()) {
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked, continue?'), function () {
+                self.pinIt();
+                self.changeSkin(newSkinImg);
+            });
+        }
+
         var imgReady = TQ.RM.hasResourceReady(newSkinImg);
         if (!imgReady) {
-            var self = this;
             return TQ.RM.addItem(newSkinImg, function() {
                 self.changeSkin(newSkinImg);
             });
