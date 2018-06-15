@@ -98,7 +98,8 @@ var currScene = null;
             var desc = {
                 isBackground: isBkg(matType),
                 data: img,
-                src: null, type: "Bitmap", autoFit: determineAutoFit(matType)
+                src: null, type: "Bitmap", autoFit: determineAutoFit(matType),
+                eType: TQ.MatType.toEType(matType)
             };
 
             var ele = SceneEditor.addItem(desc);
@@ -113,7 +114,8 @@ var currScene = null;
         TQ.RM.loadSoundFromFile(fileOrBlob, function (result) {
             var desc = {
                 data: TQ.RM.getResource(result.item.id).res,
-                src: result.item.id, type: TQ.ElementType.SOUND
+                src: result.item.id, type: TQ.ElementType.SOUND,
+                eType: TQ.MatType.toEType(matType)
             };
 
             var ele = SceneEditor.addItem(desc);
@@ -127,6 +129,7 @@ var currScene = null;
 
     SceneEditor.addItem = function (desc) {
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
+        desc.eType = TQ.MatType.toEType(desc.type);
 
         // "Groupfile" 暂时还没有纳入RM的管理范畴
         if (((desc.type === TQ.ElementType.SOUND) ||
@@ -141,6 +144,7 @@ var currScene = null;
 
         function doAdd() {
             var ele = currScene.addItem(desc);
+            TQ.Assert.isTrue(!!desc.eType);
             setTimeout(function() { // 延时， 以确保元素建立好了，避免autoFit失效,
                 if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
                     TQ.SelectSet.add(ele);

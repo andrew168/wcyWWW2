@@ -128,6 +128,17 @@ TQ = TQ || {};
         return {x: this.jsonObj.bbox.xmax, y: this.jsonObj.bbox.ymax};
     };
 
+    p.getBBoxBottomRight = function () {
+        return {x: this.jsonObj.bbox.xmax, y: this.jsonObj.bbox.ymin};
+    };
+
+    p.getBBoxTopLeft = function() {
+        return {x: this.jsonObj.bbox.xmin, y: this.jsonObj.bbox.ymax};
+    };
+
+    p.getBBoxBottomLeft = function () {
+        return {x: this.jsonObj.bbox.xmin, y: this.jsonObj.bbox.ymin};
+    };
     p._doLoad = function () {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
         var jsonObj = this.jsonObj;
