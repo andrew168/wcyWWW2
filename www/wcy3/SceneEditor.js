@@ -129,7 +129,9 @@ var currScene = null;
 
     SceneEditor.addItem = function (desc) {
         desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
-        desc.eType = TQ.MatType.toEType(desc.type);
+        if (!desc.eType) {
+            TQ.Log.error("未定义的eType");
+        }
 
         // "Groupfile" 暂时还没有纳入RM的管理范畴
         if (((desc.type === TQ.ElementType.SOUND) ||

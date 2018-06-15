@@ -536,7 +536,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (!matType) {
             matType = TQ.MatType.PROP;
         }
-        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.WITHIN_FRAME, x: x, y: y};
+        var desc = {src: filename, type: "Bitmap", eType: TQ.MatType.toEType(matType),
+            autoFit: TQ.Element.FitFlag.WITHIN_FRAME, x: x, y: y};
         addItem(desc, matType);
     }
 
@@ -549,7 +550,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function insertBkImage(filename, x, y) {
-        var desc = {src: filename, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y,
+        var desc = {src: filename, type: "Bitmap", eType: TQ.Element.ETYPE_BACKGROUND,
+            autoFit: TQ.Element.FitFlag.FULL_SCREEN, x: x, y: y,
             zIndex:0, isBackground: true};
         addItem(desc, TQ.MatType.BKG);
     }
@@ -566,6 +568,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             src: null,
             text: message,
             type: "Text",
+            eType: TQ.Element.ETYPE_TEXT,
             autoFit: TQ.Element.FitFlag.KEEP_SIZE,
             x: x,
             y: y,

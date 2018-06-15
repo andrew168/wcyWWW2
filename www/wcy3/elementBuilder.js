@@ -20,6 +20,9 @@ window.TQ = window.TQ || {};
         // 此处已经组装好了目录
         TQ.Element.upgradeToVer2(desc);
         var DescType = TQ.ElementType;
+        if (!desc.eType) {
+            TQ.Log.error('未定义的元素类别eType');
+        }
         switch (desc.type) {
             case DescType.ANCHOR_MARKER:
                 return new TQ.AnchorMarker(level, desc);
