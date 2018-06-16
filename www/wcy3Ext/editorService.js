@@ -90,7 +90,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         mCopyToggle: mCopyToggle,
         insertMat: insertMat,
         loadLocalImage: loadLocalImage,
-        insertSoundFromLocal: insertSoundFromLocal,
+        loadLocalSound: loadLocalSound,
         insertPeopleImage: insertPeopleImage, // i.e. FromUrl:
         insertPropImage: insertPropImage,
         insertBkImage: insertBkImage,
@@ -294,11 +294,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         });
     }
 
-    function insertSoundFromLocal(useDevice) {
-        return insertMatFromLocal(TQ.MatType.SOUND, useDevice);
-    }
-
-    function insertMatFromLocal(matType, useDevice) {
+    function loadLocalSound(matType, useDevice, callback) {
         if (WxService.isReady()) {
             // alert("请在浏览器中打开，以便于使用所有功能");
             // return doInsertMatFromLocalWx(matType);
@@ -309,7 +305,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 return TQ.AudioRecorder.stop();
             } else {
                 return TQ.AudioRecorder.start(function (data) {
-                    TQ.SceneEditor.addItemByFile(data, matType);
+                    TQ.SceneEditor.addItemByFile(data, matType, callback);
                 }, forceToRefreshUI);
             }
         }

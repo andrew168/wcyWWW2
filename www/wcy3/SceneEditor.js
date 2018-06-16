@@ -56,10 +56,8 @@ var currScene = null;
         stage.addChild(stageContainer);
     }
 
-    SceneEditor.addItemByFile = function (data, matType) {
+    SceneEditor.addItemByFile = function (data, matType, callback) {
         var aFile = data.aFile || data;
-        var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
-        var needToSave = true;
 
         if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
             return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
@@ -73,7 +71,7 @@ var currScene = null;
                 if (aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
                     return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
                 }
-                addItemBySoundFile(aFile, matType, needToSave);
+                addItemBySoundFile(aFile, matType, callback);
             }
         }
     };
@@ -117,7 +115,7 @@ var currScene = null;
         img.src = image64Data;
     }
 
-    function addItemBySoundFile(fileOrBlob, matType, needToSave) {
+    function addItemBySoundFile(fileOrBlob, matType, callback) {
         TQ.RM.loadSoundFromFile(fileOrBlob, function (result) {
             var desc = {
                 data: TQ.RM.getResource(result.item.id).res,
@@ -125,12 +123,7 @@ var currScene = null;
                 eType: TQ.MatType.toEType(matType)
             };
 
-            var ele = SceneEditor.addItem(desc);
-            SceneEditor.lastSoundElement = ele;
-
-            if (needToSave) {
-                TQ.ResourceSync.local2Cloud(ele, fileOrBlob, matType);
-            }
+            callback(desc, fileOrBlob, matType);
         });
     }
 
@@ -418,6 +411,7 @@ var currScene = null;
 
     SceneEditor.revokeLastSound = function () {
         if (SceneEditor.lastSoundElement) {
+            SceneEditor.lastSoundElement.stop();
             currScene.deleteElement(SceneEditor.lastSoundElement);
             SceneEditor.lastSoundElement = null;
         }
