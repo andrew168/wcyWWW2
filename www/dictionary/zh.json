@@ -184,5 +184,7 @@
   "Copy-link": "复制URL",
   "Close": "关闭",
   "already in lowest layer!": "到顶啦!",
-  "couldn't move any more！": "到底啦！"
+  "couldn't move any more！": "到底啦！",
+  "change it?": "改一下?",
+  "the object is locked, continue?": "元素被锁定了，继续?"
 }

@@ -133,5 +133,7 @@
   "uploading...": "uploading...",
   "<img src=\"/public/images/loading.gif\"> uploading...": "<img src=\"/public/images/loading.gif\"> uploading...",
   "already in lowest layer!": "already in lowest layer!",
-  "couldn't move any more！": "couldn't move any more！"
+  "couldn't move any more！": "couldn't move any more！",
+  "change it?": "change it?",
+  "the object is locked, continue?": "the object is locked, continue?"
 }
