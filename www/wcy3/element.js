@@ -1333,6 +1333,13 @@ window.TQ = window.TQ || {};
         }
 
         if (this._isNewSkin) { // 编程哲学: 多用 是, 少用 非, 符合一般人的思维逻辑, 通顺.
+            //ToDo: 替换的背景,皮肤，要不要受旧背景TRSA参数的限制？
+            // if (Element.isBackground(this.jsonObj)) {
+            //     if (this.autoFitFlag && !this.isEditorEle() && !this.isVirtualObject()) {
+            //         this.autoFit(resource);
+            //     }
+            // }
+
             TQ.Log.out("element._afterItemLoaded"); // , 应该只在临时添加的时候, 才调用
             // assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
             TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
