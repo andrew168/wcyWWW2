@@ -81,17 +81,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         decreaseTimeline: decreaseTimeline,
 
         // UI操作部分， 更改了元素的state， 所有，必须 调用 updateMode()，以更新UI
-        hideOrShow :hideOrShow ,
-        pinIt:pinIt,
+        hideOrShow: hideOrShow,
+        pinIt: pinIt,
         attachTextBubble: attachTextBubble,
         detachTextBubble: detachTextBubble,
         moveCtrl: TQ.MoveCtrl,
         // element insert (text, sound, image...)
         mCopyToggle: mCopyToggle,
         insertMat: insertMat,
-        insertBkImageFromLocal: insertBkImageFromLocal, // upload
-        insertPeopleFromLocal: insertPeopleFromLocal,
-        insertPropFromLocal: insertPropFromLocal,
+        loadLocalImage: loadLocalImage,
         insertSoundFromLocal: insertSoundFromLocal,
         insertPeopleImage: insertPeopleImage, // i.e. FromUrl:
         insertPropImage: insertPropImage,
@@ -105,7 +103,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         selectLocalFile: selectLocalFile,
 
         // select set
-        emptySelectSet:emptySelectSet,
+        emptySelectSet: emptySelectSet,
 
         // editor
         initialize: initialize,
@@ -118,7 +116,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         reset: reset,
         setWorkingRegion: setWorkingRegion,
         setBackgroundColor: setBackgroundColor,
-        onEventByToolbar : onEventByToolbar,
+        onEventByToolbar: onEventByToolbar,
 
         // particle Effect
         ParticleMgr: TQ.ParticleMgr,  // start, stop, change(option)
@@ -130,14 +128,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function addItem(desc, matType) {
         if (isProxyMat(desc.src)) {
-            NetService.uploadOne(desc.src, matType).
-                then(function (res) {
-                    TQ.Log.alertInfo("uploaded " + desc.src + " to " + res.url);
-                    desc.src = res.url;
-                    TQ.SceneEditor.addItem(desc);
-                }, function (err) {
-                    TQ.Log.error(err);
-                })
+            NetService.uploadOne(desc.src, matType).then(function (res) {
+                TQ.Log.alertInfo("uploaded " + desc.src + " to " + res.url);
+                desc.src = res.url;
+                TQ.SceneEditor.addItem(desc);
+            }, function (err) {
+                TQ.Log.error(err);
+            })
                 .finally(TQ.MessageBox.hide);
         } else {
             TQ.SceneEditor.addItem(desc);
@@ -222,7 +219,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
             if (TQUtility.isIOS()) {
                 TQ.SoundMgr.stop();
-                TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function() {
+                TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
                     TQ.SoundMgr.iosForceToResumeAll();
                     preview();
                 });
@@ -297,18 +294,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         });
     }
 
-    function insertBkImageFromLocal(useDevice) {
-        return insertMatFromLocal(TQ.MatType.BKG, useDevice);
-    }
-
-    function insertPeopleFromLocal(useDevice) {
-        return insertMatFromLocal(TQ.MatType.PEOPLE, useDevice);
-    }
-
-    function insertPropFromLocal(useDevice) {
-        return insertMatFromLocal(TQ.MatType.PROP, useDevice);
-    }
-
     function insertSoundFromLocal(useDevice) {
         return insertMatFromLocal(TQ.MatType.SOUND, useDevice);
     }
@@ -328,9 +313,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 }, forceToRefreshUI);
             }
         }
+    }
 
+    function loadLocalImage(matType, useDevice, callback) {
         return selectLocalFile(matType, useDevice).then(function (data) {
-            TQ.SceneEditor.addItemByFile(data, matType);
+            TQ.SceneEditor.preprocessLocalImage(data, matType, callback);
         }, errorReport);
     }
 

@@ -15,6 +15,7 @@ var currScene = null;
 
     // 接口
     SceneEditor.turnOnEditor = turnOnEditor;
+    SceneEditor.preprocessLocalImage = preprocessLocalImage;
     SceneEditor.needToSave = needToSave;
     SceneEditor.lastSoundElement = null;
 
@@ -74,25 +75,34 @@ var currScene = null;
                 }
                 addItemBySoundFile(aFile, matType, needToSave);
             }
-        } else {
-            var stopReminder = true;
-            TQ.ImageProcess.start(aFile, options,
-                function (buffer) {
-                    if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
-                        TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
-                            TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
-                            function () {
-                                addItemByImageData(buffer.data, matType, needToSave);
-                            }, function () {
-                            });
-                    } else {
-                        addItemByImageData(buffer.data, matType, needToSave);
-                    }
-                });
         }
     };
 
-    function addItemByImageData(image64Data, matType, needToSave) {
+    function preprocessLocalImage(data, matType, callback) {// reduce size,
+        var aFile = data.aFile || data,
+            options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
+
+        if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
+            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+        }
+
+        var stopReminder = true;
+        TQ.ImageProcess.start(aFile, options,
+            function (buffer) {
+                if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
+                    TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
+                        TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
+                        function () {
+                            addItemByImageData(buffer.data, matType, callback);
+                        }, function () {
+                        });
+                } else {
+                    addItemByImageData(buffer.data, matType, callback);
+                }
+            });
+    }
+
+    function addItemByImageData(image64Data, matType, callback) {
         var img = new Image();
         img.onload = function() {
             var desc = {
@@ -102,10 +112,7 @@ var currScene = null;
                 eType: TQ.MatType.toEType(matType)
             };
 
-            var ele = SceneEditor.addItem(desc);
-            if (needToSave) {
-                TQ.ResourceSync.local2Cloud(ele, image64Data, matType);
-            }
+            callback(desc, image64Data, matType);
         };
         img.src = image64Data;
     }
