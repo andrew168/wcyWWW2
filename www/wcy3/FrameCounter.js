@@ -158,7 +158,7 @@ window.TQ = window.TQ || {};
             if (_isRecording) {
                 vMax += step;
             } else {
-                FrameCounter.v = vMax;
+                // FrameCounter.v = vMax;
             }
         }
 

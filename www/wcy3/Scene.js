@@ -164,12 +164,15 @@ TQ = TQ || {};
             }
             if (TQ.FrameCounter.finished() && TQ.FrameCounter.isPlaying()) {
                 if (this.isLastLevel()) {
-                    if (!TQ.FrameCounter.isAutoRewind()) {
-                        this.stop();
-                        TQ.Log.checkPoint('Scene.EVENT_END_OF_PLAY');
-                        TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_END_OF_PLAY);
-                    } else if (!TQ.FrameCounter.isInverse()) {
-                        this.doReplay();
+                    // 声音是否播完
+                    if (this.hasMusicCompleted()) {
+                        if (!TQ.FrameCounter.isAutoRewind()) {
+                            // this.stop();
+                            TQ.Log.checkPoint('Scene.EVENT_END_OF_PLAY');
+                            TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_END_OF_PLAY);
+                        } else if (!TQ.FrameCounter.isInverse()) {
+                            this.doReplay();
+                        }
                     }
                 } else {
                     this.nextLevel();
@@ -364,6 +367,10 @@ TQ = TQ || {};
 
     p.isLastLevel = function () {
         return ((this.currentLevelId + 1) >= this.levelNum());
+    };
+
+    p.hasMusicCompleted = function () {
+        return (this.tMax < this.toGlobalTime(TQ.FrameCounter.t());
     };
 
     p.hasAnimation = function () {
@@ -945,6 +952,7 @@ TQ = TQ || {};
         var i = 0,
             ts = 0,
             te = 0,
+            tGlobalLastFrame = 0,
             level = null;
 
         // for recording
@@ -980,8 +988,11 @@ TQ = TQ || {};
                 _levelTs.push(ts);
                 _levelTe.push(te);
             }
+
+            tGlobalLastFrame = Math.max(tGlobalLastFrame, level.getGlobalTime());
         }
 
+        te = Math.max(te, tGlobalLastFrame);
         if (Math.abs(this.tMax - te) > 0.1) {
             this.tMax = (wholeSceneReady) ? te : Math.max(this.tMax, te);
             TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);

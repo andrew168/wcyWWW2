@@ -10,6 +10,7 @@ window.TQ = window.TQ || {};
         this.background = null;
         this.latestElement = null; // 最新生成的复合物体
         this.tMaxFrame = 0;
+        this.tGlobalLastFrame = 0; // 他对作品最大时长的最低要求
         this.tMaxCapacity = DEFAULT_MAX_FRAME; // 该level的最后一帧动画的时间(单位是: 帧), 以该Level的头为0帧.
         this.t0 = 0;
         this.resourceReady = false;
@@ -729,15 +730,23 @@ window.TQ = window.TQ || {};
         if (!this.dataReady) return this.tMaxFrame;
         // 在退出本level的时候才调用，以更新时间，
         //  ToDo: ?? 在编辑本Level的时候， 这个值基本上是没有用的
-        var tLastFrame = 0;
+        var tLastFrame = 0,
+            tGlobalLastFrame = 0,
+            ele;
         for (var i = 0; i < this.elements.length; i++) {
-            assertNotNull(TQ.Dictionary.FoundNull, this.elements[i]);
-            if (!this.elements[i].calculateLastFrame) {
+            ele = this.elements[i];
+            assertNotNull(TQ.Dictionary.FoundNull, ele);
+            if (!ele.calculateLastFrame) {
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             } else {
-                tLastFrame = Math.max(tLastFrame, this.elements[i].calculateLastFrame());
+                if (ele.isMultiScene) {
+                    tGlobalLastFrame = Math.max(tGlobalLastFrame, ele.calculateLastFrame());
+                } else {
+                    tLastFrame = Math.max(tLastFrame, ele.calculateLastFrame());
+                }
             }
         }
+        this.tGlobalLastFrame = tGlobalLastFrame;
         return tLastFrame;
     };
 
@@ -813,7 +822,11 @@ window.TQ = window.TQ || {};
 
     p.getTime = function() {
         return Math.max(this.tMaxFrame, this.tMaxCapacity);
-    }
+    };
+
+    p.getGlobalTime = function () {
+        return this.tGlobalLastFrame;
+    };
 
     p.setT0 = function(t0) { this.t0 = t0;};
     p.getT0 = function() { return this.t0;};

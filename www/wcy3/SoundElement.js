@@ -107,8 +107,10 @@ TQ = TQ || {};
     p._parent_calculateLastFrame = p.calculateLastFrame;
     p.calculateLastFrame = function() {
         if (!this.instance) return 0;
-        if (this.isMultiScene) return 0;  // ToDo: 需要补改变当前的录制长度， （如：200帧的默认值），跨场景的声音， 不能用来计算本场景的最后一帧
-        return (this.t0 + this.instance.duration / 1000);
+        // 由上级（level）来决定：
+        // 跨场景的声音：影响作品总时间；
+        // 非跨场景的声音： 只用来计算本场景的最后一帧；
+        return (this.t0 + this.instance.duration / 1000); // duration 单位是ms
     };
 
     SoundElement._composeFullPath = function (res) {
