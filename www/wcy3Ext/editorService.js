@@ -312,8 +312,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function loadLocalImage(matType, useDevice, callback) {
-        return selectLocalFile(matType, useDevice).then(function (data) {
-            TQ.SceneEditor.preprocessLocalImage(data, matType, callback);
+        return selectLocalFile(matType, useDevice).then(function (filesOrImage64) {
+            var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64],
+                n = files.length,
+                i,
+                mat;
+            for (i = 0; i < n; i++) {
+                mat = files[i];
+                if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat)) {
+                    TQ.SceneEditor.preprocessLocalImage(mat, matType, callback);
+                }
+            }
         }, errorReport);
     }
 
@@ -399,7 +408,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             TQ.Log.debugInfo('changed');
             var files = domEle.files;
             if ((files.length > 0)) {
-                q.resolve({aFile:files[0], matType: matType, useDevice: useDevice});
+                q.resolve(files);
             } else {
                 q.reject({error:1, msg: "未选中文件！"});
             }

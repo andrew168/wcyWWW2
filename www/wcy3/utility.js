@@ -189,6 +189,16 @@ window.TQ = window.TQ || {};
         return false;
     };
 
+    Utility.isImageFile = function (file) {
+        return ((file instanceof File) && (file.type) && (file.type.indexOf('image') >=0));
+    };
+
+    Utility.isImage64 = function (data) {
+        // "data:image/png;base64"
+        var headers;
+        return ((typeof data === 'string') && (headers=data.slice(0,40)) && (headers.indexOf("data:image/")) && (label.indexOf("base64") >= 0));
+    };
+
     Utility.isJSON = function (desc) {
         if (!((desc == undefined) || (desc == null))) {
             if (! ((desc.type == undefined) || (desc.type == null))) {
