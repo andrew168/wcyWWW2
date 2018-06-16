@@ -104,7 +104,6 @@ var currScene = null;
         var img = new Image();
         img.onload = function() {
             var desc = {
-                isBackground: isBkg(matType),
                 data: img,
                 src: null, type: "Bitmap", autoFit: determineAutoFit(matType),
                 eType: TQ.MatType.toEType(matType)

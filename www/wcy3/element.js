@@ -712,7 +712,7 @@ window.TQ = window.TQ || {};
         } else {
             this.jsonObj.src = newSkinImg;
         }
-        if (this.isBackground()) {
+        if (Element.isBackground(this.jsonObj)) {
             this.autoFitFlag = TQ.Element.FitFlag.FULL_SCREEN;
         }
         this._doRemoveFromStage();
@@ -1856,8 +1856,8 @@ window.TQ = window.TQ || {};
         return (this.jsonObj.type === type);
     };
 
-    p.isBackground = function() {
-        return !!this.jsonObj.isBackground;
+    Element.isBackground = function(desc) {
+        return (desc && desc.eType && (desc.eType === TQ.Element.ETYPE_BACKGROUND));
     };
 
     p.isLoaded = function () {

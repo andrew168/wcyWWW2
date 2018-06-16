@@ -234,7 +234,7 @@ window.TQ = window.TQ || {};
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       // 记录新创建的元素到elements
       this.elements.push(ele);
-      if (ele.isBackground()) {
+      if (TQ.Element.isBackground(ele.jsonObj)) {
         TQ.AssertExt.invalidLogic(!this.background, "应该只有1个背景");
         this.background = ele;
       }
