@@ -3,8 +3,7 @@
  * Cmd 系列的文件， 只是用于编辑， 不能用于播放器， 所以要分离
  */
 
-TQ.CommandMgr.setTextProperty = function (option) {
-    var ele = TQ.SelectSet.peek();
+TQ.CommandMgr.setTextProperty = function (ele, option) {
     if (ele && ele.isText()) {
         var oldOption = {},
             newOption = option;

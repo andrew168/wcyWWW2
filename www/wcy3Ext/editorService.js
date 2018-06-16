@@ -896,8 +896,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
     }
 
-    function setTextProperty(option) {
-        TQ.CommandMgr.directDo(TQ.CommandMgr.setTextProperty(option));
+    function setTextProperty(ele, option) {
+        TQ.CommandMgr.directDo(TQ.CommandMgr.setTextProperty(ele, option));
     }
 
     function increaseFontLevel() {
