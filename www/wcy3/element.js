@@ -712,7 +712,9 @@ window.TQ = window.TQ || {};
         } else {
             this.jsonObj.src = newSkinImg;
         }
-
+        if (this.isBackground()) {
+            this.autoFitFlag = TQ.Element.FitFlag.FULL_SCREEN;
+        }
         this._doRemoveFromStage();
         this.persist();
         this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1
