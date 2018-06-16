@@ -843,7 +843,7 @@ window.TQ = window.TQ || {};
         }
 
         pWorld = desc;
-        var minScale = Math.min(pWorld.sx, pWorld.sy);
+        var minScale = Math.max(pWorld.sx, pWorld.sy); // 正好充满， 不留空白边， 多余的图，超出编辑
         if ((this.autoFitFlag === Element.FitFlag.KEEP_SIZE) ||
             ((this.autoFitFlag === Element.FitFlag.WITHIN_FRAME) && (minScale > 1))) { // 框大， 图小，保持原尺寸
             pWorld.sx = 1;
