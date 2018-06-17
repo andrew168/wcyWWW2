@@ -433,11 +433,16 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function composeWxShareData(scene, _shareCode) {
+        var defaultShareForKids = {
+            "title": '儿童创造能力提升',
+            "description": '儿童创造能力提升--UDOIDO KIDZ'
+        };
+
         TQ.Assert(_wcyId > 0, "必须先保存，才能调用");
         return {
-            title: (scene.title) ? scene.title : "UdoIdo",
+            title: defaultShareForKids.title, // (scene.title) ? scene.title : "UdoIdo",
             ssPath: (scene.ssPath) ? TQ.RM.toFullPathFs(scene.ssPath): null,
-            desc: (scene.description) ? scene.description: null,
+            desc: defaultShareForKids.description, // (scene.description) ? scene.description: null,
             code: (_shareCode) ? _shareCode : wcyId2ShareCode(_wcyId)
         }
     }
