@@ -370,7 +370,7 @@ TQ = TQ || {};
     };
 
     p.hasMusicCompleted = function () {
-        return (this.tMax < this.toGlobalTime(TQ.FrameCounter.t());
+        return (this.tMax < this.toGlobalTime(TQ.FrameCounter.t()));
     };
 
     p.hasAnimation = function () {
