@@ -300,13 +300,20 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             // return doInsertMatFromLocalWx(matType);
         }
 
-        if (useDevice && (matType === TQ.MatType.SOUND)) {
-            if (TQ.AudioRecorder.isRecording) {
-                return TQ.AudioRecorder.stop();
+        if (matType === TQ.MatType.SOUND) {
+            if (useDevice) {
+                if (TQ.AudioRecorder.isRecording) {
+                    return TQ.AudioRecorder.stop();
+                } else {
+                    return TQ.AudioRecorder.start(function (data) {
+                        TQ.SceneEditor.addItemByFile(data, matType, callback);
+                    }, forceToRefreshUI);
+                }
             } else {
-                return TQ.AudioRecorder.start(function (data) {
-                    TQ.SceneEditor.addItemByFile(data, matType, callback);
-                }, forceToRefreshUI);
+                selectLocalFile(matType, useDevice).then(function (files) {
+                    var soundFile = files[files.length -1];
+                    TQ.SceneEditor.addItemByFile(soundFile, matType, callback);
+                });
             }
         }
     }
