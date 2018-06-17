@@ -93,6 +93,8 @@ function UserService($http, $auth) {
             user.needManualLogin = false;
             user.name = data.name;
             user.ID = data.ID;
+            user.age = (!data.age ? user.age : data.age);
+            user.city = (!data.city? user.city: data.city);
             user.displayName = data.displayName;
             user.isValidName = true;
             user.saveToCache();

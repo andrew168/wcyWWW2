@@ -193,14 +193,25 @@
 
             function onSuccess(response) {
                 var data = (response.status === 200) ? response.data : [],
-                    selected = [];
+                    selected = [],
+                    userName = TQ.userProfile.getUserName();
 
                 if (!Array.isArray(data)) {
                     data = [];
                 }
 
                 data.forEach(function(item) {
-                    selected.push({wcyId: item._id, path: item.ssPath});
+                    selected.push({
+                        wcyId: item._id,
+                        path: item.ssPath,
+                        thumbPath: 'https://res.cloudinary.com/eplan/image/upload/w_100,h_100,c_limit/' + item.ssPath,
+                        title: "我有一个梦", // ToDo: 允许用户录入主题， 或系统设置竞赛的主题
+                        score: (!item.score? 1000: item.score), //起点，（只有创作了作品，系统给你1000点， 然后实时统计
+                        userName: userName,
+                        userId: item.userId,
+                        userAge: TQ.userProfile.age,
+                        city: TQ.userProfile.city
+                    });
                 });
                 mats.setList(selected);
                 state |= stateType;
