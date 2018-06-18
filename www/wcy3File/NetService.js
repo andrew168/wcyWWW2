@@ -11,6 +11,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     var baseUrl = TQ.Config.BONE_HOST,
         urlConcat = TQ.Base.Utility.urlConcat,
         IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API,
+        C_OPUS_URL = TQ.Config.MAN_HOST + '/wcyList';
         C_MAN_URL = TQ.Config.MAN_HOST + '/material';
 
     function isFullPath(url) {
@@ -238,6 +239,34 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         doUpdateMat(data);
     }
 
+    function requestToShareOpus(opus) {
+        var url = C_OPUS_URL + "/apply/" + opus.ID;
+        doUpdateOpus(url);
+    }
+
+    function ShareOpus(opus) { //批准发布作品，approveToShareOpus
+        var url = C_OPUS_URL + "/approve/" + opus.ID;
+        doUpdateOpus(url);
+    }
+
+    function requestToBanOpus(opus) {
+        TQ.Log.warn("服务器尚未实现此命令，暂时")
+        var url = C_OPUS_URL + "/requestToBan/" + opus.ID;
+        doUpdateOpus(url);
+    }
+
+    function banOpus(opus) {
+        var url = C_OPUS_URL + "/ban/" + opus.ID;
+        doUpdateMat(url);
+    }
+
+    function doUpdateOpus(url) {
+        return $http.get(url).then(function (pkg) { // 发出event， 好让dataService等更新自己
+            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
+        });
+    }
+
+
     function doUpdateMat(data) {
         return $http.post(C_MAN_URL, angular.toJson(data)).then(function (pkg) { // 发出event， 好让dataService等更新自己
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
@@ -248,6 +277,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         var url = urlConcat(baseUrl, path);
         TQ.Log.debugInfo("update: " + path + " to ==> " + url);
     }
+
 
     function del(path) {  // delete is reserved key word!!!
         var url = urlConcat(baseUrl, path);
@@ -304,6 +334,13 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         shareMat: shareMat,
         requestToShareMat: requestToShareMat,
         requestToBanMat: requestToBanMat,
+
+        requestToBanOpus: requestToBanOpus,
+        banOpus: banOpus, // 先ban， 后 delete, 不要急于删除， 以避免有些作品还在使用它们
+
+        requestToShareOpus: requestToShareOpus,
+        ShareOpus: ShareOpus,
+
         initialize: initialize,
         get: get,
         put: put,

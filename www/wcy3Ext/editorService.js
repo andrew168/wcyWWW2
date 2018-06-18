@@ -34,10 +34,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         updateControllers: updateControllers,
         forceToRenderSlider: forceToRenderSlider,
 
+        // 素材管理
         banMat: NetService.banMat,
         shareMat: NetService.shareMat,
         requestToBanMat: NetService.requestToBanMat,
         requestToShareMat: NetService.requestToShareMat,
+
+        // 作品管理
+        requestToBanOpus: NetService.requestToBanOpus,
+        banOpus: NetService.banOpus,
+        requestToShareOpus: NetService.requestToShareOpus,
+        shareOpus: NetService.shareOpus,
 
         // play & preview
         preview: preview,
