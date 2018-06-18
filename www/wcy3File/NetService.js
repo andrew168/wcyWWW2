@@ -215,13 +215,30 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             matType: data.type
         };
 
-        return $http.post(C_MAN_URL, angular.toJson(data2)).then(function (pkg) {
-            TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data2.matType});
-        });
+        return doUpdateMat(data2);
+    }
+
+    function requestToShareMat(data) {
+        data.requestToShareMat = true;
+        doUpdateMat(data);
+    }
+
+    function requestToBanMat(data) {
+        data.requestToBanMat = true;
+        doUpdateMat(data);
+    }
+
+    function shareMat(data) {
+        data.ban = true;
+        doUpdateMat(data);
     }
 
     function banMat(data) {
         data.ban = true;
+        doUpdateMat(data);
+    }
+
+    function doUpdateMat(data) {
         return $http.post(C_MAN_URL, angular.toJson(data)).then(function (pkg) { // 发出event， 好让dataService等更新自己
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
         });
@@ -284,6 +301,9 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     return {
         banMat: banMat, // 先ban， 后 delete, 不要急于删除， 以避免有些作品还在使用它们
+        shareMat: shareMat,
+        requestToShareMat: requestToShareMat,
+        requestToBanMat: requestToBanMat,
         initialize: initialize,
         get: get,
         put: put,

@@ -35,6 +35,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         forceToRenderSlider: forceToRenderSlider,
 
         banMat: NetService.banMat,
+        shareMat: NetService.shareMat,
+        requestToBanMat: NetService.requestToBanMat,
+        requestToShareMat: NetService.requestToShareMat,
 
         // play & preview
         preview: preview,
