@@ -31,6 +31,9 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     console.log("query: " + JSON.stringify(req.query));
     var public_id = req.body.public_id || null,
         ban = req.body.ban || false,
+        share = req.body.share || false,
+        requestToBan = req.body.requestToBan || false,
+        requestToShare = req.body.requestToShare || false,
         matType = getMatType(req),
         path = req.body.path || null,
         user = status.getUserInfo(req, res);
@@ -39,11 +42,18 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     }
 
     status.logUser(user, req, res);
-    if (ban) {
+    if (ban || share || requestToBan || requestToShare) {
         if (!public_id) {
             public_id = utils.path2public_id(path);
         }
-        return banMatId(req, res, matType, utils.matName2Id(public_id));
+        var newValues = {
+            isBanned: ban,
+            isShared: share,
+            requestToBan: requestToBan,
+            requestToShare: requestToShare
+        };
+
+        return banMatId(req, res, newValues, matType, utils.matName2Id(public_id));
     }
 
     if (!public_id) {
@@ -133,7 +143,7 @@ function updateMatId(req, res, matType, matId, path) {
     getMatController(matType).update(matId, path, onSavedToDB);
 }
 
-function banMatId(req, res, matType, matId) {
+function banMatId(req, res, newValues, matType, matId) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -146,7 +156,7 @@ function banMatId(req, res, matType, matId) {
         sendBack(data, res);
     }
 
-    getMatController(matType).ban(matId, user, onSavedToDB);
+    getMatController(matType).ban(matId, user, newValues, onSavedToDB);
 }
 
 function getMatIds(req, res, matType) {

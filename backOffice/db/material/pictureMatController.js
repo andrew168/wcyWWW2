@@ -129,7 +129,7 @@ function update(id, path, callback) {
         });
 }
 
-function ban(id, user, callback) {
+function ban(id, user, newValue, callback) {
     var onlyMine = {userId: user.ID},
         condition = {$and: [{_id: id}]};
 
@@ -144,7 +144,22 @@ function ban(id, user, callback) {
                 console.error(404, {msg: 'not found! : ' + id + ", or not belong to this user: " + playerID});
             } else {
                 console.log(data);
-                data.set('isBanned', true);
+                if (newValue['isBanned'] !== undefined ) {
+                    data.set('isBanned', newValue['isBanned']);
+                }
+
+                if (newValue['isShared'] !== undefined) {
+                    data.set('isShared', newValue['isShared']);
+                }
+
+                if (newValue['requestToBan'] !== undefined) {
+                    data.set('requestToBan', newValue['requestToBan']);
+                }
+
+                if (newValue['requestToShare'] !== undefined) {
+                    data.set('requestToShare', newValue['requestToShare']);
+                }
+
                 data.save(function (err, data) {
                     if (!err) {
                         if (callback) {

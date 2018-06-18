@@ -16,6 +16,8 @@ var pictureMatSchema = new Schema({
     path: String,  // 素材在Server上的相对路径，去除host和MatFolder之后
     isShared: {type:Boolean, default:false}, //个人私有/与众共享
     isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到
+    requestToBan: {type: Boolean, default: false},// 用户请求禁止
+    requestToShare: {type: Boolean, default: false},// 用户请求分享
     uploaded: {type:Boolean, default:false}
 });
 
