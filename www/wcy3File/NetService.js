@@ -220,17 +220,17 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     function requestToShareMat(data) {
-        data.requestToShareMat = true;
+        data.requestToShare = true;
         doUpdateMat(data);
     }
 
     function requestToBanMat(data) {
-        data.requestToBanMat = true;
+        data.requestToBan = true;
         doUpdateMat(data);
     }
 
     function shareMat(data) {
-        data.ban = true;
+        data.share = true;
         doUpdateMat(data);
     }
 
@@ -240,24 +240,24 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     function requestToShareOpus(opus) {
-        var url = C_OPUS_URL + "/apply/" + opus.ID;
+        var url = C_OPUS_URL + "/apply/" + opus.wcyId;
         doUpdateOpus(url);
     }
 
-    function ShareOpus(opus) { //批准发布作品，approveToShareOpus
-        var url = C_OPUS_URL + "/approve/" + opus.ID;
+    function shareOpus(opus) { //批准发布作品，approveToShareOpus
+        var url = C_OPUS_URL + "/approve/" + opus.wcyId;
         doUpdateOpus(url);
     }
 
     function requestToBanOpus(opus) {
         TQ.Log.warn("服务器尚未实现此命令，暂时")
-        var url = C_OPUS_URL + "/requestToBan/" + opus.ID;
+        var url = C_OPUS_URL + "/requestToBan/" + opus.wcyId;
         doUpdateOpus(url);
     }
 
     function banOpus(opus) {
-        var url = C_OPUS_URL + "/ban/" + opus.ID;
-        doUpdateMat(url);
+        var url = C_OPUS_URL + "/ban/" + opus.wcyId;
+        doUpdateOpus(url);
     }
 
     function doUpdateOpus(url) {
@@ -339,7 +339,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         banOpus: banOpus, // 先ban， 后 delete, 不要急于删除， 以避免有些作品还在使用它们
 
         requestToShareOpus: requestToShareOpus,
-        ShareOpus: ShareOpus,
+        shareOpus: shareOpus,
 
         initialize: initialize,
         get: get,
