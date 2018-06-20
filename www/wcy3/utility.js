@@ -196,7 +196,10 @@ window.TQ = window.TQ || {};
     Utility.isImage64 = function (data) {
         // "data:image/png;base64"
         var headers;
-        return ((typeof data === 'string') && (headers=data.slice(0,40)) && (headers.indexOf("data:image/")) && (label.indexOf("base64") >= 0));
+        return ((typeof data === 'string') &&
+            (headers=data.slice(0,40)) &&
+            (headers.indexOf("data:image/") >= 0) &&
+            (headers.indexOf("base64") >= 0));
     };
 
     Utility.isJSON = function (desc) {

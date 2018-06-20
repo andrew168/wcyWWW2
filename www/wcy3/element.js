@@ -695,23 +695,25 @@ window.TQ = window.TQ || {};
             });
         }
 
-        if (!(newSkinImg instanceof Image)) {
+        this.persist();
+        var originalZ = this.jsonObj.zIndex;
+        if (newSkinImg instanceof Image) {
+            this.jsonObj.src = null;
+            this.jsonObj.data = newSkinImg;
+        } else if (TQ.Utility.isImage64(newSkinImg)) {
+            // this.jsonObj.src = newSkinImg;
+            this.jsonObj.src = null;
+            this.jsonObj.data = newSkinImg;
+        } else {
             var imgReady = TQ.RM.hasResourceReady(newSkinImg);
             if (!imgReady) {
                 return TQ.RM.addItem(newSkinImg, function () {
                     self.changeSkin(newSkinImg);
                 });
             }
-        }
-
-        this.persist();
-        var originalZ = this.jsonObj.zIndex;
-        if (newSkinImg instanceof Image) {
-            this.jsonObj.src = null;
-            this.jsonObj.data = newSkinImg;
-        } else {
             this.jsonObj.src = newSkinImg;
         }
+
         if (Element.isBackground(this.jsonObj)) {
             this.autoFitFlag = TQ.Element.FitFlag.FULL_SCREEN;
         }

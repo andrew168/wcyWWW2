@@ -1371,20 +1371,24 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function changeSkin(newSkinUrl) {
         if (TQ.SelectSet.isEmpty()) {
-            return TQ.MessageBox.show(TQ.Locale.getStr('select the element to be changed!'));
+            TQ.MessageBox.show(TQ.Locale.getStr('select the element to be changed!'));
+            return null;
         }
 
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (ele.isPinned()) {
-            return TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked', function() {
+            TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked, continue?'), function() {
                 ele.pinIt();
                 changeSkin(newSkinUrl);
-            }))
+            });
+            return ele;
         }
 
         if (ele.isBitmap()) {
             ele.changeSkin(newSkinUrl);
         }
+
+        return ele;
     }
 
     var screenShotIsDither = false;
