@@ -159,7 +159,7 @@ window.TQ = window.TQ || {};
 
     p.createHitArea = function(rotation, w, h) {
         var shape = new createjs.Shape();
-        shape.rotation = rotation;
+        shape.rotation = 0; //相对于它host元素的角度，0， 因为hitArea总是随host主体转动的;
         shape.graphics.beginFill("#F00").drawRect(0, 0, w , h);
         TQ.DirtyFlag.setElement(this);
         return shape;
