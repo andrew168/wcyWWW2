@@ -682,7 +682,7 @@ window.TQ = window.TQ || {};
         skin.TBD = true;
     };
 
-    p.changeSkin = function (newSkinImg) {
+    p.changeSkin = function (newSkinImg, onChanged) {
         if (!this.isBitmap()) {
             return;
         }
@@ -691,7 +691,7 @@ window.TQ = window.TQ || {};
         if (self.isPinned()) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked, continue?'), function () {
                 self.pinIt();
-                self.changeSkin(newSkinImg);
+                self.changeSkin(newSkinImg, onChanged);
             });
         }
 
@@ -708,7 +708,7 @@ window.TQ = window.TQ || {};
             var imgReady = TQ.RM.hasResourceReady(newSkinImg);
             if (!imgReady) {
                 return TQ.RM.addItem(newSkinImg, function () {
-                    self.changeSkin(newSkinImg);
+                    self.changeSkin(newSkinImg, onChanged);
                 });
             }
             this.jsonObj.src = newSkinImg;
@@ -722,6 +722,9 @@ window.TQ = window.TQ || {};
         this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1
         this._isNewSkin = true;
         this._doLoad(this.jsonObj);
+        if (onChanged) {
+            onChanged(self);
+        }
     };
 
     p.attachMarker = function(){

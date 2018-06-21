@@ -1369,7 +1369,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
     }
 
-    function changeSkin(newSkinUrl) {
+    function changeSkin(newSkinUrl, onChanged) {
         if (TQ.SelectSet.isEmpty()) {
             TQ.MessageBox.show(TQ.Locale.getStr('select the element to be changed!'));
             return null;
@@ -1379,13 +1379,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (ele.isPinned()) {
             TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked, continue?'), function() {
                 ele.pinIt();
-                changeSkin(newSkinUrl);
+                changeSkin(newSkinUrl, onChanged);
             });
             return ele;
         }
 
         if (ele.isBitmap()) {
-            ele.changeSkin(newSkinUrl);
+            ele.changeSkin(newSkinUrl, onChanged);
         }
 
         return ele;
