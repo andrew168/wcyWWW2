@@ -116,7 +116,7 @@ window.TQ = window.TQ || {};
             txtObj.font = TQ.Utility.toCssFont(this.jsonObj);
 
             // hitArea 不会根据str内容来更新， 所以：
-            txtObj.hitArea = this.createHitArea(txtObj.rotation, getMeasuredWidthModified(txtObj), this.getHeight());
+            txtObj.hitArea = this.createHitArea(0, getMeasuredWidthModified(txtObj), this.getHeight());
 
             TQ.DirtyFlag.setElement(this);
         }
@@ -135,7 +135,7 @@ window.TQ = window.TQ || {};
 
         // alert("final size: \n original= " + txtObj.getMeasuredWidth() + ', \n modified =  ' + getMeasuredWidthModified(txtObj));
         // hitArea 会随宿主物体的变换而变换， 所以，可以重用
-        txtObj.hitArea = this.createHitArea(txtObj.rotation, getMeasuredWidthModified(txtObj), this.getHeight());
+        txtObj.hitArea = this.createHitArea(0, getMeasuredWidthModified(txtObj), this.getHeight());
         this._afterItemLoaded();
         if (this.hasFlag(TQ.Element.IN_STAGE)) {
             this.setTRSAVZ();
@@ -157,9 +157,9 @@ window.TQ = window.TQ || {};
     //    this.addChildDirect(bubble);
     //};
 
-    p.createHitArea = function(rotation, w, h) {
+    p.createHitArea = function(rotationRelative, w, h) {
         var shape = new createjs.Shape();
-        shape.rotation = 0; //相对于它host元素的角度，0， 因为hitArea总是随host主体转动的;
+        shape.rotation = rotationRelative; //相对于它host元素的角度，0， 因为hitArea总是随host主体转动的;
         shape.graphics.beginFill("#F00").drawRect(0, 0, w , h);
         TQ.DirtyFlag.setElement(this);
         return shape;
