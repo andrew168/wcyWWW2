@@ -18,7 +18,8 @@ JSON.minify = JSON.minify || require("node-json-minify");
 var config = {
     header: null,
     version: null,
-    hash: null
+    hash: null,
+    withDictionary: false //不再发布词典到后续项目
 };
 
 gulp.task('config', ['clean'], function () {
@@ -99,9 +100,11 @@ gulp.task('copy_lazyLoad_files', function () {
 });
 
 gulp.task('copy_dictionary', function () {
-    return gulp.src(srcPath + "\\dictionary\\*.*")
-        .pipe(gulp.dest(dstPath1 + "\\dictionary\\"))
-        .pipe(gulp.dest(dstPath2 + "\\dictionary\\"));
+    if (config.withDictionary) {
+        return gulp.src(srcPath + "\\dictionary\\*.*")
+            .pipe(gulp.dest(dstPath1 + "\\dictionary\\"))
+            .pipe(gulp.dest(dstPath2 + "\\dictionary\\"));
+    }
 });
 
 gulp.task('default', ['config', 'copy_lazyLoad_files', 'copy_debug_tools', 'copy_build_tools', 'copy_dictionary'], function () {
