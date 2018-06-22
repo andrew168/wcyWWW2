@@ -474,7 +474,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                         q.reject({error:1, msg: str});
                         break;
                     }
-                    TQ.Assert.isTrue(TQUtility.isSoundFile(aFile));
                 }
                 data.fileOrBuffer = aFile;
                 q.resolve(data);

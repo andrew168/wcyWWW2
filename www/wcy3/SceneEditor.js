@@ -64,7 +64,7 @@ var currScene = null;
         }
 
         if (matType === TQ.MatType.SOUND) {
-            if (!TQUtility.isSoundFile(aFile) &&  !TQUtility.isBlob(aFile)) {
+            if (!TQUtility.isSoundFile(aFile) &&  !TQUtility.isSoundBlob(aFile)) {
                 var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
                 TQ.MessageBox.show(str);
             } else {

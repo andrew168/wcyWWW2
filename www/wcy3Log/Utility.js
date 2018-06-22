@@ -183,12 +183,12 @@ var TQUtility; //
         }
     };
 
-    Utility.isSoundFile = function(aFile) {
-        if (!aFile.type) {  // for Wx
-            return false;
-        }
+    Utility.isSoundBlob = function (item) {
+        return ((item instanceof Blob) && !(item instanceof File) && (item.type) && (item.type.indexOf('audio') >= 0));
+    };
 
-        return (aFile.type.indexOf('audio') >= 0);
+    Utility.isSoundFile = function(aFile) {
+        return ((aFile instanceof File) && (aFile.type) && (aFile.type.indexOf('audio') >= 0));
     };
 
     Utility.isBlob = function (blobData) {
