@@ -340,8 +340,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 if (TQ.Utility.isImageFile(mat)) {
                     TQ.SceneEditor.preprocessLocalImage(mat, matType, callback);
                     n--;
-                    callback = function () {
-                        TQ.ResourceSync.local2Cloud(null, image64Data, matType);
+                    callback = function (desc, fileOrBlob, matType) {
+                        TQ.ResourceSync.local2Cloud(null, fileOrBlob, matType);
                     }
                 }
             }
