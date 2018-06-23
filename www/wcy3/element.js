@@ -696,12 +696,9 @@ window.TQ = window.TQ || {};
         }
 
         this.persist();
+        var oldImgHeight = this.displayObj.image.height;
         var originalZ = this.jsonObj.zIndex;
-        if (newSkinImg instanceof Image) {
-            this.jsonObj.src = null;
-            this.jsonObj.data = newSkinImg;
-        } else if (TQ.Utility.isImage64(newSkinImg)) {
-            // this.jsonObj.src = newSkinImg;
+        if ((newSkinImg instanceof Image) || TQ.Utility.isImage64(newSkinImg)) {
             this.jsonObj.src = null;
             this.jsonObj.data = newSkinImg;
         } else {
@@ -721,7 +718,10 @@ window.TQ = window.TQ || {};
         this.persist();
         this.jsonObj.zIndex = originalZ; // 在被从stage remove之后， z变为-1
         this._isNewSkin = true;
-        this._doLoad(this.jsonObj);
+        this._doLoad(this.jsonObj, function() {
+            var scale = oldImgHeight / self.displayObj.image.height;
+            self.scale(scale);
+        });
         if (onChanged) {
             onChanged(self);
         }
@@ -804,7 +804,7 @@ window.TQ = window.TQ || {};
         return jsonObj.img;
     };
 
-    p._doLoad = function (desc) {
+    p._doLoad = function (desc, callback) {
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
         var resource;
         if (desc.data) {
@@ -823,6 +823,9 @@ window.TQ = window.TQ || {};
         this._afterItemLoaded(resource);
         this.setTRSAVZ();
         TQ.DirtyFlag.setElement(this);
+        if (callback) {
+            callback();
+        }
     };
 
     p.autoFit = function(img) {
@@ -1782,9 +1785,11 @@ window.TQ = window.TQ || {};
     };
 
     p.scale = function (scale) {
-        var scaleTo = {};
-        scaleTo.sx = scale * this.jsonObj.sx;
-        scaleTo.sy = scale * this.jsonObj.sy;
+        var scaleTo = {
+            sx: scale * this.jsonObj.sx,
+            sy: scale * this.jsonObj.sy
+        };
+
         this.scaleTo(scaleTo);
     };
 
