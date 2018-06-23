@@ -81,6 +81,17 @@
             limit: '50mb',
             extended: true}));
         app.use(cookieParser());
+        app.get('*', function (req, res, next) {
+            if (req && (req.url)) {
+                var path = req.url;
+                if (path === '/' || path === '') { // index.html
+                    res.header('Cache-Control', 'public, max-age=0');
+                } else if (path.indexOf('.') >= 0) { // 除了API之外的, (例如： .css, .png, .js, etc)
+                    res.header('Cache-Control', 'public, max-age=25920000');
+                }
+            }
+            next();
+        });
 
 //CORS middleware
         var allowCrossDomain = function (req, res, next) {
