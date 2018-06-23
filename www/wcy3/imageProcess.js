@@ -30,17 +30,9 @@ var TQ = TQ || {};
         }
         ele.src = url;
 
-        function determineScale(img) {//只缩小， 不放大
-            var scale = 1;
-
-            if (img.height > TQ.Config.designatedHeight) {
-                scale = Math.min(1, TQ.Config.designatedHeight / img.height);
-            }
-
-            if (img.width > TQ.Config.designatedWidth) {
-                scale = Math.min(scale, TQ.Config.designatedWidth / img.width);
-            }
-            return scale;
+        function determineScale(img) {//只缩小， 不放大，不能超过屏幕的w和h
+            var scale = Math.min(1, TQ.Config.designatedHeight / img.height);
+            return Math.min(scale, TQ.Config.designatedWidth / img.width);
         }
 
         function onload () {
