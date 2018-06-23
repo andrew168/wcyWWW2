@@ -334,6 +334,18 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 n = files.length,
                 i,
                 mat;
+
+            if ((matType === TQ.MatType.BKG) && (n > 1)) {
+                mat = files[n-1];
+                if (TQ.Utility.isImageFile(mat)) {
+                    TQ.SceneEditor.preprocessLocalImage(mat, matType, callback);
+                    n--;
+                    callback = function () {
+                        TQ.ResourceSync.local2Cloud(null, image64Data, matType);
+                    }
+                }
+            }
+
             for (i = 0; i < n; i++) {
                 mat = files[i];
                 if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat)) {

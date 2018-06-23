@@ -31,8 +31,10 @@ this.TQ.ResourceSync = (function () {
         angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
             .then(function (res) {
                 TQ.Log.debugInfo(res.url);
-                ele.jsonObj.src = res.url;
-                force2Mp3(ele);
+                if (ele && ele.jsonObj) {
+                    ele.jsonObj.src = res.url;
+                    force2Mp3(ele);
+                }
                 numActiveTasks--;
                 tryShowCompleteInfo();
             });
