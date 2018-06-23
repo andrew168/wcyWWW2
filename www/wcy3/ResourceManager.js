@@ -601,8 +601,9 @@ this.TQ = this.TQ || {};
     }
 
     function _isLocalFileSystem(name) {
-        return ((name.indexOf("filesystem:") === 0)
-                || (name.indexOf("file:///") === 0));
+        return ((name.indexOf("filesystem:") === 0) ||
+            (name.indexOf("file:///") === 0) ||
+            (name.indexOf("blob:") === 0));
     }
 
     function _toFullPath(name) {
