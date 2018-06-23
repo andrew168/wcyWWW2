@@ -24,12 +24,11 @@ var config = {
 
 gulp.task('config', ['clean'], function () {
     //ver info
-    config.header = "/*! ionic " + new Date().toLocaleString() + " */\n";
+    config.header = "/*! wcy3 library " + new Date().toLocaleString() + " */\n";
     config.version = require('./package.json').version;
     config.hash = config.version + "." + crypto.createHash('md5').update(config.header).digest('hex').slice(0, 8);
-
-    //container files
     config.hash = "";
+
     config.app_js = "/wcy3all" + config.hash + ".js";
     config.app_min_js = "/wcy3all" + config.hash + ".min.js";
     config.app_min_js_map = "wcy3all" + config.hash + ".min.map";
@@ -43,7 +42,7 @@ gulp.task('wcylib_concat', function () {
         .pipe($.if('*.css', $.rename(config.app_min_css)))
         .pipe($.if(/wcy3all\.js/ && args.remove_logs, $.replace(/AuxLog\.log\(.*\);/gm, "")))
         .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
-        .pipe($.if(/wcy3all\.js/, $.header(config.header)))
+        // .pipe($.if(/wcy3all\.js/, $.header(config.header)))
         .pipe(wcylib_assets.restore())
         .pipe($.useref())
         .pipe($.if('*.html', $.replace(/wcy3all\.js/g, config.app_js)))
