@@ -41,9 +41,8 @@ var currScene = null;
             screenshotName: option.screenshotName,
             content: TQ.Scene.getEmptySceneJSON()
         };
-        fileInfo.isPlayOnly = false;
         TQ.WCY.isPlayOnly = false;
-        init(fileInfo);
+        SceneEditor.openWcy(fileInfo);
     };
 
     function createStage() {
@@ -159,11 +158,6 @@ var currScene = null;
         }
     };
 
-    SceneEditor.loadScene = function (fileInfo) {
-        // fileInfo.name = getDefaultTitle(fileInfo.name);
-        openScene(fileInfo);
-    };
-
     SceneEditor.emptyScene = function () { // empty the current scene
         if (!currScene) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
@@ -230,7 +224,7 @@ var currScene = null;
         //stage.enableMouseOver();
         TQBase.LevelState.reset();
         initializeCoreModules();
-        TQ.SceneEditor.loadScene(fileInfo);
+        loadScene(fileInfo);
         initializeControllers();
     }
 
@@ -267,7 +261,7 @@ var currScene = null;
         TQ.AnimationManager.initialize();
     }
 
-    function openScene(fileInfo) {
+    function loadScene(fileInfo) {
         if ((typeof fileInfo) === "string") {
             fileInfo = {name: fileInfo, content: null};
         }
