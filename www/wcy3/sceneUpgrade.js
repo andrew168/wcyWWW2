@@ -18,17 +18,34 @@
                     break;
                 default:
                     console.error("not supported version: =" + objJson.version);
+                    return;
             }
         }
-        // V3_1+
-        if (objJson.version  === TQ.Scene.VER3_1) {
-            upgrade3_1ToVer3_3(objJson);
+        if (objJson.version < TQ.Scene.VER_LATEST) {
+            // V3_1+
+            if (objJson.version <= TQ.Scene.VER3_3) {
+                upgrade3_1ToVer3_3(objJson);
+            }
+
+            if (objJson.version <= TQ.Scene.VER3_4) {
+                upgrade3_3ToVer3_4(objJson);
+            }
         }
 
         // now it's latest
         TQ.Log.debugInfo(" upgrade result: version = " + objJson.version + ", designed region(W,H)： W = " +
             objJson.designatedWidth + ", H=" + objJson.designatedHeight + ")");
     };
+
+    function upgrade3_3ToVer3_4(objJson) {
+        var num = objJson.levels.length;
+        for (var i = 0; i < num; i++) {
+            TQ.Level.upgrade3_3ToVer3_4(objJson.levels[i]);
+        }
+
+        objJson.version = TQ.Scene.VER3_4;
+        return objJson;
+    }
 
     function upgrade3_1ToVer3_3(objJson) {
         if (!objJson.designatedWidth) { // 是PC做的， 只在 本地debug版

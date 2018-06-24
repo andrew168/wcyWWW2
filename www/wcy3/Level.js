@@ -236,8 +236,8 @@ window.TQ = window.TQ || {};
       // 记录新创建的元素到elements
       this.elements.push(ele);
       if (TQ.Element.isBackground(ele.jsonObj)) {
-        TQ.AssertExt.invalidLogic(!this.background, "应该只有1个背景");
-        this.background = ele;
+          TQ.AssertExt.invalidLogic(!this.background, "应该只有1个背景");
+          this.background = ele;
       }
       TQ.DirtyFlag.setLevel(this);
       // ToDo: 暂时关闭， 还需要多调试
@@ -855,5 +855,25 @@ window.TQ = window.TQ || {};
     p.hasAnimation = function() {
         return !isStaticImage(this.tMaxFrame);
     };
+
+    //upgrade:
+    Level.upgrade3_3ToVer3_4 = function (levelDesc) {
+        if (!levelDesc) {
+            return;
+        }
+
+        var foundBackground = false;
+        for (var i = 0; i < (levelDesc.length); i++) {
+            var eleDesc = levelDesc[i];
+            if (eleDesc.eType === TQ.Element.ETYPE_BACKGROUND) {
+                if (!foundBackground) {
+                    foundBackground = true;
+                } else {
+                    eleDesc.eType = TQ.Element.ETYPE_PROP;
+                }
+            }
+        }
+    };
+
     TQ.Level = Level;
 }());
