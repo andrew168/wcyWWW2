@@ -32,7 +32,7 @@ var currScene = null;
             screenshotName: option.screenshotName,
             content: TQ.Scene.getEmptySceneJSON()
         };
-        TQ.WCY.isPlayOnly = false;
+        TQ.State.isPlayOnly = false;
         SceneEditor.openScene(fileInfo);
     };
 
@@ -159,7 +159,7 @@ var currScene = null;
     };
 
     SceneEditor.getMode = function () {
-        if (TQ.WCY.isPlayOnly) {
+        if (TQ.State.isPlayOnly) {
             return TQBase.LevelState.RUNNING;
         }
         return SceneEditor._mode;
@@ -227,10 +227,10 @@ var currScene = null;
     }
 
     function initializeControllers() {
-        TQ.InputMap.initialize(TQ.WCY.isPlayOnly);
+        TQ.InputMap.initialize(TQ.State.isPlayOnly);
         TQ.TaskMgr.initialize();
         TQ.GarbageCollector.initialize();
-        if (!TQ.WCY.isPlayOnly) {
+        if (!TQ.State.isPlayOnly) {
             turnOnEditor();
         }
     }
