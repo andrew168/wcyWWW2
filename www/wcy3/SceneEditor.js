@@ -19,14 +19,6 @@ var currScene = null;
     SceneEditor.needToSave = needToSave;
     SceneEditor.lastSoundElement = null;
 
-    SceneEditor.showWcy = function (fileInfo) {
-        if (fileInfo.isPlayOnly === undefined) {
-            fileInfo.isPlayOnly = true;
-        }
-
-        init(fileInfo);
-    };
-
     SceneEditor.openWcy = function (fileInfo) {
         if (fileInfo.isPlayOnly === undefined) {
             fileInfo.isPlayOnly = false;
