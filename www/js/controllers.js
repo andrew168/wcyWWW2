@@ -310,11 +310,6 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         NetService.get(server1File);
     };
 
-    $scope.testShowWCY = function () {
-        // WCY.createScene();
-        WCY.test($scope.data.sceneID);
-    };
-
     $scope.createWcy = function () {
         WCY.create();
     };
