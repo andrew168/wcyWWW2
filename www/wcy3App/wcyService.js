@@ -54,7 +54,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function create(option) {
-        if (TQ.userProfile.loggedIn && TQ.SceneEditor.needToSave()) {
+        if (TQ.userProfile.loggedIn && needToSave()) {
             return save().then(function () {
                 create(option); // 数据已经保存，到内存， 网络上传还需要时间
             }, _onFail);
@@ -133,7 +133,7 @@ function WCY($http, FileService, WxService, NetService) {
             });
     }
     function getWcy(shareString) {
-        if (TQ.userProfile.loggedIn && TQ.SceneEditor.needToSave()) {
+        if (TQ.userProfile.loggedIn && needToSave()) {
             return save().then(function () {
                 getWcy(shareString);
             });
@@ -264,7 +264,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function start() {
-        if (TQ.userProfile.loggedIn && TQ.SceneEditor.needToSave()) {
+        if (TQ.userProfile.loggedIn && needToSave()) {
             return save().then(function () {
                 start();
             });
@@ -327,7 +327,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _autoSave() {
-        if (isSaving || _autoSaveStopped || currScene.hasSavedToCache || !TQ.SceneEditor.needToSave() || !isSafe()) {
+        if (isSaving || _autoSaveStopped || currScene.hasSavedToCache || !needToSave() || !isSafe()) {
         } else {
             TQ.Assert.isObject(currScene);
             var data = currScene.getData();
@@ -495,6 +495,10 @@ function WCY($http, FileService, WxService, NetService) {
 
     function isNewOpus() {
         return (!_shareCode);
+    }
+
+    function needToSave() {
+        return (currScene && !currScene.isEmpty() && !currScene.isSaved);
     }
 
     return {

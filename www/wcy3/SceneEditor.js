@@ -16,7 +16,6 @@ var currScene = null;
     // 接口
     SceneEditor.turnOnEditor = turnOnEditor;
     SceneEditor.preprocessLocalImage = preprocessLocalImage;
-    SceneEditor.needToSave = needToSave;
     SceneEditor.lastSoundElement = null;
 
     SceneEditor.openWcy = function (fileInfo) {
@@ -258,31 +257,26 @@ var currScene = null;
             fileInfo = {name: fileInfo, content: null};
         }
 
-        if (!TQ.userProfile.loggedIn && needToSave()) {
+        if (currScene) {
             currScene.reset();
         }
 
-        if (!needToSave()) {
-            TQ.MessageBox.hide();
-            if (!currScene) {
-                currScene = new TQ.Scene();
-                TQ.WCY.currentScene = currScene;
-            } else {
-                currScene.close();
-            }
-            TQ.GarbageCollector.reset();
-            currScene.open(fileInfo);
-            localStorage.setItem("sceneName", fileInfo.name);
-            TQ.FrameCounter.reset();
-            TQ.CommandMgr.reset();
-            TQ.AnimationManager.reset();
-            TQ.SkinningCtrl.end();
-            TQ.FloatToolbar.close();
+        TQ.MessageBox.hide();
+        if (!currScene) {
+            currScene = new TQ.Scene();
             TQ.WCY.currentScene = currScene;
         } else {
-            TQ.AssertExt.invalidLogic("必须自动保存， 减少干扰用户！");
-            TQ.MessageBox.show(TQ.Locale.getStr('please save it first!'));
+            currScene.close();
         }
+        TQ.GarbageCollector.reset();
+        currScene.open(fileInfo);
+        localStorage.setItem("sceneName", fileInfo.name);
+        TQ.FrameCounter.reset();
+        TQ.CommandMgr.reset();
+        TQ.AnimationManager.reset();
+        TQ.SkinningCtrl.end();
+        TQ.FloatToolbar.close();
+        TQ.WCY.currentScene = currScene;
         return currScene;
     }
 
@@ -384,10 +378,6 @@ var currScene = null;
         if (ele != null) {
             TQ.Animation.unitTest(ele);
         }
-    }
-
-    function needToSave() {
-        return (currScene && !currScene.isEmpty() && !currScene.isSaved);
     }
 
     function isBkg(matType) {
