@@ -18,7 +18,7 @@ var currScene = null;
     SceneEditor.preprocessLocalImage = preprocessLocalImage;
     SceneEditor.lastSoundElement = null;
 
-    SceneEditor.openWcy = function (fileInfo) {
+    SceneEditor.openScene = function (fileInfo) {
         if (fileInfo.isPlayOnly === undefined) {
             fileInfo.isPlayOnly = false;
         }
@@ -33,7 +33,7 @@ var currScene = null;
             content: TQ.Scene.getEmptySceneJSON()
         };
         TQ.WCY.isPlayOnly = false;
-        SceneEditor.openWcy(fileInfo);
+        SceneEditor.openScene(fileInfo);
     };
 
     function createStage() {

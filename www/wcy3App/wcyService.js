@@ -313,7 +313,7 @@ function WCY($http, FileService, WxService, NetService) {
 
     function _open(fileinfo) {
         //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
-        TQ.SceneEditor.openWcy(fileinfo);
+        TQ.SceneEditor.openScene(fileinfo);
         doStarted();
     }
 
