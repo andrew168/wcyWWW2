@@ -23,11 +23,11 @@
         }
         if (objJson.version < TQ.Scene.VER_LATEST) {
             // V3_1+
-            if (objJson.version <= TQ.Scene.VER3_3) {
+            if (objJson.version < TQ.Scene.VER3_3) {
                 upgrade3_1ToVer3_3(objJson);
             }
 
-            if (objJson.version <= TQ.Scene.VER3_4) {
+            if (objJson.version < TQ.Scene.VER3_4) {
                 upgrade3_3ToVer3_4(objJson);
             }
         }

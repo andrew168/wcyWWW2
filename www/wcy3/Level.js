@@ -858,13 +858,16 @@ window.TQ = window.TQ || {};
 
     //upgrade:
     Level.upgrade3_3ToVer3_4 = function (levelDesc) {
-        if (!levelDesc) {
+        var foundBackground = false,
+            elements,
+            eleDesc;
+
+        if (!levelDesc || !(elements = levelDesc.elements)) {
             return;
         }
 
-        var foundBackground = false;
-        for (var i = 0; i < (levelDesc.length); i++) {
-            var eleDesc = levelDesc[i];
+        for (var i = 0; i < (elements.length); i++) {
+            eleDesc = elements[i];
             if (eleDesc.eType === TQ.Element.ETYPE_BACKGROUND) {
                 if (!foundBackground) {
                     foundBackground = true;
