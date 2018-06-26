@@ -1102,6 +1102,7 @@ window.TQ = window.TQ || {};
 
         if (this.jsonObj.zIndex == -1) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // -1, group物体应该在isVirtualObject中处理
+            this.jsonObj.zIndex == Element.TOP;
         }
         var thislevel = this.level;
         var item = this.displayObj;
