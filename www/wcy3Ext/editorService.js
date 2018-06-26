@@ -226,7 +226,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         updateControllers();
 
-        if (TQ.Config.AutoPlay && currScene && !currScene.isEmpty()) {
+        if (TQ.Config.AutoPlay && currScene) {
             if (TQUtility.isIOS()) {
                 TQ.SoundMgr.stop();
                 TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
