@@ -1429,11 +1429,13 @@ window.TQ = window.TQ || {};
         var data = this.jsonData;
         this.jsonData = null;
         //  只是为了输出, 才临时赋值给它, 现在收回.
-        data.animeTrack = null;
-        data.animeCtrl = null;
-        data.viewCtrl = null;
-        data.trace = null;
-        data.children.splice(0);
+        if (data) { // 对于BBox，它是null
+            data.animeTrack = null;
+            data.animeCtrl = null;
+            data.viewCtrl = null;
+            data.trace = null;
+            data.children.splice(0);
+        }
         if (this.children != null) {
             for (var i = 0; i < this.children.length; i++) {
                 this.children[i].afterToJSON();
