@@ -343,4 +343,8 @@ window.TQ = window.TQ || {};
     TQ.RotateCommand = RotateCommand;
     TQ.SetTimeCommand = SetTimeCommand;
     TQ.DeleteEleCommand = DeleteEleCommand;
+    TQ.CommandMgr.pinIt = function (ele) {
+        TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.PINIT, ele, null, null));
+    };
+
 }());

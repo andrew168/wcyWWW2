@@ -1389,7 +1389,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         var ele = TQ.SelectSet.peekLatestEditableEle();
         if (ele.isPinned()) {
             TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked, continue?'), function() {
-                ele.pinIt();
+                TQ.CommandMgr.pinIt(ele);
                 changeSkin(newSkinUrl, onChanged);
             });
             return ele;

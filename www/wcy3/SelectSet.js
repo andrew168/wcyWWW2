@@ -272,7 +272,9 @@ TQ = TQ || {};
         for (var i = 0; i< SelectSet.members.length; i++) {
             var ele = SelectSet.members[i];
             assertNotNull(TQ.Dictionary.FoundNull, ele);
-            if (ele.isValid()) ele.pinIt();
+            if (ele.isValid()) {
+                TQ.CommandMgr.pinIt(ele);
+            }
         }
     };
 

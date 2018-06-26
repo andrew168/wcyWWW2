@@ -1291,12 +1291,7 @@ window.TQ = window.TQ || {};
     };
 
     p.pinIt = function () {
-        if (!this.jsonObj.isPinned) {
-            this.jsonObj.isPinned = true;
-        } else {
-            this.jsonObj.isPinned = false;
-        }
-
+        this.jsonObj.isPinned = !this.jsonObj.isPinned;
         TQ.DirtyFlag.setElement(this);
         if (this.isGroup()) {
             for (var i = 0; i < this.children.length; i++) {

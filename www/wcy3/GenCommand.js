@@ -32,6 +32,7 @@ window.TQ = window.TQ || {};
     GenCommand.CHANGE_LAYER = "cmd_change_layer";
     GenCommand.SET_3D_OBJ = "cmd_set_3D_obj";
     GenCommand.ADD_ITEM = "cmd_add_item";
+    GenCommand.PINIT = "cmd_pin_it";
 
     GenCommand.initialize = function () {
         fns = [];
@@ -42,6 +43,7 @@ window.TQ = window.TQ || {};
         fns[GenCommand.CHANGE_LAYER] = {dofn: "moveZ",  undofn: "moveToZ"};
         fns[GenCommand.SET_3D_OBJ] = {dofn: "attachTo",  undofn: "detach"};
         fns[GenCommand.ADD_ITEM] = {dofn: "addElementDirect",  undofn: "deleteElement"};
+        fns[GenCommand.PINIT] = {dofn: "pinIt", undofn: "pinIt"};
     };
     inherit(GenCommand, TQ.AbstractCommand);
 
