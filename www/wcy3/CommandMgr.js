@@ -343,6 +343,12 @@ window.TQ = window.TQ || {};
     TQ.RotateCommand = RotateCommand;
     TQ.SetTimeCommand = SetTimeCommand;
     TQ.DeleteEleCommand = DeleteEleCommand;
+
+    TQ.CommandMgr.scale = function (ele, newScale) {
+        var oldValue = {sx: ele.jsonObj.sx, sy: ele.jsonObj.sy};
+        TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.SCALE, ele, newScale, oldValue));
+    };
+
     TQ.CommandMgr.pinIt = function (ele) {
         TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.PINIT, ele, null, null));
     };

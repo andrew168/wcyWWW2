@@ -131,15 +131,9 @@ window.TQ = window.TQ || {};
         var MIN_SCALE = 0.1, MAX_SCALE = 2;
         coefficient = InputCtrl.limitScale(element.jsonObj.sx, MIN_SCALE, MAX_SCALE, coefficient);
         coefficient = InputCtrl.limitScale(element.jsonObj.sy, MIN_SCALE, MAX_SCALE, coefficient);
-        InputCtrl.doScaleCmd(element, {sx: element.jsonObj.sx * coefficient,
+        TQ.CommandMgr.scale(element, {sx: element.jsonObj.sx * coefficient,
                 sy: element.jsonObj.sy * coefficient});
     };
-
-    InputCtrl.doScaleCmd = function(ele, newScale) {
-        var oldValue = {sx:ele.jsonObj.sx, sy: ele.jsonObj.sy};
-        TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.SCALE, ele, newScale, oldValue));
-    };
-
     /*
     镜像变换: 关于X轴镜像，（上下对称）
      */
@@ -147,7 +141,7 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, element);
         if (!element) return;
         var coefficientX = -1;
-        InputCtrl.doScaleCmd(element,
+        TQ.CommandMgr.scale(element,
             {sx: element.jsonObj.sx * coefficientX,
                 sy: element.jsonObj.sy});
     };
@@ -159,7 +153,7 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, element);
         if (!element) return;
         var coefficientY = -1;
-        InputCtrl.doScaleCmd(element,
+        TQ.CommandMgr.scale(element,
             {sx: element.jsonObj.sx,
                 sy: element.jsonObj.sy * coefficientY});
     };
