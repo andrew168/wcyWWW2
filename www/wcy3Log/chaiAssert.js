@@ -203,11 +203,14 @@ module.exports = function (_chai, util) {
     if (!ok) {
       var msg = util.getMessage(this, arguments)
         , actual = util.getActual(this, arguments);
+        //DEBUG_ONLY_BEGIN
       throw new AssertionError(msg, {
           actual: actual
         , expected: expected
         , showDiff: showDiff
       }, (config.includeStack) ? this.assert : flag(this, 'ssfi'));
+        //DEBUG_ONLY_END
+        console.error(msg);
     }
   };
 
@@ -2108,11 +2111,14 @@ module.exports = function (chai, util) {
 
   assert.fail = function (actual, expected, message, operator) {
     message = message || 'assert.fail()';
+    //DEBUG_ONLY_BEGIN
     throw new chai.AssertionError(message, {
         actual: actual
       , expected: expected
       , operator: operator
     }, assert.fail);
+    //DEBUG_ONLY_END
+      console.error(message);
   };
 
   /**
@@ -3590,11 +3596,14 @@ module.exports = function (chai, util) {
 
   chai.expect.fail = function (actual, expected, message, operator) {
     message = message || 'expect.fail()';
+      //DEBUG_ONLY_BEGIN
     throw new chai.AssertionError(message, {
         actual: actual
       , expected: expected
       , operator: operator
     }, chai.expect.fail);
+      //DEBUG_ONLY_END
+      console.error(message);
   };
 };
 
@@ -3654,11 +3663,14 @@ module.exports = function (chai, util) {
 
     should.fail = function (actual, expected, message, operator) {
       message = message || 'should.fail()';
-      throw new chai.AssertionError(message, {
+        //DEBUG_ONLY_BEGIN
+        throw new chai.AssertionError(message, {
           actual: actual
         , expected: expected
         , operator: operator
       }, should.fail);
+        //DEBUG_ONLY_END
+        console.error(message);
     };
 
     should.equal = function (val1, val2, msg) {
