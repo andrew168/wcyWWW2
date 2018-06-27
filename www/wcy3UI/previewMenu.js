@@ -68,9 +68,11 @@ var TQ = TQ || {};
         isWatching = true;
         TQ.Log.checkPoint("start watch in preview Menu...");
         setTimeout(function() { // 避免延后一点， 避免被preview按钮的操作触发
-            selectedEvents.forEach(function (item) {
-                document.addEventListener(item, onPreviewMenuOn);
-            });
+            if (isWatching && allowToWatch) { // 防止刚start，就stop， （在App刚刚启动的时候）
+                selectedEvents.forEach(function (item) {
+                    document.addEventListener(item, onPreviewMenuOn);
+                });
+            }
         }, 100);
     }
 
