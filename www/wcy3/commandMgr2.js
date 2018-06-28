@@ -101,6 +101,15 @@ window.TQ = window.TQ || {};
                         cmd.oldValue = last.oldValue;
                         break;
                     case 'GenCommand':
+                        switch (cmd.type2) {
+                            case TQ.GenCommand.SCALE:  // 可以合并的命令种类
+                            case TQ.GenCommand.SCALE_AND_ROTATE:
+                            case TQ.GenCommand.CHANGE_LAYER:
+                                break;
+
+                            default:// 其余的种类，不能合并， 比如：GenCommand.ADD_ITEM, .PINIT, etc
+                                return null;
+                        }
                         if (cmd.type2 === last.type2) {
                             cmd.oldValue = last.oldValue;
                         } else {
