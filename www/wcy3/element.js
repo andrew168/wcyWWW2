@@ -1960,6 +1960,10 @@ window.TQ = window.TQ || {};
         return false;
     };
 
+    p.isHighlighting = function () {
+        return this._isHighlighting;
+    };
+
     p.isEditorEle = function () {
         // 只是给Editor用的临时元素， 比如：用于亮显选中元素转轴点的marker， 边界框BBox等等，
         // 这种元素， 不能保存到文件中， 也不出现在截图中， 在Z图层升降中，也忽略他们

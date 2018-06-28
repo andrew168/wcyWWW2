@@ -87,6 +87,9 @@ TQ = TQ || {};
         }
         if (SelectSet.members.indexOf(element) < 0) {
             SelectSet.members.push(element);
+        }
+
+        if (!element.isHighlighting()) {
             element.highlight(true);
             SelectSet.attachDecoration(element);
 
@@ -380,6 +383,21 @@ TQ = TQ || {};
             SelectSet.clear(false, true);
         }
         TQ.AssertExt.invalidLogic(selectedMarkers.length === 0);
+    };
+
+    SelectSet.unHighlight = function () {
+        if (SelectSet.members.length > 0) {
+            for (var i = 0; i < SelectSet.members.length; i++) {
+                var ele = SelectSet.members[i];
+                assertNotNull(TQ.Dictionary.FoundNull, ele);
+                if (ele.isValid()) ele.highlight(false); // 可能已经被前面的父物体一起删除了
+                ele.detachDecoration();
+            }
+
+            //SelectSet.members.splice(0); // 删除全部选中的物体;
+            selectedMarkers.splice(0);
+            TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+        }
     };
 
     SelectSet.isEmpty = function() {
