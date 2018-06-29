@@ -668,6 +668,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
         assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
         if (!currScene) return;
+        TQ.CommandMgr.reset();
         currScene.gotoLevel(id);
     }
 
