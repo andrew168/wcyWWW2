@@ -48,8 +48,9 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 return;
             }
             if (!TQ.Utility.isSupportedEnvironment()) {
-                var msg = TQ.Locale.getStr('please install') +' <a href="https://www.google.ca/chrome/browser/features.html" style="font-weight: bold; text-decoration: underline">' +
-                    TQ.Locale.getStr('chrome') + '</a>！';
+                var msg = TQ.Locale.getStr('please use android mobile');
+                // +' <a href="https://www.google.ca/chrome/browser/features.html" style="font-weight: bold; text-decoration: underline">' +
+                    // TQ.Locale.getStr('chrome') + '</a>！';
                 TQ.MessageBox.prompt(msg);
                 return;
             }
