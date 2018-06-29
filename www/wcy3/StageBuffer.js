@@ -31,6 +31,10 @@ window.TQ = window.TQ || {};
     };
 
     StageBuffer.add = function (ele) {
+        if (ele.isHighlighter()) { // 亮显元素， 不加入到stage中
+            return;
+        }
+
         if (StageBuffer.isBatchMode) {
             StageBuffer.members.push(ele);
         } else {
