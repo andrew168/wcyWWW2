@@ -33,7 +33,13 @@ var TQ = TQ || {};
     State.updateDeviceInfo = updateDeviceInfo;
     State.allowPageTransition = true;
 
+    var deviceInfoInitialized = false;
+
     function determineWorkingRegion() {
+        if (!deviceInfoInitialized) {
+            updateDeviceInfo();
+        }
+
         // top bar的min-height是 11vmin
         var topBarEle = document.getElementById('id_top_bar'),
             bottomBarEle = document.getElementById('id_bottom_bar'),
@@ -81,12 +87,15 @@ var TQ = TQ || {};
     }
 
     function updateDeviceInfo() {
-        if ((State.innerWidth === window.innerWidth) &&
+        if (deviceInfoInitialized && (State.innerWidth === window.innerWidth) &&
             (State.innerHeight === window.innerHeight)) {  // no change
             return false;
         }
 
-        State.innerWidth = window.innerWidth;
+        deviceInfoInitialized = true;
+        var desktopEle = $('.desktop-ok')[0];
+        State.innerWidth = (desktopEle) ? TQ.Utility.getCssSize(window.getComputedStyle(desktopEle).width) :
+            window.innerWidth;
         State.innerHeight = window.innerHeight;
         return true;
     }
