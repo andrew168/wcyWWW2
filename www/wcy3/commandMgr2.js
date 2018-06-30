@@ -70,7 +70,10 @@ window.TQ = window.TQ || {};
         return cmd;
     };
 
-    CommandMgr.addToUndoStack = function (cmd) {
+    CommandMgr.addToUndoStack = function (cmd, fromRedo) {
+        if (!fromRedo && (_redoStack.length > 0)) {
+            _redoStack.splice(0);
+        }
         while (_undoStack.length > TQ.Config.MAX_UNDO_STEP) {
             _undoStack.shift();
         }
@@ -170,7 +173,7 @@ window.TQ = window.TQ || {};
         if (_redoStack.length >= 1) {
             var cmd = _redoStack.pop();
             var result = cmd.redo();
-            CommandMgr.addToUndoStack(cmd);
+            CommandMgr.addToUndoStack(cmd, true);
             return result;
         }
 
