@@ -23,7 +23,8 @@ TQ = TQ || {};
     Scene.VER3_1 = 3.1; // 采用指定分辨率的世界坐标系(以像素为单位)， 替代归一化世界坐标系
     Scene.VER3_3 = 3.3; // designated区域 大于1*1
     Scene.VER3_4 = 3.4; // 背景唯一： 每一个场景中，只能有1个背景，在最底层
-    Scene.VER_LATEST = Scene.VER3_4;
+    Scene.VER3_5 = 3.5; // 采用lZ压缩
+    Scene.VER_LATEST = Scene.VER3_5;
     var stateStack = [];
     var p = Scene.prototype;
     var _levelTs = [],
@@ -43,6 +44,7 @@ TQ = TQ || {};
     p.state = TQBase.LevelState.NOT_INIT;
 
     // static APIs:
+    Scene.decompress = decompress;
     Scene.doReplay = doReplay;
     Scene.removeEmptyLevel = removeEmptyLevel;
     Scene.getEmptySceneJSON = getEmptySceneJSON;
@@ -862,7 +864,8 @@ TQ = TQ || {};
         if (data.length > TQ.Config.MAX_FILE_SIZE) {
             TQ.MessageBox.toast(TQ.Locale.getStr('file is too long, please save your work ASAP'));
         }
-        return data;
+
+        return compress(data);
     };
 
     p.updateShareData = function() {
@@ -1066,6 +1069,30 @@ TQ = TQ || {};
 
     function getTMax() {
         return (!currScene) ? 0: currScene.tMax;
+    }
+
+    function compress(wcyData) {
+        if (TQ.Config.useLZCompress) {
+            var compressed = LZString.compressToUTF16(wcyData);
+            return JSON.stringify({zip: true, len: compressed.length, data: compressed});
+        }
+        return wcyData;
+    }
+
+    function decompress(wcyData) {
+        if (!!wcyData && (typeof wcyData === 'string')) {
+            var obj = JSON.parse(wcyData);
+            if (obj.zip) {
+                var decompressed = LZString.decompressFromUTF16(obj.data);
+                if (!decompressed || decompressed.length < obj.length) {
+                    TQ.AssertExt.invalidLogic(true, '解压后的长度小于压缩者，是不是结束符0出现了？');
+                } else {
+                    return decompressed;
+                }
+            }
+        }
+
+        return wcyData;
     }
 
     TQ.Scene = Scene;

@@ -220,6 +220,7 @@ function WCY($http, FileService, WxService, NetService) {
             headers: {
                 // 'Token' : myToken, // 必须同源，才能用Token
                 'Content-Type': 'application/json'
+                // 'Content-Type': 'text/plain'
             },
             data: jsonWcyData
         });
@@ -467,7 +468,7 @@ function WCY($http, FileService, WxService, NetService) {
         TQ.State.determineWorkingRegion();
         TQ.WCY.authorID = data.authorID;
         if (!!data.data) {
-            _openInJson(data.data);
+            _openInJson(TQ.Scene.decompress(data.data));
         }
     }
 
