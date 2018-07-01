@@ -865,7 +865,7 @@ TQ = TQ || {};
             TQ.MessageBox.toast(TQ.Locale.getStr('file is too long, please save your work ASAP'));
         }
 
-        return compress(data);
+        return compress(data, this.ssPath);
     };
 
     p.updateShareData = function() {
@@ -1071,10 +1071,10 @@ TQ = TQ || {};
         return (!currScene) ? 0: currScene.tMax;
     }
 
-    function compress(wcyData) {
+    function compress(wcyData, ssPath) {
         if (TQ.Config.useLZCompress) {
             var compressed = LZString.compressToUTF16(wcyData);
-            return JSON.stringify({zip: true, len: compressed.length, data: compressed});
+            return JSON.stringify({zip: true, len: compressed.length, ssPath: ssPath, data: compressed});
         }
         return wcyData;
     }
