@@ -2,7 +2,7 @@
  * Created by Andrewz on 6/25/2016.
  */
 
-function DataService(list) {
+function DataObject(list) {
     var IMAGE_COLUMN_NUMBER = 3,
         THUMBAIL_EXP = "w_100,h_100,c_limit/",
         vm = this,
@@ -12,8 +12,8 @@ function DataService(list) {
     // interface
     vm.getPage = getPage;
     vm.setList = setList;
-    DataService.fromThumbNail = fromThumbNail;
-    DataService.prepareColumn = prepareColumn;
+    DataObject.fromThumbNail = fromThumbNail;
+    DataObject.prepareColumn = prepareColumn;
 
     // init
     if (list) {
@@ -141,4 +141,4 @@ function DataService(list) {
     }
 }
 
-TQ.DataObject = DataService;
+TQ.DataObject = DataObject;
