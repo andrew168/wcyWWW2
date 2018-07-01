@@ -162,7 +162,7 @@
             }
             if (!matType || (matType === TQ.MatType.OPUS)) {
                 state &= (~READY_OPUS);
-                getOpusList(propsMyWork, READY_OPUS);
+                getOpusList(propsMyWork, matType, READY_OPUS);
             }
         }
 
@@ -177,7 +177,7 @@
                 if (!Array.isArray(data)) {
                     data = [];
                 }
-                mats.setList(data);
+                mats.setList(data, matType);
                 state |= stateType;
                 if (state === READ_ALL) {
                     onDataReady();
@@ -185,7 +185,7 @@
             }
         }
 
-        function getOpusList(mats, stateType) {
+        function getOpusList(mats, matType, stateType) {
             $http({
                 method: 'GET',
                 url: TQ.Config.OPUS_HOST + '/wcyList/'
@@ -204,7 +204,6 @@
                     selected.push({
                         wcyId: item._id,
                         path: item.ssPath,
-                        thumbPath: 'https://res.cloudinary.com/eplan/image/upload/w_100,h_100,c_limit/' + item.ssPath,
                         title: "我有一个梦", // ToDo: 允许用户录入主题， 或系统设置竞赛的主题
                         score: (!item.score? 1000: item.score), //起点，（只有创作了作品，系统给你1000点， 然后实时统计
                         userName: userName,
@@ -213,7 +212,7 @@
                         city: TQ.userProfile.city
                     });
                 });
-                mats.setList(selected);
+                mats.setList(selected, matType);
                 state |= stateType;
                 if (state === READ_ALL) {
                     onDataReady();

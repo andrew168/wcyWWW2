@@ -4,7 +4,8 @@
 
 function DataObject(list) {
     var IMAGE_COLUMN_NUMBER = 3,
-        THUMBAIL_EXP = "w_100,h_100,c_limit/",
+        THUMBNAIL_EXP = "w_100,h_100,c_limit/",
+        OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/",
         vm = this,
         currentPageID = 0,
         pages = [];
@@ -47,7 +48,7 @@ function DataObject(list) {
     }
 
     // implementations (按照字母顺序排列，升序)
-    function fixup(items) {
+    function fixup(items, matType) {
         var i;
         for (i = 0; i < items.length; i++) {
             if (!items[i].isProxy) {
@@ -61,7 +62,12 @@ function DataObject(list) {
                     } else if (!TQ.Utility.isImage(oldPath)) {
                         TQ.Log.error("Found unknown format:" + oldPath);
                     }
-                    items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(oldPath));
+                    if (matType === TQ.MatType.OPUS) {
+                        items[i].thumbPath = TQ.RM.toFullPathFs(toOpusThumbNail(oldPath));
+                    } else {
+                        items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(oldPath));
+                    }
+
                     items[i].path = TQ.RM.toFullPathFs(oldPath);
                 }
             }
@@ -121,23 +127,28 @@ function DataObject(list) {
         currentPageID = TQ.MathExt.clamp(currentPageID, 0, pages.length - 1);
     }
 
-    function setList(list) {
+    function setList(list, matType) {
         reset();
         if (TQ.Config.LocalCacheEnabled) {
             TQ.DownloadManager.downloadBulk(list);
         } else {
-            fixup(list);
+            fixup(list, matType);
         }
         prepareColumn(list, IMAGE_COLUMN_NUMBER);
     }
 
     function toThumbNail(path) {
         TQ.Assert.isTrue(path[0] != '/', "not separator");
-        return  (TQ.Utility.isImage(path) ? THUMBAIL_EXP: "") + path;
+        return  (TQ.Utility.isImage(path) ? THUMBNAIL_EXP: "") + path;
+    }
+
+    function toOpusThumbNail(path) {
+        TQ.Assert.isTrue(path[0] != '/', "not separator");
+        return (TQ.Utility.isImage(path) ? OPUS_THUMBNAIL_EXP : "") + path;
     }
 
     function fromThumbNail(path) {
-        return path.replace(THUMBAIL_EXP, "");
+        return path.replace(THUMBNAIL_EXP, "").replace(OPUS_THUMBNAIL_EXP, "");
     }
 }
 
