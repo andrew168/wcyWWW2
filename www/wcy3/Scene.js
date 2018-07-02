@@ -11,6 +11,7 @@ TQ = TQ || {};
         this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         this.isDirty = true;
+        this.wholeSceneReady = false;
         this.tMax = 0;
     }
 
@@ -367,6 +368,10 @@ TQ = TQ || {};
 
     p.isEmpty = function () {
         return (this.levelNum() <= 2 && this.currentLevel && this.currentLevel.isEmpty());
+    };
+
+    p.isWholeReady = function () {
+        return this.wholeSceneReady;
     };
 
     p.isLastLevel = function () {
@@ -997,6 +1002,7 @@ TQ = TQ || {};
             tGlobalLastFrame = Math.max(tGlobalLastFrame, level.getGlobalTime());
         }
 
+        this.wholeSceneReady = wholeSceneReady;
         te = Math.max(te, tGlobalLastFrame);
         if (Math.abs(this.tMax - te) > 0.1) {
             this.tMax = (wholeSceneReady) ? te : Math.max(this.tMax, te);
