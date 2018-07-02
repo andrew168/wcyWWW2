@@ -98,11 +98,8 @@ TQ = TQ || {};
     p._parent_doRemoveFromStage = p._doRemoveFromStage;
     p._doAddItemToStage = function()   // 子类中定义的同名函数, 会覆盖父类, 让所有的兄弟类, 都有使用此函数.
     {
-        if (this.isSound()) {
-            TQ.SoundMgr.addItem(this);
-        } else {
-            this._parent_doAddItemToStage();
-        }
+        // 这是sound的专用类，所以，执行到此的必然是sound，
+        TQ.SoundMgr.addItem(this);
     };
 
     p._parent_calculateLastFrame = p.calculateLastFrame;
