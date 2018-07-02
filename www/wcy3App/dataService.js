@@ -56,30 +56,6 @@
             return -1;
         }
 
-        function addWork(tag, wcyName, screenshot) {
-            TQ.AssertExt.depreciated("deleteWork");
-            var work = {tag: tag, wcyName: wcyName, path: screenshot, modified: true};
-            var id = search(work);
-            if (id >= 0) {
-                temp = propsMyWork1.splice(id, 1);
-                delete(temp.wcyName);
-                delete(temp.path);
-            }
-            propsMyWork1.splice(0, 0, work);
-            propsMyWork = TQ.DataService.prepareColumn(propsMyWork1, IMAGE_COLUMN_NUMBER);
-            writeCache(MY_WORKS, propsMyWork1);
-        }
-
-        function deleteWork(work) {
-            TQ.AssertExt.depreciated("deleteWork");
-            var id = propsMyWork1.indexOf(work);
-            if (id >= 0) {
-                propsMyWork1.splice(id, 1);
-            }
-            writeCache(MY_WORKS, propsMyWork1);
-            propsMyWork = TQ.DataService.prepareColumn(propsMyWork1, IMAGE_COLUMN_NUMBER);
-        }
-
         function cloneWork(work) {
 
         }
@@ -236,8 +212,6 @@
             initialize: initialize,
             getProps: getProps,
             getSounds: getSounds,
-            addWork: addWork,
-            deleteWork: deleteWork,
             cloneWork: cloneWork,
             generateUUID: generateUUID,
             reload: reload,
