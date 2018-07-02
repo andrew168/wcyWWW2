@@ -3,8 +3,7 @@
  */
 
 function DataObject(list) {
-    var IMAGE_COLUMN_NUMBER = 3,
-        THUMBNAIL_EXP = "w_100,h_100,c_limit/",
+    var THUMBNAIL_EXP = "w_100,h_100,c_limit/",
         OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/",
         vm = this,
         currentPageID = 0,
@@ -83,22 +82,17 @@ function DataObject(list) {
         return pages[currentPageID];
     }
 
-    function prepareColumn(props_local, m) {
+    function prepareColumn(props_local) {
         var i,
-            j,
             page = pages[pages.length - 1];
 
-        for (i = 0; i < props_local.length;) {
+        for (i = 0; i < props_local.length; i++) {
             if (page.length >= 9) {
                 page = createPage();
             }
 
-            for (j = 0; j < m; j++, i++) {
-                if (i < props_local.length) {
-                    if (page.indexOf(props_local[i]) < 0) {
-                        page.push(props_local[i]);
-                    }
-                }
+            if (page.indexOf(props_local[i]) < 0) {
+                page.push(props_local[i]);
             }
         }
     }
@@ -134,7 +128,7 @@ function DataObject(list) {
         } else {
             fixup(list, matType);
         }
-        prepareColumn(list, IMAGE_COLUMN_NUMBER);
+        prepareColumn(list);
     }
 
     function toThumbNail(path) {
