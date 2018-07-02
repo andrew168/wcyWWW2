@@ -145,9 +145,9 @@ window.TQ = window.TQ || {};
     Config.statServiceEnabled = false;
     Config.IN_RELEASE = true;
 
-    //DEBUG_ONLY_BEGIN
+    //IN_HEAVY_DEV_BEGIN   // 用于暂时hide未开发好的feature，不release他们
     Config.IN_RELEASE = false;
-    //DEBUG_ONLY_END
+    //IN_HEAVY_DEV__END
 
     //允许使用本地文件系统缓存网络文件， 以便于离线使用， 和 降低网络流量， 提高系统速度。
     Config.TECH_TEST1_LOCAL_CACHE_ON = false;
