@@ -1109,7 +1109,7 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, this.displayObj); // 必须有显示体
         item.jsonObj = this.jsonObj;  // 需要临时建立关系， 因为在NetIO时候可能破坏了。
         item.ele = this;
-        { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
+        if (!this.isHighlighter()) { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
             this.setFlag(Element.IN_STAGE);
             if ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
                 this.getContainer().addChild(item);
