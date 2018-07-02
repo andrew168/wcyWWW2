@@ -3,7 +3,9 @@
  */
 
 function DataObject(list) {
-    var THUMBNAIL_EXP = "w_100,h_100,c_limit/",
+    var IMAGE_PAGE_SIZE = 9,
+        SOUND_PAGE_SIZE = 4,
+        THUMBNAIL_EXP = "w_100,h_100,c_limit/",
         OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/",
         vm = this,
         currentPageID = 0,
@@ -13,7 +15,6 @@ function DataObject(list) {
     vm.getPage = getPage;
     vm.setList = setList;
     DataObject.fromThumbNail = fromThumbNail;
-    DataObject.prepareColumn = prepareColumn;
 
     // init
     if (list) {
@@ -82,12 +83,12 @@ function DataObject(list) {
         return pages[currentPageID];
     }
 
-    function prepareColumn(props_local) {
+    function prepareColumn(props_local, pageSize) {
         var i,
             page = pages[pages.length - 1];
 
         for (i = 0; i < props_local.length; i++) {
-            if (page.length >= 9) {
+            if (page.length >= pageSize) {
                 page = createPage();
             }
 
@@ -128,7 +129,7 @@ function DataObject(list) {
         } else {
             fixup(list, matType);
         }
-        prepareColumn(list);
+        prepareColumn(list, (matType === TQ.MatType.SOUND? SOUND_PAGE_SIZE: IMAGE_PAGE_SIZE));
     }
 
     function toThumbNail(path) {
@@ -146,4 +147,5 @@ function DataObject(list) {
     }
 }
 
+DataObject.IMAGE_PAGE_SIZE = 9;
 TQ.DataObject = DataObject;
