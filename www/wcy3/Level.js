@@ -648,6 +648,7 @@ window.TQ = window.TQ || {};
     };
 
     p.prepareForJSONOut = function () {
+        TQ.AssertExt.invalidLogic(this.dataReady, "数据没有加载完成， 不能调用");
         this.persist(); // 固化z-Index值
     };
 

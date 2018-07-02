@@ -1137,15 +1137,22 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function syncLevelThumbs() {
-        TQ.State.allowPageTransition = false;
         // quick fill, to void undefined element in ng repeat;
         var nowTimestamp = Date.now();
         for (var i = 0; i < currScene.levelNum(); i++) {
             if (!levelThumbs[i]) {
-                levelThumbs[i] = {src:null, timestamp:i + nowTimestamp};
+                levelThumbs[i] = {src: null, timestamp: i + nowTimestamp};
             }
         }
+        doSyncLevelThumbs();
+    }
 
+    function doSyncLevelThumbs() {
+        if (!currScene.isAllResourceReady()) {
+            return $timeout(doSyncLevelThumbs, 500);
+        }
+        TQ.AssertExt.invalidLogic(currScene.isAllResourceReady(), '有level没有完全加载，不能调用');
+        TQ.State.allowPageTransition = false;
         function makeCheckOne(i) {
             return function () {
                 var j;

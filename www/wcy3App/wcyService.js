@@ -499,7 +499,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function needToSave() {
-        return (currScene && !currScene.isEmpty() && currScene.isWholeReady() && !currScene.isSaved);
+        return (currScene && !currScene.isEmpty() && currScene.isAllResourceReady() && !currScene.isSaved);
     }
 
     return {

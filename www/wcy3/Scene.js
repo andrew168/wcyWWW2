@@ -11,7 +11,7 @@ TQ = TQ || {};
         this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         this.isDirty = true;
-        this.wholeSceneReady = false;
+        this.allResourceReady = false;
         this.tMax = 0;
     }
 
@@ -370,8 +370,8 @@ TQ = TQ || {};
         return (this.levelNum() <= 2 && this.currentLevel && this.currentLevel.isEmpty());
     };
 
-    p.isWholeReady = function () {
-        return this.wholeSceneReady;
+    p.isAllResourceReady = function () {
+        return this.allResourceReady;
     };
 
     p.isLastLevel = function () {
@@ -396,7 +396,9 @@ TQ = TQ || {};
                 self.doTransition(id);
             } else {
                 level.onResourceReady = function () {
-                    self.doTransition(id);
+                    setTimeout(function () { // 避免直接调用
+                        self.doTransition(id);
+                    });
                 }
             }
         }
@@ -859,6 +861,7 @@ TQ = TQ || {};
     };
 
     p.getData = function () {
+        TQ.AssertExt.invalidLogic(!this.allResourceReady, '有level没有完全加载，不能调用');
         for (var i = 0; i < this.levelNum(); i++) {
             this.levels[i].prepareForJSONOut();
         }
@@ -975,11 +978,11 @@ TQ = TQ || {};
             _levelTs.splice(this.levels.length);
         }
 
-        var wholeSceneReady = true;
+        var allResourceReady = true;
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
             if (!level.resourceReady) {
-                wholeSceneReady = false;
+                allResourceReady = false;
                 continue;
             }
 
@@ -1002,10 +1005,10 @@ TQ = TQ || {};
             tGlobalLastFrame = Math.max(tGlobalLastFrame, level.getGlobalTime());
         }
 
-        this.wholeSceneReady = wholeSceneReady;
+        this.allResourceReady = allResourceReady;
         te = Math.max(te, tGlobalLastFrame);
         if (Math.abs(this.tMax - te) > 0.1) {
-            this.tMax = (wholeSceneReady) ? te : Math.max(this.tMax, te);
+            this.tMax = (allResourceReady) ? te : Math.max(this.tMax, te);
             TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
         }
     };
