@@ -145,6 +145,14 @@ TQ.MessageBox = (function () {
             vexOptions.overlayClassName = options.overlayClassName;
         }
 
+        if (!options.okText) {
+            options.okText = TQ.Locale.getStr('OK');
+        }
+
+        if (!options.cancelText) {
+            options.cancelText = TQ.Locale.getStr('Cancel');
+        }
+
         if (options.okText) {
             buttons.push($.extend({}, vex.dialog.buttons.YES, {text: options.okText}));
         }
