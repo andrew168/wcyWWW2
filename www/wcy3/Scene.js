@@ -861,7 +861,7 @@ TQ = TQ || {};
     };
 
     p.getData = function () {
-        TQ.AssertExt.invalidLogic(!this.allResourceReady, '有level没有完全加载，不能调用');
+        TQ.AssertExt.invalidLogic(this.allResourceReady, '有level没有完全加载，不能调用');
         for (var i = 0; i < this.levelNum(); i++) {
             this.levels[i].prepareForJSONOut();
         }
