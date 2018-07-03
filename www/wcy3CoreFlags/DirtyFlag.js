@@ -41,8 +41,12 @@ var TQ = TQ || {};
     }
 
     function requestToUpdateAll() {
-        currScene.isDirty = true;
-        currScene.currentLevel.requestToUpdateAll();
+        if (currScene) {
+            currScene.isDirty = true;
+            if (currScene.currentLevel) {
+                currScene.currentLevel.requestToUpdateAll();
+            }
+        }
     }
 
     TQ.DirtyFlag = DirtyFlag;
