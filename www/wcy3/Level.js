@@ -227,7 +227,6 @@ window.TQ = window.TQ || {};
 
     p.addElement = function  (desc) {
         var newItem = TQ.Element.build(this, desc);
-        TQ.DirtyFlag.setLevel(this);
         return this.addElementDirect(newItem);
     };
 
