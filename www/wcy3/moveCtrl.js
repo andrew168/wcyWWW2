@@ -38,6 +38,7 @@ TQ.MoveCtrl = (function () {
     }
 
     function moveZ(ele, offset, ev) {
+        TQ.AssertExt.depreciated(false, "ToDo: 是不是被cmdMoveLayer彻底代替了？");
         var target = ele.displayObj;
         // offset 是 hit点与图像定位点之间的偏移， 在MouseDown的时候由Element的onPress计算的
         var deltaY = TQ.Utility.deltaYinWorld(target, offset, ev);
