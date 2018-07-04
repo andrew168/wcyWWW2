@@ -45,7 +45,7 @@ window.TQ = window.TQ || {};
         this.dataReady = false;
         this.state = TQBase.LevelState.NOT_INIT;
         this.isWaitingForShow = false;
-        this.dirtyZ = false;
+        this.isDirtyZ = false;
         this.isDirty = true;
     };
 
@@ -145,7 +145,7 @@ window.TQ = window.TQ || {};
         }
 
         TQ.DirtyFlag.setLevel(this);
-        this.dirtyZ = true;
+        this.isDirtyZ = true;
     };
 
     p.cloneElement = function(elements) {
@@ -165,7 +165,7 @@ window.TQ = window.TQ || {};
             results.push(newEle);
         }
         TQ.DirtyFlag.setLevel(this);
-        this.dirtyZ = true;
+        this.isDirtyZ = true;
         return results;
     };
 
@@ -240,7 +240,7 @@ window.TQ = window.TQ || {};
           this.background = ele;
       }
       TQ.DirtyFlag.setLevel(this);
-      this.dirtyZ = true;
+      this.isDirtyZ = true;
       // ToDo: 暂时关闭， 还需要多调试
       // if (! (ele.isSound() || ele.isGroupFile() || ele.isButton()) ) {
       //    TQ.SelectSet.add(ele);
@@ -263,7 +263,7 @@ window.TQ = window.TQ || {};
         	TQ.GarbageCollector.add(ele);
 		}
         TQ.DirtyFlag.setElement(this);
-        this.dirtyZ = true;
+        this.isDirtyZ = true;
         return ele;
     };
 
@@ -518,7 +518,7 @@ window.TQ = window.TQ || {};
         this.removeNullElements();
         if (!this.dataReady) return;
 
-        if (!(this.dirtyZ || this.isDirty || TQ.FrameCounter.isPlaying())) {
+        if (!(this.isDirtyZ || this.isDirty || TQ.FrameCounter.isPlaying())) {
             return;
         }
 
@@ -540,10 +540,10 @@ window.TQ = window.TQ || {};
             this.calculateLastFrame();
             stage.update();
         }
-        if (this.dirtyZ) {
+        if (this.isDirtyZ) {
             this.persist();
         }
-        this.dirtyZ = false;
+        this.isDirtyZ = false;
         this.isDirty = false;
     };
 
