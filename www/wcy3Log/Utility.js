@@ -15,6 +15,7 @@ var TQUtility; //
 
     Utility.isIOS = isIOS;
     Utility.isAndroid = isAndroid;
+    Utility.isAndroidPad = isAndroidPad;
     Utility.parsePathname = parsePathname;
 
     Utility.isObject = function(obj) {
@@ -27,6 +28,15 @@ var TQUtility; //
 
     function isAndroid() {
         return ionic.Platform.isAndroid();
+    }
+
+    function isAndroidPad() {
+        var w = window.screen.width,
+            h = window.screen.height,
+            width = Math.max(w, h),
+            height = Math.min(w, h);
+
+        return isAndroid() && (width > 600 && height > 850);
     }
 
     function isIOS() { // only mobile, pad, no mac
