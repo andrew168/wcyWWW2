@@ -181,6 +181,7 @@ window.TQ = window.TQ || {};
     };
 
     p.skinning = function (hostElement, skinElement) {
+        TQ.AssertExt.depreciated(false, "ToDo: 是不是被changeSkin代替了？");
         assertNotNull(TQ.Dictionary.FoundNull, hostElement);
         assertNotNull(TQ.Dictionary.FoundNull, skinElement);
         hostElement.skinning(skinElement);
