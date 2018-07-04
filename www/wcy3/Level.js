@@ -240,6 +240,7 @@ window.TQ = window.TQ || {};
           this.background = ele;
       }
       TQ.DirtyFlag.setLevel(this);
+      this.dirtyZ = true;
       // ToDo: 暂时关闭， 还需要多调试
       // if (! (ele.isSound() || ele.isGroupFile() || ele.isButton()) ) {
       //    TQ.SelectSet.add(ele);
@@ -262,6 +263,7 @@ window.TQ = window.TQ || {};
         	TQ.GarbageCollector.add(ele);
 		}
         TQ.DirtyFlag.setElement(this);
+        this.dirtyZ = true;
         return ele;
     };
 
