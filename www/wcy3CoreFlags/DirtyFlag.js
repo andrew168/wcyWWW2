@@ -19,12 +19,15 @@ var TQ = TQ || {};
         }
     }
 
-    function setElement(ele) {
+    function setElement(ele, requestDirtyZ) {
         setElementOnly(ele);
         if (currScene) {
             currScene.isDirty = true;
             if (currScene.currentLevel) {
                 currScene.currentLevel.isDirty = true;
+                if (requestDirtyZ) {
+                    currScene.currentLevel.isDirtyZ = true;
+                }
             }
         }
     }

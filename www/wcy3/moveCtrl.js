@@ -49,6 +49,7 @@ TQ.MoveCtrl = (function () {
             _doMoveZ(ele, deltaStep);
             TQ.Log.out("ID:" + _lastItemID + "sum" + _accumulateStep
                 +", step: " + step + ", delta: " + deltaStep);
+            TQ.DirtyFlag.setElement(ele, true);
         }
     }
 
@@ -103,6 +104,7 @@ TQ.MoveCtrl = (function () {
         _openQueue(step);
         _doMoveZ(ele, step);
         _flush();
+        TQ.DirtyFlag.setElement(ele, true);
     }
 
     function onMoveUpLayer(evt) {
