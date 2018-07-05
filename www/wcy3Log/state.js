@@ -67,10 +67,17 @@ var TQ = TQ || {};
 
         var topBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight,
             bottomBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.bottomBarHeight,
-            h = State.innerHeight - (isLandscape? 0: (topBarHeight + bottomBarHeight)),
+            h = State.innerHeight,
             w = State.innerWidth,
-            designated = !currScene ? TQ.Scene.getDesignatedRegionDefault() : currScene.getDesignatedRegion();
+            designated;
 
+        if (isLandscape) {
+            w = w - TQ.Config.MIN_WIDTH_OF_LANDSCAPE_MENU;
+        } else {
+            h = h - (topBarHeight + bottomBarHeight);
+        }
+
+        designated = !currScene ? TQ.Scene.getDesignatedRegionDefault() : currScene.getDesignatedRegion();
         scaleMin = Math.min(w / designated.w, h / designated.h);
         TQ.Config.workingRegionWidth = scaleMin * designated.w;
         TQ.Config.workingRegionHeight = scaleMin * designated.h;
