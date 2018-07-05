@@ -1182,6 +1182,8 @@ window.TQ = window.TQ || {};
                 })(this);
             }
         }
+
+        TQ.DirtyFlag.setElement(this, true);
     };
 
     p.highlight = function (enable) {

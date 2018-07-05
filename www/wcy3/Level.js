@@ -164,8 +164,7 @@ window.TQ = window.TQ || {};
             }
             results.push(newEle);
         }
-        TQ.DirtyFlag.setLevel(this);
-        this.isDirtyZ = true;
+        TQ.DirtyFlag.setLevel(this, true);
         return results;
     };
 

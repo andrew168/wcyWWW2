@@ -32,9 +32,12 @@ var TQ = TQ || {};
         }
     }
 
-    function setLevel(level) {
+    function setLevel(level, requestDirtyZ) {
         if (!!level) {
             level.isDirty = true;
+            if (requestDirtyZ) {
+                level.isDirtyZ = true;
+            }
         }
         currScene.isDirty = true;
     }
