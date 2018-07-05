@@ -17,6 +17,7 @@ var TQUtility; //
     Utility.isAndroid = isAndroid;
     Utility.isAndroidPad = isAndroidPad;
     Utility.parsePathname = parsePathname;
+    Utility.isLandscape = isLandscape;
 
     Utility.isObject = function(obj) {
         return (typeof obj === 'object');
@@ -43,6 +44,14 @@ var TQUtility; //
         return ionic.Platform.isIOS();
     }
 
+    function isLandscape () {
+        var flags = ''; // "landscape-primary", "portrait-primary"
+        if (screen && screen.orientation && screen.orientation.type) {
+            flags = screen.orientation.type;
+        }
+        return (flags.indexOf('landscape') >=0);
+    }
+
     function getVersionNumber() {
         if (!window.device) {
             return 0;
@@ -61,7 +70,7 @@ var TQUtility; //
     }
 
     Utility.isFullySupported = function() {
-        if (isPC()) {
+        if (Utility.isPC()) {
             return true;
         } else if (isAndroid()) {
             return (getVersionNumber() >= versionToNum('4.1'));
