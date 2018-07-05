@@ -37,7 +37,7 @@ var TQUtility; //
             width = Math.max(w, h),
             height = Math.min(w, h);
 
-        return isAndroid() && (width > 600 && height > 850);
+        return isAndroid() && (width > 850 && height > 600);
     }
 
     function isIOS() { // only mobile, pad, no mac
