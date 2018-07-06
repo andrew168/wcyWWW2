@@ -296,7 +296,8 @@ TQ = TQ || {};
     // for both image and animation
     p.addItem = function (desc) {
         this.isDirty = true;
-        var level = this.currentLevel;
+        var level = desc.dstLevel;
+        delete(desc.dstLevel);
         if ((desc.toOverlay == undefined) || (desc.toOverlay == null)) {
             if (desc.levelID != undefined) {
                 level = this.getLevel(desc.levelID);
@@ -316,9 +317,13 @@ TQ = TQ || {};
             ele = TQ.Element.build(level, desc);
             assertTrue(TQ.INVALID_LOGIC, ele.level == level);
             ele.level = level;
-            var thisScene = this;
-            TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.ADD_ITEM,
-                thisScene, ele, ele));
+            if (level.isActive()) {
+                var thisScene = this;
+                TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.ADD_ITEM,
+                    thisScene, ele, ele));
+            } else { // level都退出了Stage了，undo stack肯定也reset了，所有不能在加了
+                this.addElementDirect(ele);
+            }
         }
         return ele;
     };

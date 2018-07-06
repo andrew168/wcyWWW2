@@ -184,10 +184,12 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     $scope.insertBkImage = function () {
         EditorService.insertBkImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
             300, 300);
+        // EditorService.gotoNextLevel();
     };
 
     $scope.insertSound = function () {
         EditorService.insertSound('https://res-3.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3');
+        // EditorService.gotoNextLevel();
     };
 
     $scope.insertRectangle = function () {
@@ -327,6 +329,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
             useDevice = true;
 
         EditorService.loadLocalImage(matType, useDevice, onLocalImageLoaded);
+        // EditorService.gotoNextLevel();
     };
 
     function onLocalImageLoaded(desc, image64Data, matType) {

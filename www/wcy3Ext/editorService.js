@@ -310,25 +310,27 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             // return doInsertMatFromLocalWx(matType);
         }
 
+        var dstLevel = currScene.currentLevel;
         if (matType === TQ.MatType.SOUND) {
             if (useDevice) {
                 if (TQ.AudioRecorder.isRecording) {
                     return TQ.AudioRecorder.stop();
                 } else {
                     return TQ.AudioRecorder.start(function (data) {
-                        TQ.SceneEditor.addItemByFile(data, matType, callback);
+                        TQ.SceneEditor.addItemByFile(dstLevel, data, matType, callback);
                     }, forceToRefreshUI);
                 }
             } else {
                 selectLocalFile(matType, useDevice).then(function (files) {
                     var soundFile = files[files.length -1];
-                    TQ.SceneEditor.addItemByFile(soundFile, matType, callback);
+                    TQ.SceneEditor.addItemByFile(dstLevel, soundFile, matType, callback);
                 });
             }
         }
     }
 
     function loadLocalImage(matType, useDevice, callback) {
+        var dstLevel = currScene.currentLevel;
         return selectLocalFile(matType, useDevice).then(function (filesOrImage64) {
             var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64],
                 n = files.length,
@@ -340,7 +342,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     mat = files[n - 1];
                     n--;
                     if (TQ.Utility.isImageFile(mat)) {
-                        TQ.SceneEditor.preprocessLocalImage(mat, matType, callback);
+                        TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback);
                         callback = function (desc, fileOrBlob, matType) {
                             TQ.ResourceSync.local2Cloud(null, fileOrBlob, matType);
                         };
@@ -352,7 +354,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             for (i = 0; i < n; i++) {
                 mat = files[i];
                 if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat)) {
-                    TQ.SceneEditor.preprocessLocalImage(mat, matType, callback);
+                    TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback);
                 }
             }
         }, errorReport);

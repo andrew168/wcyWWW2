@@ -1072,6 +1072,10 @@ window.TQ = window.TQ || {};
     };
 
     p.addItemToStage = function () {
+        if (!this.level.isActive()) {// 资源加载耗时多， 整个level都已经退出了stage，(因为level切换了)
+            return;
+        }
+
         if (!this.isGroup()) {
             TQ.StageBuffer.add(this);
         }
