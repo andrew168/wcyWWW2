@@ -46,7 +46,7 @@ var currScene = null;
         stage.addChild(stageContainer);
     }
 
-    SceneEditor.addItemByFile = function (data, matType, callback) {
+    SceneEditor.addItemByFile = function (dstLevel, data, matType, callback) {
         var aFile = data.aFile || data;
 
         if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
@@ -61,12 +61,12 @@ var currScene = null;
                 if (aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
                     return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
                 }
-                addItemBySoundFile(aFile, matType, callback);
+                addItemBySoundFile(dstLevel, aFile, matType, callback);
             }
         }
     };
 
-    function preprocessLocalImage(data, matType, callback) {// reduce size,
+    function preprocessLocalImage(dstLevel, data, matType, callback) {// reduce size,
         var aFile = data.aFile || data,
             options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
 
@@ -81,21 +81,22 @@ var currScene = null;
                     TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
                         TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
                         function () {
-                            addItemByImageData(buffer.data, matType, callback);
+                            addItemByImageData(dstLevel, buffer.data, matType, callback);
                         }, function () {
                         });
                 } else {
-                    addItemByImageData(buffer.data, matType, callback);
+                    addItemByImageData(dstLevel, buffer.data, matType, callback);
                 }
             });
     }
 
-    function addItemByImageData(image64Data, matType, callback) {
+    function addItemByImageData(dstLevel, image64Data, matType, callback) {
         var img = new Image();
         img.onload = function() {
             var desc = {
                 data: img,
                 src: null, type: "Bitmap", autoFit: determineAutoFit(matType),
+                dstLevel: dstLevel,
                 eType: TQ.MatType.toEType(matType)
             };
 
@@ -104,11 +105,12 @@ var currScene = null;
         img.src = image64Data;
     }
 
-    function addItemBySoundFile(fileOrBlob, matType, callback) {
+    function addItemBySoundFile(dstLevel, fileOrBlob, matType, callback) {
         TQ.RM.loadSoundFromFile(fileOrBlob, function (result) {
             var desc = {
                 data: TQ.RM.getResource(result.item.id).res,
                 src: result.item.id, type: TQ.ElementType.SOUND,
+                dstLevel: dstLevel,
                 eType: TQ.MatType.toEType(matType)
             };
 
@@ -122,6 +124,9 @@ var currScene = null;
             TQ.Log.error("未定义的eType");
         }
 
+        if (!desc.dstLevel) {
+            desc.dstLevel = currScene.currentLevel;
+        }
         // "Groupfile" 暂时还没有纳入RM的管理范畴
         if (((desc.type === TQ.ElementType.SOUND) ||
             (desc.type === TQ.ElementType.BITMAP) ||
@@ -136,15 +141,17 @@ var currScene = null;
         function doAdd() {
             var ele = currScene.addItem(desc);
             TQ.Assert.isTrue(!!desc.eType);
-            setTimeout(function() { // 延时， 以确保元素建立好了，避免autoFit失效,
-                if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
-                    TQ.SelectSet.add(ele);
-                } else {
-                    if (ele.isSound()) {
-                        TQ.SoundMgr.play(ele.jsonObj.src);
+            if (ele.level && ele.level.isActive()) {
+                setTimeout(function () { // 延时， 以确保元素建立好了，避免autoFit失效,
+                    if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
+                        TQ.SelectSet.add(ele);
+                    } else {
+                        if (ele.isSound()) {
+                            TQ.SoundMgr.play(ele.jsonObj.src);
+                        }
                     }
-                }
-            }, 200);
+                }, 200);
+            }
             return ele;
         }
     };
