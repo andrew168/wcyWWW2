@@ -336,14 +336,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 mat;
 
             if ((matType === TQ.MatType.BKG) && (n > 1)) {
-                mat = files[n-1];
-                if (TQ.Utility.isImageFile(mat)) {
-                    TQ.SceneEditor.preprocessLocalImage(mat, matType, callback);
+                do {
+                    mat = files[n - 1];
                     n--;
-                    callback = function (desc, fileOrBlob, matType) {
-                        TQ.ResourceSync.local2Cloud(null, fileOrBlob, matType);
+                    if (TQ.Utility.isImageFile(mat)) {
+                        TQ.SceneEditor.preprocessLocalImage(mat, matType, callback);
+                        callback = function (desc, fileOrBlob, matType) {
+                            TQ.ResourceSync.local2Cloud(null, fileOrBlob, matType);
+                        };
+                        break;
                     }
-                }
+                } while ( n > 0);
             }
 
             for (i = 0; i < n; i++) {
@@ -619,7 +622,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function insertSound(filename) {
-        var desc = {src: filename, type: "SOUND"};
+        var desc = {src: filename, type: "SOUND", eType: TQ.Element.ETYPE_AUDIO};
         addItem(desc, TQ.MatType.SOUND);
      }
 
