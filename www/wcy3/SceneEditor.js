@@ -50,7 +50,7 @@ var currScene = null;
         var aFile = data.aFile || data;
 
         if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M +'M');
         }
 
         if (matType === TQ.MatType.SOUND) {
@@ -59,7 +59,7 @@ var currScene = null;
                 TQ.MessageBox.show(str);
             } else {
                 if (aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-                    return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+                    return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
                 }
                 addItemBySoundFile(dstLevel, aFile, matType, callback);
             }
@@ -71,7 +71,7 @@ var currScene = null;
             options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
 
         if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE);
+            return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
         }
 
         var stopReminder = true;
