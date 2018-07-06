@@ -323,8 +323,18 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertBkImageFromLocal = function () {
-        EditorService.insertBkImageFromLocal();
+        var matType = TQ.MatType.PROP,
+            useDevice = true;
+
+        EditorService.loadLocalImage(matType, useDevice, onLocalImageLoaded);
     };
+
+    function onLocalImageLoaded(desc, image64Data, matType) {
+        var ele = TQ.SceneEditor.addItem(desc);
+        if (ele) {
+            TQ.ResourceSync.local2Cloud(ele, image64Data, matType);
+        }
+    }
 
     $scope.saveWorks = function () {
         WCY.save();
