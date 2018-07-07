@@ -579,6 +579,10 @@ TQ = TQ || {};
      如果id超出边界（id < 0)，则忽略
      */
     p.deleteLevel = function (id) {
+        return this.cutLevel(id);
+    };
+
+    p.cutLevel = function (id) {
         if ((id < 0) || (id >= this.levelNum())) {
             assertTrue(TQ.Dictionary.INVALID_PARAMETER, false);
             return;
@@ -598,7 +602,7 @@ TQ = TQ || {};
      用户不需要关心
      */
     p.moveTo = function (srcId, dstId) {
-        var content = this.deleteLevel(srcId);
+        var content = this.cutLevel(srcId);
         if (srcId < dstId) {
             dstId--;
         }
@@ -903,7 +907,7 @@ TQ = TQ || {};
                 TQ.SoundMgr.close();
                 // TQ.TextEditor.onNo();
                 this.currentLevel.exit();
-                this    .currentLevel = null;
+                this.currentLevel = null;
             }
             this.levels = [];  // 释放原来的数据
             this.currentLevel = null;
