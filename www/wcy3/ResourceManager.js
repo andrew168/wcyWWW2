@@ -222,8 +222,8 @@ this.TQ = this.TQ || {};
     RM.reset = function() {
         RM.completeOnceHandlers.splice(0);
         RM.preloader.removeAllEventListeners();
-        RM.preloader.reset();
         RM.preloader.removeAll();
+        RM.preloader.cancel();
         RM.setupListeners();
         RM.isEmpry = true;
     };

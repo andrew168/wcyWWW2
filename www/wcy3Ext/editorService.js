@@ -60,6 +60,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // opus ==> WCY
         cloneIt: WCY.cloneIt,
         forkIt: forkIt,
+        emptyScene: emptyScene,
 
         // level
         addLevel: addLevel,
@@ -863,7 +864,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function startRecord() {TQ.FrameCounter.startRecord(); TQ.SceneEditor.setPlayMode(); }
     function stopRecord() {TQ.FrameCounter.stopRecord(); TQ.SceneEditor.setEditMode(); }
-    function emptyScene() {TQ.SceneEditor.emptyScene(); }
+    function emptyScene() {
+        if (currScene) {
+            TQ.SceneEditor.emptyScene();
+        }
+    }
 
     function doPlayStop() {
         if (TQ.FrameCounter.isPlaying()) {
