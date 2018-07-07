@@ -583,6 +583,7 @@ window.TQ = window.TQ || {};
     };
 
     p.delete = function () {
+        TQ.AssertExt.depreciated("是否已经被 cleanStage代替了？-2018.07.07");
         // 如果是EXIT， 则已经被exit()函数处理过了，
         TQ.DirtyFlag.setLevel(this);
         if ((this.state === TQBase.LevelState.EDITING) ||

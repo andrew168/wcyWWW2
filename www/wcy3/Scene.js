@@ -903,8 +903,7 @@ TQ = TQ || {};
                 TQ.SoundMgr.close();
                 // TQ.TextEditor.onNo();
                 this.currentLevel.exit();
-                this.currentLevel.delete();
-                this.currentLevel = null;
+                this    .currentLevel = null;
             }
             this.levels = [];  // 释放原来的数据
             this.currentLevel = null;
