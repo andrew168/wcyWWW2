@@ -555,6 +555,14 @@ window.TQ = window.TQ || {};
       }
     };
 
+    p.empty = function () {
+        if (this.isActive()) {
+            this.cleanStage();
+        }
+        this.elements.splice(0);
+        TQ.DirtyFlag.setLevel(this);
+    };
+
     p.cleanStage = function () {
         TQ.DirtyFlag.setLevel(this);
         for (var i = 0; i < this.elements.length; i++) {

@@ -636,10 +636,13 @@ TQ = TQ || {};
     p.forceToRemoveAll = function () {
         this.stop();
         this.close(true);  // discard
-        while (this.levelNum() > 0) {
-            this.deleteLevel(0);
+        while (this.levelNum() > 1) {
+            var levelID = this.levelNum() - 1;
+            this.deleteLevel(levelID);
         }
-        this.addLevel(); // all one empty level
+        if (this.levels[0]) {
+            this.levels[0].empty();
+        }
         this.selectLevel(0);
         this.currentLevel.state = TQBase.LevelState.INITING;
         this.currentLevel.show();
