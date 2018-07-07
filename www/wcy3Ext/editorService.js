@@ -74,6 +74,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         // level and element
         onDelete: onDelete,
+        deleteSound: deleteSound,
 
         // element modification (text, sound, image...)
         changeSkin: changeSkin,
@@ -624,10 +625,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.SceneEditor.addItem(desc);
     }
 
-    function insertSound(filename) {
-        var desc = {src: filename, type: "SOUND", eType: TQ.Element.ETYPE_AUDIO};
+    function insertSound(url, resourceName) {
+        var desc = {src: url, resName: resourceName, type: "SOUND", eType: TQ.Element.ETYPE_AUDIO};
         addItem(desc, TQ.MatType.SOUND);
-     }
+    }
 
     function addItemByUrl(url, matType, option) {
         var eleType = (matType === TQ.MatType.SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
@@ -1396,6 +1397,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
             TQ.SelectSet.delete();
         }
+    }
+
+    function deleteSound(ele) {
+        TQ.CommandMgr.directDo(new TQ.DeleteEleCommand(currScene, ele));
     }
 
     function changeSkin(newSkinUrl, onChanged) {

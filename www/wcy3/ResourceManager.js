@@ -491,6 +491,15 @@ this.TQ = this.TQ || {};
         return RM.toRelative(str);
     };
 
+    RM.getNameFromUrl = function (url) {
+        if (!url) {
+            return url;
+        }
+        var words = url.split('/');
+        return words[words.length - 1];
+    };
+
+
     function handleAndroidLocalhost(pathname) {
         var ANDROID_LOCALHOST = '/android_asset/www';
         if (pathname.indexOf(ANDROID_LOCALHOST) === 0) {

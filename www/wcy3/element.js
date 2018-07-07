@@ -2050,8 +2050,15 @@ window.TQ = window.TQ || {};
     p.getOperationFlags = function () {
         return (this.state & 0xFFF0);
     };
+
     p.getAlias = function () {
         return null;
+    };
+
+    p.getResourceName = function () {
+        if (this.jsonObj) {
+            return this.jsonObj.resName || TQ.RM.getNameFromUrl(this.jsonObj.src);
+        }
     };
 
     p.getMaxZ = function() {
