@@ -770,14 +770,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             nextLevel = id - 1;
         }
         if (nextLevel < 0) {
-            nextLevel = 0;
-            id = 1;
-            addLevelAt(0);
+            currScene.currentLevel.empty();
+            levelThumbs[0] = null;
+        } else {
+            currScene.gotoLevel(nextLevel);
+            $timeout(function () {
+                deleteLevel(id);
+            });
         }
-        currScene.gotoLevel(nextLevel);
-        $timeout(function () {
-            deleteLevel(id);
-        });
     }
 
     /*
