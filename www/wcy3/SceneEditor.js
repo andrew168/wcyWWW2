@@ -157,8 +157,8 @@ var currScene = null;
     };
 
     SceneEditor.emptyScene = function () { // empty the current scene
-        if (!currScene) {
-            assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
+        TQ.AssertExt.isNotNull(currScene);
+        if (!currScene || currScene.isEmpty()) {
             return false;
         }
 
