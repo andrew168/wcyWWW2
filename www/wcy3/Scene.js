@@ -371,8 +371,21 @@ TQ = TQ || {};
         }
     };
 
+
     p.isEmpty = function () {
-        return (this.levelNum() <= 2 && this.currentLevel && this.currentLevel.isEmpty());
+        for (var i =0;  i< this.levelNum(); i++) {
+            if (!this.levels[i].isEmpty()) {
+                return false;
+            }
+        }
+
+        return true;
+    };
+
+    p.isCurrentLevelEmpty = function() {
+        return ((this.levelNum() == 0) ||
+            !this.currentLevel ||
+            this.currentLevel.isEmpty());
     };
 
     p.isAllResourceReady = function () {
