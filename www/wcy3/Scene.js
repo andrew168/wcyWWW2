@@ -651,6 +651,10 @@ TQ = TQ || {};
     // !!! can not recover, be careful!
     // empty the current scene
     p.forceToRemoveAll = function () {
+        if (this.isEmpty()) {
+            return;
+        }
+
         this.stop();
         this.close(true);  // discard
         while (this.levelNum() > 1) {
@@ -922,9 +926,10 @@ TQ = TQ || {};
                 this.currentLevel.exit();
                 this.currentLevel = null;
             }
-            this.levels = [];  // 释放原来的数据
-            this.currentLevel = null;
+            this.levels.splice(1, this.levelNum()-1);  // 释放原来的数据
+            this.currentLevel = this.levels[0];
             this.currentLevelId = 0;
+            this.currentLevel.empty();
             this.onsceneload = null;
             isStarted = false;
             return true;
