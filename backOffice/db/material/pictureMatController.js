@@ -141,7 +141,7 @@ function ban(id, user, newValue, callback) {
     PictureMat.findOne(condition)
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found! : ' + id + ", or not belong to this user: " + playerID});
+                callback({error: 'not found! : ' + id + ", or not belong to this user: " + user.ID});
             } else {
                 console.log(data);
                 if (newValue['isBanned'] !== undefined ) {
@@ -166,7 +166,7 @@ function ban(id, user, newValue, callback) {
                             callback(data._doc._id);
                         }
                     } else {
-                        console.error("error in ban picture mat!");
+                        callback({error: "error in ban picture mat!"});
                     }
                 });
             }

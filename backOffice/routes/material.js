@@ -149,10 +149,16 @@ function banMatId(req, res, newValues, matType, matId) {
         return netCommon.notLogin(req, res);
     }
 
-    function onSavedToDB(docId) {
-        var data = {
-            public_id: utils.matId2Name(docId)
-        };
+    function onSavedToDB(result) {
+        var data;
+        if (result.error) {
+            data = result;
+        } else {
+            docId = result;
+            data = {
+                public_id: utils.matId2Name(docId)
+            };
+        }
         sendBack(data, res);
     }
 
