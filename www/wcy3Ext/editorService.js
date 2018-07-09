@@ -1400,7 +1400,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function deleteSound(ele) {
-        TQ.CommandMgr.directDo(new TQ.DeleteEleCommand(currScene, ele));
+        TQ.AssertExt.isNotNull(ele);
+        if (ele) {
+            ele.stop();
+            TQ.CommandMgr.directDo(new TQ.DeleteEleCommand(currScene, ele));
+        }
     }
 
     function changeSkin(newSkinUrl, onChanged) {

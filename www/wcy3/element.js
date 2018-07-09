@@ -2059,6 +2059,14 @@ window.TQ = window.TQ || {};
         if (this.jsonObj) {
             return this.jsonObj.resName || TQ.RM.getNameFromUrl(this.jsonObj.src);
         }
+        return "";
+    };
+
+    p.getResourcePath = function () {
+        if (this.jsonObj) {
+            return this.jsonObj.src;
+        }
+        return null;
     };
 
     p.getMaxZ = function() {
