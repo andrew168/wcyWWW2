@@ -565,8 +565,10 @@ window.TQ = window.TQ || {};
 
     p.cleanStage = function () {
         TQ.DirtyFlag.setLevel(this);
-        for (var i = 0; i < this.elements.length; i++) {
-            this.elements[i].resetStageFlag();
+        if (this.dataReady) {
+            for (var i = 0; i < this.elements.length; i++) {
+                this.elements[i].resetStageFlag();
+            }
         }
 
         if (stageContainer) {
