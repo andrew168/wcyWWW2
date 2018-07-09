@@ -268,6 +268,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
 
     function doUpdateMat(data) {
+        TQ.AssertExt.isNotNull(data.matType, "db必须的参数");
         return $http.post(C_MAN_URL, angular.toJson(data)).then(function (pkg) { // 发出event， 好让dataService等更新自己
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
         });
