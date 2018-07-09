@@ -7,6 +7,7 @@
 //
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
+    matCommon = require('./matCommon'),
     PictureMat = mongoose.model('PictureMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
@@ -129,48 +130,9 @@ function update(id, path, callback) {
         });
 }
 
+
 function ban(id, user, newValue, callback) {
-    var onlyMine = {userId: user.ID},
-        condition = {$and: [{_id: id}]};
-
-    if (user.canAdmin || user.canBan) {// 如果 有权admin或Ban， 不加 userId的限制
-    } else {
-        condition.$and.push(onlyMine);
-    }
-
-    PictureMat.findOne(condition)
-        .exec(function (err, data) {
-            if (!data) {
-                callback({error: 'not found! : ' + id + ", or not belong to this user: " + user.ID});
-            } else {
-                console.log(data);
-                if (newValue['isBanned'] !== undefined ) {
-                    data.set('isBanned', newValue['isBanned']);
-                }
-
-                if (newValue['isShared'] !== undefined) {
-                    data.set('isShared', newValue['isShared']);
-                }
-
-                if (newValue['requestToBan'] !== undefined) {
-                    data.set('requestToBan', newValue['requestToBan']);
-                }
-
-                if (newValue['requestToShare'] !== undefined) {
-                    data.set('requestToShare', newValue['requestToShare']);
-                }
-
-                data.save(function (err, data) {
-                    if (!err) {
-                        if (callback) {
-                            callback(data._doc._id);
-                        }
-                    } else {
-                        callback({error: "error in ban picture mat!"});
-                    }
-                });
-            }
-        });
+    matCommon.ban(PictureMat, id, user, newValue, callback);
 }
 
 exports.add = add;

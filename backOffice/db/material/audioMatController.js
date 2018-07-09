@@ -8,6 +8,7 @@
 
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
+    matCommon = require('./matCommon'),
     AudioMat = mongoose.model('AudioMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
@@ -98,33 +99,8 @@ function update(id, path, callback) {
         });
 }
 
-function ban(id, user, callback) {
-    var onlyMine = {userId: user.ID},
-        condition = {$and: [{_id: id}]};
-
-    if (user.canAdmin || user.canBan) {// 如果 有权admin或Ban， 不加 userId的限制
-    } else {
-        condition.$and.push(onlyMine);
-    }
-
-    AudioMat.findOne(condition)
-        .exec(function (err, data) {
-            if (!data) {
-                console.error(404, {msg: 'not found! : ' + id + ", or not belong to this user: " + playerID});
-            } else {
-                console.log(data);
-                data.set('isBanned', true);
-                data.save(function (err, data) {
-                    if (!err) {
-                        if (callback) {
-                            callback(data._id);
-                        }
-                    } else {
-                        console.error("error in ban picture mat!");
-                    }
-                });
-            }
-        });
+function ban(id, user, newValue, callback) {
+    matCommon.ban(AudioMat, id, user, newValue, callback);
 }
 
 exports.get = get;
