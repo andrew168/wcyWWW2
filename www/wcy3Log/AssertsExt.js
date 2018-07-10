@@ -11,6 +11,7 @@ var TQ = TQ || {};
     AssertExt.depreciated = depreciated;
     AssertExt.invalidLogic = invalidLogic;
     AssertExt.isNotNull = isNotNull;
+    AssertExt.isTrue = isTrue;
     AssertExt.expectObject = expectObject;
 
     function depreciated(name) {
@@ -25,6 +26,10 @@ var TQ = TQ || {};
 
     function isNotNull(exp) {
         TQ.Assert.isNotNull(exp, TQ.Dictionary.INVALID_LOGIC );
+    }
+
+    function isTrue(exp, msg) {
+        TQ.Assert.isTrue(exp, msg);
     }
 
     function expectObject(exp) {

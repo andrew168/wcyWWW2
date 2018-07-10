@@ -7,6 +7,7 @@ window.TQ = window.TQ || {};
 (function () {
     var DEFAULT_MAX_FRAME = 3; // seconds
     function Level(description) {
+        TQ.AssertExt.isTrue(!description || (typeof description ==='object'), "必须是object, 不能是json字串");
         this.background = null;
         this.latestElement = null; // 最新生成的复合物体
         this.tMaxFrame = 0;
@@ -35,6 +36,7 @@ window.TQ = window.TQ || {};
         description = (!description) ? {} :description;
         description.elements = (!description.elements) ? [] : description.elements;
         this.elements = description.elements;
+        TQ.AssertExt.isNotNull(this.elements);
         this.FPS = (!description.FPS) ? TQ.FrameCounter.defaultFPS : description.FPS;
         this.tMaxFrame = (!description.tMaxFrame)? this.tMaxFrame : description.tMaxFrame;
         this.tMaxCapacity = Math.max(this.tMaxCapacity, this.tMaxFrame);

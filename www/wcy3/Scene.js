@@ -635,7 +635,7 @@ TQ = TQ || {};
         srcLevel.prepareForJSONOut();
         jsonData = JSON.stringify(srcLevel);
         srcLevel.afterToJSON();
-        newLevel = new TQ.Level(jsonData);
+        newLevel = new TQ.Level(JSON.parse(jsonData));
         return this.addLevel(dstId, newLevel);
     };
 
