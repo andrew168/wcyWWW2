@@ -460,7 +460,7 @@ function WCY($http, FileService, WxService, NetService) {
     }
 
     function _onReceivedWcyData(res) {
-        TQ.MessageBox.hide();  // end of loading，no resource yet
+        TQ.MessageBox.reset();  // end of loading，no resource yet
         var data = res.data;
         parseCommonData(data);
         TQ.WCY.isPlayOnly = data.isPlayOnly;

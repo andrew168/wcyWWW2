@@ -457,7 +457,7 @@ TQ = TQ || {};
         function onOpened() {
             TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);
             self.showLevel();
-            TQ.MessageBox.hide();
+            TQ.MessageBox.reset();
             setTimeout(function () {
                 if (!isStarted) {
                     self.start();
