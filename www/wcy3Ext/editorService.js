@@ -147,7 +147,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             }, function (err) {
                 TQ.Log.error(err);
             })
-                .finally(TQ.MessageBox.hide);
+                .finally(TQ.MessageBox.reset);
         } else {
             TQ.SceneEditor.addItem(desc);
         }
@@ -236,7 +236,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     preview();
                 });
             } else {
-                TQ.MessageBox.hide();
+                TQ.MessageBox.reset();
                 preview();
             }
         }
@@ -535,7 +535,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             then(addItemByData, function (err) {
                 TQ.Log.error(err);
             })
-            .finally(TQ.MessageBox.hide);
+            .finally(TQ.MessageBox.reset);
     }
 
     // private functions:

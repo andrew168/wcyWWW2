@@ -268,7 +268,7 @@ var currScene = null;
             currScene.reset();
         }
 
-        TQ.MessageBox.hide();
+        TQ.MessageBox.reset();
         if (!currScene) {
             currScene = new TQ.Scene();
             TQ.WCY.currentScene = currScene;
