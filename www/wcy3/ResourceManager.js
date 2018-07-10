@@ -33,6 +33,7 @@ this.TQ = this.TQ || {};
 
     var urlParser = TQ.Base.Utility.urlParser,
         urlConcat = TQ.Base.Utility.urlConcat,
+        maxConnectionsPerHost = 6,
         RM = ResourceManager;
 
     RM.DATA_TYPE_SOUND = createjs.AbstractLoader.SOUND; // preloader lib中定义的
@@ -50,6 +51,7 @@ this.TQ = this.TQ || {};
     RM.callbackList = [];
     RM.dataReady = false;
     RM.completeOnceHandlers = [];
+
     RM.initialize = function() {
         //var MAX_CONNECTIONS_PER_HOST={
         //    'chrome': 6,
@@ -59,7 +61,6 @@ this.TQ = this.TQ || {};
         //    'chrome mobile': 6,
         //    'safari mobile': 6,
         //};
-        var maxConnectionsPerHost = 6;
 
         if (!!RM._hasCreated) { // 确保只创建一次
             return;
@@ -79,14 +80,7 @@ this.TQ = this.TQ || {};
         }
 
 		// Instantiate a queue.
-        RM.preloader = new createjs.LoadQueue(true, null, true); // , "assets/");
-        RM.preloader.installPlugin(createjs.Sound);
-        RM.preloader.setMaxConnections(maxConnectionsPerHost);
-
-        if (TQ.Base.Utility.isMobileDevice()) {
-            RM.preloader.installPlugin(createjs.CordovaAudioLoader);
-        }
-        RM.setupListeners();
+        resetPreloader();
         _setupDefaultResource();
     };
 
@@ -224,9 +218,21 @@ this.TQ = this.TQ || {};
         RM.preloader.removeAllEventListeners();
         RM.preloader.removeAll();
         RM.preloader.cancel();
-        RM.setupListeners();
-        RM.isEmpry = true;
+        RM.preloader = null;
+        resetPreloader();
+        RM.isEmpty = true;
     };
+
+    function resetPreloader() {
+        RM.preloader = new createjs.LoadQueue(true, null, true); // , "assets/");
+        RM.preloader.installPlugin(createjs.Sound);
+        RM.preloader.setMaxConnections(maxConnectionsPerHost);
+
+        if (TQ.Base.Utility.isMobileDevice()) {
+            RM.preloader.installPlugin(createjs.CordovaAudioLoader);
+        }
+        RM.setupListeners();
+    }
 
     // 信号：暂停预加载，以便于处理时间敏感的判定， 必须是短时间
     RM.setPaused = function(value)
