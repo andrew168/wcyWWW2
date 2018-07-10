@@ -16,6 +16,7 @@ TQ.MessageBox = (function () {
     var instance = {
         getInstance: getInstance,
         hide: hide,
+        reset: reset,
         hideProgressBox: hideProgressBox,
         prompt: prompt,
         confirm: confirm, // 有OK和Cancel两个按钮
@@ -50,6 +51,11 @@ TQ.MessageBox = (function () {
 
     function getInstance() {
         return instance;
+    }
+
+    function reset() {
+        // 仅仅是清除任何显示的对话框，但是，要避免重入，特别是，此对话框的onOK调用reset
+        setTimeout(hide);
     }
 
     function hide(ref) {

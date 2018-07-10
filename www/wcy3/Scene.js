@@ -240,7 +240,7 @@ TQ = TQ || {};
     };
 
     p.showLevel = function () {
-        TQ.MessageBox.hide();
+        TQ.MessageBox.reset();
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNum()); //level ID 超界
         this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
         TQ.Log.checkPoint("entering level " + this.currentLevelId);
