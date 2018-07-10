@@ -204,11 +204,14 @@ TQ = TQ || {};
         if (!currScene) {
             return;
         }
+
+        TQ.SoundMgr.stop();
         if (TQ.FrameCounter.isPlaying()) {
             currScene.stop();
         } else {
             saveState();
         }
+
         if (currScene.currentLevel && currScene.currentLevel.isEditMode()) {
             currScene.currentLevel.calculateLastFrame();
         }
