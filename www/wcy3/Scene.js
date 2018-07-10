@@ -650,7 +650,7 @@ TQ = TQ || {};
 
     // !!! can not recover, be careful!
     // empty the current scene
-    p.forceToRemoveAll = function () {
+    p.empty = function () {
         if (this.isEmpty()) {
             return;
         }

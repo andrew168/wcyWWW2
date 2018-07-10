@@ -158,11 +158,11 @@ var currScene = null;
 
     SceneEditor.emptyScene = function () { // empty the current scene
         TQ.AssertExt.isNotNull(currScene);
-        if (!currScene || currScene.isEmpty()) {
+        if (!currScene) {
             return false;
         }
 
-        currScene.forceToRemoveAll();
+        currScene.empty();
     };
 
     SceneEditor.getMode = function () {
