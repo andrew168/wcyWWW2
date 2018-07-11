@@ -12,6 +12,8 @@ TQ = TQ || {};
     SoundMgr.started = false;
     SoundMgr.isSupported = false;
     SoundMgr.items = [];
+    var isReseting = false;
+
     SoundMgr.initialize = function() {
         SoundMgr.isSupported = true;
     };
@@ -108,9 +110,15 @@ TQ = TQ || {};
         // 只删除那些不跨场景的
         for (var i = SoundMgr.items.length - 1; i >=0; i--) {
             var ele = SoundMgr.items[i];
-            if (ele.isMultiScene) continue;
+            if (ele.isMultiScene && !isReseting) continue;
             SoundMgr.items.splice(i,1);
         }
+    };
+
+    SoundMgr.reset = function () {
+        isReseting = true;
+        SoundMgr.close();
+        isReseting = false;
     };
 
     SoundMgr.close = function() {

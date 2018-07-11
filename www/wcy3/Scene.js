@@ -206,7 +206,7 @@ TQ = TQ || {};
             return;
         }
 
-        TQ.SoundMgr.stop();
+        TQ.SoundMgr.reset();
         if (TQ.FrameCounter.isPlaying()) {
             currScene.stop();
         } else {
@@ -929,7 +929,7 @@ TQ = TQ || {};
         if (this.isSaved || this.isEmpty() || !!discard) {
             if (this.currentLevel != null) {
                 TQ.RM.reset(); // 必须先停止RM，否则其中的callback如果引用了Level对象就会出错
-                TQ.SoundMgr.close();
+                TQ.SoundMgr.reset();
                 // TQ.TextEditor.onNo();
                 this.currentLevel.exit();
                 this.currentLevel = null;
