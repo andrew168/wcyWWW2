@@ -829,6 +829,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function preview (options) {
+        TQ.SoundMgr.reset();
         TQ.SelectSet.empty(); // 清楚选中的元素， 和highlight
         setPreviewMode();
         replay(options);
@@ -859,8 +860,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function replay(option) {
-       TQ.Scene.doReplay(option);
-       _onPlay();
+        TQ.SoundMgr.reset();
+        TQ.Scene.doReplay(option);
+        _onPlay();
     }
 
     function startRecord() {TQ.FrameCounter.startRecord(); TQ.SceneEditor.setPlayMode(); }
