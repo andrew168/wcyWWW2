@@ -11,10 +11,11 @@ TQ = TQ || {};
         this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         this.isDirty = true;
-        this.allResourceReady = false;
         this.tMax = 0;
     }
 
+    var allResourceReady = false,
+        allDataReady = false;
     Scene.EVENT_READY = "sceneReady";
     Scene.EVENT_SAVED = "sceneSaved";
     Scene.EVENT_END_OF_PLAY = "end_of_Play";
@@ -392,7 +393,11 @@ TQ = TQ || {};
     };
 
     p.isAllResourceReady = function () {
-        return this.allResourceReady;
+        return allResourceReady;
+    };
+
+    p.isAllDataReady = function () {
+        return allDataReady;
     };
 
     p.isLastLevel = function () {
@@ -645,7 +650,7 @@ TQ = TQ || {};
             newLevel;
         this.copyTo(this.currentLevelId, newLevelId);
         TQ.RM.onCompleteOnce(function () {
-            newLevel.resourceReady = true;
+            newLevel.onLoaded();
         });
         newLevel = this.getLevel(newLevelId);
         this.startPreloader(newLevel);
@@ -893,7 +898,7 @@ TQ = TQ || {};
     };
 
     p.getData = function () {
-        TQ.AssertExt.invalidLogic(this.allResourceReady, '有level没有完全加载，不能调用');
+        TQ.AssertExt.invalidLogic(allDataReady, '有level没有完全加载和build，不能调用');
         for (var i = 0; i < this.levelNum(); i++) {
             this.levels[i].prepareForJSONOut();
         }
@@ -1010,11 +1015,18 @@ TQ = TQ || {};
             _levelTs.splice(this.levels.length);
         }
 
-        var allResourceReady = true;
+        var _allResourceReady = true,
+            _allDataReady = true;
         for (i = 0; i < this.levels.length; i++) {
             level = this.levels[i];
             if (!level.resourceReady) {
-                allResourceReady = false;
+                _allResourceReady = false;
+                _allDataReady = false;
+                continue;
+            }
+
+            if (!level.dataReady) {
+                _allDataReady = false;
                 continue;
             }
 
@@ -1037,10 +1049,11 @@ TQ = TQ || {};
             tGlobalLastFrame = Math.max(tGlobalLastFrame, level.getGlobalTime());
         }
 
-        this.allResourceReady = allResourceReady;
+        allResourceReady = _allResourceReady;
+        allDataReady = _allDataReady;
         te = Math.max(te, tGlobalLastFrame);
         if (Math.abs(this.tMax - te) > 0.1) {
-            this.tMax = (allResourceReady) ? te : Math.max(this.tMax, te);
+            this.tMax = (_allResourceReady) ? te : Math.max(this.tMax, te);
             TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
         }
     };
