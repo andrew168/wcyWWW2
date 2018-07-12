@@ -659,24 +659,23 @@ TQ = TQ || {};
     // !!! can not recover, be careful!
     // empty the current scene
     p.empty = function () {
-        if (this.isEmpty()) {
-            return;
+        if (!this.isEmpty()) {
+            this.stop();
+            this.close(true);  // discard
+            while (this.levelNum() > 1) {
+                var levelID = this.levelNum() - 1;
+                this.deleteLevel(levelID);
+            }
+            if (this.levels[0]) {
+                this.levels[0].empty();
+            }
+            this.selectLevel(0);
+            this.currentLevel.state = TQBase.LevelState.INITING;
+            this.currentLevel.show();
         }
-
-        this.stop();
-        this.close(true);  // discard
-        while (this.levelNum() > 1) {
-            var levelID = this.levelNum() - 1;
-            this.deleteLevel(levelID);
-        }
-        if (this.levels[0]) {
-            this.levels[0].empty();
-        }
-        this.selectLevel(0);
-        this.currentLevel.state = TQBase.LevelState.INITING;
-        this.currentLevel.show();
         this.title = TQ.Config.UNNAMED_SCENE;
         this.state = TQBase.LevelState.NOT_INIT;
+        this.backgroundColor = TQ.Config.BACKGROUND_COLOR;
         this.isSaved = true; //ToDo: check it is false???
         this.isDirty = true;
     };
