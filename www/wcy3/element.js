@@ -1998,6 +1998,10 @@ window.TQ = window.TQ || {};
         return this.displayObj.visible;
     };
 
+    p.isInCurrentLevel = function () {
+        return (currScene && currScene.currentLevel && (currScene.currentLevel === this.level));
+    };
+
     p.hasBroken = function () {
         return (this.hasFlag(Element.BROKEN));
     };
