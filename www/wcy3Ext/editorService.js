@@ -1162,6 +1162,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function doSyncLevelThumbs() {
         if (!currScene.isAllResourceReady()) {
+            TQ.MessageBox.toast(TO.Locale.getStr('processing...'));
             return $timeout(doSyncLevelThumbs, 500);
         }
         TQ.AssertExt.invalidLogic(currScene.isAllResourceReady(), '有level没有完全加载，不能调用');
