@@ -167,7 +167,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         state.showTrimTimeline = false; //false;
 
         // editor's mode
-        if (currScene && currScene.isEmpty()) {
+        if (currScene && !TQ.State.isPlayOnly) {
             setAddMode();
         } else {
             setPreviewMode();
@@ -228,7 +228,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         updateControllers();
 
-        if (TQ.Config.AutoPlay && currScene) {
+        if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
             if (TQUtility.isIOS()) {
                 TQ.SoundMgr.stop();
                 TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
