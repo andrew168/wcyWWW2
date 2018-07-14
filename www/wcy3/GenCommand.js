@@ -48,10 +48,8 @@ window.TQ = window.TQ || {};
     inherit(GenCommand, TQ.AbstractCommand);
 
     GenCommand.prototype.do = function() {
-        var result = this.receiver[this.dofn](this.newValue);
-        if (!this.oldValue) {
-            this.oldValue = result;
-        }
+        this.receiver[this.dofn](this.newValue);
+        TQ.AssertExt.isTrue(typeof this.oldValue !== 'undefined', 'oldValue为什么没有赋值？');
     };
 
     GenCommand.prototype.undo = function() {
