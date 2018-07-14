@@ -19,6 +19,11 @@ window.TQ = window.TQ || {};
     }
 
     Level.EVENT_START_SHOWING = 'level start showing';
+
+    Level.isCurrent = function (id) {
+        return (currScene && (currScene.currentLevelId === id));
+    };
+
     var p = Level.prototype;
     p.isDirty = false;  //  变量赋值应该放在最前面, 确保在使用之前已经赋值. 小函数放在最后, 很少看.
     p.isPreloading = false;
