@@ -3,12 +3,14 @@
  */
 var TQ = TQ || {};
 TQ.MessageBox = (function () {
+    var TYPE_PROMPT = 'prompt',
+        TYPE_CONFIRM = 'confirm',
+        TYPE_SHOW = 'show',
+        TYPE_TOAST = 'toast',
+        TYPE_PROGRESS = 'progress';
+
     var isShowingByForce = false,
-        toastInstance,
-        progressInstance,
-        promptInstance,
-        confirmInstance,
-        showInstance,
+        instances = {},
         msgList = [],
         timer = null;
 
@@ -46,7 +48,7 @@ TQ.MessageBox = (function () {
             timer = setTimeout(onDuration, options.duration);
         }
 
-        return show2(options);
+        return (instances[options.type] = show2(options));
     }
 
     function getInstance() {
@@ -86,27 +88,28 @@ TQ.MessageBox = (function () {
             option.onCancel = onCancel1;
         }
 
-        return (promptInstance = doShow(option));
+        option.type = TYPE_PROMPT;
+        return (doShow(option));
     }
 
     function confirm(options) {
-        return (confirmInstance = doShow(options));
+        options.type = TYPE_CONFIRM;
+        return doShow(options);
     }
 
     function show(str) {
-        return (showInstance = doShow({unsafeMessage: str}));
+        return doShow({unsafeMessage: str, type: TYPE_SHOW});
     }
 
     function toast(str) {
         var duration = 1000;
-        return (toastInstance = doShow({unsafeMessage: str, duration: duration}));
+        return doShow({unsafeMessage: str, duration: duration, type: TYPE_TOAST});
     }
 
     function onDuration() {
         isShowingByForce = false;
-        var tempInstance = toastInstance;
-        toastInstance = null;
-        hide(tempInstance);
+        hide(instances[TYPE_TOAST]);
+        instances[TYPE_TOAST] = null;
         if (msgList.length <= 0) {
             return;
         }
@@ -120,7 +123,7 @@ TQ.MessageBox = (function () {
 
     function showWaiting(msg) {
         var htmlStr = '<img src="/public/images/loading.gif"> ' + msg;
-        return (progressInstance = doShow({unsafeMessage: htmlStr, position: 'bottom'}));
+        return doShow({unsafeMessage: htmlStr, position: 'bottom', type: TYPE_PROGRESS});
     }
 
     function show2(options) {
@@ -196,30 +199,25 @@ TQ.MessageBox = (function () {
 
     function doHide(ref) {
         if (!ref) {
-            var tempInstance;
             hideProgressBox();
-            if (showInstance) {
-                tempInstance = showInstance;
-                showInstance = null;
-                vex.close(tempInstance);
+            if (instances[TYPE_SHOW]) {
+                vex.close(instances[TYPE_SHOW]);
+                instances[TYPE_SHOW] = null;
             }
 
-            if (promptInstance) {
-                tempInstance = promptInstance;
-                promptInstance = null;
-                vex.close(tempInstance); // 这个close， 还在调用callback，容易造成死循环
+            if (instances[TYPE_PROMPT]) {
+                vex.close(instances[TYPE_PROMPT]); // 这个close， 还在调用callback，容易造成死循环
+                instances[TYPE_PROMPT] = null;
             }
 
-            if (confirmInstance) {
-                tempInstance = confirmInstance;
-                confirmInstance = null;
-                vex.close(tempInstance);
+            if (instances[TYPE_CONFIRM]) {
+                vex.close(instances[TYPE_CONFIRM]);
+                instances[TYPE_CONFIRM] = null;
             }
 
-            if (toastInstance) {
-                tempInstance = toastInstance;
-                toastInstance = null;
-                vex.close(tempInstance);
+            if (instances[TYPE_TOAST]) {
+                vex.close(instances[TYPE_TOAST]);
+                instances[TYPE_TOAST] = null;
             }
         } else {
             vex.close(ref);
@@ -227,10 +225,9 @@ TQ.MessageBox = (function () {
     }
 
     function hideProgressBox() {
-        if (progressInstance) {
-            var tempInstance = progressInstance;
-            progressInstance = null;
-            hide(tempInstance);
+        if (instances[TYPE_PROGRESS]) {
+            hide(instances[TYPE_PROGRESS]);
+            instances[TYPE_PROGRESS] = null;
         }
     }
 
