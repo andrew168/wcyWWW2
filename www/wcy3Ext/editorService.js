@@ -1144,6 +1144,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 forceToRefreshUI();
                 if (currScene.levelNum() > levelThumbs.length) {
                     $timeout(syncLevelThumbs);
+                } else {
+                    resetToLevel0();
                 }
             });
         }, 100);
@@ -1184,13 +1186,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                         makeCheckOne(j)();
                     }
                 } else {
-                    $timeout(function () {
-                        gotoLevel(0);
-                        $timeout(function () {
-                            gotoLevel(0);
-                            TQ.State.allowPageTransition = true;
-                        }, 500);
-                    }, 500);
+                    resetToLevel0();
                 }
             };
         }
@@ -1202,6 +1198,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         } else {
             makeCheckOne(currScene.levelNum() - 1)();
         }
+    }
+
+    function resetToLevel0() {
+        $timeout(function () {
+            gotoLevel(0);
+            $timeout(function () {
+                gotoLevel(0);
+                TQ.State.allowPageTransition = true;
+            }, 500);
+        }, 500);
     }
 
     function setPreviewMode() {
