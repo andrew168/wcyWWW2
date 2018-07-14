@@ -759,7 +759,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             // $timeout(function() {
             //     deleteLevel(0);
             // });
-            return TQ.MessageBox.prompt('至少要有一个场景!');
+            return TQ.MessageBox.prompt('at least 1 scene!');
         }
 
         assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
