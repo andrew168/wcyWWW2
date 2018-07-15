@@ -567,6 +567,8 @@ window.TQ = window.TQ || {};
             this.cleanStage();
         }
         this.elements.splice(0);
+        this.latestElement = null;
+        this.background = null;
         TQ.DirtyFlag.setLevel(this);
     };
 
