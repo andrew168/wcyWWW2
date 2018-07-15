@@ -97,6 +97,7 @@ window.TQ = window.TQ || {};
     Element.CLEAR_ANIMATATION = 0x8000; //清除全部track, 重新记录;
     Element.IN_STAGE = 0x10000; // 加入到了Stage;
     Element.LOADED = 0x20000; //
+    Element.EVENT_NEW_ELEMENT_ADDED = 'new element added';
 
     Element.showHidenObjectFlag = false;  //  个人的state由个人记录, 上级可以控制
     var p = Element.prototype;
@@ -1594,8 +1595,14 @@ window.TQ = window.TQ || {};
         // 2) 从世界坐标 到 设备坐标
         this.setTRSAVZ();
         this.updateChildren(t);
+
         this.updateHighlighter();
         this.dirty = this.dirty2 = false;
+
+        if (this.isNewlyAdded) {
+            this.isNewlyAdded = false;
+            TQUtility.triggerEvent(document, Element.EVENT_NEW_ELEMENT_ADDED, {element: this});
+        }
 
         if (this.hookInMove) {
             this.hookInMove.call(this, this);

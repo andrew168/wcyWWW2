@@ -211,6 +211,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
+            document.addEventListener(TQ.Element.EVENT_NEW_ELEMENT_ADDED, onNewElementAdded);
             updateMode();
             updateColorPanel();
             if (TQ.Config.statServiceEnabled) {
@@ -243,6 +244,20 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
         if (currScene && !currScene.isPlayOnly) {
             WCY.startAutoSave();
+        }
+    }
+
+    function onNewElementAdded(evt) {
+        // 用事件， 在条件满足之后，再触发event，比延时更好，确保资源和M矩阵都ready。
+        var ele = evt.element;
+        if (ele && ele.level && ele.level.isActive()) {
+            if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
+                TQ.SelectSet.add(ele);
+            } else {
+                if (ele.isSound()) {
+                    TQ.SoundMgr.play(ele.jsonObj.src);
+                }
+            }
         }
     }
 
@@ -869,10 +884,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function stopRecord() {TQ.FrameCounter.stopRecord(); TQ.SceneEditor.setEditMode(); }
     function emptyScene() {
         TQ.SelectSet.empty();
-        TQ.SoundMgr.reset();
-        TQ.RM.reset();
         if (currScene) {
             TQ.SceneEditor.emptyScene();
+            currScene.start();
         }
     }
 
