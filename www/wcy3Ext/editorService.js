@@ -868,6 +868,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function startRecord() {TQ.FrameCounter.startRecord(); TQ.SceneEditor.setPlayMode(); }
     function stopRecord() {TQ.FrameCounter.stopRecord(); TQ.SceneEditor.setEditMode(); }
     function emptyScene() {
+        TQ.SelectSet.empty();
+        TQ.SoundMgr.reset();
+        TQ.RM.reset();
         if (currScene) {
             TQ.SceneEditor.emptyScene();
         }
