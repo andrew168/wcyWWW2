@@ -153,18 +153,6 @@ TQ = TQ || {};
         }
     };
 
-    SelectSet.updateDecorations = function(show) {
-        TQ.AssertExt.depreciated("updateDecorations");
-        for (var i = 0; i< SelectSet.members.length; i++) {
-            var ele = SelectSet.members[i];
-            if (show) {
-                SelectSet.attachDecoration(ele);
-            } else {
-                ele.detachDecoration();
-            }
-        }
-    };
-
     function groupIt() {
         var isUnGroup = TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyUngroup;
         if (isUnGroup || (SelectSet.members.length >= 2)) {
