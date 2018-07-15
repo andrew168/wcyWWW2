@@ -1142,7 +1142,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             $timeout(function () { //在UI（top bar等）更新之后，必须重新计算canvas大小，
                 AppService.configCanvas();
                 forceToRefreshUI();
-                if (currScene.levelNum() > levelThumbs.length) {
+                if (!currScene.isEmpty() && currScene.levelNum() > levelThumbs.length) {
                     $timeout(syncLevelThumbs);
                 } else {
                     resetToLevel0();
