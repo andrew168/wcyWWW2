@@ -112,10 +112,17 @@ TQ = TQ || {};
     var isStarted = false;
 
     p.start = function () {
+        if (!isStarted) {
+            isStarted = true;
+            self.mainLoop();
+        }
+    };
+
+    p.mainLoop = function () {
         requestAnimationFrame(function () {
             if (isStarted) {
                 self.onTick();
-                self.start();
+                self.mainLoop();
             }
         });
     };
@@ -464,10 +471,7 @@ TQ = TQ || {};
             self.showLevel();
             TQ.MessageBox.reset();
             setTimeout(function () {
-                if (!isStarted) {
-                    self.start();
-                    isStarted = true;
-                }
+                self.start();
             });
         }
 

@@ -214,6 +214,9 @@ this.TQ = this.TQ || {};
 
     // 清除所有的资源，准备开始新的微创意
     RM.reset = function() {
+        if (!RM._hasCreated) {
+            return;
+        }
         RM.completeOnceHandlers.splice(0);
         RM.preloader.removeAllEventListeners();
         RM.preloader.removeAll();
