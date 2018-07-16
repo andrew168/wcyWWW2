@@ -264,7 +264,8 @@ TQ = TQ || {};
         this.currentLevel.onSelected();
         var thisScene = this;
         this.currentLevel.onLevelRunning = function () {
-            if (thisScene.state === TQBase.LevelState.RUNNING) {
+            if ((thisScene.state === TQBase.LevelState.RUNNING) ||
+                (thisScene.state === TQBase.LevelState.EDITING)) {
                 return;
             }
             thisScene.state = TQBase.LevelState.RUNNING;
