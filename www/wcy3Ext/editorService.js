@@ -887,6 +887,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (currScene) {
             TQ.SceneEditor.emptyScene();
             currScene.start();
+            $timeout(syncLevelThumbs);
         }
     }
 
