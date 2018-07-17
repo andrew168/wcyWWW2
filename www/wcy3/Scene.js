@@ -261,7 +261,6 @@ TQ = TQ || {};
         this.currentLevelId = id;
         this.currentLevel = this.getLevel(this.currentLevelId);
         assertNotNull(TQ.Dictionary.INVALID_LOGIC, this.currentLevel);
-        this.currentLevel.onSelected();
         var thisScene = this;
         this.currentLevel.onLevelRunning = function () {
             if ((thisScene.state === TQBase.LevelState.RUNNING) ||
@@ -274,6 +273,7 @@ TQ = TQ || {};
             TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_READY);
             this.isDirty = true;
         }
+        this.currentLevel.onSelected();
     };
 
     p.joint = function (elements, hasUnJointFlag) {
