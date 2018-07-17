@@ -94,8 +94,15 @@ window.TQ = window.TQ || {};
                 txtObj.text = this.jsonObj.text = option.text;
             }
 
-            if (option.fontColor) {
-                TQ.State.color = txtObj.color = this.jsonObj.color = option.fontColor;
+            var color;
+            if (option.fontColor !== undefined) {
+                color = option.fontColor;
+            } else if (option.color !== undefined) {
+                color = option.color;
+            }
+
+            if (color !== undefined) {
+                TQ.State.color = txtObj.color = this.jsonObj.color = color;
             }
 
             if (option.fontSize) {

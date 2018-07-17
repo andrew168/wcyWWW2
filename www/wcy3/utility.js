@@ -12,7 +12,8 @@ window.TQ = window.TQ || {};
     }
 
     Utility.toCssFont = function(option) {
-        // Any valid value for the CSS font attribute is acceptable (ex. "bold 36px Arial").
+        // !!! 只接受 合法的 CSS font attribute, ex. "bold 36px Arial"
+        // 不能带color
       var result = "";
         if (option.bold) {
             result += 'bold ';
@@ -21,7 +22,7 @@ window.TQ = window.TQ || {};
             result += 'italic ';
         }
         result +=option.fontSize + "px " + option.fontFace;
-      return result;
+        return result;
     };
 
     Utility.getCssSize = function(cssValue) {
