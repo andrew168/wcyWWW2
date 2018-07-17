@@ -677,9 +677,11 @@ TQ = TQ || {};
             this.selectLevel(0);
             this.currentLevel.state = TQBase.LevelState.INITING;
             this.currentLevel.show();
+        } else {
+            this.currentLevel.empty();// 主要是设置各种flag
         }
         this.title = TQ.Config.UNNAMED_SCENE;
-        this.state = TQBase.LevelState.NOT_INIT;
+        this.state = TQBase.LevelState.INITING;
         this.backgroundColor = TQ.Config.BACKGROUND_COLOR;
         this.isSaved = true; //ToDo: check it is false???
         this.isDirty = true;

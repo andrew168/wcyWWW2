@@ -569,6 +569,7 @@ window.TQ = window.TQ || {};
         this.elements.splice(0);
         this.latestElement = null;
         this.background = null;
+        this.state = TQBase.LevelState.INITING;
         TQ.DirtyFlag.setLevel(this);
     };
 
