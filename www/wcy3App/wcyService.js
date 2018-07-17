@@ -24,9 +24,9 @@ WCY 服务： 提供wcy及其screenshot的创建、保存、编辑、展示等�
    => show
 */
 angular.module('starter').factory("WCY", WCY);
-WCY.$inject = ['$http', 'FileService', 'WxService', 'NetService'];
+WCY.$inject = ['$timeout', '$http', 'FileService', 'WxService', 'NetService'];
 
-function WCY($http, FileService, WxService, NetService) {
+function WCY($timeout, $http, FileService, WxService, NetService) {
     // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
     var user = TQ.userProfile;
     var _AUTO_SAVE_NAME = '_auto_save_name_',
@@ -87,7 +87,7 @@ function WCY($http, FileService, WxService, NetService) {
 
     function stop() {
         TQ.TouchManager.stop(); // 防止之前被打开
-        _stopAutoSave();
+        stopAutoSave();
     }
 
     function save(forkIt) {
@@ -339,8 +339,9 @@ function WCY($http, FileService, WxService, NetService) {
             if (TQ.userProfile.loggedIn && isNewOpus()) {
                 save();
             }
+            TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
         }
-        return setTimeout(_autoSave, 30000); // 30s
+        return $timeout(_autoSave, 30000); // 30s
     }
 
     var _autoSaveInitialized = false;
@@ -348,7 +349,7 @@ function WCY($http, FileService, WxService, NetService) {
     var _autoSavingTimeout;
     function startAutoSave() {
         if (_autoSaveInitialized) {
-            _stopAutoSave();
+            stopAutoSave();
         }
 
         if (!TQ.Config.AutoSaveEnabled) {
@@ -360,7 +361,7 @@ function WCY($http, FileService, WxService, NetService) {
         _autoSavingTimeout = _autoSave();
     }
 
-    function _stopAutoSave() {
+    function stopAutoSave() {
         if (_autoSavingTimeout) {
             _autoSaveStopped = true;
             clearTimeout(_autoSavingTimeout);
@@ -513,6 +514,7 @@ function WCY($http, FileService, WxService, NetService) {
         cloneIt: cloneIt,
         setAsNew: setAsNew,
         startAutoSave: startAutoSave,
+        stopAutoSave: stopAutoSave,
         uploadScreenshot: uploadScreenshot,
         edit: edit,  // open for edit
         getWcy: getWcy,
