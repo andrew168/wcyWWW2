@@ -241,10 +241,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 preview();
             }
         }
-
-        if (currScene && !currScene.isPlayOnly) {
-            WCY.startAutoSave();
-        }
     }
 
     function onNewElementAdded(evt) {
@@ -844,6 +840,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function preview (options) {
+        WCY.stopAutoSave();
         TQ.SoundMgr.reset();
         TQ.SelectSet.empty(); // 清楚选中的元素， 和highlight
         setPreviewMode();
@@ -1165,7 +1162,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 if (!currScene.isEmpty() && currScene.levelNum() > levelThumbs.length) {
                     $timeout(syncLevelThumbs);
                 } else {
-                    resetToLevel0();
+                    toAddModeDone();
                 }
             });
         }, 100);
@@ -1206,7 +1203,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                         makeCheckOne(j)();
                     }
                 } else {
-                    resetToLevel0();
+                    toAddModeDone();
                 }
             };
         }
@@ -1220,11 +1217,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
     }
 
-    function resetToLevel0() {
+    function toAddModeDone() {
         $timeout(function () {
             gotoLevel(0);
             $timeout(function () {
                 gotoLevel(0);
+                WCY.startAutoSave();
                 TQ.State.allowPageTransition = true;
             }, 500);
         }, 500);
