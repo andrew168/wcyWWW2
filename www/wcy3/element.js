@@ -35,7 +35,7 @@ window.TQ = window.TQ || {};
             this.animeCtrl = null;
             this.viewCtrl = null;
             this.state = (desc.state == undefined) ? 0 : desc.state;
-            this.dirty = this.dirty2 = false;
+            this.dirty = this.dirty2 = false; // dirty2是迫使记录某几个或全部数据
             if (!!desc.autoFit) { //所有新加的元素都必须有此属性， 从文件中load的元素则无
                 this.autoFitFlag = desc.autoFit;
                 this.isNewlyAdded = true;
@@ -864,10 +864,11 @@ window.TQ = window.TQ || {};
         }
     };
 
-    p.forceToRecord = function() {
+    p.forceToRecord = function(flag) {
         this.dirty2 = true; //迫使系统记录这个坐标
-        this.setFlag(Element.TRANSLATING | Element.ROTATING | Element.SCALING
+        flag = flag? flag : (Element.TRANSLATING | Element.ROTATING | Element.SCALING
             |Element.ALPHAING | Element.COLOR_CHANGED);
+        this.setFlag(flag);
     };
 
     p.setTRSAVZ = function () {

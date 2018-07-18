@@ -25,6 +25,10 @@ window.TQ = window.TQ || {};
         return result;
     };
 
+    Utility.fontSize2Level = function (size) {
+        return '' + (parseFloat(size) / TQ.Config.FONT_LEVEL_UNIT);
+    };
+
     Utility.getCssSize = function(cssValue) {
         if (cssValue === 'auto') {
             return 0;

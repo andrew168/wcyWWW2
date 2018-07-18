@@ -103,6 +103,7 @@ window.TQ = window.TQ || {};
 
             if (color !== undefined) {
                 TQ.State.color = txtObj.color = this.jsonObj.color = color;
+                this.forceToRecord(TQ.Element.COLOR_CHANGED);
             }
 
             if (option.fontSize) {

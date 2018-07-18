@@ -158,7 +158,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         // element's state
         state.x = 0.1; // in NDC space
         state.y = 0.9;
-        state.fontLevel = fontSize2Level(TQ.Config.fontSize);
+        state.fontLevel = TQ.Utility.fontSize2Level(TQ.Config.fontSize);
         state.color = TQ.Config.color;
         state.isVisible = true;
         state.isLocked = false;
@@ -594,12 +594,21 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         addItem(desc, TQ.MatType.BKG);
     }
 
-    function insertText(message, x, y) {
+    function insertText(message, x, y, options) {
         if (!message) {
             return TQ.Log.info("空字符串， 不必添加到画布");
         }
         if (!state.fontFace) {
             state.fontFace = TQ.Config.fontFace;
+        }
+
+        if (options) {
+            if (options.fontSize) {
+                state.fontLevel = TQ.Utility.fontSize2Level(options.fontSize);
+            }
+            if (options.color) {
+                state.color = options.color;
+            }
         }
 
         var desc = {
@@ -656,10 +665,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     function getFontSize() {
         return parseFloat(state.fontLevel) * TQ.Config.FONT_LEVEL_UNIT;
-    }
-
-    function fontSize2Level(size) {
-        return '' + (parseFloat(size) / TQ.Config.FONT_LEVEL_UNIT);
     }
 
     /*
@@ -962,7 +967,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function increaseFontLevel() {
         var selectedElement = TQ.SelectSet.peek();
         if (selectedElement && selectedElement.isText()) {
-            state.fontLevel = fontSize2Level(selectedElement.getFontSize());
+            state.fontLevel = TQ.Utility.fontSize2Level(selectedElement.getFontSize());
             state.fontLevel++;
             setFontLevel(state.fontLevel);
         }
@@ -971,7 +976,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function decreaseFontLevel() {
         var selectedElement = TQ.SelectSet.peek();
         if (selectedElement && selectedElement.isText()) {
-            state.fontLevel = fontSize2Level(selectedElement.getFontSize());
+            state.fontLevel = TQ.Utility.fontSize2Level(selectedElement.getFontSize());
             if (state.fontLevel >=1) {
                 state.fontLevel--;
                 setFontLevel(state.fontLevel);
@@ -1370,7 +1375,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             }
 
             if (ele.getType() === TQ.ElementType.TEXT) {
-                var level = fontSize2Level(ele.getFontSize());
+                var level = TQ.Utility.fontSize2Level(ele.getFontSize());
                 if (!TQ.Utility.equalWithin2(state.fontLevel, level)) {
                     state.fontLevel = level;
                     hasChanged = true;
