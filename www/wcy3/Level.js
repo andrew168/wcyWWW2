@@ -581,9 +581,7 @@ window.TQ = window.TQ || {};
             }
         }
 
-        if (stageContainer) {
-            stageContainer.children.splice(0);
-        }
+        TQ.SceneEditor.cleanStage();
     };
 
     p._removeAllItems = function () {

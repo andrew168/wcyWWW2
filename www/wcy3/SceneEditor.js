@@ -10,7 +10,15 @@ var currScene = null;
     function SceneEditor() {
     }
 
-    var editorOn = false;
+    var editorOn = false,
+        _auxContainer;
+
+    Object.defineProperty(SceneEditor, 'auxContainer', {
+        get: function () {
+            return _auxContainer;
+        }
+    });
+
     SceneEditor._mode = TQBase.LevelState.EDITING; // 创作界面的缺省模式是编辑.
 
     // 接口
@@ -43,8 +51,20 @@ var currScene = null;
         // create a new stage and point it at our canvas:
         SceneEditor.stage = stage = new createjs.Stage(canvas);
         SceneEditor.stageContainer = stageContainer = new createjs.Container();
+        _auxContainer = new createjs.Container();
         stage.addChild(stageContainer);
+        stage.addChild(_auxContainer); // aux层，总是在上，存放BBox， marker等
     }
+
+    SceneEditor.cleanStage = function() {
+        if (stageContainer) {
+            stageContainer.children.splice(0);
+        }
+
+        if (_auxContainer) {
+            _auxContainer.children.splice(0);
+        }
+    };
 
     SceneEditor.addItemByFile = function (dstLevel, data, matType, callback) {
         var aFile = data.aFile || data;

@@ -883,10 +883,10 @@ window.TQ = window.TQ || {};
             assertNotNull(TQ.Dictionary.FoundNull, this.displayObj);
         }
         if (jsonObj.isVis && !this.isVirtualObject() && !this.hasFlag(Element.IN_STAGE)) {
-            //飞线: 谁在使用这种情况?, 顶多在Show的时候检查"
-            TQ.Log.warn(TQ.Dictionary.INVALID_LOGIC + ":setTRSAVZ元素loaded，在Buffer，尚未进stage：" + this.jsonObj.src);
-            return;
-        }
+                //飞线: 谁在使用这种情况?, 顶多在Show的时候检查"
+                TQ.Log.warn(TQ.Dictionary.INVALID_LOGIC + ":setTRSAVZ元素loaded，在Buffer，尚未进stage：" + this.jsonObj.src);
+                return;
+            }
 
         // 可见性由父子共同决定：
         //  如果父物体为空， 该物体的可见性由自己的标志完全决定
@@ -1090,6 +1090,10 @@ window.TQ = window.TQ || {};
     };
 
     p.getContainer = function() {
+        if (this.isHighlighter()) {
+            return TQ.SceneEditor.auxContainer;
+        }
+
         if (TQ.Config.useCreateJSFullContainer) {
             var parent = this.parent;
             return (parent && parent.isGroup()) ? parent.displayObj : stageContainer;
@@ -1115,18 +1119,19 @@ window.TQ = window.TQ || {};
         assertNotNull(TQ.Dictionary.FoundNull, this.displayObj); // 必须有显示体
         item.jsonObj = this.jsonObj;  // 需要临时建立关系， 因为在NetIO时候可能破坏了。
         item.ele = this;
-        if (!this.isHighlighter()) { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
+        var container = this.getContainer();
+        { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
             this.setFlag(Element.IN_STAGE);
             if ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
-                this.getContainer().addChild(item);
+                container.addChild(item);
             } else {
-                var z = this.getContainer().getChildIndex(upperEle.displayObj);
+                var z = container.getChildIndex(upperEle.displayObj);
                 if (z < 0) { // 是 group， 或者其它不可显示的物体
-                    this.getContainer().addChild(item);
+                    container.addChild(item);
                 } else {
                     assertTrue(TQ.Dictionary.INVALID_PARAMETER, z >= 0); // 第一个元素的z = 0
-                    assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < this.getContainer().getNumChildren());
-                    this.getContainer().addChildAt(item, z);  // 把upperEle 顶起来
+                    assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < container.getNumChildren());
+                    container.addChildAt(item, z);  // 把upperEle 顶起来
                 }
             }
 
@@ -2130,6 +2135,9 @@ window.TQ = window.TQ || {};
         }
         if (this.children) {
             for (var i = 0; i < this.children.length; i++) {
+                if (this.children.isHighlighter()) {
+                    continue;
+                }
                 z = this.children[i].getZ();
                 if (z >= 0) {
                     return z
