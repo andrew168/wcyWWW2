@@ -374,8 +374,6 @@ window.TQ = window.TQ || {};
         } else if (isMacSafari()) {
             Utility.setEnv(Utility.BR_SAFARI);
             supported = true;
-        } else {
-            supported = false;
         }
 
         return supported;
