@@ -366,10 +366,11 @@ window.TQ = window.TQ || {};
         } else if (ionic.Platform.isIOS() || ionic.Platform.isIPad()) {
             Utility.setEnv(Utility.DEV_MOBILE);
             Utility.setEnv(Utility.OS_IPHONE);
-            supported = false;
+            supported = true; // false;
         } else {
             Utility.setEnv(Utility.DEV_PC);// or Mac
             Utility.setEnv(Utility.OS_WINDOWS); // or Mac OS
+            supported = true; // false;
         }
 
         if (isChrome()) {
@@ -377,6 +378,8 @@ window.TQ = window.TQ || {};
             supported = true;
         } else if (isMacSafari()) {
             Utility.setEnv(Utility.BR_SAFARI);
+            supported = true;
+        } else {
             supported = false;
         }
 
