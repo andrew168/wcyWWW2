@@ -51,7 +51,10 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                 var msg = TQ.Locale.getStr('please use android mobile');
                 // +' <a href="https://www.google.ca/chrome/browser/features.html" style="font-weight: bold; text-decoration: underline">' +
                     // TQ.Locale.getStr('chrome') + '</a>！';
-                TQ.MessageBox.prompt(msg);
+                TQ.MessageBox.prompt(msg, function () {
+                    msg = TQ.Locale.getStr('please copy this page to technical support') + ': support@udoido.com. \n\n\n\r\n\r';
+                    $timeout(TQ.MessageBox.prompt(msg + navigator.userAgent));
+                });
                 return;
             }
             _initialized = true;

@@ -353,12 +353,7 @@ window.TQ = window.TQ || {};
     Utility.hasEnv = function (flag) { return Utility.env & flag; };
 
     Utility.isSupportedEnvironment = function () {
-        var getBrowserInfo = ("" != TQ.Utility.getUrlParam("B")); // &B=0;
         var supported = false;
-        if (getBrowserInfo) {
-            alert(navigator.userAgent);
-        }
-
         if (ionic.Platform.isAndroid()) {
             Utility.setEnv(Utility.DEV_MOBILE);
             Utility.setEnv(Utility.OS_ANDROID);
