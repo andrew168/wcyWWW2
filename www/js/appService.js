@@ -53,7 +53,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
                     // TQ.Locale.getStr('chrome') + '</a>！';
                 TQ.MessageBox.prompt(msg, function () {
                     msg = TQ.Locale.getStr('please copy this page to technical support') + ': support@udoido.com. \n\n\n\r\n\r';
-                    $timeout(TQ.MessageBox.prompt(msg + navigator.userAgent));
+                    $timeout(TQ.MessageBox.prompt(msg + navigator.userAgent +' \n\r' + navigator.vendor));
                 });
                 return;
             }
