@@ -163,12 +163,10 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.dc2World = function(ptDc) {
-        var sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth, // 把当前device尺寸，映射到  target尺寸
-            sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight;
-
+        var scale = TQ.Utility.getDc2WorldScale();
         return {
-            x: (ptDc.x === undefined) ? 0 : ptDc.x * sx,
-            y: (ptDc.y === undefined) ? 0 : TQ.Utility.toWorldCoord(ptDc.y) * sy,
+            x: (ptDc.x === undefined) ? 0 : ptDc.x * scale.sx,
+            y: (ptDc.y === undefined) ? 0 : TQ.Utility.toWorldCoord(ptDc.y) * scale.sy,
             //sx: (ptDc.sx === undefined) ? 1 : ptDc.sx * sx,
             //sy: (ptDc.sy === undefined) ? 1 : ptDc.sy * sy,
             //fontSize: (ptDc.fontSize === undefined) ? 0 : ptDc.fontSize * sx,
@@ -181,8 +179,7 @@ var TQ = TQ || {};
     CreateJSAdapter.dc2World2 = function (ptDc) {
         // DC坐标：是event中的(pageX, pageY)，window的innerWidth和Height坐标系，不含address bar， 原点在左上角，
         // World坐标： Canvas上的实际绘图区，
-        var sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth, // 把当前device尺寸，映射到  target尺寸
-            sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight,
+        var scale = Utility.getDc2WorldScale(),
             x0d = (TQ.State.innerWidth - TQ.Config.workingRegionWidth)/2,
             y0d = TQ.State.innerHeight - (TQ.State.innerHeight - TQ.Config.workingRegionHeight)/2;
 
@@ -197,15 +194,16 @@ var TQ = TQ || {};
         }
 
         return {
-            x: (ptDc.x - x0d) * sx,
-            y: (y0d - ptDc.y) * sy,
+            x: (ptDc.x - x0d) * scale.sx,
+            y: (y0d - ptDc.y) * scale.sy,
             rotation: -ptDc.rotation
         };
     };
 
     CreateJSAdapter.world2Dc = function (ptWorld) {
-        var sx = TQ.Config.workingRegionWidth / currScene.getDesignatedWidth(), // 把target尺寸映射到device尺寸
-            sy = TQ.Config.workingRegionHeight / currScene.getDesignatedHeight(),
+        var scale = TQ.Utility.getWorld2DcScale(),
+            sx = scale.sx,
+            sy = scale.sy,
             sMin = Math.min(sx, sy),
             ptDc;
 

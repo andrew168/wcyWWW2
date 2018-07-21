@@ -576,6 +576,30 @@ window.TQ = window.TQ || {};
         return '#' + number2Hex(r) + number2Hex(g) + number2Hex(b);
     };
 
+    Utility.getWorld2DcScale = function () {
+        var sx = 1,
+            sy = 1;
+
+        if (currScene) {
+            sx = TQ.Config.workingRegionWidth / currScene.getDesignatedWidth();
+            sy = TQ.Config.workingRegionHeight / currScene.getDesignatedHeight();
+        }
+
+        return {sx: sx, sy: sy};
+    };
+
+    Utility.getDc2WorldScale = function () {
+        var sx = 1,
+            sy = 1;
+
+        if (currScene) {
+            sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth;
+            sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight;
+        }
+
+        return {sx: sx, sy: sy};
+    };
+
     Utility.world2css = function (x, y) {
         // window的左下角是（0,0）
         var canvas = TQ.Graphics.getCanvas(),
