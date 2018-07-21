@@ -208,6 +208,24 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             window.addEventListener('orientationchange', function () {
                 $timeout(onResize); // ！！ 必须用timeout 之后， 否则ipad上不起作用。
             });
+            window.addEventListener("blur", onGotoBkg);
+            window.addEventListener("focus", onGotoForegroud);
+
+            function onGotoBkg() {
+                console.log("state on go to bkg!");
+                if (state.isPreviewMode) {
+                    stop();
+                } else {
+                    TQ.SoundMgr.stopAll();
+                }
+            }
+
+            function onGotoForegroud() {
+                console.log("state on go to foreground!");
+                if (state.isPreviewMode) {
+                    play();
+                }
+            }
 
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
             document.addEventListener(TQ.SelectSet.SELECTION_EMPTY_EVENT, onSelectSetChange);
