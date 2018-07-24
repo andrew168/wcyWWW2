@@ -179,7 +179,7 @@ var TQ = TQ || {};
     CreateJSAdapter.dc2World2 = function (ptDc) {
         // DC坐标：是event中的(pageX, pageY)，window的innerWidth和Height坐标系，不含address bar， 原点在左上角，
         // World坐标： Canvas上的实际绘图区，
-        var scale = Utility.getDc2WorldScale(),
+        var scale = TQ.Utility.getDc2WorldScale(),
             x0d = (TQ.State.innerWidth - TQ.Config.workingRegionWidth)/2,
             y0d = TQ.State.innerHeight - (TQ.State.innerHeight - TQ.Config.workingRegionHeight)/2;
 
