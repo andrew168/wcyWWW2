@@ -360,7 +360,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
     }
 
-    function loadLocalImage(matType, useDevice, callback) {
+    function loadLocalImage(matType, useDevice, callback, kouTuMain) {
         var dstLevel = currScene.currentLevel;
         return selectLocalFile(matType, useDevice).then(function (filesOrImage64) {
             var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64],
@@ -373,7 +373,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                     mat = files[n - 1];
                     n--;
                     if (TQ.Utility.isImageFile(mat)) {
-                        TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback);
+                        TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback, kouTuMain);
                         callback = function (desc, fileOrBlob, matType) {
                             TQ.ResourceSync.local2Cloud(null, fileOrBlob, matType);
                         };
@@ -385,7 +385,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             for (i = 0; i < n; i++) {
                 mat = files[i];
                 if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat)) {
-                    TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback);
+                    TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback, kouTuMain);
                 }
             }
         }, errorReport);

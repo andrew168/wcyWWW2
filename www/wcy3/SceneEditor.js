@@ -86,7 +86,7 @@ var currScene = null;
         }
     };
 
-    function preprocessLocalImage(dstLevel, data, matType, callback) {// reduce size,
+    function preprocessLocalImage(dstLevel, data, matType, callback, kouTuMain) {// reduce size,
         var aFile = data.aFile || data,
             options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
 
@@ -100,12 +100,21 @@ var currScene = null;
                 if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
                     TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
                         TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
+                        nextProcess,
                         function () {
-                            addItemByImageData(dstLevel, buffer.data, matType, callback);
-                        }, function () {
                         });
                 } else {
-                    addItemByImageData(dstLevel, buffer.data, matType, callback);
+                    nextProcess();
+                }
+
+                function nextProcess() {
+                    if (kouTuMain) {
+                        koutuMain(buffer.data, matType, function (image64) {
+                            addItemByImageData(dstLevel, image64, matType, callback);
+                        });
+                    } else {
+                        addItemByImageData(dstLevel, buffer.data, matType, callback);
+                    }
                 }
             });
     }
