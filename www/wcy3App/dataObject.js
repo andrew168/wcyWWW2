@@ -8,6 +8,7 @@ function DataObject(list) {
         THUMBNAIL_EXP = "w_100,h_100,c_limit/",
         OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/",
         vm = this,
+        bakCurrentPageID = 0,
         currentPageID = 0,
         pages = [];
 
@@ -130,6 +131,8 @@ function DataObject(list) {
             fixup(list, matType);
         }
         prepareColumn(list, (matType === TQ.MatType.SOUND? SOUND_PAGE_SIZE: IMAGE_PAGE_SIZE));
+        currentPageID = bakCurrentPageID;
+        updatePageID();
     }
 
     function toThumbNail(path) {
