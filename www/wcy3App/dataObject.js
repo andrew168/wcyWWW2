@@ -81,6 +81,7 @@ function DataObject(list) {
             TQ.AssertExt.invalidLogic(false, "应该有初始值！");
             return null;
         }
+        bakCurrentPageID = currentPageID;
         return pages[currentPageID];
     }
 
