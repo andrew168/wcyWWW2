@@ -379,15 +379,27 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                         };
                         break;
                     }
-                } while ( n > 0);
+                } while (n > 0);
             }
 
-            for (i = 0; i < n; i++) {
+            function processOneFile(i) {
+                if (i >= n) {
+                    return;
+                }
                 mat = files[i];
                 if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat)) {
-                    TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback, kouTuMain);
+                    TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, function (desc, fileOrBlob, matType) {
+                        callback(desc, fileOrBlob, matType);
+                        if ((i+1) < n) {
+                            $timeout(function() {
+                                processOneFile(i+1);
+                            });
+                        }
+                    }, kouTuMain);
                 }
             }
+
+            processOneFile(0);
         }, errorReport);
     }
 
