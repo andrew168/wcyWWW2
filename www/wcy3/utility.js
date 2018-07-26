@@ -602,6 +602,11 @@ window.TQ = window.TQ || {};
             sx = currScene.getDesignatedWidth() / TQ.Config.workingRegionWidth,
             sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight;
 
+        if (isNaN(yCanvasOriginInCss)) {
+            yCanvasOriginInCss = window.innerHeight -
+                (removePx(canvasStyle.top) + removePx(canvasStyle.height));
+        }
+
         return {x: x / sx + xCanvasOriginInCss,
             y: y / sy + yCanvasOriginInCss};
     };
@@ -615,7 +620,11 @@ window.TQ = window.TQ || {};
     };
 
     function removePx(xInCss) {
-        return Number(xInCss.replace("px", ""));
+        var result = Number(xInCss.replace("px", ""));
+        if (isNaN(result)) {
+            TQ.Log.error("css 取值错误， NaN： " + xInCss);
+        }
+        return result;
     }
 
     function number2Hex(n) {
