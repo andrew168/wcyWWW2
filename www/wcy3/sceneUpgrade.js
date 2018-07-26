@@ -30,12 +30,26 @@
             if (objJson.version < TQ.Scene.VER3_4) {
                 upgrade3_3ToVer3_4(objJson);
             }
+
+            if (objJson.version < TQ.Scene.VER3_6) {
+                upgrade3_4ToVer3_6(objJson);
+            }
         }
 
         // now it's latest
         TQ.Log.debugInfo(" upgrade result: version = " + objJson.version + ", designed region(W,H)： W = " +
             objJson.designatedWidth + ", H=" + objJson.designatedHeight + ")");
     };
+
+    function upgrade3_4ToVer3_6(objJson) {
+        var num = objJson.levels.length;
+        for (var i = 0; i < num; i++) {
+            TQ.Level.upgrade3_3ToVer3_4(objJson.levels[i]);
+        }
+
+        objJson.version = TQ.Scene.VER3_6;
+        return objJson;
+    }
 
     function upgrade3_3ToVer3_4(objJson) {
         var num = objJson.levels.length;

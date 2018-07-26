@@ -878,6 +878,24 @@ window.TQ = window.TQ || {};
     };
 
     //upgrade:
+    Level.upgrade3_4ToVer3_6 = function (levelDesc) {
+        var elements,
+            eleDesc;
+
+        if (!levelDesc || !(elements = levelDesc.elements)) {
+            return;
+        }
+
+        for (var i = 0; i < (elements.length); i++) {
+            eleDesc = elements[i];
+            if (eleDesc.eType === TQ.Element.ETYPE_AUDIO) {
+                if (eleDesc.isMultiScene !== undefined) {
+                    eleDesc.isCrossLevel = eleDesc.isMultiScene;
+                }
+            }
+        }
+    };
+
     Level.upgrade3_3ToVer3_4 = function (levelDesc) {
         var foundBackground = false,
             elements,
