@@ -1644,7 +1644,7 @@ window.TQ = window.TQ || {};
             if (justRecorded && (TQ.TrackRecorder.style == TQ.Channel.JUMP_INTERPOLATION)) {
                 tt = t + 0.01; // 在脉冲运动下，迫使系统采用最新的位置
             }
-            if (this.isSound() && this.isMultiScene) {//支持跨场景的声音
+            if (this.isSound() && this.isCrossLevel) {//支持跨场景的声音
                 tt = currScene.toGlobalTime(tt);
             }
             TQ.TrackDecoder.calculate(this, tt); // 计算结果在Pose中，是 物体坐标系的）

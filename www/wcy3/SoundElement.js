@@ -21,7 +21,7 @@ TQ = TQ || {};
             this.t0 = 0;
         }
         this.version = jsonObj.version;
-        this.isMultiScene = (jsonObj.isMultiScene !== undefined? jsonObj.isMultiScene :
+        this.isCrossLevel = (jsonObj.isCrossLevel !== undefined? jsonObj.isCrossLevel :
             (this.isVer2plus() ? true: false));
         this.initialize(jsonObj);
     }
@@ -120,7 +120,7 @@ TQ = TQ || {};
     };
 
     p._doRemoveFromStage = function() {
-        if (!this.isMultiScene) { // 支持跨场景的声音
+        if (!this.isCrossLevel) { // 支持跨场景的声音
             this.stop();
         }
     };
@@ -152,7 +152,7 @@ TQ = TQ || {};
 
         if (this.isPaused() || this.isFinished()) { //  在FAILED情况下， 重新开始播放
             var t = TQ.FrameCounter.t();
-            if (this.isMultiScene) {
+            if (this.isCrossLevel) {
                 t = currScene.toGlobalTime(t);
             }
             return this.resume(t);
@@ -177,7 +177,7 @@ TQ = TQ || {};
             TQ.Log.info(TQ.Dictionary.INVALID_LOGIC + "in SoundElement.resume");
             return;
         } else {
-            if (this.isMultiScene) {
+            if (this.isCrossLevel) {
                 ts = this.toGlobalTime(this.t0);  // VER2版本引入的跨场景的声音
             } else {
                 ts = this.t0;  // 兼容VER1版本中的 单一场景的声音。

@@ -77,7 +77,7 @@ TQ = TQ || {};
         var t = TQ.FrameCounter.t();
         for (var i = 0; i < SoundMgr.items.length; i++) {
             var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
-            if (ele.isMultiScene) {
+            if (ele.isCrossLevel) {
         		var tt = currScene.toGlobalTime(t);
                 ele.resume(tt);
             } else {
@@ -110,7 +110,7 @@ TQ = TQ || {};
         // 只删除那些不跨场景的
         for (var i = SoundMgr.items.length - 1; i >=0; i--) {
             var ele = SoundMgr.items[i];
-            if (ele.isMultiScene && !isReseting) continue;
+            if (ele.isCrossLevel && !isReseting) continue;
             SoundMgr.items.splice(i,1);
         }
     };

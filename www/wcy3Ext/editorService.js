@@ -675,8 +675,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.SceneEditor.addItem(desc);
     }
 
-    function insertSound(url, resourceName) {
-        var desc = {src: url, resName: resourceName, type: "SOUND", eType: TQ.Element.ETYPE_AUDIO};
+    function insertSound(url, resourceName, isCrossLevel) {
+        var desc = {src: url, resName: resourceName, type: "SOUND", eType: TQ.Element.ETYPE_AUDIO, isCrossLevel: isCrossLevel};
         addItem(desc, TQ.MatType.SOUND);
     }
 

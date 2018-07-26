@@ -186,7 +186,7 @@ TQ = TQ || {};
         selectedElement = null;
         for (var i = items.length - 1; i >= 0; i--) {
             var ele = items[i];
-            // if (ele.isMultiScene) continue;
+            // if (ele.isCrossLevel) continue;
             ele.stop();
             items.splice(i, 1);
         }

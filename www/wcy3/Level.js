@@ -760,7 +760,7 @@ window.TQ = window.TQ || {};
             if (!ele.calculateLastFrame) {
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             } else {
-                if (ele.isMultiScene) {
+                if (ele.isCrossLevel) {
                     tGlobalLastFrame = Math.max(tGlobalLastFrame, ele.calculateLastFrame());
                 } else {
                     tLastFrame = Math.max(tLastFrame, ele.calculateLastFrame());

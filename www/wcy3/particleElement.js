@@ -32,7 +32,7 @@ TQ = TQ || {};
         }
 
         this.version = jsonObj.version;
-        this.isMultiScene = (this.isVer2plus()) ? true : false;
+        this.isCrossLevel = (this.isVer2plus()) ? true : false;
         this.initialize(jsonObj);
     }
 
@@ -130,7 +130,7 @@ TQ = TQ || {};
 
     p.calculateLastFrame = function () {
         if (!this.instance) return 0;
-        if (this.isMultiScene) return 0;  // ToDo: 需要补改变当前的录制长度， （如：200帧的默认值），跨场景的声音， 不能用来计算本场景的最后一帧
+        if (this.isCrossLevel) return 0;  // ToDo: 需要补改变当前的录制长度， （如：200帧的默认值），跨场景的声音， 不能用来计算本场景的最后一帧
         return (this.t0 + this.instance.duration / 1000);
     };
 
