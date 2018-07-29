@@ -1134,26 +1134,32 @@ TQ = TQ || {};
 
     function compress(wcyData, ssPath) {
         if (TQ.Config.useLZCompress) {
-            var compressed = LZString.compressToUTF16(wcyData);
-            return JSON.stringify({zip: true, len: compressed.length, ssPath: ssPath, data: compressed});
+            var compressed = LZString.compressToBase64(wcyData);
+            return JSON.stringify({zip64: true, len: compressed.length, ssPath: ssPath, data: compressed});
         }
         return wcyData;
     }
 
     function decompress(wcyData) {
+        var decompressed = wcyData;
+
         if (!!wcyData && (typeof wcyData === 'string')) {
             var obj = JSON.parse(wcyData);
-            if (obj.zip) {
-                var decompressed = LZString.decompressFromUTF16(obj.data);
-                if (!decompressed || decompressed.length < obj.length) {
-                    TQ.AssertExt.invalidLogic(true, '解压后的长度小于压缩者，是不是结束符0出现了？');
+            if (obj.zip64 || obj.zip) {
+                if (obj.zip) {
+                    decompressed = LZString.decompressFromUTF16(obj.data);
                 } else {
-                    return decompressed;
+                    decompressed = LZString.decompressFromBase64(obj.data);
+                }
+
+                if (!decompressed || decompressed.length < obj.length) {
+                    TQ.AssertExt.invalidLogic(false, '解压后的长度小于压缩者，是不是结束符0出现了？');
+                    decompressed = wcyData;
                 }
             }
         }
 
-        return wcyData;
+        return decompressed;
     }
 
     TQ.Scene = Scene;
