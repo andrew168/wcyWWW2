@@ -40,10 +40,14 @@
 
                 config.sampleRate = context.sampleRate;
 
-                processor.onaudioprocess = function(event){
+                processor.onaudioprocess = function(event) {
+                    if (stopped) {
+                        Util.log('丢弃');
+                        return;
+                    }
                     //监听音频录制过程
                     var array = event.inputBuffer.getChannelData(0);
-                    realTimeWorker.postMessage({ cmd: 'encode', buf: array });
+                    realTimeWorker.postMessage({cmd: 'encode', buf: array});
                 };
 
                 var realTimeWorker = new Worker('/worker.js'); //开启后台线程
@@ -76,6 +80,7 @@
                 //开始录音
                 _this.start = function(){
                     if(processor && microphone){
+                        _this.reset();
                         microphone.connect(processor);
                         processor.connect(context.destination);
                         Util.log('开始录音');
@@ -117,6 +122,9 @@
                     successCallback = onSuccess;
                     errorCallback = onError;
                     realTimeWorker.postMessage({ cmd: 'finish' });
+                };
+                _this.reset = function () {
+                    realTimeWorker.postMessage({cmd: 'reset'});
                 };
 
                 realTimeWorker.postMessage({

@@ -9,6 +9,13 @@
         dataBuffer = [];
     };
 
+    function reset() {
+        if (mp3Encoder) {
+            mp3Encoder.flush();
+        }
+        clearBuffer();
+    }
+
     var appendToBuffer = function(mp3Buf){
         dataBuffer.push(new Int8Array(mp3Buf));
     };
@@ -67,6 +74,9 @@
                 break;
             case 'finish':
                 finish();
+                break;
+            case 'reset':
+                reset();
                 break;
         }
     };
