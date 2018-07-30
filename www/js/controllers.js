@@ -236,8 +236,47 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         EditorService.insertPropFromLocal();
     };
 
+    var _currentMusic = null;
     $scope.insertSoundFromLocal = function (useDevice) {
-        EditorService.insertSoundFromLocal(useDevice);
+        var matType = TQ.MatType.SOUND;
+        EditorService.loadLocalSound(matType, useDevice, onLocalSoundLoaded);
+    };
+
+    function onLocalSoundLoaded(desc, fileOrBlob, matType) {
+        desc.isCrossLevel = (TQUtility.isSoundFile(fileOrBlob) ? true : false); //假设：本地文件是背景音， 录音是本场景的
+        if (TQUtility.isSoundFile(fileOrBlob)) {
+            doAddLocalSound(desc, fileOrBlob);
+        } else {// 实时录音
+            lastVoiceRecording = {
+                desc: desc,
+                fileOrBlob: fileOrBlob
+            };
+            onTryMusic({path: desc.src});
+        }
+    }
+
+    $scope.stopAudioRecording = function () {
+        if (TQ.AudioRecorder.isRecording) {
+            return TQ.AudioRecorder.stop();
+        }
+    };
+
+    function onTryMusic(prop) {
+        if (prop && prop.path) {
+            if (_currentMusic && prop.path === _currentMusic.path) {
+                onStopTryMusic();
+            } else {
+                TQ.SoundMgr.play(prop.path);
+                _currentMusic = prop;
+            }
+        }
+    }
+
+    $scope.onStopTryMusic = function () {
+        if (_currentMusic.path) {
+            TQ.SoundMgr.stop(_currentMusic.path);
+            _currentMusic = null;
+        }
     };
 
     $scope.insertAlbum = function () {
