@@ -27,6 +27,7 @@ var TQ = TQ || {};
     State.innerWidth = window.innerWidth;
     State.innerHeight = window.innerHeight;
     State.bottomBarHeight = 0;
+    State.bottomFloatToolHeight = 0;
     State.topBarHeight = 0;
     State.buttonHeight = 0;
     State.determineWorkingRegion = determineWorkingRegion;
@@ -43,7 +44,8 @@ var TQ = TQ || {};
 
         // top bar的min-height是 11vmin
         var topBarEle = document.getElementById('id_top_bar'),
-            bottomBarEle = document.getElementById('id_bottom_bar'),
+            bottomBarEle = document.getElementsByClassName('footer')[0],
+            accompanyToolBarEle = document.getElementsByClassName('cao_icon')[0],
             buttonEle;
         if (!topBarEle && !bottomBarEle) {
             buttonEle = document.getElementById('id-delete');
@@ -62,6 +64,9 @@ var TQ = TQ || {};
             } else {
                 State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(topBarEle).height);
                 State.bottomBarHeight = TQ.Utility.getCssSize(window.getComputedStyle(bottomBarEle).height);
+                if (accompanyToolBarEle) {
+                    State.bottomFloatToolHeight = TQ.Utility.getCssSize(window.getComputedStyle(accompanyToolBarEle).height);
+                }
             }
         }
 
