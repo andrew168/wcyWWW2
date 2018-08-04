@@ -751,11 +751,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function addLevelAt(id) {
         id = Number(id);
         assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
-        if (!currScene) return;
+        if (!currScene) return -1;
 
         currScene.addLevel(id);
         levelThumbs.splice(currScene.currentLevelId+1, 0, {src:null, timestamp:Date.now()});
         gotoLevel(id);
+        return id;
     }
 
     /*

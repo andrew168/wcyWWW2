@@ -338,7 +338,15 @@ window.TQ = window.TQ || {};
             desc.sy = 1;
         }
 
-        if (desc.zIndex == undefined) {
+        if (desc.mirrorX === undefined) {
+            desc.mirrorX = false;
+        }
+
+        if (desc.mirrorY === undefined) {
+            desc.mirrorY = false;
+        }
+
+        if (desc.zIndex === undefined) {
             desc.zIndex = Element.TOP;
         }
 
@@ -1790,6 +1798,26 @@ window.TQ = window.TQ || {};
         this.jsonObj.sy = scaleInWorld.sy;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.SCALING);
+        TQ.DirtyFlag.setElement(this);
+        this.dirty2 = true;
+    };
+
+    p.mirrorX = function () {
+        if (this.isPinned()) {
+            return;
+        }
+
+        this.jsonObj.mirrorX = !this.jsonObj.mirrorX;
+        TQ.DirtyFlag.setElement(this);
+        this.dirty2 = true;
+    };
+
+    p.mirrorY = function () {
+        if (this.isPinned()) {
+            return;
+        }
+
+        this.jsonObj.mirrorY = !this.jsonObj.mirrorY;
         TQ.DirtyFlag.setElement(this);
         this.dirty2 = true;
     };
