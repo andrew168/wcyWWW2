@@ -10,6 +10,7 @@ var appConfig = {
         {name:'Share', schema:'../db/share/shareSchema.js', ctrl:'../db/share/shareController.js'},
         {name:'User', schema:'../db/user/userSchema.js', ctrl:'../db/user/userController.js'},
         {name:'Opus', schema:'../db/opus/opusSchema.js', ctrl:'../db/opus/opusController.js'},
+        {name:'Topic', schema: '../db/topic/topicSchema.js', ctrl: '../db/topic/topicController.js'},
         {name:'PictureMat', schema:'../db/material/pictureMatSchema.js', ctrl:'../db/material/pictureMatController.js'},
         {name:'AudioMat', schema:'../db/material/audioMatSchema.js', ctrl:'../db/material/audioMatController.js'}
     ],
@@ -22,6 +23,7 @@ var appConfig = {
         {url: 'isWx', filePath: './../routes/isWx'},
         {url: 'wechat', filePath: './../routes/isWx'}, //???
         {url: 'wcy', filePath: './../routes/wcy'},
+        {url: 'topic', filePath: './../routes/topic'},
         {url: 'wcyList', filePath: './../routes/wcyList'},
         {url: 'user', filePath: './../routes/user'},
         {url: 'material', filePath: './../routes/material'},
