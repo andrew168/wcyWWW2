@@ -7,6 +7,7 @@
 //
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
+    dbCommon = require('../dbCommonFunc.js'),
     matCommon = require('./matCommon'),
     PictureMat = mongoose.model('PictureMat');
 
@@ -130,12 +131,68 @@ function update(id, path, callback) {
         });
 }
 
+function attachTopic(matType, matId, topicId, operator, onSuccess, onError) {
+    function doAttach(model) {
+        var topicIds = model._doc.topicIds;
+        if (!topicIds) {
+            topicIds = [];
+        }
+        if (topicIds.indexOf(topicId) < 0) {
+            topicIds.push(topicId);
+        }
+        model.set('topicIds', topicIds);
+    }
+
+    genericUpdate(matId, doAttach, operator, onSuccess, onError);
+}
+
+function detachTopic(matType, matId, topicId, operator, onSuccess, onError) {
+    function doDetach(model) {
+        var id,
+            topicIds = model._doc.topicIds;
+
+        if (topicIds && ((id = topicIds.indexOf(topicId)) >= 0)) {
+            topicIds.splice(id, 1);
+            model.set('topicIds', topicIds);
+        }
+    }
+
+    genericUpdate(matId, doDetach, operator, onSuccess, onError);
+}
+
+function genericUpdate(id, doUpdate, operator, onSuccess, onError) {
+    var condition = {_id: id};
+    if (!operator.canAdmin) {
+        condition.authorId = operator.ID;
+    }
+
+    PictureMat.findOne(condition)
+        .exec(function (err, data) {
+            if (err || !data) {
+                onError(dbCommon.composeErrorMsg(err, data));
+            } else {
+                console.log(data);
+                doUpdate(data);
+                data.save(function (err, model) {
+                    if (err || !model) {
+                        onError(dbCommon.composeErrorMsg(err, model));
+                    } else {
+                        if (onSuccess) {
+                            onSuccess(model._doc._id, model._doc);
+                        }
+                    }
+                });
+            }
+        });
+}
 
 function ban(id, user, newValue, callback) {
     matCommon.ban(PictureMat, id, user, newValue, callback);
 }
 
 exports.add = add;
+exports.attachTopic = attachTopic;
+exports.detachTopic = detachTopic;
 exports.get = get;
 exports.getList = getList;
 exports.update = update;

@@ -10,7 +10,7 @@ var mongoose = require('mongoose'),
 var pictureMatSchema = new Schema({
     name: String,
     timestamp:{type:Date, default: Date.now},
-    userId: Number, // 上传者的ID， 认为：上传者就是创作zhe，
+    userId: Number, // 上传者的ID， 认为：上传者就是创作者，
     typeId: Number, // 10:背景图， in material.js
     ip: String,
     path: String,  // 素材在Server上的相对路径，去除host和MatFolder之后
@@ -18,6 +18,7 @@ var pictureMatSchema = new Schema({
     isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到
     requestToBan: {type: Boolean, default: false},// 用户请求禁止
     requestToShare: {type: Boolean, default: false},// 用户请求分享
+    topicIds: {type: Array},
     uploaded: {type:Boolean, default:false}
 });
 
