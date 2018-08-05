@@ -5,8 +5,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$inject = ['$q', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY', 'AppService'];
-function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, AppService) {
+EditorService.$inject = ['$q', '$http', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY', 'AppService'];
+function EditorService($q, $http, $rootScope, $timeout, NetService, WxService, WCY, AppService) {
     var CMD_UNKNOWN = "unknown",
         CMD_MCOPYING_BEGIN = 'mcopying begin',
         CMD_MCOPYING_END = 'mcopying end';
@@ -45,6 +45,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         banOpus: NetService.banOpus,
         requestToShareOpus: NetService.requestToShareOpus,
         shareOpus: NetService.shareOpus,
+
+        // 主题
+        addTopic: addTopic,
+        updateTopic: updateTopic,
+        getTopics: getTopics,
 
         // play & preview
         preview: preview,
@@ -1585,5 +1590,35 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         currCmd = CMD_UNKNOWN;
 
         //ToDo: 　Joint, group
+    }
+
+    function addTopic (topic) {
+        var url = TQ.Config.OPUS_HOST + "/topic";
+        $http.post(url, JSON.stringify(topic)).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function updateTopic(topic) {
+        var url = TQ.Config.OPUS_HOST + "/topic";
+        $http.post(url, JSON.stringify(topic)).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function getTopics() {
+        var url = TQ.Config.OPUS_HOST + "/topic/list";
+        $http.get(url).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
     }
 }

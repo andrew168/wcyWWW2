@@ -452,4 +452,32 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         DataService.initialize();
         DataService.getProps(10);
     }
+
+    $scope.addTopic = function() {
+        var topic = {
+            title: "小马过河",
+            // questionOpusId: Number,
+            // ssPath: Number,
+            // statTime: {type: Date},
+            // endTime: {type: Date},
+            // lastModified: {type: Date, default: Date.now},
+            // authorId: Number,
+            authorName: "张三",
+            authorSchool: "图强"
+        };
+
+        EditorService.addTopic(topic);
+    };
+
+    $scope.updateTopic = function () {
+        var topic = {
+            _id: 7,
+            title: "小马2"
+        };
+        EditorService.updateTopic(topic);
+    };
+
+    $scope.getTopics = function () {
+        EditorService.getTopics();
+    };
 }
