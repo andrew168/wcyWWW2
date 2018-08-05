@@ -50,6 +50,8 @@ function EditorService($q, $http, $rootScope, $timeout, NetService, WxService, W
         addTopic: addTopic,
         updateTopic: updateTopic,
         getTopics: getTopics,
+        attachTopic: attachTopic,
+        detachTopic: detachTopic,
 
         // play & preview
         preview: preview,
@@ -1615,6 +1617,38 @@ function EditorService($q, $http, $rootScope, $timeout, NetService, WxService, W
     function getTopics() {
         var url = TQ.Config.OPUS_HOST + "/topic/list";
         $http.get(url).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function attachTopic(matType, matId, topicId) {
+        var url = TQ.Config.OPUS_HOST + "/material/attachTopic",
+            package = {
+                matType: matType,
+                public_id: matId,
+                topicId: topicId
+            };
+
+        $http.post(url, JSON.stringify(package)).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function detachTopic(matType, matId, topicId) {
+        var url = TQ.Config.OPUS_HOST + "/material/detachTopic",
+            package = {
+                matType: matType,
+                public_id: matId,
+                topicId: topicId
+            };
+
+        $http.post(url, JSON.stringify(package)).then(function (value) {
                 console.log(value);
             },
             function (reason) {

@@ -480,4 +480,12 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     $scope.getTopics = function () {
         EditorService.getTopics();
     };
+
+    $scope.attachTopic = function () {
+        EditorService.attachTopic(30, "c111", 7);
+    };
+
+    $scope.detachTopic = function () {
+        EditorService.detachTopic(30, "c111", 7);
+    };
 }
