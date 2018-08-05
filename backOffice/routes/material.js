@@ -87,6 +87,29 @@ router.post('/attachTopic', authHelper.ensureAuthenticated, function (req, res, 
     }
 });
 
+router.post('/detachTopic', authHelper.ensureAuthenticated, function (req, res, next) {
+    var matPublic_id = req.body.public_id || null,
+        topicId = req.body.topicId || null,
+        matType = getMatType(req),
+        matId = utils.matName2Id(matPublic_id),
+        user = status.getUserInfo(req, res);
+
+    if (!user) {
+        return netCommon.notLogin(req, res);
+    }
+
+    status.logUser(user, req, res);
+    getMatController(matType).detachTopic(matType, matId, topicId, user, onSuccess, onError);
+
+    function onSuccess(id, doc) {
+        res.json(doc);
+    }
+
+    function onError(err) {
+        res.json(err);
+    }
+});
+
 router.get('/', function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
