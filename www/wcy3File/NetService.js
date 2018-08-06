@@ -330,6 +330,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         return prefix[type] + dateString + '.' + extension;
     }
 
+
     function addTopic(topic) {
         var url = TQ.Config.OPUS_HOST + "/topic";
         $http.post(url, JSON.stringify(topic)).then(function (value) {
@@ -362,13 +363,13 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function attachTopic(matType, matId, topicId) {
         var url = TQ.Config.OPUS_HOST + "/material/attachTopic",
-            package = {
+            data = {
                 matType: matType,
-                public_id: matId,
+                matId: matId,
                 topicId: topicId
             };
 
-        $http.post(url, JSON.stringify(package)).then(function (value) {
+        $http.post(url, JSON.stringify(data)).then(function (value) {
                 console.log(value);
             },
             function (reason) {
@@ -378,13 +379,13 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function detachTopic(matType, matId, topicId) {
         var url = TQ.Config.OPUS_HOST + "/material/detachTopic",
-            package = {
+            data = {
                 matType: matType,
-                public_id: matId,
+                matId: matId,
                 topicId: topicId
             };
 
-        $http.post(url, JSON.stringify(package)).then(function (value) {
+        $http.post(url, JSON.stringify(data)).then(function (value) {
                 console.log(value);
             },
             function (reason) {

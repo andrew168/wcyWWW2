@@ -483,17 +483,17 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.attachTopic = function () {
-        // EditorService.attachTopic(10, "c218", 7);
-        // EditorService.attachTopic(10, "c196", 7);
-        // EditorService.attachTopic(20, "c271", 7);
-        // EditorService.attachTopic(20, "c269", 7);
-        EditorService.attachTopic(10, "c281", 7);
-        EditorService.attachTopic(20, "c281", 7);
-        EditorService.attachTopic(20, "c272", 2);
-        EditorService.attachTopic(20, "c97", 7);
+        // EditorService.attachTopic(10, "218", 7);
+        // EditorService.attachTopic(10, "196", 7);
+        // EditorService.attachTopic(20, "271", 7);
+        // EditorService.attachTopic(20, "269", 7);
+        EditorService.attachTopic(10, "281", 7);
+        EditorService.attachTopic(20, "281", 7);
+        EditorService.attachTopic(20, "272", 2);
+        EditorService.attachTopic(20, "97", 7);
     };
 
     $scope.detachTopic = function () {
-        EditorService.detachTopic(30, "c29", 7);
+        EditorService.detachTopic(30, "29", 7);
     };
 }

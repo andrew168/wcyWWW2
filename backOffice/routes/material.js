@@ -65,10 +65,9 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
 });
 
 router.post('/attachTopic', authHelper.ensureAuthenticated, function (req, res, next) {
-    var matPublic_id = req.body.public_id || null,
+    var matId = req.body.matId || null,
         topicId = req.body.topicId || null,
         matType = getMatType(req),
-        matId = utils.matName2Id(matPublic_id),
         user = status.getUserInfo(req, res);
 
     if (!user) {
@@ -88,10 +87,9 @@ router.post('/attachTopic', authHelper.ensureAuthenticated, function (req, res, 
 });
 
 router.post('/detachTopic', authHelper.ensureAuthenticated, function (req, res, next) {
-    var matPublic_id = req.body.public_id || null,
+    var matId = req.body.matId || null,
         topicId = req.body.topicId || null,
         matType = getMatType(req),
-        matId = utils.matName2Id(matPublic_id),
         user = status.getUserInfo(req, res);
 
     if (topicId) {
