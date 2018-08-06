@@ -94,6 +94,8 @@
                     return propsBackground.getPage(pageStep);
                 case TQ.MatType.OPUS:
                     return propsMyWork.getPage(pageStep);
+                case TQ.MatType.TOPIC:
+                    return topics.getPage(pageStep);
                 default :
                     console.error('资源类别参数错误');
                     return propsLocal.getPage(pageStep);

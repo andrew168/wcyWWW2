@@ -44,6 +44,8 @@ function DataObject(list) {
     function createPage() {
         var page = [];
         page.parent = vm;
+        page.previousPage = getPreviousPage;
+        page.nextPage = getNextPage;
         pages.push(page);
         return page;
     }
@@ -83,6 +85,14 @@ function DataObject(list) {
         }
         bakCurrentPageID = currentPageID;
         return pages[currentPageID];
+    }
+
+    function getPreviousPage() {
+        return getPage(-1);
+    }
+
+    function getNextPage() {
+        return getPage(1);
     }
 
     function prepareColumn(props_local, pageSize) {
