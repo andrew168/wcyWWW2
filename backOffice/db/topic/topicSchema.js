@@ -8,6 +8,7 @@ var mongoose = require('mongoose'),
 // 主题的ID，title，开始时间，结束时间等，创作者的id，名称，
 var topicSchema = new Schema({
     title: {type: String, default: "no name"},
+    description: {type: String},
     questionOpusId: Number,
     ssPath: Number,
     statTime:{type:Date},
