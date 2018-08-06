@@ -45,8 +45,30 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
         condition.$and.push(userLimit);
     }
 
-    if (topicId !== null) {
-        condition.$and.push({topicIds: {$all: [topicId]}}); //选出记录，它的topicIds数组中含有元素 topicId，
+    // if (topicId !== null) {
+    //     condition.$and.push({topicIds: {$all: [topicId]}}); //选出记录，它的topicIds数组中含有元素 topicId，
+    // }
+
+    function sortByTopic(item1, item2) {
+        var val1,
+            val2;
+
+        if (item1.topicIds && item1.topicIds.indexOf(topicId) >= 0) {
+            val1 = 1;
+        } else {
+            val1 = 0;
+        }
+
+        if (item2.topicIds && item2.topicIds.indexOf(topicId) >= 0) {
+            val2 = 1;
+        } else {
+            val2 = 0;
+        }
+
+        if (val1 !== val2) {
+            return val2 - val1;
+        }
+        return item2.lastModified - item1.lastModified;
     }
 
     PictureMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
@@ -58,6 +80,7 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
             data.forEach(copyItem);
         }
 
+        result.sort(sortByTopic);
         onSuccess(result);
         function copyItem(model) {
             var item = model._doc;
