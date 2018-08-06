@@ -279,7 +279,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         TQ.Log.debugInfo("update: " + path + " to ==> " + url);
     }
 
-
     function del(path) {  // delete is reserved key word!!!
         var url = urlConcat(baseUrl, path);
         TQ.Log.debugInfo("delete: " + url);
@@ -332,13 +331,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
 
     function addTopic(topic) {
-        var url = TQ.Config.OPUS_HOST + "/topic";
-        $http.post(url, JSON.stringify(topic)).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
+        updateTopic(topic);
     }
 
     function updateTopic(topic) {
@@ -362,31 +355,28 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     function attachTopic(matType, matId, topicId) {
-        var url = TQ.Config.OPUS_HOST + "/material/attachTopic",
-            data = {
-                matType: matType,
-                matId: matId,
-                topicId: topicId
-            };
-
-        $http.post(url, JSON.stringify(data)).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
+        doUpdateMatTopic("attachTopic", {
+            matType: matType,
+            matId: matId,
+            topicId: topicId
+        });
     }
 
     function detachTopic(matType, matId, topicId) {
-        var url = TQ.Config.OPUS_HOST + "/material/detachTopic",
-            data = {
-                matType: matType,
-                matId: matId,
-                topicId: topicId
-            };
+        doUpdateMatTopic("detachTopic", {
+            matType: matType,
+            matId: matId,
+            topicId: topicId
+        });
+    }
 
+    function doUpdateMatTopic(operation, data) {
+        var url = C_MAN_URL + "/" + operation;
+        TQ.AssertExt.isNotNull(data.matType, "db必须的参数");
         $http.post(url, JSON.stringify(data)).then(function (value) {
                 console.log(value);
+                // 发出event， 好让dataService等更新自己
+                TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
             },
             function (reason) {
                 console.log(reason);
