@@ -275,6 +275,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     }
 
     function update(path) {
+        TQ.AssertExt.depreciated("是不是无用了？");
         var url = urlConcat(baseUrl, path);
         TQ.Log.debugInfo("update: " + path + " to ==> " + url);
     }
@@ -328,7 +329,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
         return prefix[type] + dateString + '.' + extension;
     }
-
 
     function addTopic(topic) {
         updateTopic(topic);
