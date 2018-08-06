@@ -47,7 +47,7 @@ function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
     });
 }
 
-function getList(userId, typeId, onSuccess, isAdmin) {
+function getList(userId, typeId, topicId, onSuccess, isAdmin) {
     var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
         condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
 

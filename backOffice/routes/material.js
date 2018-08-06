@@ -94,6 +94,10 @@ router.post('/detachTopic', authHelper.ensureAuthenticated, function (req, res, 
         matId = utils.matName2Id(matPublic_id),
         user = status.getUserInfo(req, res);
 
+    if (topicId) {
+        topicId = Number(topicId);
+    }
+
     if (!user) {
         return netCommon.notLogin(req, res);
     }
@@ -123,19 +127,28 @@ router.get('/', function(req, res, next) {
 router.param('matType', function (req, res, next, id) {
     next();
 });
+// 定义RESTFull API（路径）中的参数，形参
+router.param('topicId', function (req, res, next, id) {
+    next();
+});
 
-router.get('/list/:matType', authHelper.ensureAuthenticated, function(req, res, next) {
+router.get('/list/:matType/topic/:topicId', authHelper.ensureAuthenticated, function(req, res, next) {
     var matType = req.params.matType,
+        topicId = req.params.topicId || null,
         user = status.getUserInfo2(req, res);
 
     if (!user) {
         return netCommon.notLogin(req, res);
     }
 
+    if (topicId) {
+        topicId = Number(topicId);
+    }
+
     matType = (!matType) ? 10 : parseInt(matType);
     console.log("type = " + matType);
     status.logUser(user, req, res);
-    getMatController(matType).getList(user.ID, matType, onGotList, user.canAdmin);
+    getMatController(matType).getList(user.ID, matType, topicId, onGotList, user.canAdmin);
     function onGotList(list) {
         // console.log(JSON.stringify(list));
         res.json(list);

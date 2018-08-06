@@ -37,12 +37,16 @@ function get(userId, callback) {
     });
 }
 
-function getList(userId, typeId, onSuccess, isAdmin) {
+function getList(userId, typeId, topicId, onSuccess, isAdmin) {
     var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
         condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
 
     if (userLimit && !isAdmin) {
         condition.$and.push(userLimit);
+    }
+
+    if (topicId !== null) {
+        condition.$and.push({topicIds: {$all: [topicId]}}); //选出记录，它的topicIds数组中含有元素 topicId，
     }
 
     PictureMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
@@ -59,8 +63,10 @@ function getList(userId, typeId, onSuccess, isAdmin) {
             var item = model._doc;
             if (item.path) {
                 result.push({
+                    _id: item._id,
                     id: item._id, name: item.name, path: item.path, authorID: item.userId,
-                    isShared: item.isShared, time: item.timestamp
+                    isShared: item.isShared, time: item.timestamp,
+                    topicIds: item.topicIds
                 });
             }
         }
