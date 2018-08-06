@@ -479,7 +479,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.getTopics = function () {
-        EditorService.getTopics();
+        DataService.getTopics();
     };
 
     $scope.attachTopic = function () {

@@ -344,16 +344,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             });
     }
 
-    function getTopics() {
-        var url = TQ.Config.OPUS_HOST + "/topic/list";
-        $http.get(url).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
-    }
-
     function attachTopic(matType, matId, topicId) {
         doUpdateMatTopic("attachTopic", {
             matType: matType,
@@ -397,7 +387,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
         addTopic: addTopic,
         updateTopic: updateTopic,
-        getTopics: getTopics,
         attachTopic: attachTopic,
         detachTopic: detachTopic,
 

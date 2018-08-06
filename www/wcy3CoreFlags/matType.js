@@ -12,6 +12,7 @@ TQ.MatType = (function() {
 
         // 作品
         OPUS: 90,  //  "mywork",
+        TOPIC: 91,  // 主题
 
         // depreciated
         LOCAL: -1,

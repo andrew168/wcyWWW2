@@ -35,6 +35,7 @@
         var propsBackground = new TQ.DataObject();
 
         var sounds = new TQ.DataObject();
+        var topics = new TQ.DataObject();
 
         var propsMyWork = new TQ.DataObject();
         var propsMyWork1 = new TQ.DataObject();
@@ -103,6 +104,25 @@
             return sounds.getPage(pageStep);
         }
 
+        function getTopics(pageStep) {
+            return topics.getPage(pageStep);
+        }
+
+        function loadTopics() {
+            var url = TQ.Config.OPUS_HOST + "/topic/list";
+            $http.get(url).then(function (response) {
+                    console.log(response);
+                    var data = (response.status === 200) ? response.data : [];
+                    if (!Array.isArray(data)) {
+                        data = [];
+                    }
+                    topics.setList(data, TQ.MatType.TOPIC);
+                },
+                function (reason) {
+                    console.log(reason);
+                });
+        }
+
         function initialize() {
             if (initialized) {
                 return;
@@ -140,6 +160,7 @@
                 state &= (~READY_OPUS);
                 getOpusList(propsMyWork, matType, READY_OPUS);
             }
+            loadTopics(); //只有后台admin工具需要。
         }
 
         function getMatList(mats, matType, stateType) {
@@ -212,6 +233,7 @@
             initialize: initialize,
             getProps: getProps,
             getSounds: getSounds,
+            getTopics: getTopics,
             cloneWork: cloneWork,
             generateUUID: generateUUID,
             reload: reload,
