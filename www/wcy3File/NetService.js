@@ -330,6 +330,68 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         return prefix[type] + dateString + '.' + extension;
     }
 
+    function addTopic(topic) {
+        var url = TQ.Config.OPUS_HOST + "/topic";
+        $http.post(url, JSON.stringify(topic)).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function updateTopic(topic) {
+        var url = TQ.Config.OPUS_HOST + "/topic";
+        $http.post(url, JSON.stringify(topic)).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function getTopics() {
+        var url = TQ.Config.OPUS_HOST + "/topic/list";
+        $http.get(url).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function attachTopic(matType, matId, topicId) {
+        var url = TQ.Config.OPUS_HOST + "/material/attachTopic",
+            package = {
+                matType: matType,
+                public_id: matId,
+                topicId: topicId
+            };
+
+        $http.post(url, JSON.stringify(package)).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
+    function detachTopic(matType, matId, topicId) {
+        var url = TQ.Config.OPUS_HOST + "/material/detachTopic",
+            package = {
+                matType: matType,
+                public_id: matId,
+                topicId: topicId
+            };
+
+        $http.post(url, JSON.stringify(package)).then(function (value) {
+                console.log(value);
+            },
+            function (reason) {
+                console.log(reason);
+            });
+    }
+
     return {
         banMat: banMat, // 先ban， 后 delete, 不要急于删除， 以避免有些作品还在使用它们
         shareMat: shareMat,
@@ -341,6 +403,12 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
         requestToShareOpus: requestToShareOpus,
         shareOpus: shareOpus,
+
+        addTopic: addTopic,
+        updateTopic: updateTopic,
+        getTopics: getTopics,
+        attachTopic: attachTopic,
+        detachTopic: detachTopic,
 
         initialize: initialize,
         get: get,

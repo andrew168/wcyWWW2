@@ -47,11 +47,11 @@ function EditorService($q, $http, $rootScope, $timeout, NetService, WxService, W
         shareOpus: NetService.shareOpus,
 
         // 主题
-        addTopic: addTopic,
-        updateTopic: updateTopic,
-        getTopics: getTopics,
-        attachTopic: attachTopic,
-        detachTopic: detachTopic,
+        addTopic: NetService.addTopic,
+        updateTopic: NetService.updateTopic,
+        getTopics: NetService.getTopics,
+        attachTopic: NetService.attachTopic,
+        detachTopic: NetService.detachTopic,
 
         // play & preview
         preview: preview,
@@ -1592,67 +1592,5 @@ function EditorService($q, $http, $rootScope, $timeout, NetService, WxService, W
         currCmd = CMD_UNKNOWN;
 
         //ToDo: 　Joint, group
-    }
-
-    function addTopic (topic) {
-        var url = TQ.Config.OPUS_HOST + "/topic";
-        $http.post(url, JSON.stringify(topic)).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
-    }
-
-    function updateTopic(topic) {
-        var url = TQ.Config.OPUS_HOST + "/topic";
-        $http.post(url, JSON.stringify(topic)).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
-    }
-
-    function getTopics() {
-        var url = TQ.Config.OPUS_HOST + "/topic/list";
-        $http.get(url).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
-    }
-
-    function attachTopic(matType, matId, topicId) {
-        var url = TQ.Config.OPUS_HOST + "/material/attachTopic",
-            package = {
-                matType: matType,
-                public_id: matId,
-                topicId: topicId
-            };
-
-        $http.post(url, JSON.stringify(package)).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
-    }
-
-    function detachTopic(matType, matId, topicId) {
-        var url = TQ.Config.OPUS_HOST + "/material/detachTopic",
-            package = {
-                matType: matType,
-                public_id: matId,
-                topicId: topicId
-            };
-
-        $http.post(url, JSON.stringify(package)).then(function (value) {
-                console.log(value);
-            },
-            function (reason) {
-                console.log(reason);
-            });
     }
 }
