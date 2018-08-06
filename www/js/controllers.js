@@ -16,6 +16,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         selectedSingleKey: '5'
     };
 
+    TQ.State.topicId = 7;
     $scope.timelineSlider = TQ.TimerUI.rangeSlider;
     $scope.fontSizes = [
         {value: 1, size: '1'},
@@ -482,10 +483,15 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.attachTopic = function () {
-        EditorService.attachTopic(30, "c111", 7);
+        // EditorService.attachTopic(10, "c218", 7);
+        // EditorService.attachTopic(10, "c196", 7);
+        // EditorService.attachTopic(20, "c271", 7);
+        // EditorService.attachTopic(20, "c269", 7);
+        EditorService.attachTopic(10, "c281", 7);
+        EditorService.attachTopic(20, "c281", 7);
     };
 
     $scope.detachTopic = function () {
-        EditorService.detachTopic(30, "c111", 7);
+        EditorService.detachTopic(30, "c29", 7);
     };
 }
