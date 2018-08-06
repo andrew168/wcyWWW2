@@ -5,8 +5,8 @@
  */
 
 angular.module('starter').factory('EditorService', EditorService);
-EditorService.$inject = ['$q', '$http', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY', 'AppService'];
-function EditorService($q, $http, $rootScope, $timeout, NetService, WxService, WCY, AppService) {
+EditorService.$inject = ['$q', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY', 'AppService'];
+function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, AppService) {
     var CMD_UNKNOWN = "unknown",
         CMD_MCOPYING_BEGIN = 'mcopying begin',
         CMD_MCOPYING_END = 'mcopying end';
