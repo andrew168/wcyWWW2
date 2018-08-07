@@ -770,6 +770,7 @@ TQ = TQ || {};
         this.currentLevelId = objJson.currentLevelId;
         this.currentLevelId = 0; //ToDo: 迫使系统总是打开第一个场景
         this.title = (!objJson.title) ? null : objJson.title;
+        this.topicId = objJson.topicId || 0;
         this.tMax = (objJson.tMax === undefined) ? this.tMax : objJson.tMax;
 
         if (this.title == null) {
@@ -985,6 +986,7 @@ TQ = TQ || {};
         // it is provided to prevent loading WCY01.WDM from server
         var empty = {
             version: Scene.VER_LATEST,
+            topicId: TQ.State.topicId,
             "levels": [
                 {
                     "jsonElements": null,

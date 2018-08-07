@@ -13,6 +13,7 @@ var opusSchema = new Schema({
     // 申请共享，批准发表
     state: {type: Number, default: 10}, // 10, 私有的,
     userId:Number,
+    topicId: Number,
     ssPath: {type: String, default:""},
     template: {type: Number, default: 0} // 0: no template
 });

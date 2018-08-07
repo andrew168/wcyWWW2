@@ -55,6 +55,7 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
     var templateID = 0,
         wcyDataObj = req.body,
         wcyData = JSON.stringify(wcyDataObj),
+        topicId = wcyDataObj.topicId || 0,
         ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
 
     if (!wcyData) {
@@ -64,7 +65,7 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
     } else {
         var wcyId = req.query.wcyId || 0;
         if (isNewWcy(wcyId)) { // 新作品，
-            opusController.add(user.ID, ssPath, templateID, onSavedToDB, null);
+            opusController.add(user.ID, topicId, ssPath, templateID, onSavedToDB, null);
         } else {
             opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDB);
         }

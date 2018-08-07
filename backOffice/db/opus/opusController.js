@@ -24,9 +24,10 @@ function get(id) {
         });
 }
 
-function add(userID, ssPath, templateID, onSuccess, onError) {
+function add(userID, topicId, ssPath, templateID, onSuccess, onError) {
     console.info("enter add");
     var aOpus = new Opus({
+        topicId: topicId,
         userId: userID,
         ssPath: ssPath,
         template: templateID
