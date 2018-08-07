@@ -120,11 +120,6 @@ window.TQ = window.TQ || {};
       return Utility.getComponentByThumbnail(thumbnail);
     };
 
-    Utility.getEmptyScene = function () {
-      return {"levels":[{"jsonElements":null, "FPS":20, "elements":null, "name":"0"}],
-        "overlay":null, "currentLevelId":0, "currentLevel":null};
-    };
-
     // @@ToDo: 显示表达式的字串， 和 文件的行号，
     Utility.assertValid = function(obj)
     {

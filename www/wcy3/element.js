@@ -197,7 +197,7 @@ window.TQ = window.TQ || {};
                     displayInfo2(jqResponse);
                     TQ.Log.error(jqResponse + ". " + e.toString());
                     // 给一个空白文件， 确保可可持续进行
-                    desc = TQ.Utility.getEmptyScene();
+                    desc = TQ.Scene.getEmptySceneJSON();
                 }
 
                 desc = pt._extractComponent(desc, jsonFiledesc.x, jsonFiledesc.y, jsonFiledesc.zIndex);

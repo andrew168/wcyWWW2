@@ -706,7 +706,7 @@ TQ = TQ || {};
             displayInfo2(jsonStr);
             TQ.Log.error(jsonStr + ". " + e.toString());
             // 给一个空白文件， 确保可可持续进行
-            objJson = TQ.Utility.getEmptyScene();
+            objJson = getEmptySceneJSON();
         }
         objJson.alias = (alias == null) ? 'none' : alias;
         objJson.remote = true;
