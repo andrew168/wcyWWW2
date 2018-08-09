@@ -68,10 +68,11 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
         if (val1 !== val2) {
             return val2 - val1;
         }
-        return item2.lastModified - item1.lastModified;
+        return (new Date(item2.time)) - (new Date(item1.time));
     }
 
     PictureMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
+
     function onSeachResult(err, data) {
         var result = [];
         if (!data) {
@@ -82,6 +83,7 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
 
         result.sort(sortByTopic);
         onSuccess(result);
+
         function copyItem(model) {
             var item = model._doc;
             if (item.path) {
