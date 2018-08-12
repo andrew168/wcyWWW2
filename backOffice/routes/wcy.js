@@ -168,7 +168,6 @@ function sendBackWcy(req, res, wcyId) {
         wcyData = null,
         user;
 
-    // status.checkUser(req, res, onUserReady);
     opusController.getAuthor(wcyId, onGotAuthorData);
     fs.readFile(wcyId2Filename(wcyId), 'utf8', onDataReady);
     function onGotAuthorData(data) {

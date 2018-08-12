@@ -60,7 +60,7 @@ function composeUserPkg(model) {
     };
 }
 
-function add(req, onSuccess) {
+function add(req, onSuccess, onError) {
     var aDoc = new User({
         name:'andrew' + new Date().getTime(),
         score: 100 //多余的字段， 将被忽略
@@ -68,7 +68,16 @@ function add(req, onSuccess) {
 
     try {
         aDoc.save(function(err, model) {
-            onSuccess(model._doc);
+            if (err || !model) {
+                if (!err) {
+                    err = "model为空!"
+                }
+                if (onError) {
+                    onError(err);
+                }
+            } else {
+                onSuccess(model._doc);
+            }
         });
     } catch(e) {
         console.log("Fatal error: at user doc read/write");

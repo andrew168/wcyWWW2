@@ -62,13 +62,13 @@ function logUser(user, req, res, callback) {
         if (callback) {
             callback();
         }
+    }, function (msg) {
+        console.log("非法逻辑，非法用户，新add也不成功，: user=" + JSON.stringify(user) + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
+        console.log(msg);
+        if (callback) {
+            callback(msg);
+        }
     })
-}
-
-function checkUser(req, res, callback) {
-    validateUser(req, res, function(){
-        setUserCookie(res, callback);
-    });
 }
 
 function setUserCookie(user, res, callback) {
@@ -77,7 +77,7 @@ function setUserCookie(user, res, callback) {
         res.cookie('timesCalled', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
         res.clearCookie('oldCookie1');
     } catch (err) {
-        console.error("checkUser is so slow that response has completed!");
+        console.error("error in set cookie!");
     }
 
     if (callback) {
@@ -85,7 +85,7 @@ function setUserCookie(user, res, callback) {
     }
 }
 
-function validateUser(req, res, callback) {
+function validateUser(req, res, callback, onError) {
     user.ID = getCookieNumber(req, 'userID', defaultUserID);
     user.timesCalled = getCookieNumber(req, 'timesCalled', 0);
     if (isNewUser(user.ID)) {
@@ -96,7 +96,7 @@ function validateUser(req, res, callback) {
             if (callback) {
                 callback();
             }
-        });
+        }, onError);
     } else {
         user.isRegistered = true;
         if (callback) {
@@ -174,7 +174,6 @@ exports.getUserInfo = getUserInfo;
 exports.getUserInfo2 = getUserInfo2;
 exports.getUserInfoByTokenId = getUserInfoByTokenId;
 exports.getUserIDfromCookie = getUserIDfromCookie; //TBD
-exports.checkUser = checkUser;
 exports.logUser = logUser;
 exports.setUserCookie = setUserCookie;
 exports.onLoginSucceed = onLoginSucceed;
