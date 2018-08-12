@@ -3,7 +3,7 @@
  */
 
 function DataObject(list) {
-    var IMAGE_PAGE_SIZE = 9,
+    var IMAGE_PAGE_SIZE = 6,
         SOUND_PAGE_SIZE = 4,
         THUMBNAIL_EXP = "w_100,h_100,c_limit/",
         OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/",
