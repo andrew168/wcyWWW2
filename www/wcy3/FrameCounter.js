@@ -251,6 +251,7 @@ window.TQ = window.TQ || {};
 
     FrameCounter.isInverse = function () { return step < 0;};
     FrameCounter.isPlaying = function () { return (state == GO); };
+    FrameCounter.isRecording = function () {return _isRecording;};
     FrameCounter.isRequestedToStop = function () { return (requestState == STOP); };
     FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= vMax)); };
     FrameCounter.isAutoRewind = function () { return autoRewind; };

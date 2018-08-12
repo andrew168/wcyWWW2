@@ -200,8 +200,11 @@ TQ = TQ || {};
         if (!TQ.SceneEditor.isEditMode()) {  //录制的时候， 自动延长 本场景的时间长度
             TQ.FrameCounter.setTMax(this.currentLevel.getTime());
         }
-
         // update 其它level的 相对时间点
+        this.updateT0();
+    };
+
+    p.updateT0 = function () {
         var t = 0;
         for (var i = 0; i < this.levels.length; i++) {
             this.levels[i].setT0(t);
@@ -1014,9 +1017,10 @@ TQ = TQ || {};
             tGlobalLastFrame = 0,
             level = null;
 
-        // for recording
-        if (this.currentLevel && (this.currentLevel.getTime() < TQ.FrameCounter.maxTime())) {
-            this.currentLevel.setTime(TQ.FrameCounter.maxTime());
+        if (TQ.FrameCounter.isRecording) {
+            if (this.currentLevel && (this.currentLevel.getTime() < TQ.FrameCounter.maxTime())) {
+                this.currentLevel.setTime(TQ.FrameCounter.maxTime());
+            }
         }
 
         if (_levelTe.length > this.levels.length ) {
@@ -1063,6 +1067,7 @@ TQ = TQ || {};
         te = Math.max(te, tGlobalLastFrame);
         if (Math.abs(this.tMax - te) > 0.1) {
             this.tMax = (_allResourceReady) ? te : Math.max(this.tMax, te);
+            this.updateT0();
             TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
         }
     };
