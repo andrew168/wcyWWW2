@@ -111,6 +111,7 @@ TQ = TQ || {};
         for (var i = SoundMgr.items.length - 1; i >=0; i--) {
             var ele = SoundMgr.items[i];
             if (ele.isCrossLevel && !isReseting) continue;
+            ele.stop();
             SoundMgr.items.splice(i,1);
         }
     };
