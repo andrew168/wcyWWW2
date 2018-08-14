@@ -5,14 +5,14 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    var DEFAULT_MAX_FRAME = 3; // seconds
+    var DEFAULT_T_MAX_FRAME = 3; // seconds
     function Level(description) {
         TQ.AssertExt.isTrue(!description || (typeof description ==='object'), "必须是object, 不能是json字串");
         this.background = null;
         this.latestElement = null; // 最新生成的复合物体
         this.tMaxFrame = 0;
         this.tGlobalLastFrame = 0; // 他对作品最大时长的最低要求
-        this.tMaxCapacity = DEFAULT_MAX_FRAME; // 该level的最后一帧动画的时间(单位是: 帧), 以该Level的头为0帧.
+        this.tMaxCapacity = DEFAULT_T_MAX_FRAME; // 该level的最后一帧动画的时间(单位是: s), 以该Level的头为0帧.
         this.t0 = 0;
         this.resourceReady = false;
         this.initialize(description);
@@ -842,7 +842,7 @@ window.TQ = window.TQ || {};
     };
 
     p.getTime = function() {
-        return Math.max(this.tMaxFrame, this.tMaxCapacity);
+        return Math.max(this.tMaxFrame, DEFAULT_T_MAX_FRAME);// this.tMaxCapacity
     };
 
     p.getGlobalTime = function () {
