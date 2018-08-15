@@ -1101,7 +1101,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             rightLevel.calculateLastFrame();
             rightLevel.calculateRealLastFrame();
         }
-        currScene.currentLevel.setTime(TQ.FrameCounter.maxTime(), true);
+        currScene.currentLevel.setTime(TQ.FrameCounter.maxTime());
     }
 
     function increaseTimeline() {

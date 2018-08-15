@@ -12,7 +12,6 @@ window.TQ = window.TQ || {};
         this.latestElement = null; // 最新生成的复合物体
         this.tMaxFrame = 0;
         this.tGlobalLastFrame = 0; // 他对作品最大时长的最低要求
-        this.tMaxCapacity = DEFAULT_T_MAX_FRAME; // 该level的最后一帧动画的时间(单位是: s), 以该Level的头为0帧.
         this.t0 = 0;
         this.resourceReady = false;
         this.initialize(description);
@@ -44,7 +43,6 @@ window.TQ = window.TQ || {};
         TQ.AssertExt.isNotNull(this.elements);
         this.FPS = (!description.FPS) ? TQ.FrameCounter.defaultFPS : description.FPS;
         this.tMaxFrame = (!description.tMaxFrame)? this.tMaxFrame : description.tMaxFrame;
-        this.tMaxCapacity = Math.max(this.tMaxCapacity, this.tMaxFrame);
         this._t = 0; // _t是临时变量， 每次播放都不同，没必要fixedUp 起止
         assertNotNull(TQ.Dictionary.FoundNull, description.name);
         this.name = description.name;
@@ -773,9 +771,6 @@ window.TQ = window.TQ || {};
 
     p.calculateLastFrame = function () {
         this.tMaxFrame = this.calculateRealLastFrame();
-        if (this.tMaxCapacity < this.tMaxFrame) {
-            this.tMaxCapacity = this.tMaxFrame;
-        }
         return this.tMaxFrame;
     };
 
@@ -796,7 +791,7 @@ window.TQ = window.TQ || {};
         return ideaStep;
     }
     p.increaseTime = function() {
-        var oldMax = this.tMaxCapacity,
+        var oldMax = this.getTime(),
             newMax = oldMax + findStep(oldMax * 0.2);
         if (newMax < 1) {
             newMax = 1;
@@ -806,7 +801,7 @@ window.TQ = window.TQ || {};
     };
 
     p.decreaseTime = function () {
-        var oldMax = this.tMaxCapacity,
+        var oldMax = this.getTime(),
             newMax = oldMax - findStep(oldMax * (1 - 1/1.2));
         if (newMax === oldMax) {
             if ((newMax > 2)) {
@@ -819,30 +814,23 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setLevel(this);
     };
 
-    p.setTime = function (t, forceChangeCapacity) {
+    p.setTime = function (t) {
         this.tMaxFrame = t;
-        if (forceChangeCapacity) {
-            this.tMaxCapacity = t;
-        } else {
-            this.tMaxCapacity = Math.max(this.tMaxCapacity, this.tMaxFrame);
-        }
-
         if (this.isActive()) {
             TQ.FrameCounter.setTMax(this.tMaxFrame);
         }
     };
 
     p.setCapacity = function (t) {
-        if (t >= this.tMaxFrame) {
-            this.tMaxCapacity = t;
+        if (t >= this.getTime()) {
             if (this.isActive()) {
-                TQ.FrameCounter.setTMax(this.tMaxCapacity);
+                TQ.FrameCounter.setTMax(t);
             }
         }
     };
 
     p.getTime = function() {
-        return Math.max(this.tMaxFrame, DEFAULT_T_MAX_FRAME);// this.tMaxCapacity
+        return Math.max(this.tMaxFrame, DEFAULT_T_MAX_FRAME);
     };
 
     p.getGlobalTime = function () {
