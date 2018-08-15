@@ -12,7 +12,8 @@ TQ = TQ || {};
     SoundMgr.started = false;
     SoundMgr.isSupported = false;
     SoundMgr.items = [];
-    var isReseting = false;
+    var isReseting = false,
+        directSounds = [];
 
     SoundMgr.initialize = function() {
         SoundMgr.isSupported = true;
@@ -47,12 +48,27 @@ TQ = TQ || {};
                 }
             }
             SoundMgr._auditioningInstance = createjs.Sound.play(TQ.RM.getID(item)); // 用Sound.play, 可以播放多个instance， 声音只用ID， 不要resouce data
+            directSounds.push(id);
         } else {
             TQ.RM.addItem(id, function() {SoundMgr.play(id);});
         }
     };
 
-    SoundMgr.stop = function(id) {  createjs.Sound.stop(id); };
+    SoundMgr.stop = function(id) {
+        createjs.Sound.stop(id);
+        var index = directSounds.indexOf(id);
+        directSounds.splice(index, 1);
+    };
+
+    function stopAllDirectSound() {
+        if (directSounds.length > 0) {
+            var temp = directSounds.slice(0);
+            temp.forEach(function (id) {
+                SoundMgr.stop(id);
+            })
+        }
+    }
+
     SoundMgr.addItem =function(ele) {
         if (SoundMgr.items.indexOf(ele) >=0) { // 避免同一个元素（跨场景的），重复插入
             return;
@@ -94,6 +110,7 @@ TQ = TQ || {};
         if (!!SoundMgr._auditioningInstance) {
             SoundMgr._auditioningInstance.stop();
         }
+        stopAllDirectSound();
     };
 
     SoundMgr.iosForceToResumeAll = function () {
@@ -103,6 +120,7 @@ TQ = TQ || {};
                 ele.forceToReplay();
             }
         }
+        stopAllDirectSound();
     };
 
     SoundMgr.removeAll = function()
@@ -114,6 +132,7 @@ TQ = TQ || {};
             ele.stop();
             SoundMgr.items.splice(i,1);
         }
+        stopAllDirectSound();
     };
 
     SoundMgr.reset = function () {
