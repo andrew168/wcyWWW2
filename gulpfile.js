@@ -98,6 +98,18 @@ gulp.task('copy_lazyLoad_files', function () {
         .pipe(gulp.dest(dstPath2 + "\\wcy3Social"));
 });
 
+gulp.task('copy_worker_files', function () {
+    var filesAndDirs = [
+        ["", "worker.js"],
+        ["", "lame.min.js"]
+    ];
+
+    filesAndDirs.forEach(function (resource) {
+        gulp.src(srcPath + '\\' + resource[0] + '\\' + resource[1])
+            .pipe(gulp.dest(dstPath1 + '\\' + resource[0]));
+    });
+});
+
 gulp.task('copy_dictionary', function () {
     if (config.withDictionary) {
         return gulp.src(srcPath + "\\dictionary\\*.*")
@@ -106,13 +118,13 @@ gulp.task('copy_dictionary', function () {
     }
 });
 
-gulp.task('default', ['config', 'copy_lazyLoad_files', 'copy_debug_tools', 'copy_build_tools', 'copy_dictionary'], function () {
+gulp.task('default', ['hot_sync'], function () {
     gulp.start('build');
 });
 
-gulp.task('hot_sync', ['config', 'copy_lazyLoad_files', 'copy_debug_tools', 'copy_build_tools', 'copy_dictionary'], function() {
+gulp.task('hot_sync', ['config', 'copy_worker_files', 'copy_lazyLoad_files', 'copy_debug_tools', 'copy_build_tools', 'copy_dictionary'], function() {
     console.log("hot sync souce to voteCard");
-    gulp.start('wcylib_concat');
+    gulp.start('copy_dictionary');
 });
 
 gulp.task('extract_string_const', function(){
