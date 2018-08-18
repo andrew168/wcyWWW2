@@ -4,6 +4,7 @@
     importScripts('lame.min.js');
 
     var mp3Encoder, maxSamples = 1152, samplesMono, lame, config, dataBuffer;
+    var stopped = false;
 
     var clearBuffer = function(){
         dataBuffer = [];
@@ -17,6 +18,9 @@
     }
 
     var appendToBuffer = function(mp3Buf){
+        if (stopped) {
+            return;
+        }
         dataBuffer.push(new Int8Array(mp3Buf));
     };
 
@@ -45,6 +49,9 @@
     };
 
     var encode = function(arrayBuffer){
+        if (stopped) {
+            return;
+        }
         samplesMono = convertBuffer(arrayBuffer);
         var remaining = samplesMono.length;
         for(var i = 0; remaining >= 0; i += maxSamples){
@@ -69,14 +76,22 @@
             case 'init':
                 init(e.data.config);
                 break;
+            case 'start':
+                reset();
+                stopped = false;
+                break;
+            case 'stop':
+                stopped = true;
+                break;
             case 'encode':
-                encode(e.data.buf);
+                if (stopped) {
+                    console.error("用法错误：应该先start！");
+                } else {
+                    encode(e.data.buf);
+                }
                 break;
             case 'finish':
                 finish();
-                break;
-            case 'reset':
-                reset();
                 break;
         }
     };
