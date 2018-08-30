@@ -289,14 +289,23 @@ window.TQ = window.TQ || {};
         }
     };
 
-    p.getInSag = function() {
-        return (this.sags && this.sags[TQ.AnimationManager.SagCategory.IN]) ?
-            this.sags[TQ.AnimationManager.SagCategory.IN] : null;
-    };
+    p.getSags = function() {
+        if (!this.sags) {
+            return null;
+        }
 
-    p.getInSagType = function () {
-        var sag = this.getInSag();
-        return (sag) ? sag.typeID : null;
+        var sags = [];
+        for (item in TQ.AnimationManager.SagCategory) {
+            var sagType = TQ.AnimationManager.SagCategory[item];
+            if (sag = this.sags[sagType]) {
+                sags[sagType] = sag;
+            }
+        }
+
+        if (sags.length > 0) {
+            return sags;
+        }
+        return null;
     };
 
     p.hasSag = function() {

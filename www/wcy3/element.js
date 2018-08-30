@@ -2197,12 +2197,8 @@ window.TQ = window.TQ || {};
         return true;
     };
 
-    p.getInSagName = function() {
-        if (!this.animeTrack) {
-            return null;
-        }
-
-        return this.animeTrack.getInSagName();
+    p.getSags = function() {
+        return (this.animeTrack) ? this.animeTrack.getSags() : null;
     };
 
     p.hasBBox = function() {

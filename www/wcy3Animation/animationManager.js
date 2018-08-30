@@ -99,6 +99,10 @@ TQ.AnimationManager = (function () {
         ],
 
         instance = {
+            categoryId: SagCategory.IN,
+            tDelay:0,
+            tDuration: 1, // seconds
+            getCurrentTypeSag: getCurrentTypeSag,
             previewAndRemoveLatest: previewAndRemoveLatest,
             state: state,
             speeds: speeds,
@@ -158,7 +162,33 @@ TQ.AnimationManager = (function () {
         num += checkSag(ele, SagType.FADE_OUT);
         num += checkSag(ele, SagType.TWINKLE);
         state.hasSag = (num > 0);
+
+        var existSag = getCurrentTypeSag(ele);
+        if (existSag && (instance.categoryId === existSag.categoryID)) {
+                instance.tDuration = existSag.duration;
+                instance.tDelay = existSag.delay;
+        }
+
         return true;
+    };
+
+    function getCurrentTypeSag(ele) {
+        var existSags = ele.getSags(),
+            sag,
+            result = null;
+
+        if (existSags) {
+            existSags.some(function (channelSags) {
+                if (channelSags && (sag = channelSags[instance.categoryId])) {
+                    instance.tDuration = sag.duration;
+                    instance.tDelay = sag.delay;
+                    result = sag;
+                    return true;
+                }
+                return false;
+            });
+        }
+        return null;
     }
 
     function rotate() {
@@ -243,7 +273,6 @@ TQ.AnimationManager = (function () {
             case SagType.SCALE_IN:
                 t1 = sag.t1;
                 t2 = sag.t2;
-                currentTime = Math.max(t2, currentTime);
                 break;
 
             case SagType.LEFT_OUT:
@@ -254,7 +283,6 @@ TQ.AnimationManager = (function () {
             case SagType.SCALE_OUT:
                 t1 = sag.t1;
                 t2 = sag.t2;
-                currentTime = Math.min(t1, currentTime);
                 break;
 
             default:
@@ -429,11 +457,19 @@ TQ.AnimationManager = (function () {
         return recordSag(sag);
     }
 
+    function getTDelay() {
+        return TQ.Scene.globalT2local(TQ.FrameCounter.t() + instance.tDelay, true);
+    }
+
+    function getTDuration() {
+        return TQ.Scene.globalT2local(TQ.FrameCounter.t() + instance.tDelay + instance.tDuration, true);
+    }
+
     // private functions:
     function composeFlyInSag(typeId, startPos, destinationPos) {
         var speed = getSpeed(typeId),
-            delay = TQ.FrameCounter.gridSnap(TQ.TimerUI.getTObject1().t),// seconds
-            duration = TQ.FrameCounter.gridSnap((TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt)), // seconds
+            delay = TQ.FrameCounter.gridSnap(getTDelay().t),// seconds
+            duration = TQ.FrameCounter.gridSnap((getTDuration().gt - getTDelay().gt)), // seconds
             t1 = delay,
             dampingDuration = TQ.FrameCounter.gridSnap(TQ.SpringEffect.defaultConfig.dampingDuration), // seconds
             t2 = t1 + duration,
@@ -463,8 +499,8 @@ TQ.AnimationManager = (function () {
 
     function composeFlyOutSag(typeId, startPos, destinationPos) {
         var speed = getSpeed(typeId),
-            delay = TQ.FrameCounter.gridSnap(TQ.TimerUI.getTObject1().t),
-            duration = TQ.FrameCounter.gridSnap((TQ.TimerUI.getTObject2().gt - TQ.TimerUI.getTObject1().gt)), // seconds
+            delay = TQ.FrameCounter.gridSnap(getTDelay().t),
+            duration = TQ.FrameCounter.gridSnap((getTDuration().gt - getTDelay().gt)), // seconds
             t1 = delay,
             dampingDuration = TQ.FrameCounter.gridSnap(TQ.SpringEffect.defaultConfig.dampingDuration), // seconds
             t2 = t1 + duration,

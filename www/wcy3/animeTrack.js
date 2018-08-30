@@ -110,32 +110,30 @@ TQ = TQ || {};
         })
     };
 
-    p.getInSagName = function() {
-        if (!this.hasSag) {
-            return null;
-        }
-
-        return this.x.getInSagType() ||
-            this.y.getInSagType() ||
-            this.sx.getInSagType() ||
-            this.sy.getInSagType() ||
-            this.rotation.getInSagType() ||
-            this.visible.getInSagType() ||
-            this.alpha.getInSagType() ||
-            this.colorR.getInSagType() ||
-            this.colorG.getInSagType() ||
-            this.colorB.getInSagType();
-    };
-
-    p.getInSag = function () {
-        var inSag = null;
+    p.getSags = function () {
+        var sags = null;
         this.forEachChannel(function (channel) {
-            if (!inSag) {
-                inSag = channel.getInSag();
+            var channelSags = channel.getSags();
+            if (channelSags) {
+                if (!sags) {
+                    sags = [];
+                }
+                sags.push(channelSags);
             }
         });
 
-        return inSag;
+        return sags;
+    };
+
+    p.getInSag = function () {
+        var sags = this.getSags(),
+            sag = null;
+        if (sags && sags.length > 0) {
+            sags.some(function (channelSags) {
+                return (channelSags && (sag = channelSags[TQ.AnimationManager.SagCategory.IN]));
+            })
+        }
+        return sag;
     };
 
     AnimeTrack.validate = function(tracks) {
