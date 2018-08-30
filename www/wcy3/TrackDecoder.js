@@ -153,6 +153,14 @@ window.TQ = window.TQ || {};
             return calVisible(sag, channel, t);
         }
 
+        if (!TQ.FrameCounter.isPlaying()) { //编辑状态下， InSag显示其结果，idle和OutSag都显示其开始
+            if (sag.categoryID === TQ.AnimationManager.SagCategory.IN) {
+                t = sag.t2;
+            } else {
+                t = sag.t1;
+            }
+        }
+
         // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
         var dampingT0 = TQ.SpringEffect.getDampingT0(sag),
             deltaY = 0;
