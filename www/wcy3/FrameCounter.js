@@ -20,8 +20,8 @@ window.TQ = window.TQ || {};
     var _isRecording = false,
         NORMAL_SPEED = 1,
         LOW_SPEED = 0.5,
-        GO = 1, // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
-        STOP = 0,
+        STATE_GO = 1, // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
+        STATE_STOP = 0,
         baseStep = NORMAL_SPEED,
         step = baseStep,
         abOptions = null,
@@ -36,7 +36,7 @@ window.TQ = window.TQ || {};
     FrameCounter.cmdGotoFrame = cmdGotoFrame;
 
     var _FPS = FrameCounter.defaultFPS,  // 下划线是内部变量, 禁止外面引用
-        state = STOP,
+        state = STATE_STOP,
         requestState = null,
         autoRewind = false,
         currLevel = null;
@@ -103,13 +103,13 @@ window.TQ = window.TQ || {};
     FrameCounter.forward = function ()
     {
         step = 2 * baseStep;
-        state = GO;
+        state = STATE_GO;
     };
 
     FrameCounter.backward = function () {
         TQ.AssertExt.depreciated("backward: 过时了");
         step = -2 * baseStep;
-        state = GO;
+        state = STATE_GO;
     };
 
     FrameCounter.gotoBeginning = function() {
@@ -136,7 +136,7 @@ window.TQ = window.TQ || {};
     // 前进一个delta. (delta是负值, 即为倒带)
     FrameCounter.update = function () {
         FrameCounter.updateState();
-        if (!(state == GO)) {
+        if (!(state == STATE_GO)) {
             return ;
         }
 
@@ -185,13 +185,13 @@ window.TQ = window.TQ || {};
     FrameCounter.updateState = function() {
         switch (requestState) {
             case null: break;
-            case GO : {
+            case STATE_GO : {
                 step = baseStep;
-                state = GO;
+                state = STATE_GO;
                 break;
             }
-            case STOP: {
-                state = STOP;
+            case STATE_STOP: {
+                state = STATE_STOP;
                 break;
             }
         }
@@ -202,7 +202,7 @@ window.TQ = window.TQ || {};
     FrameCounter.play = function ()
     {
         lastTimestamp = Date.now();
-        requestState = GO;
+        requestState = STATE_GO;
         //ToDo: 暂时关闭GIF文件的生成
         /* if (TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL])
         {
@@ -216,7 +216,7 @@ window.TQ = window.TQ || {};
 
     FrameCounter.stop = function ()
     {
-        requestState = STOP;
+        requestState = STATE_STOP;
         if (abOptions) {
             var tStop = abOptions.stopAt;
             abOptions = null;
@@ -250,9 +250,9 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.isInverse = function () { return step < 0;};
-    FrameCounter.isPlaying = function () { return (state == GO); };
+    FrameCounter.isPlaying = function () { return (state == STATE_GO); };
     FrameCounter.isRecording = function () {return _isRecording;};
-    FrameCounter.isRequestedToStop = function () { return (requestState == STOP); };
+    FrameCounter.isRequestedToStop = function () { return (requestState == STATE_STOP); };
     FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= vMax)); };
     FrameCounter.isAutoRewind = function () { return autoRewind; };
 
@@ -264,7 +264,7 @@ window.TQ = window.TQ || {};
         requestState = null;
         vMax = 3 * FrameCounter.defaultFPS; // 空白带子, 长度为 30秒 * 每秒20帧,  600
         FrameCounter.v = 0;
-        state = STOP;
+        state = STATE_STOP;
     };
 
     FrameCounter.setTMax = function (tMax) {
