@@ -526,7 +526,9 @@ window.TQ = window.TQ || {};
             return;
         }
 
-        this._t = t; // 临时存储,供保留现场, 不对外
+        if (TQ.State.isAddMode || TQ.State.isModifyMode) {
+            this._t = t; // 临时存储,供保留现场, 不对外
+        }
         // 如果是播放状态，
         for (var i = 0; i < this.elements.length; ++i) {
             if (!this.elements[i].TBD) {
