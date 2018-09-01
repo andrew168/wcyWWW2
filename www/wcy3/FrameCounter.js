@@ -27,7 +27,6 @@ window.TQ = window.TQ || {};
         baseStep = NORMAL_SPEED,
         step = baseStep,
         abOptions = null,
-        newTimestamp,
         lastTimestamp;
 
     FrameCounter.EVENT_AB_PREVIEW_STOPPED = 'ab preview stopped';
@@ -138,42 +137,41 @@ window.TQ = window.TQ || {};
     // 前进一个delta. (delta是负值, 即为倒带)
     FrameCounter.update = function () {
         FrameCounter.updateState();
-        if (!(state === STATE_GO)) {
-            return ;
-        }
-
-        if (FrameCounter.hasUIData) {
-            FrameCounter.hasUIData = false;
-            return;
-        }
-
-        newTimestamp = Date.now();
-        var vDelta = t2f((newTimestamp - lastTimestamp)/1000);
-        FrameCounter.v = FrameCounter.v + vDelta;
+        var newTimestamp = Date.now();
+        var vDelta = t2f((newTimestamp - lastTimestamp) / 1000);
         lastTimestamp = newTimestamp;
 
-        if (abOptions) {
-            if (FrameCounter.t() > abOptions.tEnd) {
-                FrameCounter.stop();
+        if (state === STATE_GO) {
+            if (FrameCounter.hasUIData) {
+                FrameCounter.hasUIData = false;
+                return;
             }
-        } else if(FrameCounter.v > vMax) {
-            if (_isRecording) {
-                vMax += step;
-            } else {
-                // FrameCounter.v = vMax;
-            }
-        }
 
-        if(FrameCounter.v < 0) {
-            if (autoRewind) {
-                FrameCounter.v = vMax;
-            } else {
-                FrameCounter.v = 0;
-            }
-        }
+            FrameCounter.v = FrameCounter.v + vDelta;
 
-        TQ.FrameCounter.isNew = true;
-        assertTrue(TQ.Dictionary.CounterValidation, FrameCounter.v >= 0);
+            if (abOptions) {
+                if (FrameCounter.t() > abOptions.tEnd) {
+                    FrameCounter.stop();
+                }
+            } else if (FrameCounter.v > vMax) {
+                if (_isRecording) {
+                    vMax += step;
+                } else {
+                    // FrameCounter.v = vMax;
+                }
+            }
+
+            if (FrameCounter.v < 0) {
+                if (autoRewind) {
+                    FrameCounter.v = vMax;
+                } else {
+                    FrameCounter.v = 0;
+                }
+            }
+
+            TQ.FrameCounter.isNew = true;
+            assertTrue(TQ.Dictionary.CounterValidation, FrameCounter.v >= 0);
+        }
 
         if (_hooks.length > 0) {
             _hooks.forEach(updateHook);
