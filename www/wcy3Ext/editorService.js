@@ -58,6 +58,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         previewCurrentLevel: previewCurrentLevel,
         play: play,
         stop: stop,
+        pause: pause,
+        resume: resume,
         replay: replay,
         startRecord: startRecord,
         stopRecord: stopRecord,
@@ -217,11 +219,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             });
             window.addEventListener("blur", onGotoBkg);
             window.addEventListener("focus", onGotoForegroud);
+            var pausedByBkur = false;
 
             function onGotoBkg() {
                 console.log("state on go to bkg!");
                 if (state.isPreviewMode) {
-                    stop();
+                    if (!TQ.FrameCounter.isPaused()) {
+                        pausedByBkur = true;
+                        stop();
+                    }
                 } else {
                     TQ.SoundMgr.stopAll();
                 }
@@ -229,8 +235,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
             function onGotoForegroud() {
                 console.log("state on go to foreground!");
-                if (state.isPreviewMode) {
-                    play();
+                if (pausedByBkur) {
+                    pausedByBkur = false;
+                    if (state.isPreviewMode) {
+                        play();
+                    }
                 }
             }
 
@@ -900,6 +909,20 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             currScene.play();
         }
         _onPlay();
+    }
+
+    function pause() {
+        assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
+        if (currScene != null) {
+            TQ.FrameCounter.pause();
+        }
+    }
+
+    function resume() {
+        assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
+        if (currScene != null) {
+            TQ.FrameCounter.resume();
+        }
     }
 
     function _onPlay() {

@@ -22,6 +22,8 @@ window.TQ = window.TQ || {};
         LOW_SPEED = 0.5,
         STATE_GO = 1, // 调在使用之前, 常量在使用之前必须先定义(包括初始化,例如下面给_state赋值)
         STATE_STOP = 0,
+        STATE_PAUSE = 2,
+        STATE_RESUME = 3,
         baseStep = NORMAL_SPEED,
         step = baseStep,
         abOptions = null,
@@ -136,7 +138,7 @@ window.TQ = window.TQ || {};
     // 前进一个delta. (delta是负值, 即为倒带)
     FrameCounter.update = function () {
         FrameCounter.updateState();
-        if (!(state == STATE_GO)) {
+        if (!(state === STATE_GO)) {
             return ;
         }
 
@@ -194,6 +196,13 @@ window.TQ = window.TQ || {};
                 state = STATE_STOP;
                 break;
             }
+            case STATE_PAUSE:
+                state = STATE_PAUSE;
+                break;
+
+            case STATE_RESUME:
+                state = STATE_GO;
+                break;
         }
         requestState = null;
     };
@@ -236,6 +245,20 @@ window.TQ = window.TQ || {};
         }
     };
 
+    FrameCounter.pause = function () {
+        if ((requestState === STATE_GO) ||
+            (state === STATE_GO)) {
+            requestState = STATE_PAUSE;
+        }
+    };
+
+    FrameCounter.resume = function () {
+        if ((requestState === STATE_PAUSE) ||
+            (state === STATE_PAUSE)) {
+            requestState = STATE_RESUME;
+        }
+    };
+
     FrameCounter.autoRewind = function () {
         autoRewind = !autoRewind;
     };
@@ -250,7 +273,8 @@ window.TQ = window.TQ || {};
     };
 
     FrameCounter.isInverse = function () { return step < 0;};
-    FrameCounter.isPlaying = function () { return (state == STATE_GO); };
+    FrameCounter.isPlaying = function () { return ((state === STATE_GO) || (state === STATE_PAUSE)); };
+    FrameCounter.isPaused = function () {return (FrameCounter.isPlaying() && (state === STATE_PAUSE));};
     FrameCounter.isRecording = function () {return _isRecording;};
     FrameCounter.isRequestedToStop = function () { return (requestState == STATE_STOP); };
     FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= vMax)); };
