@@ -199,7 +199,7 @@ TQ.AnimationManager = (function () {
         }
         var endAngle = ele.getRotation(),
             startAngle = endAngle - 360,
-            sag = composeFlyInSag(SagType.ROTATE, startAngle, endAngle);
+            sag = composeIdleSag(SagType.ROTATE, startAngle, endAngle);
                 return recordSag(sag);
     }
 
@@ -466,7 +466,15 @@ TQ.AnimationManager = (function () {
     }
 
     // private functions:
+    function composeIdleSag(typeId, startPos, destinationPos) {
+        return composeSag(SagCategory.IDLE, typeId, startPos, destinationPos);
+    }
+
     function composeFlyInSag(typeId, startPos, destinationPos) {
+        return composeSag(SagCategory.IN, typeId, startPos, destinationPos);
+    }
+
+    function composeSag(categoryID, typeId, startPos, destinationPos) {
         var speed = getSpeed(typeId),
             delay = TQ.FrameCounter.gridSnap(getTDelay().t),// seconds
             duration = TQ.FrameCounter.gridSnap((getTDuration().gt - getTDelay().gt)), // seconds
@@ -487,7 +495,7 @@ TQ.AnimationManager = (function () {
             duration: duration,
             /// for editor only end
             destinationPos: destinationPos, // exactly stop at this point
-            categoryID: SagCategory.IN,
+            categoryID: categoryID,
             typeID: typeId,
             speed: speed.normSpeed, //1-5 规范化的速度
             actualSpeed: velocity,

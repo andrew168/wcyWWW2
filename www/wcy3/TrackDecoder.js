@@ -141,9 +141,9 @@ window.TQ = window.TQ || {};
                             floorSag.t1 = item.t1;
                             floorSag.t = item.t2;
                             floorSag.sag = item;
-                        }
                     }
             }
+        }
         }
         return floorSag;
     }
@@ -158,6 +158,12 @@ window.TQ = window.TQ || {};
                 t = sag.t2;
             } else {
                 t = sag.t1;
+            }
+        } else {
+            if ((sag.categoryID === TQ.AnimationManager.SagCategory.IDLE) && (t > sag.t2)) {
+                var T = sag.t2 - sag.t1;
+                var nTimes = Math.floor((t-sag.t1) / T);
+                t = t - nTimes * T;
             }
         }
 
