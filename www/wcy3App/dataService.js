@@ -135,6 +135,10 @@
         }
 
         function onMatChanged(event) {
+            if (!TQ.userProfile.loggedIn) {
+                return;
+            }
+
             var matType = null;
             if (!!event && event.data && event.data.matType) {
                 matType = event.data.matType;
