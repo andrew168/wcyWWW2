@@ -66,7 +66,7 @@ var TQ = TQ || {};
         started = true;
         currentOps = trsaOps;
         attachOps(currentOps);
-        TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
+        TQ.Assert.isTrue(!!TQ.SceneEditor.stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.addEventListener('touch', TQ.Trsa3.onTouchStage);
     }
 
@@ -109,7 +109,7 @@ var TQ = TQ || {};
             detachOps(currentOps);
         }
 
-        TQ.Assert.isTrue(!!stage, "Stage 没有初始化！");
+        TQ.Assert.isTrue(!!TQ.SceneEditor.stage, "Stage 没有初始化！");
         TQ.SceneEditor.stage.removeEventListener('touch', TQ.Trsa3.onTouchStage);
     }
 

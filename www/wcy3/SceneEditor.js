@@ -49,11 +49,12 @@ var currScene = null;
         //ToDo:AZ
         // addHammer(canvas);
         // create a new stage and point it at our canvas:
-        SceneEditor.stage = stage = new createjs.Stage(canvas);
+        stage = new createjs.Stage(canvas);
         SceneEditor.stageContainer = stageContainer = new createjs.Container();
         _auxContainer = new createjs.Container();
         stage.addChild(stageContainer);
         stage.addChild(_auxContainer); // aux层，总是在上，存放BBox， marker等
+        SceneEditor.stage = stage;
     }
 
     SceneEditor.cleanStage = function() {
@@ -229,7 +230,6 @@ var currScene = null;
         return (SceneEditor.getMode() == TQBase.LevelState.RUNNING);
     };
 
-    SceneEditor.stage = stage;
     SceneEditor.stageContainer = stageContainer;
     TQ.SceneEditor = SceneEditor;
 
