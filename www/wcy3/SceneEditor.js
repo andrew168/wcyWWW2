@@ -269,6 +269,9 @@ var currScene = null;
         }
 
         editorOn = true;
+        if (!TQ.SceneEditor.stage) {
+            createStage();
+        }
         TQ.CommandMgr.initialize();
         TQ.InputCtrl.initialize(stageContainer);
         TQ.MoveCtrl.initialize(stageContainer);
