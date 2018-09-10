@@ -61,8 +61,8 @@ TQ.SpringEffect = (function () {
     }
 
     function getDampingT0(sag) {
-        var dampingDuration = (sag) ? (sag.dampingDuration || defaultConfig.dampingDuration)
-            : defaultConfig.dampingDuration;
+        var dampingDuration = (!sag || sag.dampingDuration===undefined)? defaultConfig.dampingDuration:
+            sag.dampingDuration;
 
         return sag.t2 - dampingDuration;
     }
