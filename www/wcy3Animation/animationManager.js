@@ -146,23 +146,7 @@ TQ.AnimationManager = (function () {
             }
         }
 
-        var num = 0;
-        num += checkSag(ele, SagType.LEFT_IN);
-        num += checkSag(ele, SagType.LEFT_OUT);
-        num += checkSag(ele, SagType.RIGHT_IN);
-        num += checkSag(ele, SagType.RIGHT_OUT);
-        num += checkSag(ele, SagType.TOP_IN);
-        num += checkSag(ele, SagType.TOP_OUT);
-        num += checkSag(ele, SagType.BOTTOM_IN);
-        num += checkSag(ele, SagType.BOTTOM_OUT);
-        num += checkSag(ele, SagType.SCALE_IN);
-        num += checkSag(ele, SagType.SCALE_OUT);
-        num += checkSag(ele, SagType.ROTATE);
-        num += checkSag(ele, SagType.FADE_IN);
-        num += checkSag(ele, SagType.FADE_OUT);
-        num += checkSag(ele, SagType.TWINKLE);
-        state.hasSag = (num > 0);
-
+        state.hasSag = !!ele.getSags();
         var existSag = getCurrentTypeSag(ele);
         if (existSag && (instance.categoryId === existSag.categoryID)) {
                 instance.tDuration = existSag.duration;
@@ -617,69 +601,6 @@ TQ.AnimationManager = (function () {
         }
 
         return {normSpeed: norm, actualSpeed: actual};
-    }
-
-    function type2fn(typeId) {
-        switch (typeId) {
-            case SagType.FADE_IN:
-                return 'fadeIn';
-
-            case SagType.FADE_OUT:
-                return 'fadeOut';
-
-            case SagType.SCALE_IN:
-                return 'scaleOut';
-
-            case SagType.SCALE_OUT:
-                return 'scaleIn';
-
-            case SagType.ROTATE:
-                return 'rotate';
-
-            case SagType.LEFT_IN:
-                return 'leftIn';
-
-            case SagType.LEFT_OUT:
-                return 'leftOut';
-
-            case SagType.RIGHT_IN:
-                return 'rightIn';
-
-            case SagType.RIGHT_OUT:
-                return 'rightOut';
-
-            case SagType.TOP_IN:
-                return 'topIn';
-
-            case SagType.TOP_OUT:
-                return 'topOut';
-
-            case SagType.BOTTOM_IN:
-                return 'bottomIn';
-
-            case SagType.BOTTOM_OUT:
-                return 'bottomOut';
-
-            case SagType.TWINKLE:
-                return 'twinkle';
-
-            default:
-                TQ.AssertExt.invalidLogic(false, "unknown case");
-                break;
-        }
-    }
-
-    function checkSag(ele, type) {
-        if (type !== SagType.NO) {
-            var sag = getSag(ele, type),
-                fn = type2fn(type);
-            speeds[fn] = (sag) ? sag.speed : 2.5;
-            if (sag) {
-                return 1;
-            }
-        }
-
-        return 0;
     }
 
     function removeAllSags() {
