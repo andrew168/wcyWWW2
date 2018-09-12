@@ -132,10 +132,11 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
                 TQ.Log.error("出错：无法保存文件: " + fileName + JSON.stringify(e));
             });
     }
-    function getWcy(shareString) {
+
+    function _getWcy(shareString) {
         if (TQ.userProfile.loggedIn && needToSave()) {
             return save().then(function () {
-                getWcy(shareString);
+                _getWcy(shareString);
             });
         }
 
@@ -192,6 +193,19 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
 
     function getWcyById(wcyId) { // 通过作品栏目调入到编辑器中
         return getWcy(wcyId2ShareCode(wcyId), false);
+    }
+
+    function getWcy(shareString) {
+        TQ.State.isTopicIntro = false;
+        TQ.State.topicId = -1;
+        _getWcy(shareString);
+    }
+
+    function getTopicIntro(topic) {
+        TQ.State.currentTopic = topic;
+        TQ.State.isTopicIntro = true;
+        TQ.State.topicId = topic.topicId;
+        return _getWcy(wcyId2ShareCode(topic.introductionId), false);
     }
 
     function getShareCode() {
@@ -520,6 +534,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         getWcy: getWcy,
         preloadWcy: preloadWcy,
         getWcyById: getWcyById,
+        getTopicIntro: getTopicIntro,
         getShareCode: getShareCode,
         getScreenshotUrl: getScreenshotUrl,
         hasSsPath: hasSsPath,
