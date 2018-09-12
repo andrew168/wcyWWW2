@@ -33,6 +33,8 @@ TQ.AnimationManager = (function () {
             SCALE_IN: 'sag scale in',
             SCALE_OUT: 'sag scale out',
 
+            // idle
+            FLOAT_X: 'sag float x',
             ROTATE: 'sag rotate',
             TWINKLE: 'sag twinkle',
 
@@ -67,6 +69,7 @@ TQ.AnimationManager = (function () {
             leftOut: 2.5,
             rightIn: 2.5,
             rightOut: 2.5,
+            floatX: 2.5,
             topIn: 2.5,
             topOut: 2.5,
             bottomIn: 2.5,
@@ -118,6 +121,7 @@ TQ.AnimationManager = (function () {
             scaleOut: scaleOut,
             fadeIn: fadeIn,
             fadeOut: fadeOut,
+            floatX: floatX,
 
             leftIn: leftIn,
             rightIn: rightIn,
@@ -255,6 +259,7 @@ TQ.AnimationManager = (function () {
             case SagType.TOP_IN:
             case SagType.FADE_IN:
             case SagType.SCALE_IN:
+            case SagType.FLOAT_X:
                 t1 = sag.t1;
                 t2 = sag.t2;
                 break;
@@ -301,6 +306,27 @@ TQ.AnimationManager = (function () {
         var posInWorld = ele.getPositionInWorld(),
             startPos = TQ.Graphics.getCanvasWidth() + ele.getBBoxRadiusInWorld(),
             sag = composeFlyInSag(SagType.RIGHT_IN, startPos, posInWorld.x);
+        return recordSag(sag);
+    }
+
+    function floatX() {
+        var ele = TQ.SelectSet.peekLatestEditableEle();
+        if (!ele) {
+            return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
+        }
+
+        TQ.Log.debugInfo("float x");
+        var MARGIN = 10,
+            posInWorld = ele.getPositionInWorld(),
+            halfWidth = ele.getBBoxRadiusInWorld()/2,
+            startPos = posInWorld.x,
+            fakeEndPos = startPos + TQ.Graphics.getCanvasWidth(),
+            extraData = {
+                xMin: 0 - halfWidth - MARGIN,
+                xMax: TQ.Graphics.getCanvasWidth() + halfWidth + MARGIN
+            },
+
+            sag = composeIdleSag(SagType.FLOAT_X, startPos, fakeEndPos, extraData);
         return recordSag(sag);
     }
 
@@ -450,15 +476,15 @@ TQ.AnimationManager = (function () {
     }
 
     // private functions:
-    function composeIdleSag(typeId, startPos, destinationPos) {
-        return composeSag(SagCategory.IDLE, typeId, startPos, destinationPos);
+    function composeIdleSag(typeId, startPos, destinationPos, extraData) {
+        return composeSag(SagCategory.IDLE, typeId, startPos, destinationPos, extraData);
     }
 
     function composeFlyInSag(typeId, startPos, destinationPos) {
         return composeSag(SagCategory.IN, typeId, startPos, destinationPos);
     }
 
-    function composeSag(categoryID, typeId, startPos, destinationPos) {
+    function composeSag(categoryID, typeId, startPos, destinationPos, extraData) {
         var speed = getSpeed(typeId),
             delay = TQ.FrameCounter.gridSnap(getTDelay().t),// seconds
             duration = TQ.FrameCounter.gridSnap((getTDuration().gt - getTDelay().gt)), // seconds
@@ -477,6 +503,7 @@ TQ.AnimationManager = (function () {
             /// for editor only begin
             delay: delay,
             duration: duration,
+            extraData: extraData,
             /// for editor only end
             destinationPos: destinationPos, // exactly stop at this point
             categoryID: categoryID,
@@ -593,6 +620,11 @@ TQ.AnimationManager = (function () {
             case SagType.TWINKLE:
                 norm = speeds.twinkle;
                 actual = norm * speedFactor.twinkle;
+                break;
+
+            case SagType.FLOAT_X:
+                norm = speeds.floatX;
+                actual = norm * speedFactor.floatX;
                 break;
 
             default:

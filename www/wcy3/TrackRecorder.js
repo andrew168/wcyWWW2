@@ -119,6 +119,7 @@ window.TQ = window.TQ || {};
             case SagType.LEFT_OUT:
             case SagType.RIGHT_IN:
             case SagType.RIGHT_OUT:
+            case SagType.FLOAT_X:
                 recordOneSag(track.x, sag);
                 break;
 
@@ -184,6 +185,7 @@ window.TQ = window.TQ || {};
             case SagType.LEFT_OUT:
             case SagType.RIGHT_IN:
             case SagType.RIGHT_OUT:
+            case SagType.FLOAT_X:
                 track.x.removeOneSag(SagCategoryID, sagTypeId);
                 break;
 
@@ -226,6 +228,7 @@ window.TQ = window.TQ || {};
             case SagType.LEFT_OUT:
             case SagType.RIGHT_IN:
             case SagType.RIGHT_OUT:
+            case SagType.FLOAT_X:
                 return getOneSag(track.x, sagTypeId);
 
             case SagType.TOP_IN:

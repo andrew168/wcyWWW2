@@ -149,24 +149,22 @@ window.TQ = window.TQ || {};
     }
 
     function calSag(sag, channel, t) {
-        if (sag.typeID === TQ.AnimationManager.SagType.TWINKLE) {
-            return calVisible(sag, channel, t);
-        }
-
         if (!TQ.FrameCounter.isPlaying()) { //编辑状态下， InSag显示其结果，idle和OutSag都显示其开始
             if (sag.categoryID === TQ.AnimationManager.SagCategory.IN) {
                 t = sag.t2;
             } else {
                 t = sag.t1;
             }
-        } else {
-            if ((sag.categoryID === TQ.AnimationManager.SagCategory.IDLE) && (t > sag.t2)) {
-                var T = sag.t2 - sag.t1;
-                var nTimes = Math.floor((t-sag.t1) / T);
-                t = t - nTimes * T;
-            }
         }
 
+        if (sag.categoryID === TQ.AnimationManager.SagCategory.IDLE) {
+            return calIdleSag(sag, channel, t)
+        }
+
+        return calDumpSag(sag, channel, t);
+    }
+
+    function calDumpSag(sag, channel, t) {
         // 通用于各个SAG， x,y,z,   scale, rotation, alpha, etc
         var dampingT0 = TQ.SpringEffect.getDampingT0(sag),
             deltaY = 0;
@@ -189,6 +187,46 @@ window.TQ = window.TQ || {};
             return 0;
         }
         return 1;
+    }
+
+    function calIdleSag(sag, channel, t) {
+        if (sag.typeID === TQ.AnimationManager.SagType.TWINKLE) {
+            return calVisible(sag, channel, t);
+        }
+        if (sag.typeID === TQ.AnimationManager.SagType.FLOAT_X) {
+            return calFloatX(sag, channel, t);
+        }
+        if (sag.typeID === TQ.AnimationManager.SagType.ROTATE) {
+            return calRotate(sag, channel, t);
+        }
+        return calDumpSag(sag, channel, t);
+    }
+
+    function calFloatX(sag, channel, t) {
+        // 公式
+        //    fx = (x0 + v*t)
+        //    dl = xMax - xMin;
+        //    fx2 = fx - Math.floor((fx - xMin) / dl) * dl;
+        //
+
+        var fx = sag.value0 + (t - sag.t1) * sag.actualSpeed,
+            xMin = sag.extraData.xMin,
+            dl = sag.extraData.xMax - xMin;
+
+        return fx - Math.floor((fx - xMin) / dl) * dl;
+    }
+
+    function calRotate(sag, channel, t) {
+        // 公式
+        //    fx = (x0 + v*t)
+        //    dl = 360;
+        //    fx2 = fx - Math.floor(fx / dl) * dl;
+        //
+
+        var fx = sag.value0 + (t - sag.t1) * sag.actualSpeed,
+            dl = 360;
+
+        return fx - Math.floor(fx / dl) * dl;
     }
 
     function calTrack(channel, t)
