@@ -206,7 +206,7 @@ TQ = TQ || {};
 
     p.updateT0 = function () {
         var t = 0;
-        for (var i = 0; i < this.levels.length; i++) {
+        for (var i = 0; i < this.levelNum(); i++) {
             this.levels[i].setT0(t);
             t += this.levels[i].getTime();
         }
@@ -422,7 +422,7 @@ TQ = TQ || {};
     };
 
     p.hasAnimation = function () {
-        return ((this.levels.length === 1) && this.levels[0].hasAnimation());
+        return ((this.levelNum() === 1) && this.levels[0].hasAnimation());
     };
 
     p.gotoLevel = function (id) {
@@ -549,7 +549,7 @@ TQ = TQ || {};
     };
 
     p.getLevel = function (id) {
-        if (id < this.levels.length) {
+        if (id < this.levelNum()) {
             return this.levels[id];
         }
         return null;
@@ -1024,14 +1024,14 @@ TQ = TQ || {};
             }
         }
 
-        if (_levelTe.length > this.levels.length ) {
-            _levelTe.splice(this.levels.length);
-            _levelTs.splice(this.levels.length);
+        if (_levelTe.length > this.levelNum() ) {
+            _levelTe.splice(this.levelNum());
+            _levelTs.splice(this.levelNum());
         }
 
         var _allResourceReady = true,
             _allDataReady = true;
-        for (i = 0; i < this.levels.length; i++) {
+        for (i = 0; i < this.levelNum(); i++) {
             level = this.levels[i];
             if (!level.resourceReady) {
                 _allResourceReady = false;
