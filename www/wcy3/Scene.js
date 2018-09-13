@@ -207,8 +207,9 @@ TQ = TQ || {};
     p.updateT0 = function () {
         var t = 0;
         for (var i = 0; i < this.levelNum(); i++) {
-            this.levels[i].setT0(t);
-            t += this.levels[i].getTime();
+            var level = this.getLevel(i);
+            level.setT0(t);
+            t += level.getTime();
         }
     };
 
@@ -391,7 +392,7 @@ TQ = TQ || {};
 
     p.isEmpty = function () {
         for (var i =0;  i< this.levelNum(); i++) {
-            if (!this.levels[i].isEmpty()) {
+            if (!this.getLevel(i).isEmpty()) {
                 return false;
             }
         }
@@ -422,7 +423,7 @@ TQ = TQ || {};
     };
 
     p.hasAnimation = function () {
-        return ((this.levelNum() === 1) && this.levels[0].hasAnimation());
+        return ((this.levelNum() === 1) && this.getLevel(0).hasAnimation());
     };
 
     p.gotoLevel = function (id) {
@@ -430,7 +431,7 @@ TQ = TQ || {};
         id = (id >= this.levelNum()) ? (this.levelNum() - 1) : id;
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
-            var level = self.levels[id];
+            var level = self.getLevel(id);
             if (level.resourceReady) {
                 self.doTransition(id);
             } else {
@@ -644,7 +645,7 @@ TQ = TQ || {};
      复制序号为srcId的场景的内容，并插入到序号dstId的场景之前，
      */
     p.copyTo = function (srcId, dstId) {
-        var srcLevel = this.levels[srcId],
+        var srcLevel = this.getLevel(srcId),
             jsonData,
             newLevel;
         srcLevel.prepareForJSONOut();
@@ -669,6 +670,7 @@ TQ = TQ || {};
     // !!! can not recover, be careful!
     // empty the current scene
     p.empty = function () {
+        var level;
         if (!this.isEmpty()) {
             this.stop();
             this.close(true);  // discard
@@ -676,8 +678,8 @@ TQ = TQ || {};
                 var levelID = this.levelNum() - 1;
                 this.deleteLevel(levelID);
             }
-            if (this.levels[0]) {
-                this.levels[0].empty();
+            if (level = this.getLevel(0)) {
+                level.empty();
             }
             this.selectLevel(0);
             this.currentLevel.state = TQBase.LevelState.INITING;
@@ -802,7 +804,7 @@ TQ = TQ || {};
                 //start preloader
                 var levelToPreload = 0;
                 // 设置each Level的resourceReady标志, and start show
-                var level3 = (levelToPreload === num) ? pt.overlay : pt.levels[levelToPreload];
+                var level3 = (levelToPreload === num) ? pt.overlay : pt.getLevel(levelToPreload);
                 TQ.RM.onCompleteOnce(makeOnLevelLoaded(level3, levelToPreload));
                 pt.startPreloader(level3);
                 function makeOnLevelLoaded(level, levelToPreload) {
@@ -813,7 +815,7 @@ TQ = TQ || {};
                         setTimeout(function () {
                             levelToPreload++;
                             if (levelToPreload <= num) {
-                                var level2 = (levelToPreload === num) ? pt.overlay : pt.levels[levelToPreload];
+                                var level2 = (levelToPreload === num) ? pt.overlay : pt.getLevel(levelToPreload);
                                 TQ.RM.onCompleteOnce(makeOnLevelLoaded(level2, levelToPreload));
                                 pt.startPreloader(level2);
                             }
@@ -868,32 +870,9 @@ TQ = TQ || {};
         }
     };
 
-    p.save_TBD_by_WCY_save = function (title, keywords) {
-        // 必须预处理， 切断反向的link，以避免出现Circle，无法生成JSON字串
-        this.stop();
-        this.currentLevel.exit();  // 先退出, 保存之后, 再次进入
-        var bak_currentLevel = this.currentLevel;
-        var bak_overlay = this.overlay;
-        this.currentLevel = null;
-        this.overlay = null;
-        for (var i = 0; i < this.levelNum(); i++) {
-            this.levels[i].prepareForJSONOut();
-        }
-        this.title = title;
-        TQ.MessageBubble.counter = 0;
-        netSave(this.title, this, keywords);
-        TQ.ScreenShot.SaveScreen(this.title, keywords);
-
-        this.currentLevel = bak_currentLevel;
-        this.overlay = bak_overlay;
-        this.afterToJSON();
-        this.showLevel();
-        this.isSaved = true;
-    };
-
     p.afterToJSON = function () {
         for (var i = 0; i < this.levelNum(); i++) {
-            this.levels[i].afterToJSON();
+            this.getLevel(i).afterToJSON();
         }
     };
 
@@ -912,7 +891,7 @@ TQ = TQ || {};
     p.getData = function () {
         TQ.AssertExt.invalidLogic(allDataReady, '有level没有完全加载和build，不能调用');
         for (var i = 0; i < this.levelNum(); i++) {
-            this.levels[i].prepareForJSONOut();
+            this.getLevel(i).prepareForJSONOut();
         }
         this.updateShareData();
         var data = JSON.stringify(this);
@@ -926,7 +905,7 @@ TQ = TQ || {};
     };
 
     p.updateShareData = function() {
-        var level1 = (this.levelNum() > 0) ? this.levels[0] : null;
+        var level1 = (this.levelNum() > 0) ? this.getLevel(0) : null;
         if (level1) {
             this.title = this.title || level1.getText(0);
             this.description = this.description || level1.getText(1);
@@ -947,7 +926,7 @@ TQ = TQ || {};
                 this.currentLevel = null;
             }
             this.levels.splice(1, this.levelNum()-1);  // 释放原来的数据
-            this.currentLevel = this.levels[0];
+            this.currentLevel = this.getLevel(0);
             this.currentLevelId = 0;
             this.currentLevel.empty();
             this.onsceneload = null;
@@ -1032,7 +1011,7 @@ TQ = TQ || {};
         var _allResourceReady = true,
             _allDataReady = true;
         for (i = 0; i < this.levelNum(); i++) {
-            level = this.levels[i];
+            level = this.getLevel(i);
             if (!level.resourceReady) {
                 _allResourceReady = false;
                 _allDataReady = false;
