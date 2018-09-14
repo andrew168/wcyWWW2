@@ -21,6 +21,7 @@ TQ = TQ || {};
             joint: null
         },
         latestElement = null,
+        lastSolidElement = null, // 非null的， 可编辑的 element， 不是marker
         selectedMarkers = []; // 选中的dec元素的集合(转轴点和夹点都是marker)(一个物体上只能选中一个)
 
     SelectSet.SELECTION_NEW_EVENT = "selected new element";
@@ -38,6 +39,7 @@ TQ = TQ || {};
         state.multiCmdStarted = false;
         state.cmd = null;
         latestElement = null;
+        lastSolidElement = null;
         btnEffect.group = null;
         btnEffect.joint = null;
         TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function() {
@@ -105,6 +107,9 @@ TQ = TQ || {};
 
         TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_NEW_EVENT, {element: element});
         latestElement = element;
+        if (element && !element.isMarker()) {
+            lastSolidElement = element;
+        }
     };
 
     /*
@@ -434,6 +439,10 @@ TQ = TQ || {};
             ele = ele.host;
         }
         return ele;
+    };
+
+    SelectSet.getLastSolidElement = function () {
+        return lastSolidElement;
     };
 
     SelectSet.updateByGesture = function(evt) {
