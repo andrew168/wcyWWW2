@@ -496,4 +496,8 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     $scope.detachTopic = function () {
         EditorService.detachTopic(30, "29", 7);
     };
+
+    $scope.getOutro = function () {
+        currScene.attachOutro(currScene.levels);
+    }
 }

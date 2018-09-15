@@ -209,7 +209,7 @@
                 <button class="button button-positive" ng-click="attachTopic()">关联素材到主题</button>
                 <button class="button button-positive" ng-click="detachTopic()">取消关联素材到主题</button>
                 <button class="button button-positive" ng-click="EditorService.toAddMode()">编辑</button>
-                <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="EditorService.replay()">重播</button>
+                <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="getOutro(); EditorService.replay()">重播</button>
                 <button class="button button-positive" ng-click="EditorService.preview()">预览</button>
                 <button class="button button-positive" ng-click="EditorService.previewCurrentLevel($event)" ng-show="false">预览本节</button>
                 <button class="button button-positive" ng-click="EditorService.stop($event)" ng-show="false">stop</button>

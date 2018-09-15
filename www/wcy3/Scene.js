@@ -255,8 +255,8 @@ TQ = TQ || {};
 
     p.showLevel = function () {
         TQ.MessageBox.reset();
-        assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNum()); //level ID 超界
-        this.currentLevelId = (this.currentLevelId < this.levelNum()) ? this.currentLevelId : 0;
+        assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNumWithOutro()); //level ID 超界
+        this.currentLevelId = (this.currentLevelId < this.levelNumWithOutro()) ? this.currentLevelId : 0;
         TQ.Log.checkPoint("entering level " + this.currentLevelId);
         TQ.FrameCounter.gotoBeginning();
         this.selectLevel(this.currentLevelId);
@@ -416,7 +416,7 @@ TQ = TQ || {};
     };
 
     p.isLastLevel = function () {
-        return ((this.currentLevelId + 1) >= this.levelNum());
+        return ((this.currentLevelId + 1) >= this.levelNumWithOutro());
     };
 
     p.hasMusicCompleted = function () {
@@ -429,7 +429,7 @@ TQ = TQ || {};
 
     p.gotoLevel = function (id) {
         this.isDirty = true;
-        id = (id >= this.levelNum()) ? (this.levelNum() - 1) : id;
+        id = (id >= this.levelNumWithOutro()) ? (this.levelNumWithOutro() - 1) : id;
         id = (id < 0) ? 0 : id;
         if (this.currentLevel != null) {
             var level = self.getLevel(id);
@@ -553,6 +553,11 @@ TQ = TQ || {};
     p.getLevel = function (id) {
         if (id < this.levelNum()) {
             return this.levels[id];
+        } else {
+            id = id - this.levelNum();
+            if (id < this.outroLevelNum()) {
+                return this.outro[id];
+            }
         }
         return null;
     };
@@ -582,6 +587,14 @@ TQ = TQ || {};
 
     p.levelNum = function () {
         return this.levels.length;
+    };
+
+    p.levelNumWithOutro = function () {
+        return this.levelNum() + this.outroLevelNum();
+    };
+
+    p.outroLevelNum = function () {
+        return (!this.outro) ? 0: this.outro.length;
     };
 
     /*
@@ -907,8 +920,7 @@ TQ = TQ || {};
 
         return compress(data, this.ssPath);
     };
-
-    p.attachOutro = function (outro) {
+    p.attachOutro = function(outro) {
         this.outro = outro;
     };
 
@@ -1003,6 +1015,7 @@ TQ = TQ || {};
             ts = 0,
             te = 0,
             tGlobalLastFrame = 0,
+            numOfLevel = (TQ.FrameCounter.isPlaying() ? this.levelNumWithOutro(): this.levelNum()),
             level = null;
 
         if (TQ.FrameCounter.isRecording) {
@@ -1011,14 +1024,14 @@ TQ = TQ || {};
             }
         }
 
-        if (_levelTe.length > this.levelNum() ) {
-            _levelTe.splice(this.levelNum());
-            _levelTs.splice(this.levelNum());
+        if (_levelTe.length > numOfLevel ) {
+            _levelTe.splice(numOfLevel);
+            _levelTs.splice(numOfLevel);
         }
 
         var _allResourceReady = true,
             _allDataReady = true;
-        for (i = 0; i < this.levelNum(); i++) {
+        for (i = 0; i < numOfLevel; i++) {
             level = this.getLevel(i);
             if (!level.resourceReady) {
                 _allResourceReady = false;
