@@ -803,7 +803,7 @@ TQ = TQ || {};
     p.fixedUpLevels = function (levels, objJson) {
         // create levels
         var desc = null;
-        var num = objJson.levels.length;
+        var num = (!objJson ||  !objJson.levels)? 0:  objJson.levels.length;
         for (var i = 0; i < num; i++) {
             desc = objJson.levels[i];
             if (desc.name === null) {
@@ -812,7 +812,7 @@ TQ = TQ || {};
             levels[i] = new TQ.Level(desc);
         }
 
-        if (num === 0) { // 纠错
+        if (num === 0 && this.levelNum() ===0) { // 纠错
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             desc = null;
             levels[0] = new TQ.Level(desc);
