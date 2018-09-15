@@ -797,6 +797,10 @@ TQ = TQ || {};
             this.title = this.filename;
         }
 
+        this.fixedUpLevels(this.levels, objJson);
+    };
+
+    p.fixedUpLevels = function (levels, objJson) {
         // create levels
         var desc = null;
         var num = objJson.levels.length;
@@ -805,49 +809,55 @@ TQ = TQ || {};
             if (desc.name === null) {
                 desc.name = "level-" + i.toString();
             }
-            this.levels[i] = new TQ.Level(desc);
+            levels[i] = new TQ.Level(desc);
         }
 
         if (num === 0) { // 纠错
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             desc = null;
-            this.levels[0] = new TQ.Level(desc);
+            levels[0] = new TQ.Level(desc);
         }
 
-        (function (pt) {
-                //start preloader
-                var levelToPreload = 0;
-                // 设置each Level的resourceReady标志, and start show
-                var level3 = (levelToPreload === num) ? pt.overlay : pt.getLevel(levelToPreload);
-                TQ.RM.onCompleteOnce(makeOnLevelLoaded(level3, levelToPreload));
-                pt.startPreloader(level3);
-                function makeOnLevelLoaded(level, levelToPreload) {
-                    return function () {
-                        level.resourceReady = true;
-                        TQ.Log.checkPoint("level asset loaded: " + level.name);
-                        pt.isDirty = true;
-                        setTimeout(function () {
-                            levelToPreload++;
-                            if (levelToPreload <= num) {
-                                var level2 = (levelToPreload === num) ? pt.overlay : pt.getLevel(levelToPreload);
-                                TQ.RM.onCompleteOnce(makeOnLevelLoaded(level2, levelToPreload));
-                                pt.startPreloader(level2);
-                            }
-                        });
+        this.preload(objJson);
+    };
 
-                        if (levelToPreload === 0) {
-                            if ((pt.onsceneload != undefined) && (pt.onsceneload != null)) {
-                                pt.onsceneload();
-                            }
-                        } else {
-                            if (level.onResourceReady) {
-                                level.onResourceReady();
-                            }
-                        }
+    p.preload = function () {
+        //start preloader
+        var self = this,
+            num = this.levelNum(),
+            levelToPreload = 0;
+
+        // 设置each Level的resourceReady标志, and start show
+        var level3 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
+        TQ.RM.onCompleteOnce(makeOnLevelLoaded(level3, levelToPreload));
+        self.startPreloader(level3);
+
+        function makeOnLevelLoaded(level, levelToPreload) {
+            return function () {
+                level.resourceReady = true;
+                TQ.Log.checkPoint("level asset loaded: " + level.name);
+                self.isDirty = true;
+                setTimeout(function () {
+                    levelToPreload++;
+                    if (levelToPreload <= num) {
+                        var level2 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
+                        TQ.RM.onCompleteOnce(makeOnLevelLoaded(level2, levelToPreload));
+                        self.startPreloader(level2);
+                    }
+                });
+
+                if (levelToPreload === 0) {
+                    if ((self.onsceneload !== undefined) && (self.onsceneload != null)) {
+                        self.onsceneload();
+                    }
+                } else {
+                    if (level.onResourceReady) {
+                        level.onResourceReady();
                     }
                 }
-            })
-        (this);
+            }
+        }
+
         displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
     };
 
