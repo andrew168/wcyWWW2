@@ -6,6 +6,7 @@ TQ = TQ || {};
     function Scene() {
         self = this;
         this.levels = [];
+        this.outro = null;
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
         this.version = Scene.VER_LATEST;
         this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
@@ -885,6 +886,9 @@ TQ = TQ || {};
         delete(scene2.onsceneload);
         delete(scene2.isPlayOnly);
         delete(scene2.state);
+        if (scene2.outro !== undefined) {
+            delete(scene2.outro);
+        }
         return scene2;
     };
 
@@ -902,6 +906,10 @@ TQ = TQ || {};
         }
 
         return compress(data, this.ssPath);
+    };
+
+    p.attachOutro = function (outro) {
+        this.outro = outro;
     };
 
     p.updateShareData = function() {
