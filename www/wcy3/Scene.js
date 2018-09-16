@@ -515,6 +515,10 @@ TQ = TQ || {};
         this.isDirty = true;
         this.hasSavedToCache = false;
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
+        this.outroInitialized = false;
+        this.outro = null;
+        this.topic = null;
+        this.topicId = null;
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
@@ -937,8 +941,22 @@ TQ = TQ || {};
 
         return compress(data, this.ssPath);
     };
-    p.attachOutro = function(outro) {
-        this.outro = outro;
+
+    p.attachOutro = function(outroJson) {
+        this.outroInitialized = true;
+        var tempOutro = [];
+        this.fixedUpLevels(tempOutro, outroJson);
+        if (tempOutro.length > 0) {
+            this.outro = tempOutro;
+            this.preload();
+        }
+    };
+
+    p.getOutroId = function () {
+        if (this.topic && this.topic.outroId !== undefined) {
+            return this.topic.outroId;
+        }
+        return null;
     };
 
     p.updateShareData = function() {
@@ -1007,6 +1025,7 @@ TQ = TQ || {};
         var empty = {
             version: Scene.VER_LATEST,
             topicId: TQ.State.topicId,
+            topic: null, // 包括topicId, outroId
             "levels": [
                 {
                     "jsonElements": null,

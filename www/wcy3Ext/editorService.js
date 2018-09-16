@@ -207,9 +207,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function onSceneReady() {
+        var outroId;
         reset();
         TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
         onResize();
+        if (!currScene.outroInitialized && (outroId = currScene.getOutroId()) !== null) {
+            WCY.getOutro(outroId);
+        }
+
         if (!_sceneReady) { // 新建WCY， 不属于此
             TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
             _sceneReady = true;

@@ -148,8 +148,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
         // TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
         if (!preloadedWcyData && !isPreloadingWcy) {
-            $http.get(url)
-                .then(_onReceivedWcyData, _onFail);
+            getOpusFromServer(url, _onReceivedWcyData, _onFail);
         } else if (preloadedWcyData) {
             _onReceivedWcyData(preloadedWcyData);
             preloadedWcyData = null;
@@ -474,6 +473,16 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         TQ.MessageBox.prompt(TQ.Locale.getStr('hey, the network connection lost'));
     }
 
+    function getOpusFromServer(url, onSuccess, onFail) {
+        $http.get(url)
+            .then(onSuccess, onFail);
+    }
+
+    function getOutro(outroId) {
+        var url = TQ.Config.OPUS_HOST + '/wcy/' + wcyId2ShareCode(outroId);
+        getOpusFromServer(url, _onReceivedOutroData, _onReceivedOutroData);
+    }
+
     function _onReceivedWcyData(res) {
         TQ.MessageBox.reset();  // end of loading，no resource yet
         var data = res.data;
@@ -484,6 +493,16 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         TQ.WCY.authorID = data.authorID;
         if (!!data.data) {
             _openInJson(TQ.Scene.decompress(data.data));
+        }
+    }
+
+    function _onReceivedOutroData(res) {
+        var outroData = (!res || !res.data || !res.data.data) ? null: res.data.data;
+        if (outroData) {
+            outroData = TQ.Scene.decompress(outroData);
+            // upgrade
+            outroData = JSON.parse(outroData);
+            currScene.attachOutro(outroData);
         }
     }
 
@@ -532,6 +551,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         uploadScreenshot: uploadScreenshot,
         edit: edit,  // open for edit
         getWcy: getWcy,
+        getOutro: getOutro,
         preloadWcy: preloadWcy,
         getWcyById: getWcyById,
         getTopicIntro: getTopicIntro,
