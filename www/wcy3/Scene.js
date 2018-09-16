@@ -798,6 +798,7 @@ TQ = TQ || {};
         }
 
         this.fixedUpLevels(this.levels, objJson);
+        this.preload();
     };
 
     p.fixedUpLevels = function (levels, objJson) {
@@ -817,20 +818,24 @@ TQ = TQ || {};
             desc = null;
             levels[0] = new TQ.Level(desc);
         }
-
-        this.preload(objJson);
     };
 
     p.preload = function () {
         //start preloader
         var self = this,
-            num = this.levelNum(),
+            num = self.levelNumWithOutro(),
             levelToPreload = 0;
 
         // 设置each Level的resourceReady标志, and start show
-        var level3 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
-        TQ.RM.onCompleteOnce(makeOnLevelLoaded(level3, levelToPreload));
-        self.startPreloader(level3);
+        var level3;
+        for (; levelToPreload < num; levelToPreload++) {
+            level3 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
+            if (!level3.resourceReady) {
+                TQ.RM.onCompleteOnce(makeOnLevelLoaded(level3, levelToPreload));
+                self.startPreloader(level3);
+                break;
+            }
+        }
 
         function makeOnLevelLoaded(level, levelToPreload) {
             return function () {
@@ -839,10 +844,12 @@ TQ = TQ || {};
                 self.isDirty = true;
                 setTimeout(function () {
                     levelToPreload++;
-                    if (levelToPreload <= num) {
+                    for (; levelToPreload < num; levelToPreload++) {
                         var level2 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
-                        TQ.RM.onCompleteOnce(makeOnLevelLoaded(level2, levelToPreload));
-                        self.startPreloader(level2);
+                        if (!level2.resourceReady) {
+                            TQ.RM.onCompleteOnce(makeOnLevelLoaded(level2, levelToPreload));
+                            self.startPreloader(level2);
+                        }
                     }
                 });
 
