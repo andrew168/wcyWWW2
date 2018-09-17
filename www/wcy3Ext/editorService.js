@@ -724,14 +724,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function gotoLevel(id) {
         TQ.Log.debugInfo("gotoLevel " + id);
         if (state.isAddMode || state.isModifyMode) {
-            if (currScene && currScene.currentLevelId >= 0) {
+            if (currScene && currScene.currentLevelId >= 0 && !currScene.isOutro(currScene.currentLevelId)) {
                 TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
             }
 
             document.addEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
             function makeThumbnail() {
                 document.removeEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
-                if (!levelThumbs[currScene.currentLevelId]) {
+                if (!levelThumbs[currScene.currentLevelId] && !currScene.isOutro(currScene.currentLevelId)) {
                     TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
                     forceToRefreshUI();
                 }

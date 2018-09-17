@@ -420,6 +420,10 @@ TQ = TQ || {};
         return ((this.currentLevelId + 1) >= this.levelNumWithOutro());
     };
 
+    p.isOutro = function(levelId) {
+        return (levelId >= this.levelNum());
+    };
+
     p.hasMusicCompleted = function () {
         return (this.tMax < this.toGlobalTime(TQ.FrameCounter.t()));
     };
@@ -770,6 +774,8 @@ TQ = TQ || {};
 
         // copy non-object properties
         TQUtility.shadowCopyWithoutObject(this, objJson);
+        this.topic = objJson.topic;
+        objJson.topic = null;
         this.state = TQBase.LevelState.NOT_INIT;
         if (!objJson.version) {
             this.version = Scene.VER1;  // 升级旧版的作品， 添加其版本号
@@ -846,10 +852,17 @@ TQ = TQ || {};
         function makeOnLevelLoaded(level, levelToPreload) {
             return function () {
                 level.resourceReady = true;
+                if (self.isOutro(levelToPreload)) {
+                    level.updateState();
+                }
+
                 TQ.Log.checkPoint("level asset loaded: " + level.name);
                 self.isDirty = true;
                 setTimeout(function () {
                     levelToPreload++;
+                    if (self.isOutro(levelToPreload)) {
+                        level.updateState();
+                    }
                     for (; levelToPreload < num; levelToPreload++) {
                         var level2 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
                         if (!level2.resourceReady) {
