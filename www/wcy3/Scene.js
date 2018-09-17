@@ -1043,7 +1043,7 @@ TQ = TQ || {};
         var empty = {
             version: Scene.VER_LATEST,
             topicId: TQ.State.topicId,
-            topic: null, // 包括topicId, outroId
+            topic: TQ.State.topic, // 包括topicId, outroId
             "levels": [
                 {
                     "jsonElements": null,
