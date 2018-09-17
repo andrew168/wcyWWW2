@@ -201,10 +201,10 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     function getTopicIntro(topic) {
-        TQ.State.currentTopic = topic;
+        TQ.State.topic = topic;
         TQ.State.isTopicIntro = true;
         TQ.State.topicId = topic.topicId;
-        return _getWcy(wcyId2ShareCode(topic.introductionId), false);
+        return _getWcy(wcyId2ShareCode(topic.introId), false);
     }
 
     function getShareCode() {

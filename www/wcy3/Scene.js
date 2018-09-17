@@ -7,6 +7,7 @@ TQ = TQ || {};
         self = this;
         this.levels = [];
         this.outro = null;
+        this.topic = TQ.State.topic;
         this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
         this.version = Scene.VER_LATEST;
         this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
@@ -517,7 +518,7 @@ TQ = TQ || {};
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
         this.outroInitialized = false;
         this.outro = null;
-        this.topic = null;
+        this.topic = (TQ.State && TQ.State.topic)? TQ.State.topic : null;
         this.topicId = null;
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
@@ -707,6 +708,7 @@ TQ = TQ || {};
         }
         this.title = TQ.Config.UNNAMED_SCENE;
         this.state = TQBase.LevelState.INITING;
+        this.topic = TQ.State.topic;
         this.backgroundColor = TQ.Config.BACKGROUND_COLOR;
         this.isSaved = true; //ToDo: check it is false???
         this.isDirty = true;
@@ -922,6 +924,9 @@ TQ = TQ || {};
         delete(scene2.state);
         if (scene2.outro !== undefined) {
             delete(scene2.outro);
+        }
+        if (scene2.outroInitialized !== undefined) { // 不需要保存的临时状态， 放在一个变量里面
+            delete(scene2.outroInitialized);
         }
         return scene2;
     };
