@@ -143,7 +143,7 @@ TQ.AnimationManager = (function () {
     function reset(ele) {
         sagLatest = null;
         if (!ele) {
-            ele = TQ.SelectSet.peekLatestEditableEle();
+            ele = TQ.SelectSet.getLastSolidElement();
             if (!ele) {
                 state.hasSag = false;
                 return false;
@@ -181,7 +181,7 @@ TQ.AnimationManager = (function () {
 
     function rotate() {
         TQ.Log.debugInfo("rotate");
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -192,7 +192,7 @@ TQ.AnimationManager = (function () {
     }
 
     function twinkle() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -215,7 +215,7 @@ TQ.AnimationManager = (function () {
     }
 
     function recordSag(sagOrsags) {
-        var ele = TQ.SelectSet.peekLatestEditableEle(),
+        var ele = TQ.SelectSet.getLastSolidElement(),
             sags = (Array.isArray(sagOrsags) ? sagOrsags : [sagOrsags]),
             sagId;
 
@@ -284,7 +284,7 @@ TQ.AnimationManager = (function () {
     }
 
     function leftIn() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -297,7 +297,7 @@ TQ.AnimationManager = (function () {
     }
 
     function rightIn() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -310,7 +310,7 @@ TQ.AnimationManager = (function () {
     }
 
     function floatX() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -331,7 +331,7 @@ TQ.AnimationManager = (function () {
     }
 
     function bottomIn() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -344,7 +344,7 @@ TQ.AnimationManager = (function () {
     }
 
     function topIn() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -357,7 +357,7 @@ TQ.AnimationManager = (function () {
     }
 
     function leftOut() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -370,7 +370,7 @@ TQ.AnimationManager = (function () {
     }
 
     function rightOut() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -384,7 +384,7 @@ TQ.AnimationManager = (function () {
     }
 
     function bottomOut() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -397,7 +397,7 @@ TQ.AnimationManager = (function () {
     }
 
     function topOut() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -411,7 +411,7 @@ TQ.AnimationManager = (function () {
 
     function scaleIn() {
         TQ.Log.debugInfo("scale in");
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -426,7 +426,7 @@ TQ.AnimationManager = (function () {
     }
 
     function scaleOut() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -442,7 +442,7 @@ TQ.AnimationManager = (function () {
     }
 
     function fadeIn() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -455,7 +455,7 @@ TQ.AnimationManager = (function () {
     }
 
     function fadeOut() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
@@ -636,7 +636,7 @@ TQ.AnimationManager = (function () {
     }
 
     function removeAllSags() {
-        var ele = TQ.SelectSet.peekLatestEditableEle();
+        var ele = TQ.SelectSet.getLastSolidElement();
         if (!ele) {
             return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
         }
