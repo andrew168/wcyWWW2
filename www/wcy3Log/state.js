@@ -59,7 +59,7 @@ var TQ = TQ || {};
                 State.buttonHeight = Math.ceil(0.11 * Math.min(State.innerHeight, State.innerWidth));
             }
         } else {
-            if (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) {
+            if (State.isPlayOnly || State.isPlaying || State.isPreviewMode) {
 
             } else {
                 State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(topBarEle).height);
@@ -70,8 +70,8 @@ var TQ = TQ || {};
             }
         }
 
-        var topBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight,
-            bottomBarHeight = (TQ.WCY.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.bottomBarHeight,
+        var topBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight,
+            bottomBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.bottomBarHeight,
             h = State.innerHeight,
             w = State.innerWidth,
             designated;

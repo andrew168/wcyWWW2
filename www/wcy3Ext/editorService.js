@@ -297,15 +297,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     function updateControllers() { // 在login和fork之后， 都需要使用
-        if (!TQ.TouchManager.hasInitialized() && !TQ.WCY.isPlayOnly) {
+        if (!TQ.TouchManager.hasInitialized() && !TQ.State.isPlayOnly) {
             TQ.TouchManager.initialize();
         }
 
-        if (!TQ.TouchManager.hasStarted() && !TQ.WCY.isPlayOnly) {
+        if (!TQ.TouchManager.hasStarted() && !TQ.State.isPlayOnly) {
             TQ.TouchManager.start();
         }
 
-        if (TQ.TouchManager.hasStarted() && TQ.WCY.isPlayOnly) {
+        if (TQ.TouchManager.hasStarted() && TQ.State.isPlayOnly) {
             TQ.TouchManager.stop();
         }
 

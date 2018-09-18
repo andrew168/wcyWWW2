@@ -203,6 +203,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     function getTopicIntro(topic) {
         TQ.State.topic = topic;
         TQ.State.isTopicIntro = true;
+        TQ.State.isPlayOnly = true;
         TQ.State.topicId = topic.topicId;
         return _getWcy(wcyId2ShareCode(topic.introId), false);
     }
@@ -490,8 +491,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         TQ.MessageBox.reset();  // end of loading，no resource yet
         var data = res.data;
         parseCommonData(data);
-        TQ.WCY.isPlayOnly = data.isPlayOnly;
-        TQ.State.isPlayOnly = data.isPlayOnly;
+        TQ.State.isPlayOnly = (TQ.State.isTopicIntro? true: data.isPlayOnly);
         TQ.State.determineWorkingRegion();
         TQ.WCY.authorID = data.authorID;
         if (!!data.data) {
