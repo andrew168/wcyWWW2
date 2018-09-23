@@ -8,6 +8,7 @@ var TQ = TQ || {};
     }
 
     Trsa3.mCopy = mCopy;
+    Trsa3.ditherStart = ditherStart;
     Trsa3.onTouchStart = onTouchOrDragStart;
     Trsa3.onMouseDown = onMouseDown;
     Trsa3.onPinchAndRotate = onPinchAndRotate;
@@ -190,11 +191,17 @@ var TQ = TQ || {};
     }
 
     function onMouseDown(e) {
+        if (isDithering) {
+            return;
+        }
         TQ.InputMap.updateSpecialKey(e);
         return onTouchOrDragStart(e);
     }
 
     function onMouseUp(e) {
+        if (isDithering) {
+            return;
+        }
         TQ.InputMap.updateSpecialKey(e);
         return onTouchOrDragEnd(e);
     }
