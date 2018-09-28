@@ -44,8 +44,7 @@ TQ.AnimationManager = (function () {
         },
         sagLatest = null;
 
-    var getSag = TQ.TrackRecorder.getSag,
-        state = {
+    var state = {
             delay: DEFAULT_DELAY,
             duration: DEFAULT_DURATION,
             leftIn: false,

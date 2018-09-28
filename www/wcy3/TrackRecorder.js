@@ -206,45 +206,6 @@ window.TQ = window.TQ || {};
         track.updateSagFlag();
     };
 
-    TrackRecorder.getSag = function (element, sagTypeId) {
-        var track = element.animeTrack,
-            SagType = TQ.AnimationManager.SagType;
-        if (!track) { //新添加的物体， 可能短时间没有track，
-            return null;
-        }
-
-        switch (sagTypeId) {
-            case SagType.FADE_IN:
-            case SagType.FADE_OUT:
-                return getOneSag(track.alpha, sagTypeId);
-
-            case SagType.SCALE_IN:
-            case SagType.SCALE_OUT:
-                return getOneSag(track.sx, sagTypeId);
-
-            case SagType.ROTATE:
-                return getOneSag(track.rotation, sagTypeId);
-            case SagType.LEFT_IN:
-            case SagType.LEFT_OUT:
-            case SagType.RIGHT_IN:
-            case SagType.RIGHT_OUT:
-            case SagType.FLOAT_X:
-                return getOneSag(track.x, sagTypeId);
-
-            case SagType.TOP_IN:
-            case SagType.TOP_OUT:
-            case SagType.BOTTOM_IN:
-            case SagType.BOTTOM_OUT:
-                return getOneSag(track.y, sagTypeId);
-
-            case SagType.TWINKLE:
-                return getOneSag(track.visible, sagTypeId);
-            default:
-                TQ.Log.debugInfo("unknown case");
-                break;
-        }
-    };
-
     TrackRecorder.recordOneChannel = function (track, channel, t, v, interpolationMethod) {
         assertDepreciated(TQ.Dictionary.isDepreciated + "， 移到了channel类中的record！");
         assertNotNull(TQ.Dictionary.FoundNull, channel);
