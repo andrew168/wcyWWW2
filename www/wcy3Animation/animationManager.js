@@ -140,7 +140,9 @@ TQ.AnimationManager = (function () {
     }
 
     function reset(ele) {
-        sagLatest = null;
+        if (!sagLatest || sagLatest.ele !== ele) {
+            sagLatest = null;
+        }
         if (!ele) {
             ele = TQ.SelectSet.getLastSolidElement();
             if (!ele) {
