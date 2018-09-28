@@ -183,10 +183,10 @@ window.TQ = window.TQ || {};
         var T = sag.hideT + sag.showT,
             cycleNumber = Math.floor((t - sag.t1) / T),
             thisCycle = t - sag.t1 - T * cycleNumber;
-        if (thisCycle < sag.hideT) {
-            return 0;
+        if (thisCycle < sag.showT) {
+            return 1;
         }
-        return 1;
+        return 0;
     }
 
     function calIdleSag(sag, channel, t) {
