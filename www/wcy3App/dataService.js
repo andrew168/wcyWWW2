@@ -242,6 +242,7 @@
             getTopics: getTopics,
             cloneWork: cloneWork,
             generateUUID: generateUUID,
+            loadTopics: loadTopics,
             reload: reload,
             toScreenshotName: toScreenshotName,
             toWcyName: toWcyName

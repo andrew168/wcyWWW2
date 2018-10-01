@@ -36,16 +36,9 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
     }
 });
 
-router.get('/list', authHelper.ensureAuthenticated, function (req, res, next) {
+router.get('/list', function (req, res, next) {
     var user = status.getUserInfo2(req, res);
-
-    if (!user) {
-        return netCommon.notLogin(req, res);
-    }
-
-    status.logUser(user, req, res);
-    topicController.getList(user.ID, onGotList, onError);
-
+    topicController.getList(user, onGotList, onError);
     function onGotList(list) {
         res.json(list);
     }

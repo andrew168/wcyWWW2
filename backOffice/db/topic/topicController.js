@@ -59,11 +59,11 @@ function onSaveTopic(err, model, onSuccess, onError) {
 
 // 获取最新的N个主题， 自己的， 或者 优秀公开的
 function getList(user, onSuccess, onError) {
-    var userId = user.ID,
-        userLimit = (userId === null) ? null : {"userId": userId},
-        condition = (!userLimit) ? {"state": STATE.FINE} : {$or: [userLimit, {"state": STATE.FINE}]};
+    var userLimit = (!user || user.ID === null) ? null : {"userId": user.ID},
+        stateLimit = {"state": STATE.FINE},
+        condition = (!userLimit) ? stateLimit : {$or: [userLimit, stateLimit]};
 
-    if (user.canBan || user.canApprove) {
+    if (user && (user.canBan || user.canApprove)) {
         condition = null;
     }
 
