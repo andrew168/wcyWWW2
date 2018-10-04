@@ -8,7 +8,7 @@
 
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
-    matCommon = require('./matCommon'),
+    matCommon = require('../matCommon'),
     AudioMat = mongoose.model('AudioMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作

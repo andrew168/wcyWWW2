@@ -14,6 +14,7 @@ var express = require('express'),
     netCommon = require('../common/netCommonFunc'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
     status = require('../common/status'),
+    audit = require('./audit'),
     fs = require('fs'),
     authHelper = require('./authHelper'),
     pictureMatController = require('../db/material/pictureMatController'),
@@ -30,10 +31,6 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
     var public_id = req.body.public_id || null,
-        ban = req.body.ban || false,
-        share = req.body.share || false,
-        requestToBan = req.body.requestToBan || false,
-        requestToShare = req.body.requestToShare || false,
         matType = getMatType(req),
         path = req.body.path || null,
         user = status.getUserInfo(req, res);
@@ -42,18 +39,10 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     }
 
     status.logUser(user, req, res);
-    if (ban || share || requestToBan || requestToShare) {
-        if (!public_id) {
-            public_id = utils.path2public_id(path);
-        }
-        var newValues = {
-            isBanned: ban,
-            isShared: share,
-            requestToBan: requestToBan,
-            requestToShare: requestToShare
-        };
-
-        return banMatId(req, res, newValues, matType, utils.matName2Id(public_id));
+    var auditResult = audit.process(req);
+    if (auditResult.isAudit) {
+        public_id = utils.path2public_id(path);
+        return banMatId(req, res, auditResult.newValues, matType, utils.matName2Id(public_id));
     }
 
     if (!public_id) {
@@ -202,9 +191,7 @@ function updateMatId(req, res, matType, matId, path) {
 
 function banMatId(req, res, newValues, matType, matId) {
     var user = status.getUserInfo(req, res);
-    if (!user) {
-        return netCommon.notLogin(req, res);
-    }
+    // 此处不必再验证user了，因为之前的外网函数已经验证过了！
 
     function onSavedToDB(result) {
         var data;
