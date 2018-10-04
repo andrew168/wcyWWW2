@@ -19,6 +19,10 @@ var topicSchema = new Schema({
     authorId:Number,
     authorName: {type: String},// 作者姓名和单位，冗余，以避免1次查作者库
     authorSchool: {type: String},
+    isShared: {type: Boolean, default: false}, //个人私有/与众共享
+    isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到， 包括自己
+    requestToBan: {type: Boolean, default: false},// 用户或粗审员请求禁止
+    requestToShare: {type: Boolean, default: false},// 用户或粗审员请求分享
     // 申请共享，批准发表
     state: {type: Number, default: 10} // 10, 私有的,
 });

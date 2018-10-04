@@ -2,7 +2,7 @@
 var LATEST_topic_NUM = 100;
 var mongoose = require('mongoose'),
     dbCommon = require('../dbCommonFunc.js'),
-    STATE = dbCommon.STATE,
+    matCommon = require('../matCommon'),
     Topic = mongoose.model('Topic'); // 获取已经定义的model，（定义见topicSchema的setup)
 
 function get(id, onSuccess, onError) {
@@ -57,11 +57,11 @@ function onSaveTopic(err, model, onSuccess, onError) {
     }
 }
 
-// 获取最新的N个主题， 自己的， 或者 优秀公开的
+// 获取最新的N个主题， 自己的(如果登录了)， 和 优秀公开的
 function getList(user, onSuccess, onError) {
-    var userLimit = (!user || user.ID === null) ? null : {"userId": user.ID},
-        stateLimit = {"state": STATE.FINE},
-        condition = (!userLimit) ? stateLimit : {$or: [userLimit, stateLimit]};
+    var userLimit = (!user || user.ID === null) ? null : {$or: [{"userId": user.ID}, {"isShared": true}]},
+        stateLimit = {"isBanned": false},
+        condition = (!userLimit) ? stateLimit : {$and: [userLimit, stateLimit]};
 
     if (user && (user.canBan || user.canApprove)) {
         condition = null;
@@ -94,7 +94,12 @@ function getList(user, onSuccess, onError) {
     }
 }
 
+function ban(id, user, newValue, callback) {
+    matCommon.ban(Topic, id, user, newValue, callback);
+}
+
 exports.get = get;
 exports.add = add;
+exports.ban = ban;
 exports.update = update;
 exports.getList = getList;

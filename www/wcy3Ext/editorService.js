@@ -52,6 +52,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         getTopics: NetService.getTopics,
         attachTopic: NetService.attachTopic,
         detachTopic: NetService.detachTopic,
+        banTopic: NetService.banTopic,
+        shareTopic: NetService.shareTopic,
+        requestToBanTopic: NetService.requestToBanTopic,
+        requestToShareTopic: NetService.requestToShareTopic,
 
         // play & preview
         preview: preview,

@@ -11,6 +11,7 @@ var express = require('express'),
     netCommon = require('../common/netCommonFunc'),
     status = require('../common/status'),
     authHelper = require('./authHelper'),
+    audit = require('./audit'),
     topicController = require('../db/topic/topicController');
 
 // 添加，修改，禁止，发布，等
@@ -18,7 +19,28 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
-    var topicDataObj = req.body; // 已经自动转为object了， 虽然传输是json，
+    var topicDataObj = req.body,// 已经自动转为object了， 虽然传输是json，
+        user = status.getUserInfo(req, res),
+        auditResult;
+
+    if (!user) {
+        return netCommon.notLogin(req, res);
+    }
+
+    auditResult = audit.process(req);
+    if (auditResult.isAudit) {
+        function onAuditCompleted(result) {
+            var data = {
+                result: result,
+                newValues: auditResult.newValues,
+                id: auditResult._id
+            };
+
+            res.json(data);
+        }
+
+        return topicController.ban(auditResult._id, user, auditResult.newValues, onAuditCompleted);
+    }
 
     // 检查并处理公共操作
     if (isNewTopic(topicDataObj)) {

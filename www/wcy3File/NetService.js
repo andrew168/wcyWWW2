@@ -334,6 +334,16 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         updateTopic(topic);
     }
 
+    function banTopic(topic) {
+        topic.ban = true;
+        updateTopic(topic);
+    }
+
+    function shareTopic(topic) {
+        topic.share = true;
+        updateTopic(topic);
+    }
+
     function updateTopic(topic) {
         var url = TQ.Config.OPUS_HOST + "/topic";
         $http.post(url, JSON.stringify(topic)).then(function (value) {
@@ -389,6 +399,8 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         updateTopic: updateTopic,
         attachTopic: attachTopic,
         detachTopic: detachTopic,
+        banTopic: banTopic,
+        shareTopic: shareTopic,
 
         initialize: initialize,
         get: get,
