@@ -177,21 +177,8 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
             }, _onFail);
     }
 
-    function wcyId2ShareCode(id) {
-        return ("0_" + id + "_0_0");
-    }
-
-    function shareCode2Id(shareCode) {
-        var items = shareCode.split('_');
-        if (items.length > 1) {
-            return items[1];
-        }
-
-        return -1;
-    }
-
     function getWcyById(wcyId) { // 通过作品栏目调入到编辑器中
-        return getWcy(wcyId2ShareCode(wcyId), false);
+        return getWcy(TQ.Utility.wcyId2ShareCode(wcyId), false);
     }
 
     function getWcy(shareString) {
@@ -205,7 +192,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         TQ.State.isTopicIntro = true;
         TQ.State.isPlayOnly = true;
         TQ.State.topicId = topic.topicId;
-        return _getWcy(wcyId2ShareCode(topic.introId), false);
+        return _getWcy(TQ.Utility.wcyId2ShareCode(topic.introId), false);
     }
 
     function getShareCode() {
@@ -290,7 +277,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
             _shareCode = readCache(_SHARE_CODE_, null);
             _wcyId = readCache(_WCY_ID_, TQ.Config.INVALID_WCY_ID);
             if (_shareCode && ((!_wcyId) || (_wcyId < 1))) {
-                _wcyId = shareCode2Id(_shareCode);
+                _wcyId = TQ.Utility.shareCode2Id(_shareCode);
             }
             var filename = readCache(_FILENAME, TQ.Config.UNNAMED_SCENE);
             var fileInfo = {name: filename, content: previousSaved};
@@ -462,7 +449,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
             title: defaultShareForKids.title, // (scene.title) ? scene.title : "UdoIdo",
             ssPath: (scene.ssPath) ? TQ.RM.toFullPathFs(scene.ssPath): null,
             desc: defaultShareForKids.description, // (scene.description) ? scene.description: null,
-            code: (_shareCode) ? _shareCode : wcyId2ShareCode(_wcyId)
+            code: (_shareCode) ? _shareCode : TQ.Utility.wcyId2ShareCode(_wcyId)
         }
     }
 
@@ -483,7 +470,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     function getOutro(outroId) {
-        var url = TQ.Config.OPUS_HOST + '/wcy/' + wcyId2ShareCode(outroId);
+        var url = TQ.Config.OPUS_HOST + '/wcy/' + TQ.Utility.wcyId2ShareCode(outroId);
         getOpusFromServer(url, _onReceivedOutroData, _onReceivedOutroData);
     }
 

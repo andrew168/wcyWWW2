@@ -300,8 +300,8 @@ window.TQ = window.TQ || {};
         return request.QueryString(param);
     };
 
-    Utility.getShareCodeFromUrl = function() {
-        var hash = window.location.hash;
+    Utility.getShareCodeFromUrl = function(url) {
+        var hash = (!url) ? window.location.hash : TQ.Base.Utility.urlParser(url).hash;
         if (hash) {
             var params = hash.split('/');
             if (params.length >=3) {
@@ -310,6 +310,23 @@ window.TQ = window.TQ || {};
         }
 
         return "";
+    };
+
+    Utility.getWcyIdFromUrl = function (url) {
+        return Utility.shareCode2Id(Utility.getShareCodeFromUrl(url));
+    };
+
+    Utility.shareCode2Id = function (shareCode) {
+        var items = shareCode.split('_');
+        if (items.length > 1) {
+            return items[1];
+        }
+
+        return -1;
+    };
+
+    Utility.wcyId2ShareCode = function (id) {
+        return ("0_" + id + "_0_0");
     };
 
     Utility.isFbAvailable = function() {
