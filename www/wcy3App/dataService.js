@@ -12,7 +12,7 @@
         var writeCache = TQ.Base.Utility.writeCache;
         var initialized = false;
         var MY_WORKS = "_myWorks_";
-        var IMAGE_COLUMN_NUMBER = 3,
+        var EVENT_TOPIC_READY = "topic ready",
             EVENT_DATA_READY = "data ready";
         var READY_BKG_IMAGE = 0x01,
             READY_PROP_IMAGE = 0x02,
@@ -119,6 +119,7 @@
                         data = [];
                     }
                     topics.setList(data, TQ.MatType.TOPIC);
+                    $rootScope.$broadcast(EVENT_TOPIC_READY);
                 },
                 function (reason) {
                     console.log(reason);
@@ -235,6 +236,7 @@
         }
 
         return {
+            EVENT_TOPIC_READY: EVENT_TOPIC_READY,
             EVENT_DATA_READY: EVENT_DATA_READY,
             initialize: initialize,
             getProps: getProps,

@@ -28,7 +28,7 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
     }
 
     auditResult = audit.process(req);
-    if (auditResult.isAudit) {
+    if (auditResult.isAudit && ((user.canBan || user.canApprove))) {
         function onAuditCompleted(result) {
             var data = {
                 result: result,
@@ -59,7 +59,7 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
 });
 
 router.get('/list', function (req, res, next) {
-    var user = status.getUserInfo2(req, res);
+    var user = (!authHelper.hasAuthInfo(req)) ? null: status.getUserInfo2(req, res);
     topicController.getList(user, onGotList, onError);
     function onGotList(list) {
         res.json(list);
