@@ -52,11 +52,15 @@ function DataObject(list) {
         var i;
         for (i = 0; i < items.length; i++) {
             if (!items[i].isProxy) {
-                if (!items[i].path) {
+                var oldPath = (matType === TQ.MatType.TOPIC)? items[i].posterPicturePath :
+                    items[i].path;
+                if (oldPath === "/undefined") {
+                    oldPath = null;
+                }
+                if (!oldPath) {
                     items[i].thumbPath = null;
                     items[i].path = null;
                 } else {
-                    var oldPath = items[i].path;
                     if (TQ.Utility.isSoundResource(oldPath)) { //force to convert to mp3
                         oldPath = TQ.Utility.forceExt(oldPath, ".mp3");
                     } else if (!TQ.Utility.isImage(oldPath)) {
