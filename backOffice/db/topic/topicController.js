@@ -59,7 +59,7 @@ function onSaveTopic(err, model, onSuccess, onError) {
 
 // 获取最新的N个主题， 自己的(如果登录了)， 和 优秀公开的
 function getList(user, onSuccess, onError) {
-    var userLimit = (!user || user.ID === null) ? null : {$or: [{"userId": user.ID}, {"isShared": true}]},
+    var userLimit = (!user || user.ID === null) ? null : {$or: [{"authorId": user.ID}, {"isShared": true}]},
         stateLimit = {"isBanned": false},
         condition = (!userLimit) ? stateLimit : {$and: [userLimit, stateLimit]};
 

@@ -8,17 +8,17 @@ var mongoose = require('mongoose'),
 // 主题的ID，title，开始时间，结束时间等，创作者的id，名称，
 var topicSchema = new Schema({
     title: {type: String, default: "no name"},
-    description: {type: String},
+    description: {type: String, default: ""},
     questionOpusId: Number,
-    posterPicturePath: {type: String},
+    posterPicturePath: {type: String, default:""},
     introId: Number,
     outroId: Number,
     statTime:{type:Date},
     endTime:{type: Date},
     lastModified:{type:Date, default: Date.now},
     authorId:Number,
-    authorName: {type: String},// 作者姓名和单位，冗余，以避免1次查作者库
-    authorSchool: {type: String},
+    authorName: {type: String, default: ""},// 作者姓名和单位，冗余，以避免1次查作者库
+    authorSchool: {type: String,  default: ""},
     isShared: {type: Boolean, default: false}, //个人私有/与众共享
     isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到， 包括自己
     requestToBan: {type: Boolean, default: false},// 用户或粗审员请求禁止
