@@ -5,8 +5,6 @@
 function DataObject(list) {
     var IMAGE_PAGE_SIZE = 6,
         SOUND_PAGE_SIZE = 4,
-        THUMBNAIL_EXP = "w_100,h_100,c_limit/",
-        OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/",
         vm = this,
         bakCurrentPageID = 0,
         currentPageID = 0,
@@ -15,7 +13,6 @@ function DataObject(list) {
     // interface
     vm.getPage = getPage;
     vm.setList = setList;
-    DataObject.fromThumbNail = fromThumbNail;
 
     // init
     if (list) {
@@ -66,9 +63,9 @@ function DataObject(list) {
                         TQ.Log.error("Found unknown format:" + oldPath);
                     }
                     if (matType === TQ.MatType.OPUS) {
-                        items[i].thumbPath = TQ.RM.toFullPathFs(toOpusThumbNail(oldPath));
+                        items[i].thumbPath = TQ.RM.toOpusThumbNailFullPath(oldPath);
                     } else {
-                        items[i].thumbPath = TQ.RM.toFullPathFs(toThumbNail(oldPath));
+                        items[i].thumbPath = TQ.RM.toMatThumbNailFullPath(oldPath);
                     }
 
                     items[i].path = TQ.RM.toFullPathFs(oldPath);
@@ -144,20 +141,6 @@ function DataObject(list) {
         prepareColumn(list, (matType === TQ.MatType.SOUND? SOUND_PAGE_SIZE: IMAGE_PAGE_SIZE));
         currentPageID = bakCurrentPageID;
         updatePageID();
-    }
-
-    function toThumbNail(path) {
-        TQ.Assert.isTrue(path[0] != '/', "not separator");
-        return  (TQ.Utility.isImage(path) ? THUMBNAIL_EXP: "") + path;
-    }
-
-    function toOpusThumbNail(path) {
-        TQ.Assert.isTrue(path[0] != '/', "not separator");
-        return (TQ.Utility.isImage(path) ? OPUS_THUMBNAIL_EXP : "") + path;
-    }
-
-    function fromThumbNail(path) {
-        return path.replace(THUMBNAIL_EXP, "").replace(OPUS_THUMBNAIL_EXP, "");
     }
 }
 

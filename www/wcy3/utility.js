@@ -316,6 +316,10 @@ window.TQ = window.TQ || {};
         return Utility.shareCode2Id(Utility.getShareCodeFromUrl(url));
     };
 
+    Utility.wcyId2Url = function (opusId) {
+        return TQ.Config.OPUS_HOST + "#/opus/" + Utility.wcyId2ShareCode(opusId);
+    };
+
     Utility.shareCode2Id = function (shareCode) {
         var items = shareCode.split('_');
         if (items.length > 1) {

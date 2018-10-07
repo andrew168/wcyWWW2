@@ -31,6 +31,9 @@ this.TQ = this.TQ || {};
     function ResourceManager() {
     }
 
+    var THUMBNAIL_EXP = "w_100,h_100,c_limit/",
+        OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/";
+
     var urlParser = TQ.Base.Utility.urlParser,
         urlConcat = TQ.Base.Utility.urlConcat,
         maxConnectionsPerHost = 6,
@@ -674,6 +677,38 @@ this.TQ = this.TQ || {};
         }
 
         return !_isFullPath(path);
+    }
+
+    RM.toRelativeFromThumbnail = function (url) {
+        var pathname = TQ.Base.Utility.urlParser(url).pathname,
+            parts = (!pathname) ? [] : pathname.split("/");
+        return (parts.length < 2) ? url : parts[parts.length - 2] + "/" + parts[parts.length - 1];
+    };
+
+    RM.toMatFullPath = function (relativePath) {
+        return TQ.Config.MAT_UPLOAD_API + "/" + relativePath;
+    };
+
+    RM.toMatThumbNailFullPath = function (relativePath) {
+        return (!relativePath) ? null : RM.toFullPathFs(toThumbNail(relativePath));
+    };
+
+    RM.toOpusThumbNailFullPath = function (relativePath) {
+        return (!relativePath) ? null: RM.toFullPathFs(toOpusThumbNail(relativePath));
+    };
+
+    RM.removeThumbNail = function (path) {
+        return path.replace(THUMBNAIL_EXP, "").replace(OPUS_THUMBNAIL_EXP, "");
+    };
+
+    function toOpusThumbNail(path) {
+        TQ.Assert.isTrue(path[0] != '/', "not separator");
+        return (TQ.Utility.isImage(path) ? OPUS_THUMBNAIL_EXP : "") + path;
+    }
+
+    function toThumbNail(path) {
+        TQ.Assert.isTrue(path[0] != '/', "not separator");
+        return (TQ.Utility.isImage(path) ? THUMBNAIL_EXP : "") + path;
     }
 
     RM.loadSoundFromFile = loadSoundFromFile;
