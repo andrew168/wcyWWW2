@@ -635,6 +635,17 @@ window.TQ = window.TQ || {};
         };
     };
 
+    Utility.sendTextToClipboard = function (str) {
+        var textArea = document.createElement("textarea");
+        textArea.value = str;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        setTimeout(function () {
+            document.execCommand("Copy");
+        });
+    };
+
     function removePx(xInCss) {
         var result = Number(xInCss.replace("px", ""));
         if (isNaN(result)) {
@@ -673,6 +684,7 @@ window.TQ = window.TQ || {};
         ditherStart();
         return readyToGo;
     }
+
 
     Utility.preventDither = preventDither;
     TQ.Utility = Utility;
