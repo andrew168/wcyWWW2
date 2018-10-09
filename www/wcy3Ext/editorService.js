@@ -798,6 +798,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (!currScene) return;
         var nextLevel = currScene.currentLevelId + 1;
         currScene.duplicateCurrentLevel();
+        levelThumbs.splice(currScene.currentLevelId, 0, {src: null, timestamp: Date.now()});
         $timeout(function() {
             gotoLevel(nextLevel);
         });
