@@ -240,7 +240,7 @@ window.TQ = window.TQ || {};
       // 记录新创建的元素到elements
       this.elements.push(ele);
       if (TQ.Element.isBackground(ele.jsonObj)) {
-          TQ.AssertExt.invalidLogic(!this.background, "应该只有1个背景");
+          // TQ.AssertExt.invalidLogic(!this.background, "应该只有1个背景");
           this.background = ele;
       }
       TQ.DirtyFlag.setLevel(this);
