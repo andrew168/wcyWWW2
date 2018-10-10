@@ -56,7 +56,6 @@ TQ = TQ || {};
     Scene.localT2Global = localT2Global;
     Scene.globalT2local = globalT2local;
     Scene.getTMax = getTMax;
-
     Scene.saveState = saveState;
     Scene.restoreState = restoreState;
 
@@ -523,7 +522,7 @@ TQ = TQ || {};
         this.outroInitialized = false;
         this.outro = null;
         this.topic = (TQ.State && TQ.State.topic)? TQ.State.topic : null;
-        this.topicId = null;
+        this.topicId = TQ.Utility.getTopicId();;
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
@@ -1042,7 +1041,7 @@ TQ = TQ || {};
         // it is provided to prevent loading WCY01.WDM from server
         var empty = {
             version: Scene.VER_LATEST,
-            topicId: TQ.State.topicId,
+            topicId: TQ.Utility.getTopicId(),
             topic: TQ.State.topic, // 包括topicId, outroId
             "levels": [
                 {

@@ -173,7 +173,7 @@
         function getMatList(mats, matType, stateType) {
             $http({
                 method: 'GET',
-                url: TQ.Config.MAN_HOST + '/material/list/' + matType + "/topic/" + TQ.State.topicId
+                url: TQ.Config.MAN_HOST + '/material/list/' + matType + "/topic/" + TQ.Utility.getTopicId()
             }).then(onSuccess);
 
             function onSuccess(response) {

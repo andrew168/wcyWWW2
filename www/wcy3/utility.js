@@ -555,6 +555,10 @@ window.TQ = window.TQ || {};
             Utility.equalBoxSize(box1, box2));
     };
 
+    Utility.getTopicId = function() {
+        return (TQ.State && TQ.State.topic) ? TQ.State.topic._id : 0;
+    };
+
     // private
     function getNativeEvent(e) {
         var e0 = e.nativeEvent;

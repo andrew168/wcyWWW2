@@ -16,7 +16,6 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         selectedSingleKey: '5'
     };
 
-    TQ.State.topicId = 7;
     $scope.timelineSlider = TQ.TimerUI.rangeSlider;
     $scope.fontSizes = [
         {value: 1, size: '1'},
