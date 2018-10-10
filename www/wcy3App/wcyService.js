@@ -183,7 +183,6 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
 
     function getWcy(shareString) {
         TQ.State.isTopicIntro = false;
-        TQ.State.topicId = -1;
         _getWcy(shareString);
     }
 
@@ -191,7 +190,6 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         TQ.State.topic = topic;
         TQ.State.isTopicIntro = true;
         TQ.State.isPlayOnly = true;
-        TQ.State.topicId = topic.topicId;
         return _getWcy(TQ.Utility.wcyId2ShareCode(topic.introId), false);
     }
 
