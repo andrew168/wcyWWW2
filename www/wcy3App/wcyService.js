@@ -521,7 +521,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     function needToSave() {
-        return (currScene && !currScene.isCurrentLevelEmpty() && currScene.isAllDataReady() && !currScene.isSaved);
+        return (currScene && (TQ.State || !TQ.State.isPlayOnly) && !currScene.isCurrentLevelEmpty() && currScene.isAllDataReady() && !currScene.isSaved);
     }
 
     return {
