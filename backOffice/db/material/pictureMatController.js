@@ -37,17 +37,20 @@ function get(userId, callback) {
     });
 }
 
-function getList(userId, typeId, topicId, onSuccess, isAdmin) {
+function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
     var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
-        condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
+        condition = {$and: [{"isBanned": false}, {"typeId": typeId}]},
+        needSortExt = false;
 
     if (userLimit && !isAdmin) {
         condition.$and.push(userLimit);
     }
 
-    // if (topicId !== null) {
-    //     condition.$and.push({topicIds: {$all: [topicId]}}); //选出记录，它的topicIds数组中含有元素 topicId，
-    // }
+    if ((!requestAll) && (topicId !== null) && (topicId > 0)) {
+        condition.$and.push({topicIds: topicId}); //选出记录，它的topicIds数组中含有元素 topicId，
+    } else {
+        needSortExt = true;
+    }
 
     function sortByTopic(item1, item2) {
         var val1,
@@ -81,7 +84,9 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
             data.forEach(copyItem);
         }
 
-        result.sort(sortByTopic);
+        if (needSortExt) {
+            result.sort(sortByTopic);
+        }
         onSuccess(result);
 
         function copyItem(model) {

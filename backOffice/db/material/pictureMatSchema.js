@@ -18,7 +18,7 @@ var pictureMatSchema = new Schema({
     isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到， 包括自己
     requestToBan: {type: Boolean, default: false},// 用户或粗审员请求禁止
     requestToShare: {type: Boolean, default: false},// 用户或粗审员请求分享
-    topicIds: {type: Array},
+    topicIds: {type: Array, default:[]},
     uploaded: {type:Boolean, default:false}
 });
 

@@ -194,6 +194,10 @@ var TQUtility; //
     };
 
     Utility.shadowCopyWithoutObject = function(target, source) {
+        return Utility.extendWithoutObject(target, source);
+    };
+
+    Utility.extendWithoutObject = function (target, source) {
         for (var prop in source) {
             if (!source.hasOwnProperty(prop) || Utility.isObject(source[prop])) {
                 continue;

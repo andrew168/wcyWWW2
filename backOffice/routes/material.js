@@ -118,9 +118,13 @@ router.param('matType', function (req, res, next, id) {
 router.param('topicId', function (req, res, next, id) {
     next();
 });
+router.param('requestAll', function (req, res, next, id) {
+    next();
+});
 
-router.get('/list/:matType/topic/:topicId', authHelper.ensureAuthenticated, function(req, res, next) {
+router.get('/list/:matType/topic/:topicId/option/:requestAll', authHelper.ensureAuthenticated, function(req, res, next) {
     var matType = req.params.matType,
+        requestAll =  utils.getParamsBoolean(req.params.requestAll, false);
         topicId = req.params.topicId || null,
         user = status.getUserInfo2(req, res);
 
@@ -135,7 +139,7 @@ router.get('/list/:matType/topic/:topicId', authHelper.ensureAuthenticated, func
     matType = (!matType) ? 10 : parseInt(matType);
     console.log("type = " + matType);
     status.logUser(user, req, res);
-    getMatController(matType).getList(user.ID, matType, topicId, onGotList, user.canAdmin);
+    getMatController(matType).getList(user.ID, matType, topicId, onGotList, user.canAdmin, requestAll);
     function onGotList(list) {
         // console.log(JSON.stringify(list));
         res.json(list);

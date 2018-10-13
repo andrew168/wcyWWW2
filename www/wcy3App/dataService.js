@@ -21,6 +21,9 @@
             READY_OPUS = 0x10,
             READ_ALL = 0x1f;
         var state = 0,
+            options = {
+                requestAll: false
+            },
             workCounter = 0;
 
         //在手机上，图片必须使用相对路径， 不能使用绝对路径！！！
@@ -171,9 +174,11 @@
         }
 
         function getMatList(mats, matType, stateType) {
+            var topicId = TQ.Utility.getTopicId(),
+                requestAll = (!topicId) || (topicId <=0) || options.requestAll;
             $http({
                 method: 'GET',
-                url: TQ.Config.MAN_HOST + '/material/list/' + matType + "/topic/" + TQ.Utility.getTopicId()
+                url: TQ.Config.MAN_HOST + '/material/list/' + matType + "/topic/" + topicId + "/option/" + requestAll
             }).then(onSuccess);
 
             function onSuccess(response) {
@@ -235,10 +240,15 @@
             onMatChanged();
         }
 
+        function setup(newOptions) {
+            TQUtility.extendWithoutObject(options, newOptions);
+        }
+
         return {
             EVENT_TOPIC_READY: EVENT_TOPIC_READY,
             EVENT_DATA_READY: EVENT_DATA_READY,
             initialize: initialize,
+            setup: setup,
             getProps: getProps,
             getSounds: getSounds,
             getTopics: getTopics,

@@ -48,6 +48,14 @@ function getCookieNumber(req, name, defaultValue) {
     return (isNaN(para)) ? defaultValue : para;
 }
 
+function getParamsBoolean(paraVar, defaultValue) {
+    var result;
+    if (paraVar) {
+        result = JSON.parse(paraVar);
+    }
+    return result;
+}
+
 function onResSave(err, doc, res) {
     showDocument(err, doc);
     if (!err) {
@@ -96,6 +104,7 @@ exports.composeShareCode = composeShareCode;
 exports.decomposeShareCode = decomposeShareCode;
 exports.getCookieNumber = getCookieNumber;
 exports.getCookie = getCookie;
+exports.getParamsBoolean = getParamsBoolean;
 exports.notFound = notFound;
 exports.dumpDocument = showDocument;
 exports.onSave = onSave;
