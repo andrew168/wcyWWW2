@@ -19,27 +19,31 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
     console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
+
     var topicDataObj = req.body,// 已经自动转为object了， 虽然传输是json，
         user = status.getUserInfo(req, res),
+        isAudit = (req.query && req.query.isAudit)? req.query.isAudit: false,
         auditResult;
 
     if (!user) {
         return netCommon.notLogin(req, res);
     }
 
-    auditResult = audit.process(req);
-    if (auditResult.isAudit && ((user.canBan || user.canApprove))) {
-        function onAuditCompleted(result) {
-            var data = {
-                result: result,
-                newValues: auditResult.newValues,
-                id: auditResult._id
-            };
+    if (isAudit) {
+        auditResult = audit.process(req);
+        if (auditResult.isAudit && ((user.canBan || user.canApprove))) {
+            function onAuditCompleted(result) {
+                var data = {
+                    result: result,
+                    newValues: auditResult.newValues,
+                    id: auditResult._id
+                };
 
-            res.json(data);
+                res.json(data);
+            }
+
+            return topicController.ban(auditResult._id, user, auditResult.newValues, onAuditCompleted);
         }
-
-        return topicController.ban(auditResult._id, user, auditResult.newValues, onAuditCompleted);
     }
 
     // 检查并处理公共操作

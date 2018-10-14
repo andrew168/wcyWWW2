@@ -346,6 +346,9 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function updateTopic(topic) {
         var url = TQ.Config.OPUS_HOST + "/topic";
+        if (TQ.State.isAudit) {
+            url += "?isAudit=true";
+        }
         $http.post(url, JSON.stringify(topic)).then(function (value) {
                 console.log(value);
             },
