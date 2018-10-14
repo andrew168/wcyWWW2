@@ -10,6 +10,7 @@ TQ = TQ || {};
     }
 
     GroupElement.create = create;
+
     function create(level, elements) {
         TQ.Log.out("Group it");
         if (!elements || !elements.length) {
@@ -68,6 +69,14 @@ TQ = TQ || {};
         this.setTRSAVZ();
     };
 
+    p.getWidth = function () {
+        return (this.children.length < 2) ? 1: this.children[0].getWidth();
+    };
+
+    p.getHeight = function () {
+        return (this.children.length < 2) ? 1 : this.children[0].getHeight();
+    };
+
     p.explode = function() {
         // 普通group只炸开1层，
         // 关节：炸开整条链
@@ -81,6 +90,8 @@ TQ = TQ || {};
         }
         return parts;
     };
+
+
 
     TQ.GroupElement = GroupElement;
 }());
