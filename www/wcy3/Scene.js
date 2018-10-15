@@ -256,6 +256,10 @@ TQ = TQ || {};
     p.showLevel = function () {
         TQ.MessageBox.reset();
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNumWithOutro()); //level ID 超界
+        if (this.currentLevelId < 0) {
+            TQ.AssertExt.isTrue(this.currentLevelId >= 0, "为什么会是负的？");
+            this.currentLevelId = 0;
+        }
         this.currentLevelId = (this.currentLevelId < this.levelNumWithOutro()) ? this.currentLevelId : 0;
         TQ.Log.checkPoint("entering level " + this.currentLevelId);
         TQ.FrameCounter.gotoBeginning();
