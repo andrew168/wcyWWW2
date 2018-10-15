@@ -64,7 +64,7 @@ function getList(user, onSuccess, onError) {
         condition = (!userLimit) ? stateLimit : {$and: [userLimit, stateLimit]};
 
     if (user && (user.canBan || user.canApprove)) {
-        condition = null;
+        condition = stateLimit; // 被禁止的就不再显示了
     }
 
     Topic.find(condition).sort({lastModified: -1})
