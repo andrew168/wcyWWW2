@@ -327,7 +327,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     function _autoSave() {
-        if (isSaving || _autoSaveStopped || currScene.hasSavedToCache || !needToSave() || !isSafe()) {
+        if (TQ.State.isInBkg || isSaving || _autoSaveStopped || currScene.hasSavedToCache || !needToSave() || !isSafe()) {
         } else {
             TQ.Assert.isObject(currScene);
             var data = currScene.getData();

@@ -27,6 +27,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         levelThumbs = WCY.levelThumbs;
     state.hasUndo = TQ.CommandMgr.hasUndo; // function
     state.hasRedo = TQ.CommandMgr.hasUndo; // function
+    state.isInBkg = false;
 
     return {
         state: state,
@@ -231,6 +232,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             var pausedByBkur = false;
 
             function onGotoBkg() {
+                state.isInBkg = true;
                 console.log("state on go to bkg!");
                 if (state.isPreviewMode) {
                     if (!TQ.FrameCounter.isPaused()) {
@@ -243,6 +245,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             }
 
             function onGotoForegroud() {
+                state.isInBkg = false;
                 console.log("state on go to foreground!");
                 if (pausedByBkur) {
                     pausedByBkur = false;
