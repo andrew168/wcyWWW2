@@ -247,7 +247,7 @@ function WxService($http, $cookies, $q) {
         }
 
         _shareData = shareData;
-        if (!inWx()) {  // 如果不在微信里面， 则总是关闭此功能
+        if (!TQUtility.isWeChat()) {  // 如果不在微信里面， 则总是关闭此功能
             TQ.Config.hasWx = false;
         }
 
@@ -256,14 +256,6 @@ function WxService($http, $cookies, $q) {
         }
 
         return getSignature();
-    }
-
-    function inWx() {
-        // 微信在 Android和iPhone 下的 User Agent分别是：
-        // mozilla/5.0 (linux; u; android ......micromessenger/5.0.1.352
-        // mozilla/5.0 (iphone; ...... micromessenger/5.0
-        var ua = navigator.userAgent.toLowerCase();
-        return /micromessenger/.test(ua);
     }
 
     //扫面印刷品上的二维码（不是微信上的图片)

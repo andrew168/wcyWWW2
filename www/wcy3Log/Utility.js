@@ -16,6 +16,7 @@ var TQUtility; //
     Utility.isIOS = isIOS;
     Utility.isAndroid = isAndroid;
     Utility.isAndroidPad = isAndroidPad;
+    Utility.isWeChat = isWeChat;
     Utility.parsePathname = parsePathname;
     Utility.isLandscape = isLandscape;
 
@@ -42,6 +43,14 @@ var TQUtility; //
 
     function isIOS() { // only mobile, pad, no mac
         return ionic.Platform.isIOS();
+    }
+
+    function isWeChat() {
+        // 微信在 Android和iPhone 下的 User Agent分别是：
+        // mozilla/5.0 (linux; u; android ......micromessenger/5.0.1.352
+        // mozilla/5.0 (iphone; ...... micromessenger/5.0
+        var ua = navigator.userAgent.toLowerCase();
+        return /micromessenger/.test(ua);
     }
 
     function isLandscape () {
