@@ -144,7 +144,7 @@ TQ = TQ || {};
 
         if (this.isFirstTimePlay) {
             this.isFirstTimePlay = false;
-            if (!this.t0) {
+            if (this.t0 === undefined) {
                 this.t0 = TQ.FrameCounter.t();   // ToDo:这个t0计算方法有误， 需要根据编辑时插入点的位置， 来计算； 如果播放时，跳开一个位移，则不是播放时的开始位置。
             }
             return this.instance.play();
