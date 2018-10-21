@@ -974,7 +974,7 @@ TQ = TQ || {};
     };
 
     p.getOutroId = function () {
-        if (this.topic && this.topic.outroId !== undefined) {
+        if (this.topic && this.topic.outroId !== undefined && this.topic.outroId != 0) {
             return this.topic.outroId;
         }
         return null;
