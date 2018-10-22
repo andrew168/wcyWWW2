@@ -37,7 +37,7 @@ window.TQ = window.TQ || {};
             imageResize(album, id, img, 100, 100);
         };
 
-        img.src = takeImage();
+        img.src = takeImage(TQ.Graphics.getCanvasBkgColor());
     };
 
     ScreenShot.getDataWithBkgColor = function() {
