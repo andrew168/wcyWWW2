@@ -8,6 +8,9 @@ TQ.TimerUI = (function () {
     var isUserControlling = false,
         isSagPanel = false,
         initialized = false,
+        previousSync = null,
+        tPool = [],
+        tPoolMaxLength = 5,
         unitSeries = [0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100, 500, 1000, 5000], // * 20 frame per second
         rangeSlider = {
             minValue: 0,
@@ -74,12 +77,61 @@ TQ.TimerUI = (function () {
         isUserControlling = false;
     }
 
+    /**消除抖动和快速移动中的中间过渡：
+     *   200ms, 消除中间位置；
+     *   在同一个位置停留1000ms，则sync到此位置
+     */
     function syncToCounter(v) {
         var t = TQ.FrameCounter.f2t(v);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-        var tObj = TQ.Scene.globalT2local(t);
-        TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(tObj.t));
-        TQ.DirtyFlag.requestToUpdateAll();
+        if (previousSync === null) {
+            tPool.splice(0);
+        } else {
+            clearTimeout(previousSync);
+            previousSync = null;
+        }
+
+        while (tPool.length >= tPoolMaxLength) {
+            tPool.shift();
+        }
+
+        tPool.push(t);
+        var status = calculateStatus();
+        t = status.tAverage;
+
+        if (status.hasStayOver1s) {
+            tPool.splice(0);
+            previousSync = null;
+            doSync();
+        } else {
+            previousSync = setTimeout(doSync, 200);
+        }
+
+        function doSync() {
+            var tObj = TQ.Scene.globalT2local(t);
+            TQ.FrameCounter.cmdGotoFrame(TQ.FrameCounter.t2f(tObj.t));
+            TQ.DirtyFlag.requestToUpdateAll();
+            previousSync = null;
+        }
+
+        function calculateStatus() {
+            var sum = 0,
+                diff = 0,
+                maxDiff = 0,
+                base = tPool[tPool.length - 1];
+            for (i = 0; i < tPool.length; i++) {
+                sum += tPool[i];
+                diff = Math.abs(tPool[i] - base);
+                if (diff > maxDiff) {
+                    maxDiff = diff;
+                }
+            }
+            var totalLength = TQ.Scene.getTMax();
+            return {
+                tAverage: sum / tPool.length,
+                hasStayOver1s: ((tPool.length >= tPoolMaxLength) && (maxDiff < totalLength * 0.05))
+            };
+        }
     }
 
     function setGlobalTime(globalT) {
