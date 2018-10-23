@@ -118,14 +118,14 @@ function doGetTicket(cb) {
 }
 
 function getToken(cb) {
-    var appID, //  = "wx9a9eb662dd97612f",
+    var appId, //  = "wx9a9eb662dd97612f",
         appSecret; // = "7375b13e9c859d48b71a6097790d8358";
 
-    appID = configSvr.wx.udoido.appID;
+    appId = configSvr.wx.udoido.appId;
     appSecret = configSvr.wx.udoido.appSecret;
     var getTokenUrl = 'https://api.weixin.qq.com/cgi-bin/token?' +
         'grant_type=client_credential' +
-        '&appid=' + appID + '&secret=' + appSecret;
+        '&appid=' + appId + '&secret=' + appSecret;
 
     // !! 注意调用所有微信接口时均需使用https协议
     https.get(getTokenUrl, function(res) {

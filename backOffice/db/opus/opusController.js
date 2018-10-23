@@ -24,13 +24,13 @@ function get(id) {
         });
 }
 
-function add(userID, topicId, ssPath, templateID, onSuccess, onError) {
+function add(userId, topicId, ssPath, templateId, onSuccess, onError) {
     console.info("enter add");
     var aOpus = new Opus({
         topicId: topicId,
-        userId: userID,
+        userId: userId,
         ssPath: ssPath,
-        template: templateID
+        template: templateId
     });
 
     aOpus.save(onSave);
@@ -104,7 +104,7 @@ function updateScreenshot(userId, id, path, onSuccess, onError) {
     Opus.findOne({_id: id, userId: userId})
         .exec(function (err, data) {
             if (!data) {
-                console.error("opusID = " + id + 'userId = ' + userId); // 可能是不同的UserId，不能覆盖他人的作品
+                console.error("opusId = " + id + 'userId = ' + userId); // 可能是不同的UserId，不能覆盖他人的作品
                 console.error(id + ' opus not found!'); // 可能是不同的UserId，不能覆盖他人的作品
                 add(userId, path, id, onSuccess, onError); // 因此， 以建立新文件， 注明是以他人的作品为模板的
             } else {
@@ -142,12 +142,12 @@ function getAuthor(opusId, onCompleted) {
         });
 }
 
-function applyToPublish(id, playerID, callback) {
+function applyToPublish(id, playerId, callback) {
     // 必须是自己的才能申请发表， 否则， 无效
-    Opus.findOne({$and: [{_id: id}, {userId: playerID}]})
+    Opus.findOne({$and: [{_id: id}, {userId: playerId}]})
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found! : ' + id + ", or not belong to : " + playerID});
+                console.error(404, {msg: 'not found! : ' + id + ", or not belong to : " + playerId});
             } else {
                 console.log(data);
                 var item = data._doc;

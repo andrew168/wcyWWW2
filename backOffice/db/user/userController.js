@@ -25,10 +25,10 @@ function get(id) {
         });
 }
 
-function model2User(err, model, errorID) {
+function model2User(err, model, errorId) {
     var pkg;
     if (err || !model || (Array.isArray(model) && (model.length < 1))) {
-        pkg = composeErrorPkg(err, errorID);
+        pkg = composeErrorPkg(err, errorId);
     } else {
         pkg = composeUserPkg(model);
     }
@@ -36,10 +36,10 @@ function model2User(err, model, errorID) {
     return pkg;
 }
 
-function composeErrorPkg(err, errorID) {
+function composeErrorPkg(err, errorId) {
     return {
         result: Const.FAILED,
-        errorID: errorID,
+        errorId: errorId,
         error: err
     };
 }
@@ -49,7 +49,7 @@ function composeUserPkg(model) {
     return {
         result: Const.SUCCESS,
         loggedIn: true,
-        errorID: Const.ERROR.NO,
+        errorId: Const.ERROR.NO,
         name: doc.name,
         ID: doc._id,
         displayName: doc.displayName,

@@ -11,7 +11,7 @@ var express = require('express'),
     opusController = require('../db/opus/opusController');
 
 // 定义RESTFull API（路径）中的参数， 形参
-router.param('opusID', function (req, res, next, id) {
+router.param('opusId', function (req, res, next, id) {
     next();
 });
 
@@ -32,47 +32,47 @@ router.get('/', authHelper.ensureAuthenticated, function(req, res, next) {
     }
 });
 
-router.get('/apply/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
+router.get('/apply/:opusId', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
-    var opusID = req.params.opusID || 0,
-        msg = "received! apply to publish: " + opusID;
-    opusController.applyToPublish(opusID, user.ID);
+    var opusId = req.params.opusId || 0,
+        msg = "received! apply to publish: " + opusId;
+    opusController.applyToPublish(opusId, user.ID);
     res.json(msg);
 });
 
-router.get('/approve/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
+router.get('/approve/:opusId', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
 
-    var opusID = req.params.opusID || 0,
+    var opusId = req.params.opusId || 0,
         msg;
 
     if (user.canApprove) {
-        opusController.approveToPublish(opusID);
-        msg = "received! approve, " + opusID;
+        opusController.approveToPublish(opusId);
+        msg = "received! approve, " + opusId;
     } else {
         msg = "not allowed!";
     }
     res.json(msg);
 });
 
-router.get('/ban/:opusID', authHelper.ensureAuthenticated, function (req, res, next) {
+router.get('/ban/:opusId', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
     }
 
-    var opusID = req.params.opusID || 0,
+    var opusId = req.params.opusId || 0,
         msg;
 
     if (user.canBan) {
-        opusController.ban(opusID);
-        msg = "received! ban, " + opusID;
+        opusController.ban(opusId);
+        msg = "received! ban, " + opusId;
     } else {
         msg = "not allowed!";
     }

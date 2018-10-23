@@ -34,7 +34,7 @@ function getList(req, res, next) {
 
 function setPrivilege(req, res, next) {
     var privilegeCode = req.params.privilegeCode || null,
-        clientID = req.params.ID || null,
+        clientId = req.params.ID || null,
         user = status.getUserInfo(req, res);
 
     if (!user) {
@@ -43,12 +43,12 @@ function setPrivilege(req, res, next) {
 
     // user.canAdmin = true;
 
-    if (!privilegeCode || !clientID || (!user.canAdmin && user.name.toLowerCase() !== DEFAULT_ADMIN.toLowerCase())) {
+    if (!privilegeCode || !clientId || (!user.canAdmin && user.name.toLowerCase() !== DEFAULT_ADMIN.toLowerCase())) {
         return onCompleted("not allowed or wrong parameters!");
     } else {
         privilegeCode = parseInt(privilegeCode);
-        clientID = parseInt(clientID);
-        userController.setPrivilege(clientID, privilegeCode, onCompleted);
+        clientId = parseInt(clientId);
+        userController.setPrivilege(clientId, privilegeCode, onCompleted);
     }
     function onCompleted(msg) {
         res.json(msg);

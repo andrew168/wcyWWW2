@@ -82,26 +82,26 @@ router.post('/signup', function (req, res) {
         displayName = req.body.displayName || null;
 
     // status.logUser(req);
-    var errorID = Const.ERROR.NO,
+    var errorId = Const.ERROR.NO,
         errorMsg = '';
 
     if (!isValidDisplayName(displayName)) {
-        errorID = Const.ERROR.DISPLAY_NAME_INVALID;
+        errorId = Const.ERROR.DISPLAY_NAME_INVALID;
         errorMsg = 'display name at least 2 characters';
     } else if (!isValidFormat(name)) {
-        errorID = Const.ERROR.NAME_IS_INVALID;
+        errorId = Const.ERROR.NAME_IS_INVALID;
         errorMsg = 'invalid name';
     } else if (!isValidFormat(psw)) {
-        errorID = Const.ERROR.PASSWORD_IS_INVALID;
+        errorId = Const.ERROR.PASSWORD_IS_INVALID;
         errorMsg = 'invalid password format';
     }
 
-    if (errorID !== Const.ERROR.NO) {
-        return sendBackErrorInfo1(errorMsg, errorID);
+    if (errorId !== Const.ERROR.NO) {
+        return sendBackErrorInfo1(errorMsg, errorId);
     }
 
-    function sendBackErrorInfo1(msg, errorID) {
-        var data = composeErrorPkg(msg, errorID);
+    function sendBackErrorInfo1(msg, errorId) {
+        var data = composeErrorPkg(msg, errorId);
         status.onLoginFailed(req, res, data);
         res.send(data);
     }
@@ -112,8 +112,8 @@ router.post('/signup', function (req, res) {
         }
 
         if (user) {
-            errorID = Const.ERROR.NAME_IS_INVALID_OR_TAKEN;
-            var pkg = composeErrorPkg('Email is already taken', errorID);
+            errorId = Const.ERROR.NAME_IS_INVALID_OR_TAKEN;
+            var pkg = composeErrorPkg('Email is already taken', errorId);
             return responseError(res, Const.HTTP.STATUS_409_CONFLICT, pkg);
         }
         var user = new User({

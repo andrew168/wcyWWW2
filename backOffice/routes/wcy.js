@@ -52,7 +52,7 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
     // console.log("body: " + JSON.stringify(req.body));
     console.log("query: " + JSON.stringify(req.query));
     //ToDo:@@@
-    var templateID = 0,
+    var templateId = 0,
         wcyDataObj = req.body,
         wcyData = JSON.stringify(wcyDataObj),
         topicId = wcyDataObj.topicId || 0,
@@ -65,13 +65,13 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
     } else {
         var wcyId = req.query.wcyId || 0;
         if (isNewWcy(wcyId)) { // 新作品，
-            opusController.add(user.ID, topicId, ssPath, templateID, onSavedToDB, null);
+            opusController.add(user.ID, topicId, ssPath, templateId, onSavedToDb, null);
         } else {
-            opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDB);
+            opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDb);
         }
 
         // 入库， 并获取新wcyID，
-        function onSavedToDB(_wcyId, ssPath) {
+        function onSavedToDb(_wcyId, ssPath) {
             wcyId = _wcyId;
             _saveWcy(req, res, user, wcyId, ssPath, wcyData);
         }
@@ -125,11 +125,11 @@ function resWcySaved(req, res, user, wcyId, ssPath, msg) {
 /// private function:
 function response(req, res, data, wcyId, authorData) {
     var user = authHelper.hasAuthInfo(req) ?  status.getUserInfo2(req, res) : null,
-        userID = (!user) ? 0 : user.ID,
+        userId = (!user) ? 0 : user.ID,
         url = req.headers.origin,
     // var url = req.headers.referer;
         shareId = 0,
-        shareCode = utils.composeShareCode(shareId, wcyId, userID);
+        shareCode = utils.composeShareCode(shareId, wcyId, userId);
 
     var data = {
         timestamp: utils.createTimestamp(),
@@ -138,9 +138,9 @@ function response(req, res, data, wcyId, authorData) {
         timesCalled: status.timesCalled,
         wcyId: wcyId,
         shareCode: shareCode,
-        userID: userID,
-        authorID: authorData.ID,
-        isPlayOnly: (userID !== authorData.ID),
+        userId: userId,
+        authorId: authorData.ID,
+        isPlayOnly: (userId !== authorData.ID),
         data: data
     };
 

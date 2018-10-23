@@ -69,7 +69,7 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
             var item = model1._doc;
             if (item.path) {
                 result.push({
-                    id: item._id, name: item.name, path: item.path, authorID: item.userId,
+                    id: item._id, name: item.name, path: item.path, authorId: item.userId,
                     isShared: item.isShared, time: item.timestamp
                 });
             }

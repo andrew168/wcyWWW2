@@ -159,7 +159,7 @@ function createMatId(req, res, matType, originalFilename) {
     } else {
         if (isNewMaterial(originalFilename)) {
             // 入库， 并获取新material ID，
-            function onSavedToDB(_matId, path) {
+            function onSavedToDb(_matId, path) {
                 mat_id = _matId;
                 var data = {
                     public_id: utils.matId2Name(mat_id)
@@ -174,7 +174,7 @@ function createMatId(req, res, matType, originalFilename) {
             // ToDo:
             var ip = null;
             var isShared = MAT_SHARE_FLAG_DEFAULT;
-            getMatController(matType).add(user.ID, originalFilename, matType, ip, isShared, onSavedToDB, null);
+            getMatController(matType).add(user.ID, originalFilename, matType, ip, isShared, onSavedToDb, null);
         } else {
             console.log("must be new material");
         }
@@ -183,21 +183,21 @@ function createMatId(req, res, matType, originalFilename) {
 
 function updateMatId(req, res, matType, matId, path) {
     // 入库， 并获取新material ID，
-    function onSavedToDB(docId) {
+    function onSavedToDb(docId) {
         var data = {
             public_id: utils.matId2Name(docId)
         };
         sendBack(data, res);
     }
 
-    getMatController(matType).update(matId, path, onSavedToDB);
+    getMatController(matType).update(matId, path, onSavedToDb);
 }
 
 function banMatId(req, res, newValues, matType, matId) {
     var user = status.getUserInfo(req, res);
     // 此处不必再验证user了，因为之前的外网函数已经验证过了！
 
-    function onSavedToDB(result) {
+    function onSavedToDb(result) {
         var data;
         if (result.error) {
             data = result;
@@ -210,7 +210,7 @@ function banMatId(req, res, newValues, matType, matId) {
         sendBack(data, res);
     }
 
-    getMatController(matType).ban(matId, user, newValues, onSavedToDB);
+    getMatController(matType).ban(matId, user, newValues, onSavedToDb);
 }
 
 function getMatIds(req, res, matType) {

@@ -94,7 +94,7 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
             if (item.path) {
                 result.push({
                     _id: item._id,
-                    id: item._id, name: item.name, path: item.path, authorID: item.userId,
+                    id: item._id, name: item.name, path: item.path, authorId: item.userId,
                     isShared: item.isShared, time: item.timestamp,
                     topicIds: item.topicIds
                 });

@@ -392,7 +392,7 @@
 
 
         if (foundBot == true) {
-            console.info({botID: botName, botReq: botReqUrl});
+            console.info({botId: botName, botReq: botReqUrl});
         }
         return foundBot;
     }

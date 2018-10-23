@@ -7,7 +7,7 @@ var assert = require('assert'),
     authHelper = require('../routes/authHelper');
 
 var ANONYMOUS = "anonymous",
-    defaultUserID = 10,
+    defaultUserId = 10,
     COOKIE_LIFE = (90*24*60*60*1000); // 90 days
 var user = {
     ID:0,
@@ -86,7 +86,7 @@ function setUserCookie(user, res, callback) {
 }
 
 function validateUser(req, res, callback, onError) {
-    user.ID = getCookieNumber(req, 'userID', defaultUserID);
+    user.ID = getCookieNumber(req, 'userId', defaultUserId);
     user.timesCalled = getCookieNumber(req, 'timesCalled', 0);
     if (isNewUser(user.ID)) {
         user.timesCalled = 0;
@@ -135,8 +135,8 @@ function getCookieString(req, name, defaultValue) {
     return para;
 }
 
-function isNewUser(userID) {
-    return ((userID === defaultUserID) || (userID === 0));
+function isNewUser(userId) {
+    return ((userId === defaultUserId) || (userId === 0));
 }
 
 function getUserInfo(req, res) {
@@ -166,14 +166,14 @@ function getUserInfoByTokenId(tokenId, userId) {
     return candidate;
 }
 
-function getUserIDfromCookie(req, res) {
-    return getCookieNumber(req, 'userID', defaultUserID);
+function getUserIdFromCookie(req, res) {
+    return getCookieNumber(req, 'userId', defaultUserId);
 }
 
 exports.getUserInfo = getUserInfo;
 exports.getUserInfo2 = getUserInfo2;
 exports.getUserInfoByTokenId = getUserInfoByTokenId;
-exports.getUserIDfromCookie = getUserIDfromCookie; //TBD
+exports.getUserIdFromCookie = getUserIdFromCookie; //TBD
 exports.logUser = logUser;
 exports.setUserCookie = setUserCookie;
 exports.onLoginSucceed = onLoginSucceed;

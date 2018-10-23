@@ -6,7 +6,7 @@ var configSvr = {
     wx: {
         bindToken: "tuqiangkeji1111",
         udoido: {
-            appID: 'wx5fe65e70536d0258',
+            appId: 'wx5fe65e70536d0258',
             appSecret: '393e38d14682d6e2ee524dbc96b080bf'
         }
     },
