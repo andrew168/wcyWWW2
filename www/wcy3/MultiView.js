@@ -12,15 +12,15 @@ TQ = TQ || {};
      */
     function MultiView(jsonObj) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string');
-        this.viewID = 0; // 默认显示第一个视图的元素
+        this.viewId = 0; // 默认显示第一个视图的元素
         this.fixedUp(jsonObj);  //用于从数据文件建立动画
     }
 
     var p = MultiView.prototype;
 
     p.fixedUp = function(jsonObj) {
-        if ((jsonObj != null) && (jsonObj.viewID != null)) {
-            this.viewID = jsonObj.viewID;
+        if ((jsonObj != null) && (jsonObj.viewId != null)) {
+            this.viewId = jsonObj.viewId;
         }
     };
 
@@ -42,12 +42,12 @@ TQ = TQ || {};
     p.changeView = function(adjust) {
         if (this.parent == null)  return;
 
-        this.viewID += adjust;
+        this.viewId += adjust;
         var num = this.parent.children.length;
-        this.viewID  = TQ.MathExt.range(this.viewID, 0, num-1 );
+        this.viewId  = TQ.MathExt.range(this.viewId, 0, num-1 );
         for (var i = 0; i < num; i++) {
             var e = this.parent.children[i];
-            e.show(i == this.viewID);
+            e.show(i == this.viewId);
         }
     };
 
@@ -91,7 +91,7 @@ TQ = TQ || {};
 
     p.toJSON = function()
     {
-        return this.viewID;
+        return this.viewId;
     };
 
     p.isMultiView = function() { return true; };

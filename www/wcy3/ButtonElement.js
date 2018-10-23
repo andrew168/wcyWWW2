@@ -152,7 +152,7 @@ TQ = TQ || {};
             this.jsonObj.actions = [];
             for (var i = 0; i < this.actions.length; i++) {
                 var act = this.actions[i];
-                this.jsonObj.actions.push({elementID: act.ele.id, name: act.name});
+                this.jsonObj.actions.push({elementId: act.ele.id, name: act.name});
             }
         }
 
@@ -166,7 +166,7 @@ TQ = TQ || {};
         for (var i = 0; i < this.jsonObj.actions.length; i++) {
             var act = this.jsonObj.actions[i];
             if ((!act) ||(!act.action)) continue; // 去除空的、被删除的响应,
-            var ele = this.level.findByDescID(act.id);
+            var ele = this.level.findByDescId(act.id);
             if (ele) {
                 this.addAction(ele, act.name);
             }

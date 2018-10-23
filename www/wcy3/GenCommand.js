@@ -8,21 +8,21 @@ window.TQ = window.TQ || {};
 (function () {
 
     var fns = null;
-    function GenCommand(cmdIDorArray, ele, newValue, oldValue) {
+    function GenCommand(cmdIdOrArray, ele, newValue, oldValue) {
         if (!fns) {
             GenCommand.initialize();
         }
         this.receiver = ele;
         this.newValue = newValue;
         this.oldValue = oldValue;
-        if (Array.isArray(cmdIDorArray)) {
-            this.type2 = cmdIDorArray[0];
-            this.dofn = cmdIDorArray[0];
-            this.undofn = cmdIDorArray[1];
+        if (Array.isArray(cmdIdOrArray)) {
+            this.type2 = cmdIdOrArray[0];
+            this.dofn = cmdIdOrArray[0];
+            this.undofn = cmdIdOrArray[1];
         } else {
-            this.type2 = cmdIDorArray;
-            this.dofn = fns[cmdIDorArray].dofn;
-            this.undofn = fns[cmdIDorArray].undofn;
+            this.type2 = cmdIdOrArray;
+            this.dofn = fns[cmdIdOrArray].dofn;
+            this.undofn = fns[cmdIdOrArray].undofn;
         }
     }
     GenCommand.SCALE = "cmd_scale";

@@ -37,7 +37,7 @@ window.TQ = window.TQ || {};
     Config.SCENES_CORE_PATH = "mcAssets/";
     Config.SOUNDS_PATH ="mcSounds/"; //从 localhost的根目录开始, 不是 E盘的根目录
     Config.SOUND_PLUGIN_PATH = "../soundjs/";
-    Config.DefaultUserID = 10000;
+    Config.DefaultUserId = 10000;
 
     // utilities tools
     Config.REMOVE_EMPTY_LEVEL_ON = true;

@@ -24,7 +24,7 @@ TQ.Pay = (function () {
                 // Make a call to your server to set up the payment
                 return paypal.request.post(CREATE_URL)
                     .then(function (res) {
-                        return res.paymentID;
+                        return res.paymentId;
                     });
             },
 
@@ -32,8 +32,8 @@ TQ.Pay = (function () {
             onAuthorize: function (data, actions) {
                 // Set up the data you need to pass to your server
                 var data = {
-                    paymentID: data.paymentID,
-                    payerID: data.payerID
+                    paymentId: data.paymentId,
+                    payerId: data.payerId
                 };
 
                 // Make a call to your server to execute the payment

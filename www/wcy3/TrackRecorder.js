@@ -100,7 +100,7 @@ window.TQ = window.TQ || {};
             sag =sags[0],
             sag2= (sags.length >= 2) ? sags[1] : sag;
 
-        switch (sag.typeID) {
+        switch (sag.typeId) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
                 recordOneSag(track.alpha, sag);
@@ -137,7 +137,7 @@ window.TQ = window.TQ || {};
                 break;
         }
 
-        switch (sag.categoryID) {
+        switch (sag.categoryId) {
             case TQ.AnimationManager.IN:
                 track.inSagType = sag.type;
                 break;
@@ -164,40 +164,40 @@ window.TQ = window.TQ || {};
     TrackRecorder.removeSag = function (element, sag) {
         var track = element.animeTrack;
         var SagType = TQ.AnimationManager.SagType,
-            sagTypeId = sag.typeID,
-            SagCategoryID = sag.categoryID;
+            sagTypeId = sag.typeId,
+            SagCategoryId = sag.categoryId;
         switch (sagTypeId) {
             case SagType.FADE_IN:
             case SagType.FADE_OUT:
-                track.alpha.removeOneSag(SagCategoryID, sagTypeId);
+                track.alpha.removeOneSag(SagCategoryId, sagTypeId);
                 break;
 
             case SagType.SCALE_IN:
             case SagType.SCALE_OUT:
-                track.sx.removeOneSag(SagCategoryID, sagTypeId);
-                track.sy.removeOneSag(SagCategoryID, sagTypeId);
+                track.sx.removeOneSag(SagCategoryId, sagTypeId);
+                track.sy.removeOneSag(SagCategoryId, sagTypeId);
                 break;
 
             case SagType.ROTATE:
-                track.rotation.removeOneSag(SagCategoryID, sagTypeId);
+                track.rotation.removeOneSag(SagCategoryId, sagTypeId);
                 break;
             case SagType.LEFT_IN:
             case SagType.LEFT_OUT:
             case SagType.RIGHT_IN:
             case SagType.RIGHT_OUT:
             case SagType.FLOAT_X:
-                track.x.removeOneSag(SagCategoryID, sagTypeId);
+                track.x.removeOneSag(SagCategoryId, sagTypeId);
                 break;
 
             case SagType.TOP_IN:
             case SagType.TOP_OUT:
             case SagType.BOTTOM_IN:
             case SagType.BOTTOM_OUT:
-                track.y.removeOneSag(SagCategoryID, sagTypeId);
+                track.y.removeOneSag(SagCategoryId, sagTypeId);
                 break;
 
             case SagType.TWINKLE:
-                track.visible.removeOneSag(SagCategoryID, sagTypeId);
+                track.visible.removeOneSag(SagCategoryId, sagTypeId);
                 break;
             default:
                 break;
@@ -239,7 +239,7 @@ window.TQ = window.TQ || {};
                 continue;
             }
 
-            if (item.typeID === sagTypeId) {
+            if (item.typeId === sagTypeId) {
                 return item;
             }
         }
@@ -252,7 +252,7 @@ window.TQ = window.TQ || {};
             channel.sags = [];
         }
 
-        channel.sags[sag.categoryID] = sag; // ToDo: 仅支持1个入场，1个出场动画，1个idle
+        channel.sags[sag.categoryId] = sag; // ToDo: 仅支持1个入场，1个出场动画，1个idle
 
         // track.sags.sort(compareSag);
     }

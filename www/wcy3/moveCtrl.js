@@ -13,7 +13,7 @@ TQ.MoveCtrl = (function () {
         _queue = [],
         _direction,
         _accumulateStep = 0, // 连续Z向移动， 距离越远， 移动的越多。与鼠标运动快慢， 一致。
-        _lastItemID = -1;
+        _lastItemId = -1;
 
     var _self = {
         initialize: initialize,
@@ -34,7 +34,7 @@ TQ.MoveCtrl = (function () {
     }
 
     function isSameItem(target) {
-        return (_lastItemID == target.id);
+        return (_lastItemId == target.id);
     }
 
     function moveZ(ele, offset, ev) {
@@ -47,7 +47,7 @@ TQ.MoveCtrl = (function () {
         if (deltaStep != 0) {
             _accumulateStep = step;
             _doMoveZ(ele, deltaStep);
-            TQ.Log.out("ID:" + _lastItemID + "sum" + _accumulateStep
+            TQ.Log.out("ID:" + _lastItemId + "sum" + _accumulateStep
                 +", step: " + step + ", delta: " + deltaStep);
             TQ.DirtyFlag.setElement(ele, true);
         }
@@ -152,7 +152,7 @@ TQ.MoveCtrl = (function () {
         // move up the selected object toward more visible
         if (null != target) {
             _moveZOne(ele);
-            _lastItemID = target.id;
+            _lastItemId = target.id;
             if (!!ele.children) {
                 for (var i=0; i< ele.children.length; i++) {
                     var child = ele.children[i];
@@ -231,12 +231,12 @@ TQ.MoveCtrl = (function () {
         if (!target) return;
         var id = _stage.getChildIndex(target);
         if (id >= 0) {
-            var newID = TQ.MathExt.range(id + step, 0, _stage.getNumChildren() - 1);
-            if (id != newID) {
+            var newId = TQ.MathExt.range(id + step, 0, _stage.getNumChildren() - 1);
+            if (id != newId) {
                 if ((step > 1) || (step < -1))  { // move to Top, or Bottom
-                    _stage.setChildIndex(ele.displayObj, newID);
+                    _stage.setChildIndex(ele.displayObj, newId);
                 } else {
-                    _stage.swapChildrenAt(id, newID);
+                    _stage.swapChildrenAt(id, newId);
                 }
             }
         }

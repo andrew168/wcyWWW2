@@ -188,7 +188,7 @@ window.TQ = window.TQ || {};
             if (sag) {
                 if (((sag.t1 < t1) && (t1 < sag.t2)) ||
                     ((sag.t1 < t2) && (t2 < sag.t2))) {
-                    self.removeOneSag(sag.categoryID, sag.typeID);
+                    self.removeOneSag(sag.categoryId, sag.typeId);
                 } else {
                     hasSag = true;
                     if (t1 < sag.t1) {
@@ -217,7 +217,7 @@ window.TQ = window.TQ || {};
         this.tid2 = 0;
     };
 
-    p.removeOneSag = function (categoryID, typeID) {
+    p.removeOneSag = function (categoryId, typeId) {
         if (!this.sags || this.sags.length <= 0) {
             return;
         }
@@ -230,7 +230,7 @@ window.TQ = window.TQ || {};
                 continue;
             }
 
-            if ((item.categoryID === categoryID) && (item.typeID === typeID)) {
+            if ((item.categoryId === categoryId) && (item.typeId === typeId)) {
                 return this.sags[i] = null;
             }
         }
@@ -243,7 +243,7 @@ window.TQ = window.TQ || {};
         if (this.sags) {
             this.sags.forEach(function (sag) {
                 if (sag) {
-                    switch (sag.categoryID) {
+                    switch (sag.categoryId) {
                         case TQ.AnimationManager.SagCategory.IN:
                             tInMax = Math.max(tInMax, sag.t2);
                             break;

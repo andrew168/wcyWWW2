@@ -398,10 +398,10 @@ window.TQ = window.TQ || {};
         TQ.DirtyFlag.setLevel(this);
     };
 
-    p.findByDescID = function(descID) {
+    p.findByDescId = function(descId) {
         for (var i = 0; i < (this.elements.length); i++) {
             var ele = this.elements[i];
-            if (ele.jsonObj.id == descID) return ele;
+            if (ele.jsonObj.id == descId) return ele;
         }
 
         return null;

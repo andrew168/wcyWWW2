@@ -153,7 +153,7 @@ TQ.AnimationManager = (function () {
 
         state.hasSag = !!ele.getSags();
         var existSag = getCurrentTypeSag(ele);
-        if (existSag && (instance.categoryId === existSag.categoryID)) {
+        if (existSag && (instance.categoryId === existSag.categoryId)) {
                 instance.tDuration = existSag.duration;
                 instance.tDelay = existSag.delay;
         }
@@ -203,8 +203,8 @@ TQ.AnimationManager = (function () {
         var showT = 1 / speed.actualSpeed,
             hideT = showT,
             sag = {
-                categoryID: SagCategory.IDLE,
-                typeID: SagType.TWINKLE,
+                categoryId: SagCategory.IDLE,
+                typeId: SagType.TWINKLE,
                 showT: showT,
                 hideT: hideT,
                 speed: speed.normSpeed, // only for UI // ToDo: 实际的speed
@@ -249,7 +249,7 @@ TQ.AnimationManager = (function () {
     function composePreviewOptions(sag) {
         var t1, t2,
             currentTime = TQ.FrameCounter.t();
-        switch (sag.typeID) {
+        switch (sag.typeId) {
             case SagType.TWINKLE:
                 t1 = currentTime;
                 t2 = t1 + 3 * (sag.hideT + sag.showT);
@@ -485,7 +485,7 @@ TQ.AnimationManager = (function () {
         return composeSag(SagCategory.IN, typeId, startPos, destinationPos);
     }
 
-    function composeSag(categoryID, typeId, startPos, destinationPos, extraData) {
+    function composeSag(categoryId, typeId, startPos, destinationPos, extraData) {
         var speed = getSpeed(typeId),
             delay = TQ.FrameCounter.gridSnap(getTDelay().t),// seconds
             duration = TQ.FrameCounter.gridSnap((getTDuration().gt - getTDelay().gt)), // seconds
@@ -507,8 +507,8 @@ TQ.AnimationManager = (function () {
             extraData: extraData,
             /// for editor only end
             destinationPos: destinationPos, // exactly stop at this point
-            categoryID: categoryID,
-            typeID: typeId,
+            categoryId: categoryId,
+            typeId: typeId,
             speed: speed.normSpeed, //1-5 规范化的速度
             actualSpeed: velocity,
             value0: startPos,
@@ -538,8 +538,8 @@ TQ.AnimationManager = (function () {
             duration: duration,
             /// for editor only end
             destinationPos: destinationPos, // exactly stop at this point
-            categoryID: SagCategory.OUT,
-            typeID: typeId,
+            categoryId: SagCategory.OUT,
+            typeId: typeId,
             speed: speed.normSpeed,
             actualSpeed: velocity,
             value0: startPos,

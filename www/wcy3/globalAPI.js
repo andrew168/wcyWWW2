@@ -143,7 +143,7 @@ window.TQ = window.TQ || {};
         WCY.currentScene.deleteElement(ele);
     };
 
-    WCY.getCurrentLevelID = function()
+    WCY.getCurrentLevelId = function()
     {
       return WCY.currentScene.currentLevelId;
     };

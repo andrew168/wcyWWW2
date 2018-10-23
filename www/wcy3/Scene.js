@@ -322,8 +322,8 @@ TQ = TQ || {};
         var level = desc.dstLevel;
         delete(desc.dstLevel);
         if ((desc.toOverlay == undefined) || (desc.toOverlay == null)) {
-            if (desc.levelID != undefined) {
-                level = this.getLevel(desc.levelID);
+            if (desc.levelId != undefined) {
+                level = this.getLevel(desc.levelId);
             }
         } else {
             assertTrue(TQ.Dictionary.INVALID_PARAMETER + ": " + desc.toOverlay, (desc.toOverlay == 1)); //overlay参数有误
@@ -701,8 +701,8 @@ TQ = TQ || {};
             this.stop();
             this.close(true);  // discard
             while (this.levelNum() > 1) {
-                var levelID = this.levelNum() - 1;
-                this.deleteLevel(levelID);
+                var levelId = this.levelNum() - 1;
+                this.deleteLevel(levelId);
             }
             if (level = this.getLevel(0)) {
                 level.empty();

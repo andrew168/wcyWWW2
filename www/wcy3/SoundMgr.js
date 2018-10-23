@@ -47,7 +47,7 @@ TQ = TQ || {};
                     SoundMgr._auditioningInstance.stop();
                 }
             }
-            SoundMgr._auditioningInstance = createjs.Sound.play(TQ.RM.getID(item)); // 用Sound.play, 可以播放多个instance， 声音只用ID， 不要resouce data
+            SoundMgr._auditioningInstance = createjs.Sound.play(TQ.RM.getId(item)); // 用Sound.play, 可以播放多个instance， 声音只用ID， 不要resouce data
             directSounds.push(id);
         } else {
             TQ.RM.addItem(id, function() {SoundMgr.play(id);});

@@ -241,9 +241,9 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）
-    function edit(sceneID) {
+    function edit(sceneId) {
         TQ.WCY.isPlayOnly = false;
-        return _load(sceneID);
+        return _load(sceneId);
     }
 
     function forkIt() {
@@ -258,9 +258,9 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         save(true); // 要求fork 当前作品 //服务器不处理
     }
 
-    function show(sceneID) {
+    function show(sceneId) {
         TQ.WCY.isPlayOnly = true;
-        return _load(sceneID);
+        return _load(sceneId);
     }
 
     function start() {
@@ -287,12 +287,12 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     // private function:
-    function _load(sceneID) {
+    function _load(sceneId) {
         var filename = "p14959.wdm"; // straw berry
         var content = null;
 
-        if (sceneID) {
-            filename = 'p' + sceneID + '.wdm';
+        if (sceneId) {
+            filename = 'p' + sceneId + '.wdm';
         }
 
         var url = TQ.Config.BONE_HOST + '/wcy/wdmOpen?filename=' + filename;
@@ -478,7 +478,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         parseCommonData(data);
         TQ.State.isPlayOnly = (TQ.State.isTopicIntro? true: data.isPlayOnly);
         TQ.State.determineWorkingRegion();
-        TQ.WCY.authorID = data.authorID;
+        TQ.WCY.authorId = data.authorId;
         if (!!data.data) {
             _openInJson(TQ.Scene.decompress(data.data));
         }

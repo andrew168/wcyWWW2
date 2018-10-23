@@ -55,7 +55,7 @@ window.TQ = window.TQ || {};
             error:displayInfo3,
             data: {
                 type:'png',
-                userID: localStorage.getItem("userID"),
+                userId: localStorage.getItem("userId"),
                 imageName: imageName,
                 base64data : imageData,
                 keywords:_keywords

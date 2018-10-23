@@ -338,19 +338,19 @@ window.TQ = window.TQ || {};
         return (host.indexOf('udoido.cn') < 0);
     };
 
-    Utility.getUserID = function () {
-        var userID=TQ.Init.uid;
-        if (userID == "") {
-            var userID2 = Utility.readLocalStorage("userID", "");
-            if (userID2 != "") {
-                userID = userID2;
+    Utility.getUserId = function () {
+        var userId=TQ.Init.uid;
+        if (userId == "") {
+            var userId2 = Utility.readLocalStorage("userId", "");
+            if (userId2 != "") {
+                userId = userId2;
             } else {
-                userID = TQ.Config.DefaultUserID; // 系统用户
+                userId = TQ.Config.DefaultUserId; // 系统用户
             }
         } else {
-            localStorage.setItem("userID", userID);
+            localStorage.setItem("userId", userId);
         }
-        return userID;
+        return userId;
     };
     Utility.DEV_PC = 0x0001;
     Utility.DEV_PAD = 0x0002;
@@ -431,9 +431,9 @@ window.TQ = window.TQ || {};
     }
 
     Utility.CheckUserRight = function() {
-        var userID = Utility.getUserID();
+        var userId = Utility.getUserId();
         // ToDo: 使用数据库
-        if ((userID == 10000) ||(userID == 10001) || (userID == 10011) || (userID == 10012)) {
+        if ((userId == 10000) ||(userId == 10001) || (userId == 10011) || (userId == 10012)) {
           //  $("#tbDelete").button("enable");
         }
     };

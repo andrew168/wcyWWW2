@@ -55,9 +55,9 @@ var TOUCH_MOVING_FLAG = 999;
     // 私有变量， 用下划线开头， 放在公共变量的后面，必须在所有函数的前面，
     InputMap._on = true;  //  true, 由它处理键盘； false: 不.
 
-    InputMap.setToolbarState = function(buttonIDString) {
-        assertNotNull(TQ.Dictionary.FoundNull, buttonIDString);
-        InputMap.toolbarState = buttonIDString;
+    InputMap.setToolbarState = function(buttonIdString) {
+        assertNotNull(TQ.Dictionary.FoundNull, buttonIdString);
+        InputMap.toolbarState = buttonIdString;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TOOLBAR);
     };
 

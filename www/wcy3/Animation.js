@@ -35,10 +35,10 @@ TQ = TQ || {};
                 var actionJson = jsonObj.actionTable[i];
                 var fs = Number(actionJson.fs);
                 var fe = fs + Number(actionJson.F);
-                if (!actionJson.gifIconID) {
-                    actionJson.gifIconID = TQ.Utility.getDefultActionIcon();
+                if (!actionJson.gifIconId) {
+                    actionJson.gifIconId = TQ.Utility.getDefultActionIcon();
                 }
-                this.addAction(new TQ.Action(actionJson.name, fs, fe, actionJson.style, actionJson.gifIconID));
+                this.addAction(new TQ.Action(actionJson.name, fs, fe, actionJson.style, actionJson.gifIconId));
             }
         }
     };
@@ -78,7 +78,7 @@ TQ = TQ || {};
     };
 
     p.addAction = function(action, forceToUpdate) {
-        var id  = this._findActionID(action.name);
+        var id  = this._findActionId(action.name);
         if (id != TQ.ERROR) { // 避免重复同名的动作, （如果已经有同名的， 则替换之）
             if (!forceToUpdate) {
                 return false;
@@ -91,7 +91,7 @@ TQ = TQ || {};
     };
 
     p.deleteAction = function(name) {
-        var id = this._findActionID(name);
+        var id = this._findActionId(name);
         if (id == TQ.ERROR) {
             TQ.MessageBubble.show(TQ.Dictionary.INVALID_PARAMETER + name);
         } else {
@@ -100,7 +100,7 @@ TQ = TQ || {};
     };
 
     // private function
-    p._findActionID = function(actionName) {
+    p._findActionId = function(actionName) {
         for (var i = 0; i < this.actionTable.length; i++) {
             if (this.actionTable[i].name == actionName) {
                 return i;
@@ -111,7 +111,7 @@ TQ = TQ || {};
     };
 
     p._findAction = function(actionName) {
-        var id = this._findActionID(actionName);
+        var id = this._findActionId(actionName);
         if (id != TQ.ERROR) {
             return this.actionTable[id];
         }

@@ -75,14 +75,14 @@ window.TQ = window.TQ || {};
     // 连续Z向移动， 距离越远， 移动的越多。
     // 与鼠标运动快慢， 一致。
     InputCtrl._accumulateStep = 0;
-    InputCtrl._lastItemID = -1;
+    InputCtrl._lastItemId = -1;
 
     $(document).mouseup(function () {
         InputCtrl._accumulateStep = 0;
     });
 
     InputCtrl.isSameItem = function(target) {
-        return (InputCtrl._lastItemID == target.id);
+        return (InputCtrl._lastItemId == target.id);
     };
 
     InputCtrl.getDelta = function (mode, element, target, offset, ev) {
@@ -94,10 +94,10 @@ window.TQ = window.TQ || {};
             TQ.Config.RotateSensitivity : TQ.Config.MouseSensitivity;
         InputCtrl.step = Math.floor(delta / sensitivity);
         var deltaStep = (InputCtrl.isSameItem(target))? (InputCtrl.step - InputCtrl._accumulateStep) : InputCtrl.step;
-        TQ.Log.out("ID:" + InputCtrl._lastItemID + "sum" + InputCtrl._accumulateStep
+        TQ.Log.out("ID:" + InputCtrl._lastItemId + "sum" + InputCtrl._accumulateStep
             +", step: " + InputCtrl.step + ", delta: " + deltaStep);
         if (null != target) {
-            InputCtrl._lastItemID = target.id;
+            InputCtrl._lastItemId = target.id;
         }
         return deltaStep;
     };

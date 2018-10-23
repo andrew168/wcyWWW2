@@ -101,7 +101,7 @@ window.TQ = window.TQ || {};
             if (!item) {
                 continue;
             }
-            switch (item.categoryID) {
+            switch (item.categoryId) {
                 case SagCategory.IN:
                     if (t < item.t2) {
                         floorSag.t1 = 0;
@@ -150,14 +150,14 @@ window.TQ = window.TQ || {};
 
     function calSag(sag, channel, t) {
         if (!TQ.FrameCounter.isPlaying()) { //编辑状态下， InSag显示其结果，idle和OutSag都显示其开始
-            if (sag.categoryID === TQ.AnimationManager.SagCategory.IN) {
+            if (sag.categoryId === TQ.AnimationManager.SagCategory.IN) {
                 t = sag.t2;
             } else {
                 t = sag.t1;
             }
         }
 
-        if (sag.categoryID === TQ.AnimationManager.SagCategory.IDLE) {
+        if (sag.categoryId === TQ.AnimationManager.SagCategory.IDLE) {
             return calIdleSag(sag, channel, t)
         }
 
@@ -190,13 +190,13 @@ window.TQ = window.TQ || {};
     }
 
     function calIdleSag(sag, channel, t) {
-        if (sag.typeID === TQ.AnimationManager.SagType.TWINKLE) {
+        if (sag.typeId === TQ.AnimationManager.SagType.TWINKLE) {
             return calVisible(sag, channel, t);
         }
-        if (sag.typeID === TQ.AnimationManager.SagType.FLOAT_X) {
+        if (sag.typeId === TQ.AnimationManager.SagType.FLOAT_X) {
             return calFloatX(sag, channel, t);
         }
-        if (sag.typeID === TQ.AnimationManager.SagType.ROTATE) {
+        if (sag.typeId === TQ.AnimationManager.SagType.ROTATE) {
             return calRotate(sag, channel, t);
         }
         return calDumpSag(sag, channel, t);

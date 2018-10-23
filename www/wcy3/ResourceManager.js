@@ -97,14 +97,14 @@ this.TQ = this.TQ || {};
         //Available PreloadJS callbacks
         var fileCounter = 0;
         RM.preloader.on("fileload", function(event) {
-            var resID = event.item.id;
+            var resId = event.item.id;
             var result = event.result;
             //ToDo: 唯一化断言
-            RM.items[resID].res = result;
-            RM.items[resID].type = event.item.type;
+            RM.items[resId].res = result;
+            RM.items[resId].type = event.item.type;
             fileCounter ++;
             TQ.Log.info("Loaded: (" + fileCounter + "/" + Object.keys(RM.items).length +"): " + event.item.id);
-            RM.onFileLoad(resID, result, event);
+            RM.onFileLoad(resId, result, event);
         });
 
         RM.preloader.addEventListener("complete", onCompleted);
@@ -133,25 +133,25 @@ this.TQ = this.TQ || {};
                 ((item.src !== RM.FULLPATH_NOSOUND) &&
                 (item.src !== RM.FULLPATH_NOPIC)));
             TQ.Log.info(item.src + ": " + event.toString() );
-            var resID = item.id;
+            var resId = item.id;
             var result = null;
-            var altResID = null;
+            var altResId = null;
 
             switch (item.type) {
                 case createjs.LoadQueue.IMAGE:
-                    altResID = RM.FULLPATH_NOPIC;
+                    altResId = RM.FULLPATH_NOPIC;
                     break;
 
                 case createjs.LoadQueue.SOUND:
-                    altResID = RM.FULLPATH_NOSOUND;
+                    altResId = RM.FULLPATH_NOSOUND;
                     break;
 
                 case createjs.LoadQueue.TEXT: // 元件的文件, or bad file
                     if (TQ.Utility.isImage(item.src)) {
-                        altResID = RM.FULLPATH_NOPIC;
+                        altResId = RM.FULLPATH_NOPIC;
                         item.type = createjs.LoadQueue.IMAGE;
                     } else if (TQ.Utility.isSoundResource(item.src)) {
-                        altResID = RM.FULLPATH_NOSOUND;
+                        altResId = RM.FULLPATH_NOSOUND;
                         item.type = createjs.LoadQueue.SOUND;
                     } else {
                         TQ.Log.error(item.type +": 未处理的资源类型!");
@@ -162,30 +162,30 @@ this.TQ = this.TQ || {};
                     TQ.Log.error(item.type +": 未处理的资源类型!");
             }
 
-            if ((altResID != null) && (!!RM.items[altResID])) {
-                result = RM.items[altResID].res;
+            if ((altResId != null) && (!!RM.items[altResId])) {
+                result = RM.items[altResId].res;
             } else {
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             }
 
-            RM.items[resID] = { ID: resID, res:result, type:item.type};
+            RM.items[resId] = { ID: resId, res:result, type:item.type};
             if (result == null) {
-                RM.addItem(altResID, function() {
-                    var item = RM.items[resID],
-                        altItem = RM.items[altResID];
+                RM.addItem(altResId, function() {
+                    var item = RM.items[resId],
+                        altItem = RM.items[altResId];
 
                     if (item && altItem) {
                         item.res = altItem.res;
-                        item.altResID = altItem.ID;
+                        item.altResId = altItem.ID;
                     } else {
-                        TQ.Log.error("RM.items error: resID = " + resID + " altResID=" + altResID);
+                        TQ.Log.error("RM.items error: resId = " + resId + " altResId=" + altResId);
                     }
                 });
 
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             } else {
-                RM.items[resID].altResID = RM.items[altResID].ID;
-                RM.onFileLoad(resID, result, null);
+                RM.items[resId].altResId = RM.items[altResId].ID;
+                RM.onFileLoad(resId, result, null);
             }
         });
 
@@ -195,10 +195,10 @@ this.TQ = this.TQ || {};
         RM.dataReady = false;
     };
 
-    RM.onFileLoad = function(resID, result, event) {
+    RM.onFileLoad = function(resId, result, event) {
         //check for callback
         for (var i = 0; i < RM.callbackList.length; i++) {
-            if (RM.callbackList[i].ID == resID) {
+            if (RM.callbackList[i].ID == resId) {
                 TQ.Log.info("find immediate call back to do");
                 var item = RM.callbackList.splice(i, 1);
                 item[0].func(event);
@@ -207,11 +207,11 @@ this.TQ = this.TQ || {};
         }
     };
 
-    RM.getID = function(item) {
-        if (!item.altResID) {
+    RM.getId = function(item) {
+        if (!item.altResId) {
             return item.ID;
         } else {
-            return item.altResID;
+            return item.altResId;
         }
     };
 
@@ -260,44 +260,44 @@ this.TQ = this.TQ || {};
         RM.preloader.removeEventListener(eventName,  callback);
     };
 
-    function _addReference(resourceID, _callback) {
-        var item = RM.getResource(resourceID);
+    function _addReference(resourceId, _callback) {
+        var item = RM.getResource(resourceId);
         assertTrue("_addReference: 先确保resource 存在！", !!item);
         if (!!_callback) {
-            RM.callbackList.push({ID:resourceID, func:_callback});
+            RM.callbackList.push({ID:resourceId, func:_callback});
         }
 
         //ToDo:@@@ 增加和减少 reference Counter
     }
 
-    RM.addItem = function(resourceID, _callback) {
+    RM.addItem = function(resourceId, _callback) {
         TQ.Assert.isTrue(RM.hasDefaultResource, "没有初始化RM！");
-        resourceID = _toKeyPath(resourceID);
-        if (_hasResource(resourceID)) {
-            assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceID));
-            _addReference(resourceID, _callback);
+        resourceId = _toKeyPath(resourceId);
+        if (_hasResource(resourceId)) {
+            assertTrue("RM.addItem: check resource ready before call it!!", !this.hasResourceReady(resourceId));
+            _addReference(resourceId, _callback);
         } else {
-            var resourcePath = composeResourcePath(resourceID);
+            var resourcePath = composeResourcePath(resourceId);
             TQ.Assert.isNotNull(resourcePath, "不支持的逻辑!");
             if (resourcePath) {
-                loadResource(resourcePath, resourceID, null, _callback);
+                loadResource(resourcePath, resourceId, null, _callback);
             }
         }
     };
 
-    function loadResource(resourcePath, resourceID, type, _callback) {
+    function loadResource(resourcePath, resourceId, type, _callback) {
         // 添加Item 到预加载队列中， 并启动运行预加载（如果没有运行的话）
         //ToDo: RM.Items.push({});
-        RM.items[resourceID] = {ID: resourceID, res: null, type: null};
+        RM.items[resourceId] = {ID: resourceId, res: null, type: null};
 
         if (!!_callback) {
-            RM.callbackList.push({ID: resourceID, func: _callback});
+            RM.callbackList.push({ID: resourceId, func: _callback});
         }
 
         // RM.preloader.loadFile("assets/image0.jpg");
         RM.dataReady = false;
         RM.isEmpty = false;
-        addToPreloader(resourcePath, resourceID, type);
+        addToPreloader(resourcePath, resourceId, type);
     }
 
     function loadSoundFromFile(aFile, callback)
@@ -324,16 +324,16 @@ this.TQ = this.TQ || {};
         return fullPath;
     }
 
-    function addToPreloader(fullPath, resourceID, type) {
+    function addToPreloader(fullPath, resourceId, type) {
         RM.preloader.loadManifest([{
             type: type, // 对于本地声音， 必须加，因为blob类的url无法提供类别信息
             src: accelerateByMultiHost(fullPath),
-            id: resourceID,   // Sound资源的id是字符串, 不是数字
+            id: resourceId,   // Sound资源的id是字符串, 不是数字
             data: 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
         }]);
     }
 
-    function composeResourcePath(resourceID) {
+    function composeResourcePath(resourceId) {
         var resourcePath = null;
         function makeOnSuccess1(fullPath, ID) {
             return function() {
@@ -341,24 +341,24 @@ this.TQ = this.TQ || {};
             }
         }
 
-        TQ.Assert.isTrue(resourceID.indexOf('imgcache') !== 0);
+        TQ.Assert.isTrue(resourceId.indexOf('imgcache') !== 0);
         // 先从本App的服务器下载， 没有的话， 在从File Server下载
-        if (_isLocalFileSystem(resourceID)) {
-             resourcePath = resourceID;
+        if (_isLocalFileSystem(resourceId)) {
+             resourcePath = resourceId;
         } else {
             if (TQ.Config.LocalCacheEnabled) {
                 TQ.Assert.isTrue(false, 'ToDo: 需要重新修改');
-                var cacheName = toCachePath(resourceID);
-                if (TQ.DownloadManager.hasCached(resourceID)) {
+                var cacheName = toCachePath(resourceId);
+                if (TQ.DownloadManager.hasCached(resourceId)) {
                     resourcePath = cacheName;
                 } else {
-                    var onSuccess = makeOnSuccess1(cacheName, resourceID);
-                    TQ.DownloadManager.downloadAux(resourceID, cacheName, onSuccess, function () {
-                        TQ.Log.error(resourceID + "资源加载出错！");
+                    var onSuccess = makeOnSuccess1(cacheName, resourceId);
+                    TQ.DownloadManager.downloadAux(resourceId, cacheName, onSuccess, function () {
+                        TQ.Log.error(resourceId + "资源加载出错！");
                     });
                 }
             } else {
-                resourcePath = _toFullPath(resourceID);
+                resourcePath = _toFullPath(resourceId);
             }
         }
         return resourcePath;

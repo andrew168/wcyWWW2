@@ -169,7 +169,7 @@ window.TQBase = window.TQBase || {};
         }
     };
 
-    Trsa.getClipID = function (clip) {
+    Trsa.getClipId = function (clip) {
         return clip.jsonObj.ID;
     };
 
@@ -177,8 +177,8 @@ window.TQBase = window.TQBase || {};
         var sx = (target.x - item.getCenterX()) * 2 / item.naturalWidth();
         var sy = (target.y - item.getCenterY()) * 2 / item.naturalHeight();
 
-        var clipID = this.getClipID(target);
-        switch (clipID) {
+        var clipId = this.getClipId(target);
+        switch (clipId) {
             case 3:
                 item.scaleY = sy;
                 break;

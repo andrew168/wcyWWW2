@@ -87,7 +87,7 @@ window.TQ = window.TQ || {};
     Config.LOG_CORE_PATH = "log/";
     Config.SCREENSHOT_CORE_PATH = "screenshots/";
     Config.SOUND_PLUGIN_PATH = "../soundjs/";
-    Config.DefaultUserID = 10000;
+    Config.DefaultUserId = 10000;
     Config.speedFactor = {
         floatX: 1,
         flyIn: 200,

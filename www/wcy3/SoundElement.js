@@ -63,22 +63,22 @@ TQ = TQ || {};
         if (!TQ.SoundMgr.isSupported) return;
 
         var resource,
-            resourceID;
+            resourceId;
         if (!!desc.data) {
             resource = desc.data;
-            resourceID = desc.src;
+            resourceId = desc.src;
             desc.data = null;
         } else {
             TQ.Log.info("start to play " + desc.src);
             var item = TQ.RM.getResource(desc.src);
             if (item) {
-                resource =   TQ.RM.getID(item);
-                resourceID = item.ID;
+                resource =   TQ.RM.getId(item);
+                resourceId = item.ID;
             }
         }
         if (!!resource) {
             this.loaded = true;
-            this.instance = createjs.Sound.createInstance(resourceID); // 声音只用ID， 不要resouce data
+            this.instance = createjs.Sound.createInstance(resourceId); // 声音只用ID， 不要resouce data
             //ToDo： 需要在这里play吗？
             //this.instance.play(); //interruptValue, delay, offset, loop);
             // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
@@ -199,7 +199,7 @@ TQ = TQ || {};
                     // 需要重新建立Instance， 丢弃原来的
                     var item = TQ.RM.getResource(this.jsonObj.src);
                     if (item) {
-                        this.instance = createjs.Sound.createInstance(TQ.RM.getID(item)); // 声音只用ID， 不要resouce data
+                        this.instance = createjs.Sound.createInstance(TQ.RM.getId(item)); // 声音只用ID， 不要resouce data
                     }
 
                     var interrupt = createjs.Sound.INTERRUPT_NONE, delay = 0;

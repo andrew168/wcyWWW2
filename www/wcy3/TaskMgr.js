@@ -19,19 +19,19 @@ window.TQ = window.TQ || {};
     TaskMgr.queue = [];
     TaskMgr.preferredQueue = [];
     TaskMgr.isWorking = false;
-    TaskMgr._timerID = -1;
+    TaskMgr._timerId = -1;
     TaskMgr.initialize = function() {
         TaskMgr.queue = [];
         TaskMgr.preferredQueue = [];
     };
 
     TaskMgr.invoke = function () {
-        TaskMgr._timerID = setTimeout(function() { TaskMgr._runOnce(); }, 0);
+        TaskMgr._timerId = setTimeout(function() { TaskMgr._runOnce(); }, 0);
     };
 
     TaskMgr.stop = function() {
-        if (TaskMgr._timerID >=0 ) clearTimeout(TaskMgr._timerID);
-        TaskMgr._timerID = -1;
+        if (TaskMgr._timerId >=0 ) clearTimeout(TaskMgr._timerId);
+        TaskMgr._timerId = -1;
     };
 
     TaskMgr.addTask = function(func, params, topPriority) {

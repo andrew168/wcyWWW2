@@ -20,9 +20,9 @@ window.TQ = window.TQ || {};
         _redoStack = [],
         _preferredQueue = [],
         _isWorking = false,
-        _timerID = -1,
-        _cmdGroupID = 0,
-        _lastCmdGroupID = 0;
+        _timerId = -1,
+        _cmdGroupId = 0,
+        _lastCmdGroupId = 0;
 
     CommandMgr.hasUndo = function () {
         return _undoStack.length > 0;
@@ -33,14 +33,14 @@ window.TQ = window.TQ || {};
     };
 
     CommandMgr.invoke = function () {
-        _timerID = setTimeout(function () {
+        _timerId = setTimeout(function () {
             CommandMgr._runOnce();
         }, 0);
     };
 
     CommandMgr.stop = function () {
-        if (_timerID >= 0) clearTimeout(_timerID);
-        _timerID = -1;
+        if (_timerId >= 0) clearTimeout(_timerId);
+        _timerId = -1;
     };
 
     CommandMgr.startNewOperation = function () {
@@ -86,12 +86,12 @@ window.TQ = window.TQ || {};
 
         _undoStack.push(cmd);
         _lastCmd = cmd;
-        _lastCmdGroupID = _cmdGroupID;
+        _lastCmdGroupId = _cmdGroupId;
     };
 
     CommandMgr.mergeCommand = function (last, cmd) {
         if ((last != null) &&
-            (_lastCmdGroupID === _cmdGroupID) &&
+            (_lastCmdGroupId === _cmdGroupId) &&
             (last.constructor.name2 === cmd.constructor.name2) &&
             (last.receiver.id === cmd.receiver.id)) {
             if ((last.constructor.name2 == "DeleteEleCommand") ||
@@ -187,13 +187,13 @@ window.TQ = window.TQ || {};
         _queue.splice(0);
         _preferredQueue.splice(0);
         _isWorking = false;
-        _cmdGroupID = 0;
+        _cmdGroupId = 0;
     };
 
     CommandMgr.initialize = function () {
         CommandMgr.reset();
         $(document).mousedown(function () {
-            _cmdGroupID++; // 开始一组新命令， 与前一组不能合并同类命令
+            _cmdGroupId++; // 开始一组新命令， 与前一组不能合并同类命令
         });
 
         TQ.InputMap.registerAction(TQ.InputMap.Z | TQ.InputMap.LEFT_CTRL_FLAG, CommandMgr.undo);

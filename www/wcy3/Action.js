@@ -13,19 +13,19 @@ TQ = TQ || {};
      * @param startFrame
      * @param endFrame
      * @param repeatStyle
-     * @param gifIconID
+     * @param gifIconId
      * @constructor
      */
-    function Action(name, startFrame, endFrame, repeatStyle, gifIconID) {
+    function Action(name, startFrame, endFrame, repeatStyle, gifIconId) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, endFrame >= startFrame);
-        assertFalse(TQ.Dictionary.INVALID_PARAMETER, !gifIconID);
+        assertFalse(TQ.Dictionary.INVALID_PARAMETER, !gifIconId);
         this.name = name;
         this.fs = startFrame;  //  该动作 从 [ts, te]
         this.F = endFrame - startFrame;  // 命令的时长,周长是 T
         this.n = 0; // 第一次播放，
         this.style = repeatStyle;
         this.state = Action.STOP;
-        this.gifIconID = gifIconID;
+        this.gifIconId = gifIconId;
         // this.initialize(jsonObj);
     }
     Action.STOP = 0;

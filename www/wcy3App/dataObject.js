@@ -6,8 +6,8 @@ function DataObject(list) {
     var IMAGE_PAGE_SIZE = 6,
         SOUND_PAGE_SIZE = 4,
         vm = this,
-        bakCurrentPageID = 0,
-        currentPageID = 0,
+        bakCurrentPageId = 0,
+        currentPageId = 0,
         pages = [];
 
     // interface
@@ -35,7 +35,7 @@ function DataObject(list) {
             page.splice(0);
         }
 
-        currentPageID = 0;
+        currentPageId = 0;
     }
 
     function createPage() {
@@ -79,13 +79,13 @@ function DataObject(list) {
     }
 
     function getPage(step) {
-        updatePageID(step);
+        updatePageId(step);
         if (pages.length < 1) {
             TQ.AssertExt.invalidLogic(false, "应该有初始值！");
             return null;
         }
-        bakCurrentPageID = currentPageID;
-        return pages[currentPageID];
+        bakCurrentPageId = currentPageId;
+        return pages[currentPageId];
     }
 
     function getPreviousPage() {
@@ -111,28 +111,28 @@ function DataObject(list) {
         }
     }
 
-    function updatePageID(step) {
+    function updatePageId(step) {
         if (!step) {
             step = 0;
         }
 
         switch (step) {
             case -2:
-                currentPageID = 0;
+                currentPageId = 0;
                 break;
             case 2:
-                currentPageID = pages.length;
+                currentPageId = pages.length;
                 break;
             case -1:
             case 1:
-                currentPageID += step;
+                currentPageId += step;
                 break;
             case 0:
             default :
                 break;
         }
 
-        currentPageID = TQ.MathExt.clamp(currentPageID, 0, pages.length - 1);
+        currentPageId = TQ.MathExt.clamp(currentPageId, 0, pages.length - 1);
     }
 
     function setList(list, matType) {
@@ -143,8 +143,8 @@ function DataObject(list) {
             fixup(list, matType);
         }
         prepareColumn(list, (matType === TQ.MatType.SOUND? SOUND_PAGE_SIZE: IMAGE_PAGE_SIZE));
-        currentPageID = bakCurrentPageID;
-        updatePageID();
+        currentPageId = bakCurrentPageId;
+        updatePageId();
     }
 }
 

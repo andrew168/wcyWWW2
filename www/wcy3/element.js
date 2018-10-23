@@ -1471,11 +1471,11 @@ window.TQ = window.TQ || {};
         this.animeCtrl.play("idle");  // 设置缺省的 动作
     };
 
-    p.addAction = function (name, startFrame, endFrame, repeatStyle, gifIconID, forceToUpdate) {
+    p.addAction = function (name, startFrame, endFrame, repeatStyle, gifIconId, forceToUpdate) {
         if (!this.animeCtrl) {
             this.animeCtrl = new TQ.Animation(null);
         }
-        var action = new TQ.Action(name, parseInt(startFrame), parseInt(endFrame), repeatStyle, parseInt(gifIconID));
+        var action = new TQ.Action(name, parseInt(startFrame), parseInt(endFrame), repeatStyle, parseInt(gifIconId));
         return this.animeCtrl.addAction(action, forceToUpdate);
     };
 

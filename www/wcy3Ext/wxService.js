@@ -81,7 +81,7 @@ function WxService($http, $cookies, $q) {
          ？？ 2小时之后， 是否需要重新认证？
          */
         user.timesShared = $cookies.get('timesCalled');
-        user.ID = $cookies.get('userID');
+        user.ID = $cookies.get('userId');
         // pageUrlSigned = wechat_sign.url;
         pageUrlSigned = location.href;
 
@@ -147,7 +147,7 @@ function WxService($http, $cookies, $q) {
         }
 
         user.timesShared = $cookies.get('timesCalled');
-        user.ID = $cookies.get('userID');
+        user.ID = $cookies.get('userId');
 
         var param = {
             title: _shareData.title,

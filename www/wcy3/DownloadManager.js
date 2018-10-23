@@ -38,12 +38,12 @@ var TQ = TQ || {};
         return (item.cacheName);
     };
 
-    p.download = function(name, cacheName, resourceID) {
+    p.download = function(name, cacheName, resourceId) {
         TQ.Assert.isTrue(false, "Depreciated");
     };
 
-    p.downloadAux = function(resourceID, cacheName, onSuccess, onError) {
-        TQ.Assert.isFalse(p.hasCached(resourceID), "已经cached！！");
+    p.downloadAux = function(resourceId, cacheName, onSuccess, onError) {
+        TQ.Assert.isFalse(p.hasCached(resourceId), "已经cached！！");
         var onLsError;
 
         if (TQ.Config.TwoMatServerEnabled) {
@@ -53,26 +53,26 @@ var TQ = TQ || {};
         }
 
         // full path in File Server
-        var fullPathFs = TQ.RM.toFullPathFs(resourceID);
-        _download(fullPathFs, cacheName, resourceID, onSuccess, onLsError);
+        var fullPathFs = TQ.RM.toFullPathFs(resourceId);
+        _download(fullPathFs, cacheName, resourceId, onSuccess, onLsError);
 
         // server Fs
         function makeLsOnError() {
             return function() {
-                var fullPathFs = _toFullPathFs(resourceID);
-                TQ.Assert.isFalse(TQ.DownloadManager.hasCached(resourceID),
+                var fullPathFs = _toFullPathFs(resourceId);
+                TQ.Assert.isFalse(TQ.DownloadManager.hasCached(resourceId),
                     "已经cache了！");
-                _download(fullPathFs, cacheName, resourceID, onSuccess, onError);
+                _download(fullPathFs, cacheName, resourceId, onSuccess, onError);
             }
         }
     };
 
     p.onCompleted = function(data) {
         var cacheName = data.target;
-        var resourceID = data.key;
-        var item = _files[resourceID];
+        var resourceId = data.key;
+        var item = _files[resourceId];
         if (!item) {
-            TQ.Log.error("找不到callback： for" + resourceID);
+            TQ.Log.error("找不到callback： for" + resourceId);
             return;
         }
 
@@ -95,14 +95,14 @@ var TQ = TQ || {};
 
     p.onError = function(error, data) {
         var name = data.source;
-        var resourceID = data.key;
-        var item = _files[resourceID];
+        var resourceId = data.key;
+        var item = _files[resourceId];
         if (!item) {
-            TQ.Log.error("找不到callback： for" + resourceID);
+            TQ.Log.error("找不到callback： for" + resourceId);
             return;
         }
 
-        _files[resourceID] = null; //  remove old one;
+        _files[resourceId] = null; //  remove old one;
         p.save();
         if (!error.handled) {
             if (typeof error.http_status !== 'undefined') {
@@ -157,18 +157,18 @@ var TQ = TQ || {};
                 continue;
             }
 
-            var resourceID = bulk[i].path;
-            var cacheName = TQ.RM.toCachePath(resourceID);
+            var resourceId = bulk[i].path;
+            var cacheName = TQ.RM.toCachePath(resourceId);
 
             var use_cache_file = true;
             if (use_cache_file) {
                 bulk[i].path = cacheName;
             }
 
-            if (p.hasCached(resourceID)) {
+            if (p.hasCached(resourceId)) {
                 continue;
             }
-            p.downloadAux(resourceID, cacheName);
+            p.downloadAux(resourceId, cacheName);
         }
     };
 
@@ -197,10 +197,10 @@ var TQ = TQ || {};
         return urlConcat(p.FAST_SERVER, name);
     }
 
-    function _download(name, cacheName, resourceID, onSuccess, onError) {
-        var item = _files[resourceID];
+    function _download(name, cacheName, resourceId, onSuccess, onError) {
+        var item = _files[resourceId];
         if (!item) {
-            _files[resourceID] = {onSuccess: [onSuccess], onError: [onError], cacheName: null};
+            _files[resourceId] = {onSuccess: [onSuccess], onError: [onError], cacheName: null};
         } else {
             item.onSuccess.push(onSuccess);
             item.onError.push(onError);
@@ -208,7 +208,7 @@ var TQ = TQ || {};
         }
 
         _tasks++;
-        TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {key: resourceID, source: name, target: cacheName});
+        TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {key: resourceId, source: name, target: cacheName});
     }
 
     TQ.DownloadManager = DownloadManager;
