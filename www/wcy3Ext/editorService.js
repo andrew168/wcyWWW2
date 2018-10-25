@@ -234,7 +234,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             function onGotoBkg() {
                 state.isInBkg = true;
                 console.log("state on go to bkg!");
-                if (state.isPreviewMode) {
+                if ((state.isPreviewMode) && (state.editorMode !== TQ.SceneEditor.MODE.FIRST)) {
                     if (!TQ.FrameCounter.isPaused()) {
                         pausedByBkur = true;
                         stop();
@@ -249,7 +249,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 console.log("state on go to foreground!");
                 if (pausedByBkur) {
                     pausedByBkur = false;
-                    if (state.isPreviewMode) {
+                    if (state.isPreviewMode && state.editorMode !== TQ.SceneEditor.MODE.FIRST) {
                         play();
                     }
                 }

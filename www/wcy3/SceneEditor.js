@@ -10,6 +10,16 @@ var currScene = null;
     function SceneEditor() {
     }
 
+    SceneEditor.MODE = {
+        NOT_INITIALIZED: 0,
+        LOADING: 100, // 加载页
+        WELCOME: 110,
+        FIRST: 120, // 首页 （没有canvas，1--1999）
+        MY_WORK: 900, // 个人作品也，
+        EDIT_OR_PLAY: 2000 // 编辑,分享等 （有canvas，>=2000）
+    };
+
+    TQ.State.editorMode = SceneEditor.NOT_INITIALIZED;
     var editorOn = false,
         _auxContainer;
 

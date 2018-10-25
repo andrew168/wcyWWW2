@@ -134,11 +134,9 @@ TQ = TQ || {};
             this.update(0); // 只更新状态,
         }
 
-        if (this.state < TQBase.LevelState.RUNNING) { // Running 之前, 包括:init, loading等等, 不适合update
-            return;
-        }
-
-        if (this.isUpdating) {   // 避免重复进入
+        if ((this.state < TQBase.LevelState.RUNNING) || // Running 之前, 包括:init, loading等等, 不适合update
+            (this.isUpdating)  ||  // 避免重复进入
+            (TQ.State.editorMode <= TQ.SceneEditor.MODE.FIRST)) { // UI：在欢迎页面，首页， 不update
             return;
         }
 
