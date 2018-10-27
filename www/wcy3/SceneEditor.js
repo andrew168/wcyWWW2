@@ -14,9 +14,17 @@ var currScene = null;
         NOT_INITIALIZED: 0,
         LOADING: 100, // 加载页
         WELCOME: 110,
+        LOGIN: 115, // 首页 （没有canvas，1--1999）
         FIRST: 120, // 首页 （没有canvas，1--1999）
-        MY_WORK: 900, // 个人作品也，
-        EDIT_OR_PLAY: 2000 // 编辑,分享等 （有canvas，>=2000）
+
+        // 以下是登录之后的
+        MY_WORK: 210, // 个人作品也，
+
+        // 以下还需要canvas
+        EDIT_OR_PLAY: 2000, // 编辑,分享等 （有canvas，>=2000）
+        // EDIT_IMAGE: 2200, // 尚未以他们代替 flag变量
+        // RECORD_AUDIO: 2300,
+        // PREVIEW: 2400s
     };
 
     TQ.State.editorMode = SceneEditor.NOT_INITIALIZED;
