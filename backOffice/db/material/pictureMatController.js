@@ -38,43 +38,58 @@ function get(userId, callback) {
 }
 
 function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
-    var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
-        condition = {$and: [{"isBanned": false}, {"typeId": typeId}]},
-        needSortExt = false;
+    /*
+        排序：
+        1）如果有userId：我自己上传的，没有禁止的
+        2）如果指定了主题：关联到本主题，而且 公开的、没有禁止的
+        // 3）其余的： 公开的， 没有禁止的
 
-    if (userLimit && !isAdmin) {
-        condition.$and.push(userLimit);
+        对于管理员：
+        1) 获取所有素材，或者
+        2）
+     */
+    var userLimit = (userId === null) ? null : {"userId": userId},
+        topicLimit = !hasValidTopic(topicId) ? null: {topicIds: topicId}, //选topicIds数组中含有元素topicId的，
+        typeLimit = {"typeId": typeId},
+        notBanned = {"isBanned": false},
+        userAndTopicLimit,
+        queryStr;
+    if (isAdmin) {
+        userLimit = null;
+        if (requestAll) {
+            topicLimit = null;
+        }
     }
 
-    if ((!requestAll) && (topicId !== null) && (topicId > 0)) {
-        condition.$and.push({topicIds: topicId}); //选出记录，它的topicIds数组中含有元素 topicId，
+    userAndTopicLimit = userLimit;
+    if (topicLimit) {
+        if (userAndTopicLimit) {
+            userAndTopicLimit = {$or: [userAndTopicLimit, topicLimit]};
+        } else {
+            userAndTopicLimit = topicLimit;
+        }
+    }
+
+    if (userAndTopicLimit) {
+        queryStr = {$and: [typeLimit, notBanned, userAndTopicLimit]};
     } else {
-        needSortExt = true;
+        queryStr = {$and: [typeLimit, notBanned]};
     }
 
-    function sortByTopic(item1, item2) {
-        var val1,
-            val2;
-
-        if (item1.topicIds && item1.topicIds.indexOf(topicId) >= 0) {
-            val1 = 1;
-        } else {
-            val1 = 0;
-        }
-
-        if (item2.topicIds && item2.topicIds.indexOf(topicId) >= 0) {
-            val2 = 1;
-        } else {
-            val2 = 0;
-        }
-
-        if (val1 !== val2) {
-            return val2 - val1;
-        }
-        return (new Date(item2.time)) - (new Date(item1.time));
-    }
-
-    PictureMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
+    PictureMat.aggregate([
+        {"$match": queryStr},
+        {"$addFields": { // 有些记录没有此数组，所以要补，否则下面的比较会出错
+            "topicIds": {
+               "$cond": {
+                "if": {"$ne": [{"$type": "$topicIds"}, "array"]},
+                 "then": [],
+                 "else": "$topicIds"
+                 }
+            }
+        }},
+        {"$addFields": {"topicAttached": {$in: [topicId, "$topicIds"]}}} // 排序依据：是否关联到主题
+        //, {"$limit": 15}
+        ]).sort({topicAttached: 1, timestamp: -1}).exec(onSeachResult);
 
     function onSeachResult(err, data) {
         var result = [];
@@ -84,13 +99,10 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
             data.forEach(copyItem);
         }
 
-        if (needSortExt) {
-            result.sort(sortByTopic);
-        }
         onSuccess(result);
 
-        function copyItem(model) {
-            var item = model._doc;
+        function copyItem(doc) {
+            var item = doc;
             if (item.path) {
                 result.push({
                     _id: item._id,
@@ -224,6 +236,10 @@ function genericUpdate(id, doUpdate, operator, onSuccess, onError) {
 
 function ban(id, user, newValue, callback) {
     matCommon.ban(PictureMat, id, user, newValue, callback);
+}
+
+function hasValidTopic(topicId) {
+    return (topicId !== null) && (topicId > 0);
 }
 
 exports.add = add;
