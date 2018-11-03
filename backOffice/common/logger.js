@@ -50,7 +50,17 @@ var logger = logger|| {};
     };
 
     var log2File = function(entry) {
-        fs.appendFile(logFolder + logger.logFilename, new Date().toLocaleString() + ' - ' + entry + '\r\n');
+        var options = null;
+        function onCompleted(error) {
+            if (error) {
+                console.log(error);
+            }
+        }
+
+        fs.appendFile(logFolder + logger.logFilename,
+            new Date().toLocaleString() + ' - ' + entry + '\r\n',
+            options,
+            onCompleted);
     };
 
     logger.info = function(msg) {
