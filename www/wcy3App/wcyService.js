@@ -83,6 +83,8 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
             currScene.setFilename(TQ.Config.UNNAMED_SCENE);
             writeCache(_FILENAME, currScene.filename);
         }
+        TQ.State.isPlayOnly = false;
+        TQ.State.isTopicIntro = false;
     }
 
     function stop() {
