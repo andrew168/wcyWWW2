@@ -24,13 +24,16 @@ function get(id) {
         });
 }
 
-function add(userId, topicId, ssPath, templateId, onSuccess, onError) {
+function add(userId, ssPath, templateId, wcyHeader, onSuccess, onError) {
     console.info("enter add");
     var aOpus = new Opus({
-        topicId: topicId,
         userId: userId,
         ssPath: ssPath,
-        template: templateId
+        template: templateId,
+        // 除了在wcy.js中特别用到的属性之外， 其余都通过wcyHeader（总体描述）传进来，
+        // 以简化新增属性的影响范围
+        title: wcyHeader.title || "",
+        topicId: wcyHeader.topicId || 0
     });
 
     aOpus.save(onSave);

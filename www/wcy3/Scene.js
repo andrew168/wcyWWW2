@@ -959,7 +959,7 @@ TQ = TQ || {};
             TQ.MessageBox.toast(TQ.Locale.getStr('file is too long, please save your work ASAP'));
         }
 
-        return compress(data, this.ssPath);
+        return compress(data, this.ssPath, this.title);
     };
 
     p.attachOutro = function(outroJson) {
@@ -1197,10 +1197,11 @@ TQ = TQ || {};
         return (!currScene) ? 0: currScene.tMax;
     }
 
-    function compress(wcyData, ssPath) {
+    function compress(wcyData, ssPath, title) {
         if (TQ.Config.useLZCompress) {
             var compressed = LZString.compressToBase64(wcyData);
-            return JSON.stringify({zip64: true, len: compressed.length, ssPath: ssPath, data: compressed});
+            return JSON.stringify({zip64: true, len: compressed.length,
+                ssPath: ssPath, title: title, data: compressed});
         }
         return wcyData;
     }
