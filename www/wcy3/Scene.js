@@ -58,6 +58,7 @@ TQ = TQ || {};
     Scene.getTMax = getTMax;
     Scene.saveState = saveState;
     Scene.restoreState = restoreState;
+    Scene.getDefaultTitle = getDefaultTitle;
 
     function saveState() {
         stateStack.push({tT: Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
@@ -1045,6 +1046,7 @@ TQ = TQ || {};
             version: Scene.VER_LATEST,
             topicId: TQ.Utility.getTopicId(),
             topic: TQ.State.topic, // 包括topicId, outroId
+            title: getDefaultTitle(),
             "levels": [
                 {
                     "jsonElements": null,
@@ -1223,6 +1225,12 @@ TQ = TQ || {};
         }
 
         return decompressed;
+    }
+
+    // private
+    function getDefaultTitle() {
+        return (TQ.State && TQ.State.topic && TQ.State.topic.title) ?
+            TQ.State.topic.title : TQ.Config.UNNAMED_SCENE;
     }
 
     TQ.Scene = Scene;
