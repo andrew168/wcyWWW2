@@ -8,7 +8,7 @@
 
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
-    matCommon = require('../matCommon'),
+    dbCommon = require('../dbCommonFunc.js'),
     AudioMat = mongoose.model('AudioMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
@@ -100,7 +100,7 @@ function update(id, path, callback) {
 }
 
 function ban(id, user, newValue, callback) {
-    matCommon.ban(AudioMat, id, user, newValue, callback);
+    dbCommon.ban(AudioMat, id, user, newValue, callback);
 }
 
 exports.get = get;

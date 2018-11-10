@@ -2,7 +2,6 @@
 var LATEST_topic_NUM = 100;
 var mongoose = require('mongoose'),
     dbCommon = require('../dbCommonFunc.js'),
-    matCommon = require('../matCommon'),
     Topic = mongoose.model('Topic'); // 获取已经定义的model，（定义见topicSchema的setup)
 
 function get(id, onSuccess, onError) {
@@ -95,7 +94,7 @@ function getList(user, onSuccess, onError) {
 }
 
 function ban(id, user, newValue, callback) {
-    matCommon.ban(Topic, id, user, newValue, callback);
+    dbCommon.ban(Topic, id, user, newValue, callback);
 }
 
 exports.get = get;

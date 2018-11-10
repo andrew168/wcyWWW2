@@ -8,7 +8,6 @@
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
     dbCommon = require('../dbCommonFunc.js'),
-    matCommon = require('../matCommon'),
     PictureMat = mongoose.model('PictureMat');
 
 //ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
@@ -235,7 +234,7 @@ function genericUpdate(id, doUpdate, operator, onSuccess, onError) {
 }
 
 function ban(id, user, newValue, callback) {
-    matCommon.ban(PictureMat, id, user, newValue, callback);
+    dbCommon.ban(PictureMat, id, user, newValue, callback);
 }
 
 function hasValidTopic(topicId) {
