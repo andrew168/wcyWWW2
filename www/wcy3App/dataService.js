@@ -213,7 +213,7 @@
                     selected.push({
                         wcyId: item._id,
                         path: item.ssPath,
-                        title: "我有一个梦", // ToDo: 允许用户录入主题， 或系统设置竞赛的主题
+                        title: item.title || "我有一个梦", // ToDo: 允许用户录入主题， 或系统设置竞赛的主题
                         score: (!item.score? 1000: item.score), //起点，（只有创作了作品，系统给你1000点， 然后实时统计
                         userName: userName,
                         userId: item.userId,
