@@ -775,7 +775,7 @@ TQ = TQ || {};
         }
 
         // copy non-object properties
-        TQUtility.shadowCopyWithoutObject(this, objJson);
+        TQUtility.extendWithoutObject(this, objJson);
         this.topic = objJson.topic;
         objJson.topic = null;
         this.state = TQBase.LevelState.NOT_INIT;

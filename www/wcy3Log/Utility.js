@@ -202,8 +202,11 @@ var TQUtility; //
         return jQuery.extend({}, obj);
     };
 
-    Utility.shadowCopyWithoutObject = function(target, source) {
-        return Utility.extendWithoutObject(target, source);
+    Utility.shadowCopyWithoutObject = function(source) {
+        TQ.AssertExt.isTrue(arguments.length === 1, "直接返回值");
+        var target = {};
+        Utility.extendWithoutObject(target, source);
+        return target;
     };
 
     Utility.extendWithoutObject = function (target, source) {
