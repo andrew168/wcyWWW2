@@ -52,13 +52,14 @@ router.get('/approve/:opusId', authHelper.ensureAuthenticated, function (req, re
     var opusId = req.params.opusId || 0,
         msg;
 
-    if (user.canApprove) {
-        opusController.approveToPublish(opusId);
-        msg = "received! approve, " + opusId;
-    } else {
-        msg = "not allowed!";
-    }
-    res.json(msg);
+    opusController.approveToPublish(user, opusId, function (result) {
+        if (result === -1) {
+            msg = "not allowed!";
+        } else {
+            msg = "approve, " + opusId;
+        }
+        res.json(msg);
+    });
 });
 
 router.get('/ban/:opusId', authHelper.ensureAuthenticated, function (req, res, next) {
@@ -70,13 +71,14 @@ router.get('/ban/:opusId', authHelper.ensureAuthenticated, function (req, res, n
     var opusId = req.params.opusId || 0,
         msg;
 
-    if (user.canBan) {
-        opusController.ban(opusId);
-        msg = "received! ban, " + opusId;
-    } else {
-        msg = "not allowed!";
-    }
-    res.json(msg);
+    opusController.ban(user, opusId, function (result) {
+        if (result === -1) {
+            msg = "not allowed!";
+        } else {
+            msg = "ban: " + opusId;
+        }
+        res.json(msg);
+    });
 });
 
 module.exports = router;

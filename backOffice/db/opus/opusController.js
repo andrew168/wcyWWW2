@@ -167,12 +167,12 @@ function applyToPublish(id, playerId, callback) {
         });
 }
 
-function approveToPublish(id, callback) {
+function approveToPublish(operator, id, callback) {
     // 必须是自己的才能申请发表， 否则， 无效
-    dbCommon.setProp(Opus, id, 'state', CONST.OPUS_STATE.APPROVED_TO_PUBLISH, callback);
+    dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.APPROVED_TO_PUBLISH, callback);
 }
-function ban(id, callback) {
-    dbCommon.setProp(Opus, id, 'state', CONST.OPUS_STATE.BAN, callback);
+function ban(operator, id, callback) {
+    dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.BAN, callback);
 }
 
 exports.getAuthor = getAuthor;

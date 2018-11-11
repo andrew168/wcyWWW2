@@ -3,28 +3,34 @@
  * 数据库的通用操作函数
  */
 
-function setProp(model, id, propName, propValue, callback) {
-    model.findOne({_id: id})
-        .exec(function (err, data) {
-            if (err) {
-                console.error(404, {msg: 'not found! : ' + id});
-                if (callback) {
-                    callback(-1);
-                }
-            } else {
-                console.log(data);
-                data.set(propName, propValue);
-                data.save(function (err, data) {
-                    if (!err) {
-                        if (callback) {
-                            callback(data._doc._id);
-                        }
-                    } else {
-                        console.error("error in set Prop: " + propName);
-                    }
-                });
+function setProp(operator, model, id, propName, propValue, callback) {
+    var onlyMine = {userId: operator.ID},
+        condition = {$and: [{_id: id}]};
+
+    if (operator.canAdmin || operator.canBan || operator.canApprove) {// 如果 有权admin或Ban， 不加 userId的限制
+    } else {
+        condition.$and.push(onlyMine);
+    }
+
+    model.findOne(condition).exec(function (err, data) {
+        if (err || !data) {
+            if (callback) {
+                callback(-1);
             }
-        });
+        } else {
+            console.log(data);
+            data.set(propName, propValue);
+            data.save(function (err, data) {
+                if (!err) {
+                    if (callback) {
+                        callback(data._doc._id);
+                    }
+                } else {
+                    console.error("error in set Prop: " + propName);
+                }
+            });
+        }
+    });
 }
 
 function composeErrorMsg(err, extraMsg) {

@@ -125,8 +125,8 @@ function getList(aUser, callback) {
     }
 }
 
-function setPrivilege(id, code, callback) {
-    dbCommon.setProp(User, id, 'privilege', code, callback);
+function setPrivilege(operator, id, code, callback) {
+    dbCommon.setProp(operator, User, id, 'privilege', code, callback);
 }
 
 exports.get = get;

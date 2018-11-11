@@ -48,7 +48,7 @@ function setPrivilege(req, res, next) {
     } else {
         privilegeCode = parseInt(privilegeCode);
         clientId = parseInt(clientId);
-        userController.setPrivilege(clientId, privilegeCode, onCompleted);
+        userController.setPrivilege(user, clientId, privilegeCode, onCompleted);
     }
     function onCompleted(msg) {
         res.json(msg);
