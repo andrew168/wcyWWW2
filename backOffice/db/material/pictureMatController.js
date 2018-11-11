@@ -233,8 +233,8 @@ function genericUpdate(id, doUpdate, operator, onSuccess, onError) {
         });
 }
 
-function ban(id, user, newValue, callback) {
-    dbCommon.ban(PictureMat, id, user, newValue, callback);
+function ban(operator, id, newValue, callback) {
+    dbCommon.ban(operator, PictureMat, id, newValue, callback);
 }
 
 function hasValidTopic(topicId) {

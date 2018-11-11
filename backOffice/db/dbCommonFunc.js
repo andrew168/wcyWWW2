@@ -52,11 +52,11 @@ function updateDate(dataModel, newObj) {
     }
 }
 
-function ban(matModel, id, user, newValue, callback) {
-    var onlyMine = {userId: user.ID},
+function ban(operator, matModel, id, newValue, callback) {
+    var onlyMine = {userId: operator.ID},
         condition = {$and: [{_id: id}]};
 
-    if (user.canAdmin || user.canBan) {// 如果 有权admin或Ban， 不加 userId的限制
+    if (operator.canAdmin || operator.canBan) {// 如果 有权admin或Ban， 不加 userId的限制
     } else {
         condition.$and.push(onlyMine);
     }

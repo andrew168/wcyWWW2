@@ -42,7 +42,7 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
                 res.json(data);
             }
 
-            return topicController.ban(auditResult._id, user, auditResult.newValues, onAuditCompleted);
+            return topicController.ban(user, auditResult._id, auditResult.newValues, onAuditCompleted);
         }
     }
 

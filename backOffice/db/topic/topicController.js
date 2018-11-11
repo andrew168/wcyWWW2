@@ -93,8 +93,8 @@ function getList(user, onSuccess, onError) {
     }
 }
 
-function ban(id, user, newValue, callback) {
-    dbCommon.ban(Topic, id, user, newValue, callback);
+function ban(operator, id, newValue, callback) {
+    dbCommon.ban(operator, Topic, id, newValue, callback);
 }
 
 exports.get = get;

@@ -99,8 +99,8 @@ function update(id, path, callback) {
         });
 }
 
-function ban(id, user, newValue, callback) {
-    dbCommon.ban(AudioMat, id, user, newValue, callback);
+function ban(operator, id, newValue, callback) {
+    dbCommon.ban(operator, AudioMat, id, newValue, callback);
 }
 
 exports.get = get;
