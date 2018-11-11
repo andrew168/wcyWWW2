@@ -55,6 +55,7 @@ function onSaveOpus(err, model, onSuccess, onError) {
 // 获取最新的N个作品， 自己的， 或者 优秀公开的，而且有ssPath
 function getList(user, callback) {
     var userId = user.ID,
+        notBanned = {"state": {$ne: CONST.OPUS_STATE.BAN}},
         userLimit = (userId === null) ? null : {"userId": userId},
         condition = (!userLimit) ? {"state": CONST.OPUS_STATE.FINE} : {$or: [userLimit, {"state": CONST.OPUS_STATE.FINE}]};
 
@@ -62,6 +63,11 @@ function getList(user, callback) {
         condition = null;
     }
 
+    if (condition) {
+        condition = {$and: [notBanned, condition]};
+    } else {
+        condition = notBanned;
+    }
     Opus.find(condition).sort({lastModified: -1})
         .exec(function (err, data) {
             if (!data) {
