@@ -6,12 +6,8 @@ var LATEST_OPUS_NUM = 100;
 var mongoose = require('mongoose'),
     utils = require('../../common/utils'),
     dbCommon = require('../dbCommonFunc.js'),
+    CONST = require('../../common/const'),
     Opus = mongoose.model('Opus'); // 获取已经定义的model，（定义见opusSchema的setup)
-var STATE_PRIVATE = 10,
-    STATE_APPLY_TO_PUBLISH = 20, // 必须经过批准才能公开， 防止 出乱子，
-    STATE_APPROVED_TO_PUBLISH = 30, //
-    STATE_FINE = 40, // 优秀作品
-    STATE_BAN = 70;
 
 function get(id) {
     Opus.findOne({_id: id})
@@ -60,7 +56,7 @@ function onSaveOpus(err, model, onSuccess, onError) {
 function getList(user, callback) {
     var userId = user.ID,
         userLimit = (userId === null) ? null : {"userId": userId},
-        condition = (!userLimit) ? {"state": STATE_FINE} : {$or: [userLimit, {"state": STATE_FINE}]};
+        condition = (!userLimit) ? {"state": CONST.OPUS_STATE.FINE} : {$or: [userLimit, {"state": CONST.OPUS_STATE.FINE}]};
 
     if (user.canBan || user.canApprove) {
         condition = null;
@@ -154,9 +150,9 @@ function applyToPublish(id, playerId, callback) {
             } else {
                 console.log(data);
                 var item = data._doc;
-                if (item.state === STATE_PRIVATE) {
+                if (item.state === CONST.OPUS_STATE.PRIVATE) {
                     // state: Number, // 10, 私有的， 20： 申请公开， 30: 批准公开， 41: 禁用
-                    data.set('state', STATE_APPLY_TO_PUBLISH);
+                    data.set('state', CONST.OPUS_STATE.APPLY_TO_PUBLISH);
                     data.save(function (err, data) {
                         if (!err) {
                             if (callback) {
@@ -173,10 +169,10 @@ function applyToPublish(id, playerId, callback) {
 
 function approveToPublish(id, callback) {
     // 必须是自己的才能申请发表， 否则， 无效
-    dbCommon.setProp(Opus, id, 'state', STATE_APPROVED_TO_PUBLISH, callback);
+    dbCommon.setProp(Opus, id, 'state', CONST.OPUS_STATE.APPROVED_TO_PUBLISH, callback);
 }
 function ban(id, callback) {
-    dbCommon.setProp(Opus, id, 'state', STATE_BAN, callback);
+    dbCommon.setProp(Opus, id, 'state', CONST.OPUS_STATE.BAN, callback);
 }
 
 exports.getAuthor = getAuthor;

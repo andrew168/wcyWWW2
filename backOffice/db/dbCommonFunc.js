@@ -3,14 +3,6 @@
  * 数据库的通用操作函数
  */
 
-var STATE = {
-    PRIVATE: 10,
-    APPLY_TO_PUBLISH: 20, // 必须经过批准才能公开， 防止 出乱子，
-    PUBLISHED: 30, //
-    FINE: 40, // 优秀作品
-    BAN: 70
-};
-
 function setProp(model, id, propName, propValue, callback) {
     model.findOne({_id: id})
         .exec(function (err, data) {
@@ -99,7 +91,6 @@ function ban(matModel, id, user, newValue, callback) {
 }
 
 exports.ban = ban;
-exports.STATE = STATE;
 exports.composeErrorMsg = composeErrorMsg;
 exports.setProp = setProp;
 exports.updateDate = updateDate;
