@@ -32,6 +32,31 @@ router.get('/', authHelper.ensureAuthenticated, function(req, res, next) {
     }
 });
 
+router.get('/fine', function (req, res, next) {
+    opusController.getFineList(onGotList, onFail);
+
+    function onGotList(list) {
+        res.json(list);
+    }
+
+    function onFail(msg) {
+        console.error("failed in get wcyList" + msg);
+        res.json([]);
+    }
+});
+router.get('/latest', function (req, res, next) {
+    opusController.getLatestList(onGotList, onFail);
+
+    function onGotList(list) {
+        res.json(list);
+    }
+
+    function onFail(msg) {
+        console.error("failed in get wcyList" + msg);
+        res.json([]);
+    }
+});
+
 router.get('/apply/:opusId', authHelper.ensureAuthenticated, function (req, res, next) {
     var user = status.getUserInfo(req, res);
     if (!user) {

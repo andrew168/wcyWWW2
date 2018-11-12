@@ -68,29 +68,21 @@ function getList(user, callback) {
     } else {
         condition = notBanned;
     }
-    Opus.find(condition).sort({lastModified: -1})
-        .exec(function (err, data) {
-            if (!data) {
-                console.error(404, {msg: 'not found!' + userId});
-            } else {
-                // console.log(data);
-            }
-            var result = getLatest(data);
-            if (result.length === 0) {
-                console.log("no opus found!, should has at least one demo or published");
-            }
-            callback(result);
-        });
+    Opus.find(condition).sort({lastModified: -1}).exec(function (err, data) {
+        var result = composeOpusList(err, data);
+        callback(result);
+    });
+}
 
-    function getLatest(data) {
-        if (!data) {
-            console.error("data 是null？什么情况？");
-        }
+function composeOpusList(err, data) {
+    var i,
+        result = [],
+        num;
 
-        var i,
-            result = [],
-            num = (!data ? 0 : Math.min(LATEST_OPUS_NUM, data.length));
-
+    if (err || !data) {
+        console.error(404, {msg: 'not found!' + userId});
+    } else {
+        num = (!data ? 0 : Math.min(LATEST_OPUS_NUM, data.length));
         for (i = 0; i < num; i++) {
             var doc1 = data[i]._doc;
             if (!doc1.ssPath) {
@@ -98,9 +90,27 @@ function getList(user, callback) {
             }
             result.push(doc1);
         }
-
-        return result;
     }
+
+    return result;
+}
+
+function getSpecifiedList(callback, stateRequested) {
+    var notBanned = {"state": {$ne: CONST.OPUS_STATE.BAN}},
+        condition = {"state": stateRequested};
+    condition = {$and: [notBanned, condition]};
+    Opus.find(condition).sort({lastModified: -1}).exec(function (err, data) {
+        var result = composeOpusList(err, data);
+        callback(result);
+    });
+}
+
+function getLatestList(callback) {
+    getSpecifiedList(callback, CONST.OPUS_STATE.PUBLISHED);
+}
+
+function getFineList(callback) {
+    getSpecifiedList(callback, CONST.OPUS_STATE.FINE);
 }
 
 // 也更新wcy的记录，
@@ -185,6 +195,8 @@ exports.getAuthor = getAuthor;
 exports.get = get;
 exports.add = add;
 exports.getList = getList;
+exports.getLatestList = getLatestList;
+exports.getFineList = getFineList;
 exports.applyToPublish = applyToPublish;
 exports.approveToPublish = approveToPublish;
 exports.ban = ban;
