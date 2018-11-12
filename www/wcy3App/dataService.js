@@ -41,23 +41,11 @@
         var topics = new TQ.DataObject();
 
         var propsMyWork = new TQ.DataObject();
-        var propsMyWork1 = new TQ.DataObject();
 
         function updateWork(work, tag, wcyName, screenshot) {
             work.tag = tag;
             work.filename = wcyName;
             work.screenshortName = screenshot;
-        }
-
-        function search(work) {
-            for (var i = 0; i < propsMyWork1.length; i++) {
-                if ((propsMyWork1[i].wcyName === work.wcyName) &&
-                    (propsMyWork1[i].screenshortName === work.screenshotName)) {
-                    return i;
-                }
-            }
-
-            return -1;
         }
 
         function cloneWork(work) {
@@ -228,7 +216,6 @@
         }
 
         function onDataReady() {
-            propsMyWork1 = readCacheWithParse(MY_WORKS, []);
             workCounter = readCacheWithParse("workCounter", 0);
             TQ.Log.checkPoint('DataService.EVENT_DATA_READY');
             $rootScope.$broadcast(EVENT_DATA_READY);
