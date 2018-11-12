@@ -175,7 +175,7 @@ function applyToPublish(id, playerId, callback) {
 
 function approveToPublish(operator, id, callback) {
     // 必须是自己的才能申请发表， 否则， 无效
-    dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.APPROVED_TO_PUBLISH, callback);
+    dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.PUBLISHED, callback);
 }
 function ban(operator, id, callback) {
     dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.BAN, callback);
