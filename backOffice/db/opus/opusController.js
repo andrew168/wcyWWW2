@@ -52,12 +52,13 @@ function onSaveOpus(err, model, onSuccess, onError) {
     }
 }
 
-// 获取最新的N个作品， 自己的， 或者 优秀公开的，而且有ssPath
+// 管理员： 除了ban的都返回
+// 普通用户： 只是自己的，（除了ban的）（不包括他人的）
 function getList(user, callback) {
     var userId = user.ID,
         notBanned = {"state": {$ne: CONST.OPUS_STATE.BAN}},
         userLimit = (userId === null) ? null : {"userId": userId},
-        condition = (!userLimit) ? {"state": CONST.OPUS_STATE.FINE} : {$or: [userLimit, {"state": CONST.OPUS_STATE.FINE}]};
+        condition = userLimit;
 
     if (user.canBan || user.canApprove) {
         condition = null;

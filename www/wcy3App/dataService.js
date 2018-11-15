@@ -19,7 +19,10 @@
             READY_PEOPLE_IMAGE = 0x04,
             READY_SOUND = 0x08,
             READY_OPUS = 0x10,
-            READ_ALL = 0x1f;
+            READY_PUBLISHED_OPUS = 0x20,
+            READY_FINE_OPUS = 0x40,
+            READY_ALL = READY_BKG_IMAGE | READY_PROP_IMAGE | READY_PEOPLE_IMAGE | READY_SOUND |
+                READY_OPUS | READY_PUBLISHED_OPUS | READY_FINE_OPUS;
         var state = 0,
             options = {
                 requestAll: false
@@ -40,7 +43,9 @@
         var sounds = new TQ.DataObject();
         var topics = new TQ.DataObject();
 
-        var propsMyWork = new TQ.DataObject();
+        var myOpus = new TQ.DataObject(), // only my opus
+            latestOpus = new TQ.DataObject(), // latest published
+            fineOpus = new TQ.DataObject(); // latest fine opus
 
         function updateWork(work, tag, wcyName, screenshot) {
             work.tag = tag;
@@ -84,7 +89,11 @@
                 case TQ.MatType.BKG:
                     return propsBackground.getPage(pageStep);
                 case TQ.MatType.OPUS:
-                    return propsMyWork.getPage(pageStep);
+                    return myOpus.getPage(pageStep);
+                case TQ.MatType.PUBLISHED_OPUS:
+                    return latestOpus.getPage(pageStep);
+                case TQ.MatType.FINE_OPUS:
+                    return fineOpus.getPage(pageStep);
                 case TQ.MatType.TOPIC:
                     return topics.getPage(pageStep);
                 default :
@@ -156,7 +165,15 @@
             }
             if (!matType || (matType === TQ.MatType.OPUS)) {
                 state &= (~READY_OPUS);
-                getOpusList(propsMyWork, matType, READY_OPUS);
+                getOpusList(myOpus, TQ.MatType.OPUS, READY_OPUS);
+            }
+            if (!matType || (matType === TQ.MatType.PUBLISHED_OPUS)) {
+                state &= (~READY_PUBLISHED_OPUS);
+                getOpusList(latestOpus, TQ.MatType.PUBLISHED_OPUS, READY_PUBLISHED_OPUS);
+            }
+            if (!matType || (matType === TQ.MatType.FINE_OPUS)) {
+                state &= (~READY_FINE_OPUS);
+                getOpusList(fineOpus, TQ.MatType.FINE_OPUS, READY_FINE_OPUS);
             }
             loadTopics(); //只有后台admin工具需要。
         }
@@ -176,16 +193,28 @@
                 }
                 mats.setList(data, matType);
                 state |= stateType;
-                if (state === READ_ALL) {
+                if (state === READY_ALL) {
                     onDataReady();
                 }
             }
         }
 
         function getOpusList(mats, matType, stateType) {
+            var opusDetail = '';
+            switch (matType) {
+                case TQ.MatType.PUBLISHED_OPUS:
+                    opusDetail = 'latest';
+                    break;
+                case TQ.MatType.FINE_OPUS:
+                    opusDetail = 'fine';
+                    break;
+                default:
+                    opusDetail = '';
+                    break;
+            }
             $http({
                 method: 'GET',
-                url: TQ.Config.OPUS_HOST + '/wcyList/'
+                url: TQ.Config.OPUS_HOST + '/wcyList/' + opusDetail
             }).then(onSuccess);
 
             function onSuccess(response) {
@@ -209,7 +238,7 @@
                 });
                 mats.setList(selected, matType);
                 state |= stateType;
-                if (state === READ_ALL) {
+                if (state === READY_ALL) {
                     onDataReady();
                 }
             }
