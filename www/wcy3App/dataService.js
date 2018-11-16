@@ -145,6 +145,10 @@
                 matType = event.data.matType;
             }
 
+            reload(matType);
+        }
+
+        function reload(matType) { // 用于 登录之后的刷新
             if (!matType || (matType === TQ.MatType.BKG)) {
                 state &= (~READY_BKG_IMAGE);
                 getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
@@ -175,7 +179,10 @@
                 state &= (~READY_FINE_OPUS);
                 getOpusList(fineOpus, TQ.MatType.FINE_OPUS, READY_FINE_OPUS);
             }
-            loadTopics(); //只有后台admin工具需要。
+
+            if (!matType || (matType === TQ.MatType.TOPIC)) {
+                loadTopics();
+            }
         }
 
         function getMatList(mats, matType, stateType) {
@@ -248,10 +255,6 @@
             workCounter = readCacheWithParse("workCounter", 0);
             TQ.Log.checkPoint('DataService.EVENT_DATA_READY');
             $rootScope.$broadcast(EVENT_DATA_READY);
-        }
-
-        function reload() { // 用于 登录之后的刷新
-            onMatChanged();
         }
 
         function setup(newOptions) {
