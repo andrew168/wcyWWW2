@@ -868,6 +868,18 @@ window.TQ = window.TQ || {};
     };
 
     //upgrade:
+    Level.upgradeEachElement = function (levelDesc, upgradeElement) {
+        var elements;
+
+        if (!levelDesc || !(elements = levelDesc.elements)) {
+            return;
+        }
+
+        for (var i = 0; i < (elements.length); i++) {
+            upgradeElement(elements[i]);
+        }
+    };
+
     Level.upgrade3_4ToVer3_6 = function (levelDesc) {
         var elements,
             eleDesc;
