@@ -614,6 +614,8 @@ window.TQ = window.TQ || {};
     };
 
     Utility.world2css = function (x, y) {
+        TQ.AssertExt.invalidLogic(!TQ.State.innerHeight, "应该先让desktopEle ready");
+
         // window的左下角是（0,0）
         var canvas = TQ.Graphics.getCanvas(),
             canvasStyle = getComputedStyle(canvas, null),
@@ -623,7 +625,7 @@ window.TQ = window.TQ || {};
             sy = currScene.getDesignatedHeight() / TQ.Config.workingRegionHeight;
 
         if (isNaN(yCanvasOriginInCss)) {
-            yCanvasOriginInCss = window.innerHeight -
+            yCanvasOriginInCss = TQ.State.innerHeight -
                 (removePx(canvasStyle.top) + removePx(canvasStyle.height));
         }
 
@@ -632,10 +634,11 @@ window.TQ = window.TQ || {};
     };
 
     Utility.world2cssFromTop = function (x, y) {
+        TQ.AssertExt.invalidLogic(!TQ.State.innerHeight, "应该先让desktopEle ready");
         var pos = Utility.world2css(x,y);
         return {
             x: pos.x,
-            y: window.innerHeight - pos.y
+            y: TQ.State.innerHeight - pos.y
         };
     };
 

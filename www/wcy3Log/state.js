@@ -24,8 +24,8 @@ var TQ = TQ || {};
         }
     });
 
-    State.innerWidth = window.innerWidth;
-    State.innerHeight = window.innerHeight;
+    State.innerWidth = 0;
+    State.innerHeight = 0;
     State.bottomBarHeight = 0;
     State.bottomFloatToolHeight = 0;
     State.topBarHeight = 0;
@@ -107,16 +107,17 @@ var TQ = TQ || {};
     }
 
     function updateDeviceInfo() {
-        if (deviceInfoInitialized && (State.innerWidth === window.innerWidth) &&
-            (State.innerHeight === window.innerHeight)) {  // no change
-            return false;
-        }
-
         deviceInfoInitialized = true;
         var desktopEle = $('.desktop-ok')[0];
-        State.innerWidth = (desktopEle) ? TQ.Utility.getCssSize(window.getComputedStyle(desktopEle).width) :
-            window.innerWidth;
-        State.innerHeight = window.innerHeight;
+        if (desktopEle) {
+            var bodyCss = window.getComputedStyle(desktopEle);
+            State.innerWidth = TQ.Utility.getCssSize(bodyCss.width);
+            State.innerHeight = TQ.Utility.getCssSize(bodyCss.height);
+        } else {
+            TQ.AssertExt.invalidLogic(false, "应该先让desktopEle ready");
+            State.innerWidth = window.innerWidth;
+            State.innerHeight = window.innerHeight;
+        }
         return true;
     }
 
