@@ -614,7 +614,7 @@ window.TQ = window.TQ || {};
     };
 
     Utility.world2css = function (x, y) {
-        TQ.AssertExt.invalidLogic(!TQ.State.innerHeight, "应该先让desktopEle ready");
+        TQ.AssertExt.invalidLogic(!!TQ.State.innerHeight, "应该先让desktopEle ready");
 
         // window的左下角是（0,0）
         var canvas = TQ.Graphics.getCanvas(),
@@ -634,7 +634,7 @@ window.TQ = window.TQ || {};
     };
 
     Utility.world2cssFromTop = function (x, y) {
-        TQ.AssertExt.invalidLogic(!TQ.State.innerHeight, "应该先让desktopEle ready");
+        TQ.AssertExt.invalidLogic(!!TQ.State.innerHeight, "应该先让desktopEle ready");
         var pos = Utility.world2css(x,y);
         return {
             x: pos.x,
