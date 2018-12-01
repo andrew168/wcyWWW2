@@ -38,17 +38,17 @@ function get(userId, callback) {
 
 function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
     /*
-        排序：
-        1）如果有userId：我自己上传的，没有禁止的
-        2）如果指定了主题：关联到本主题，而且 公开的、没有禁止的
-        // 3）其余的： 公开的， 没有禁止的
+        必须是“没有禁止的”
+        内容及其排序：
+        1）我自己上传的 （如果指定了userID）
+        2）关联到本主题，而且 公开的（如果指定了主题， 否则： 所有公开的）
 
         对于管理员：
-        1) 获取所有素材，或者
-        2）
+        1) 获取所有素材
      */
     var userLimit = (userId === null) ? null : {"userId": userId},
         topicLimit = !hasValidTopic(topicId) ? null: {topicIds: topicId}, //选topicIds数组中含有元素topicId的，
+        allShared = {'isShared': true},
         typeLimit = {"typeId": typeId},
         notBanned = {"isBanned": false},
         userAndTopicLimit,
@@ -61,6 +61,11 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
     }
 
     userAndTopicLimit = userLimit;
+
+    if (!topicLimit) {
+        topicLimit = allShared;
+    }
+
     if (topicLimit) {
         if (userAndTopicLimit) {
             userAndTopicLimit = {$or: [userAndTopicLimit, topicLimit]};
