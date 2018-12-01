@@ -37,7 +37,6 @@ var TQ = TQ || {};
     var deviceInfoInitialized = false;
 
     function determineWorkingRegion() {
-        var isLandscape = TQUtility.isLandscape();
         if (!deviceInfoInitialized) {
             updateDeviceInfo();
         }
@@ -76,12 +75,7 @@ var TQ = TQ || {};
             w = State.innerWidth,
             designated;
 
-        if (isLandscape) {
-            w = w - TQ.Config.MIN_WIDTH_OF_LANDSCAPE_MENU;
-        } else {
-            h = h - (topBarHeight + bottomBarHeight);
-        }
-
+        h = h - (topBarHeight + bottomBarHeight);
         designated = !currScene ? TQ.Scene.getDesignatedRegionDefault() : currScene.getDesignatedRegion();
         scaleMin = Math.min(w / designated.w, h / designated.h);
         TQ.Config.workingRegionWidth = scaleMin * designated.w;
@@ -92,15 +86,10 @@ var TQ = TQ || {};
             TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
         }
 
-        TQ.Config.workingRegionX0 = (isLandscape? (State.innerWidth - TQ.Config.workingRegionWidth) :
-            Math.round((State.innerWidth - TQ.Config.workingRegionWidth) / 2));
+        TQ.Config.workingRegionX0 = Math.round((State.innerWidth - TQ.Config.workingRegionWidth) / 2);
 
-        if (isLandscape) {
-            TQ.Config.workingRegionY0 = 0;
-        } else {
-            TQ.Config.workingRegionY0 = Math.round((State.innerHeight - TQ.Config.workingRegionHeight) / 2);
-            TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight) / 2);
-        }
+        TQ.Config.workingRegionY0 = Math.round((State.innerHeight - TQ.Config.workingRegionHeight) / 2);
+        TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight) / 2);
 
         State.bottomBarHeight = bottomBarHeight;
         State.topBarHeight = topBarHeight;
