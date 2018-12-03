@@ -136,16 +136,16 @@
         }
 
         function onMatChanged(event) {
-            if (!TQ.userProfile.loggedIn) {
-                return;
-            }
-
             var matType = null;
             if (!!event && event.data && event.data.matType) {
                 matType = event.data.matType;
             }
 
-            reload(matType);
+            if (!TQ.userProfile.loggedIn) {
+                reloadSharedData(matType);
+            } else {
+                reload(matType);
+            }
         }
 
         function reload(matType) { // 用于 登录之后的刷新
@@ -171,6 +171,10 @@
                 state &= (~READY_OPUS);
                 getOpusList(myOpus, TQ.MatType.OPUS, READY_OPUS);
             }
+            reloadSharedData(matType);
+        }
+
+        function reloadSharedData(matType) {
             if (!matType || (matType === TQ.MatType.PUBLISHED_OPUS)) {
                 state &= (~READY_PUBLISHED_OPUS);
                 getOpusList(latestOpus, TQ.MatType.PUBLISHED_OPUS, READY_PUBLISHED_OPUS);
