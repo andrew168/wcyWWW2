@@ -47,7 +47,17 @@ function WxService($http, $cookies, $q) {
         'openProductSpecificView',
         'addCard',
         'chooseCard',
-        'openCard'
+        'openCard',
+        'miniProgram',
+        'miniProgram.navigateTo',
+        'miniProgram.navigateTo',
+        'miniProgram.navigateTo',
+        'miniProgram.navigateBack',
+        'miniProgram.switchTab',
+        'miniProgram.reLaunch',
+        'miniProgram.redirectTo',
+        'miniProgram.postMessage',
+        'miniProgram.getEnv'
     ];
 
     var title = "春节快乐！",

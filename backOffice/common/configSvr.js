@@ -6,8 +6,13 @@ var configSvr = {
     wx: {
         bindToken: "tuqiangkeji1111",
         udoido: {
+            // UdoIdo服务号
             appId: 'wx5fe65e70536d0258',
             appSecret: '393e38d14682d6e2ee524dbc96b080bf'
+
+            // UdoIdo小程序
+            // appId: 'wxf4837cf4c3f35e1d',
+            // appSecret: '67bf14b07c16c1df2e8ff731638f5c3a'
         }
     },
 
