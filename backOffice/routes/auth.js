@@ -79,6 +79,7 @@ router.post('/signup', function (req, res) {
 
     var name = email,
         psw = req.body.password || null,
+        groupId = req.body.groupId || "11111",
         displayName = req.body.displayName || null;
 
     // status.logUser(req);
@@ -118,9 +119,10 @@ router.post('/signup', function (req, res) {
         }
         var user = new User({
             name: email, // email or phone number
-            displayName: req.body.displayName,
+            displayName: displayName,
+            groupId: groupId,
             email: email,
-            password: req.body.password
+            password: psw
         });
         saveAndResponse(req, res, user);
     });

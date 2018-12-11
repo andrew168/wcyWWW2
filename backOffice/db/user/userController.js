@@ -45,12 +45,15 @@ function composeErrorPkg(err, errorId) {
 }
 
 function composeUserPkg(model) {
-    var doc = (Array.isArray(model)) ? model[0]._doc : model._doc;
+    var doc = (Array.isArray(model)) ? model[0]._doc : model._doc,
+        groupId = doc.groupId || "00000";
     return {
         result: Const.SUCCESS,
         loggedIn: true,
         errorId: Const.ERROR.NO,
         name: doc.name,
+        groupId: groupId,
+        userType: getUserType(groupId),
         ID: doc._id,
         displayName: doc.displayName,
         canApprove: !!(doc.privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
@@ -127,6 +130,31 @@ function getList(aUser, callback) {
 
 function setPrivilege(operator, id, code, callback) {
     dbCommon.setProp(operator, User, id, 'privilege', code, callback);
+}
+
+function getUserType(groupId) {
+    var USER_TEACHER = 1,
+        USER_PARENT = 3,
+        USER_KIDS = 3,
+        userType = USER_KIDS,
+        lastChar;
+    if (groupId) {
+        lastChar = groupId[groupId.length - 1];
+        switch (lastChar) {
+            case '1':
+                userType = USER_KIDS;
+                break;
+            case '6':
+                userType = USER_PARENT;
+                break;
+            case '8':
+                userType = USER_TEACHER;
+                break;
+            default:
+                userType = USER_KIDS;
+        }
+    }
+    return userType;
 }
 
 exports.get = get;
