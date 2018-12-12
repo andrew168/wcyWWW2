@@ -52,7 +52,6 @@ var TQUtility; //
         // mozilla/5.0 (iphone; ...... micromessenger/5.0
         var ua = navigator.userAgent.toLowerCase();
         return /micromessenger/.test(ua);
-        'webdebugger miniprogramhtmlwebview'
     }
 
     function isMiniProgramWebViewDevTool() {
