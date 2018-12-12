@@ -1,10 +1,9 @@
 angular.module('starter').factory('WxService', WxService);
-WxService.$inject = ['$http', '$cookies', '$q'];
-function WxService($http, $cookies, $q) {
+WxService.$inject = ['$http', '$q'];
+function WxService($http, $q) {
     // ToDo: CORS 无法读取server设置的cookie，
     //     ==> Auth用户统计， 必须和网页一个host
     //  ==> sever的cookie可以是 http读取only， 不让客户端读写它，以便于追踪
-    var user = (typeof TQ.userProfile ==='undefined')? {}: TQ.userProfile;
     var _isReady = false;
     var urlConcat = TQ.Base.Utility.urlConcat;
     var _shareData = null,
@@ -90,8 +89,6 @@ function WxService($http, $cookies, $q) {
          此问题会在Android6.2中修复）
          ？？ 2小时之后， 是否需要重新认证？
          */
-        user.timesShared = $cookies.get('timesCalled');
-        user.ID = $cookies.get('userId');
         // pageUrlSigned = wechat_sign.url;
         pageUrlSigned = location.href;
 
@@ -99,19 +96,19 @@ function WxService($http, $cookies, $q) {
             TQ.Log.alertInfo(JSON.stringify(wechat_sign));
         }
 
-        wx.config({
-            debug: TQ.Config.WX_DEBUG_ENABLED, // true, // false,
-            appId: TQ.Config.wx.appId,
-            timestamp: wechat_sign.timestamp,
-            nonceStr: wechat_sign.nonceStr,
-            signature: wechat_sign.signature,
-            jsApiList: ApiList,
-            success: _onSuccess,
-            fail: _onFail,
-            complete: _onComplete,
-            cancel: _onCancel
-        });
-
+        console.log('window.__wxjs_environment = ' + window.__wxjs_environment);
+            wx.config({
+                debug: TQ.Config.WX_DEBUG_ENABLED, // true, // false,
+                appId: TQ.Config.wx.appId,
+                timestamp: wechat_sign.timestamp,
+                nonceStr: wechat_sign.nonceStr,
+                signature: wechat_sign.signature,
+                jsApiList: ApiList,
+                success: _onSuccess,
+                fail: _onFail,
+                complete: _onComplete,
+                cancel: _onCancel
+            });
         // 如果更换了页面，则需要向wx重新注册？
         // wx.ready如果注册1次， 则只执行1次。放在doConfig里面，以确保每个页面初始化之后，都能够执行1次
         wx.ready(function (msg) {
@@ -155,9 +152,6 @@ function WxService($http, $cookies, $q) {
         if (!TQ.Config.hasWx || !_isReady) {
             return;
         }
-
-        user.timesShared = $cookies.get('timesCalled');
-        user.ID = $cookies.get('userId');
 
         var param = {
             title: _shareData.title,
