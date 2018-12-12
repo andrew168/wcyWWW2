@@ -17,6 +17,7 @@ var TQUtility; //
     Utility.isAndroid = isAndroid;
     Utility.isAndroidPad = isAndroidPad;
     Utility.isWeChat = isWeChat;
+    Utility.isMiniProgramWebView = isMiniProgramWebView;
     Utility.parsePathname = parsePathname;
     Utility.isLandscape = isLandscape;
 
@@ -51,14 +52,39 @@ var TQUtility; //
         // mozilla/5.0 (iphone; ...... micromessenger/5.0
         var ua = navigator.userAgent.toLowerCase();
         return /micromessenger/.test(ua);
+        'webdebugger miniprogramhtmlwebview'
+    }
+
+    function isMiniProgramWebViewDevTool() {
+        // 微信在 Android和iPhone 下的 User Agent分别是：
+        // mozilla/5.0 (linux; u; android ......micromessenger/5.0.1.352
+        // mozilla/5.0 (iphone; ...... micromessenger/5.0
+        var ua = navigator.userAgent.toLowerCase();
+        return isWeChat() && /webdebugger miniprogramhtmlwebview/.test(ua);
+    }
+
+    function isMiniProgramWebView() { //在微信小程序打开的webView
+        return (window && window.__wxjs_environment &&
+            (window.__wxjs_environment === "miniprogram"));
     }
 
     function isLandscape () {
+        if (isMiniProgramWebView() && isMiniProgramWebViewDevTool()) {
+            return isMiniProgramWebViewSimulatorLandscape();
+        }
+
         var flags = ''; // "landscape-primary", "portrait-primary"
         if (screen && screen.orientation && screen.orientation.type) {
             flags = screen.orientation.type;
         }
         return (flags.indexOf('landscape') >=0);
+    }
+
+    function isMiniProgramWebViewSimulatorLandscape() {
+        //！！！ 在微信开发工具的模拟手机中， screen值是整个桌面， 所以，只能用window的信息
+        TQ.AssertExt.invalidLogic(isMiniProgramWebView() && isMiniProgramWebViewDevTool(), "只能在微信开发工具中调试小程序的时候使用");
+        return (window && window.innerHeight && window.innerWidth &&
+            (window.innerWidth > window.innerHeight));
     }
 
     function getVersionNumber() {
