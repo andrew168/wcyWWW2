@@ -230,8 +230,7 @@
 
             function onSuccess(response) {
                 var data = (response.status === 200) ? response.data : [],
-                    selected = [],
-                    userName = TQ.userProfile.getUserName();
+                    selected = [];
 
                 if (!Array.isArray(data)) {
                     data = [];
