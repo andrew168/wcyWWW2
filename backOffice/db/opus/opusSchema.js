@@ -13,7 +13,8 @@ var opusSchema = new Schema({
     title: {type: String, default: ""},
     // 申请共享，批准发表
     state: {type: Number, default: 10}, // 10, 私有的,
-    userId:Number,
+    userId:Number, //应该是authorId，
+    authorName: {type: String, default:""}, // 作者的displayName，冗余信息， 为了加速信息检索，避免由作者的id找
     topicId: Number,
     ssPath: {type: String, default:""},
     template: {type: Number, default: 0} // 0: no template

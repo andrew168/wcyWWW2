@@ -20,10 +20,11 @@ function get(id) {
         });
 }
 
-function add(userId, ssPath, templateId, wcyHeader, onSuccess, onError) {
+function add(user, ssPath, templateId, wcyHeader, onSuccess, onError) {
     console.info("enter add");
     var aOpus = new Opus({
-        userId: userId,
+        userId: user.ID,
+        authorName: getAuthorName(user),
         ssPath: ssPath,
         template: templateId,
         // 除了在wcy.js中特别用到的属性之外， 其余都通过wcyHeader（总体描述）传进来，
@@ -89,11 +90,19 @@ function composeOpusList(err, data) {
             if (!doc1.ssPath) {
                 //  continue;
             }
+            upgradeRecord(doc1);
             result.push(doc1);
         }
     }
 
     return result;
+}
+
+function upgradeRecord(doc) {
+    // ToDo: 提高效率：改用1次性升级，避免每次调用都执行它，
+    if (doc && doc.userId && !doc.authorName) {
+        doc.authorName = doc.userId;
+    }
 }
 
 function getSpecifiedList(callback, stateRequested) {
@@ -190,6 +199,17 @@ function approveToPublish(operator, id, callback) {
 }
 function ban(operator, id, callback) {
     dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.BAN, callback);
+}
+
+function getAuthorName(user) {
+    var result = user.displayName;
+    if (!result) {
+        result = user.name;
+    }
+    if (!result) {
+        result = user.ID;
+    }
+    return result;
 }
 
 exports.getAuthor = getAuthor;

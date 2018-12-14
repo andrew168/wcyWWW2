@@ -64,7 +64,7 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
     } else {
         var wcyId = req.query.wcyId || 0;
         if (isNewWcy(wcyId)) { // 新作品，
-            opusController.add(user.ID, ssPath, templateId, wcyDataObj, onSavedToDb, null);
+            opusController.add(user, ssPath, templateId, wcyDataObj, onSavedToDb, null);
         } else {
             opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDb);
         }
