@@ -60,6 +60,12 @@ TQ = TQ || {};
     Scene.saveState = saveState;
     Scene.restoreState = restoreState;
     Scene.getDefaultTitle = getDefaultTitle;
+    Scene.getWcyId = function () {
+        TQ.AssertExt.invalidLogic(Scene.wcyId !== undefined && Scene.wcyId >= 0, "必须先赋值");
+        return Scene.wcyId;
+    };
+
+    Scene.setWcyId = function (id) {Scene.wcyId = id;};
 
     function saveState() {
         stateStack.push({tT: Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
@@ -516,6 +522,8 @@ TQ = TQ || {};
         _levelTe.splice(0);
         _levelTs.splice(0);
         this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
+        this.isShared = false;  //只是打开旧的文件， 没有尚未修改
+        Scene.wcyId = undefined;
         this.title = "";  // 必须reset, 因为currScene在New新作品的时候， reuse了
         this.filename = null;
         this.description = null;
