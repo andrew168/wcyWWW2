@@ -28,13 +28,17 @@ var config = {
 };
 
 function ensureAuthenticated(req, res, next) {
+    var payload = INAVLID_USER;
     if (!req.header('Authorization')) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Not authorized');
+        responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Not authorized');
+    } else {
+        payload = getPayload(req, res);
     }
-    var payload = getPayload(req, res);
+
     if (payload === INAVLID_USER) {
         return;
     }
+
     next();
 }
 
