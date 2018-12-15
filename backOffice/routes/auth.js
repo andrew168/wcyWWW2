@@ -33,6 +33,7 @@ router.post('/login', function (req, res) {
         if (!user) {
             return failedOrOldPswUser(req, res);
         }
+        status.logUser(user, req, res);
         if (!req.body.password) {
             return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
         }
