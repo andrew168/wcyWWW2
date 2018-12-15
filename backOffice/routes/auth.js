@@ -87,8 +87,12 @@ router.post('/signup', function (req, res) {
         errorMsg = '';
 
     if (!isValidDisplayName(displayName)) {
+        displayName = name;
+    }
+
+    if (!isValidDisplayName(displayName)) {
         errorId = Const.ERROR.DISPLAY_NAME_INVALID;
-        errorMsg = 'display name at least 2 characters';
+        errorMsg = 'display name at least 1 character';
     } else if (!isValidFormat(name)) {
         errorId = Const.ERROR.NAME_IS_INVALID;
         errorMsg = 'invalid name';
@@ -468,7 +472,7 @@ function isValidFormat(name) {
 }
 
 function isValidDisplayName(name) {
-    return ((name) && (name.length >= 2));
+    return ((name) && (name.length >= 1));
 }
 
 function unifyProfile(id, email, displayName, pictureUrl) {
