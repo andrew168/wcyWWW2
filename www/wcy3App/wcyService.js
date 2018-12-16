@@ -534,6 +534,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
         setOnStarted: setOnStarted,
         start: start,  // start a new one, or load previous one (edited or played)
         create: create,
+        needToSave: needToSave,
         save: save,
         createHtmlPage: createHtmlPage,
         forkIt: forkIt,

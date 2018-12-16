@@ -518,23 +518,10 @@ TQ = TQ || {};
     p.reset = function () { // 在打开文件，或者创建新文件的时候， 重新设置环境
         //   $('#stop').trigger('click');
         this.setEditor();
-        this.tMax = 0;
+        this.setDefaultValue();
         _levelTe.splice(0);
         _levelTs.splice(0);
-        this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
-        this.isShared = false;  //只是打开旧的文件， 没有尚未修改
-        Scene.wcyId = undefined;
-        this.title = "";  // 必须reset, 因为currScene在New新作品的时候， reuse了
-        this.filename = null;
-        this.description = null;
-        this.ssPath = null; // 初始化， 没有此值
-        this.isDirty = true;
-        this.hasSavedToCache = false;
         this.setDesignatedSize(Scene.getDesignatedRegionDefault());
-        this.outroInitialized = false;
-        this.outro = null;
-        this.topic = (TQ.State && TQ.State.topic)? TQ.State.topic : null;
-        this.topicId = TQ.Utility.getTopicId();;
         //ToDo:@UI   initMenu(); // 重新设置菜单
 
         // close current if  has one;
@@ -552,6 +539,26 @@ TQ = TQ || {};
                 $("#linearMode").click();
             }
         }
+    };
+
+    p.setDefaultValue = function () {
+        Scene.wcyId = undefined;
+        this.tMax = 0;
+        this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
+        this.isShared = false;  //只是打开旧的文件， 没有尚未修改
+        this.title = TQ.Config.UNNAMED_SCENE;;  // 必须reset, 因为currScene在New新作品的时候， reuse了
+        this.filename = null;
+        this.description = null;
+        this.ssPath = null; // 初始化， 没有此值
+        this.hasScreenShotManual = false;
+        this.isDirty = true;
+        this.hasSavedToCache = false;
+        this.outroInitialized = false;
+        this.outro = null;
+        this.topic = (TQ.State && TQ.State.topic) ? TQ.State.topic : null;
+        this.topicId = TQ.Utility.getTopicId();
+        this.state = TQBase.LevelState.INITING;
+        this.backgroundColor = TQ.Config.BACKGROUND_COLOR;
     };
 
     p.setDesignatedSize = function (region) {
@@ -721,12 +728,8 @@ TQ = TQ || {};
         } else {
             this.currentLevel.empty();// 主要是设置各种flag
         }
-        this.title = TQ.Config.UNNAMED_SCENE;
-        this.state = TQBase.LevelState.INITING;
-        this.topic = TQ.State.topic;
-        this.backgroundColor = TQ.Config.BACKGROUND_COLOR;
-        this.isSaved = true; //ToDo: check it is false???
-        this.isDirty = true;
+
+        this.setDefaultValue();
     };
 
     // JQuery Ajax version
