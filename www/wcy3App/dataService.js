@@ -149,27 +149,29 @@
         }
 
         function reload(matType) { // 用于 登录之后的刷新
-            if (!matType || (matType === TQ.MatType.BKG)) {
-                state &= (~READY_BKG_IMAGE);
-                getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
-            }
+            if (TQ.userProfile.loggedIn) {
+                if (!matType || (matType === TQ.MatType.BKG)) {
+                    state &= (~READY_BKG_IMAGE);
+                    getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
+                }
 
-            if (!matType || (matType === TQ.MatType.PROP)) {
-                state &= (~READY_PROP_IMAGE);
-                getMatList(propsLocal, TQ.MatType.PROP, READY_PROP_IMAGE);
-            }
+                if (!matType || (matType === TQ.MatType.PROP)) {
+                    state &= (~READY_PROP_IMAGE);
+                    getMatList(propsLocal, TQ.MatType.PROP, READY_PROP_IMAGE);
+                }
 
-            if (!matType || (matType === TQ.MatType.PEOPLE)) {
-                state &= (~READY_PEOPLE_IMAGE);
-                getMatList(propsPeople, TQ.MatType.PEOPLE, READY_PEOPLE_IMAGE);
-            }
-            if (!matType || (matType === TQ.MatType.SOUND)) {
-                state &= (~READY_SOUND);
-                getMatList(sounds, TQ.MatType.SOUND, READY_SOUND);
-            }
-            if (!matType || (matType === TQ.MatType.OPUS)) {
-                state &= (~READY_OPUS);
-                getOpusList(myOpus, TQ.MatType.OPUS, READY_OPUS);
+                if (!matType || (matType === TQ.MatType.PEOPLE)) {
+                    state &= (~READY_PEOPLE_IMAGE);
+                    getMatList(propsPeople, TQ.MatType.PEOPLE, READY_PEOPLE_IMAGE);
+                }
+                if (!matType || (matType === TQ.MatType.SOUND)) {
+                    state &= (~READY_SOUND);
+                    getMatList(sounds, TQ.MatType.SOUND, READY_SOUND);
+                }
+                if (!matType || (matType === TQ.MatType.OPUS)) {
+                    state &= (~READY_OPUS);
+                    getOpusList(myOpus, TQ.MatType.OPUS, READY_OPUS);
+                }
             }
             reloadSharedData(matType);
         }
