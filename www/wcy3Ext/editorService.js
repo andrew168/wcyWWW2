@@ -285,7 +285,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
                 TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
                     TQ.SoundMgr.iosForceToResumeAll();
                     preview();
-                });
+                }, null, true);
             } else {
                 TQ.MessageBox.reset();
                 preview();

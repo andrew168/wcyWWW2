@@ -47,8 +47,11 @@ TQ.MessageBox = (function () {
             isShowingByForce = true;
             timer = setTimeout(onDuration, options.duration);
         }
-
-        return (instances[options.type] = show2(options));
+        var inst = show2(options);
+        if (!options.mustClick) {
+            instances[options.type] = inst;
+        }
+        return (inst);
     }
 
     function getInstance() {
@@ -78,8 +81,9 @@ TQ.MessageBox = (function () {
         TQ.Log.debugInfo("Ok!");
     }
 
-    function prompt(msg, onOk1, onCancel1) {
+    function prompt(msg, onOk1, onCancel1, mustClick) {
         var option = {
+            mustClick: !!mustClick,
             unsafeMessage: msg,
             onOk: onOk1? onOk1: onOk
         };
@@ -135,6 +139,7 @@ TQ.MessageBox = (function () {
                 unsafeMessage: options.unsafeMessage,
                 overlayClosesOnClick: !!options.overlayClosesOnClick,
                 className: getClassName(options),
+                mustClick: options.mustClick,
                 callback: function (value) {
                     if (value) {
                         console.log('Ok');
@@ -206,8 +211,11 @@ TQ.MessageBox = (function () {
             }
 
             if (instances[TYPE_PROMPT]) {
-                vex.close(instances[TYPE_PROMPT]); // 这个close， 还在调用callback，容易造成死循环
-                instances[TYPE_PROMPT] = null;
+                var options = instances[TYPE_PROMPT].options;
+                if (!options.mustClick) {
+                    vex.close(instances[TYPE_PROMPT]); // 这个close， 还在调用callback，容易造成死循环
+                    instances[TYPE_PROMPT] = null;
+                }
             }
 
             if (instances[TYPE_CONFIRM]) {
