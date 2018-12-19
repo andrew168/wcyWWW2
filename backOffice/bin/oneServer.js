@@ -251,6 +251,7 @@
          */
 
         server = http.createServer(app);
+        server.maxConnections = 6000; // 6 * 1000; 最多同时1000浏览器同时访问， 每个浏览器6个并发请求
 
         /**
          * Listen on provided port, on all network interfaces.

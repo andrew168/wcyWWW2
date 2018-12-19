@@ -27,6 +27,8 @@ function init() {
     app.use(compression());
     vHostServer = http.createServer(app);
     vSecuredServer = https.createServer(optionForSecuredServer, app);
+    vHostServer.maxConnections = 6000; // 6 * 1000; 最多同时1000浏览器同时访问， 每个浏览器6个并发请求
+    vSecuredServer.maxConnections = 6000; // 6 * 1000; 最多同时1000浏览器同时访问， 每个浏览器6个并发请求
     app.use(gracefulExit.middleware(app)); //!!! gracefulExit 必须是app的第一个配置
     console.info("process.env.PORT = " + process.env.PORT);
     config.port = normalizePort(process.env.PORT || config.port);
