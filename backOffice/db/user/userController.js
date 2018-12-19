@@ -98,7 +98,7 @@ function getList(aUser, callback) {
     User.find(null).sort({_id: -1})
         .exec(function (err, data) {
             if (!data) {
-                console.error(404, {msg: 'not found!' + userId});
+                console.error(404, {msg: 'not found!'});
                 callback(result);
             }
             result = getLatest(data);

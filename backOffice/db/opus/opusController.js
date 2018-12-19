@@ -82,7 +82,7 @@ function composeOpusList(err, data) {
         num;
 
     if (err || !data) {
-        console.error(404, {msg: 'not found!' + userId});
+        console.error(404, {msg: 'not found!'});
     } else {
         num = (!data ? 0 : Math.min(LATEST_OPUS_NUM, data.length));
         for (i = 0; i < num; i++) {
