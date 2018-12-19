@@ -4,6 +4,7 @@
 var assert = require('assert'),
     userController = require('../db/user/userController'),
     onlineUsers = require('./onlineUsers'),
+    serverConfig = require('./../bin/serverConfig'),
     authHelper = require('../routes/authHelper');
 
 var ANONYMOUS = "anonymous",
@@ -52,23 +53,30 @@ function onLoginFailed(req, res, data) {
 }
 
 function logUser(user, req, res, callback) {
-    var ua = req.headers['user-agent'],
-        ip = req.ip,
-        url = req.originalUrl || req.path,
-        ips = req.ips;
+  if (!serverConfig.allowLog) {
+    if (callback) {
+      callback("no log");
+    }
+    return;
+  }
 
-    validateUser(req, res, function () {
-        console.log("access: user=" + JSON.stringify(user) + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
-        if (callback) {
-            callback();
-        }
-    }, function (msg) {
-        console.log("非法逻辑，非法用户，新add也不成功，: user=" + JSON.stringify(user) + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
-        console.log(msg);
-        if (callback) {
-            callback(msg);
-        }
-    })
+  var ua = req.headers['user-agent'],
+    ip = req.ip,
+    url = req.originalUrl || req.path,
+    ips = req.ips;
+
+  validateUser(req, res, function () {
+    console.log("access: user=" + JSON.stringify(user) + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
+    if (callback) {
+      callback();
+    }
+  }, function (msg) {
+    console.log("非法逻辑，非法用户，新add也不成功，: user=" + JSON.stringify(user) + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
+    console.log(msg);
+    if (callback) {
+      callback(msg);
+    }
+  })
 }
 
 function setUserCookie(user, res, callback) {

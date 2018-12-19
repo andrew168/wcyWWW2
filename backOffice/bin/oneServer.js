@@ -3,17 +3,18 @@
 
 (function() {
 
-    var debug = require('debug')('iCardSvr2:server');
-    var http = require('http');
-    var server;
-    var _config = {};
-    var logger = require('./../common/logger');
-    var express = require('express');
-    var path = require('path');
-    var favicon = require('serve-favicon');
-    var loggerMorgan = require('morgan');
-    var cookieParser = require('cookie-parser');
-    var bodyParser = require('body-parser');
+    var debug = require('debug')('iCardSvr2:server'),
+      serverConfig = require('./serverConfig'),
+      http = require('http'),
+       server,
+     _config = {},
+     logger = require('./../common/logger'),
+     express = require('express'),
+     path = require('path'),
+     favicon = require('serve-favicon'),
+     loggerMorgan = require('morgan'),
+     cookieParser = require('cookie-parser'),
+     bodyParser = require('body-parser');
 
 // our own module
     var userStat = null;
@@ -127,23 +128,28 @@
         }
 
         // 以上的路径是静态文件，排除在外,不log访问情况
-        app.use(function (req, res, next) {
+        /*
+        此时log不合适。因为刚收到net请求，尚未核验用户身份
+        */
+        if (serverConfig.allowLog) {
+          app.use(function (req, res, next) {
             // console.log("I'm first!!! for any path, 除了以上的路径");
             var url = req.url.split(/[?,#]/)[0],
-                ext = url.substr(url.lastIndexOf('.')),
-                user;
+              ext = url.substr(url.lastIndexOf('.')),
+              user;
 
             ext = ext.toLocaleLowerCase();
             if (inWhiteList(ext)) {
-                next();
+              next();
             } else {
-                if (userStat && req.header('Authorization') &&
-                    (user = userStat.getUserInfo(req, res))) { // 可能尚未启动userStat, 因为需要启动db的支持，比较慢
-                    userStat.logUser(user, req, res);
-                }
-                next();
+              if (userStat && req.header('Authorization') &&
+                (user = userStat.getUserInfo(req, res))) { // 可能尚未启动userStat, 因为需要启动db的支持，比较慢
+                userStat.logUser(user, req, res);
+              }
+              next();
             }
-        });
+          });
+        }
 
         console.log("current path:" + __dirname);
         console.log("client path (dynamic): " + clientPath);
