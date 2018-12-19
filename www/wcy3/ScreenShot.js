@@ -14,7 +14,7 @@ window.TQ = window.TQ || {};
     ScreenShot.SaveScreen = function (name, keywords) {
         imageName = name;
         takeImage();
-        ScreenShot.upload(keywords);
+        // ScreenShot.upload(keywords);
     };
 
     function takeImage(bkgColor) {
@@ -42,25 +42,6 @@ window.TQ = window.TQ || {};
 
     ScreenShot.getDataWithBkgColor = function() {
         return takeImage(TQ.Graphics.getCanvasBkgColor());
-    };
-
-    ScreenShot.upload = function (_keywords)
-    {
-        assertNotNull(TQ.Dictionary.FoundNull,  imageData); // 先截取屏幕
-        $.ajax({
-            type: "POST",
-            url: 'Weidongman/src/ScreenShot.php',
-            dataType: 'text',
-            success:displayInfo3,
-            error:displayInfo3,
-            data: {
-                type:'png',
-                userId: localStorage.getItem("userId"),
-                imageName: imageName,
-                base64data : imageData,
-                keywords:_keywords
-            }
-        });
     };
 
     function determineScale(img, maxWidth, maxHeight) {//只缩小， 不放大
