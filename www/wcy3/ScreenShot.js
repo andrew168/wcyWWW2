@@ -8,16 +8,9 @@ window.TQ = window.TQ || {};
 
 (function () {
     var ScreenShot = {};
-    var imageData = null,
-        imageName = "noname";
-
-    ScreenShot.SaveScreen = function (name, keywords) {
-        imageName = name;
-        takeImage();
-        // ScreenShot.upload(keywords);
-    };
 
     function takeImage(bkgColor) {
+        var imageData;
         if (!bkgColor) {
             imageData = stage.toDataURL("image/png"); // 默认生成透明图, 带alpha信息, PNG格式的
         } else {
