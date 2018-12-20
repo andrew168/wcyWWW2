@@ -12,8 +12,37 @@ TQ.ImageCliper = (function () {
     baseRadius = 100,
     radius = baseRadius,
     resourceReady = true,
+    isCliping = false,
     onClipCompleted = null,
-    imageObj = new Image();
+    imageObj = new Image(),
+    eleStart = {
+      needReset: true,
+      xc: 0,
+      yc: 0,
+      radius: 1,
+      scale: {sx: 1, sy: 1}
+    },
+    deltaTrsa = {
+      dx: 0,
+      dy: 0,
+      scale: {sx: 1, sy: 1}
+    },
+    mouseStart,
+
+    clipOps = [
+      ['touch', onTouchOrDragStart],
+      ['mousedown', onMouseDown],
+
+      ['touchend', onTouchOrDragEnd],
+      ['mouseup', onMouseUp],
+
+      ['release', onRelease],
+      ['rotate', onPinchAndRotate],
+      ['pinch', onPinchAndRotate],
+
+      ['drag', onDrag],
+      ['touchmove', notHandled]
+    ];
 
   return {
     clipImage: clipImage,
@@ -42,6 +71,7 @@ TQ.ImageCliper = (function () {
   }
 
   function clipImage(imageUrl, onCompleted) {
+    isCliping = true;
     if (!imageUrl) {
       imageUrl = '/img/welcome-bkg-phone.jpg';
     }
@@ -53,6 +83,8 @@ TQ.ImageCliper = (function () {
       yc = canvas.height / 2;
     }
     clipDiv.style.display = 'block';
+    TQ.TouchManager.save();
+    TQ.TouchManager.attachOps(clipOps, canvas);
 
     onClipCompleted = onCompleted;
     resourceReady = false;
@@ -83,6 +115,9 @@ TQ.ImageCliper = (function () {
     if (resourceReady) {
       context.clearRect(0, 0, canvas.width, canvas.height);
       doClip(xc, yc, 1);
+    }
+    if (isCliping) {
+      requestAnimationFrame(mainLoop);
     }
   }
   function confirm() {
@@ -135,10 +170,121 @@ TQ.ImageCliper = (function () {
   }
 
   function complete(imageData) {
+    isCliping = false;
     if (onClipCompleted) {
       onClipCompleted(imageData);
     }
+    TQ.TouchManager.restore();
     clipDiv.style.display = 'none';
+  }
+
+  function onTouchOrDragStart(e) { // ==mouse的onPressed，
+    if (e.type === 'mousedown') {
+      document.addEventListener('keyup', onKeyUp);
+      document.addEventListener('mouseup', onKeyUp);
+    }
+
+    TQ.Log.debugInfo("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
+    updateStartElement(e);
+    e.stopPropagation();
+    e.preventDefault();
+  }
+
+  function onTouchOrDragEnd(e) {
+    if (e.type === 'mouseup') {
+      document.removeEventListener('keyup', onKeyUp);
+      TQ.TouchManager.detachHandler('mousemove', onDrag);
+    }
+
+    TQ.Log.debugInfo("touch end, or mouse up " + TQ.Utility.getTouchNumbers(e));
+  }
+
+  function updateStartElement(e) {
+    resetStartParams(e);
+    if (TQ.Utility.isMouseEvent(e)) {
+      TQ.TouchManager.attachHandler('mousemove', onDrag);
+    }
+  }
+
+  function resetStartParams(e) {
+    eleStart.needReset = false;
+    eleStart.scale = 1;
+    eleStart.xc = xc;
+    eleStart.yc = yc;
+    eleStart.radius = radius;
+
+    var evt = touch2StageXY(e);
+    mouseStart = {stageX: evt.stageX, stageY: evt.stageY, firstTime: true};
+    deltaTrsa.scale.reset();
+  }
+
+  function onPinchAndRotate(e) {
+    var scale;
+    if (e.type.indexOf('pinch') >= 0) {
+      scale = e.gesture.scale;
+    }
+    var newScaleX = eleStart.scale.sx * scale,
+      newScaleY = eleStart.scale.sy * scale;
+    if (!isNaN(newScaleX)) {
+      if (Math.abs(newScaleX) < 0.00001) {
+        console.warn("Too small");
+      } else {
+        doScale({sx: newScaleX, sy: newScaleY});
+      }
+    }
+  }
+
+  function doScale(scale) {
+    radius = eleStart.radius * scale.sx;
+  }
+
+  function onMouseDown(e) {
+    return onTouchOrDragStart(e);
+  }
+
+  function onMouseUp(e) {
+    return onTouchOrDragEnd(e);
+  }
+
+  function onRelease() {
+  }
+
+  function onDrag(e) {  //// ==mouse的onMove，
+    if (e.type === 'mousemove') {
+      return;
+    }
+
+    e = touch2StageXY(e);
+    e.stopPropagation();
+    e.preventDefault();
+    doDrag(mouseStart, e);
+  }
+
+  function doDrag(pStart, evt) {
+    xc += evt.stageX - pStart.stageX;
+    yc += evt.stageY - pStart.stageY;
+  }
+
+  function onKeyUp() {
+    document.removeEventListener('keyup', onKeyUp);
+    document.removeEventListener('mouseup', onKeyUp);
+  }
+
+  function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
+    var touches = TQ.Utility.getTouches(e);
+    if (touches.length > 0) {
+      var touch = touches[0];
+      e.stageX = touch.pageX;
+      e.stageY = touch.pageY;
+    } else {
+      TQ.AssertExt.invalidLogic(false, "应该有touch点");
+    }
+
+    return e;
+  }
+
+  function notHandled(e) {
+    TQ.Log.debugInfo("event not handled: " + e.type + ", " + (e.touches ? e.touches.length : 0));
   }
 
 }());

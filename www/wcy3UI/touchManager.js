@@ -82,11 +82,15 @@ var TQ = TQ || {};
         attachOps(currentOps);
     }
 
-    function attachOps(ops) {
+    function attachOps(ops, newCanvas) {
+        if (newCanvas) {
+          canvas = newCanvas;
+        }
         if (!!ops) {
             ops.forEach(function (item) {
                 addHandler(item[0], item[1]);
             });
+            currentOps = ops;
         }
     }
 
@@ -96,6 +100,17 @@ var TQ = TQ || {};
                 detachHandler(item[0], item[1]);
             });
         }
+    }
+
+    var savedState;
+    function save() {
+      savedState = {ops: currentOps, canvas: canvas};
+    }
+
+    function restore() {
+      canvas = savedState.canvas;
+      attachOps(savedState.ops);
+      savedState = null;
     }
 
     function stop() {
@@ -159,6 +174,8 @@ var TQ = TQ || {};
         return initialized;
     }
 
+    TouchManager.save = save;
+    TouchManager.restore = restore;
     TouchManager.addHandler = addHandler;
     TouchManager.attachHandler = addHandler;
     TouchManager.detachHandler = detachHandler;
@@ -167,6 +184,7 @@ var TQ = TQ || {};
     TouchManager.hasInitialized = hasInitialized;
     TouchManager.start = start;
     TouchManager.stop = stop;
+    TouchManager.attachOps = attachOps;
     TouchManager.updateOps = updateOps;
     TQ.TouchManager = TouchManager;
 })();
