@@ -5,6 +5,8 @@
 var TQ = TQ || {};
 TQ.ImageCliper = (function () {
   var canvas,
+    canvasWidth,
+    canvasHeight,
     clipDiv,
     context,
     xc,
@@ -62,7 +64,15 @@ TQ.ImageCliper = (function () {
   }
 
   function drawImage() {
-    context.drawImage(imageObj, 0, 0);
+    var minWidth = Math.min(canvasWidth, imageObj.width),// 不放大， 只缩小
+      minHeight = Math.min(canvasHeight, imageObj.height),
+      sx = minWidth/imageObj.width,
+      sy = minHeight/imageObj.height,
+      scale = Math.min(sx, sy);
+
+      minWidth = scale * imageObj.width;
+      minHeight = scale * imageObj.height;
+      context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, minWidth, minHeight);
   }
 
   function clipImage(imageUrl, onCompleted) {
@@ -74,9 +84,13 @@ TQ.ImageCliper = (function () {
       canvas = document.getElementById('clipCanvas');
       clipDiv = document.getElementById('clip-div');
       context = canvas.getContext('2d');
+      canvas.width = TQ.State.innerWidth;
+      canvas.height = TQ.State.innerHeight;
+      canvasWidth = canvas.width;
+      canvasHeight = canvas.height;
     }
-    xc = canvas.width / 2;
-    yc = canvas.height / 2;
+    xc = canvasWidth / 2;
+    yc = canvasHeight / 2;
     radius = baseRadius;
     clipDiv.style.display = 'block';
     TQ.TouchManager.save();
