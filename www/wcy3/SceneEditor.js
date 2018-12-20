@@ -112,30 +112,37 @@ var currScene = null;
         if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
             return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
         }
-
-        var stopReminder = true;
-        TQ.ImageProcess.start(aFile, options,
-            function (buffer) {
-                if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
-                    TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
-                        TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
-                        nextProcess,
-                        function () {
-                        });
-                } else {
-                    nextProcess();
-                }
-
-                function nextProcess() {
-                    if (kouTuMain) {
-                        koutuMain(buffer.data, matType, function (image64) {
-                            addItemByImageData(dstLevel, image64, matType, callback);
-                        });
-                    } else {
-                        addItemByImageData(dstLevel, buffer.data, matType, callback);
-                    }
-                }
+        if (TQ.ImageCliper) {
+            TQ.ImageCliper.clipImage(TQUtility.fileToUrl(aFile, options), function (imageData) {
+              if (imageData) {
+                addItemByImageData(dstLevel, imageData, matType, callback);
+              }
             });
+        } else {
+          var stopReminder = true;
+          TQ.ImageProcess.start(aFile, options,
+            function (buffer) {
+              if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
+                TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
+                  TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
+                  nextProcess,
+                  function () {
+                  });
+              } else {
+                nextProcess();
+              }
+
+              function nextProcess() {
+                if (kouTuMain) {
+                  koutuMain(buffer.data, matType, function (image64) {
+                    addItemByImageData(dstLevel, image64, matType, callback);
+                  });
+                } else {
+                  addItemByImageData(dstLevel, buffer.data, matType, callback);
+                }
+              }
+            });
+        }
     }
 
     function addItemByImageData(dstLevel, image64Data, matType, callback) {

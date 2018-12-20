@@ -4,10 +4,11 @@
 
 var TQ = TQ || {};
 TQ.ImageCliper = (function () {
-  var canvas = document.getElementById('clipCanvas'),
-    context = canvas.getContext('2d'),
-    xc = canvas.width / 2,
-    yc = canvas.height / 2,
+  var canvas,
+    clipDiv,
+    context,
+    xc,
+    yc,
     baseRadius = 100,
     radius = baseRadius,
     resourceReady = true,
@@ -15,7 +16,9 @@ TQ.ImageCliper = (function () {
     imageObj = new Image();
 
   return {
-    clipImage: clipImage
+    clipImage: clipImage,
+    confirm: confirm,
+    cancel: cancel
   };
 
   function setClip(x0, y0, scale) {
@@ -42,6 +45,15 @@ TQ.ImageCliper = (function () {
     if (!imageUrl) {
       imageUrl = '/img/welcome-bkg-phone.jpg';
     }
+    if (!canvas) {
+      canvas = document.getElementById('clipCanvas');
+      clipDiv = document.getElementById('clip-div');
+      context = canvas.getContext('2d');
+      xc = canvas.width / 2;
+      yc = canvas.height / 2;
+      clipDiv.style.display = 'block';
+    }
+
     onClipCompleted = onCompleted;
     resourceReady = false;
     imageObj.src = imageUrl;
@@ -70,16 +82,24 @@ TQ.ImageCliper = (function () {
   function mainLoop() {
     if (resourceReady) {
       doClip(xc, yc, 1);
-      setTimeout(getClipResult(function (imageClipedData) {
-        var image3Obj = new Image();
-        image3Obj.onload = function (ev) {
-          // context.drawImage(imageObj, 0, 0);
-          // context.clearRect(0, 0, canvas.width, canvas.height);
-          context.drawImage(image3Obj, 0, 0);
-        };
-        image3Obj.src = imageClipedData;
-      }));
     }
+  }
+  function confirm() {
+    setTimeout(getClipResult(function (imageClipedData) {
+      var image3Obj = new Image();
+      image3Obj.onload = function (ev) {
+        // context.drawImage(imageObj, 0, 0);
+        // context.clearRect(0, 0, canvas.width, canvas.height);
+        context.drawImage(image3Obj, 0, 0);
+      };
+      image3Obj.src = imageClipedData;
+    }));
+  }
+
+  function cancel() {
+    setTimeout(function () {
+      complete(null);
+    });
   }
 
   function getClipResult(callback) {
@@ -105,10 +125,7 @@ TQ.ImageCliper = (function () {
         if (callback) {
           callback(image2Data);
         }
-
-        if (onClipCompleted) {
-          onClipCompleted(image2Data);
-        }
+        complete(image2Data);
       });
     }
 
@@ -116,6 +133,11 @@ TQ.ImageCliper = (function () {
     imageObj2.src = image1Data;
   }
 
-}());
+  function complete(imageData) {
+    if (onClipCompleted) {
+      onClipCompleted(image2Data);
+    }
+    clipDiv.style.display = 'none';
+  }
 
-TQ.ImageCliper.clipImage('/img/welcome-bkg-phone.jpg');
+}());
