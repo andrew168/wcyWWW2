@@ -51,8 +51,8 @@ TQ.ImageCliper = (function () {
       context = canvas.getContext('2d');
       xc = canvas.width / 2;
       yc = canvas.height / 2;
-      clipDiv.style.display = 'block';
     }
+    clipDiv.style.display = 'block';
 
     onClipCompleted = onCompleted;
     resourceReady = false;
@@ -81,6 +81,7 @@ TQ.ImageCliper = (function () {
 
   function mainLoop() {
     if (resourceReady) {
+      context.clearRect(0, 0, canvas.width, canvas.height);
       doClip(xc, yc, 1);
     }
   }
@@ -135,7 +136,7 @@ TQ.ImageCliper = (function () {
 
   function complete(imageData) {
     if (onClipCompleted) {
-      onClipCompleted(image2Data);
+      onClipCompleted(imageData);
     }
     clipDiv.style.display = 'none';
   }
