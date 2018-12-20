@@ -22,11 +22,6 @@ TQ.ImageCliper = (function () {
       radius: 1,
       scale: {sx: 1, sy: 1}
     },
-    deltaTrsa = {
-      dx: 0,
-      dy: 0,
-      scale: {sx: 1, sy: 1}
-    },
     mouseStart,
 
     clipOps = [
@@ -79,9 +74,10 @@ TQ.ImageCliper = (function () {
       canvas = document.getElementById('clipCanvas');
       clipDiv = document.getElementById('clip-div');
       context = canvas.getContext('2d');
-      xc = canvas.width / 2;
-      yc = canvas.height / 2;
     }
+    xc = canvas.width / 2;
+    yc = canvas.height / 2;
+    radius = baseRadius;
     clipDiv.style.display = 'block';
     TQ.TouchManager.save();
     TQ.TouchManager.attachOps(clipOps, canvas);
@@ -211,31 +207,22 @@ TQ.ImageCliper = (function () {
     eleStart.scale = 1;
     eleStart.xc = xc;
     eleStart.yc = yc;
-    eleStart.radius = radius;
+    eleStart.baseRadius = baseRadius;
 
     var evt = touch2StageXY(e);
     mouseStart = {stageX: evt.stageX, stageY: evt.stageY, firstTime: true};
-    deltaTrsa.scale.reset();
   }
 
   function onPinchAndRotate(e) {
-    var scale;
+    var scale = 1;
     if (e.type.indexOf('pinch') >= 0) {
       scale = e.gesture.scale;
     }
-    var newScaleX = eleStart.scale.sx * scale,
-      newScaleY = eleStart.scale.sy * scale;
-    if (!isNaN(newScaleX)) {
-      if (Math.abs(newScaleX) < 0.00001) {
-        console.warn("Too small");
-      } else {
-        doScale({sx: newScaleX, sy: newScaleY});
-      }
-    }
+    doScale({sx: scale, sy: scale});
   }
 
   function doScale(scale) {
-    radius = eleStart.radius * scale.sx;
+    baseRadius = eleStart.baseRadius * Math.max(scale.sx, scale.sy);
   }
 
   function onMouseDown(e) {
@@ -261,8 +248,8 @@ TQ.ImageCliper = (function () {
   }
 
   function doDrag(pStart, evt) {
-    xc += evt.stageX - pStart.stageX;
-    yc += evt.stageY - pStart.stageY;
+    xc = eleStart.xc + (evt.stageX - pStart.stageX);
+    yc = eleStart.yc + evt.stageY - pStart.stageY;
   }
 
   function onKeyUp() {
