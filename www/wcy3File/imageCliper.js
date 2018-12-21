@@ -157,6 +157,8 @@ TQ.ImageCliper = (function () {
       heightCompressed = minHeight;
       xc = widthCompressed / 2;
       yc = heightCompressed / 2;
+      scale.sx = widthCompressed / baseRadius;
+      scale.sy = heightCompressed / baseRadius;
       radius = baseRadius;
       resourceReady = true;
       mainLoop();
@@ -344,8 +346,12 @@ TQ.ImageCliper = (function () {
   }
 
   function doScale(deltaScale) {
-    scale.sx = eleStart.scale.sx * deltaScale.sx;
-    scale.sy = eleStart.scale.sy * deltaScale.sy;
+    var sx = eleStart.scale.sx * deltaScale.sx,
+    sy = eleStart.scale.sy * deltaScale.sy;
+    if ((sx* baseRadius < widthCompressed) || (sy * baseRadius <heightCompressed)) {
+      scale.sx = sx;
+      scale.sy = sy;
+    }
   }
 
   function onMouseDown(e) {
