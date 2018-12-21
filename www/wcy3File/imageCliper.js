@@ -4,7 +4,8 @@
 
 var TQ = TQ || {};
 TQ.ImageCliper = (function () {
-  var MASK_TYPE_CIRCLE = 1,
+  var MASK_TYPE_NO = 0,
+    MASK_TYPE_CIRCLE = 1,
     MASK_TYPE_RECT = 2;
 
   var canvas,
@@ -21,7 +22,8 @@ TQ.ImageCliper = (function () {
       sy: 1
     },
     resourceReady = true,
-    maskType = MASK_TYPE_CIRCLE,
+    touchStarted = false,
+    maskType = MASK_TYPE_NO,
     isCliping = false,
     onClipCompleted = null,
     imageObj = new Image(),
@@ -63,6 +65,8 @@ TQ.ImageCliper = (function () {
 
   function setClip(x0, y0, scale) {
     switch(maskType) {
+      case MASK_TYPE_NO:
+        break;
       case MASK_TYPE_CIRCLE:
         drawCircle(x0, y0, scale);
         break;
@@ -72,7 +76,9 @@ TQ.ImageCliper = (function () {
       default:
         drawCircle(x0, y0, scale);
     }
-    context.clip();
+    if (maskType !== MASK_TYPE_NO) {
+      context.clip();
+    }
   }
 
   function drawCircle(x0, y0, scale) {
@@ -247,12 +253,14 @@ TQ.ImageCliper = (function () {
     }
 
     TQ.Log.debugInfo("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
+    touchStarted = true;
     updateStartElement(e);
     e.stopPropagation();
     e.preventDefault();
   }
 
   function onTouchOrDragEnd(e) {
+    touchStarted = false;
     if (e.type === 'mouseup') {
       document.removeEventListener('keyup', onKeyUp);
       TQ.TouchManager.detachHandler('mousemove', onDrag);
@@ -269,6 +277,9 @@ TQ.ImageCliper = (function () {
   }
 
   function resetStartParams(e) {
+    if (!touchStarted) {
+      return;
+    }
     eleStart.needReset = false;
     eleStart.scale.sx = scale.sx; // 不能用object相等， 那是指针！！！
     eleStart.scale.sy = scale.sy;
@@ -287,6 +298,9 @@ TQ.ImageCliper = (function () {
     var scaleX,
       scaleY;
 
+    if (!touchStarted) {
+      return;
+    }
     eleStart.deltaScale.determineScale(null, e);
     scaleX = eleStart.scale.sx * eleStart.deltaScale.sx;
     scaleY = eleStart.scale.sy * eleStart.deltaScale.sy;
@@ -319,6 +333,9 @@ TQ.ImageCliper = (function () {
     if (e.type === 'mousemove') {
       return;
     }
+    if (!touchStarted) {
+      return;
+    }
 
     e = touch2StageXY(e);
     e.stopPropagation();
@@ -327,6 +344,10 @@ TQ.ImageCliper = (function () {
   }
 
   function doDrag(pStart, evt) {
+    if (!touchStarted) {
+      return;
+    }
+
     xc = eleStart.xc + (evt.stageX - pStart.stageX);
     yc = eleStart.yc + evt.stageY - pStart.stageY;
   }
