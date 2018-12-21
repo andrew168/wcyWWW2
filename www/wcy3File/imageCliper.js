@@ -15,6 +15,7 @@ TQ.ImageCliper = (function () {
     heightCompressed,
     clipDiv,
     context,
+    xOffset, yOffset, // 图像右上角在canvas中的定位. (为了图像居中显示）
     xc,
     yc,
     baseRadius = 100,
@@ -56,8 +57,8 @@ TQ.ImageCliper = (function () {
 
   return {
     clipImage: clipImage,
-    confirm: confirm,
     setMask: setMask,
+    confirm: confirm,
     cancel: cancel
   };
 
@@ -155,8 +156,10 @@ TQ.ImageCliper = (function () {
       minHeight = sxy * imageObj.height;
       widthCompressed = minWidth;
       heightCompressed = minHeight;
-      xc = widthCompressed / 2;
-      yc = heightCompressed / 2;
+      xOffset = (canvasWidth - widthCompressed) / 2;
+      yOffset = (canvasHeight - heightCompressed) / 2;
+      xc = xOffset + (widthCompressed / 2);
+      yc = yOffset + (heightCompressed / 2);
       scale.sx = widthCompressed / baseRadius;
       scale.sy = heightCompressed / baseRadius;
       radius = baseRadius;
