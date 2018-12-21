@@ -56,7 +56,6 @@ TQ.ImageCliper = (function () {
 
   return {
     clipImage: clipImage,
-    skip: skip, // 不裁剪
     confirm: confirm,
     setMask: setMask,
     cancel: cancel
@@ -190,6 +189,10 @@ TQ.ImageCliper = (function () {
     }
   }
   function confirm() {
+    if (maskType === MASK_TYPE_NO) {
+      return skip();
+    }
+
     setTimeout(getClipResult(function (imageClipedData) {
       var image3Obj = new Image();
       image3Obj.onload = function (ev) {
