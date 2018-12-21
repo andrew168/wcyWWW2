@@ -22,8 +22,10 @@ TQ.ImageCliper = (function () {
       xc: 0,
       yc: 0,
       radius: 1,
-      scale: {sx: 1, sy: 1}
+      scale: {sx: 1, sy: 1},
+      deltaScale: new TQ.ScaleCalculator()
     },
+
     mouseStart,
 
     clipOps = [
@@ -222,17 +224,26 @@ TQ.ImageCliper = (function () {
     eleStart.xc = xc;
     eleStart.yc = yc;
     eleStart.baseRadius = baseRadius;
+    eleStart.deltaScale.reset();
 
     var evt = touch2StageXY(e);
     mouseStart = {stageX: evt.stageX, stageY: evt.stageY, firstTime: true};
   }
 
   function onPinchAndRotate(e) {
-    var scale = 1;
-    if (e.type.indexOf('pinch') >= 0) {
-      scale = e.gesture.scale;
+    var scaleX,
+      scaleY;
+
+    eleStart.deltaScale.determineScale(null, e);
+    scaleX = eleStart.scale.sx * eleStart.deltaScale.sx;
+    scaleY = eleStart.scale.sy * eleStart.deltaScale.sy;
+
+    if (!isNaN(scaleX) &&
+      !isNaN(scaleY) &&
+      (Math.abs(scaleX) > 0.00001) &&
+      (Math.abs(scaleY) > 0.00001)) {
+      doScale({sx: scaleX, sy: scaleY});
     }
-    doScale({sx: scale, sy: scale});
   }
 
   function doScale(scale) {
