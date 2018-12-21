@@ -112,10 +112,10 @@ TQ.ImageCliper = (function () {
       minHeight = Math.min(canvasHeight, imageObj.height),
       sx = minWidth/imageObj.width,
       sy = minHeight/imageObj.height,
-      scale = Math.min(sx, sy);
+      sxy = Math.min(sx, sy);
 
-      minWidth = scale * imageObj.width;
-      minHeight = scale * imageObj.height;
+      minWidth = sxy * imageObj.width;
+      minHeight = sxy * imageObj.height;
       context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, minWidth, minHeight);
   }
 
@@ -270,10 +270,10 @@ TQ.ImageCliper = (function () {
 
   function resetStartParams(e) {
     eleStart.needReset = false;
-    eleStart.scale = 1;
+    eleStart.scale.sx = scale.sx; // 不能用object相等， 那是指针！！！
+    eleStart.scale.sy = scale.sy;
     eleStart.xc = xc;
     eleStart.yc = yc;
-    eleStart.baseRadius = baseRadius;
     if (!eleStart.deltaScale) {
       eleStart.deltaScale = new TQ.ScaleCalculator();
     }
@@ -300,10 +300,8 @@ TQ.ImageCliper = (function () {
   }
 
   function doScale(newScale) {
-    scale = {
-      sx: eleStart.sx * newScale.sx,
-      sy: eleStart.sy * newScale.sy
-    };
+    scale.sx = eleStart.scale.sx * newScale.sx;
+    scale.sy = eleStart.scale.sy * newScale.sy;
   }
 
   function onMouseDown(e) {
