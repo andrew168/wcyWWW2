@@ -11,6 +11,8 @@ TQ.ImageCliper = (function () {
   var canvas,
     canvasWidth,
     canvasHeight,
+    widthCompressed,
+    heightCompressed,
     clipDiv,
     context,
     xc,
@@ -123,6 +125,8 @@ TQ.ImageCliper = (function () {
 
       minWidth = sxy * imageObj.width;
       minHeight = sxy * imageObj.height;
+      widthCompressed = minWidth;
+      heightCompressed = minHeight;
       context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, minWidth, minHeight);
   }
 
@@ -198,7 +202,15 @@ TQ.ImageCliper = (function () {
   function skip() {
     // 不clip， 直接把原图返回
     setTimeout(function () {
-      complete(imageFileOrBlob);
+      if ((imageObj.width > canvasWidth) || (imageObj.height > canvasHeight)) {
+        // 图像太大， 必须压缩
+        var w = Math.min(canvasWidth, widthCompressed),
+          h = Math.min(canvasHeight, heightCompressed);
+        compressImage(imageObj, w, h, complete);
+      } else {
+        complete(imageFileOrBlob);
+      }
+
     });
 
   }
@@ -238,6 +250,21 @@ TQ.ImageCliper = (function () {
 
     imageObj2.onload = drawClippedResult;
     imageObj2.src = image1Data;
+  }
+
+  function compressImage(imageObj, destWidth, destHeight, callback) {
+    var canvas2 = document.createElement("canvas"),
+      ctx;
+
+    canvas2.width = destWidth;
+    canvas2.height = destHeight;
+    ctx = canvas2.getContext("2d");
+    ctx.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, destWidth, destHeight);
+    setTimeout(function () {
+       if (callback) {
+        callback(canvas2.toDataURL("image/png"));
+      }
+    });
   }
 
   function complete(imageData) {
