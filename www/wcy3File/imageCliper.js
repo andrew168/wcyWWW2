@@ -4,6 +4,9 @@
 
 var TQ = TQ || {};
 TQ.ImageCliper = (function () {
+  var MASK_TYPE_CIRCLE = 1,
+    MASK_TYPE_RECT = 2;
+
   var canvas,
     canvasWidth,
     canvasHeight,
@@ -13,7 +16,12 @@ TQ.ImageCliper = (function () {
     yc,
     baseRadius = 100,
     radius = baseRadius,
+    scale = {
+      sx: 1,
+      sy: 1
+    },
     resourceReady = true,
+    maskType = MASK_TYPE_CIRCLE,
     isCliping = false,
     onClipCompleted = null,
     imageObj = new Image(),
@@ -23,11 +31,9 @@ TQ.ImageCliper = (function () {
       yc: 0,
       radius: 1,
       scale: {sx: 1, sy: 1},
-      deltaScale: new TQ.ScaleCalculator()
+      deltaScale: null // 引用的ScaleCalculator尚未 ready
     },
-
     mouseStart,
-
     clipOps = [
       ['touch', onTouchOrDragStart],
       ['mousedown', onMouseDown],
@@ -45,23 +51,59 @@ TQ.ImageCliper = (function () {
 
   return {
     clipImage: clipImage,
+    skip: skip,
     confirm: confirm,
+    setMask: setMask,
     cancel: cancel
   };
 
+  function setMask(newType) {
+    maskType = newType;
+  }
+
   function setClip(x0, y0, scale) {
-    drawCircle(x0, y0, scale);
+    switch(maskType) {
+      case MASK_TYPE_CIRCLE:
+        drawCircle(x0, y0, scale);
+        break;
+      case MASK_TYPE_RECT:
+        drawRect(x0, y0, scale);
+        break;
+      default:
+        drawCircle(x0, y0, scale);
+    }
     context.clip();
   }
 
   function drawCircle(x0, y0, scale) {
     if (!scale) {
-      scale = 1;
+      scale = {sx: 1, sy: 1};
     }
 
-    radius = baseRadius * scale;
+    radius = baseRadius * scale.sx;
     context.beginPath();
     context.arc(x0, y0, radius, 0, 2 * Math.PI, false);
+    context.stroke();
+  }
+
+  function drawRect(xc, yc, scale) {
+    if (!scale) {
+      scale = {sx: 1, sy: 1};
+    }
+
+    var halfWidth = baseRadius * scale.sx,
+      halfHeight = baseRadius * scale.sy,
+      x0 = xc - halfWidth,
+      x1 = xc + halfWidth,
+      y0 = yc - halfHeight,
+      y1 = yc + halfHeight;
+
+    context.beginPath();
+    context.moveTo(x0, y0);
+    context.lineTo(x1, y0);
+    context.lineTo(x1, y1);
+    context.lineTo(x0, y1);
+    context.lineTo(x0, y0);
     context.stroke();
   }
 
@@ -126,7 +168,7 @@ TQ.ImageCliper = (function () {
   function mainLoop() {
     if (resourceReady) {
       context.clearRect(0, 0, canvas.width, canvas.height);
-      doClip(xc, yc, 1);
+      doClip(xc, yc, scale);
     }
     if (isCliping) {
       requestAnimationFrame(mainLoop);
@@ -142,6 +184,14 @@ TQ.ImageCliper = (function () {
       };
       image3Obj.src = imageClipedData;
     }));
+  }
+
+  function skip() {
+    // 不clip， 直接把原图返回
+    setTimeout(function () {
+      complete(imageObj);
+    });
+
   }
 
   function cancel() {
@@ -224,6 +274,9 @@ TQ.ImageCliper = (function () {
     eleStart.xc = xc;
     eleStart.yc = yc;
     eleStart.baseRadius = baseRadius;
+    if (!eleStart.deltaScale) {
+      eleStart.deltaScale = new TQ.ScaleCalculator();
+    }
     eleStart.deltaScale.reset();
 
     var evt = touch2StageXY(e);
@@ -246,8 +299,11 @@ TQ.ImageCliper = (function () {
     }
   }
 
-  function doScale(scale) {
-    baseRadius = eleStart.baseRadius * Math.max(scale.sx, scale.sy);
+  function doScale(newScale) {
+    scale = {
+      sx: eleStart.sx * newScale.sx,
+      sy: eleStart.sy * newScale.sy
+    };
   }
 
   function onMouseDown(e) {
