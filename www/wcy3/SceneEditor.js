@@ -146,18 +146,26 @@ var currScene = null;
     }
 
     function addItemByImageData(dstLevel, image64Data, matType, callback) {
-        var img = new Image();
-        img.onload = function() {
-            var desc = {
-                data: img,
-                src: null, type: "Bitmap", autoFit: determineAutoFit(matType),
-                dstLevel: dstLevel,
-                eType: TQ.MatType.toEType(matType)
-            };
-
-            callback(desc, image64Data, matType);
-        };
+      var img;
+      if (TQUtility.isBlob(image64Data)) {
+        img = image64Data;
+        doAdd();
+      } else {
+        img = new Image();
+        img.onload = doAdd;
         img.src = image64Data;
+      }
+
+      function doAdd() {
+        var desc = {
+          data: img,
+          src: null, type: "Bitmap", autoFit: determineAutoFit(matType),
+          dstLevel: dstLevel,
+          eType: TQ.MatType.toEType(matType)
+        };
+
+        callback(desc, image64Data, matType);
+      }
     }
 
     function addItemBySoundFile(dstLevel, fileOrBlob, matType, callback) {

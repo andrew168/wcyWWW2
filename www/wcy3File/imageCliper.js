@@ -27,6 +27,7 @@ TQ.ImageCliper = (function () {
     isCliping = false,
     onClipCompleted = null,
     imageObj = new Image(),
+    imageFileOrBlob,
     eleStart = {
       needReset: true,
       xc: 0,
@@ -53,7 +54,7 @@ TQ.ImageCliper = (function () {
 
   return {
     clipImage: clipImage,
-    skip: skip,
+    skip: skip, // 不裁剪
     confirm: confirm,
     setMask: setMask,
     cancel: cancel
@@ -126,10 +127,12 @@ TQ.ImageCliper = (function () {
   }
 
   function clipImage(imageUrl, onCompleted) {
+
     isCliping = true;
     if (!imageUrl) {
       imageUrl = '/img/welcome-bkg-phone.jpg';
     }
+    imageFileOrBlob = imageUrl; // File, url, blob
     if (!canvas) {
       canvas = document.getElementById('clipCanvas');
       clipDiv = document.getElementById('clip-div');
@@ -195,7 +198,7 @@ TQ.ImageCliper = (function () {
   function skip() {
     // 不clip， 直接把原图返回
     setTimeout(function () {
-      complete(imageObj);
+      complete(imageFileOrBlob);
     });
 
   }
