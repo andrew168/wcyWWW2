@@ -36,7 +36,7 @@ TQ = TQ || {};
 
     // 变换到物体空间
     var TANGENT_8_DEGREE = 0.14054; // i.e. tan(8 degree)
-    if (!ele) { // 没有element，就使用当前的空间坐标系
+    if (ele) { // 没有element，就使用当前的空间坐标系
       var dObj = ele.dDc2Object({x: dx, y: dy});
       dx = Math.abs(dObj.x);
       dy = Math.abs(dObj.y);
