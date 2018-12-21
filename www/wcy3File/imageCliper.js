@@ -117,21 +117,10 @@ TQ.ImageCliper = (function () {
   }
 
   function drawImage() {
-    var minWidth = Math.min(canvasWidth, imageObj.width),// 不放大， 只缩小
-      minHeight = Math.min(canvasHeight, imageObj.height),
-      sx = minWidth/imageObj.width,
-      sy = minHeight/imageObj.height,
-      sxy = Math.min(sx, sy);
-
-      minWidth = sxy * imageObj.width;
-      minHeight = sxy * imageObj.height;
-      widthCompressed = minWidth;
-      heightCompressed = minHeight;
-      context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, minWidth, minHeight);
+      context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, widthCompressed, heightCompressed);
   }
 
   function clipImage(imageUrl, onCompleted) {
-
     isCliping = true;
     if (!imageUrl) {
       imageUrl = '/img/welcome-bkg-phone.jpg';
@@ -157,6 +146,19 @@ TQ.ImageCliper = (function () {
     resourceReady = false;
     imageObj.src = imageUrl;
     imageObj.onload = function (ev) {
+      var minWidth = Math.min(canvasWidth, imageObj.width),// 不放大， 只缩小
+        minHeight = Math.min(canvasHeight, imageObj.height),
+        sx = minWidth / imageObj.width,
+        sy = minHeight / imageObj.height,
+        sxy = Math.min(sx, sy);
+
+      minWidth = sxy * imageObj.width;
+      minHeight = sxy * imageObj.height;
+      widthCompressed = minWidth;
+      heightCompressed = minHeight;
+      xc = widthCompressed / 2;
+      yc = heightCompressed / 2;
+      radius = baseRadius;
       resourceReady = true;
       mainLoop();
     };
