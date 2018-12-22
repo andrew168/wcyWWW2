@@ -116,8 +116,8 @@ TQ.ImageCliper = (function () {
     context.stroke();
   }
 
-  function drawImage() {
-      context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, widthCompressed, heightCompressed);
+  function renderImage() {
+      context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, xOffset, yOffset, widthCompressed, heightCompressed);
   }
 
   function clipImage(imageUrl, onCompleted) {
@@ -176,7 +176,7 @@ TQ.ImageCliper = (function () {
 	 */
     context.save();
     setClip(x0, y0, scale);
-    drawImage();
+    renderImage();
     /*
 	 * restore() restores the canvas context to its original state
 	 * before we defined the clipping region
@@ -237,13 +237,33 @@ TQ.ImageCliper = (function () {
     console.log(image1Data.length);
 
     function drawClippedResult() {
-      var widthClip = 2 * radius,
-        heightClip = 2 * radius,
+      var widthClip,
+        heightClip,
         xs = xc - radius,
         ys = yc - radius,
+        xe = xc + radius,
+        ye = yc + radius,
         canvas2 = document.createElement("canvas"),
         ctx;
 
+      // 裁剪出的区域，不能超出图像的边界
+      if (xs < xOffset) {
+        xs = xOffset;
+      }
+
+      if (ys < yOffset) {
+        ys = yOffset;
+      }
+
+      if (xe > (xOffset + widthCompressed)) {
+        xe = xOffset + widthCompressed;
+      }
+
+      if (ye > (yOffset + heightCompressed)) {
+        ye = yOffset + heightCompressed;
+      }
+      widthClip = xe - xs;
+      heightClip = ye - ys;
       canvas2.width = widthClip;
       canvas2.height = heightClip;
       ctx = canvas2.getContext("2d");
