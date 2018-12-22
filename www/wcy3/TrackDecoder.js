@@ -190,6 +190,9 @@ window.TQ = window.TQ || {};
     }
 
     function calIdleSag(sag, channel, t) {
+        if (TQ.FrameCounter.finished()) { // 播放结束之后， 复原
+          t = 0;
+        }
         if (sag.typeId === TQ.AnimationManager.SagType.TWINKLE) {
             return calVisible(sag, channel, t);
         }
