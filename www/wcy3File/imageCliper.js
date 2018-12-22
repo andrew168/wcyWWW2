@@ -160,8 +160,8 @@ TQ.ImageCliper = (function () {
       yOffset = (canvasHeight - heightCompressed) / 2;
       xc = xOffset + (widthCompressed / 2);
       yc = yOffset + (heightCompressed / 2);
-      scale.sx = widthCompressed / baseRadius;
-      scale.sy = heightCompressed / baseRadius;
+      scale.sx = Math.min(0.5 * widthCompressed / baseRadius, 0.5 * heightCompressed / baseRadius);
+      scale.sy = scale.sx;
       radius = baseRadius;
       resourceReady = true;
       mainLoop();
