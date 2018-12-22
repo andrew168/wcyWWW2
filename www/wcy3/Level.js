@@ -10,7 +10,8 @@ window.TQ = window.TQ || {};
     TQ.AssertExt.isTrue(!description || (typeof description === 'object'), "必须是object, 不能是json字串");
     this.background = null;
     this.latestElement = null; // 最新生成的复合物体
-    this.tMaxFrame = 0;
+    this.tMaxFrame = 0; // 用户指定的时长， 缺省是0
+    this.tMaxFrameMixed = DEFAULT_T_MAX_FRAME;
     this.tGlobalLastFrame = 0; // 他对作品最大时长的最低要求
     this.t0 = 0;
     this.resourceReady = false;
@@ -769,8 +770,9 @@ window.TQ = window.TQ || {};
   };
 
   p.calculateLastFrame = function () {
-    this.tMaxFrame = this.calculateRealLastFrame();
-    return this.tMaxFrame;
+    var tMaxFrameCalculated = this.calculateRealLastFrame();
+    this.tMaxFrameMixed = Math.max(this.tMaxFrame, Math.max(DEFAULT_T_MAX_FRAME, tMaxFrameCalculated));
+    return tMaxFrameCalculated;
   };
 
   function isStaticImage(tLastFrame) {
@@ -815,8 +817,9 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.setTime = function (t) {
+  p.setTime = function (t) { // 用户指定时长
     this.tMaxFrame = t;
+    this.calculateLastFrame(); // update mixed
     if (this.isActive()) {
       TQ.FrameCounter.setTMax(this.tMaxFrame);
     }
@@ -831,7 +834,7 @@ window.TQ = window.TQ || {};
   };
 
   p.getTime = function () {
-    return Math.max(this.tMaxFrame, DEFAULT_T_MAX_FRAME);
+    return this.tMaxFrameMixed;
   };
 
   p.getGlobalTime = function () {
