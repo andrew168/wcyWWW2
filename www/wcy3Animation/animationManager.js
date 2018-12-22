@@ -159,7 +159,7 @@ TQ.AnimationManager = (function () {
     }
 
     return true;
-  };
+  }
 
   function getCurrentTypeSag(ele) {
     var existSags = ele.getSags(),
@@ -169,6 +169,10 @@ TQ.AnimationManager = (function () {
     if (existSags) {
       existSags.some(function (channelSags) {
         if (channelSags && (sag = channelSags[instance.categoryId])) {
+          if ((typeof sag.duration === undefined) || (typeof instance.delay === undefined)) {
+            TQ.AssertExt.invalidLogic(false, "缺少duration和delay: " + sag.typeId);
+            return false
+          }
           instance.tDuration = sag.duration;
           instance.tDelay = sag.delay;
           result = sag;
@@ -193,6 +197,9 @@ TQ.AnimationManager = (function () {
   }
 
   function twinkle() {
+    var delay = TQ.FrameCounter.gridSnap(getTDelay().t),
+      duration = TQ.FrameCounter.gridSnap((getTDuration().gt - getTDelay().gt)); // seconds
+
     var ele = TQ.SelectSet.getLastSolidElement();
     if (!ele) {
       return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
@@ -203,6 +210,10 @@ TQ.AnimationManager = (function () {
     var showT = 1 / speed.actualSpeed,
       hideT = showT,
       sag = {
+        /// for editor only begin
+        delay: delay,
+        duration: duration,
+        /// for editor only end
         categoryId: SagCategory.IDLE,
         typeId: SagType.TWINKLE,
         showT: showT,
