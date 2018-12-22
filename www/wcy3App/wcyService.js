@@ -526,7 +526,11 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     function needToSave() {
-        return (currScene && (TQ.State && !TQ.State.isPlayOnly && !TQ.State.isTopicIntro) && !currScene.isCurrentLevelEmpty() && currScene.isAllDataReady() && !currScene.isSaved);
+        return (currScene && (TQ.State && !TQ.State.isPlayOnly && !TQ.State.isTopicIntro) &&
+          currScene.ssPath && // 只有生成（提交）过1次之后，才允许自动保存，以避免产生太多的草稿和空白截屏
+          !currScene.isCurrentLevelEmpty() &&
+          currScene.isAllDataReady() &&
+          !currScene.isSaved);
     }
 
     return {
