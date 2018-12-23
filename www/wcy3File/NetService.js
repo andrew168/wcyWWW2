@@ -48,7 +48,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         }
         option.matType = matType;
 
-        if (isLocalFile(file)) {
+        if (TQUtility.isLocalFile(file)) {
             if (!file.name) {
                 file.name = generateName(file);
             }
@@ -106,7 +106,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         // TQ.Log.debugInfo(JSON.stringify(signData)); // 图像数据太大
         signData.api_key = TQ.Config.Cloudinary.api_key;
         var res;
-        if (isLocalFile(fileOrBuffer)) {
+        if (TQUtility.isLocalFile(fileOrBuffer)) {
             signData.file = fileOrBuffer;
             res = doUploadLocalFile(signData);
             res.progress(function (e) {
@@ -304,10 +304,6 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         if (data) {
             get(data, onSuccess, onError);
         }
-    }
-
-    function isLocalFile(data) {
-        return ((typeof data === 'object') && (!!data.type))
     }
 
     function hasFileName(file) {
