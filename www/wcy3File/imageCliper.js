@@ -120,12 +120,19 @@ TQ.ImageCliper = (function () {
       context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, xOffset, yOffset, widthCompressed, heightCompressed);
   }
 
-  function clipImage(imageUrl, onCompleted) {
+  function clipImage(imageFile, onCompleted) {
     isCliping = true;
-    if (!imageUrl) {
-      imageUrl = '/img/welcome-bkg-phone.jpg';
+    var imageUrl;
+    if (!imageFile) {
+      imageFile = '/img/welcome-bkg-phone.jpg';
     }
-    imageFileOrBlob = imageUrl; // File, url, blob
+
+    if (TQUtility.isLocalFile(imageFile)) {
+      imageUrl = TQUtility.fileToUrl(imageFile, {crossOrigin: "Anonymous"});
+    } else {
+      imageUrl = imageFile;
+    }
+    imageFileOrBlob = imageFile; // File, url, blob
     if (!canvas) {
       canvas = document.getElementById('clipCanvas');
       clipDiv = document.getElementById('clip-div');

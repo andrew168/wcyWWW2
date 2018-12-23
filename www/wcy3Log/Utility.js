@@ -251,8 +251,15 @@ var TQUtility; //
         return ((aFile instanceof File) && (aFile.type) && (aFile.type.indexOf('audio') >= 0));
     };
 
-    Utility.isBlob = function (blobData) {
-        return (blobData instanceof Blob);
+    Utility.isBlob = function (data) {
+        return (data instanceof Blob);
+    };
+
+    Utility.isLocalFile = function (data) {
+      return (data instanceof File);
+    };
+    Utility.isLocalFileOrBlob = function (data) {
+        return Utility.isLocalFile(data) || Utility.isBlob(data);
     };
 
     Utility.fileToUrl = function (file, options) {

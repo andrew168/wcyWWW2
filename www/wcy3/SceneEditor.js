@@ -113,7 +113,7 @@ var currScene = null;
             return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
         }
         if (TQ.ImageCliper) {
-            TQ.ImageCliper.clipImage(TQUtility.fileToUrl(aFile, options), function (imageData) {
+            TQ.ImageCliper.clipImage(aFile, function (imageData) {
               if (imageData) {
                 addItemByImageData(dstLevel, imageData, matType, callback);
               }
@@ -146,13 +146,11 @@ var currScene = null;
     }
 
     function addItemByImageData(dstLevel, image64Data, matType, callback) {
-      var img;
-      if (TQUtility.isBlob(image64Data)) {
-        img = image64Data;
-        doAdd();
-      } else {
-        img = new Image();
-        img.onload = doAdd;
+      var img = new Image();
+      img.onload = doAdd;
+      if (TQUtility.isLocalFile(image64Data)) {
+        img.src = TQUtility.fileToUrl(image64Data, {});
+      } else { // base64
         img.src = image64Data;
       }
 
