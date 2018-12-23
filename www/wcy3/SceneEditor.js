@@ -20,11 +20,12 @@ var currScene = null;
         // 以下是登录之后的
         MY_WORK: 210, // 个人作品也，
 
-        // 以下还需要canvas
+        // 以下>2000, 都属于EDIT和Play，都需要canvas
         EDIT_OR_PLAY: 2000, // 编辑,分享等 （有canvas，>=2000）
+        EDIT: 2100, // 编辑
         // EDIT_IMAGE: 2200, // 尚未以他们代替 flag变量
         // RECORD_AUDIO: 2300,
-        // PREVIEW: 2400s
+        PREVIEW: 2400 // Play, Preview
     };
 
     TQ.State.editorMode = SceneEditor.NOT_INITIALIZED;

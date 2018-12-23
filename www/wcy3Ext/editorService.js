@@ -256,7 +256,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             }
 
             function isEditOrPlay() {
-                return (state.isPreviewMode) && (state.editorMode >= TQ.SceneEditor.MODE.EDIT_OR_PLAY)
+                return (state.isPreviewMode) && (state.editorMode >= TQ.SceneEditor.MODE.EDIT)
             }
 
             document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
