@@ -129,7 +129,9 @@ window.TQ = window.TQ || {};
         rotate(child, angle);
         if (isSimpleRotationMode) return true;  // 简单旋转， 比不牵涉其它关节，
 
-        if (child.isRoot() || child.parent.isPinned()) { // 如果固定了, 不IK
+        var parent = child.parent;
+        if (child.isRoot() || parent.isPinned() ||
+          (parent.isRoot() && TQ.State.fiexdRootJoint)) { // 如果固定了, 不IK
             TQ.Log.debugInfo("not achieved: (" +
                 Math.round(A.x) + "," + Math.round(A.y) + ") <-- (" +
                 Math.round(E.x) + "," + Math.round(E.y) + ")");
