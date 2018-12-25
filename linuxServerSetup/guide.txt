@@ -61,3 +61,9 @@ A：用这个命令消除：
 Environment=NODE_ENV=production
 
 备注： 在开发的时候， 效率要求低，也可以用interactive shell，例如export 或.bash_profile
+
+
+/////////////////////////////////////////
+其它:
+2017.1.7： mongoDb漏洞修改
+https://help.aliyun.com/knowledge_detail/37451.html
