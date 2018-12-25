@@ -169,7 +169,7 @@ TQ.AnimationManager = (function () {
     if (existSags) {
       existSags.some(function (channelSags) {
         if (channelSags && (sag = channelSags[instance.categoryId])) {
-          if ((typeof sag.duration === undefined) || (typeof instance.delay === undefined)) {
+          if ((typeof sag.duration === 'undefined') || (typeof sag.delay === 'undefined')) {
             TQ.AssertExt.invalidLogic(false, "缺少duration和delay: " + sag.typeId);
             return false
           }
@@ -181,7 +181,7 @@ TQ.AnimationManager = (function () {
         return false;
       });
     }
-    return null;
+    return result;
   }
 
   function rotate() {
