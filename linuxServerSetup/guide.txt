@@ -50,3 +50,14 @@ A：用这个命令消除：
   /data/wwwz/card2
   /data/wcydepot  （数据库）
   /logs/udoido
+
+6) 提高Node服务器的效率：1 启用production模式
+如果使用Linux的init system 中的Upstart，如下：
+# /etc/init/env.conf
+ env NODE_ENV=production
+
+如果使用Linux的init system 中的systemd, 如下：
+# /etc/systemd/system/myservice.service
+Environment=NODE_ENV=production
+
+备注： 在开发的时候， 效率要求低，也可以用interactive shell，例如export 或.bash_profile
