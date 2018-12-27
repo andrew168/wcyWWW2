@@ -155,10 +155,9 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     }
 
     levelThumbs.splice(0);
-    var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
     // TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
     if (!preloadedWcyData && !isPreloadingWcy) {
-      getOpusFromServer(url, _onReceivedWcyData, _onFail);
+      doGetOpusFromServer(shareString).then(_onReceivedWcyData, _onFail);
     } else if (preloadedWcyData) {
       _onReceivedWcyData(preloadedWcyData);
       preloadedWcyData = null;
@@ -168,15 +167,13 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
   }
 
   function preloadWcy() {
-    var shareString = TQ.Utility.getShareCodeFromUrl(),
-      url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
-
+    var shareString = TQ.Utility.getShareCodeFromUrl();
     if (!shareString) {
       return;
     }
 
     isPreloadingWcy = true;
-    $http.get(url)
+    doGetOpusFromServer(shareString)
       .then(function (res) {
         isPreloadingWcy = false;
         if (getWcyCalled) {
@@ -475,14 +472,18 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     TQ.MessageBox.prompt(TQ.Locale.getStr('hey, the network connection lost'));
   }
 
-  function getOpusFromServer(url, onSuccess, onFail) {
-    $http.get(url)
-      .then(onSuccess, onFail);
+  function doGetOpusFromServer(shareString) {
+    if (!shareString) {
+      return;
+    }
+
+    var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
+    return $http.get(url);
   }
 
   function getOutro(outroId) {
-    var url = TQ.Config.OPUS_HOST + '/wcy/' + TQ.Utility.wcyId2ShareCode(outroId);
-    getOpusFromServer(url, _onReceivedOutroData, _onReceivedOutroData);
+    return doGetOpusFromServer(TQ.Utility.wcyId2ShareCode(outroId))
+      .then( _onReceivedOutroData, _onReceivedOutroData);
   }
 
   function _onReceivedWcyData(res) {
