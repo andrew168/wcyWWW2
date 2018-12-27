@@ -14,6 +14,7 @@ TQ = TQ || {};
     this.setDesignatedSize(Scene.getDesignatedRegionDefault());
     this.isDirty = true;
     this.tMax = 0;
+    this.iComponentInfo = null; // 不是iComponents
   }
 
   var allResourceReady = false,
@@ -433,6 +434,26 @@ TQ = TQ || {};
 
   p.isOutro = function (levelId) {
     return (levelId >= this.levelNum());
+  };
+
+  p.isIComponent = function () {
+    return (this.iComponentInfo && !!this.iComponentInfo.Type);
+  };
+
+  p.iComponentHasThumbnail = function () {
+    return (this.iComponentInfo && !!this.iComponentInfo.thumbPath);
+  };
+
+  p.isValidIComponent = function () {
+    return (this.levelNum() === 1 && this.levels[0].itemNum() === 1);
+  };
+
+  p.setAsIComponent = function(type) {
+    if (!this.iComponentInfo) {
+      this.iComponentInfo = {};
+    }
+    this.iComponentInfo.type = type;
+    this.iComponentInfo.thumbPath = this.ssPath;
   };
 
   p.hasMusicCompleted = function () {

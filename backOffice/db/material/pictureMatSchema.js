@@ -12,6 +12,8 @@ var pictureMatSchema = new Schema({
   timestamp: {type: Date, default: Date.now},
   userId: Number, // 上传者的ID， 认为：上传者就是创作者，
   typeId: Number, // 10:背景图， in material.js
+  // 智能元件Intelligent ComponentID
+  iComponentId: {type: Number, default: 0}, // 如果!iComponentId：普通图片；>0: 智能元件
   ip: String,
   path: String,  // 素材在Server上的相对路径，去除host和MatFolder之后
   isShared: {type: Boolean, default: false}, //个人私有/与众共享
