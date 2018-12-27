@@ -101,6 +101,12 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
     if (TQ.Config.LocalCacheEnabled) {
       saveToCache();
     }
+
+    if (currScene.isIComponent() && !currScene.isValidIComponent()) {
+      return TQ.MessageBox.prompt('智能元件需要满足以下条件：一个场景:' + currScene.levelNum() +
+        ', 一个根元素: ' + currScene.levels[0].elements.length);
+    }
+
     //ToDo: if (has wifi)
     isSaving = true;
     return upload(forkIt).then(onSavedSuccess).finally(function () {
@@ -404,7 +410,6 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
       if (!!data.ssPath) {
         currScene.setSsPath(data.ssPath);
       }
-
       currScene.setFilenameById(data.wcyId);
       TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
       TQUtility.triggerEvent(document.body, TQ.Scene.EVENT_SAVED);

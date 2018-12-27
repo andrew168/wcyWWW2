@@ -128,6 +128,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     insertSnow: TQ.ParticleMgr.insertSnow,
     insertRain: TQ.ParticleMgr.insertRain,
     insertMoney: TQ.ParticleMgr.insertMoney,
+    uploadIComponentThumbnail: uploadIComponentThumbnail,
     selectLocalFile: selectLocalFile,
 
     // select set
@@ -577,17 +578,31 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     return q.promise;
   }
 
-  function uploadMat(data) {
+  function uploadMat(data, option) {
     var fileOrBuffer = data.fileOrBuffer,
       matType = data.matType,
       q = $q.defer();
 
-    NetService.uploadOne(fileOrBuffer, matType).then(function (res) {
+    NetService.uploadOne(fileOrBuffer, matType, option).then(function (res) {
       data.url = res.url;
       q.resolve(data);
     });
 
     return q.promise;
+  }
+
+  function uploadIComponentThumbnail() {
+    var desc = {
+      icId: TQ.Scene.getWcyId(),
+      src: currScene.ssPath,
+      type: currScene.iComponentInfo.type,
+    },
+      data = {
+        matType: desc.type,
+        fileOrBuffer: desc.src,
+      };
+
+    return uploadMat(data, desc);
   }
 
   function addItemByData(data) {
