@@ -189,14 +189,16 @@ window.TQ = window.TQ || {};
         this.children = [];
         // 调入 json文件, 取其中的 elements
         (function (pt) {
-            TQ.Assert.isTrue(false, "先准备好资源， 再创建元素");
-            netOpen(jsonFiledesc.src, function (jqResponse) {
+          $.ajax({
+            type: 'GET',
+            url: jsonFiledesc.src
+          }).done(function (jqResponse) {
                 try {
-                    var desc = JSON.parse(jqResponse);
+                    var desc = JSON.parse(TQ.Scene.decompress(jqResponse.data));
                 } catch (e) {
                     displayInfo2(jqResponse);
                     TQ.Log.error(jqResponse + ". " + e.toString());
-                    // 给一个空白文件， 确保可可持续进行
+                    // 给一个空白文件， 确保可持续进行
                     desc = TQ.Scene.getEmptySceneJSON();
                 }
 

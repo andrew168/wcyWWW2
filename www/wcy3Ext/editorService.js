@@ -121,6 +121,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     insertPeopleImage: insertPeopleImage, // i.e. FromUrl:
     insertPropImage: insertPropImage,
     insertBkImage: insertBkImage,
+    insertImageDesc: insertImageDesc,
     insertText: insertText,
     insertRectangle: insertRectangle,
     insertSound: insertSound,
@@ -642,6 +643,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       autoFit: TQ.Element.FitFlag.WITHIN_FRAME, x: x, y: y
     };
     addItem(desc, matType);
+  }
+
+  function insertImageDesc(desc) {
+    if (desc.eType === TQ.Element.ETYPE_BACKGROUND) {
+      desc.autoFit = TQ.Element.FitFlag.FULL_SCREEN;
+      desc.zIndex = 0;
+    }
+
+    TQ.SceneEditor.addItem(desc);
   }
 
   function insertPeopleImage(filename, x, y) {
