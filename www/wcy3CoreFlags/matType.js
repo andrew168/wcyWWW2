@@ -40,6 +40,27 @@ TQ.MatType = (function() {
                     eType = TQ.Element.ETYPE_PROP;
             }
             return eType;
+        },
+      toElementType: function (matType) {
+        var type;
+        switch (matType) {
+          case TQ.MatType.BKG:
+            type = TQ.ElementType.BITMAP;
+            break;
+          case TQ.MatType.PROP:
+            type = TQ.ElementType.BITMAP;
+            break;
+          case TQ.MatType.PEOPLE:
+            type = TQ.ElementType.BITMAP;
+            break;
+          case TQ.MatType.SOUND:
+            type = TQ.ElementType.SOUND;
+            break;
+          default:
+            TQ.Log.error("未处理的matType！");
+            type = TQ.ElementType.BITMAP;
         }
+        return type;
+      }
     };
 })();
