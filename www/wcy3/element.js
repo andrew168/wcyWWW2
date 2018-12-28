@@ -186,41 +186,47 @@ window.TQ = window.TQ || {};
     };
 
     p._addComponent = function (jsonFiledesc) {
-        this.children = [];
-        // 调入 json文件, 取其中的 elements
-        (function (pt) {
-          $.ajax({
-            type: 'GET',
-            url: jsonFiledesc.src
-          }).done(function (jqResponse) {
-                try {
-                    var desc = JSON.parse(TQ.Scene.decompress(jqResponse.data));
-                } catch (e) {
-                    displayInfo2(jqResponse);
-                    TQ.Log.error(jqResponse + ". " + e.toString());
-                    // 给一个空白文件， 确保可持续进行
-                    desc = TQ.Scene.getEmptySceneJSON();
-                }
+      var opusDesc;
+      this.children = [];
+      // 调入 json文件, 取其中的 elements
+      (function (pt) {
+        $.ajax({
+          type: 'GET',
+          url: jsonFiledesc.src
+        }).done(function (jqResponse) {
+          try {
+            var opusJson = TQ.Scene.decompress(jqResponse.data);
+            opusDesc = JSON.parse(TQ.Element.upgrade(opusJson));
+          } catch (e) {
+            displayInfo2(jqResponse);
+            TQ.Log.error(jqResponse + ". " + e.toString());
+            // 给一个空白文件， 确保可持续进行
+            opusDesc = TQ.Scene.getEmptySceneJSON();
+          }
 
-                desc = pt._extractComponent(desc, jsonFiledesc.x, jsonFiledesc.y, jsonFiledesc.zIndex);
-                desc.t0 = jsonFiledesc.t0;
+          if (opusDesc.version !== TQ.Scene.VER_LATEST) {
+            TQ.Scene.upgradeToLatest(opusDesc);
+            opusDesc.version = opusDesc.version;
+          }
 
-                TQ.RM.setPaused(true);
-                if (!TQ.RM.isEmpty) {
-                    TQ.RM.onCompleteOnce(function () {
-                        pt._initializeComponent(desc);
-                        TQ.SelectSet.add(pt);
-                    });
-                    TQ.RM.setPaused(false);
-                } else { // 资源都已经装入了，
-                    TQ.RM.setPaused(false);
-                    pt._initializeComponent(desc);
-                }
+          var groupEleDesc = pt._extractComponent(opusDesc, jsonFiledesc.x, jsonFiledesc.y, jsonFiledesc.zIndex);
+          groupEleDesc.t0 = jsonFiledesc.t0;
+
+          if (!TQ.RM.isEmpty) {
+            TQ.RM.onCompleteOnce(function () {
+              var zMax = TQ.Utility.getMaxZ();
+              // 元件的zIndex要升高，使他置于top，可见
+              Element.liftZ(groupEleDesc, zMax);
+              pt._initializeComponent(groupEleDesc);
             });
-        })(this);
+          } else { // 资源都已经装入了，
+            pt._initializeComponent(groupEleDesc);
+          }
+        });
+      })(this);
 
-        // 对元件文件, 生成了一个Group，他们也需要 一个 animeTrack
-        this.animeTrack = this.jsonObj.animeTrack;
+      // 对元件文件, 生成了一个Group，他们也需要 一个 animeTrack
+      this.animeTrack = this.jsonObj.animeTrack;
     };
 
     Element.liftZ = function (jsonObj, zBase) {
@@ -247,18 +253,11 @@ window.TQ = window.TQ || {};
 
         // ToDo: 暂时只支持1个level的组件，（下面的多level合并逻辑，要重新考虑）
         // 选取 元件中的所有元素, 作为当前元素的子元素, 如果有多个level, 则合并到一个Level
-        for (var i = 0; i < objJson.levels.length; i++) {
-            var level = objJson.levels[i];
-            if ((level.elements != null ) && (level.elements.length > 0)) {
-                for (var j = 0; j < level.elements.length; j++) {
-                    // 元件的zIndex要升高，使他置于top，可见
-                    Element.liftZ(level.elements[j], zMax);
-                    this.jsonObj.children.push(level.elements[j]);
-                    TQ.RM.addElementDesc(level.elements[j]);
-                }
-            }
-        }
-
+        TQ.AssertExt.invalidLogic(objJson.levels.length===1, "元件只能有1个场景");
+        TQ.AssertExt.invalidLogic(objJson.levels[0].elements.length === 1, "元件只能有1个根元素");
+        var component = objJson.levels[0].elements;
+        TQ.RM.addElementDescList(component);
+        this.jsonObj = component[0];
         this.jsonObj.type = "Group";  // 不论是单个物体还是多个物体,总是建立虚拟物体group， 以保留其原有的动画
         this.jsonObj.x = x;
         this.jsonObj.y = y;

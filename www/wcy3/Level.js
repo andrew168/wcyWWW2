@@ -415,33 +415,10 @@ window.TQ = window.TQ || {};
       return;
     }
 
-    var jsonElements = this.elements,
-      foundInvalidElement = false;
-
-    if (!!jsonElements) {
-      for (var i = 0; i < jsonElements.length; i++) {
-        var desc = jsonElements[i];
-        if (!desc || isBlob(desc)) {
-          foundInvalidElement = true;
-          jsonElements[i] = null;
-        } else {
-          TQ.RM.addElementDesc(desc);
-        }
-      }
-    }
-
-    if (foundInvalidElement) { //删除非法element
-      for (i = jsonElements.length - 1; i >= 0; i--) {
-        if (!jsonElements[i]) {
-          jsonElements.splice(i, 1);
-        }
-      }
+    if (!!this.elements) {
+      TQ.RM.addElementDescList(this.elements);
     }
   };
-
-  function isBlob(desc) {
-    return desc && desc.src && (desc.src.indexOf('blob:') >= 0);
-  }
 
   p.addAllItems = function () {
     // add到stage， == 显示，show

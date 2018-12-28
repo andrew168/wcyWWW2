@@ -418,6 +418,27 @@ this.TQ = this.TQ || {};
         return allChildrenReady && iReady;
     };
 
+    RM.addElementDescList = function (jsonElements) {
+      var foundInvalidElement = false;
+      for (var i = 0; i < jsonElements.length; i++) {
+        var desc = jsonElements[i];
+        if (!desc || isBlob(desc)) {
+          foundInvalidElement = true;
+          jsonElements[i] = null;
+        } else {
+          TQ.RM.addElementDesc(desc);
+        }
+      }
+
+      if (foundInvalidElement) { //删除非法element
+        for (i = jsonElements.length - 1; i >= 0; i--) {
+          if (!jsonElements[i]) {
+            jsonElements.splice(i, 1);
+          }
+        }
+      }
+    };
+
     RM.isLocalResource = function(resName) {
         return (resName.indexOf("file:///") === 0);
     };
@@ -709,6 +730,10 @@ this.TQ = this.TQ || {};
     function toThumbNail(path) {
         TQ.Assert.isTrue(path[0] != '/', "not separator");
         return (TQ.Utility.isImage(path) ? THUMBNAIL_EXP : "") + path;
+    }
+
+    function isBlob(desc) {
+      return desc && desc.src && (desc.src.indexOf('blob:') >= 0);
     }
 
     RM.loadSoundFromFile = loadSoundFromFile;
