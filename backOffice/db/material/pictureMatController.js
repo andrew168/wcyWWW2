@@ -95,9 +95,9 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
     },
     {"$addFields": {"topicAttached": {$in: [topicId, "$topicIds"]}}} // 排序依据：是否关联到主题
     //, {"$limit": 15}
-  ]).sort({topicAttached: 1, timestamp: -1}).exec(onSeachResult);
+  ]).sort({topicAttached: 1, timestamp: -1}).exec(onSearchResult);
 
-  function onSeachResult(err, data) {
+  function onSearchResult(err, data) {
     var result = [];
     if (!data) {
       console.error(404, {msg: 'not found! userId = ' + userId + ", matType =" + typeId});
@@ -110,12 +110,10 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
     function copyItem(doc) {
       var item = doc;
       if (item.path) {
-        result.push({
-          _id: item._id,
-          id: item._id, name: item.name, path: item.path, authorId: item.userId,
-          isShared: item.isShared, time: item.timestamp,
-          topicIds: item.topicIds
-        });
+        item.id = item._id;
+        item.authorId = item.userId;
+        item.time = item.timestamp;
+        result.push(item);
       }
     }
   }
@@ -125,12 +123,12 @@ function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
   var condition = null;
   if (isFullPath(picName)) {
     condition = {"typeId": typeId, "name": picName};
-    PictureMat.find(condition).exec(onSeachResult);
+    PictureMat.find(condition).exec(onSearchResult);
   } else {
     doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError);
   }
 
-  function onSeachResult(err, data) {
+  function onSearchResult(err, data) {
     if (!data || (data.length < 1)) {
       doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError);
     } else {
