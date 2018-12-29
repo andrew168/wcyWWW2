@@ -94,6 +94,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
             data.matType = matType;
             updateMat(data);
             q.resolve(data);
+            TQ.MessageBox.hide();
         }
 
         return q.promise;
