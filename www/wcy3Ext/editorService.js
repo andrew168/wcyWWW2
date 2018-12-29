@@ -592,17 +592,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function uploadIComponentThumbnail() {
-    var desc = {
-      icId: TQ.Scene.getWcyId(),
-      src: currScene.ssPath,
-      type: currScene.iComponentInfo.type,
-    },
+    var option = {
+        iComponentId: TQ.Scene.getWcyId(),
+        //ToDo: 素材库已有的图片，直接利用，避免再次上传，只是新素材id而已
+        src: TQ.ScreenShot.getData(),
+      },
       data = {
-        matType: desc.type,
-        fileOrBuffer: desc.src,
+        matType: currScene.iComponentInfo.type,
+        fileOrBuffer: option.src
       };
 
-    return uploadMat(data, desc);
+    return uploadMat(data, option);
   }
 
   function addItemByData(data) {

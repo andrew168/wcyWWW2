@@ -119,13 +119,13 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
   }
 }
 
-function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
+function add(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onError) {
   var condition = null;
   if (isFullPath(picName)) {
     condition = {"typeId": typeId, "name": picName};
     PictureMat.find(condition).exec(onSearchResult);
   } else {
-    doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError);
+    doAdd(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onError);
   }
 
   function onSearchResult(err, data) {
@@ -137,10 +137,11 @@ function add(userId, picName, typeId, ip, isShared, onSuccess, onError) {
   }
 }
 
-function doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError) {
+function doAdd(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onError) {
   var aDoc = new PictureMat({
     userId: userId,
     typeId: typeId,
+    iComponentId: iComponentId,
     name: picName,
     ip: ip,
     isShared: isShared

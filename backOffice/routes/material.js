@@ -46,8 +46,9 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     }
 
     if (!public_id) {
-        var originalFilename = req.body.filename || "no_filename";
-        createMatId(req, res, matType, originalFilename);
+        var originalFilename = req.body.filename || "no_filename",
+          iComponentId = req.body.iComponentId || 0;
+        createMatId(req, res, iComponentId, matType, originalFilename);
     } else {
         updateMatId(req, res, matType, utils.matName2Id(public_id), path);
     }
@@ -146,7 +147,7 @@ router.get('/list/:matType/topic/:topicId/option/:requestAll', authHelper.ensure
     }
 });
 
-function createMatId(req, res, matType, originalFilename) {
+function createMatId(req, res, iComponentId, matType, originalFilename) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -174,7 +175,7 @@ function createMatId(req, res, matType, originalFilename) {
             // ToDo:
             var ip = null;
             var isShared = MAT_SHARE_FLAG_DEFAULT;
-            getMatController(matType).add(user.ID, originalFilename, matType, ip, isShared, onSavedToDb, null);
+            getMatController(matType).add(user.ID, iComponentId, originalFilename, matType, ip, isShared, onSavedToDb, null);
         } else {
             console.log("must be new material");
         }

@@ -33,7 +33,7 @@ function get(userId, callback) {
   });
 }
 
-function add(userId, audioName, typeId, ip, isShared, onSuccess, onError) {
+function add(userId, iComponentId, audioName, typeId, ip, isShared, onSuccess, onError) {
   var aDoc = new AudioMat({
     userId: userId,
     typeId: typeId,
