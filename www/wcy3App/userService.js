@@ -89,19 +89,16 @@ function UserService($http, $auth) {
     function onGetProfileSuccess(netPkg) {
         var data = netPkg.data;
         if (netPkg.status === TQ.Const.STATUS200) {
+            var age = (!data.age ? user.age : data.age),
+              city = (!data.city ? user.city : data.city);
+
+            TQUtility.extendWithoutObject(user, data);
             user.loggedIn = true;
             user.needManualLogin = false;
-            user.name = data.name;
-            user.ID = data.ID;
-            user.age = (!data.age ? user.age : data.age);
-            user.city = (!data.city? user.city: data.city);
-            user.displayName = data.displayName;
+            user.age = age;
+            user.city = city;
             user.isValidName = true;
             user.saveToCache();
-            user.canAdmin = data.canAdmin;
-            user.canApprove = data.canApprove;
-            user.canBan = data.canBan;
-            user.canRefine = data.canRefine;
             TQ.Log.checkPoint("login successfully!  welcome "+ user.displayName + ", " + user.name);
         } else {
             onGetProfileFailed(netPkg);
