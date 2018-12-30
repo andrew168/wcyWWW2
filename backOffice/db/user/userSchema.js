@@ -19,6 +19,7 @@ var userSchema = new Schema({
 
     score: {type: Number, default: 0}, // 实时统计并显示？
     signUpAt: {type: Date, default: Date.now},
+    type: {type: Number, default: 1}, // 用type，统一赋值一类用户的privilege，
     privilege: {type: Number, default: 3} // 权限， 1: 普通用户， 可以 播放1， 创作2，
 });
 

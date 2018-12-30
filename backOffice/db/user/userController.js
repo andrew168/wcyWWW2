@@ -8,13 +8,19 @@ var Const = require('../../base/const'),
     dbCommon = require('../dbCommonFunc.js'),
     User = mongoose.model('User');
 
-var PAGE_SIZE = 1000;
-var PRIVILEGE_APPROVE_TO_PUBLISH = 0x10,
-    PRIVILEGE_REFINE = 0x20,
-    PRIVILEGE_BAN = 0x40,
-    PRIVILEGE_ADMIN = 0x80,
-    PRIVILEGE_CREATE_TEACHER = 0x100,
-    PRIVILEGE_ARTIST = 0x200;
+var PAGE_SIZE = 1000,
+  USER_TYPE = {
+    STUDENT: 1,
+    PARENT: 2,
+    TEACHER: 3,
+    CREATIVE_TEACHER: 4
+  },
+  PRIVILEGE_APPROVE_TO_PUBLISH = 0x10,
+  PRIVILEGE_REFINE = 0x20,
+  PRIVILEGE_BAN = 0x40,
+  PRIVILEGE_ADMIN = 0x80,
+  PRIVILEGE_CREATE_TEACHER = 0x100,
+  PRIVILEGE_ARTIST = 0x200;
 
 function get(id) {
     User.findOne({_id: id})
@@ -48,7 +54,9 @@ function composeErrorPkg(err, errorId) {
 
 function composeUserPkg(model) {
     var doc = (Array.isArray(model)) ? model[0]._doc : model._doc,
-        groupId = doc.groupId || "00000";
+        groupId = doc.groupId || "00000",
+        privilege = type2Privilege(doc.type) | doc.privilege;
+
     return {
       result: Const.SUCCESS,
       loggedIn: true,
@@ -58,14 +66,14 @@ function composeUserPkg(model) {
       userType: getUserType(groupId),
       ID: doc._id,
       displayName: doc.displayName,
-      canApprove: !!(doc.privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
-      canRefine: !!(doc.privilege & PRIVILEGE_REFINE),
-      canBan: !!(doc.privilege & PRIVILEGE_BAN),
-      canAdmin: !!(doc.privilege & PRIVILEGE_ADMIN),
+      canApprove: !!(privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
+      canRefine: !!(privilege & PRIVILEGE_REFINE),
+      canBan: !!(privilege & PRIVILEGE_BAN),
+      canAdmin: !!(privilege & PRIVILEGE_ADMIN),
       canCT: // create textbook,创建教材内容，
-        !!((doc.privilege & PRIVILEGE_CREATE_TEACHER) ||
-          (doc.privilege & PRIVILEGE_ARTIST) ||
-          (doc.privilege & PRIVILEGE_ADMIN))
+        !!((privilege & PRIVILEGE_CREATE_TEACHER) ||
+          (privilege & PRIVILEGE_ARTIST) ||
+          (privilege & PRIVILEGE_ADMIN))
     };
 }
 
@@ -163,10 +171,39 @@ function getUserType(groupId) {
     return userType;
 }
 
+function type2Privilege(type) {
+  var privilege = 3; //缺省值，见schema
+  if (!type) { // 实时type之前的用户， 都是当做是： 创新teacher，
+    type = USER_TYPE.CREATIVE_TEACHER;
+  }
+  switch (type) {
+    case USER_TYPE.STUDENT:
+      break;
+    case USER_TYPE.PARENT:
+      privilege = privilege | PRIVILEGE_ARTIST |
+        PRIVILEGE_CREATE_TEACHER;
+      break;
+    case USER_TYPE.TEACHER:
+      privilege = privilege | PRIVILEGE_ARTIST |
+       PRIVILEGE_CREATE_TEACHER;
+      break;
+    case USER_TYPE.CREATIVE_TEACHER:
+      privilege = privilege | PRIVILEGE_ARTIST |
+        PRIVILEGE_CREATE_TEACHER;
+      break;
+    default:
+      break;
+  }
+
+  return privilege;
+}
+
+exports.USER_TYPE = USER_TYPE;
 exports.get = get;
 exports.getList = getList;
 exports.add = add; // 游客
 exports.setPrivilege = setPrivilege;
+exports.type2Privilege = type2Privilege;
 exports.model2User = model2User;
 exports.composeErrorPkg = composeErrorPkg;
 exports.composeUserPkg = composeUserPkg;

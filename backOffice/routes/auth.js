@@ -81,6 +81,7 @@ router.post('/signup', function (req, res) {
     var name = email,
         psw = req.body.password || null,
         groupId = req.body.groupId || "11111",
+        userType = req.body.userType || userController.USER_TYPE.STUDENT;
         displayName = req.body.displayName || null;
 
     // status.logUser(req);
@@ -126,6 +127,7 @@ router.post('/signup', function (req, res) {
             name: email, // email or phone number
             displayName: displayName,
             groupId: groupId,
+            type: userType,
             email: email,
             password: psw
         });
