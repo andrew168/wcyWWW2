@@ -40,9 +40,7 @@ function UserService($http, $auth) {
     }
 
     function signUp(user) {
-        return $auth.signup({email: user.name.toLowerCase(), password: user.psw, displayName: user.displayName, groupId: user.groupId}).
-            then(onSignUp).
-            catch(onGetProfileFailed);
+      return $auth.signup(user).then(onSignUp).catch(onGetProfileFailed);
     }
 
     function onSignUp(netPkg) {
