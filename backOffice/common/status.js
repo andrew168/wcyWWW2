@@ -29,6 +29,7 @@ function onLoginSucceed(req, res, data, tokenId) {
             canApprove: data.canApprove,
             canRefine: data.canRefine,
             canBan: data.canBan,
+            canCT: data.canCT,
             canAdmin: data.canAdmin
         };
 

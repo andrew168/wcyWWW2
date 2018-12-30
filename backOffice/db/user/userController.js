@@ -12,7 +12,9 @@ var PAGE_SIZE = 1000;
 var PRIVILEGE_APPROVE_TO_PUBLISH = 0x10,
     PRIVILEGE_REFINE = 0x20,
     PRIVILEGE_BAN = 0x40,
-    PRIVILEGE_ADMIN = 0x80;
+    PRIVILEGE_ADMIN = 0x80,
+    PRIVILEGE_CREATE_TEACHER = 0x100,
+    PRIVILEGE_ARTIST = 0x200;
 
 function get(id) {
     User.findOne({_id: id})
@@ -48,18 +50,22 @@ function composeUserPkg(model) {
     var doc = (Array.isArray(model)) ? model[0]._doc : model._doc,
         groupId = doc.groupId || "00000";
     return {
-        result: Const.SUCCESS,
-        loggedIn: true,
-        errorId: Const.ERROR.NO,
-        name: doc.name,
-        groupId: groupId,
-        userType: getUserType(groupId),
-        ID: doc._id,
-        displayName: doc.displayName,
-        canApprove: !!(doc.privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
-        canRefine: !!(doc.privilege & PRIVILEGE_REFINE),
-        canBan: !!(doc.privilege & PRIVILEGE_BAN),
-        canAdmin: !!(doc.privilege & PRIVILEGE_ADMIN)
+      result: Const.SUCCESS,
+      loggedIn: true,
+      errorId: Const.ERROR.NO,
+      name: doc.name,
+      groupId: groupId,
+      userType: getUserType(groupId),
+      ID: doc._id,
+      displayName: doc.displayName,
+      canApprove: !!(doc.privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
+      canRefine: !!(doc.privilege & PRIVILEGE_REFINE),
+      canBan: !!(doc.privilege & PRIVILEGE_BAN),
+      canAdmin: !!(doc.privilege & PRIVILEGE_ADMIN),
+      canCT: // create textbook,创建教材内容，
+        !!((doc.privilege & PRIVILEGE_CREATE_TEACHER) ||
+          (doc.privilege & PRIVILEGE_ARTIST) ||
+          (doc.privilege & PRIVILEGE_ADMIN))
     };
 }
 
