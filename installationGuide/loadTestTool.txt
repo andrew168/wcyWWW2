@@ -1,0 +1,37 @@
+建立压力测试工具： JMeter 4+ JDK8
+1. 安装工具们
+* 安装JDK8， Java SE Development Kit 8u191
+设置JAVA_HOME =
+* 安装JMeter 4
+* 安装JMeter plugin管理器:
+  (下载并展开到 JMeter's lib/ext目录)
+
+2.运行 Jmeter， 在 JMETER_HOME/bin/jmeterw.cmd
+* 下载JMeter的plugin
+  Options| Plugin Manager
+
+3. 设置大字体， 亮色theme
+
+4. "Start"  "HTTP(S) Test Script Recorder"，生成CA证书，并安装它
+(注意， 端口是8888）
+自动生成的证书是：jmeter/bin/ApacheJMeterTemporaryRootCA.crt
+
+5。设置Chrome的network proxy，
+使用localhost的8888端口， （与前述recorder的约定一致）
+
+6.建立第一个test Plan,并录制测试脚本
+Right click on the “Test Plan”
+* Add > Threads (Users) >Thread Group
+* Add > Non-Test Elements > HTTP(S) Test Script Recorder
+
+
+Right click on the “Thread Group”
+*  Add > Logic Controller > Recording Controller
+
+Right click on “HTTP(S) Test Script Recorder” and
+add a listener: Add -> Listener -> View Results Tree
+
+
+3. 设置压力： 100个并发， 速度10秒钟1000个请求
+
+Add -> Config Element -> HTTP Request Defaults”
