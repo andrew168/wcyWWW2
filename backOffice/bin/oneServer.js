@@ -249,6 +249,7 @@
          */
 
         console.info("process.env.PORT = " + process.env.PORT);
+        console.info("process.env.NODE_ENV = " + process.env.NODE_ENV);
         _config.port = normalizePort(process.env.PORT || 80);
         app.set('port', _config.port);
 

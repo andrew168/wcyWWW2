@@ -31,6 +31,7 @@ function init() {
     vSecuredServer.maxConnections = 6000; // 6 * 1000; 最多同时1000浏览器同时访问， 每个浏览器6个并发请求
     app.use(gracefulExit.middleware(app)); //!!! gracefulExit 必须是app的第一个配置
     console.info("process.env.PORT = " + process.env.PORT);
+    console.info("process.env.NODE_ENV = " + process.env.NODE_ENV);
     config.port = normalizePort(process.env.PORT || config.port);
     app.set('port', config.port);
     process.on('SIGINT', function () {
