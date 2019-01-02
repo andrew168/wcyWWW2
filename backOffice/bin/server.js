@@ -5,6 +5,7 @@ var http = require('http'),
     vhost = require('vhost'),
     compression = require('compression'),
     fs = require('fs'),
+    logger = require('./../common/logger'),
     express = require('express'),
     gracefulExit = require('express-graceful-exit'),
     onlineUsers = require('../common/onlineUsers');
@@ -170,6 +171,7 @@ var shutdownCounter = 0;
 function onShutdownSuccessfully(statusCode) {
     shutdownCounter ++;
     console.info("Shutdown successfully!" + statusCode);
+    logger.shutdown();
     if (shutdownCounter >=2) { // 确认http和https都关闭了
         process.exit(statusCode);
     }

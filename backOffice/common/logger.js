@@ -16,10 +16,12 @@ var logger = logger|| {};
 
     function init()
     {
-        logger.initialized = true;
-        logger.error = logger.warn = logger.log = logger.debug = logger.info;
+        if (!logger.initialized) {
+          logger.initialized = true;
+          logger.error = logger.warn = logger.log = logger.debug = logger.info;
 
-        replaceConsole();
+          replaceConsole();
+        }
     }
 
     var originalConsoleFunctions = {
@@ -53,7 +55,9 @@ var logger = logger|| {};
         var options = null;
         function onCompleted(error) {
             if (error) {
-                console.log(error);
+                 if (originalConsoleFunctions && originalConsoleFunctions.log) {
+                   originalConsoleFunctions.log(error);
+                 }
             }
         }
 
@@ -78,7 +82,11 @@ var logger = logger|| {};
         log2File(msg);
     };
 
+    logger.shutdown = function () {
+      restoreConsole();
+    };
     init();
+
 })();
 
 module.exports = logger;
