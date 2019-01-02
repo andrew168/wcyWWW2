@@ -1,4 +1,6 @@
 建立压力测试工具： JMeter 4+ JDK8
+安装在Node的9.11.2版本
+
 1. 安装工具们
 * 安装JDK8， Java SE Development Kit 8u191
 设置JAVA_HOME =
@@ -32,6 +34,14 @@ Right click on “HTTP(S) Test Script Recorder” and
 add a listener: Add -> Listener -> View Results Tree
 
 
-3. 设置压力： 100个并发， 速度10秒钟1000个请求
+3. 设置压力： N=100线程（相当于100个用户）， 并发
 
-Add -> Config Element -> HTTP Request Defaults”
+参数Ramp-up Period（in seconds）： T
+
+在多少sec时间T之内启动所有N个线程，缺省是0（并发）。
+
+JMeter 将每隔T/N秒建立一个线程。
+
+T要足够长以避免在启动测试时有一个太大的工作负载，并且要足够小以至于最后一个线程在第一个完成前启动。  一般设置ramp-up=线程数启动，并上下调整到所需的。
+
+
