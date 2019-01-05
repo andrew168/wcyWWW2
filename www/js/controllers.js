@@ -233,7 +233,9 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertPropFromLocal = function () {
-        EditorService.insertPropFromLocal();
+      var matType = TQ.MatType.PROP,
+        useDevice = false;
+      EditorService.loadLocalImage(matType, useDevice, onLocalImageLoaded);
     };
 
     var _currentMusic = null;
@@ -255,6 +257,13 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         }
     }
 
+    function doAddLocalSound(desc, fileOrBlob) {
+      $scope.onStopTryMusic();
+      var ele = TQ.SceneEditor.addItem(desc);
+      TQ.SceneEditor.lastSoundElement = ele;
+      TQ.ResourceSync.local2Cloud(ele, fileOrBlob, TQ.MatType.SOUND);
+    }
+
     $scope.stopAudioRecording = function () {
         if (TQ.AudioRecorder.isRecording) {
             return TQ.AudioRecorder.stop();
@@ -264,7 +273,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     function onTryMusic(prop) {
         if (prop && prop.path) {
             if (_currentMusic && prop.path === _currentMusic.path) {
-                onStopTryMusic();
+              $scope.onStopTryMusic();
             } else {
                 TQ.SoundMgr.play(prop.path);
                 _currentMusic = prop;
@@ -273,7 +282,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     }
 
     $scope.onStopTryMusic = function () {
-        if (_currentMusic.path) {
+        if (_currentMusic && _currentMusic.path) {
             TQ.SoundMgr.stop(_currentMusic.path);
             _currentMusic = null;
         }
@@ -364,11 +373,10 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertBkImageFromLocal = function () {
-        var matType = TQ.MatType.PROP,
+        var matType = TQ.MatType.BKG,
             useDevice = true;
 
         EditorService.loadLocalImage(matType, useDevice, onLocalImageLoaded);
-        // EditorService.gotoNextLevel();
     };
 
     function onLocalImageLoaded(desc, image64Data, matType) {
