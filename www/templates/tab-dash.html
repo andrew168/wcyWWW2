@@ -13,6 +13,7 @@
         </div>
         -->
         <!-- END OF Config.TECH_TEST1_LOCAL_CACHE_ON -->
+    <canvas id="clipCanvas" width="100%" height="100%" style="background: whitesmoke;"></canvas>
     <div class="float-tool">
             <div class="new-left-button functionButton">
                 <div class="fn-left">
@@ -464,5 +465,26 @@
                 </div>
             </div>
         </div>
-    </ion-content>
+  <div id="clip-div" class="toolbar-layer" style="display: none; position: absolute; width:100%; height: 100%">
+    <canvas id="clipCanvas" width="100%" height="100%" style="background: whitesmoke;"></canvas>
+    <span class="toolbox-close-btn-layer top-right-align">
+			<span ng-show="sc.clipMask">
+				<button ng-show="sc.IN_DEV" class="button2-bgc" ng-click="sc.clip.setMask(1);"
+                title={{sc.getStr("Skip")}}>圆</button>
+				<button ng-show="sc.IN_DEV" class="button2-bgc" ng-click="sc.clip.setMask(2);"
+                title={{sc.getStr("Skip")}}>方</button>
+				<button class="button2-bgc" ng-click="sc.turnOffClip();"
+                title={{sc.getStr("Skip")}}>不裁</button>
+			</span>
+			<button ng-hide="sc.clipMask" class="button2-bgc" ng-click="sc.turnOnClip();"
+              title={{sc.getStr("Clip")}}>裁</button>
+      <button id="id-icon-ok-bg" class="button2-bgc" ng-click="sc.confirmClip();"
+              title={{sc.getStr("OK")}}></button>
+      <button id="id-icon-close-bg" class="button2-bgc" ng-click="sc.cancelClip()"
+              title={{sc.getStr("Cancel")}}></button>
+		</span>
+
+  </div>
+
+</ion-content>
 </ion-view>
