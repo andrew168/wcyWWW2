@@ -1,7 +1,7 @@
 /**
  * Created by Andrewz on 1/18/18.
  */
-angular.module('starter', ['ionic', 'ngCookies'])
+angular.module('starter', ['ionic'])
     .run(function ($ionicPlatform, WxService) {
         $ionicPlatform.ready(function () {
             // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
