@@ -31,7 +31,7 @@ TQ = TQ || {};
   /*
 		专门用于试播，同时只允许播放1个。 试看新的，必须关闭旧的。
 	 */
-  VideoMgr._auditioningInstance = null;
+  var _auditioningInstance = null;
   VideoMgr.isPlaying = function (instance) {
     if (!instance) return false;
     return (instance.playState === TQ.Video.PLAY_SUCCEEDED); // 包括paused， 不包括已经播完的
@@ -41,13 +41,13 @@ TQ = TQ || {};
     TQ.Log.info("start to play " + id);
     var item = TQ.RM.getResource(id);
     if (item) {
-      if (!!VideoMgr._auditioningInstance) {
-        if (VideoMgr.isPlaying(VideoMgr._auditioningInstance)) {
-          VideoMgr._auditioningInstance.stop();
+      if (!!_auditioningInstance) {
+        if (VideoMgr.isPlaying(_auditioningInstance)) {
+          _auditioningInstance.stop();
         }
       }
-      VideoMgr._auditioningInstance = TQ.Video.play(TQ.RM.getId(item));
-      directVideos[id] = VideoMgr._auditioningInstance;
+      _auditioningInstance = TQ.Video.play(TQ.RM.getId(item));
+      directVideos[id] = _auditioningInstance;
     } else {
       TQ.RM.addItem(id, function () {
         VideoMgr.play(id);
@@ -104,8 +104,8 @@ TQ = TQ || {};
       var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
       ele.stop();
     }
-    if (!!VideoMgr._auditioningInstance) {
-      VideoMgr._auditioningInstance.stop();
+    if (!!_auditioningInstance) {
+      _auditioningInstance.stop();
     }
     stopAllDirectVideo();
   };
