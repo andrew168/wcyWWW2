@@ -51,13 +51,11 @@ window.TQ = window.TQ || {};
             case DescType.GROUP:
             case DescType.GROUP_FILE:
                 return new TQ.GroupElement(level, desc);
+            case DescType.VIDEO:
+              return new TQ.VideoElement(level, desc);
             default :
                 console.error("unknown desc.type:" + desc.type);
                 break;
-        }
-
-        if (TQ.Element.isVideo(desc.src)) {
-            return new TQ.VideoElement(level, desc);
         }
 
         return new TQ.Element(level, desc);

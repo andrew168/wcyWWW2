@@ -9,6 +9,7 @@ window.TQ = window.TQ || {};
         ANCHOR_MARKER: "AnchorMarker",
         BITMAP: "Bitmap",
         BITMAP_ANIMATION: "BitmapAnimation",
+        VIDEO: 'VIDEO',
         BUTTON: "BUTTON",
         BBOX: "BBOX",
         GROUP: "Group",
