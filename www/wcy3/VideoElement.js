@@ -40,18 +40,18 @@ TQ = TQ || {};
 
   VideoElement.composeResource = function (res) {
     // wav: 都可以用(似乎IE不行）, 已经被FF24.0，CM29.0， SF5.1.7都支持了！！！
-    // MP3: IE, CM, SF： ==》 ogg: 火狐, opera
+    // mp4: IE, CM, SF： ==》 ogg: 火狐, opera
     var currentBrowser = createjs.BrowserDetect;
     var newRes = null;
     if (currentBrowser.isFirefox || currentBrowser.isOpera) {
-      newRes = res.replace("mp3", "ogg");
+      newRes = res.replace("mp4", "ogg");
     } else {
-      newRes = res.replace("ogg", "mp3");
+      newRes = res.replace("ogg", "mp4");
     }
     return VideoElement._composeFullPath(newRes);
   };
 
-  // 只允许MP3和ogg, 其余的必须转变
+  // 只允许mp4和ogg, 其余的必须转变
   p._doLoad = function (desc) {
     if (!desc) {
       desc = this.jsonObj;
