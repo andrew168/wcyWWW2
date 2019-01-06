@@ -6,14 +6,6 @@ TQ = TQ || {};
 
 (function () {
     'use strict';
-    // 用法: 1) 拖入一个按钮可以换皮肤，可以定义新的动作
-    //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
-    //  Button的状态：
-    //     不可见，
-    //      可见（执行可见的action），
-    //      被按下，执行（被按下的action），
-    //     再次转为不可见，          初始化状态
-
     function VideoElement(level, jsonObj) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
         this.level = level;
