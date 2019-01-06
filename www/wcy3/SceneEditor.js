@@ -113,7 +113,10 @@ var currScene = null;
     if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
       return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
     }
-    if (TQ.ImageCliper) {
+
+    if (TQUtility.isVideoFile(aFile)) {
+      addVideoItem(dstLevel, aFile, matType, callback);
+    } else if (TQ.ImageCliper) {
       TQ.ImageCliper.clipImage(aFile, function (imageData) {
         if (imageData) {
           addItemByImageData(dstLevel, imageData, matType, callback);
@@ -167,6 +170,30 @@ var currScene = null;
     }
   }
 
+  function addVideoItem(dstLevel, aFile, matType, callback) {
+    var video = document.createElement('video');
+    video.onloadeddata = doAdd;
+    if (TQUtility.isLocalFile(aFile)) {
+      video.src = TQUtility.fileToUrl(aFile, {});
+    } else {
+      TQ.AssertExt.invalidLogic(false, "video 应该是本地视频文件");
+    }
+
+    function doAdd(event) {
+      console.log(event);
+      var desc = {
+        data: video,
+        src: null,
+        type: TQ.ElementType.VIDEO,
+        autoFit: determineAutoFit(matType),
+        dstLevel: dstLevel,
+        eType: TQ.MatType.toEType(matType)
+      };
+
+      callback(desc, aFile, matType);
+    }
+  }
+
   function addItemBySoundFile(dstLevel, fileOrBlob, matType, callback) {
     TQ.RM.loadSoundFromFile(fileOrBlob, function (result) {
       var desc = {
@@ -192,6 +219,7 @@ var currScene = null;
     // "Groupfile" 暂时还没有纳入RM的管理范畴
     if (((desc.type === TQ.ElementType.SOUND) ||
         (desc.type === TQ.ElementType.BITMAP) ||
+        (desc.type === TQ.ElementType.VIDEO) ||
         (desc.type === TQ.ElementType.BUTTON)) && !desc.data &&
       (!TQ.RM.hasElementDesc(desc))) {
       TQ.RM.addElementDesc(desc, doAdd);

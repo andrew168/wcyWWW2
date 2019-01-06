@@ -422,15 +422,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
           return;
         }
         mat = files[i];
-        if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat)) {
-          TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, function (desc, fileOrBlob, matType) {
-            callback(desc, fileOrBlob, matType);
-            if ((i + 1) < n) {
-              $timeout(function () {
-                processOneFile(i + 1);
-              });
-            }
-          }, kouTuMain);
+        if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat) || TQUtility.isVideoFile(mat)) {
+          TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, onPreprocessCompleted, kouTuMain);
+        }
+
+        function onPreprocessCompleted(desc, fileOrBlob, matType) {
+          callback(desc, fileOrBlob, matType);
+          if ((i + 1) < n) {
+            $timeout(function () {
+              processOneFile(i + 1);
+            });
+          }
         }
       }
 
@@ -446,7 +448,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       },
 
       imageFile = {
-        formats: ".bmp, .gif, .jpeg, .png, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/*;capture=camera",
+        formats: "video/mp4,video/x-m4v,video/*,.bmp, .gif, .jpeg, .png, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/*;capture=camera",
         device: ""
       },
 

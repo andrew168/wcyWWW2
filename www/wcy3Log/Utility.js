@@ -251,6 +251,10 @@ var TQUtility; //
         return ((aFile instanceof File) && (aFile.type) && (aFile.type.indexOf('audio') >= 0));
     };
 
+    Utility.isVideoFile = function (aFile) {
+      return ((aFile instanceof File) && (aFile.type) && (aFile.type.indexOf('video') >= 0));
+    };
+
     Utility.isBlob = function (data) {
         return (data instanceof Blob);
     };
