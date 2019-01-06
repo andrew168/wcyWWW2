@@ -15,7 +15,7 @@ TQ = TQ || {};
   VideoMgr.isSupported = false;
   VideoMgr.items = [];
   var isReseting = false,
-    directVideos = [];
+    directVideos = {};
 
   VideoMgr.initialize = function () {
     VideoMgr.isSupported = true;
@@ -47,7 +47,7 @@ TQ = TQ || {};
         }
       }
       VideoMgr._auditioningInstance = TQ.Video.play(TQ.RM.getId(item));
-      directVideos.push(id);
+      directVideos[id] = VideoMgr._auditioningInstance;
     } else {
       TQ.RM.addItem(id, function () {
         VideoMgr.play(id);
@@ -56,18 +56,14 @@ TQ = TQ || {};
   };
 
   VideoMgr.stop = function (id) {
-    TQ.Video.stop(id);
-    var index = directVideos.indexOf(id);
-    directVideos.splice(index, 1);
+    TQ.Video.stop(directVideos[id]);
+    delete directVideos[id];
   };
 
   function stopAllDirectVideo() {
-    if (directVideos.length > 0) {
-      var temp = directVideos.slice(0);
-      temp.forEach(function (id) {
-        VideoMgr.stop(id);
-      })
-    }
+    directVideos.forEach(function (id) {
+      VideoMgr.stop(id);
+    });
   }
 
   VideoMgr.addItem = function (ele) {
