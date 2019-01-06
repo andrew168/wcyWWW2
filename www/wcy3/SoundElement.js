@@ -10,26 +10,23 @@ TQ = TQ || {};
     //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
     function SoundElement(level, jsonObj) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
-        this.level = level;
-        this.children = [];
         this.instance = null;
-        this._isNewSkin = false;
         this.isFirstTimePlay = true;
         if (!!jsonObj.t0) { // 记录声音的插入点， 只在插入点开始播放
             this.t0 = jsonObj.t0;
         } else {
             this.t0 = 0;
         }
-        this.version = jsonObj.version;
-        this.isCrossLevel = (jsonObj.isCrossLevel !== undefined? jsonObj.isCrossLevel :
-            (this.isVer2plus() ? true: false));
-        this.initialize(jsonObj);
+        TQ.Element.call(this, level, jsonObj);
+        this.isCrossLevel = (jsonObj.isCrossLevel !== undefined ? jsonObj.isCrossLevel :
+          (this.isVer2plus() ? true : false));
     }
 
     SoundElement.srcToObj = function(src) {
         return ({type:"SOUND", src: src, isVis:1});
     };
-    var p = SoundElement.prototype = new TQ.Element(null, null, null, null);
+    var p = SoundElement.prototype = Object.create(TQ.Element.prototype);
+    SoundElement.prototype.constructor = SoundElement;
     p._parent_doShow = p.doShow;
     p.doShow = function(isVisible) {
         this._parent_doShow(isVisible);

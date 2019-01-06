@@ -20,10 +20,9 @@ window.TQ = window.TQ || {};
         }
     }
 
-    TextElement.prototype = Object.create(TQ.Element.prototype);
+    var p = TextElement.prototype = Object.create(TQ.Element.prototype);
     TextElement.prototype.constructor = TextElement;
 
-    var p = TextElement.prototype = new TQ.Element(null, null);
     p.parent_detachDecoration = p.detachDecoration;
     p.parent_attachMarker = p.attachMarker;
     p.attachMarker = function () {

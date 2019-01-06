@@ -27,8 +27,8 @@ TQ = TQ || {};
     var GRADIENT_COLOR_S = "#00F",
         GRADIENT_COLOR_E = "#F00";
 
-    var p = Marker.prototype = new TQ.Element(null, null, null, null);
-
+    var p = Marker.prototype = Object.create(TQ.Element.prototype);
+    Marker.prototype.constructor = Marker;
     p._parent_update = p.update;
     p.update2 = function(t, noRecording) {
         this._parent_update(t, noRecording);
