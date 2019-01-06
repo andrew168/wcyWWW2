@@ -1,10 +1,9 @@
 /**
  * Created by Andrewz on 1/6/19.
- */
-/**
  * 图强动漫引擎,
  * 专利产品 领先技术
  * Video的Manager, 负责Video的preload, play, stop, 等一系列工作.
+ * 包括正式场景中的 和 试播的
  * 是singleton
  */
 TQ = TQ || {};
@@ -30,14 +29,12 @@ TQ = TQ || {};
   };
 
   /*
-		专门用于试听声音，同时只允许播放1个。 试听新的必须关闭旧的。
-	 播放声音文件，id就是fileName，是声音文件的路径和名称， （从服务器的根目录计算， 不带域名)，
-	 例如： "mcSounds/test1.mp3"
+		专门用于试播，同时只允许播放1个。 试看新的，必须关闭旧的。
 	 */
   VideoMgr._auditioningInstance = null;
-  VideoMgr.isPlaying = function (soundInstance) {
-    if (!soundInstance) return false;
-    return (soundInstance.playState == createjs.Sound.PLAY_SUCCEEDED); // 包括paused， 不包括已经播完的
+  VideoMgr.isPlaying = function (instance) {
+    if (!instance) return false;
+    return (instance.playState === TQ.Video.PLAY_SUCCEEDED); // 包括paused， 不包括已经播完的
   };
   VideoMgr.play = function (id) {
     if (!VideoMgr.isSupported) return;
@@ -49,8 +46,8 @@ TQ = TQ || {};
           VideoMgr._auditioningInstance.stop();
         }
       }
-      VideoMgr._auditioningInstance = createjs.Sound.play(TQ.RM.getId(item)); // 用Sound.play, 可以播放多个instance， 声音只用ID， 不要resouce data
-      directSounds.push(id);
+      VideoMgr._auditioningInstance = TQ.Video.play(TQ.RM.getId(item));
+      directVideos.push(id);
     } else {
       TQ.RM.addItem(id, function () {
         VideoMgr.play(id);
@@ -59,14 +56,14 @@ TQ = TQ || {};
   };
 
   VideoMgr.stop = function (id) {
-    createjs.Sound.stop(id);
-    var index = directSounds.indexOf(id);
-    directSounds.splice(index, 1);
+    TQ.Video.stop(id);
+    var index = directVideos.indexOf(id);
+    directVideos.splice(index, 1);
   };
 
-  function stopAllDirectSound() {
-    if (directSounds.length > 0) {
-      var temp = directSounds.slice(0);
+  function stopAllDirectVideo() {
+    if (directVideos.length > 0) {
+      var temp = directVideos.slice(0);
       temp.forEach(function (id) {
         VideoMgr.stop(id);
       })
@@ -114,7 +111,7 @@ TQ = TQ || {};
     if (!!VideoMgr._auditioningInstance) {
       VideoMgr._auditioningInstance.stop();
     }
-    stopAllDirectSound();
+    stopAllDirectVideo();
   };
 
   VideoMgr.iosForceToResumeAll = function () {
@@ -124,7 +121,7 @@ TQ = TQ || {};
         ele.forceToReplay();
       }
     }
-    stopAllDirectSound();
+    stopAllDirectVideo();
   };
 
   VideoMgr.removeAll = function () {
@@ -135,7 +132,7 @@ TQ = TQ || {};
       ele.stop();
       VideoMgr.items.splice(i, 1);
     }
-    stopAllDirectSound();
+    stopAllDirectVideo();
   };
 
   VideoMgr.reset = function () {
@@ -147,7 +144,6 @@ TQ = TQ || {};
   VideoMgr.close = function () {
     if (!VideoMgr.isSupported) return;
     VideoMgr.stopAll();
-    // createjs.Sound.stop();  // 应该已经被stopAll取代了
     VideoMgr.removeAll();
     VideoMgr.items.splice(0); //在退出微创意的时候，清除跨场景声音
     VideoMgr.started = false;
