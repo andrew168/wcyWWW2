@@ -126,7 +126,7 @@ window.TQ = window.TQ || {};
                 TQ.StageBuffer.add(this);
             }
         } else {
-            if (this.isFEeffect() || this.isSound() || this.isGrouped() || this.isGroupFile()) {
+            if (this.isFEeffect() || this.isSound() || this.isVideo() ||this.isGrouped() || this.isGroupFile()) {
             } else {
                 TQ.AssertExt.invalidLogic(this.displayObj === undefined, "没有displayObj的元素，需要重定义show接口???");
             }
@@ -889,7 +889,7 @@ window.TQ = window.TQ || {};
 
         var jsonObj = this.jsonObj;
         assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //"世界坐标值jsonOb不能为空"
-        if (!this.isSound()) { //"显示对象displayObj不能为空"
+        if (!(this.isSound() || this.isVideo())) { //"显示对象displayObj不能为空"
             assertNotNull(TQ.Dictionary.FoundNull, this.displayObj);
         }
         if (jsonObj.isVis && !this.isVirtualObject() && !this.hasFlag(Element.IN_STAGE)) {
@@ -1208,7 +1208,7 @@ window.TQ = window.TQ || {};
     };
 
     p.highlight = function (enable) {
-        if (this.isSound() || this.isGroupFile() || this.isButton()) return;
+        if (this.isSound() || this.isVideo() ||this.isGroupFile() || this.isButton()) return;
         assertNotNull(TQ.Dictionary.FoundNull, this.displayObj);
         if (!this.displayObj) {
             TQ.Log.criticalError(TQ.Dictionary.FoundNull);
@@ -1952,7 +1952,10 @@ window.TQ = window.TQ || {};
         return false;
     };
     p.isSound = function () {
-        return (this.jsonObj.type == DescType.SOUND);
+        return (this.jsonObj.type === DescType.SOUND);
+    };
+    p.isVideo = function () {
+      return (this.jsonObj.type === DescType.VIDEO);
     };
     p.isGroupFile = function () {
         return (this.jsonObj.type === DescType.GROUP_FILE);

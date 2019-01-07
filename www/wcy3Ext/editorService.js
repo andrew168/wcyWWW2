@@ -300,11 +300,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     // 用事件， 在条件满足之后，再触发event，比延时更好，确保资源和M矩阵都ready。
     var ele = (evt && evt.data && evt.data.element) ? evt.data.element : null;
     if (ele && ele.level && ele.level.isActive()) {
-      if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
-        TQ.SelectSet.add(ele);
+      if (ele.isSound()) {
+        TQ.SoundMgr.play(ele.jsonObj.src);
+      } else if (ele.isVideo()) {
+        TQ.VideoMgr.play(ele.jsonObj.src);
       } else {
-        if (ele.isSound()) {
-          TQ.SoundMgr.play(ele.jsonObj.src);
+        if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
+          TQ.SelectSet.add(ele);
         }
       }
     }

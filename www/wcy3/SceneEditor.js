@@ -171,19 +171,19 @@ var currScene = null;
   }
 
   function addVideoItem(dstLevel, aFile, matType, callback) {
-    var video = document.createElement('video');
-    video.onloadeddata = doAdd;
     if (TQUtility.isLocalFile(aFile)) {
-      video.src = TQUtility.fileToUrl(aFile, {});
+      TQ.VideoMgr.play(TQUtility.fileToUrl(aFile, {}), doAdd);
     } else {
       TQ.AssertExt.invalidLogic(false, "video 应该是本地视频文件");
     }
 
-    function doAdd(event) {
-      console.log(event);
+    function doAdd(inst) {
+      if (inst) {
+        console.log(inst);
+      }
       var desc = {
-        data: video,
-        src: null,
+        data: !inst ? aFile: inst.domEle,
+        src: !inst ? aFile : inst.src,
         type: TQ.ElementType.VIDEO,
         autoFit: determineAutoFit(matType),
         dstLevel: dstLevel,
@@ -310,6 +310,7 @@ var currScene = null;
   function initializeCoreModules() {
     // core module是在loadScene中需要用到的module， 必须在loadScene之前初始化
     TQ.SoundMgr.initialize();
+    TQ.VideoMgr.initialize();
     TQ.ParticleMgr.initialize();
     TQ.RM.initialize();
   }

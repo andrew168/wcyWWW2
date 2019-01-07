@@ -57,7 +57,6 @@ TQ = TQ || {};
       desc = this.jsonObj;
     }
 
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isSound()); // 只用于声音元素
     if (!TQ.SoundMgr.isSupported) return;
 
     var resource,
@@ -76,7 +75,7 @@ TQ = TQ || {};
     }
     if (!!resource) {
       this.loaded = true;
-      this.instance = createjs.Sound.createInstance(resourceId); // 声音只用ID， 不要resouce data
+      this.instance = TQ.VideoMgr.play(resourceId);
       //ToDo： 需要在这里play吗？
       //this.instance.play(); //interruptValue, delay, offset, loop);
       // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
@@ -273,15 +272,5 @@ TQ = TQ || {};
     }
     return result;
   };
-
-  var _createVideoElement = function (src) {
-    var __video = document.createElement('video');
-    __video.src = TQ.ResourceManager.toFullPath(src);
-    __video.autoplay = false;
-    // __video.controls = true;
-    __video.setAttribute("controls", "false");
-    return __video;
-  };
-
   TQ.VideoElement = VideoElement;
 }());

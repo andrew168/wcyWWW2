@@ -32,6 +32,16 @@
     z-index:5000;
 }
 
+.video-layer {
+  z-index: 5500;
+}
+
+.video-container {
+  position: absolute;
+  display: block;
+  pointer-events: none
+}
+
 .page-effect-layer {
     z-index: 4900;
 }

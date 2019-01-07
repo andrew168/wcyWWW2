@@ -33,23 +33,25 @@ this.TQ.ResourceSync = (function () {
                 TQ.Log.debugInfo(res.url);
                 if (ele && ele.jsonObj) {
                     ele.jsonObj.src = res.url;
-                    force2Mp3(ele);
+                    unifyFormat(ele);
                 }
                 numActiveTasks--;
                 tryShowCompleteInfo();
             });
     }
 
-    function force2Mp3(ele) {
-        // 利用Cloudinary的自动格式转换功能， 迫使录音文件3gp转换为MP3
-        // 从而， 可以播放
-        if (ele && ele.isSound() ) {
-            if (ele.jsonObj.src) {
-                var pos = ele.jsonObj.src.lastIndexOf('.'),
-                    root = ele.jsonObj.src.substr(0, pos);
-                ele.jsonObj.src = root + '.mp3';
-            }
+    function unifyFormat(ele) {
+      // 利用Cloudinary的自动格式转换功能， 迫使录音文件3gp转换为MP3
+      // 从而， 可以播放
+      if (ele && ele.jsonObj.src) {
+        var pos = ele.jsonObj.src.lastIndexOf('.'),
+          root = ele.jsonObj.src.substr(0, pos);
+        if (ele.isSound()) {
+          ele.jsonObj.src = root + '.mp3';
+        } else if (ele.isSound()) {
+          ele.jsonObj.src = root + '.mp4';
         }
+      }
     }
 
     function tryShowCompleteInfo() {

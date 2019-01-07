@@ -36,21 +36,28 @@ TQ = TQ || {};
     if (!instance) return false;
     return (instance.playState === TQ.Video.PLAY_SUCCEEDED); // 包括paused， 不包括已经播完的
   };
-  VideoMgr.play = function (id) {
+
+  VideoMgr.play = function (id, onStarted) {
     if (!VideoMgr.isSupported) return;
     TQ.Log.info("start to play " + id);
-    var item = TQ.RM.getResource(id);
-    if (item) {
+    var inst = directVideos[id];
+    if (inst) {
       if (!!_auditioningInstance) {
         if (VideoMgr.isPlaying(_auditioningInstance)) {
           _auditioningInstance.stop();
         }
       }
-      _auditioningInstance = TQ.Video.play(TQ.RM.getId(item));
-      directVideos[id] = _auditioningInstance;
+      directVideos[id] = _auditioningInstance = inst;
+      inst.play();
+      if (onStarted) {
+        onStarted(inst);
+      }
     } else {
-      TQ.RM.addItem(id, function () {
-        VideoMgr.play(id);
+      TQ.Video.play(id, function (inst) {
+        directVideos[id] = _auditioningInstance = inst;
+        if (onStarted) {
+          onStarted(inst);
+        }
       });
     }
   };
