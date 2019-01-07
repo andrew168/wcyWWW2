@@ -262,6 +262,11 @@ var TQUtility; //
     Utility.isLocalFile = function (data) {
       return (data instanceof File);
     };
+
+    Utility.isBlobUrl = function (url) {
+      return (typeof url === 'string') && (url.indexOf('blob:') === 0);
+    };
+
     Utility.isLocalFileOrBlob = function (data) {
         return Utility.isLocalFile(data) || Utility.isBlob(data);
     };

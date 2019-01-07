@@ -645,7 +645,7 @@ this.TQ = this.TQ || {};
     function _isLocalFileSystem(name) {
         return ((name.indexOf("filesystem:") === 0) ||
             (name.indexOf("file:///") === 0) ||
-            (name.indexOf("blob:") === 0));
+            TQUtility.isBlobUrl(name));
     }
 
     function _toFullPath(name) {
@@ -733,7 +733,7 @@ this.TQ = this.TQ || {};
     }
 
     function isBlob(desc) {
-      return desc && desc.src && (desc.src.indexOf('blob:') >= 0);
+      return desc && desc.src && TQUtility.isBlobUrl(desc.src);
     }
 
     RM.loadSoundFromFile = loadSoundFromFile;
