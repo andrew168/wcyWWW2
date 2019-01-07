@@ -375,13 +375,16 @@ window.TQ = window.TQ || {};
     this.state = TQBase.LevelState.INITING;
     TQ.StageBuffer.open();
     for (var i = 0; i < ((jsonElements != null) && (jsonElements.length)); i++) {
-      if (TQ.Element.isValidDesc(jsonElements[i])) {
+      var desc = jsonElements[i];
+      if (desc && TQ.Element.isValidDesc(desc)) {
+        desc.src = TQUtility.unifyFormat(desc.type, desc.src);
         this.addElementDirect(TQ.Element.build(this, jsonElements[i]));
       }
     }
     TQ.StageBuffer.close();
     // ToDo: 是否应该分多个level, 来启动?
     TQ.SoundMgr.start();
+    TQ.VideoMgr.start();
     jsonElements = null;
     this.dataReady = true;
     this.calculateLastFrame();
@@ -639,6 +642,7 @@ window.TQ = window.TQ || {};
       TQ.Log.debugInfo("is loading, or not loaded!");
     }
     TQ.SoundMgr.removeAll();
+    TQ.VideoMgr.removeAll();
     TQ.ParticleMgr.removeAll();
     this.state = TQBase.LevelState.EXIT;
   };

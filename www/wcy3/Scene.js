@@ -229,6 +229,7 @@ TQ = TQ || {};
     }
 
     TQ.SoundMgr.reset();
+    TQ.VideoMgr.reset();
     if (TQ.FrameCounter.isPlaying()) {
       currScene.stop();
     } else {
@@ -387,6 +388,8 @@ TQ = TQ || {};
       this.currentLevel.deleteElement(ele);
       if (ele.isSound()) {
         TQ.SoundMgr.deleteItem(ele);
+      } else if (ele.isVideo()){
+        TQ.VideoMgr.deleteItem(ele);
       }
     }
   };
@@ -1033,6 +1036,7 @@ TQ = TQ || {};
       if (this.currentLevel != null) {
         TQ.RM.reset(); // 必须先停止RM，否则其中的callback如果引用了Level对象就会出错
         TQ.SoundMgr.reset();
+        TQ.VideoMgr.reset();
         // TQ.TextEditor.onNo();
         this.currentLevel.exit();
         this.currentLevel = null;
@@ -1064,6 +1068,7 @@ TQ = TQ || {};
     }
     TQ.FrameCounter.stop();
     TQ.SoundMgr.pause();
+    TQ.VideoMgr.pause();
     TQ.ParticleMgr.pause();
   };
 
@@ -1071,6 +1076,7 @@ TQ = TQ || {};
     TQ.FloatToolbar.close();
     TQ.FrameCounter.play();
     TQ.SoundMgr.resume();
+    TQ.VideoMgr.resume();
     if (this.currentLevel) {
       this.currentLevel.play();
     }

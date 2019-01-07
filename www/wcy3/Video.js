@@ -73,7 +73,7 @@ TQ = TQ || {};
     var ele = document.createElement('video');
     ele.onloadeddata = onloadeddata;
     if (!TQUtility.isBlobUrl(src)) {
-      src = TQ.ResourceManager.toFullPath(src);
+      src = TQ.RM.toFullPathFs(src);
     }
     ele.src = src;
     ele.autoplay = false;

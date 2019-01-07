@@ -57,7 +57,7 @@ TQ = TQ || {};
       desc = this.jsonObj;
     }
 
-    if (!TQ.SoundMgr.isSupported) return;
+    if (!TQ.VideoMgr.isSupported) return;
 
     var resource,
       resourceId;
@@ -75,7 +75,10 @@ TQ = TQ || {};
     }
     if (!!resource) {
       this.loaded = true;
-      this.instance = TQ.VideoMgr.play(resourceId);
+      var self = this;
+      TQ.VideoMgr.play(resourceId, function (inst) {
+        self.instance = inst;
+      });
       //ToDo： 需要在这里play吗？
       //this.instance.play(); //interruptValue, delay, offset, loop);
       // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
@@ -96,7 +99,7 @@ TQ = TQ || {};
   p._doAddItemToStage = function ()   // 子类中定义的同名函数, 会覆盖父类, 让所有的兄弟类, 都有使用此函数.
   {
     // 这是sound的专用类，所以，执行到此的必然是sound，
-    TQ.SoundMgr.addItem(this);
+    TQ.VideoMgr.addItem(this);
   };
 
   p._parent_calculateLastFrame = p.calculateLastFrame;

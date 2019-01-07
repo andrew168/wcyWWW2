@@ -68,9 +68,9 @@ TQ = TQ || {};
   };
 
   function stopAllDirectVideo() {
-    directVideos.forEach(function (id) {
+    for (id in directVideos) {
       VideoMgr.stop(id);
-    });
+    }
   }
 
   VideoMgr.addItem = function (ele) {

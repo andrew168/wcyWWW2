@@ -309,6 +309,24 @@ var TQUtility; //
         return urlAPI ? urlAPI.createObjectURL(file) : false;
     }
 
+    Utility.unifyFormat = function(type, src) {
+      // 利用Cloudinary的自动格式转换功能， 迫使录音文件3gp转换为MP3
+      // 从而， 可以播放
+      var pos = src.lastIndexOf('.'),
+        root = src.substr(0, pos);
+      switch (type) {
+        case TQ.ElementType.SOUND:
+          src = root + '.mp3';
+          break;
+        case TQ.ElementType.VIDEO:
+          src = root + '.mp4';
+          break;
+        default:
+          break;
+      }
+      return src;
+    };
+
     TQ.Base.Utility = Utility;
     TQUtility = Utility;
 }());

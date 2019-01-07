@@ -244,6 +244,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
           }
         } else {
           TQ.SoundMgr.stopAll();
+          TQ.VideoMgr.stopAll();
         }
       }
 
@@ -285,8 +286,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
       if (TQUtility.isIOS()) {
         TQ.SoundMgr.stop();
+        TQ.VideoMgr.stop();
         TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
           TQ.SoundMgr.iosForceToResumeAll();
+          TQ.VideoMgr.iosForceToResumeAll();
           preview();
         }, null, true);
       } else {
@@ -952,6 +955,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   function preview(options) {
     WCY.stopAutoSave();
     TQ.SoundMgr.reset();
+    TQ.VideoMgr.reset();
     TQ.SelectSet.empty(); // 清楚选中的元素， 和highlight
     setPreviewMode();
     replay(options);
@@ -997,6 +1001,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function replay(option) {
     TQ.SoundMgr.reset();
+    TQ.VideoMgr.reset();
     TQ.Scene.doReplay(option);
     _onPlay();
   }

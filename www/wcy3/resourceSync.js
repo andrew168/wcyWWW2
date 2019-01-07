@@ -32,26 +32,11 @@ this.TQ.ResourceSync = (function () {
             .then(function (res) {
                 TQ.Log.debugInfo(res.url);
                 if (ele && ele.jsonObj) {
-                    ele.jsonObj.src = res.url;
-                    unifyFormat(ele);
+                  ele.jsonObj.src = TQUtility.unifyFormat(ele.jsonObj.type, res.url);
                 }
                 numActiveTasks--;
                 tryShowCompleteInfo();
             });
-    }
-
-    function unifyFormat(ele) {
-      // 利用Cloudinary的自动格式转换功能， 迫使录音文件3gp转换为MP3
-      // 从而， 可以播放
-      if (ele && ele.jsonObj.src) {
-        var pos = ele.jsonObj.src.lastIndexOf('.'),
-          root = ele.jsonObj.src.substr(0, pos);
-        if (ele.isSound()) {
-          ele.jsonObj.src = root + '.mp3';
-        } else if (ele.isSound()) {
-          ele.jsonObj.src = root + '.mp4';
-        }
-      }
     }
 
     function tryShowCompleteInfo() {

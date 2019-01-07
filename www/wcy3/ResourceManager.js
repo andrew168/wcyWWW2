@@ -426,6 +426,7 @@ this.TQ = this.TQ || {};
           foundInvalidElement = true;
           jsonElements[i] = null;
         } else {
+          desc.src = TQUtility.unifyFormat(desc.type, desc.src);
           TQ.RM.addElementDesc(desc);
         }
       }
