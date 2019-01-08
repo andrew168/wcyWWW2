@@ -22,6 +22,10 @@ TQ = TQ || {};
   Video.PLAY_FAILED = 310;
   Video.INTERRUPT_NONE = 320;
 
+  var contentDiv,
+    lastHeight,
+    lastWith;
+
   Video.play = function (resId, onStarted) {
     var instance = new Video(resId, function () {
       instance.play();
@@ -47,15 +51,31 @@ TQ = TQ || {};
   };
 
   p.play = function() {
-    if (!this.isInDom) {
-      this.isInDom = true;
-      this.duration = this.domEle.duration;
+    if ((lastWith !== TQ.Config.workingRegionWidth) || (lastHeight !== TQ.Config.workingRegionHeight)) {
       this.domEle.style.width = TQ.Config.workingRegionWidth + 'px';
       this.domEle.style.height = TQ.Config.workingRegionHeight + 'px';
       this.domEle.style.left = TQ.Config.workingRegionX0 + 'px';
       this.domEle.style.top = TQ.Config.workingRegionY0 + 'px';
-      document.body.appendChild(this.domEle);
+      lastWith = TQ.Config.workingRegionWidth;
+      lastHeight = TQ.Config.workingRegionHeight;
     }
+
+    if (!this.isInDom) {
+      this.isInDom = true;
+      this.duration = this.domEle.duration;
+      if (!contentDiv) {
+        contentDiv = document.getElementById('testCanvas');
+        if (contentDiv && contentDiv.parentElement) {
+          contentDiv = contentDiv.parentElement;
+        }
+      }
+      if (!contentDiv) {
+        TQ.AssertExt.invalidLogic(false, "DOM中，需要有id为testCanvas的元素");
+      } else {
+        contentDiv.appendChild(this.domEle);
+      }
+    }
+
     if (this.domEle) {
       this.domEle.style.visibility = 'visible';
       var self = this;
