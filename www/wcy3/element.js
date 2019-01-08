@@ -892,7 +892,8 @@ window.TQ = window.TQ || {};
         if (!(this.isSound() || this.isVideo())) { //"显示对象displayObj不能为空"
             assertNotNull(TQ.Dictionary.FoundNull, this.displayObj);
         }
-        if (jsonObj.isVis && !this.isVirtualObject() && !this.hasFlag(Element.IN_STAGE)) {
+        if (jsonObj.isVis && !this.isVirtualObject() &&
+          !this.hasFlag(Element.IN_STAGE) && !this.isVideo()) {
                 //飞线: 谁在使用这种情况?, 顶多在Show的时候检查"
                 TQ.Log.warn(TQ.Dictionary.INVALID_LOGIC + ":setTRSAVZ元素loaded，在Buffer，尚未进stage：" + this.jsonObj.src);
                 return;

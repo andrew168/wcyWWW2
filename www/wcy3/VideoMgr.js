@@ -61,7 +61,7 @@ TQ = TQ || {};
       });
     }
   };
-
+  VideoMgr.createInstance = VideoMgr.play;
   VideoMgr.stop = function (id) {
     TQ.Video.stop(directVideos[id]);
     delete directVideos[id];

@@ -108,7 +108,7 @@ TQ = TQ || {};
     // 由上级（level）来决定：
     // 跨场景的声音：影响作品总时间；
     // 非跨场景的声音： 只用来计算本场景的最后一帧；
-    return (this.t0 + this.instance.duration / 1000); // duration 单位是ms
+    return (this.t0 + this.instance.duration); // duration 单位是 s ???
   };
 
   VideoElement._composeFullPath = function (res) {
@@ -191,19 +191,11 @@ TQ = TQ || {};
       var offset = (t - ts) * 1000;
       var SOUND_DATA_BLOCK_SIZE = 1000;
       if ((offset >= 0) && (offset < Math.max(SOUND_DATA_BLOCK_SIZE, this.instance.duration - SOUND_DATA_BLOCK_SIZE))) {
-        if (this.instance.paused) { // 被暂停的， 可以resume
+        if (this.instance.playState === TQ.Video.PLAY_FINISHED) { // 不是paused， 则不能resume， 需要重新开始播放
+          this.instance.currentTime = 0;
           this.instance.resume();
-          this.instance.setPosition(offset); // 必须是先resume， 在setPosition， 不能对pasued声音设置pos
-        } else if (this.instance.playState == createjs.Sound.PLAY_FINISHED) { // 不是paused， 则不能resume， 需要重新开始播放
-          // 声音duration剩余1个block的时候， 已经被标记为播放完成了。
-          // 需要重新建立Instance， 丢弃原来的
-          var item = TQ.RM.getResource(this.jsonObj.src);
-          if (item) {
-            this.instance = createjs.Sound.createInstance(TQ.RM.getId(item)); // 声音只用ID， 不要resouce data
-          }
-
-          var interrupt = createjs.Sound.INTERRUPT_NONE, delay = 0;
-          this.instance.play(interrupt, delay, offset);
+        } else { // 被暂停的， 可以resume
+          this.instance.resume();
         }
       }
     }
@@ -235,9 +227,9 @@ TQ = TQ || {};
 
     var state = this.instance.playState;
     if (!state) return false;
-    return !((state == createjs.Sound.PLAY_FINISHED) ||
-      (state == createjs.Sound.PLAY_INTERRUPTED) ||
-      (state == createjs.Sound.PLAY_FAILED))
+    return !((state === TQ.Video.PLAY_FINISHED) ||
+      (state === TQ.Video.PLAY_INTERRUPTED) ||
+      (state === TQ.Video.PLAY_FAILED))
   };
 
   p.isPaused = function () {
@@ -257,7 +249,7 @@ TQ = TQ || {};
 
     var state = this.instance.playState;
     if (!state) return false;
-    return state == createjs.Sound.PLAY_FINISHED;
+    return state === TQ.Video.PLAY_FINISHED;
   };
 
   p.stop = function () {

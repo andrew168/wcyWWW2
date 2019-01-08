@@ -17,9 +17,10 @@ TQ = TQ || {};
   Video.LOADED = 2;
   Video.SHOW_FIRST_PAGE = 3;
   Video.PLAY_SUCCEEDED = 100; // == PLAYING, STARTED
-  Video.PAUSED = 210;
-  Video.STOPPED = 220;
-  Video.ENDED = 230; // 自然结束， 停在结尾， （也包括stopped）
+  Video.PLAY_FINISHED = 230;
+  Video.PLAY_INTERRUPTED = 300;
+  Video.PLAY_FAILED = 310;
+  Video.INTERRUPT_NONE = 320;
 
   Video.play = function (resId, onStarted) {
     var instance = new Video(resId, function () {
@@ -32,7 +33,9 @@ TQ = TQ || {};
   };
 
   Video.stop = function (instance) {
-    instance.stop();
+    if (instance) {
+      instance.stop();
+    }
   };
 
   var p = Video.prototype;
@@ -42,15 +45,30 @@ TQ = TQ || {};
   p.play = function() {
     if (!this.isInDom) {
       this.isInDom = true;
-      document.body.appendChild(this.domEle);
-    }
-    if (this.domEle) {
-      this.domEle.style.visibility = 'visible';
+      this.duration = this.domEle.duration;
       this.domEle.style.width = TQ.Config.workingRegionWidth + 'px';
       this.domEle.style.height = TQ.Config.workingRegionHeight + 'px';
       this.domEle.style.left = TQ.Config.workingRegionX0 + 'px';
       this.domEle.style.top = TQ.Config.workingRegionY0 + 'px';
-      this.domEle.play();
+      document.body.appendChild(this.domEle);
+    }
+    if (this.domEle) {
+      this.domEle.style.visibility = 'visible';
+      var self = this;
+      const playPromise = this.domEle.play();
+      // if (playPromise !== null) {
+      //   playPromise.catch(function(){self.domEle.play();});
+      // }
+
+      if (playPromise !== undefined) {
+        playPromise.then(function (value) {
+          self.domEle.play();
+        }).catch(function (error) {
+          console.log(error);
+          console.log('Autoplay was prevented.' +
+            'Show a "Play" button so that user can start playback');
+        });
+      }
     }
     this.playState = Video.PLAY_SUCCEEDED;
   };
@@ -59,7 +77,10 @@ TQ = TQ || {};
     if (this.domEle) {
       this.domEle.pause();
     }
-    this.playState = Video.STOPPED;
+    this.playState = Video.PLAY_INTERRUPTED;
+  };
+  p.resume = function () {
+    this.play();
   };
 
   p.removeFromDom = function () {
@@ -83,6 +104,7 @@ TQ = TQ || {};
     // ele.setAttribute("controls", "false");
     return ele;
   };
+
 
   TQ.Video = Video;
 }());
