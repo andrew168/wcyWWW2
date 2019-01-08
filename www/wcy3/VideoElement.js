@@ -127,12 +127,11 @@ TQ = TQ || {};
 
   p.play = function () {
     if (!this.instance) {
-      assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
-      TQ.Log.info(TQ.Dictionary.INVALID_LOGIC + "in VideoElement.resume");
+      // 刚刚调用opus， 尚未开始播放,（备注： Chrome新规定， 必须用户操作最后，才能开始播放）
       return;
     }
 
-    if ((!this.visibleTemp)) {
+    if (!this.visibleTemp) {
       return; //  不可见； 或者刚才调入， 尚未update生成可见性
     }
 
@@ -179,8 +178,7 @@ TQ = TQ || {};
   p.resume = function (t) { //
     var ts;
     if (!this.instance) {
-      assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
-      TQ.Log.info(TQ.Dictionary.INVALID_LOGIC + "in VideoElement.resume");
+      // 刚刚调用opus， 尚未开始播放,（备注： Chrome新规定， 必须用户操作最后，才能开始播放）
       return;
     } else {
       if (this.isCrossLevel) {
