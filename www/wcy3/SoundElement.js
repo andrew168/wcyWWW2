@@ -56,7 +56,6 @@ TQ = TQ || {};
             desc = this.jsonObj;
         }
 
-        assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isSound()); // 只用于声音元素
         if (!TQ.SoundMgr.isSupported) return;
 
         var resource,
