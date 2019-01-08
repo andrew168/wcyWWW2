@@ -42,6 +42,10 @@ TQ = TQ || {};
   p.initialize = function () {
   };
 
+  p.reset = function () {
+    this.domEle.currentTime = 0;
+  };
+
   p.play = function() {
     if (!this.isInDom) {
       this.isInDom = true;

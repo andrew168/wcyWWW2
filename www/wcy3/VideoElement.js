@@ -159,6 +159,12 @@ TQ = TQ || {};
     }
   };
 
+  p.reset = function () {
+    if (this.instance) {
+      this.instance.reset();
+    }
+  };
+
   p.forceToReplay = function () {
     this.instance.play();
   };

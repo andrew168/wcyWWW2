@@ -3,6 +3,10 @@
  * 图强动漫引擎,
  * 专利产品 领先技术
  * Video的Manager, 负责Video的preload, play, stop, 等一系列工作.
+ * VideoMgr ==》                  Video ==》 domEle
+ *          ==》 VideoElement ==》
+ * ！！！不能直接操作Video内部的instance
+ *
  * 包括正式场景中的 和 试播的
  * 是singleton
  */
@@ -73,6 +77,12 @@ TQ = TQ || {};
     }
   }
 
+  function resetAllDirectVideo() {
+    for (id in directVideos) {
+      directVideos[id].reset();
+    }
+  }
+
   VideoMgr.addItem = function (ele) {
     if (VideoMgr.items.indexOf(ele) >= 0) { // 避免同一个元素（跨场景的），重复插入
       return;
@@ -140,7 +150,15 @@ TQ = TQ || {};
 
   VideoMgr.reset = function () {
     isReseting = true;
-    VideoMgr.close();
+    VideoMgr.stopAll();
+    for (var i = 0; i < VideoMgr.items.length; i++) {
+      var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      ele.reset();
+    }
+    if (!!_auditioningInstance) {
+      _auditioningInstance.reset();
+    }
+    resetAllDirectVideo();
     isReseting = false;
   };
 
