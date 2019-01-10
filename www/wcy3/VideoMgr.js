@@ -143,6 +143,8 @@ TQ = TQ || {};
       var ele = VideoMgr.items[i];
       if (ele.isCrossLevel && !isReseting) continue;
       ele.stop();
+      ele.removeFromStage();
+
       VideoMgr.items.splice(i, 1);
     }
     stopAllDirectVideo();

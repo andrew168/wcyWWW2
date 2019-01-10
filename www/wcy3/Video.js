@@ -9,8 +9,7 @@ TQ = TQ || {};
 (function () {
   function Video(src, onStarted) {
     this.playState = 0;
-    this.domEle = createVideoElement(src, onStarted);
-    this.src = src;
+    this.createVideoElement(src, onStarted);
   }
 
   Video.UNKNOWN = 1;
@@ -47,11 +46,20 @@ TQ = TQ || {};
   };
 
   p.reset = function () {
-    this.domEle.currentTime = 0;
+    if (this.domEle) {
+      this.domEle.currentTime = 0;
+    }
   };
 
   p.play = function() {
-    if ((lastWith !== TQ.Config.workingRegionWidth) || (lastHeight !== TQ.Config.workingRegionHeight)) {
+    if (!this.domEle) {
+      var self = this;
+      return this.createVideoElement(self.src, function () {
+        self.play();
+      })
+    }
+
+    if (!this.isInDom || (lastWith !== TQ.Config.workingRegionWidth) || (lastHeight !== TQ.Config.workingRegionHeight)) {
       this.domEle.style.width = TQ.Config.workingRegionWidth + 'px';
       this.domEle.style.height = TQ.Config.workingRegionHeight + 'px';
       this.domEle.style.left = TQ.Config.workingRegionX0 + 'px';
@@ -110,13 +118,28 @@ TQ = TQ || {};
   p.removeFromDom = function () {
     if (this.isInDom) {
       this.isInDom = false;
-      document.body.removeChild(this.domEle);
+      if (this.domEle) {
+        this.domEle.parentElement.removeChild(this.domEle);
+        this.domEle = null;
+      }
     }
   };
 
-  var createVideoElement = function (src, onloadeddata) {
+  p.createVideoElement = function (src, onloadeddata) {
+    var self = this;
+    if (self.isGenerating) {
+      return;
+    }
+    self.isGenerating = true;
+    self.src = src;
+
     var ele = document.createElement('video');
-    ele.onloadeddata = onloadeddata;
+    ele.onloadeddata = function (evt) {
+      self.isGenerating = false;
+      if (onloadeddata) {
+        onloadeddata(evt);
+      }
+    };
     if (!TQUtility.isBlobUrl(src)) {
       src = TQ.RM.toFullPathFs(src);
     }
@@ -126,9 +149,8 @@ TQ = TQ || {};
     ele.className = 'video-layer video-container';
     // ele.controls = true;
     // ele.setAttribute("controls", "false");
-    return ele;
+    self.domEle = ele;
   };
-
 
   TQ.Video = Video;
 }());

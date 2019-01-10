@@ -16,8 +16,7 @@ TQ = TQ || {};
       this.t0 = 0;
     }
     TQ.Element.call(this, level, jsonObj);
-    this.isCrossLevel = (jsonObj.isCrossLevel !== undefined ? jsonObj.isCrossLevel :
-      (this.isVer2plus() ? true : false));
+    this.isCrossLevel = false;
   }
 
   VideoElement.srcToObj = function (src) {
@@ -122,6 +121,9 @@ TQ = TQ || {};
   p._doRemoveFromStage = function () {
     if (!this.isCrossLevel) { // 支持跨场景的声音
       this.stop();
+    }
+    if (this.instance) {
+     this.instance.removeFromDom();
     }
   };
 
