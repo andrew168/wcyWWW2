@@ -162,7 +162,7 @@ TQ = TQ || {};
         var isUnGroup = TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyUngroup;
         if (isUnGroup || (SelectSet.members.length >= 2)) {
             TQ.CommandMgr.directDo(new TQ.GroupCommand(SelectSet.members, isUnGroup));
-            SelectSet.clear();
+            SelectSet.clear(false, true);
             return true;
         }
 
@@ -236,13 +236,13 @@ TQ = TQ || {};
         var hasUnjointFlag = false;
         TQ.InputCtrl.setSubobjectMode();
         TQ.CommandMgr.directDo(new TQ.JointCommand(SelectSet.members, hasUnjointFlag));
-        SelectSet.clear();
+        SelectSet.clear(false, true);
     }
 
     function unjoint() {
         var unJointFlag = true;
         TQ.CommandMgr.directDo(new TQ.JointCommand(SelectSet.members, unJointFlag));
-        SelectSet.clear();
+        SelectSet.clear(false, true);
     }
 
     function explode() {
