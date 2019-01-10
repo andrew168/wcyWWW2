@@ -97,6 +97,10 @@ TQ = TQ || {};
   };
 
   p.resize = function () {
+    if (!this.domEle) {
+      return;
+    }
+
     if (!this.isInDom || (lastWith !== TQ.Config.workingRegionWidth) || (lastHeight !== TQ.Config.workingRegionHeight)) {
       this.domEle.style.width = TQ.Config.workingRegionWidth + 'px';
       this.domEle.style.height = TQ.Config.workingRegionHeight + 'px';
