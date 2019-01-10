@@ -1364,6 +1364,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         gotoLevel(0);
         WCY.startAutoSave();
         TQ.State.allowPageTransition = true;
+        TQ.VideoMgr.resize();
       }, 500);
     }, 500);
   }

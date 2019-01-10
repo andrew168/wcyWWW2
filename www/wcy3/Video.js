@@ -58,16 +58,7 @@ TQ = TQ || {};
         self.play();
       })
     }
-
-    if (!this.isInDom || (lastWith !== TQ.Config.workingRegionWidth) || (lastHeight !== TQ.Config.workingRegionHeight)) {
-      this.domEle.style.width = TQ.Config.workingRegionWidth + 'px';
-      this.domEle.style.height = TQ.Config.workingRegionHeight + 'px';
-      this.domEle.style.left = TQ.Config.workingRegionX0 + 'px';
-      this.domEle.style.top = TQ.Config.workingRegionY0 + 'px';
-      lastWith = TQ.Config.workingRegionWidth;
-      lastHeight = TQ.Config.workingRegionHeight;
-    }
-
+    this.resize();
     if (!this.isInDom) {
       this.isInDom = true;
       this.duration = this.domEle.duration;
@@ -105,6 +96,17 @@ TQ = TQ || {};
     this.playState = Video.PLAY_SUCCEEDED;
   };
 
+  p.resize = function () {
+    if (!this.isInDom || (lastWith !== TQ.Config.workingRegionWidth) || (lastHeight !== TQ.Config.workingRegionHeight)) {
+      this.domEle.style.width = TQ.Config.workingRegionWidth + 'px';
+      this.domEle.style.height = TQ.Config.workingRegionHeight + 'px';
+      this.domEle.style.left = TQ.Config.workingRegionX0 + 'px';
+      this.domEle.style.top = TQ.Config.workingRegionY0 + 'px';
+      lastWith = TQ.Config.workingRegionWidth;
+      lastHeight = TQ.Config.workingRegionHeight;
+    }
+  };
+
   p.stop = function (res) {
     if (this.domEle) {
       this.domEle.pause();
@@ -133,9 +135,14 @@ TQ = TQ || {};
     self.isGenerating = true;
     self.src = src;
 
+    var starTime = Date.now();
     var ele = document.createElement('video');
     ele.onloadeddata = function (evt) {
+      ele.onloadeddata = null;
+      ele.oncanplay = null;
+      ele.oncanplaythrough = null;
       self.isGenerating = false;
+      console.log(evt.srcElement.id + ' :' + starTime + ':' + (Date.now() - starTime) + " who fast: onloadeddata");
       if (onloadeddata) {
         onloadeddata(evt);
       }
@@ -144,6 +151,7 @@ TQ = TQ || {};
       src = TQ.RM.toFullPathFs(src);
     }
     ele.src = src;
+    ele.id = src.substr(-10, 10).replace(/\/|\./g, '_') + starTime;
     ele.autoplay = false;
     ele.style.visibility = 'none';
     ele.className = 'video-layer video-container';
