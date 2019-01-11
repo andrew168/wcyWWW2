@@ -169,7 +169,9 @@ TQ = TQ || {};
     isResizing = true;
     for (var i = 0; i < VideoMgr.items.length; i++) {
       var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
-      ele.instance.resize();
+      if (ele.instance) {
+        ele.instance.resize();
+      }
     }
     if (!!_auditioningInstance) {
       _auditioningInstance.resize();
