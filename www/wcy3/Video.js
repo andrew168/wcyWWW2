@@ -82,6 +82,7 @@ TQ = TQ || {};
 
   p.addToDom = function () {
     if (!this.isInDom) {
+      this.resize();
       this.isInDom = true;
       this.duration = this.domEle.duration;
       if (!contentDiv) {
