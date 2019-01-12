@@ -210,7 +210,6 @@ TQ = TQ || {};
   p.pause = function () {
     var instance = this.instance;
     if (!instance) {
-      assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return;
     }
 

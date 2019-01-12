@@ -251,6 +251,12 @@ var TQUtility; //
         return ((aFile instanceof File) && (aFile.type) && (aFile.type.indexOf('audio') >= 0));
     };
 
+    Utility.isVideoUrl = function (url) {
+      var supportedFormat = ['.mp4'];
+      return ((typeof url === 'string') &&
+        (supportedFormat.indexOf(TQ.Utility.getExtension(url).toLowerCase()) >= 0));
+    };
+
     Utility.isVideoFile = function (aFile) {
       return ((aFile instanceof File) && (aFile.type) && (aFile.type.indexOf('video') >= 0));
     };

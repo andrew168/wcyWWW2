@@ -286,7 +286,7 @@ this.TQ = this.TQ || {};
     };
 
     function loadResource(resourcePath, resourceId, type, _callback) {
-        if (TQUtility.isVideoFile(resourcePath)) {
+        if (TQUtility.isVideoUrl(resourcePath) || TQUtility.isVideoFile(resourcePath)) {
           type = createjs.AbstractLoader.VIDEO; //'video'
         }
         // 添加Item 到预加载队列中， 并启动运行预加载（如果没有运行的话）

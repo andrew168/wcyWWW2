@@ -59,22 +59,7 @@ TQ = TQ || {};
       })
     }
     this.resize();
-    if (!this.isInDom) {
-      this.isInDom = true;
-      this.duration = this.domEle.duration;
-      if (!contentDiv) {
-        contentDiv = document.getElementById('testCanvas');
-        if (contentDiv && contentDiv.parentElement) {
-          contentDiv = contentDiv.parentElement;
-        }
-      }
-      if (!contentDiv) {
-        TQ.AssertExt.invalidLogic(false, "DOM中，需要有id为testCanvas的元素");
-      } else {
-        contentDiv.appendChild(this.domEle);
-      }
-    }
-
+    this.addToDom();
     if (this.domEle) {
       this.domEle.style.visibility = 'visible';
       var self = this;
@@ -93,7 +78,25 @@ TQ = TQ || {};
         });
       }
     }
-    this.playState = Video.PLAY_SUCCEEDED;
+  };
+
+  p.addToDom = function () {
+    if (!this.isInDom) {
+      this.isInDom = true;
+      this.duration = this.domEle.duration;
+      if (!contentDiv) {
+        contentDiv = document.getElementById('testCanvas');
+        if (contentDiv && contentDiv.parentElement) {
+          contentDiv = contentDiv.parentElement;
+        }
+      }
+      if (!contentDiv) {
+        TQ.AssertExt.invalidLogic(false, "DOM中，需要有id为testCanvas的元素");
+      } else {
+        contentDiv.appendChild(this.domEle);
+      }
+      this.playState = Video.PLAY_SUCCEEDED;
+    }
   };
 
   p.resize = function () {
@@ -141,7 +144,8 @@ TQ = TQ || {};
 
     var starTime = Date.now();
     var ele = document.createElement('video');
-    ele.onloadeddata = function (evt) {
+
+    ele.addEventListener('loadeddata', function (evt) {
       ele.onloadeddata = null;
       ele.oncanplay = null;
       ele.oncanplaythrough = null;
@@ -150,7 +154,7 @@ TQ = TQ || {};
       if (onloadeddata) {
         onloadeddata(evt);
       }
-    };
+    }, false);
     if (!TQUtility.isBlobUrl(src)) {
       src = TQ.RM.toFullPathFs(src);
     }
@@ -162,6 +166,7 @@ TQ = TQ || {};
     // ele.controls = true;
     // ele.setAttribute("controls", "false");
     self.domEle = ele;
+    self.addToDom();
   };
 
   TQ.Video = Video;
