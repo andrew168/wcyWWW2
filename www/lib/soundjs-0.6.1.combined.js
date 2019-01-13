@@ -3665,7 +3665,7 @@ this.createjs = this.createjs || {};
 	 * @since 0.4.0
 	 * @static
 	 */
-	s.SUPPORTED_EXTENSIONS = ["mp3", "ogg", "opus", "mpeg", "wav", "m4a", "mp4", "aiff", "wma", "mid"];
+	s.SUPPORTED_EXTENSIONS = ["mp3", "ogg", "opus", "mpeg", "wav", "m4a", "aiff", "wma", "mid"];
 
 	/**
 	 * Some extensions use another type of extension support to play (one of them is a codex).  This allows you to map
