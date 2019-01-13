@@ -77,6 +77,7 @@ TQ = TQ || {};
       var self = this;
       TQ.VideoMgr.play(resourceId, function (inst) {
         self.instance = inst;
+        inst.host = self;
       });
       //ToDo： 需要在这里play吗？
       //this.instance.play(); //interruptValue, delay, offset, loop);
@@ -107,7 +108,7 @@ TQ = TQ || {};
     // 由上级（level）来决定：
     // 跨场景的声音：影响作品总时间；
     // 非跨场景的声音： 只用来计算本场景的最后一帧；
-    return (this.t0 + this.instance.duration); // duration 单位是 s ???
+    return (this.t0 + this.instance.getDuration()); // duration 单位是 s ???
   };
 
   VideoElement._composeFullPath = function (res) {
@@ -198,7 +199,7 @@ TQ = TQ || {};
 
       var offset = (t - ts) * 1000;
       var SOUND_DATA_BLOCK_SIZE = 1000;
-      if ((offset >= 0) && (offset < Math.max(SOUND_DATA_BLOCK_SIZE, this.instance.duration - SOUND_DATA_BLOCK_SIZE))) {
+      if ((offset >= 0) && (offset < Math.max(SOUND_DATA_BLOCK_SIZE, this.instance.getDuration() - SOUND_DATA_BLOCK_SIZE))) {
         if (this.instance.playState === TQ.Video.PLAY_FINISHED) { // 不是paused， 则不能resume， 需要重新开始播放
           this.instance.currentTime = 0;
           this.instance.resume();

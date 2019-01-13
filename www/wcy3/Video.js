@@ -9,6 +9,7 @@ TQ = TQ || {};
 (function () {
   function Video(src, onStarted) {
     this.playState = 0;
+    this.host = null;
     this.createVideoElement(src, onStarted);
   }
 
@@ -72,6 +73,9 @@ TQ = TQ || {};
         if (playPromise !== undefined) {
           playPromise.then(function (value) {
             self.domEle.play();
+            if (self.host) {
+              TQ.DirtyFlag.setElement(self.host);
+            }
           }).catch(function (error) {
             console.log(error);
             console.log('Autoplay was prevented.' +
@@ -184,6 +188,17 @@ TQ = TQ || {};
     // ele.setAttribute("controls", "false");
     self.domEle = ele;
     self.addToDom();
+  };
+
+  p.getDuration = function () {
+    if (this.duration && !isNaN(this.duration)) {
+      return this.duration;
+    }
+
+    if (this.domEle && !isNaN(this.domEle.duration)) {
+      return this.domEle.duration;
+    }
+    return 0;
   };
 
   TQ.Video = Video;

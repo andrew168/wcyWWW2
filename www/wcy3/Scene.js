@@ -1129,7 +1129,7 @@ TQ = TQ || {};
       numOfLevel = (TQ.FrameCounter.isPlaying() ? this.levelNumWithOutro() : this.levelNum()),
       level = null;
 
-    if (TQ.FrameCounter.isRecording) {
+    if (TQ.FrameCounter.isRecording()) {
       if (this.currentLevel && (this.currentLevel.getTime() < TQ.FrameCounter.maxTime())) {
         this.currentLevel.setTime(TQ.FrameCounter.maxTime());
       }
@@ -1180,6 +1180,7 @@ TQ = TQ || {};
     if (Math.abs(this.tMax - te) > 0.1) {
       this.tMax = (_allResourceReady) ? te : Math.max(this.tMax, te);
       this.updateT0();
+      TQ.FrameCounter.setTMax(this.tMax);
       TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
     }
   };
