@@ -146,22 +146,23 @@ TQ = TQ || {};
     var starTime = Date.now();
     var ele = document.createElement('video');
 
-    ele.addEventListener('loadeddata', function (evt) {
-      ele.onloadeddata = null;
-      ele.oncanplay = null;
-      ele.oncanplaythrough = null;
+    ele.addEventListener('loadeddata', onLoadedData, false);
+
+    function onLoadedData(evt) {
       self.isGenerating = false;
       console.log(evt.srcElement.id + ' :' + starTime + ':' + (Date.now() - starTime) + " who fast: onloadeddata");
       if (onloadeddata) {
         onloadeddata(evt);
       }
-    }, false);
+    }
+
     if (!TQUtility.isBlobUrl(src)) {
       src = TQ.RM.toFullPathFs(src);
     }
     ele.src = src;
     ele.id = src.substr(-10, 10).replace(/\/|\./g, '_') + starTime;
-    ele.autoplay = false;
+    ele.autoplay = true;
+    ele.preload = 'metadata';
     ele.style.visibility = 'none';
     ele.className = 'video-layer video-container';
     // ele.controls = true;

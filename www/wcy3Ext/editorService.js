@@ -293,8 +293,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
           preview();
         }, null, true);
       } else {
-        TQ.MessageBox.reset();
-        preview();
+        if (TQ.State.needUserClickToPlayAV) {
+          TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+            TQ.MessageBox.reset();
+            preview();
+          }, null, true);
+        } else {
+	        TQ.MessageBox.reset();
+	        preview();
+        }
+        TQ.State.needUserClickToPlayAV = false;
       }
     }
   }
