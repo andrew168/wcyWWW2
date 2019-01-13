@@ -330,7 +330,7 @@ this.TQ = this.TQ || {};
     function addToPreloader(fullPath, resourceId, type) {
         RM.preloader.loadManifest([{
             type: type, // 对于本地声音， 必须加，因为blob类的url无法提供类别信息
-            src: accelerateByMultiHost(fullPath),
+            src: (TQ.Config.useCloudinaryMultiHost? accelerateByMultiHost(fullPath) : fullPath),
             id: resourceId,   // Sound资源的id是字符串, 不是数字
             data: 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
         }]);

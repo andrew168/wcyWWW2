@@ -142,6 +142,7 @@ window.TQ = window.TQ || {};
     Config.hasAudioRecording = false;  // 没有录音功能
     Config.hasPaypal = false; //暂时关闭 paypal， 不需要它和T-shirt功能
     Config.ChromeFileEnabled = true;
+    Config.useCloudinaryMultiHost = false;
     Config.useCloundServerSimulator = true;
     Config.useCreateJsTouch = false;
     Config.useLZCompress = true;
@@ -199,11 +200,6 @@ window.TQ = window.TQ || {};
     var matServerCloundary = {
         MAT_UPLOAD_API: "https://api.cloudinary.com/v1_1/" + Config.Cloudinary.name + "/upload",
         MAT_HOST: 'https://res.cloudinary.com', // /eplan/image/upload';
-        MAT_HOST_1: 'https://res-1.cloudinary.com', // /eplan/image/upload';
-        MAT_HOST_2: 'https://res-2.cloudinary.com', // /eplan/image/upload';
-        MAT_HOST_3: 'https://res-3.cloudinary.com', // /eplan/image/upload';
-        MAT_HOST_4: 'https://res-4.cloudinary.com', // /eplan/image/upload';
-        MAT_HOST_5: 'https://res-5.cloudinary.com', // /eplan/image/upload';
         IMAGES_CORE_PATH: 'eplan/image/upload/',
         SOUNDS_PATH: 'eplan/video/upload/' //从 localhost的根目录开始, 不是 E盘的根目录
     };
@@ -234,12 +230,7 @@ window.TQ = window.TQ || {};
 
     Config.whiteListMatHosts = [
         Config.MAT_CORE_HOST,
-        Config.MAT_HOST,
-        Config.MAT_HOST_1,
-        Config.MAT_HOST_2,
-        Config.MAT_HOST_3,
-        Config.MAT_HOST_4,
-        Config.MAT_HOST_5,
+        Config.MAT_HOST
     ];
 
     window.TQ.Config = Config;
