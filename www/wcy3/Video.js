@@ -156,6 +156,19 @@ TQ = TQ || {};
       }
     }
 
+    // ele.addEventListener('loadstart', onWhoFast, false);
+    ele.addEventListener('canplay', onWhoFast, false);
+    ele.addEventListener('loadedmetadata', onWhoFast, false);
+    ele.addEventListener('canplaythrough', onWhoFast, false);
+
+    function onWhoFast(evt) {
+      ele.removeEventListener('canplay', onWhoFast, false);
+      ele.removeEventListener('loadedmetadata', onWhoFast, false);
+      ele.removeEventListener('canplaythrough', onWhoFast, false);
+      console.log(evt.srcElement.id + ' :' + starTime + ':' + (Date.now() - starTime) +
+        ' who fast: ' + evt.type + ', ' + JSON.stringify(evt));
+    }
+
     if (!TQUtility.isBlobUrl(src)) {
       src = TQ.RM.toFullPathFs(src);
     }
