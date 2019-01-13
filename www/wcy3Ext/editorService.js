@@ -287,22 +287,21 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       if (TQUtility.isIOS()) {
         TQ.SoundMgr.stop();
         TQ.VideoMgr.stop();
-        TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+        return TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
           TQ.SoundMgr.iosForceToResumeAll();
           TQ.VideoMgr.iosForceToResumeAll();
           preview();
         }, null, true);
       } else {
         if (TQ.State.needUserClickToPlayAV) {
-          TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
-            TQ.MessageBox.reset();
+          return TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+            TQ.State.needUserClickToPlayAV = false;
             preview();
           }, null, true);
         } else {
 	        TQ.MessageBox.reset();
 	        preview();
         }
-        TQ.State.needUserClickToPlayAV = false;
       }
     }
   }

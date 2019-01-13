@@ -63,19 +63,21 @@ TQ = TQ || {};
     if (this.domEle) {
       this.domEle.style.visibility = 'visible';
       var self = this;
-      const playPromise = this.domEle.play();
-      // if (playPromise !== null) {
-      //   playPromise.catch(function(){self.domEle.play();});
-      // }
+      if (!TQ.State.needUserClickToPlayAV) {
+        const playPromise = this.domEle.play();
+        // if (playPromise !== null) {
+        //   playPromise.catch(function(){self.domEle.play();});
+        // }
 
-      if (playPromise !== undefined) {
-        playPromise.then(function (value) {
-          self.domEle.play();
-        }).catch(function (error) {
-          console.log(error);
-          console.log('Autoplay was prevented.' +
-            'Show a "Play" button so that user can start playback');
-        });
+        if (playPromise !== undefined) {
+          playPromise.then(function (value) {
+            self.domEle.play();
+          }).catch(function (error) {
+            console.log(error);
+            console.log('Autoplay was prevented.' +
+              'Show a "Play" button so that user can start playback');
+          });
+        }
       }
     }
   };

@@ -516,6 +516,12 @@ TQ = TQ || {};
 
     // 删除 旧的Levels。
     function onOpened() {
+      if (TQ.State.needUserClickToPlayAV) {
+        return TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+          TQ.State.needUserClickToPlayAV = false;
+          onOpened();
+        }, null, true);
+      }
       TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);
       self.showLevel();
       TQ.MessageBox.reset();
