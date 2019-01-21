@@ -1371,6 +1371,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         gotoLevel(0);
         WCY.startAutoSave();
         TQ.State.allowPageTransition = true;
+        AppService.configCanvas(); //以防随动按钮出界，此时工具条都显示了，再更新一次工作区size
         TQ.VideoMgr.resize();
       }, 500);
     }, 500);
