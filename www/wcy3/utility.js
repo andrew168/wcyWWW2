@@ -301,16 +301,36 @@ window.TQ = window.TQ || {};
     };
 
     Utility.getShareCodeFromUrl = function(url) {
-        var hash = (!url) ? window.location.hash : TQ.Base.Utility.urlParser(url).hash;
-        if (hash) {
-            var params = hash.split('/');
-            if (params.length >=3) {
-                return params[2];
-            }
-        }
-
-        return "";
+      return Utility.parseUrl(url).shareCode;
     };
+
+    Utility.parseUrl = function (url) {
+      var params = {},
+        shareCode="";
+      var hash = (!url) ? window.location.hash : TQ.Base.Utility.urlParser(url).hash;
+      if (hash) {
+        var words = hash.split(/\/|\?/);// 其中[3]是？之后的全部query参数
+        if (words.length >= 3) {
+          shareCode = words[2];
+          var queryString = words[3];
+          if (queryString != null && queryString != "") {
+            params = transformToAssocArray(queryString);
+          }
+        }
+      }
+
+      return {shareCode:shareCode, params: params};
+    };
+
+    function transformToAssocArray(parameters) {
+      var params = {};
+      var prmarr = parameters.split("&");
+      for (var i = 0; i < prmarr.length; i++) {
+        var tmparr = prmarr[i].split("=");
+        params[tmparr[0]] = tmparr[1];
+      }
+      return params;
+    }
 
     Utility.getWcyIdFromUrl = function (url) {
         return Utility.shareCode2Id(Utility.getShareCodeFromUrl(url));
