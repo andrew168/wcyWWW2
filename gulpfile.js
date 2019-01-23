@@ -1,9 +1,9 @@
 /* jshint node:true */
 
 'use strict';
-var srcPath = 'E:\\projects\\WcyCore\\www',
-    dstPath1 = 'E:\\projects\\cardforvote\\www',
-    dstPath2 = 'E:\\projects\\cardforvote\\ksWww';
+var srcPath = '.\\www',
+    dstPath1 = '..\\cardforvote\\www',
+    dstPath2 = '..\\cardforvote\\ksWww';
 var gulp = require('gulp'),
     gettext = require('gulp-angular-gettext');
 
@@ -11,7 +11,6 @@ var $ = require('gulp-load-plugins')(); //jshint ignore:line
 var uglifyjs = require("uglify-js");
 var fs = require('fs');
 var del = require('del');
-var crypto = require('crypto');
 var args = require('yargs').argv;
 JSON.minify = JSON.minify || require("node-json-minify");
 
@@ -26,7 +25,6 @@ gulp.task('config', ['clean'], function () {
     //ver info
     config.header = "/*! wcy3 library " + new Date().toLocaleString() + " */\n";
     config.version = require('./package.json').version;
-    config.hash = config.version + "." + crypto.createHash('md5').update(config.header).digest('hex').slice(0, 8);
     config.hash = "";
 
     config.app_js = "/wcy3all" + config.hash + ".js";
@@ -128,7 +126,7 @@ gulp.task('hot_sync', ['config', 'copy_worker_files', 'copy_lazyLoad_files', 'co
 });
 
 gulp.task('extract_string_const', function(){
-    var source = ['E:\\projects\\WcyCore\\www\\wcy3App\\wcyService.js'];
+    var source = [ srcPath + '\\wcy3App\\wcyService.js'];
     // var source = ['www\\wcy3\\stringConstExtractDemo.js'];
     // var source = ['www\\wcy3\\**\\*.js'];
     return gulp.src(source)
