@@ -20,8 +20,8 @@ TQ.MessageBox = (function () {
         hide: hide,
         reset: reset,
         hideProgressBox: hideProgressBox,
-        prompt: prompt,
-        confirm: confirm, // 有OK和Cancel两个按钮
+        prompt: prompt, //可以被reset.
+        confirm: confirm, // 有OK和Cancel两个按钮， 不能被reset, 用户必须click
         show: show, // show 就是alert，只有OK按钮
         show2: show2,
         showWaiting: showWaiting,
@@ -216,11 +216,6 @@ TQ.MessageBox = (function () {
                     vex.close(instances[TYPE_PROMPT]); // 这个close， 还在调用callback，容易造成死循环
                     instances[TYPE_PROMPT] = null;
                 }
-            }
-
-            if (instances[TYPE_CONFIRM]) {
-                vex.close(instances[TYPE_CONFIRM]);
-                instances[TYPE_CONFIRM] = null;
             }
 
             if (instances[TYPE_TOAST]) {
