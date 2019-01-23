@@ -284,24 +284,23 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     updateControllers();
 
     if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
-      if (TQUtility.isIOS()) {
-        TQ.SoundMgr.stop();
-        TQ.VideoMgr.stop();
+      if (TQ.State.needUserClickToPlayAV && TQ.State.queryParams && !TQ.State.queryParams.hideFirstClickPrompt) {
+        if (TQUtility.isIOS()) {
+          TQ.SoundMgr.stop();
+          TQ.VideoMgr.stop();
+        }
         return TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
-          TQ.SoundMgr.iosForceToResumeAll();
-          TQ.VideoMgr.iosForceToResumeAll();
+          TQ.State.needUserClickToPlayAV = false;
+          if (TQUtility.isIOS()) {
+            TQ.SoundMgr.iosForceToResumeAll();
+            TQ.VideoMgr.iosForceToResumeAll();
+          }
           preview();
         }, null, true);
       } else {
-        if (TQ.State.needUserClickToPlayAV) {
-          return TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
-            TQ.State.needUserClickToPlayAV = false;
-            preview();
-          }, null, true);
-        } else {
-	        TQ.MessageBox.reset();
-	        preview();
-        }
+        TQ.MessageBox.reset();
+        TQ.State.needUserClickToPlayAV = false;
+        preview();
       }
     }
   }
