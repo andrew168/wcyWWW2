@@ -149,34 +149,42 @@
         }
 
         function reload(matType) { // 用于 登录之后的刷新
-            if (TQ.userProfile.loggedIn) {
-                if (!matType || (matType === TQ.MatType.BKG)) {
-                    state &= (~READY_BKG_IMAGE);
-                    getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
-                }
+          if (TQ.State.isPlayOnly) {
+            return onDataReady();
+          }
 
-                if (!matType || (matType === TQ.MatType.PROP)) {
-                    state &= (~READY_PROP_IMAGE);
-                    getMatList(propsLocal, TQ.MatType.PROP, READY_PROP_IMAGE);
-                }
-
-                if (!matType || (matType === TQ.MatType.PEOPLE)) {
-                    state &= (~READY_PEOPLE_IMAGE);
-                    getMatList(propsPeople, TQ.MatType.PEOPLE, READY_PEOPLE_IMAGE);
-                }
-                if (!matType || (matType === TQ.MatType.SOUND)) {
-                    state &= (~READY_SOUND);
-                    getMatList(sounds, TQ.MatType.SOUND, READY_SOUND);
-                }
-                if (!matType || (matType === TQ.MatType.OPUS)) {
-                    state &= (~READY_OPUS);
-                    getOpusList(myOpus, TQ.MatType.OPUS, READY_OPUS);
-                }
+          if (TQ.userProfile.loggedIn) {
+            if (!matType || (matType === TQ.MatType.BKG)) {
+              state &= (~READY_BKG_IMAGE);
+              getMatList(propsBackground, TQ.MatType.BKG, READY_BKG_IMAGE);
             }
-            reloadSharedData(matType);
+
+            if (!matType || (matType === TQ.MatType.PROP)) {
+              state &= (~READY_PROP_IMAGE);
+              getMatList(propsLocal, TQ.MatType.PROP, READY_PROP_IMAGE);
+            }
+
+            if (!matType || (matType === TQ.MatType.PEOPLE)) {
+              state &= (~READY_PEOPLE_IMAGE);
+              getMatList(propsPeople, TQ.MatType.PEOPLE, READY_PEOPLE_IMAGE);
+            }
+            if (!matType || (matType === TQ.MatType.SOUND)) {
+              state &= (~READY_SOUND);
+              getMatList(sounds, TQ.MatType.SOUND, READY_SOUND);
+            }
+            if (!matType || (matType === TQ.MatType.OPUS)) {
+              state &= (~READY_OPUS);
+              getOpusList(myOpus, TQ.MatType.OPUS, READY_OPUS);
+            }
+          }
+          reloadSharedData(matType);
         }
 
         function reloadSharedData(matType) {
+            if (TQ.State.isPlayOnly) {
+              return onDataReady();
+            }
+
             if (!matType || (matType === TQ.MatType.PUBLISHED_OPUS)) {
                 state &= (~READY_PUBLISHED_OPUS);
                 getOpusList(latestOpus, TQ.MatType.PUBLISHED_OPUS, READY_PUBLISHED_OPUS);
