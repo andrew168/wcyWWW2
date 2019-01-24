@@ -53,6 +53,7 @@ TQ = TQ || {};
   // static APIs:
   Scene.decompress = decompress;
   Scene.doReplay = doReplay;
+  Scene.ensureFirstClick = ensureFirstClick;
   Scene.removeEmptyLevel = removeEmptyLevel;
   Scene.getEmptySceneJSON = getEmptySceneJSON;
   Scene.localT2Global = localT2Global;
@@ -69,6 +70,25 @@ TQ = TQ || {};
   Scene.setWcyId = function (id) {
     Scene.wcyId = id;
   };
+
+  function ensureFirstClick(callback) {
+    if (TQ.State.needUserClickToPlayAV && TQ.State.queryParams && !TQ.State.queryParams.hideFirstClickPrompt) {
+      if (TQ.State.editorMode >= TQ.SceneEditor.MODE.EDIT_OR_PLAY) {
+        if (TQUtility.isIOS()) {
+          TQ.SoundMgr.stop();
+          TQ.VideoMgr.stop();
+        }
+      }
+      TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+        if (callback) {
+          callback();
+        }
+      }, null, true);
+
+      return false;
+    }
+    return true;
+  }
 
   function saveState() {
     stateStack.push({tT: Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
@@ -516,10 +536,8 @@ TQ = TQ || {};
 
     // 删除 旧的Levels。
     function onOpened() {
-      if (TQ.State.needUserClickToPlayAV && TQ.State.queryParams && !TQ.State.queryParams.hideFirstClickPrompt) {
-        return TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
-          onOpened();
-        }, null, true);
+      if (!ensureFirstClick(onOpened)) {
+        return;
       }
       TQ.State.needUserClickToPlayAV = false;
       TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);

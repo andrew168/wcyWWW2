@@ -284,22 +284,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     updateControllers();
 
     if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
-      if (TQ.State.needUserClickToPlayAV && TQ.State.queryParams && !TQ.State.queryParams.hideFirstClickPrompt) {
-        if (TQUtility.isIOS()) {
-          TQ.SoundMgr.stop();
-          TQ.VideoMgr.stop();
-        }
-        return TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+      if (!TQ.Scene.ensureFirstClick(function () {
           TQ.State.needUserClickToPlayAV = false;
           if (TQUtility.isIOS()) {
             TQ.SoundMgr.iosForceToResumeAll();
             TQ.VideoMgr.iosForceToResumeAll();
           }
           preview();
-        }, null, true);
+        })) {
       } else {
-        TQ.MessageBox.reset();
-        TQ.State.needUserClickToPlayAV = false;
         preview();
       }
     }
@@ -959,6 +952,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function preview(options) {
+    TQ.MessageBox.reset();
     WCY.stopAutoSave();
     TQ.SoundMgr.reset();
     TQ.VideoMgr.reset();
