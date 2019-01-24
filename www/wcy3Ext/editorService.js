@@ -1380,8 +1380,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     WCY.forkIt().then(toAddMode);
   }
 
-  function setColorPanel(panel) {
-    _colorPanel = panel;
+  function setColorPanel(domPanel) {
+    if (!domPanel) {
+      _colorPanel = domPanel;
+    }
   }
 
   function setAddMode() {
