@@ -576,7 +576,14 @@ window.TQ = window.TQ || {};
     };
 
     Utility.getTopicId = function() {
-        return (TQ.State && TQ.State.topic) ? TQ.State.topic._id : 0;
+        var topicIdFromScene = (currScene && currScene.topicId)? currScene.topicId: 0;
+        if (!topicIdFromScene) { // 防止"" 和 string型的数字
+          topicIdFromScene = 0;
+        } else {
+          topicIdFromScene = parseInt(topicIdFromScene);
+        }
+
+        return (TQ.State && TQ.State.topic) ? TQ.State.topic._id : topicIdFromScene;
     };
 
     // private
