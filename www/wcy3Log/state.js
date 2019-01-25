@@ -108,7 +108,7 @@ var TQ = TQ || {};
               TQ.AssertExt.invalidLogic(false, "需要设定body的 height");
             }
         } else {
-            TQ.AssertExt.invalidLogic(false, "应该先让desktopEle ready");
+            TQ.AssertExt.invalidLogic(TQ.State.isPlayOnly, "应该先让desktopEle ready");
             State.innerWidth = window.innerWidth;
             State.innerHeight = window.innerHeight;
         }
