@@ -285,7 +285,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
       if (!TQ.Scene.ensureFirstClick(function () {
-          TQ.State.needUserClickToPlayAV = false;
           if (TQUtility.isIOS()) {
             TQ.SoundMgr.iosForceToResumeAll();
             TQ.VideoMgr.iosForceToResumeAll();

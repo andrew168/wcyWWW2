@@ -80,6 +80,7 @@ TQ = TQ || {};
         }
       }
       TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+        TQ.State.needUserClickToPlayAV = false;
         if (callback) {
           callback();
         }
@@ -539,7 +540,6 @@ TQ = TQ || {};
       if (!ensureFirstClick(onOpened)) {
         return;
       }
-      TQ.State.needUserClickToPlayAV = false;
       TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);
       self.showLevel();
       TQ.MessageBox.reset();
