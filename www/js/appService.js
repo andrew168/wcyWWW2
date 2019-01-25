@@ -70,7 +70,9 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             TQ.Log.error('must setup default language!');
         }
         angular.element(document).ready(function () {
+          if (TQ.State.queryParams && !TQ.State.queryParams.noLocale) {
             TQ.Locale.initialize(TQ.Env.lang);
+          }
         });
 
         if (_state < STATE_STARTING) { // 由于autoLogin的影响， 可能此段函数被滞后了。
