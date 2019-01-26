@@ -15,19 +15,19 @@ router.get('/', function (req, res, next) {
 function onWxmpLoggin(req, res) {
   var appId = configSvr.wx.boneMiniprogram.appId,
     appSecret = configSvr.wx.boneMiniprogram.appSecret,
-    wxTempCode = req.body.code,
-    boneToken = req.body.boneToken,
-    nickname = req.body.nickname;
+    wxTempCode = req.body.code || req.query.code,
+    boneToken = req.body.boneToken || req.query.boneToken,
+    nickname = req.body.nickname || req.query.nickname;
 
   if (!wxTempCode) {
     wxTempCode = "";
   }
 
-  if (boneToken) {
-    boneToken = '';
+  if (!boneToken) {
+    boneToken = 'noBoneToken';
   }
 
-  if (nickname) {
+  if (!nickname) {
     nickname = '匿名微信用户';
   }
 
@@ -50,7 +50,7 @@ function onWxmpLoggin(req, res) {
         console.log(errorMsg);
         res.send("login from wx: failed! detail: " + errorMsg);
       } else {
-        console.log("get new token.");
+        console.log("linked code to userID, 用户可以用code找到userID");
         res.send("login from wx: OK!");
       }
     });
