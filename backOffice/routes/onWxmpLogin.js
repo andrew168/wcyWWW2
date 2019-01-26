@@ -48,9 +48,11 @@ function onWxmpLoggin(req, res) {
       if (!wxUserId || jsonData.errcode) {
         var errorMsg = "error in code2session：" + jsonData.errmsg;
         console.log(errorMsg);
+        res.send("login from wx: failed! detail: " + errorMsg);
+      } else {
+        console.log("get new token.");
+        res.send("login from wx: OK!");
       }
-      console.log("get new token.");
-      res.send("login from wx: OK!");
     });
   }).on('error', function (e) {
     console.log("Got error: " + e.message);
