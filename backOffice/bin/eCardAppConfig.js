@@ -20,6 +20,7 @@ var appConfig = {
         // {url: 'users', filePath: './../routes/users'},
         {url: 'getCSignature', filePath: './../routes/getCSignature'},
         {url: 'getWSignature', filePath: './../routes/getWSignature'},
+        {url: 'onWxmpLogin', filePath: './../routes/onWxmpLogin'},
         {url: 'isWx', filePath: './../routes/isWx'},
         {url: 'wechat', filePath: './../routes/isWx'}, //???
         {url: 'wcy', filePath: './../routes/wcy'},
