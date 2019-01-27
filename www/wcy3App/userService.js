@@ -28,6 +28,10 @@ function UserService($http, $auth) {
             catch(onGetProfileFailed);
     }
 
+    function loginFromWx(wxBoneToken, displayName) {
+      return login('wxuser999', 'WxTest123');
+    }
+
     function authenticate(authName) {
         return $auth.authenticate(authName).
             then(getProfile).
@@ -137,6 +141,7 @@ function UserService($http, $auth) {
         getUserList: getUserList,
         setAdmin: setAdmin,
         login: login,
+        loginFromWx: loginFromWx,
         logout: logout,
         signUp: signUp
     }
