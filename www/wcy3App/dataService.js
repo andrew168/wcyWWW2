@@ -148,8 +148,8 @@
             }
         }
 
-        function reload(matType) { // 用于 登录之后的刷新
-          if (TQ.State.isPlayOnly) {
+        function reload(matType, ignorePlayFlag) { // 用于 登录之后的刷新
+          if (!ignorePlayFlag && TQ.State.isPlayOnly ) {
             return onDataReady();
           }
 
@@ -177,11 +177,11 @@
               getOpusList(myOpus, TQ.MatType.OPUS, READY_OPUS);
             }
           }
-          reloadSharedData(matType);
+          reloadSharedData(matType, ignorePlayFlag);
         }
 
-        function reloadSharedData(matType) {
-            if (TQ.State.isPlayOnly) {
+        function reloadSharedData(matType, ignorePlayFlag) {
+            if (!ignorePlayFlag && TQ.State.isPlayOnly) {
               return onDataReady();
             }
 
