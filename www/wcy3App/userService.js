@@ -29,7 +29,8 @@ function UserService($http, $auth) {
     }
 
     function loginFromWx(wxBoneToken, displayName) {
-      return login('wxuser999', 'WxTest123');
+      //return login('wxuser999', 'WxTest123');
+      return login('wxNewYearCard', 'TqTest123');
     }
 
     function authenticate(authName) {
