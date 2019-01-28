@@ -309,7 +309,7 @@ window.TQ = window.TQ || {};
         shareCode="";
       var hash = (!url) ? window.location.hash : TQ.Base.Utility.urlParser(url).hash;
       if (hash) {
-        hash = decodeURIComponent(hash);
+        hash = decodeURI(hash);
         var words = hash.split(/\/|\?/);// 其中[3]是？之后的全部query参数
         if (words.length >= 3) {
           shareCode = words[2];
