@@ -37,6 +37,9 @@
             if (objJson.version < TQ.Scene.VER3_7) {
                 upgrade3_6ToVer3_7(objJson);
             }
+            if (objJson.version < TQ.Scene.VER3_8) {
+              upgrade3_7ToVer3_8(objJson);
+            }
         }
 
         // now it's latest
@@ -44,7 +47,21 @@
             objJson.designatedWidth + ", H=" + objJson.designatedHeight + ")");
     };
 
-    function upgrade3_6ToVer3_7(objJson) {
+  function upgrade3_7ToVer3_8(objJson) {
+    var num = objJson.levels.length;
+    for (var i = 0; i < num; i++) {
+      TQ.Level.upgradeEachElement(objJson.levels[i], function (eleDesc) {
+        if (eleDesc.animeTrack) {
+          TQ.AnimeTrack.upgradeTo3_8(eleDesc.animeTrack);
+        }
+      });
+    }
+
+    objJson.version = TQ.Scene.VER3_8;
+    return objJson;
+  }
+
+  function upgrade3_6ToVer3_7(objJson) {
         var num = objJson.levels.length;
         for (var i = 0; i < num; i++) {
             TQ.Level.upgradeEachElement(objJson.levels[i], function (eleDesc) {

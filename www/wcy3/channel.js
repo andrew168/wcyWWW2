@@ -312,6 +312,23 @@ window.TQ = window.TQ || {};
         return (this.sags && this.sags.length > 0);
     };
 
+    Channel.upgradeTo3_8 = function (channel) {
+      if (channel && channel.sags) {
+        for (sagType in channel.sags) {
+          var oneSag = channel.sags[sagType];
+          if (oneSag) {
+            if (oneSag.categoryID !== undefined) {
+              oneSag.categoryId = oneSag.categoryID;
+              delete oneSag.categoryID;
+            }
+            if (oneSag.typeID !== undefined) {
+              oneSag.typeId = oneSag.typeID;
+              delete oneSag.typeID;
+            }
+          }
+        }
+      }
+    };
     TQ.OneChannel = Channel;
     TQ.Channel = Channel;
 })();

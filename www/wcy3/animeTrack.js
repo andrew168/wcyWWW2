@@ -230,5 +230,20 @@ TQ = TQ || {};
             this.colorB.hasSag();
     };
 
+    AnimeTrack.upgradeTo3_8 = function (track) {
+      if (!track.hasSag) {
+        return;
+      }
+
+      TQ.Channel.upgradeTo3_8(track.y);
+      TQ.Channel.upgradeTo3_8(track.sx);
+      TQ.Channel.upgradeTo3_8(track.sy);
+      TQ.Channel.upgradeTo3_8(track.rotation);
+      TQ.Channel.upgradeTo3_8(track.alpha);
+      TQ.Channel.upgradeTo3_8(track.visible);
+      TQ.Channel.upgradeTo3_8(track.colorR);
+      TQ.Channel.upgradeTo3_8(track.colorG);
+      TQ.Channel.upgradeTo3_8(track.colorB);
+    };
     TQ.AnimeTrack = AnimeTrack;
 })();
