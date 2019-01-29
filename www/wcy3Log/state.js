@@ -103,7 +103,11 @@ var TQ = TQ || {};
             var bodyCss = window.getComputedStyle(desktopEle);
             State.innerWidth = TQ.Utility.getCssSize(bodyCss.width);
             State.innerHeight = TQ.Utility.getCssSize(bodyCss.height);
-            if (State.innerHeight == 0) {
+            if (!State.innerWidth) {
+              State.innerWidth = window.innerWidth;
+              TQ.AssertExt.invalidLogic(false, "需要设定body的 width");
+            }
+            if (!State.innerHeight) {
               State.innerHeight = window.innerHeight;
               TQ.AssertExt.invalidLogic(false, "需要设定body的 height");
             }

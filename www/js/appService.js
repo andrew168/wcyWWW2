@@ -20,9 +20,9 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     function configCanvas() {
         TQ.State.updateDeviceInfo();
         TQ.State.determineWorkingRegion();
-        TQ.Graphics.setCanvas();
         if (currScene) {
-            TQ.DirtyFlag.setScene();
+          TQ.State.canvasStyle = TQ.Graphics.setCanvas();
+          TQ.DirtyFlag.setScene();
         }
 
         TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight + ")"
