@@ -681,7 +681,20 @@ window.TQ = window.TQ || {};
         });
     };
 
-    function removePx(xInCss) {
+  Utility.removeWelcomeTextPage = function () {
+    function removeDomEleById(domId) {
+      var domEle = document.getElementById(domId);
+      if (domEle) {
+        angular.element(domEle).remove();
+      }
+    }
+
+    removeDomEleById('welcome-div');
+    removeDomEleById('id-play-panel');
+    removeDomEleById('welcome-brand');
+  };
+
+  function removePx(xInCss) {
         var result = Number(xInCss.replace("px", ""));
         if (isNaN(result)) {
             TQ.Log.error("css 取值错误， NaN： " + xInCss);
@@ -719,6 +732,7 @@ window.TQ = window.TQ || {};
         ditherStart();
         return readyToGo;
     }
+
 
 
     Utility.preventDither = preventDither;
