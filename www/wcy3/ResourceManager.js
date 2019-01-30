@@ -653,6 +653,9 @@ this.TQ = this.TQ || {};
     }
 
     function _toFullPath(name) {
+        if (!name) {
+          name = "";
+        }
         if (_isLocalFileSystem(name)) {
             return name;
         }
