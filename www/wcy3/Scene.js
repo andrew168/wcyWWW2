@@ -80,12 +80,41 @@ TQ = TQ || {};
           TQ.VideoMgr.stop();
         }
       }
-      TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
-        TQ.State.needUserClickToPlayAV = false;
-        if (callback) {
-          callback();
-        }
-      }, null, true);
+      if (TQUtility.isMiniProgramWebView && TQUtility.isMiniProgramWebView()) {
+        // if (TQ.Utility && TQ.Utility.removeWelcomeTextPage) {
+        //   TQ.Utility.removeWelcomeTextPage();
+        // }
+
+        // TQ.State.needUserClickToPlayAV = false;
+        // if (callback) {
+        //   callback();
+        // }
+        wx.miniProgram.navigateBack({
+          delta: 1,
+          complete: function () {
+            // if (callback) {
+            //   callback();
+            // }
+          }
+        });
+        // wx.miniProgram.navigateTo({
+        //   url: '/pages/index/index', // 大小写敏感
+        //   complete: function () {
+        //     if (callback) {
+        //       callback();
+        //     }
+        //   }
+        //   // success: onSuccess,
+        //   // fail: onFail
+        // });
+      }
+
+        TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+          TQ.State.needUserClickToPlayAV = false;
+          if (callback) {
+            callback();
+          }
+        }, null, true);
 
       return false;
     }
