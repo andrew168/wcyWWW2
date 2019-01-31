@@ -4,25 +4,32 @@
 var TQ = TQ || {};
 TQ.userProfile = (function() {
     var self = {
-        needManualLogin: true,
-        loggedIn: false,  // 没有login，其余的信息都无意义
-        isSignUping: false,
-        displayName: "",
-        name: "",
-        age: 6,         //ToDo: 需要用户录入
-        city: '无锡',    //ToDo: 需要用户录入
-        ID: "",
-        sessionToken: "",
-        timesShared: 0,
-        readFromCache: readFromCache,
-        saveToCache: saveToCache,
-        isGuest: function () {
-            return (self.name && (self.name.indexOf('guest') ===0) &&
-                (self.displayName && (self.displayName.indexOf('guest') === 0)));
-        },
-        getUserName: function () {
-            return (self.isGuest()? '游客': self.displayName);
-        }
+      needManualLogin: true,
+      loggedIn: false,  // 没有login，其余的信息都无意义
+      isSignUping: false,
+      displayName: "",
+      name: "",
+      age: 6,         //ToDo: 需要用户录入
+      city: '无锡',    //ToDo: 需要用户录入
+      ID: "",
+      sessionToken: "",
+      timesShared: 0,
+      readFromCache: readFromCache,
+      saveToCache: saveToCache,
+      isGuest: function () {
+        return (self.name && (self.name.indexOf('guest') === 0) &&
+          (self.displayName && (self.displayName.indexOf('guest') === 0)));
+      },
+      getUserName: function () {
+        return (self.isGuest() ? '游客' : self.displayName);
+      },
+      hasWxUserGranted: function () {
+        // 区别：
+        // wx游客： 'wxNewYearCard'，
+        // wx授权用户，再次登录: 'wxUser' + OpenId,  wx中的昵称
+        return (TQUtility.isMiniProgramWebView() &&
+          (self.name.indexOf('wxUser') ===0));
+      }
     };
 
     var readCache = TQ.Base.Utility.readCache,
