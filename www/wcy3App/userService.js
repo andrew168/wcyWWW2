@@ -22,15 +22,19 @@ function UserService($http, $auth) {
         return signUp(name, name, name);
     }
 
-    function login(name, psw) {
-        return $auth.login({email: name.toLowerCase(), password: psw}).
+    function login(name, psw, from, nickName) {
+        if (!from) { // 对于WX MiniP 平台, wxCode, 保持原来的大小写
+          name = name.toLowerCase();
+        }
+        return $auth.login({email: name, password: psw, from: from, nickName: nickName}).
             then(getProfile).
             catch(onGetProfileFailed);
     }
 
     function loginFromWx(wxBoneToken, displayName) {
-      //return login('wxuser999', 'WxTest123');
-      return login('wxNewYearCard', 'TqTest123');
+      // return login('wxNewYearCard', 'TqTest123');
+      var authorizer = 'wx'; // AUTH.WX 见服务器的const.js
+      return login(wxBoneToken, 'wxGranted', authorizer, displayName);
     }
 
     function authenticate(authName) {
