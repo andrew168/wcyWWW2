@@ -25,13 +25,15 @@ exports.HTTP = {
 var AUTH = {
     FACEBOOK: 'facebook',
     TWITTER: 'twitter',
-    GOOGLE: 'google'
+    GOOGLE: 'google',
+    WX: 'wx'
 };
 
 var AUTH_PREFIX = {};
 AUTH_PREFIX[AUTH.FACEBOOK] = 'fb';
 AUTH_PREFIX[AUTH.TWITTER] = 'tt';
 AUTH_PREFIX[AUTH.GOOGLE] = 'gg';
+AUTH_PREFIX[AUTH.WX] = 'wx';
 
 exports.AUTH = AUTH;
 exports.AUTH_PREFIX = AUTH_PREFIX;
