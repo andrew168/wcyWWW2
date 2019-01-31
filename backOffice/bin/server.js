@@ -8,7 +8,8 @@ var http = require('http'),
     logger = require('./../common/logger'),
     express = require('express'),
     gracefulExit = require('express-graceful-exit'),
-    onlineUsers = require('../common/onlineUsers');
+    onlineUsers = require('../common/onlineUsers'),
+    onlineWxUsers = require('../common/onlineWxUsers');
 
 var vHostServer, vSecuredServer;
 var config = {port: 80};
@@ -61,6 +62,7 @@ function init() {
 //app.use(vhost('cyly.udoido.cn', require('./eCardAppServer').app));
 //    app.use(vhost('wish.udoido.cn', require('./wishAppServer').app));
 
+    onlineWxUsers.restore();
     onlineUsers.restore();
 
     /**
@@ -143,13 +145,24 @@ function onShotdown() {
 
     console.log("prepare to shut dwon server ...");
     shuttingDown = true;
-    if (onlineUsers) {
+    if (onlineUsers || onlineUsers) {
+      if (onlineUsers) {
         onlineUsers.save(onSaved);
+      }
+
+      if (onlineWxUsers) {
+        onlineWxUsers.save(onSaved);
+      }
     } else {
         onSaved();
     }
 
     function onSaved() {
+        if ((onlineUsers && !onlineUsers.hasStopped()) ||
+          (onlineWxUsers && !onlineWxUsers.hasStopped())) {
+          return;
+        }
+
         console.log("shutting dwon server gracefully...!");
         gracefulExit.gracefulExitHandler(app, vSecuredServer, {
             // socketio: app.settings.socketio,
