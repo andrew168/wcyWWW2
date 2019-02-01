@@ -12,6 +12,7 @@ var express = require('express'),
     config = authHelper.config,
     fs = require('fs'),
     qs = require('qs'),
+    onlineWxUsers = require('../common/onlineWxUsers'),
     userController = require('../db/user/userController');
 
 var composeErrorPkg = userController.composeErrorPkg,
@@ -23,35 +24,77 @@ router.post('/login', function (req, res) {
     wxCode,
     user,
     authInfo = {authorizer: req.body.from || ''};
-
   if (!email) {
     return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, "email is empty！");
   }
-  User.findOne({email: req.body.email}, '+password', function (err, user) {
+
+  authInfo.isFromWx = (!!authInfo.authorizer && authInfo.authorizer === Const.AUTH.WX);
+  if (authInfo.isFromWx) {
+    wxCode = email;
+    authInfo.wxCode = wxCode;
+    user = onlineWxUsers.get(wxCode);
+    if (!user) {
+      wxCode2OpenId(wxCode, displayName, function (openId) {
+        user = onlineWxUsers.get(openId);
+        if (!user) {
+          authInfo.wx = openId;
+          userController.getByWxOpenId(openId, onFindUser);
+        } else {
+          onlineWxUsers.add(user, wxCode);
+          resUserToken2(req, res, user);
+        }
+      })
+    } else {
+      return resUserToken2(req, res, user, authInfo);
+    }
+    return;
+  }
+
+  login(req, res, email);
+
+  function login(req, res, userId) {
+    User.findOne({email: userId}, '+password', onFindUser);
+  }
+
+  function onFindUser(err, user) {
     if (err) {
       var pkg = composeErrorPkg(err, Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT);
       return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, pkg);
     }
 
     if (!user) {
+      if (authInfo && (authInfo.isFromWx)) {
+        return createWxUser(req, res, authInfo, displayName);
+      }
       return failedOrOldPswUser(req, res);
     }
+
     status.logUser(user, req, res);
     if (!req.body.password) {
       return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
     }
 
-    user.comparePassword(req.body.password, function (err, isMatch) {
-      if (err) {
-        return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
+    if (authInfo && (authInfo.isFromWx)) {
+      if (user._doc.displayName !== displayName) {
+        user._doc.displayName = ''; // 必须清空旧的，才会用新的
+        updateUser(user, {wx: authInfo.wx, displayName: displayName}, Const.AUTH.WX);
       }
 
-      if (!isMatch) {
-        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
-      }
-      resUserToken2(req, res, user);
-    });
-  });
+      resUserToken2(req, res, user, authInfo);
+    } else {
+      user.comparePassword(req.body.password, function (err, isMatch) {
+        if (err) {
+          return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
+        }
+
+        if (!isMatch) {
+          return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
+        }
+        // onlineUsers.add(user, user._id);
+        resUserToken2(req, res, user);
+      });
+    }
+  }
 });
 
 function failedOrOldPswUser(req, res) {
@@ -205,8 +248,7 @@ router.post('/facebook', function (req, res) {
                     'https://graph.facebook.com/' + profile.id + '/picture?type=large'
                     // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
                 );
-            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile,
-              {authorizer: Const.AUTH.FACEBOOK}, requestToLink);
+            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
         });
     });
 });
@@ -263,11 +305,10 @@ router.post('/wechat', function (req, res) {
                     unifiedProfile = unifyProfile(
                         profile.openid,
                         null, // email， nice to have, 不能是必须的，因为很多微信用户就没有email
-                        profile.nickName,
+                        profile.displayName || profile.nickName, //兼容二者
                         profile.headimgurl
                     );
-                return responseUserInfo(res, req, {wx: unifiedProfile.id}, unifiedProfile,
-                  {authorizer: Const.AUTH.WX}, requestToLink);
+                return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
             });
         });
     });
@@ -290,7 +331,8 @@ function responseUserInfo(res, req, condition, profile, authInfo, requestToLink)
                 user = createUser(profile, authInfo);
             }
         }
-        return saveAndResponse(req, res, user, authInfo);
+
+        return saveAndResponse(req, res, user, profile, authInfo);
     }
 }
 
@@ -317,7 +359,7 @@ function updateUser(userModel, profile, authInfo) {
     if (profile.wx) {
       userModel.wx = profile.wx;
     }
-    userModel.displayName = userModel.displayName || profile.name || profile.displayName;  //其它平台修改了，这里不受影响？
+    userModel.displayName = userModel.displayName || profile.displayName;  //其它平台修改了，这里不受影响？
     return userModel;
 }
 
@@ -405,8 +447,7 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
                     // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
                 );
 
-            return responseUserInfo(res, req, {twitter: unifiedProfile.id}, unifiedProfile,
-              {authorizer: Const.AUTH.TWITTER}, requestToLink);
+            return responseUserInfo(res, req, {twitter: unifiedProfile.id}, unifiedProfile, Const.AUTH.TWITTER, requestToLink);
         });
     });
 }
@@ -445,8 +486,7 @@ router.post('/google', function (req, res) {
                     profile.displayName,
                     profile.picture.replace('sz=50', 'sz=200')
                 );
-            return responseUserInfo(res, req, {google: unifiedProfile.id}, unifiedProfile,
-              {authorizer: Const.AUTH.GOOGLE}, requestToLink);
+            return responseUserInfo(res, req, {google: unifiedProfile.id}, unifiedProfile, Const.AUTH.GOOGLE, requestToLink);
         });
     });
 });
@@ -480,13 +520,43 @@ function resUserToken2(req, res, user, authInfo) {
 }
 
 function saveAndResponse(req, res, userModel, authInfo) {
-    userModel.save(function (err, userModel) {
-        if (err) {
-            var pkg = composeErrorPkg(err, Const.ERROR_NAME_EXIST_OR_INVALID_FORMAT);
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, pkg);
-        }
-        resUserToken2(req, res, userModel,  authInfo);
+    doSaveUser(req, res, userModel, function (savedModel) {
+      resUserToken2(req, res, savedModel, authInfo);
     });
+}
+
+function doSaveUser(req, res, userModel, callback) {
+  userModel.save(function (err, userModel) {
+    if (err) {
+      var pkg = composeErrorPkg(err, Const.ERROR_NAME_EXIST_OR_INVALID_FORMAT);
+      return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, pkg);
+    }
+    if (callback) {
+      callback(userModel);
+    }
+  });
+}
+
+function wxCode2OpenId(wxCode, displayName, callback) {
+  var openId = 'OpenIdTest123' + displayName;
+  setTimeout(function () {
+    if (callback) {
+      callback(openId);
+    }
+  });
+}
+
+function createWxUser(req, res, authInfo, displayName) {
+  var requestToLink = false, // 建立新的，而不是link到老的
+    unifiedProfile = unifyProfile(authInfo.wx, null, displayName);
+    unifiedProfile.wx = authInfo.wx; // openId;
+    unifiedProfile.wxCode = authInfo.wxCode;
+
+  return responseUserInfo(res, req,
+    {wx: authInfo.wx},
+    unifiedProfile,
+    Const.AUTH.WX,
+    requestToLink);
 }
 
 function isValidFormat(name) {
