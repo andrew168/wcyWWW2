@@ -9,7 +9,8 @@ var fs = require('fs'),
     tempFileName = "/data/onlineUserDump.txt",
     dataReady = false,
     readyToStop = false,
-    users = null;
+    users = null,
+    allowNRunningClient = false; //普通用户， 一个同时只能在1个机器上登录
 
 function add(aUser, tokenId) {
     if (!users) {
@@ -101,7 +102,9 @@ function hasStopped() {
 }
 
 function obsoleteExistingToken(aUser) {
-// each user can only have one token in the same time
+    if (allowNRunningClient) {
+      return;
+    }
     var ids = Object.keys(users);
     ids.forEach(function (id) {
         if (users[id].ID === aUser.ID) {
