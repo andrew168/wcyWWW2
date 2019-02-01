@@ -12,6 +12,7 @@ var express = require('express'),
     config = authHelper.config,
     fs = require('fs'),
     qs = require('qs'),
+    onlineUsers = require('../common/onlineUsers'),
     onlineWxUsers = require('../common/onlineWxUsers'),
     userController = require('../db/user/userController');
 
@@ -182,25 +183,22 @@ router.post('/signup', function (req, res) {
 });
 
 router.get('/api/me', authHelper.ensureAuthenticated, function (req, res) {
-    User.findById(req.user, function (err, user) {
-        var errDesc;
-        if (err) {
-            errDesc = err.message;
-        } else if (!user) {
-            errDesc = "No user found with this token";
-        }
+  var userInfo;
+  if (req.tokenId) {
+    userInfo = onlineUsers.get(req.tokenId)
+  }
 
-        if (errDesc) {
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
-        }
+  if (!userInfo) {
+    return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
+  }
 
-        var userInfo = composeUserPkg(user);
-        status.onLoginSucceed(req, res, userInfo, req.tokenId); //
-        res.send(userInfo);
-    });
+  var userInfoPkg = composeUserPkg(userInfo);
+  status.onLoginSucceed(req, res, userInfoPkg, req.tokenId); //
+  res.send(userInfoPkg);
 });
 
 router.put('/api/me', authHelper.ensureAuthenticated, function (req, res) {
+    console.error("需要吗？");
     User.findById(req.user, function (err, user) {
         if (err) {
             return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
@@ -494,7 +492,7 @@ router.post('/google', function (req, res) {
 function createJWT(user, tokenId) {
     var payload = {
         salt: Math.round(Math.random() * 1000),
-        sub: user._id,
+        sub: (!user.ID ?  user._id : user.ID),
         tokenId: tokenId,
         iat: moment().unix(),
         exp: moment().add(14, 'days').unix()

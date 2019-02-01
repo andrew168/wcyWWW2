@@ -73,6 +73,7 @@ function composeUserPkg(model) {
       groupId: groupId,
       userType: getUserType(groupId),
       ID: userID,
+      _id: userID, // 只是过渡时期兼容 以前的mongoDB的model和doc，
       displayName: userInfo.displayName,
       canApprove: !!(privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
       canRefine: !!(privilege & PRIVILEGE_REFINE),

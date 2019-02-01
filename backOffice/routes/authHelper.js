@@ -1,5 +1,5 @@
 /**
- * Created by Andrewz on 10/30/17.
+   * Created by Andrewz on 10/30/17.
  */
 var INAVLID_USER = 0;
 var jwt = require('jwt-simple'),
@@ -61,9 +61,10 @@ function getPayload(req, res) {
 
     if (payload.exp <= moment().unix()) {
         responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Token has expired');
-        return INAVLID_USER;
+          return INAVLID_USER;
     }
-    req.user = payload.sub; // ToBeDelete
+
+    req.user = payload.sub; // // 必须删除， ToBeDelete
     req.userId = payload.sub; //ToDo: 准备更名
     req.tokenId = payload.tokenId;
     return payload;
