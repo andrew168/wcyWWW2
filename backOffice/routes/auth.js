@@ -300,7 +300,19 @@ function updateUser(userModel, profile, authName) {
     userModel.name = userModel.name || (prefix + profile.id);
     userModel.psw = userModel.psw || (prefix + profile.id);
     userModel.email = userModel.email || profile.email;
-    userModel.displayName = userModel.displayName || profile.name;
+    if (profile.facebook) {
+        userModel.facebook = profile.facebook;
+    }
+    if (profile.google) {
+      userModel.google = profile.google;
+    }
+    if (profile.twitter) {
+      userModel.twitter = profile.twitter;
+    }
+    if (profile.wx) {
+      userModel.wx = profile.wx;
+    }
+    userModel.displayName = userModel.displayName || profile.name || profile.displayName;  //其它平台修改了，这里不受影响？
     return userModel;
 }
 
