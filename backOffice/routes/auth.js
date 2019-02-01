@@ -18,37 +18,40 @@ var composeErrorPkg = userController.composeErrorPkg,
     composeUserPkg = userController.composeUserPkg;
 
 router.post('/login', function (req, res) {
-    var email = req.body.email;
-    if (email) {
-        email = email.toLocaleLowerCase();
-    } else {
-        return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, "email is empty！");
+  var email = req.body.email || '',// email就是账号alias，也可以是电话号码，QQ, 微信，FB，等
+    displayName = req.body.nickName || '',
+    wxCode,
+    user,
+    authInfo = {authorizer: req.body.from || ''};
+
+  if (!email) {
+    return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, "email is empty！");
+  }
+  User.findOne({email: req.body.email}, '+password', function (err, user) {
+    if (err) {
+      var pkg = composeErrorPkg(err, Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT);
+      return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, pkg);
     }
-    User.findOne({email: req.body.email}, '+password', function (err, user) {
-        if (err) {
-            var pkg = composeErrorPkg(err, Const.ERROR.PASSWORD_IS_INVALID_OR_INCORRECT);
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, pkg);
-        }
 
-        if (!user) {
-            return failedOrOldPswUser(req, res);
-        }
-        status.logUser(user, req, res);
-        if (!req.body.password) {
-            return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
-        }
+    if (!user) {
+      return failedOrOldPswUser(req, res);
+    }
+    status.logUser(user, req, res);
+    if (!req.body.password) {
+      return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
+    }
 
-        user.comparePassword(req.body.password, function (err, isMatch) {
-            if (err) {
-                return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
-            }
+    user.comparePassword(req.body.password, function (err, isMatch) {
+      if (err) {
+        return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
+      }
 
-            if (!isMatch) {
-                return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
-            }
-            resUserToken2(req, res, user);
-        });
+      if (!isMatch) {
+        return responseError(res, Const.HTTP.STATUS_401_UNAUTHORIZED, 'Invalid email and/or password');
+      }
+      resUserToken2(req, res, user);
     });
+  });
 });
 
 function failedOrOldPswUser(req, res) {
@@ -202,7 +205,8 @@ router.post('/facebook', function (req, res) {
                     'https://graph.facebook.com/' + profile.id + '/picture?type=large'
                     // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
                 );
-            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
+            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile,
+              {authorizer: Const.AUTH.FACEBOOK}, requestToLink);
         });
     });
 });
@@ -262,35 +266,36 @@ router.post('/wechat', function (req, res) {
                         profile.nickName,
                         profile.headimgurl
                     );
-                return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
+                return responseUserInfo(res, req, {wx: unifiedProfile.id}, unifiedProfile,
+                  {authorizer: Const.AUTH.WX}, requestToLink);
             });
         });
     });
 });
 
-function responseUserInfo(res, req, condition, profile, authName, requestToLink) {
+function responseUserInfo(res, req, condition, profile, authInfo, requestToLink) {
     User.findOne(condition, onFound);
     function onFound(err, user) {
         if (err) {
             return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
         } else if (user) {
-            user = updateUser(user, profile, authName);
+            user = updateUser(user, profile, authInfo);
         } else {
             if (requestToLink && req) { // 未发现已经link好的账号，
                 var token = req.header('Authorization').split(' ')[1];
                 var payload = jwt.decode(token, config.TOKEN_SECRET);
                 condition = {_id: payload.sub};
-                return responseUserInfo(res, null, condition, profile, authName, requestToLink);
+                return responseUserInfo(res, null, condition, profile, authInfo, requestToLink);
             } else {
-                user = createUser(profile, authName);
+                user = createUser(profile, authInfo);
             }
         }
-        return saveAndResponse(req, res, user);
+        return saveAndResponse(req, res, user, authInfo);
     }
 }
 
-function updateUser(userModel, profile, authName) {
-    var prefix = Const.AUTH_PREFIX[authName];
+function updateUser(userModel, profile, authInfo) {
+    var prefix = Const.AUTH_PREFIX[authInfo.authorizer];
     if (userModel.name === (prefix + 'undefined')) {
         userModel.name = null;
     }
@@ -400,7 +405,8 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
                     // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
                 );
 
-            return responseUserInfo(res, req, {twitter: unifiedProfile.id}, unifiedProfile, Const.AUTH.TWITTER, requestToLink);
+            return responseUserInfo(res, req, {twitter: unifiedProfile.id}, unifiedProfile,
+              {authorizer: Const.AUTH.TWITTER}, requestToLink);
         });
     });
 }
@@ -439,7 +445,8 @@ router.post('/google', function (req, res) {
                     profile.displayName,
                     profile.picture.replace('sz=50', 'sz=200')
                 );
-            return responseUserInfo(res, req, {google: unifiedProfile.id}, unifiedProfile, Const.AUTH.GOOGLE, requestToLink);
+            return responseUserInfo(res, req, {google: unifiedProfile.id}, unifiedProfile,
+              {authorizer: Const.AUTH.GOOGLE}, requestToLink);
         });
     });
 });
@@ -464,21 +471,21 @@ function responseError500(res, err, data) {
     return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
 }
 
-function resUserToken2(req, res, user) {
+function resUserToken2(req, res, user, authInfo) {
     var tokenId = authHelper.generateTokenId(),
         token = createJWT(user, tokenId),
         userInfo = composeUserPkg(user);
-    status.onLoginSucceed(req, res, userInfo, tokenId);
+    status.onLoginSucceed(req, res, userInfo, tokenId, authInfo);
     res.send({token: token, data: userInfo});
 }
 
-function saveAndResponse(req, res, userModel) {
+function saveAndResponse(req, res, userModel, authInfo) {
     userModel.save(function (err, userModel) {
         if (err) {
             var pkg = composeErrorPkg(err, Const.ERROR_NAME_EXIST_OR_INVALID_FORMAT);
             return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, pkg);
         }
-        resUserToken2(req, res, userModel);
+        resUserToken2(req, res, userModel,  authInfo);
     });
 }
 
