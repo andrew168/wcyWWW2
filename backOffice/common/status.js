@@ -38,13 +38,20 @@ function onLoginSucceed(req, res, data, tokenId, authInfo) {
       isRegistered: true
     }, data);
 
-    //case： 在同一台机器上， 分别用不同的账号，登录， 退出
-    onlineUsers.add(user, tokenId);
     setUserCookie(user, res);
-    if (authInfo && (authInfo.authorizer === Const.AUTH.WX)) {
-      onlineWxUsers.add(user, authInfo.wx);
-      onlineWxUsers.add(user, authInfo.wxCode);
-    }
+
+    setTimeout(function() {
+      //case： 在同一台机器上， 分别用不同的账号，登录， 退出
+      onlineUsers.add(user, tokenId);
+      if (authInfo && (authInfo.authorizer === Const.AUTH.WX)) {
+        if (!!authInfo.wx) {
+          onlineWxUsers.add(user, authInfo.wx);
+        }
+        if (!!authInfo.wxCode) {
+          onlineWxUsers.add(user, authInfo.wxCode);
+        }
+      }
+    });
 }
 
 function onLoginFailed(req, res, data) {
