@@ -71,7 +71,7 @@ function composeUserPkg(model) {
       errorId: Const.ERROR.NO,
       name: userInfo.name,
       groupId: groupId,
-      type: getUserType(groupId),
+      type: userInfo.type,
       ID: userID,
       _id: userID, // 只是过渡时期兼容 以前的mongoDB的model和doc，
       displayName: userInfo.displayName,
@@ -153,31 +153,6 @@ function getList(aUser, callback) {
 
 function setPrivilege(operator, id, code, callback) {
     dbCommon.setProp(operator, User, id, 'privilege', code, callback);
-}
-
-function getUserType(groupId) {
-    var USER_TEACHER = 1,
-        USER_PARENT = 3,
-        USER_KIDS = 3,
-        userType = USER_KIDS,
-        lastChar;
-    if (groupId) {
-        lastChar = groupId[groupId.length - 1];
-        switch (lastChar) {
-            case '1':
-                userType = USER_KIDS;
-                break;
-            case '6':
-                userType = USER_PARENT;
-                break;
-            case '8':
-                userType = USER_TEACHER;
-                break;
-            default:
-                userType = USER_KIDS;
-        }
-    }
-    return userType;
 }
 
 function type2Privilege(type) {
