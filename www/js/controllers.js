@@ -125,6 +125,16 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
             });
     };
 
+    $scope.testWxLogin = function (id) {
+      var wxBoneToken = 'code123456ABC#%^*()', displayName = '大写小写特殊码';
+      UserService.loginFromWx(wxBoneToken, displayName).then(function () {
+        if (TQ.userProfile.loggedIn) {
+          DataService.reload();
+          console.log('OOOOOOOOOK!');
+        }
+      });
+    };
+
     $scope.testAuthenticate = function(authName) {
         UserService.authenticate(authName);
     };
