@@ -2,8 +2,10 @@
  * Created by Andrewz on 1/24/2016.
  */
 var assert = require('assert'),
+    Const = require('../base/const'),
     userController = require('../db/user/userController'),
     onlineUsers = require('./onlineUsers'),
+    onlineWxUsers = require('./onlineWxUsers'),
     serverConfig = require('./../bin/serverConfig'),
     authHelper = require('../routes/authHelper');
 
@@ -39,6 +41,10 @@ function onLoginSucceed(req, res, data, tokenId, authInfo) {
     //case： 在同一台机器上， 分别用不同的账号，登录， 退出
     onlineUsers.add(user, tokenId);
     setUserCookie(user, res);
+    if (authInfo && (authInfo.authorizer === Const.AUTH.WX)) {
+      onlineWxUsers.add(user, authInfo.wx);
+      onlineWxUsers.add(user, authInfo.wxCode);
+    }
 }
 
 function onLoginFailed(req, res, data) {
