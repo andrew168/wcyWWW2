@@ -163,17 +163,15 @@ TQ.MessageBox = (function () {
             options.okText = TQ.Locale.getStr('OK');
         }
 
+        if (!options.cancelText) {
+            options.cancelText = TQ.Locale.getStr('Cancel');
+        }
+
         if (options.okText) {
             buttons.push($.extend({}, vex.dialog.buttons.YES, {text: options.okText}));
         }
-
-        if (options.onCancel) {
-          if (!options.cancelText) {
-            options.cancelText = TQ.Locale.getStr('Cancel');
-          }
-          if (options.cancelText) {
+        if (options.cancelText) {
             buttons.push($.extend({}, vex.dialog.buttons.NO, {text: options.cancelText}));
-          }
         }
 
         if (buttons.length > 0) {
