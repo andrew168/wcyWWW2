@@ -246,7 +246,8 @@ router.post('/facebook', function (req, res) {
                     'https://graph.facebook.com/' + profile.id + '/picture?type=large'
                     // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
                 );
-            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
+            return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile,
+              {authorizer: Const.AUTH.FACEBOOK}, requestToLink);
         });
     });
 });
@@ -306,7 +307,8 @@ router.post('/wechat', function (req, res) {
                         profile.displayName || profile.nickName, //兼容二者
                         profile.headimgurl
                     );
-                return responseUserInfo(res, req, {facebook: unifiedProfile.id}, unifiedProfile, Const.AUTH.FACEBOOK, requestToLink);
+                return responseUserInfo(res, req, {facebook: unifiedProfile.id},
+                  unifiedProfile, {authorizer: Const.AUTH.FACEBOOK}, requestToLink);
             });
         });
     });
@@ -361,9 +363,9 @@ function updateUser(userModel, profile, authInfo) {
     return userModel;
 }
 
-function createUser(profile, autherName) {
+function createUser(profile, authInfo) {
     var userModel = new User();
-    return updateUser(userModel, profile, autherName);
+    return updateUser(userModel, profile, authInfo);
 }
 
 var requestTokenUrlTwitter = 'https://api.twitter.com/oauth/request_token';
@@ -445,7 +447,8 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
                     // 'https://graph.facebook.com/v2.3/' + profile.id + '/picture?type=large'
                 );
 
-            return responseUserInfo(res, req, {twitter: unifiedProfile.id}, unifiedProfile, Const.AUTH.TWITTER, requestToLink);
+            return responseUserInfo(res, req, {twitter: unifiedProfile.id},
+              unifiedProfile, {authorizer: Const.AUTH.TWITTER}, requestToLink);
         });
     });
 }
@@ -484,7 +487,8 @@ router.post('/google', function (req, res) {
                     profile.displayName,
                     profile.picture.replace('sz=50', 'sz=200')
                 );
-            return responseUserInfo(res, req, {google: unifiedProfile.id}, unifiedProfile, Const.AUTH.GOOGLE, requestToLink);
+            return responseUserInfo(res, req, {google: unifiedProfile.id},
+              unifiedProfile, {authorizer: Const.AUTH.GOOGLE}, requestToLink);
         });
     });
 });
@@ -553,7 +557,7 @@ function createWxUser(req, res, authInfo, displayName) {
   return responseUserInfo(res, req,
     {wx: authInfo.wx},
     unifiedProfile,
-    Const.AUTH.WX,
+    authInfo,
     requestToLink);
 }
 
