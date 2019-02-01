@@ -63,7 +63,7 @@ function DataObject(list) {
                 } else {
                     if (TQ.Utility.isSoundResource(oldPath)) { //force to convert to mp3
                         oldPath = TQ.Utility.forceExt(oldPath, ".mp3");
-                    } else if (!TQ.Utility.isImage(oldPath)) {
+                    } else if (!TQ.Utility.isImage(oldPath) && !TQ.Utility.isVideo(oldPath)) {
                         TQ.Log.error("Found unknown format:" + oldPath);
                     }
                     if (matType === TQ.MatType.OPUS) {
