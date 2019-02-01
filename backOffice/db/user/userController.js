@@ -71,7 +71,7 @@ function composeUserPkg(model) {
       errorId: Const.ERROR.NO,
       name: userInfo.name,
       groupId: groupId,
-      userType: getUserType(groupId),
+      type: getUserType(groupId),
       ID: userID,
       _id: userID, // 只是过渡时期兼容 以前的mongoDB的model和doc，
       displayName: userInfo.displayName,
@@ -182,8 +182,8 @@ function getUserType(groupId) {
 
 function type2Privilege(type) {
   var privilege = 3; //缺省值，见schema
-  if (!type) { // 实时type之前的用户， 都是当做是： 创新teacher，
-    type = USER_TYPE.CREATIVE_TEACHER;
+  if (!type) { // 实施type之前的用户， 都是缺省用户：（学生）
+    type = USER_TYPE.STUDENT;
   }
   switch (type) {
     case USER_TYPE.STUDENT:
