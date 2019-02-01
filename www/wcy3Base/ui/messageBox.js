@@ -21,6 +21,7 @@ TQ.MessageBox = (function () {
         reset: reset,
         hideProgressBox: hideProgressBox,
         prompt: prompt, //可以被reset.
+        promptWithNoCancel: promptWithNoCancel,
         confirm: confirm, // 有OK和Cancel两个按钮， 不能被reset, 用户必须click
         show: show, // show 就是alert，只有OK按钮
         show2: show2,
@@ -81,19 +82,25 @@ TQ.MessageBox = (function () {
         TQ.Log.debugInfo("Ok!");
     }
 
-    function prompt(msg, onOk1, onCancel1, mustClick) {
-        var option = {
-            mustClick: !!mustClick,
-            unsafeMessage: msg,
-            onOk: onOk1? onOk1: onOk
-        };
+    function promptWithNoCancel(msg, onOk1) {
+      prompt(msg, onOk1, null, true, {noCancel: true});
+    }
 
-        if (onCancel1) {
-            option.onCancel = onCancel1;
-        }
+    function prompt(msg, onOk1, onCancel1, mustClick, options) {
+      if (!options) {
+        options = {};
+      }
 
-        option.type = TYPE_PROMPT;
-        return (doShow(option));
+      options.mustClick = !!mustClick;
+      options.unsafeMessage = msg;
+      options.onOk = onOk1 ? onOk1 : onOk;
+
+      if (onCancel1) {
+        options.onCancel = onCancel1;
+      }
+
+      options.type = TYPE_PROMPT;
+      return (doShow(options));
     }
 
     function confirm(options) {
@@ -163,15 +170,18 @@ TQ.MessageBox = (function () {
             options.okText = TQ.Locale.getStr('OK');
         }
 
-        if (!options.cancelText) {
-            options.cancelText = TQ.Locale.getStr('Cancel');
-        }
-
         if (options.okText) {
             buttons.push($.extend({}, vex.dialog.buttons.YES, {text: options.okText}));
         }
-        if (options.cancelText) {
+
+        if (!options.noCancel) {
+          if (!options.cancelText) {
+            options.cancelText = TQ.Locale.getStr('Cancel');
+          }
+
+          if (options.cancelText) {
             buttons.push($.extend({}, vex.dialog.buttons.NO, {text: options.cancelText}));
+          }
         }
 
         if (buttons.length > 0) {

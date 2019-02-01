@@ -111,7 +111,7 @@ TQ = TQ || {};
         }
       }
 
-        TQ.MessageBox.prompt(TQ.Locale.getStr('Click OK to start play'), function () {
+        TQ.MessageBox.promptNoCancel(TQ.Locale.getStr('Click OK to start play'), function () {
           TQ.State.needUserClickToPlayAV = false;
           if (callback) {
             callback();
