@@ -1,6 +1,6 @@
 /**
  * Created by Andrewz on 1/26/19.
- * wxmp: 微信miniprogram的接口
+ * wxmp: 微信miniprogram的接口, 只是从微信小程序中上传到服务器， 尚未利用。
  */
 
 var express = require('express');
@@ -16,8 +16,8 @@ function onWxmpLoggin(req, res) {
   var appId = configSvr.wx.boneMiniprogram.appId,
     appSecret = configSvr.wx.boneMiniprogram.appSecret,
     wxTempCode = req.body.code || req.query.code,
-    boneToken = req.body.boneToken || req.query.boneToken,
-    nickname = req.body.nickname || req.query.nickname;
+    boneToken = req.body.boneToken || req.query.boneToken, // 在微信小程序中约定的名称
+    nickName = req.body.nickName || req.query.nickName;
 
   if (!wxTempCode) {
     wxTempCode = "";
@@ -27,10 +27,9 @@ function onWxmpLoggin(req, res) {
     boneToken = 'noBoneToken';
   }
 
-  if (!nickname) {
-    nickname = '匿名微信用户';
+  if (!nickName) {
+    nickName = '匿名微信用户';
   }
-
 
   var getOpenIdUrl = 'https://api.weixin.qq.com/sns/jscode2session' +
     '?appid=' + appId + '&secret=' + appSecret + '&js_code=' + wxTempCode + '&grant_type=authorization_code';
