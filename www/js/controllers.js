@@ -108,12 +108,16 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.testSignUp = function () {
-        testUserId++;
-        email = 'T' + testUserId + "@samplexyz.com";
-        UserService.signUp(email, 'pswwwwww' + testUserId, 'display' + testUserId).
-            then(function (data) {
-                console.log("signUp successfully!" + data);
-            });
+      var email = '8' + (++testUserId) + "@samplexyz.com";
+      UserService.signUp({
+        email: email,
+        password: 'pswwwwww' + testUserId,
+        displayName: 'display' + testUserId,
+        userType: 1,
+        groupId: '1111'
+      }).then(function (data) {
+        console.log("signUp successfully!" + data);
+      });
     };
 
     $scope.testLogin = function (id) {
