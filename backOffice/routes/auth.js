@@ -540,7 +540,7 @@ function doSaveUser(req, res, userModel, callback) {
 }
 
 function wxCode2OpenId(wxCode, displayName, callback) {
-  var openId = 'OpenIdTest123' + displayName;
+  var openId = 'OpenIdF' + displayName;
   setTimeout(function () {
     if (callback) {
       callback(openId);
