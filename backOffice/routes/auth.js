@@ -514,9 +514,9 @@ function responseError500(res, err, data) {
 function resUserToken2(req, res, user, authInfo) {
     var tokenId = authHelper.generateTokenId(),
         token = createJWT(user, tokenId),
-        userInfo = composeUserPkg(user);
-    status.onLoginSucceed(req, res, userInfo, tokenId, authInfo);
-    res.send({token: token, data: userInfo});
+        userInfoPackage = composeUserPkg(user);
+    status.onLoginSucceed(req, res, userInfoPackage, tokenId, authInfo);
+    res.send({token: token, data: userInfoPackage});
 }
 
 function saveAndResponse(req, res, userModel, authInfo) {
