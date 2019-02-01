@@ -19,19 +19,22 @@ var user = {
     timesCalled: 0
 };
 
-function onLoginSucceed(req, res, data, tokenId) {
-    var user = {
-            loggedIn: true,
-            ID: data.ID,
-            name: data.name,
-            isRegistered: true,
-            displayName: data.displayName,
-            canApprove: data.canApprove,
-            canRefine: data.canRefine,
-            canBan: data.canBan,
-            canCT: data.canCT,
-            canAdmin: data.canAdmin
-        };
+function extendWithoutObject(target, source) {
+  for (var prop in source) {
+    if (!source.hasOwnProperty(prop) || ((typeof (source[prop])) === 'object')) {
+      continue;
+    }
+    target[prop] = source[prop];
+  }
+  return target;
+}
+
+function onLoginSucceed(req, res, data, tokenId, authInfo) {
+    var user = extendWithoutObject({
+      loggedIn: true,
+      ID: data.ID,
+      isRegistered: true
+    }, data);
 
     //case： 在同一台机器上， 分别用不同的账号，登录， 退出
     onlineUsers.add(user, tokenId);
