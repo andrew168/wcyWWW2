@@ -33,6 +33,11 @@ function get(id) {
         });
 }
 
+function getByWxOpenId(openId, callback) {
+  User.findOne({wx: openId})
+    .exec(callback);
+}
+
 function model2User(err, model, errorId) {
     var pkg;
     if (err || !model || (Array.isArray(model) && (model.length < 1))) {
@@ -207,3 +212,4 @@ exports.type2Privilege = type2Privilege;
 exports.model2User = model2User;
 exports.composeErrorPkg = composeErrorPkg;
 exports.composeUserPkg = composeUserPkg;
+exports.getByWxOpenId = getByWxOpenId;
