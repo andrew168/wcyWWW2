@@ -8,7 +8,8 @@ var fs = require('fs'),
   tempFileName = "/data/onlineWxUserDump.txt",
   dataReady = false,
   readyToStop = false,
-  users = null;
+  users = null,
+  allowNRunningClient = true; //微信用户， 临时，允许多个用户同时用
 
 function add(aUser, wxCode) {
   if (!users) {
@@ -74,7 +75,10 @@ function hasStopped() {
 }
 
 function obsoleteExistingToken(aUser) {
-// each user can only have one token in the same time
+  if (allowNRunningClient) {
+    return;
+  }
+
   var ids = Object.keys(users);
   ids.forEach(function (id) {
     if (users[id].ID === aUser.ID) {
