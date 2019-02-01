@@ -58,19 +58,22 @@ function composeErrorPkg(err, errorId) {
 }
 
 function composeUserPkg(model) {
-    var doc = (Array.isArray(model)) ? model[0]._doc : model._doc,
-        groupId = doc.groupId || "00000",
-        privilege = type2Privilege(doc.type) | doc.privilege;
+    var aModel = (Array.isArray(model)) ? model[0] : model,
+        isModel = !!(aModel._doc),
+        userInfo = (isModel? aModel._doc : aModel),
+        userID = (isModel? aModel._id : userInfo.ID),
+        groupId = userInfo.groupId || "00000",
+        privilege = type2Privilege(userInfo.type) | userInfo.privilege;
 
     return {
       result: Const.SUCCESS,
       loggedIn: true,
       errorId: Const.ERROR.NO,
-      name: doc.name,
+      name: userInfo.name,
       groupId: groupId,
       userType: getUserType(groupId),
-      ID: doc._id,
-      displayName: doc.displayName,
+      ID: userID,
+      displayName: userInfo.displayName,
       canApprove: !!(privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
       canRefine: !!(privilege & PRIVILEGE_REFINE),
       canBan: !!(privilege & PRIVILEGE_BAN),
