@@ -540,7 +540,21 @@ function doSaveUser(req, res, userModel, callback) {
 }
 
 function wxCode2OpenId(wxCode, displayName, callback) {
-  var openId = 'OpenIdF' + displayName;
+  var wxUser = onlineWxUsers.getOpenId(wxCode),
+    openId;
+
+  if (wxUser) {
+    if (wxUser.openId) {
+      openId = wxUser.openId;
+    } else if (wxUser.nickName) {
+      displayName = wxUser.nickName;
+    }
+  }
+
+  if (!openId) {
+    openId = 'OpenIdF' + displayName;
+  }
+
   setTimeout(function () {
     if (callback) {
       callback(openId);
