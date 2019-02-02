@@ -6,6 +6,7 @@
 var express = require('express');
 var router = express.Router();
 var https = require('https'),
+  onlineWxUsers = require('../common/onlineWxUsers'),
   configSvr = require('../common/configSvr');
 
 router.get('/', function (req, res, next) {
@@ -15,24 +16,23 @@ router.get('/', function (req, res, next) {
 function onWxmpLoggin(req, res) {
   var appId = configSvr.wx.boneMiniprogram.appId,
     appSecret = configSvr.wx.boneMiniprogram.appSecret,
-    wxTempCode = req.body.code || req.query.code,
+    wxCode = req.body.code || req.query.code,
     boneToken = req.body.boneToken || req.query.boneToken, // 在微信小程序中约定的名称
     nickName = req.body.nickName || req.query.nickName;
+    if (!wxCode) {
+      wxCode = "";
+    }
 
-  if (!wxTempCode) {
-    wxTempCode = "";
-  }
+    if (!boneToken) {
+      boneToken = 'noBoneToken';
+    }
 
-  if (!boneToken) {
-    boneToken = 'noBoneToken';
-  }
-
-  if (!nickName) {
-    nickName = '匿名微信用户';
+    if (!nickName) {
+      nickName = '微信用户';
   }
 
   var getOpenIdUrl = 'https://api.weixin.qq.com/sns/jscode2session' +
-    '?appid=' + appId + '&secret=' + appSecret + '&js_code=' + wxTempCode + '&grant_type=authorization_code';
+    '?appid=' + appId + '&secret=' + appSecret + '&js_code=' + wxCode + '&grant_type=authorization_code';
 
   console.log("call wx to convert temp code to openid");
   // !! 注意调用所有微信接口时均需使用https协议
@@ -43,14 +43,19 @@ function onWxmpLoggin(req, res) {
       console.log('raw data in response: ');
       console.log(data);
       var jsonData = JSON.parse(data);
-      var wxUserId = (!jsonData.unionId ? jsonData.openId : jsonData.unionId);
-      if (!wxUserId || jsonData.errcode) {
+      var wxOpenId = (!jsonData.unionId ? jsonData.openId : jsonData.unionId);
+      if (!wxOpenId || jsonData.errcode) {
+        wxOpenId = 'OpenIdF' + nickName;
         var errorMsg = "error in code2session：" + jsonData.errmsg;
         console.log(errorMsg);
         res.send("login from wx: failed! detail: " + errorMsg);
       } else {
         console.log("linked code to userID, 用户可以用code找到userID");
         res.send("login from wx: OK!");
+      }
+
+      if (wxCode && wxOpenId && nickName) {
+        onlineWxUsers.addWxOpenId(wxOpenId, nickName, wxCode);
       }
     });
   }).on('error', function (e) {

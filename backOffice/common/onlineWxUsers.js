@@ -4,11 +4,16 @@
  * 避免重复查找openid
  */
 
+var WX_OPEN_ID = 0,
+  NICK_NAME = 1,
+  TIME_STAMP = 2;
+
 var fs = require('fs'),
-  tempFileName = "/data/onlineWxUserDump.txt",
+  tempFileName = "/data/onlineWxUserDump2.txt",
   dataReady = false,
   readyToStop = false,
   users = null,
+  wxCodes = null,
   allowNRunningClient = true; //微信用户， 临时，允许多个用户同时用
 
 function add(aUser, wxCode) {
@@ -45,7 +50,7 @@ function save(callback) {
 
   if (users) {
     obsoleteStaleToken();
-    fs.writeFile(tempFileName, JSON.stringify(users), onSaved);
+    fs.writeFile(tempFileName, JSON.stringify({users: users, wxCodes: wxCodes}), onSaved);
   } else {
     onSaved();
   }
@@ -53,10 +58,14 @@ function save(callback) {
 
 function restore() {
   function setup(err, data) {
-    users = (!err && data) ? JSON.parse(data) : {};
-    if (!users) { // 防止 "null"
-      users = {};
+    allData = (!err && data) ? JSON.parse(data) : {};
+    if (!allData) { // 防止 "null"
+      allData = {};
     }
+
+    // {users: users, wxCodes: wxCodes}
+    users = (!allData.users ? {} : allData.users);
+    wxCodes = (!allData.wxCodes ? {} : allData.wxCodes);
     obsoleteStaleToken();
     dataReady = true;
     readyToStop = false;
@@ -87,6 +96,42 @@ function obsoleteExistingToken(aUser) {
   })
 }
 
+function addWxOpenId(wxOpenId, nickName, wxCode) {
+  if (!wxCodes) {
+    console.error(" not ready");
+    return;
+  }
+
+  wxCodes[wxCode] = [wxOpenId, nickName, new Date().getTime()];  // 3rd: 用tokenId做索引
+}
+
+function getOpenId(wxCode) {
+  if (!wxCodes) {
+    console.error(" not ready");
+    return null;
+  }
+
+  if (!wxCodes[wxCode]) {
+    console.error(" not found: wxCode" + wxCode);
+    return null;
+  }
+  return {
+    openId: wxCodes[wxCode][WX_OPEN_ID],
+    nickName: wxCodes[wxCode][NICK_NAME]
+  };
+}
+
+function obsoleteStaleWxCode() {
+  var ids = Object.keys(wxCodes);
+  var oldWxCodeTime = new Date().getTime() - (24*60*60*1000);
+  ids.forEach(function (codeExt) {
+    var t = wcCodes[codeExt][TIME_STAMP];
+    if (t < oldWxCodeTime) {
+      delete wcCodes[codeExt];
+    }
+  })
+}
+
 function obsoleteStaleToken() {
   var ids = Object.keys(users);
   ids.forEach(function (id) {
@@ -101,6 +146,8 @@ function isValidTokenId(token) {
 }
 
 exports.add = add;
+exports.addWxOpenId = addWxOpenId;
+exports.getOpenId = getOpenId;
 exports.get = get;
 exports.save = save;
 exports.restore = restore;
