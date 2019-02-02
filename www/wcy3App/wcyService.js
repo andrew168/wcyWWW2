@@ -109,8 +109,10 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
 
     //ToDo: if (has wifi)
     isSaving = true;
+    TQ.MessageBox.promptNoFlash(TQ.Locale.getStr('正在保存。。。'));
     return upload(forkIt).then(onSavedSuccess).finally(function () {
       isSaving = false;
+      TQ.MessageBox.hide();
     });
   }
 

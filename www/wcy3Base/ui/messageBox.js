@@ -11,9 +11,9 @@ TQ.MessageBox = (function () {
 
     var isShowingByForce = false,
         instances = {},
+        timerNoFlash = null;
         msgList = [],
         timer = null;
-
 
     var instance = {
         getInstance: getInstance,
@@ -21,6 +21,7 @@ TQ.MessageBox = (function () {
         reset: reset,
         hideProgressBox: hideProgressBox,
         prompt: prompt, //可以被reset.
+        promptNoFlash: promptNoFlash,
         promptWithNoCancel: promptWithNoCancel,
         confirm: confirm, // 有OK和Cancel两个按钮， 不能被reset, 用户必须click
         show: show, // show 就是alert，只有OK按钮
@@ -70,6 +71,11 @@ TQ.MessageBox = (function () {
             timer = null;
         }
 
+        if (timerNoFlash) {
+            clearTimeout(timerNoFlash);
+            timerNoFlash = null;
+        }
+
         isShowingByForce = false;
         doHide(ref);
     }
@@ -101,6 +107,18 @@ TQ.MessageBox = (function () {
 
       options.type = TYPE_PROMPT;
       return (doShow(options));
+    }
+
+    // 3秒之内， 不显示waiting， 防止快闪
+    function promptNoFlash(msg, onOk1, onCancel1, mustClick, options) {
+      var NO_FLASH_TIME = 2000;
+      if (timerNoFlash) {
+        clearTimeout(timerNoFlash);
+      }
+      timerNoFlash = setTimeout(function () {
+          prompt(msg, onOk1, onCancel1, mustClick, options);
+            timerNoFlash = null;
+        }, NO_FLASH_TIME);
     }
 
     function confirm(msg, onOk1, options) {
