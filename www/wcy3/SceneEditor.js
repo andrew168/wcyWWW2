@@ -25,7 +25,8 @@ var currScene = null;
     EDIT: 2100, // 编辑
     // EDIT_IMAGE: 2200, // 尚未以他们代替 flag变量
     // RECORD_AUDIO: 2300,
-    PREVIEW: 2400 // Play, Preview
+    PREVIEW: 2400, // Play, Preview
+    SHARE_PANE: 2410 //属于PREVIEW上的页面
   };
 
   TQ.State.editorMode = SceneEditor.NOT_INITIALIZED;
