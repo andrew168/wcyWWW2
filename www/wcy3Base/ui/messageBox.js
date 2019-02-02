@@ -103,8 +103,17 @@ TQ.MessageBox = (function () {
       return (doShow(options));
     }
 
-    function confirm(options) {
-        options.type = TYPE_CONFIRM;
+    function confirm(msg, onOk1, options) {
+      // 只有确定， 必须点击才能消失
+      if (!options) {
+        options = {};
+      }
+
+      options.mustClick = true;
+      options.noCancel = true;
+      options.unsafeMessage = msg;
+      options.onOk = !onOk1 ? onOk : onOk1;
+      options.type = TYPE_CONFIRM;
         return doShow(options);
     }
 
