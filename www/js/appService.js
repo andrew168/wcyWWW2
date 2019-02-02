@@ -30,7 +30,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     }
 
     function _init() {
-        if (UserService.canAutoLogin() && ! TQUtility.isMiniProgramWebView()) {
+        if (UserService.canAutoLogin()) {
             UserService.tryAutoLogin().then(doInit);
         } else {
             doInit();
