@@ -24,11 +24,12 @@ TQ.userProfile = (function() {
         return (self.isGuest() ? '游客' : self.displayName);
       },
       hasWxUserGranted: function () {
+        var guestName = 'wxOpenIdF微信用户'; // 与后台，小程序保持一致
         // 区别：
         // wx游客： 'wxNewYearCard'，
         // wx授权用户，再次登录: 'wxUser' + OpenId,  wx中的昵称
         return (TQUtility.isMiniProgramWebView() &&
-          (self.name.indexOf('wxUser') ===0));
+          (self.name.indexOf('wxOpenId') ===0) && (self.name !== guestName));
       }
     };
 
