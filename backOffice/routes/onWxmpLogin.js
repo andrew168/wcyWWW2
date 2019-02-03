@@ -6,6 +6,7 @@
 var express = require('express');
 var router = express.Router();
 var https = require('https'),
+  Const = require('../base/const'),
   onlineWxUsers = require('../common/onlineWxUsers'),
   configSvr = require('../common/configSvr');
 
@@ -28,7 +29,7 @@ function onWxmpLoggin(req, res) {
     }
 
     if (!nickName) {
-      nickName = '微信用户';
+      nickName = Const.DEFAULT_WX_GUEST_NAME;
   }
 
   var getOpenIdUrl = 'https://api.weixin.qq.com/sns/jscode2session' +

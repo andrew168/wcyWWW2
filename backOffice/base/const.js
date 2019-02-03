@@ -39,3 +39,4 @@ exports.AUTH = AUTH;
 exports.AUTH_PREFIX = AUTH_PREFIX;
 exports.SUCCESS = 1;
 exports.FAILED = 0;
+exports.DEFAULT_WX_GUEST_NAME = '微信用户';

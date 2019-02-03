@@ -35,17 +35,20 @@ router.post('/login', function (req, res) {
     authInfo.wxCode = wxCode;
     user = onlineWxUsers.get(wxCode);
     if (!user) {
-      wxCode2OpenId(wxCode, displayName, function (openId) {
+      wxCode2OpenId(wxCode, displayName, function (openId, wxNickName) {
+        displayName = wxNickName; // 前台来的nickName，其实没有用途，而且易被hack
         user = onlineWxUsers.get(openId);
         if (!user) {
           authInfo.wx = openId;
           userController.getByWxOpenId(openId, onFindUser);
         } else {
+          updateDisplayName(user, wxCode);
           onlineWxUsers.add(user, wxCode);
           resUserToken2(req, res, user);
         }
       })
     } else {
+      updateDisplayName(user, wxCode);
       return resUserToken2(req, res, user, authInfo);
     }
     return;
@@ -546,7 +549,9 @@ function wxCode2OpenId(wxCode, displayName, callback) {
   if (wxUser) {
     if (wxUser.openId) {
       openId = wxUser.openId;
-    } else if (wxUser.nickName) {
+    }
+
+    if (wxUser.nickName && (wxUser.nickName !== Const.DEFAULT_WX_GUEST_NAME)) {
       displayName = wxUser.nickName;
     }
   }
@@ -557,9 +562,17 @@ function wxCode2OpenId(wxCode, displayName, callback) {
 
   setTimeout(function () {
     if (callback) {
-      callback(openId);
+      callback(openId, displayName);
     }
   });
+}
+
+function updateDisplayName(user, wxCode) {
+  var wxUser = onlineWxUsers.getOpenId(wxCode);
+
+  if (user && wxUser && wxUser.nickName && (wxUser.nickName !== Const.DEFAULT_WX_GUEST_NAME)) {
+    user.displayName = wxUser.nickName;
+  }
 }
 
 function createWxUser(req, res, authInfo, displayName) {
