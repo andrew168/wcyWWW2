@@ -44,7 +44,7 @@ function onWxmpLoggin(req, res) {
       console.log('raw data in response: ');
       console.log(data);
       var jsonData = JSON.parse(data);
-      var wxOpenId = (!jsonData.unionId ? jsonData.openId : jsonData.unionId);
+      var wxOpenId = (!jsonData.unionid ? jsonData.openid : jsonData.unionid);
       if (!wxOpenId || jsonData.errcode) {
         wxOpenId = 'OpenIdF' + nickName;
         var errorMsg = "error in code2session：" + jsonData.errmsg;

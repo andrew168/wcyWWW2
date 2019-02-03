@@ -16,8 +16,8 @@ var configSvr = {
         },
         boneMiniprogram: {
           // bone教师邦小程序：贺年卡
-          appId: 'wx5fe65e70536d0258',
-          appSecret: '393e38d14682d6e2ee524dbc96b080bf'
+          appId: 'wx3fb982675950e960',
+          appSecret: '53cba2783f227a3e11e314081cf5d891'
         }
     },
 
