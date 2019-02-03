@@ -24,9 +24,9 @@ WCY 服务： 提供wcy及其screenshot的创建、保存、编辑、展示等�
    => show
 */
 angular.module('starter').factory("WCY", WCY);
-WCY.$inject = ['$timeout', '$http', 'FileService', 'WxService', 'NetService'];
+WCY.$inject = ['$q', '$timeout', '$http', 'FileService', 'WxService', 'NetService'];
 
-function WCY($timeout, $http, FileService, WxService, NetService) {
+function WCY($q, $timeout, $http, FileService, WxService, NetService) {
   // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
   var user = TQ.userProfile;
   var _AUTO_SAVE_NAME = '_auto_save_name_',
@@ -243,10 +243,21 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
       }
       return save().then(uploadScreenshot);
     }
-    tryCounter = 0;
-    var data = TQ.ScreenShot.getForPost();
     TQ.AssertExt.invalidLogic(!!_ssSign);
-    return NetService.doUploadImage(_ssSign, data).then(onUploadSsSuccess, onErrorGeneral);
+    tryCounter = 0;
+    q = $q.defer();
+    TQ.ScreenShot.getForPostAsync(function (data) {
+      NetService.doUploadImage(_ssSign, data).then(
+        function (res) {
+          onUploadSsSuccess(res);
+          q.resolve(res);
+        }, function (err) {
+          onErrorGeneral(err);
+          q.reject(err);
+        });
+    });
+
+    return q;
   }
 
   //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）

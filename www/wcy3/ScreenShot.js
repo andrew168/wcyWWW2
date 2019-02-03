@@ -25,12 +25,14 @@ window.TQ = window.TQ || {};
     };
 
     ScreenShot.saveThumbnail = function (album, id) {
-        var img = new Image();
-        img.onload = function () {
-          album[id] = imageResize(img, 100, 100);
+      var img = new Image();
+      img.onload = function () {
+        album[id] = {
+          src: imageResize(img, 100, 100),
+          timestamp: Date.now()
         };
-
-        img.src = takeImage(TQ.Graphics.getCanvasBkgColor());
+      };
+      img.src = takeImage(TQ.Graphics.getCanvasBkgColor());
     };
 
     ScreenShot.getDataWithBkgColor = function() {
@@ -42,11 +44,18 @@ window.TQ = window.TQ || {};
 			归一化到Iphone 6宽度尺寸，而且，高度改为4:3 ==》375*500 （全高度667）
 			也可用于和最新作品栏目
 		*/
-	  ScreenShot.getForPost = function () {
+	  ScreenShot.getForPostAsync= function (onImageReady) {
 	    var WIDTH_IPHONE_6 = 375,
 	      HEIGHT_IPHONE_6 = 667,
-	      fullScreenShot = takeImage(TQ.Graphics.getCanvasBkgColor());
-	    return imageResize(fullScreenShot, WIDTH_IPHONE_6, HEIGHT_IPHONE_6);
+        fullScreenShot = new Image();
+      fullScreenShot.onload = function () {
+        var resultImage =  imageResize(fullScreenShot, WIDTH_IPHONE_6, HEIGHT_IPHONE_6);
+        if (onImageReady) {
+          onImageReady(resultImage);
+        }
+      };
+
+      fullScreenShot.src = takeImage(TQ.Graphics.getCanvasBkgColor());
 	  };
 
     function determineScale(img, maxWidth, maxHeight) {//只缩小， 不放大
@@ -78,8 +87,7 @@ window.TQ = window.TQ || {};
         ctx = canvasTemp.getContext("2d");
         var xc = 0, yc = 0;
         ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
-        return {src: canvasTemp.toDataURL("image/png"),
-                     timestamp: Date.now()};
+        return canvasTemp.toDataURL("image/png");
     }
 
     // ToDo: 支持GIF,
