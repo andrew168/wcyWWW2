@@ -120,6 +120,13 @@ var currScene = null;
     } else if (TQ.ImageCliper) {
       TQ.ImageCliper.clipImage(aFile, function (imageData) {
         if (imageData) {
+          if (imageData instanceof File) {
+            var imageFile = imageData;
+            if (imageFile.size > TQ.Config.MAX_FILE_SIZE) {
+              return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制文件大小 < ' + Math.round(TQ.Config.MAX_FILE_SIZE / 1000) + 'K');
+            }
+          }
+
           addItemByImageData(dstLevel, imageData, matType, callback);
         }
       });

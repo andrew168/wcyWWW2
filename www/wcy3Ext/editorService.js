@@ -391,6 +391,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       } else {
         selectLocalFile(matType, useDevice).then(function (files) {
           var soundFile = files[files.length - 1];
+          if (soundFile.size > TQ.Config.MAX_SOUND_FILE_SIZE) {
+            return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制声音文件大小 < ' + Math.round(TQ.Config.MAX_SOUND_FILE_SIZE/1000) + 'K');
+          }
           TQ.SceneEditor.addItemByFile(dstLevel, soundFile, matType, callback);
         });
       }
