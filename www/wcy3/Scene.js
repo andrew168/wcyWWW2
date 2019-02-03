@@ -629,8 +629,7 @@ TQ = TQ || {};
     this.tMax = 0;
     this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
     this.isShared = false;  //只是打开旧的文件， 没有尚未修改
-    this.title = TQ.Config.UNNAMED_SCENE;
-    ;  // 必须reset, 因为currScene在New新作品的时候， reuse了
+    this.title = TQ.Config.UNNAMED_SCENE; // 必须reset, 因为currScene在New新作品的时候， reuse了
     this.filename = null;
     this.description = null;
     this.ssPath = null; // 初始化， 没有此值
