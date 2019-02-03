@@ -109,6 +109,7 @@ window.TQ = window.TQ || {};
     Config.LOG_LEVEL = 7;  // release 版 为 0,完全没有,输出, 内部release为 1,不用动程序, 也能够看到错误;
     Config.AutoPlay = true; //false , release 版 为 true, 第一次打开网址, 就自动播放;
     Config.AutoSaveEnabled = true;  // release 版 为 true, 自动保存WCY作品到LocalStorage
+    Config.LockPostImageEnabled = false;  // 春节贺卡， 任何人都可以修改
 
     // 本地缓存的参数
     //private, must use get/set
