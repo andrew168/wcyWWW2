@@ -111,13 +111,14 @@ TQ = TQ || {};
         }
       }
 
+      TQ.Locale.onReady(function () {
         TQ.MessageBox.promptWithNoCancel(TQ.Locale.getStr('Click OK to start play'), function () {
           TQ.State.needUserClickToPlayAV = false;
           if (callback) {
             callback();
           }
         }, null, true);
-
+      });
       return false;
     }
     return true;

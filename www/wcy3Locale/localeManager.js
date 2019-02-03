@@ -8,13 +8,24 @@ TQ.Locale = (function () {
         currentLang = null,
         fondNewTag = false,
         dataReady = false,
+        onReadyCallback,
         dict = {},
         self = {
+            isReady: function () {return dataReady;},
+            onReady: onReady,
             getStr: getStr,
             initialize: initialize,
             output: output,
             setLang: setLang
         };
+
+    function onReady(callback) {
+      if (dataReady) {
+        callback();
+      } else {
+        onReadyCallback = callback;
+      }
+    }
 
     function setLang(lang) {
         if (currentLang && (currentLang === lang)) {
@@ -34,6 +45,10 @@ TQ.Locale = (function () {
             if (typeof data === 'object') {
                 dict = data;
                 dataReady = true;
+                if (onReadyCallback) {
+                  onReadyCallback();
+                  onReadyCallback = null;
+                }
             }
         });
     }
