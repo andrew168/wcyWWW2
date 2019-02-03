@@ -27,7 +27,7 @@ window.TQ = window.TQ || {};
     ScreenShot.saveThumbnail = function (album, id) {
         var img = new Image();
         img.onload = function () {
-          album[id] = imageResize(album, id, img, 100, 100);
+          album[id] = imageResize(img, 100, 100);
         };
 
         img.src = takeImage(TQ.Graphics.getCanvasBkgColor());
