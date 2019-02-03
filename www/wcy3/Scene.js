@@ -73,7 +73,7 @@ TQ = TQ || {};
   };
 
   function ensureFirstClick(callback) {
-    if (TQ.State.needUserClickToPlayAV && TQ.State.queryParams && !TQ.State.queryParams.hideFirstClickPrompt) {
+    if (!TQ.State.hideWelcomeAutomatically && TQ.State.needUserClickToPlayAV && TQ.State.queryParams && !TQ.State.queryParams.hideFirstClickPrompt) {
       if (TQ.State.editorMode >= TQ.SceneEditor.MODE.EDIT_OR_PLAY) {
         if (TQUtility.isIOS()) {
           TQ.SoundMgr.stop();
