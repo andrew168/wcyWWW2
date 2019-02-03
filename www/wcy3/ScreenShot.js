@@ -27,7 +27,7 @@ window.TQ = window.TQ || {};
     ScreenShot.saveThumbnail = function (album, id) {
         var img = new Image();
         img.onload = function () {
-            imageResize(album, id, img, 100, 100);
+          album[id] = imageResize(album, id, img, 100, 100);
         };
 
         img.src = takeImage(TQ.Graphics.getCanvasBkgColor());
@@ -50,7 +50,7 @@ window.TQ = window.TQ || {};
         return scale;
     }
 
-    function imageResize(album, id, img, maxWidth, maxHeight) {
+    function imageResize(img, maxWidth, maxHeight) {
         var scale = determineScale(img, maxWidth, maxHeight),
             ctx,
             neededHeight = Math.round(img.height * scale / 8) * 8,
@@ -66,7 +66,7 @@ window.TQ = window.TQ || {};
         ctx = canvasTemp.getContext("2d");
         var xc = 0, yc = 0;
         ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
-        album[id] = {src: canvasTemp.toDataURL("image/png"),
+        return {src: canvasTemp.toDataURL("image/png"),
                      timestamp: Date.now()};
     }
 
