@@ -37,6 +37,18 @@ window.TQ = window.TQ || {};
         return takeImage(TQ.Graphics.getCanvasBkgColor());
     };
 
+	  /*
+			专门针对社交app帖子插图的优化：要求：不失真，宽度最大化，容许高度溢出或不足
+			归一化到Iphone 6宽度尺寸，而且，高度改为4:3 ==》375*500 （全高度667）
+			也可用于和最新作品栏目
+		*/
+	  ScreenShot.getForPost = function () {
+	    var WIDTH_IPHONE_6 = 375,
+	      HEIGHT_IPHONE_6 = 667,
+	      fullScreenShot = takeImage(TQ.Graphics.getCanvasBkgColor());
+	    return imageResize(fullScreenShot, WIDTH_IPHONE_6, HEIGHT_IPHONE_6);
+	  };
+
     function determineScale(img, maxWidth, maxHeight) {//只缩小， 不放大
         var scale = 1;
 

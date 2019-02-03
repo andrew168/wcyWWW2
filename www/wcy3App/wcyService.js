@@ -244,7 +244,7 @@ function WCY($timeout, $http, FileService, WxService, NetService) {
       return save().then(uploadScreenshot);
     }
     tryCounter = 0;
-    var data = TQ.ScreenShot.getDataWithBkgColor();
+    var data = TQ.ScreenShot.getForPost();
     TQ.AssertExt.invalidLogic(!!_ssSign);
     return NetService.doUploadImage(_ssSign, data).then(onUploadSsSuccess, onErrorGeneral);
   }
