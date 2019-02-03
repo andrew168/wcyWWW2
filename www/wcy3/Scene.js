@@ -205,6 +205,12 @@ TQ = TQ || {};
       return;
     }
 
+    this.isReadyToShow = true;
+    if (this.onReadyToShowCallback) {
+      this.onReadyToShowCallback();
+      this.onReadyToShowCallback = null;
+    }
+
     this.isUpdating = true;
     TQ.FrameCounter.update();  // 前进一帧, 只有play和播放的时候, 才移动Frame
     //ToDo:@UI  TQ.TimerUI.update();  // 必须先更新数据, 在更新UI
@@ -228,6 +234,14 @@ TQ = TQ || {};
     TQ.InputMap.restart(); // 必须是Game Cycle中最后一个, 因为JustPressed依赖于它
     TQ.FrameCounter.isNew = false;
     this.isUpdating = false;
+  };
+
+  p.onReadyToShow = function (callback) {
+    if (this.isReadyToShow && callback) {
+      callback();
+    } else {
+      this.onReadyToShowCallback = callback;
+    }
   };
 
   p.update = function (t) {
