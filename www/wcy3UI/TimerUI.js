@@ -194,7 +194,7 @@ TQ.TimerUI = (function () {
     }
 
     function onTranslate(value, id, which) {
-        TQ.Log.debugInfo(value + ',' + id + ',' + which);
+        // TQ.Log.debugInfo(value + ',' + id + ',' + which);
         var t,
             result;
         t = TQ.FrameCounter.f2t(value);
