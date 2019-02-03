@@ -5,8 +5,10 @@ var express = require('express'),
   router = express.Router();
 
 var headlines = ['祝您新年愉快，阖家欢乐！',
-  'BONE教师邦参加教育创变者大会--“进深”， 四川 成都，2019.1.16',
-  '图话--用引擎技术助力教育创新'
+  '"猪"事顺利，财源广进!',
+  '幸福平安, 吉祥如意！'
+  // 'BONE教师邦参加教育创变者大会--“进深”， 四川 成都，2019.1.16',
+  // '图话--用引擎技术助力教育创新'
 ];
 
 router.get('/', function (req, res, next) {
