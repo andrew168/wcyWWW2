@@ -234,30 +234,27 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
     });
   }
 
-  var tryCounter = 0;
-
   function uploadScreenshot() {
+    var q = $q.defer();
     if (!_ssSign) {
-      if (tryCounter++ > 2) {
-        return TQ.Log.debugInfo("failed to uploadScreen after tried 2 times");
-      }
-      return save().then(uploadScreenshot);
+      setTimeout(function () {
+        q.reject({errMsg:"failed to uploadScreen: !ssSign ", data:null});
+      });
+    } else {
+      TQ.AssertExt.invalidLogic(!!_ssSign);
+      TQ.ScreenShot.getForPostAsync(function (data) {
+        NetService.doUploadImage(_ssSign, data).then(
+          function (res) {
+            onUploadSsSuccess(res);
+            q.resolve(res);
+          }, function (err) {
+            onErrorGeneral(err);
+            q.reject(err);
+          });
+      });
     }
-    TQ.AssertExt.invalidLogic(!!_ssSign);
-    tryCounter = 0;
-    q = $q.defer();
-    TQ.ScreenShot.getForPostAsync(function (data) {
-      NetService.doUploadImage(_ssSign, data).then(
-        function (res) {
-          onUploadSsSuccess(res);
-          q.resolve(res);
-        }, function (err) {
-          onErrorGeneral(err);
-          q.reject(err);
-        });
-    });
 
-    return q;
+    return q.promise;
   }
 
   //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）
