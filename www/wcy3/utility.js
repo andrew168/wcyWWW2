@@ -301,6 +301,7 @@ window.TQ = window.TQ || {};
     };
 
     Utility.getShareCodeFromUrl = function(url) {
+      TQ.Log.depreciated('被parseUrl替代，2019.3以后删除');
       return Utility.parseUrl(url).shareCode;
     };
 
