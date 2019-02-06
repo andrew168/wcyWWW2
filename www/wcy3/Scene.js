@@ -112,12 +112,18 @@ TQ = TQ || {};
       }
 
       TQ.Locale.onReady(function () {
-        TQ.MessageBox.promptWithNoCancel(TQ.Locale.getStr('Click OK to start play'), function () {
+        if (TQ.State.isPlayOnly) {
+          TQ.MessageBox.promptWithNoCancel(TQ.Locale.getStr('Click OK to start play'), onOk, null, true);
+        } else {
+          onOk();
+        }
+
+        function onOk() {
           TQ.State.needUserClickToPlayAV = false;
           if (callback) {
             callback();
           }
-        }, null, true);
+        }
       });
       return false;
     }
