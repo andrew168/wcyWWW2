@@ -106,6 +106,14 @@ function UserService($http, $auth) {
             user.city = city;
             user.isValidName = true;
             user.saveToCache();
+            // 有特别能力解决问题的人 superman
+            var superman = ['人人动画_Andrew郅刚', 'toronto1111'];
+            superman.any(function (displayName) {
+              if (user.name === displayName || user.displayName === displayName) {
+                user.canSolve = true;
+              }
+            });
+
             TQ.Log.checkPoint("login successfully!  welcome "+ user.displayName + ", " + user.name);
         } else {
             onGetProfileFailed(netPkg);
