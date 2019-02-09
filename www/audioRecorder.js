@@ -58,7 +58,7 @@ TQ.AudioRecorder = (function () {
             }
             state = STATE_STARTED;
             onStopCallback = callback;
-            recorder.start();
+            recorder && recorder.start();
             if (refreshUI) {
                 refreshUI();
             }
@@ -81,9 +81,9 @@ TQ.AudioRecorder = (function () {
             onStopCallback = defaultCallback;
         }
 
-        recorder.stop();
-        recorder.getBlob(onStopCallback);
-        onStopCallback = null;
+        recorder && recorder.stop();
+        recorder && recorder.getBlob(onStopCallback);
+				onStopCallback = null;
     }
 
     function accept() {
