@@ -328,8 +328,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function onResize() {
-    AppService.configCanvas();
-    forceToRedraw(); // 迫使IOS系统重新绘制canvas上的图像
+    if (!TQ.State.textEditor || !TQ.State.textEditor.isOpening) {
+      AppService.configCanvas();
+      forceToRedraw(); // 迫使IOS系统重新绘制canvas上的图像
+    }
   }
 
   var hasTouch = false,
