@@ -83,6 +83,7 @@ TQ.AudioRecorder = (function () {
 
         recorder && recorder.stop();
         recorder && recorder.getBlob(onStopCallback);
+		    recorder.clear();
 				onStopCallback = null;
     }
 
