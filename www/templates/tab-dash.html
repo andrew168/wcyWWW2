@@ -170,9 +170,9 @@
             <div style="display: block">
                 <div ng-show="false && state.isPlayOnly">播放Only</div>
                 <button class="button button-positive" ng-click="makeOrder()" ng-show="false">下订单</button>
-                <button class="button button-positive" ng-click="testSignUp()">注册</button>
-                <button class="button button-positive" ng-click="testWxLogin('1111')">Wx登录</button>
-                <button class="button button-positive" ng-click="testLogin('1111')">登录toronto1111</button>
+                <button class="button button-positive" ng-click="testSignUp()" ng-show="false">注册</button>
+                <button class="button button-positive" ng-click="testWxLogin('1111')" ng-show="false">Wx登录</button>
+                <button class="button button-positive" ng-click="testLogin('1111')" ng-show="false">登录toronto1111</button>
                 <button class="button button-positive" ng-click="testLogin('2222')" ng-show="false">22</button>
                 <button class="button button-positive" ng-click="testLogin('3333')" ng-show="false">33</button>
                 <button class="button button-positive" ng-click="testLogin('4444')" ng-show="false">44</button>
@@ -204,12 +204,12 @@
 
                 <button class="button button-positive" ng-click="EditorService.forkIt()" ng-show="false">ForkIt</button>
                 <button class="button button-positive" ng-click="EditorService.cloneIt()" ng-show="false">CloneIt</button>
-                <button class="button button-positive" ng-click="testDataService()">素材库读取</button>
-                <button class="button button-positive" ng-click="addTopic()">添加topic</button>
-                <button class="button button-positive" ng-click="updateTopic()">updateTopic</button>
-                <button class="button button-positive" ng-click="getTopics()">获取topic列表</button>
-                <button class="button button-positive" ng-click="attachTopic()">关联素材到主题</button>
-                <button class="button button-positive" ng-click="detachTopic()">取消关联素材到主题</button>
+                <button class="button button-positive" ng-click="testDataService()" ng-show="false">素材库读取</button>
+                <button class="button button-positive" ng-click="addTopic()" ng-show="false">添加topic</button>
+                <button class="button button-positive" ng-click="updateTopic()" ng-show="false">updateTopic</button>
+                <button class="button button-positive" ng-click="getTopics()" ng-show="false">获取topic列表</button>
+                <button class="button button-positive" ng-click="attachTopic()" ng-show="false">关联素材到主题</button>
+                <button class="button button-positive" ng-click="detachTopic()" ng-show="false">取消关联素材到主题</button>
                 <button class="button button-positive" ng-click="EditorService.toAddMode()">编辑</button>
                 <button class="weui-btn weui-btn_mini weui-btn_primary" ng-click="getOutro(); EditorService.replay()">重播</button>
                 <button class="button button-positive" ng-click="EditorService.preview()">预览</button>
@@ -228,9 +228,9 @@
                 <button class="button button-positive" ng-click="insertPropFromLocal()">+本地道具</button>
                 <button class="button button-positive" ng-click="insertSound()" ng-show="true">素材库声音</button>
                 <button class="button button-positive" ng-click="insertSoundFromLocal(false)" ng-show="true">本地声音</button>
-                <button class="button button-positive" ng-click="insertSoundFromLocal(true)" ng-show="true">开始录音</button>
-                <button class="button button-positive" ng-click="stopAudioRecording()" ng-show="true">停止录音</button>
-                <button class="button button-positive" ng-click="onStopTryMusic(true)" ng-show="true">停止播放录音</button>
+                <button class="button button-positive" ng-click="insertSoundFromLocal(true)" ng-show="false">开始录音</button>
+                <button class="button button-positive" ng-click="stopAudioRecording()" ng-show="false">停止录音</button>
+                <button class="button button-positive" ng-click="onStopTryMusic(true)" ng-show="false">停止播放录音</button>
                 <button class="button button-positive" ng-click="EditorService.attachTextBubble()" ng-show="false">加气泡</button>
                 <button class="button button-positive" ng-click="EditorService.detachTextBubble()" ng-show="false">删气泡</button>
                 <button class="btn-big ion-ios-copy-outline" ng-click="EditorService.mCopyToggle()" ng-show="false">mCopy</button>
@@ -267,16 +267,16 @@
                     </ui-select-choices>
                 </ui-select>
 
-                <button class="button button-positive" my-click="uploadScreenshot()">截屏上传</button>
-                <button class="button button-positive" my-click="EditorService.saveScreenShot()">截屏保存</button>
+                <button class="button button-positive" my-click="uploadScreenshot()" ng-show="false">截屏上传</button>
+                <button class="button button-positive" my-click="EditorService.saveScreenShot()" ng-show="false">截屏保存</button>
 
                 <button class="button button-positive" ng-click="undo()">undo</button>
                 <button class="button button-positive" ng-click="redo()">redo</button>
                 <button class="button button-positive" ng-click="addLevel()" ng-show="true">建立新level</button>
                 <button class="button button-positive" ng-click="deleteCurrentLevel()" ng-show="false">删除当前level</button>
                 <button class="button button-positive" ng-click="deleteLevel(2)" ng-show="false">删除level 2</button>
-                <button class="button button-positive" ng-click="gotoPreLevel()">前一个level</button>
-                <button class="button button-positive" ng-click="gotoNextLevel()">后一个level</button>
+                <button class="button button-positive" ng-click="gotoPreLevel()" ng-show="false">前一个level</button>
+                <button class="button button-positive" ng-click="gotoNextLevel()" ng-show="false">后一个level</button>
             </div>
 
 
