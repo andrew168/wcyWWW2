@@ -54,10 +54,7 @@ TQ = TQ || {};
 
   p.play = function() {
     if (!this.domEle) {
-      var self = this;
-      return this.createVideoElement(self.src, function () {
-        self.play();
-      })
+      TQ.AssertExt.depreciated('不支持这种case，必须有domEle，因为这是内部函数, 应该简化');
     }
     this.resize();
     this.addToDom();
