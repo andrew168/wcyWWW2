@@ -157,6 +157,10 @@ this.TQ = this.TQ || {};
                         TQ.Log.error(item.type +": 未处理的资源类型!");
                     }
                     break;
+                case createjs.LoadQueue.VIDEO:
+                    altResId = "";
+                    item.type = createjs.LoadQueue.VIDEO;
+                    break;
 
                 default :
                     TQ.Log.error(item.type +": 未处理的资源类型!");
