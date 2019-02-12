@@ -98,7 +98,7 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.getScale = function () {
-        return CreateJSAdapter.getScaleInWorld();
+        return this.getScaleInWorld();
     };
 
     CreateJSAdapter.getScaleInWorld = function () {
