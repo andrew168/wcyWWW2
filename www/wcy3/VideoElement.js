@@ -8,6 +8,17 @@ TQ = TQ || {};
   'use strict';
   function VideoElement(level, jsonObj) {
     assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
+    if (jsonObj && jsonObj.data && (jsonObj.data instanceof HTMLVideoElement )) {
+      jsonObj.x = 0;
+      jsonObj.x = 0;
+      jsonObj.width = jsonObj.data.videoWidth;
+      jsonObj.height = jsonObj.data.videoHeight;
+    }
+
+    this.lastX100 = -100;
+    this.lastY100 = -100;
+    this.lastW100 = 10000;
+    this.lastH100 = 10000;
     this.instance = null;
     this.isFirstTimePlay = true;
     if (!!jsonObj.t0) { // 记录声音的插入点， 只在插入点开始播放
@@ -15,17 +26,17 @@ TQ = TQ || {};
     } else {
       this.t0 = 0;
     }
-    TQ.Element.call(this, level, jsonObj);
+    TQ.Rectangle.call(this, level, jsonObj);
     this.isCrossLevel = false;
   }
 
   VideoElement.srcToObj = function (src) {
     return ({type: "SOUND", src: src, isVis: 1});
   };
-  var p = VideoElement.prototype = Object.create(TQ.Element.prototype);
-  VideoElement.prototype.constructor = VideoElement;
+  var p = VideoElement.prototype = Object.create(TQ.Rectangle.prototype);
+  p.constructor = VideoElement;
   p.getImageResource = function (item, jsonObj) {
-    return _createVideoElement(jsonObj.src);
+    TQ.AssertExt.invalidLogic('ToDo');
   };
   p._parent_doShow = p.doShow;
   p.doShow = function (isVisible) {
@@ -58,6 +69,7 @@ TQ = TQ || {};
 
     if (!TQ.VideoMgr.isSupported) return;
 
+    this.displayObj = this.createImage();
     var resource,
       resourceId;
     if (!!desc.data) {
@@ -100,6 +112,7 @@ TQ = TQ || {};
   {
     // 这是sound的专用类，所以，执行到此的必然是sound，
     TQ.VideoMgr.addItem(this);
+    this._parent_doAddItemToStage();
   };
 
   p._parent_calculateLastFrame = p.calculateLastFrame;
@@ -120,6 +133,7 @@ TQ = TQ || {};
   };
 
   p._doRemoveFromStage = function () {
+    this._parent_doRemoveFromStage();
     if (!this.isCrossLevel) { // 支持跨场景的声音
       this.stop();
     }
@@ -275,5 +289,21 @@ TQ = TQ || {};
     }
     return result;
   };
+
+  p.parent_update = p.update;
+  p.update = function (t, noRecording) {
+    this.parent_update(t, noRecording);
+    if ((Math.round(this.jsonObj.x * 100) !== Math.round(this.lastX100)) ||
+      (Math.round(this.jsonObj.y * 100) !== Math.round(this.lastY100)) ||
+      (Math.round(this.getWidth() * 100) !== Math.round(this.lastW100)) ||
+      (Math.round(this.getHeight() * 100) !== Math.round(this.lastH100)) ) {
+      this.lastX100 = Math.round(this.jsonObj.x * 100);
+      this.lastY100 = Math.round(this.jsonObj.y * 100);
+      this.lastW100 = Math.round(this.getWidth() * 100);
+      this.lastH100 = Math.round(this.getHeight() * 100);
+      this.instance.updateSize(this.lastX100/100, this.lastY100/100, this.lastW100/100, this.lastH100/100);
+    }
+  };
+
   TQ.VideoElement = VideoElement;
 }());

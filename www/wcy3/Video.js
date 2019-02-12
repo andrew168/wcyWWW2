@@ -184,7 +184,18 @@ TQ = TQ || {};
     // ele.controls = true;
     // ele.setAttribute("controls", "false");
     self.domEle = ele;
+    this.updateSize(0, 200, 300, 300);
     self.addToDom();
+  };
+
+  p.updateSize = function (x, y, w, h) {
+    if (this.domEle) {
+      this.domEle.style.visibility = 'none';
+      this.domEle.style.top = (TQ.Config.workingRegionHeight - y) + 'px';
+      this.domEle.style.left = x + 'px';
+      this.domEle.style.width = w + 'px';
+      this.domEle.style.height = h + 'px';
+    }
   };
 
   p.getDuration = function () {
