@@ -116,6 +116,13 @@ window.TQ = window.TQ || {};
         return !(!desc ||
         (!desc.src && (srcNotNull.indexOf(desc.type) >=0)));
     };
+    Element.createHitArea = function (host, rotationRelative, w, h) {
+      var shape = new createjs.Shape();
+      shape.rotation = rotationRelative; //相对于它host元素的角度，0， 因为hitArea总是随host主体转动的;
+      shape.graphics.beginFill("#F00").drawRect(0, 0, w, h);
+      TQ.DirtyFlag.setElement(host);
+      return shape;
+    };
 
     // 成员函数
     p.show = function (isVisible) {
