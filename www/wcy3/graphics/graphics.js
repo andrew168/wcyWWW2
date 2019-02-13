@@ -18,6 +18,7 @@ TQ.Graphics = (function () {
         drawSolidCircle: drawSolidCircle,
         drawCircle: drawCircle,
         drawRect: drawRect,
+        drawSolidRect: drawSolidRect,
         drawRectC: drawRectC,
         drawStar: drawStar,
         getCanvas: getCanvas,
@@ -119,26 +120,34 @@ TQ.Graphics = (function () {
       return drawCircle(shape, x, y, radius, gradientColorS, gradientColorE, color);
     }
 
-  function drawBubble(shape, bubble) {
+    function drawBubble(shape, bubble) {
         //  正中心是 原点
         var geoModel = calBubbleModel(bubble.xmin, bubble.ymin, bubble.width, bubble.height,
             bubble.radiusTL, bubble.radiusTR, bubble.radiusBR, bubble.radiusBL, bubble.anchor);
         drawPolygon(shape, geoModel);
     }
 
-    function drawRect(shape, x0,y0, w, h, radius) {
+    function drawRect(shape, x0,y0, w, h, radius, solidColor) {
         var xc = x0 + w/2,
             yc = y0 + h/2;
-        drawRectC(shape, xc, yc, w, h, radius);
+        drawRectC(shape, xc, yc, w, h, radius, solidColor);
     }
 
-    function drawRectC(shape, xc, yc, w, h, radius) {
+	  function drawSolidRect(shape, solidColor, x0, y0, w, h, radius) {
+	    return drawRect(shape, x0, y0, w, h, radius, solidColor);
+	  }
+
+	  function drawRectC(shape, xc, yc, w, h, radius, solidColor) {
         // 左下角， + pivot
         var thickness = 1,
             edgeColor = "#000";
 
         radius = (radius === undefined) ? 2 : radius;
-        shape.graphics.ss(thickness).beginStroke(edgeColor).
+        var strokes = shape.graphics;
+        if (solidColor) {
+          strokes = strokes.beginFill(solidColor);
+        }
+        strokes.ss(thickness).beginStroke(edgeColor).
             drawRoundRect(xc, yc, w, h, radius).
             endFill();
     }

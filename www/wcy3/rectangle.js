@@ -17,13 +17,15 @@ TQ = TQ || {};
     p.constructor = Rectangle; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
     p.parent_fillGap = p.fillGap;
     p.fillGap = function (desc) {
-        desc.pivotX = 0;
-        desc.pivotY = 0;
+        if (desc.pivotX === undefined) {
+          desc.pivotX = 0.5;
+          desc.pivotY = 0.5;
+        }
         if (desc.width === undefined) {
-            desc.width = 200;
+            desc.width = 100;
         }
         if (desc.height === undefined) {
-            desc.height = 100;
+            desc.height = desc.width;
         }
 
         return this.parent_fillGap(desc);
@@ -32,13 +34,13 @@ TQ = TQ || {};
     p.createImage = function () {
         var jsonObj = this.jsonObj;
         var s = new createjs.Shape();
+        var w = this.getWidth(),
+          h = this.getHeight();
+
         s.x = jsonObj.x;
         s.y = jsonObj.y;
         s.graphics.clear(); // 清除老的边框
-        TQ.Graphics.drawRect(s, 0, 0, this.getWidth(), this.getHeight());
-        Rectangle.RADIUS = Math.min(this.getWidth(), this.getHeight()) / 2;
-        TQ.Graphics.drawStar(s, 0, 0, 3 * Rectangle.RADIUS, 3 * Rectangle.RADIUS);
-        TQ.Graphics.drawCircle(s, 0, 0, Rectangle.RADIUS);
+        TQ.Graphics.drawSolidRect(s, '#FF0000', -jsonObj.pivotX * w, -h -jsonObj.pivotY * h, w, h);
         return s;
     };
 

@@ -220,13 +220,16 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertRectangle = function () {
-      // EditorService.insertRectangle(200, 400, 300, 300);
-        // EditorService.insertRectangle(200, 400, 200, 200);
-        //EditorService.insertRectangle(200, 400, 150, 150);
-        EditorService.insertRectangle(200, 400, 100, 100);
-        // EditorService.insertRectangle(200, 400, 50, 50);
-        // EditorService.insertRectangle(200, 400, 10, 10);
-        // EditorService.insertRectangle(200, 400, 5, 5);
+      EditorService.insertRectangle(0, 0, 100, 100);
+      EditorService.insertRectangle(100, 0, 100, 100);
+      EditorService.insertRectangle(200, 0, 100, 100);
+      EditorService.insertRectangle(0, 100, 100, 100);
+      EditorService.insertRectangle(100, 100, 100, 100);
+      EditorService.insertRectangle(200, 100, 100, 100);
+      EditorService.insertRectangle(0, 200, 100, 100);
+      EditorService.insertRectangle(100, 200, 100, 100);
+      EditorService.insertRectangle(200, 200, 100, 100);
+      EditorService.insertRectangle(100, 300, 100, 100);
     };
 
     $scope.startRecord = function() {
