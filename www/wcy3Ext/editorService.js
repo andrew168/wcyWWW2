@@ -752,6 +752,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var desc = {
       src: null,
       type: TQ.ElementType.RECTANGLE,
+      eType: TQ.Element.ETYPE_RECTANGLE,
       autoFit: TQ.Element.FitFlag.NO,
       x: x,
       y: y,
