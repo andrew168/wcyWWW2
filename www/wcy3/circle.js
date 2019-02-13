@@ -39,11 +39,13 @@ TQ = TQ || {};
     var s = new createjs.Shape();
     var x0 = jsonObj.x,
       y0 = jsonObj.y,
+      w = this.getWidth(),
+      h = this.getHeight(),
       r = jsonObj.radius;
     s.x = x0;
     s.y = y0;
     s.graphics.clear(); // 清除老的边框
-    TQ.Graphics.drawSolidCircle(s, '#FF0000', x0, y0, r);
+    TQ.Graphics.drawSolidCircle(s, '#FF0000', jsonObj.pivotX * w, -jsonObj.pivotY * h, r);
     return s;
   };
 
@@ -56,11 +58,11 @@ TQ = TQ || {};
   };
 
   p.getWidth = function () {
-    return this.jsonObj.radius;
+    return this.jsonObj.radius * 2;
   };
 
   p.getHeight = function () {
-    return this.jsonObj.radius;
+    return this.jsonObj.radius * 2;
   };
 
   TQ.Circle = Circle;
