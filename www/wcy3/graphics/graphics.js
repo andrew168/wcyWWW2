@@ -15,6 +15,7 @@ TQ.Graphics = (function () {
 
     return {
         drawBubble: drawBubble,
+        drawSolidCircle: drawSolidCircle,
         drawCircle: drawCircle,
         drawRect: drawRect,
         drawRectC: drawRectC,
@@ -96,7 +97,7 @@ TQ.Graphics = (function () {
         return canvasStyle;
     }
 
-    function drawCircle(shape, x, y, radius, gradientColorS, gradientColorE) { //shape is createJS.Shape
+    function drawCircle(shape, x, y, radius, gradientColorS, gradientColorE, solidColor) { //shape is createJS.Shape
         var thickness = 1,
             edgeColor = "#000";
 
@@ -105,12 +106,20 @@ TQ.Graphics = (function () {
             gradientColorE = "#F00";
         }
 
-        shape.graphics.ss(thickness).beginStroke(edgeColor).
+        var strokes = shape.graphics;
+        if (solidColor) {
+          strokes = strokes.beginFill(solidColor);
+        }
+        strokes.ss(thickness).beginStroke(edgeColor).
             beginRadialGradientFill([gradientColorS, gradientColorE], [0, 1], 0, 0, 0, 0, 0, radius).
             drawCircle(x, y, radius).endFill();
     }
 
-    function drawBubble(shape, bubble) {
+    function drawSolidCircle(shape, color, x, y, radius, gradientColorS, gradientColorE) { //shape is createJS.Shape
+      return drawCircle(shape, x, y, radius, gradientColorS, gradientColorE, color);
+    }
+
+  function drawBubble(shape, bubble) {
         //  正中心是 原点
         var geoModel = calBubbleModel(bubble.xmin, bubble.ymin, bubble.width, bubble.height,
             bubble.radiusTL, bubble.radiusTR, bubble.radiusBR, bubble.radiusBL, bubble.anchor);

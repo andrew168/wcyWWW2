@@ -192,7 +192,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
 
     $scope.insertPeople = function () {
         EditorService.insertPeopleImage("https://res.cloudinary.com/eplan/image/upload/v1501348053/c29.png",
-            300, 300);
+        300, 300);
     };
 
     $scope.insertBkImage = function () {
@@ -206,8 +206,21 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         // EditorService.gotoNextLevel();
     };
 
+    $scope.insertCircle = function () {
+      EditorService.insertCircle(0, 0, 50);
+      EditorService.insertCircle(100, 0, 50);
+      EditorService.insertCircle(200, 0, 50);
+      EditorService.insertCircle(0, 100, 50);
+      EditorService.insertCircle(100, 100, 50);
+      EditorService.insertCircle(200, 100, 50);
+      EditorService.insertCircle(0, 200, 50);
+      EditorService.insertCircle(100, 200, 50);
+      EditorService.insertCircle(200, 200, 50);
+      EditorService.insertCircle(100, 300, 50);
+    };
+
     $scope.insertRectangle = function () {
-        // EditorService.insertRectangle(200, 400, 300, 300);
+      // EditorService.insertRectangle(200, 400, 300, 300);
         // EditorService.insertRectangle(200, 400, 200, 200);
         //EditorService.insertRectangle(200, 400, 150, 150);
         EditorService.insertRectangle(200, 400, 100, 100);

@@ -123,6 +123,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     insertImageDesc: insertImageDesc,
     insertText: insertText,
     insertRectangle: insertRectangle,
+    insertCircle: insertCircle,
     insertSound: insertSound,
     insertSnow: TQ.ParticleMgr.insertSnow,
     insertRain: TQ.ParticleMgr.insertRain,
@@ -728,6 +729,23 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     TQ.SceneEditor.addItem(desc);
     // TQ.TextEditor.initialize();
     // TQ.TextEditor.addText(TQ.Dictionary.defaultText);
+  }
+
+  function insertCircle(x, y, r) {
+    var desc = {
+      src: null,
+      type: TQ.ElementType.CIRCLE,
+      eType: TQ.Element.ETYPE_CIRCLE,
+      autoFit: TQ.Element.FitFlag.NO,
+      x: x,
+      y: y,
+      width: r,
+      height: r,
+      radius: r,
+      color: '#FF0000'
+    };
+
+    TQ.SceneEditor.addItem(desc);
   }
 
   function insertRectangle(x, y, w, h) {

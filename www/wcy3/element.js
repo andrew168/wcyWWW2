@@ -20,6 +20,7 @@ window.TQ = window.TQ || {};
         RAIN: "RainEffect", // TBD
         SNOW: "SnowEffect", // TBD
         RECTANGLE: "Rectangle",
+        CIRCLE: "Circle",
         SOUND: "SOUND",
         TEXT: "Text",
         TEXT_BUBBLE: "TextBubble"
@@ -86,6 +87,8 @@ window.TQ = window.TQ || {};
     Element.ETYPE_BUTTON = 6; //按钮
     Element.ETYPE_AUDIO = 7; // 声音
     Element.ETYPE_PART = 8; // 零件
+    Element.ETYPE_CIRCLE = 9; //
+    Element.ETYPE_RECTANGLE = 10; //
 
     // 元素的类别资源类别
     Element.TYPE_BITMAP = 2; // 图片
