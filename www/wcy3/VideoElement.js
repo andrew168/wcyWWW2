@@ -8,9 +8,9 @@ TQ = TQ || {};
   'use strict';
   function VideoElement(level, jsonObj) {
     assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
-    if (jsonObj && jsonObj.data && (jsonObj.data instanceof HTMLVideoElement )) {
-      jsonObj.x = 0;
-      jsonObj.x = 0;
+    if (jsonObj && (jsonObj.width === undefined) && jsonObj.data && (jsonObj.data instanceof HTMLVideoElement )) {
+      jsonObj.pivotX = 0.5;
+      jsonObj.pivotY = 0.5;
       jsonObj.width = jsonObj.data.videoWidth;
       jsonObj.height = jsonObj.data.videoHeight;
     }
@@ -301,7 +301,9 @@ TQ = TQ || {};
       this.lastY100 = Math.round(this.jsonObj.y * 100);
       this.lastW100 = Math.round(this.getWidth() * 100);
       this.lastH100 = Math.round(this.getHeight() * 100);
-      this.instance.updateSize(this.lastX100/100, this.lastY100/100, this.lastW100/100, this.lastH100/100);
+      var w = this.lastW100 / 100 * this.getScale().sx,
+        h = this.lastH100 / 100 * this.getScale().sy;
+      this.instance.updateSize(this.lastX100/100, this.lastY100/100, w, h);
     }
   };
 

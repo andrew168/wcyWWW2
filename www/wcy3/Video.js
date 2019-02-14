@@ -26,6 +26,7 @@ TQ = TQ || {};
     lastHeight,
     lastWith;
 
+  Video.loadVideoRes = loadVideoRes;
   Video.play = function (resId, onStarted) {
     var instance = new Video(resId, function () {
       instance.play();
@@ -146,16 +147,27 @@ TQ = TQ || {};
     self.isGenerating = true;
     self.src = src;
 
-    var starTime = Date.now();
-    var ele = document.createElement('video');
+    loadVideoRes(src, function (ele) {
+      self.domEle = ele;
+      self.addToDom();
+      if (onloadeddata) {
+        onloadeddata(self);
+      }
+    });
+  };
+
+  function loadVideoRes(src, callback) {
+    var ele = document.createElement('video'),
+      starTime = Date.now();
 
     ele.addEventListener('loadeddata', onLoadedData, false);
 
     function onLoadedData(evt) {
       self.isGenerating = false;
+      // this.updateSize();
       console.log(evt.srcElement.id + ' :' + starTime + ':' + (Date.now() - starTime) + " who fast: onloadeddata");
-      if (onloadeddata) {
-        onloadeddata(evt);
+      if (callback) {
+        callback(ele);
       }
     }
 
@@ -183,16 +195,14 @@ TQ = TQ || {};
     ele.className = 'video-layer video-container';
     // ele.controls = true;
     // ele.setAttribute("controls", "false");
-    self.domEle = ele;
-    this.updateSize(0, 200, 300, 300);
-    self.addToDom();
-  };
+  }
 
   p.updateSize = function (x, y, w, h) {
     if (this.domEle) {
+      var cssPos = TQ.Utility.world2css(x, y);
       this.domEle.style.visibility = 'none';
-      this.domEle.style.top = (TQ.Config.workingRegionHeight - y) + 'px';
-      this.domEle.style.left = x + 'px';
+      this.domEle.style.bottom = Math.round(cssPos.y) + 'px';
+      this.domEle.style.left = Math.round(cssPos.x) + 'px';
       this.domEle.style.width = w + 'px';
       this.domEle.style.height = h + 'px';
     }
