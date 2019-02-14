@@ -197,17 +197,6 @@ TQ = TQ || {};
     // ele.setAttribute("controls", "false");
   }
 
-  p.updateSize = function (x, y, w, h) {
-    if (this.domEle) {
-      var cssPos = TQ.Utility.world2css(x, y);
-      this.domEle.style.visibility = 'none';
-      this.domEle.style.bottom = Math.round(cssPos.y) + 'px';
-      this.domEle.style.left = Math.round(cssPos.x) + 'px';
-      this.domEle.style.width = w + 'px';
-      this.domEle.style.height = h + 'px';
-    }
-  };
-
   p.getDuration = function () {
     if (this.duration && !isNaN(this.duration)) {
       return this.duration;

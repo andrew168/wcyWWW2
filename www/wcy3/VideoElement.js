@@ -303,7 +303,21 @@ TQ = TQ || {};
       this.lastH100 = Math.round(this.getHeight() * 100);
       var w = this.lastW100 / 100 * this.getScale().sx,
         h = this.lastH100 / 100 * this.getScale().sy;
-      this.instance.updateSize(this.lastX100/100, this.lastY100/100, w, h);
+      this.updateSize(this.lastX100/100, this.lastY100/100, w, h);
+    }
+  };
+
+  p.updateSize = function (x, y, w, h) {
+    if (this.instance && this.instance.domEle) {
+      var xLeft = x - w * this.jsonObj.pivotX,
+        yBottom = y - h * this.jsonObj.pivotY,
+        cssPos = TQ.Utility.world2css(xLeft, yBottom),
+        domEleStyle = this.instance.domEle.style;
+      domEleStyle.visibility = 'none';
+      domEleStyle.bottom = Math.round(cssPos.y) + 'px';
+      domEleStyle.left = Math.round(cssPos.x) + 'px';
+      domEleStyle.width = w + 'px';
+      domEleStyle.height = h + 'px';
     }
   };
 
