@@ -320,33 +320,30 @@ TQ = TQ || {};
     var w = this.getWidth() * this.getScale().sx,
       h = this.getHeight() * this.getScale().sy;
 
-    if ((Math.round(this.jsonObj.x * 100) !== Math.round(this.lastX100)) ||
-      (Math.round(this.jsonObj.y * 100) !== Math.round(this.lastY100)) ||
-      (Math.round(w * 100) !== Math.round(this.lastW100)) ||
-      (Math.round(h * 100) !== Math.round(this.lastH100)) ) {
-      this.lastX100 = Math.round(this.jsonObj.x * 100);
-      this.lastY100 = Math.round(this.jsonObj.y * 100);
-      this.lastW100 = Math.round(w * 100);
-      this.lastH100 = Math.round(h * 100);
-      var w = this.lastW100 / 100,
-        h = this.lastH100 / 100;
-      this.updateSize(this.lastX100/100, this.lastY100/100, w, h, this.jsonObj.rotation);
-    }
+    this.lastX100 = Math.round(this.jsonObj.x * 100);
+    this.lastY100 = Math.round(this.jsonObj.y * 100);
+    this.lastW100 = Math.round(w * 100);
+    this.lastH100 = Math.round(h * 100);
+    w = this.lastW100 / 100;
+    h = this.lastH100 / 100;
+    this.updateSize(this.lastX100 / 100, this.lastY100 / 100, w, h, this.jsonObj.rotation);
   };
 
   p.updateSize = function (x, y, w, h, rotation) {
-    if (this.instance && this.instance.domEle) {
-      var xLeft = x - w * this.jsonObj.pivotX,
-        yBottom = y - h * this.jsonObj.pivotY,
-        cssPos = TQ.Utility.world2css(xLeft, yBottom),
-        domEleStyle = this.instance.domEle.style;
-      domEleStyle.visibility = 'none';
-      domEleStyle.bottom = Math.round(cssPos.y) + 'px';
-      domEleStyle.left = Math.round(cssPos.x) + 'px';
-      domEleStyle.width = w + 'px';
-      domEleStyle.height = h + 'px';
-      domEleStyle.transform = 'rotate(' + (-rotation) + 'deg)';
+    if (!this.instance || !this.instance.domEle) {
+      return;
     }
+
+    var xLeft = x - w * this.jsonObj.pivotX,
+      yBottom = y - h * this.jsonObj.pivotY,
+      cssPos = TQ.Utility.world2css(xLeft, yBottom),
+      domEleStyle = this.instance.domEle.style;
+    domEleStyle.visibility = 'none';
+    domEleStyle.bottom = Math.round(cssPos.y) + 'px';
+    domEleStyle.left = Math.round(cssPos.x) + 'px';
+    domEleStyle.width = w + 'px';
+    domEleStyle.height = h + 'px';
+    domEleStyle.transform = 'rotate(' + (-rotation) + 'deg)';
   };
 
   TQ.VideoElement = VideoElement;
