@@ -317,16 +317,19 @@ TQ = TQ || {};
   p.parent_update = p.update;
   p.update = function (t, noRecording) {
     this.parent_update(t, noRecording);
+    var w = this.getWidth() * this.getScale().sx,
+      h = this.getHeight() * this.getScale().sy;
+
     if ((Math.round(this.jsonObj.x * 100) !== Math.round(this.lastX100)) ||
       (Math.round(this.jsonObj.y * 100) !== Math.round(this.lastY100)) ||
-      (Math.round(this.getWidth() * 100) !== Math.round(this.lastW100)) ||
-      (Math.round(this.getHeight() * 100) !== Math.round(this.lastH100)) ) {
+      (Math.round(w * 100) !== Math.round(this.lastW100)) ||
+      (Math.round(h * 100) !== Math.round(this.lastH100)) ) {
       this.lastX100 = Math.round(this.jsonObj.x * 100);
       this.lastY100 = Math.round(this.jsonObj.y * 100);
-      this.lastW100 = Math.round(this.getWidth() * 100);
-      this.lastH100 = Math.round(this.getHeight() * 100);
-      var w = this.lastW100 / 100 * this.getScale().sx,
-        h = this.lastH100 / 100 * this.getScale().sy;
+      this.lastW100 = Math.round(w * 100);
+      this.lastH100 = Math.round(h * 100);
+      var w = this.lastW100 / 100,
+        h = this.lastH100 / 100;
       this.updateSize(this.lastX100/100, this.lastY100/100, w, h);
     }
   };
