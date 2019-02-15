@@ -22,9 +22,7 @@ TQ = TQ || {};
   Video.PLAY_FAILED = 310;
   Video.INTERRUPT_NONE = 320;
 
-  var contentDiv,
-    lastHeight,
-    lastWith;
+  var contentDiv;
 
   Video.loadVideoRes = loadVideoRes;
   Video.play = function (resId, onStarted) {
@@ -57,7 +55,6 @@ TQ = TQ || {};
     if (!this.domEle) {
       TQ.AssertExt.depreciated('不支持这种case，必须有domEle，因为这是内部函数, 应该简化');
     }
-    this.resize();
     this.addToDom();
     if (this.domEle) {
       this.domEle.style.visibility = 'visible';
@@ -86,7 +83,6 @@ TQ = TQ || {};
 
   p.addToDom = function () {
     if (!this.isInDom) {
-      this.resize();
       this.isInDom = true;
       this.duration = this.domEle.duration;
       if (!contentDiv) {
@@ -101,21 +97,6 @@ TQ = TQ || {};
         contentDiv.appendChild(this.domEle);
       }
       this.playState = Video.PLAY_SUCCEEDED;
-    }
-  };
-
-  p.resize = function () {
-    if (!this.domEle) {
-      return;
-    }
-
-    if (!this.isInDom || (lastWith !== TQ.Config.workingRegionWidth) || (lastHeight !== TQ.Config.workingRegionHeight)) {
-      this.domEle.style.width = TQ.Config.workingRegionWidth + 'px';
-      this.domEle.style.height = TQ.Config.workingRegionHeight + 'px';
-      this.domEle.style.left = TQ.Config.workingRegionX0 + 'px';
-      this.domEle.style.top = TQ.Config.workingRegionY0 + 'px';
-      lastWith = TQ.Config.workingRegionWidth;
-      lastHeight = TQ.Config.workingRegionHeight;
     }
   };
 
