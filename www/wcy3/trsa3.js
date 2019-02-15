@@ -278,8 +278,17 @@ var TQ = TQ || {};
                 if (Math.abs(newScaleX) < 0.00001) {
                     console.warn("Too small");
                 } else {
-                    TQ.CommandMgr.directScaleAndRotate(startEle, {sx: newScaleX, sy: newScaleY}, startTrsa.ang + deltaTrsa.ang);
-                    isMultiTouching = true;
+                  if (startEle.isoScale) {
+                    var isoScale = (newScaleX + newScaleY) / 2;
+                    newScaleX = isoScale;
+                    newScaleY = isoScale;
+                  }
+
+                  TQ.CommandMgr.directScaleAndRotate(startEle, {
+                    sx: newScaleX,
+                    sy: newScaleY
+                  }, startTrsa.ang + deltaTrsa.ang);
+                  isMultiTouching = true;
                 }
             }
         }

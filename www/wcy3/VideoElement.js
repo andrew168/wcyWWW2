@@ -13,6 +13,7 @@ TQ = TQ || {};
       jsonObj.pivotY = 0.5;
       jsonObj.width = jsonObj.data.videoWidth;
       jsonObj.height = jsonObj.data.videoHeight;
+      jsonObj.isoScale = true;
     }
 
     this.lastX100 = -100;
