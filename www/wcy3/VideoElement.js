@@ -330,11 +330,11 @@ TQ = TQ || {};
       this.lastH100 = Math.round(h * 100);
       var w = this.lastW100 / 100,
         h = this.lastH100 / 100;
-      this.updateSize(this.lastX100/100, this.lastY100/100, w, h);
+      this.updateSize(this.lastX100/100, this.lastY100/100, w, h, this.jsonObj.rotation);
     }
   };
 
-  p.updateSize = function (x, y, w, h) {
+  p.updateSize = function (x, y, w, h, rotation) {
     if (this.instance && this.instance.domEle) {
       var xLeft = x - w * this.jsonObj.pivotX,
         yBottom = y - h * this.jsonObj.pivotY,
@@ -345,6 +345,7 @@ TQ = TQ || {};
       domEleStyle.left = Math.round(cssPos.x) + 'px';
       domEleStyle.width = w + 'px';
       domEleStyle.height = h + 'px';
+      domEleStyle.transform = 'rotate(' + (-rotation) + 'deg)';
     }
   };
 
