@@ -180,7 +180,7 @@ var currScene = null;
 
   function addVideoItem(dstLevel, aFile, matType, callback) {
     if (TQUtility.isLocalFile(aFile)) {
-      TQ.VideoMgr.play(TQUtility.fileToUrl(aFile, {}), doAdd);
+      TQ.VideoMgr.play(TQUtility.fileToUrl(aFile, {}), doAdd); //
     } else {
       TQ.AssertExt.invalidLogic(false, "video 应该是本地视频文件");
     }
@@ -189,11 +189,16 @@ var currScene = null;
       if (inst) {
         console.log(inst);
       }
+      var maxDisplay = TQ.VideoElement.createDescFromResource(inst.domEle);
       var desc = {
         data: !inst ? aFile: inst.domEle,
+        x: maxDisplay.x,
+        y: maxDisplay.y,
+        width: maxDisplay.width,
+        height: maxDisplay.height,
         src: !inst ? aFile : inst.src,
         type: TQ.ElementType.VIDEO,
-        autoFit: determineAutoFit(matType),
+        autoFit: TQ.Element.FitFlag.NO,
         dstLevel: dstLevel,
         eType: TQ.MatType.toEType(matType)
       };

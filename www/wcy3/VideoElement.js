@@ -33,6 +33,30 @@ TQ = TQ || {};
   VideoElement.srcToObj = function (src) {
     return ({type: "SOUND", src: src, isVis: 1});
   };
+
+  VideoElement.createDescFromResource = function (domEle) {
+    if (domEle) {
+      var x = 0,
+        y,
+        w = TQ.Config.workingRegionWidth,
+        h,
+      xc, yc;
+      h = domEle.videoHeight * w / domEle.videoWidth;
+      y = (TQ.Config.workingRegionHeight - h) / 2;
+      xc = x + w/2;
+      yc = y + h/2;
+
+      return {
+        x: xc,
+        y: yc,
+        width: w,
+        height: h
+      }
+    } else {
+      return {};
+    }
+  };
+
   var p = VideoElement.prototype = Object.create(TQ.Rectangle.prototype);
   p.constructor = VideoElement;
   p.getImageResource = function (item, jsonObj) {
