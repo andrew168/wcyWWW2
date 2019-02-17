@@ -88,6 +88,10 @@ TQ = TQ || {};
     if (VideoMgr.items.indexOf(ele) >= 0) { // 避免同一个元素（跨场景的），重复插入
       return;
     }
+    if (ele.instance && ele.instance.domEle) {
+      ele.instance.addToDom();
+      ele.instance.reset();
+    }
     VideoMgr.items.push(ele);
   };
 

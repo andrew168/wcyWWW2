@@ -173,10 +173,6 @@ TQ = TQ || {};
       return;
     }
 
-    if (!this.visibleTemp) {
-      return; //  不可见； 或者刚才调入， 尚未update生成可见性
-    }
-
     if ((!TQ.FrameCounter.isPlaying() || TQ.FrameCounter.isRequestedToStop())) return;
 
     if (this.isPlaying()) {
