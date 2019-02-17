@@ -189,20 +189,14 @@ var currScene = null;
       if (inst) {
         console.log(inst);
       }
-      var maxDisplay = TQ.VideoElement.createDescFromResource(inst.domEle);
-      var desc = {
-        data: !inst ? aFile: inst.domEle,
-        x: maxDisplay.x,
-        y: maxDisplay.y,
-        width: maxDisplay.width,
-        height: maxDisplay.height,
+      var desc = TQ.VideoElement.createDescFromResource(inst.domEle);
+      TQUtility.extendWithoutObject(desc, {
+        data: !inst ? aFile : inst.domEle,
         src: !inst ? aFile : inst.src,
-        type: TQ.ElementType.VIDEO,
         autoFit: TQ.Element.FitFlag.NO,
         dstLevel: dstLevel,
         eType: TQ.MatType.toEType(matType)
-      };
-
+      });
       callback(desc, aFile, matType);
     }
   }

@@ -9,11 +9,7 @@ TQ = TQ || {};
   function VideoElement(level, jsonObj) {
     assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
     if (jsonObj && (jsonObj.width === undefined) && jsonObj.data && (jsonObj.data instanceof HTMLVideoElement )) {
-      jsonObj.pivotX = 0.5;
-      jsonObj.pivotY = 0.5;
-      jsonObj.width = jsonObj.data.videoWidth;
-      jsonObj.height = jsonObj.data.videoHeight;
-      jsonObj.isoScale = true;
+      TQUtility.extendWithoutObject(jsonObj, VideoElement.createDescFromResource(jsonObj.data));
     }
 
     this.lastX100 = -100;
@@ -48,6 +44,10 @@ TQ = TQ || {};
       yc = y + h/2;
 
       return {
+        type: TQ.ElementType.VIDEO,
+        pivotX: 0.5,
+        pivotY: 0.5,
+        isoScale:  true,
         x: xc,
         y: yc,
         width: w,

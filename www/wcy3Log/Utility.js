@@ -236,7 +236,7 @@ var TQUtility; //
 
     Utility.extendWithoutObject = function (target, source) {
         for (var prop in source) {
-            if (source.hasOwnProperty(prop) || Utility.isObject(source[prop])) {
+            if (Utility.isObject(source[prop])) {
                 continue;
             }
             target[prop] = source[prop];
