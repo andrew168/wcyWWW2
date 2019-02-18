@@ -113,9 +113,9 @@ TQ = TQ || {};
   p.removeFromDom = function () {
     if (this.isInDom) {
       this.isInDom = false;
-      if (this.domEle) {
+      if (this.domEle && this.domEle.parentElement) {
         this.domEle.parentElement.removeChild(this.domEle);
-        this.domEle = null;
+        this.domEle.parentElement = null;
       }
     }
   };
