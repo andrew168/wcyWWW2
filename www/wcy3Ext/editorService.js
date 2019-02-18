@@ -1301,6 +1301,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function toAddMode() {
+    if (TQ.FrameCounter.isPlaying() && currScene) {
+      currScene.stop();
+    }
+
     TQ.Scene.restoreState();
     $timeout(function () {
       TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
