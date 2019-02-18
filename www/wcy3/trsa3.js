@@ -278,7 +278,7 @@ var TQ = TQ || {};
                 if (Math.abs(newScaleX) < 0.00001) {
                     console.warn("Too small");
                 } else {
-                  if (startEle.isoScale) {
+                  if (startEle.jsonObj && startEle.jsonObj.isoScale) {
                     var isoScale = (newScaleX + newScaleY) / 2;
                     newScaleX = isoScale;
                     newScaleY = isoScale;
