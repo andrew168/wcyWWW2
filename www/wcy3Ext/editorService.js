@@ -1304,7 +1304,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (TQ.FrameCounter.isPlaying() && currScene) {
       currScene.stop();
     }
-
     TQ.Scene.restoreState();
     $timeout(function () {
       TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
@@ -1391,7 +1390,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         WCY.startAutoSave();
         TQ.State.allowPageTransition = true;
         AppService.configCanvas(); //以防随动按钮出界，此时工具条都显示了，再更新一次工作区size
-        TQ.VideoMgr.resize();
+        // TQ.VideoMgr.resize();
       }, 500);
     }, 500);
   }
