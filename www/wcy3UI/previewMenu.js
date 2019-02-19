@@ -31,7 +31,9 @@ var TQ = TQ || {};
         allowToWatch = true;
 
     function initialize(globalState, onCallback, offCallback) {
-        state = globalState;
+        if (!state) {
+          state = TQ.State;
+        }
         previewMenuOnCallback = onCallback;
         previewMenuOffCallback = offCallback;
     }
@@ -39,6 +41,9 @@ var TQ = TQ || {};
     function onPreviewMenuOn(e) {
         if (!isSelectedEvent(e)) {
             return;
+        }
+        if (!state) {
+          state = TQ.State;
         }
 
         if (state.isPreviewMode && e && (selectedEvents.indexOf(e.type) >= 0)) {
@@ -55,6 +60,9 @@ var TQ = TQ || {};
             return;
         }
 
+        if (!state) {
+          state = TQ.State;
+        }
         state.isPreviewMenuOn = false;
         if (previewMenuOffCallback) {
             previewMenuOffCallback();
