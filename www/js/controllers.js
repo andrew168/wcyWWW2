@@ -487,7 +487,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.$on(TQ.Scene.EVENT_END_OF_PLAY, function () {
-        EditorService.toAddMode()
+        // EditorService.toAddMode()
     });
 
     function testDataService() {
