@@ -1012,7 +1012,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   function _onPlay() {
     updateMode();
     forceToRefreshUI();
-    TQ.TouchManager.stop();
+    if (TQ.TouchManager && TQ.TouchManager.hasStarted()) {
+      TQ.TouchManager.stop();
+    }
     TQ.State.isPlaying = true;
     $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
       AppService.configCanvas();
@@ -1311,7 +1313,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       if (state.isPreviewMode) {
         state.isPreviewMode = false;
         TQ.IdleCounter.remove(onPreviewMenuOff);
-        TQ.TouchManager.start();
         onPreviewMenuOff();
         TQ.PreviewMenu.stopWatch();
       }
@@ -1389,6 +1390,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         gotoLevel(0);
         WCY.startAutoSave();
         TQ.State.allowPageTransition = true;
+        TQ.State.isPlayOnly = false;
+        updateControllers();
         AppService.configCanvas(); //以防随动按钮出界，此时工具条都显示了，再更新一次工作区size
         // TQ.VideoMgr.resize();
       }, 500);
