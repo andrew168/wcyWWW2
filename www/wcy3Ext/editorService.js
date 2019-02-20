@@ -281,8 +281,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       // TQ.TouchManager.addHandler('swiperight', gotoNextLevel);
     }
 
-    updateControllers();
-    preview();
+    if (TQ.State.isPlayOnly) {
+      updateControllers();
+      preview();
+    }
   }
 
   function onNewElementAdded(evt) {
