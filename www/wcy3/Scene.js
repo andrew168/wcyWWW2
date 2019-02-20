@@ -590,9 +590,6 @@ TQ = TQ || {};
 
     // 删除 旧的Levels。
     function onOpened() {
-      if (!ensureFirstClick(onOpened)) {
-        return;
-      }
       TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);
       self.showLevel();
       TQ.MessageBox.reset();

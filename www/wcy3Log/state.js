@@ -34,6 +34,7 @@ var TQ = TQ || {};
     State.updateDeviceInfo = updateDeviceInfo;
     State.allowPageTransition = true;
     State.fiexdRootJoint = true; // 关节的根，总是固定的， 不可动的（动态可修改，所以用State，不用Config）
+    State.queryParams = {}; // 防止无它导致ensureFirstClick失败
 
     var deviceInfoInitialized = false;
 

@@ -282,19 +282,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     updateControllers();
-
-    if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
-      if (!TQ.Scene.ensureFirstClick(function () {
-          if (TQUtility.isIOS()) {
-            TQ.SoundMgr.iosForceToResumeAll();
-            TQ.VideoMgr.iosForceToResumeAll();
-          }
-          preview();
-        })) {
-      } else {
-        preview();
-      }
-    }
+    preview();
   }
 
   function onNewElementAdded(evt) {
@@ -974,6 +962,18 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function preview(options) {
+    if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
+      if (!TQ.Scene.ensureFirstClick(function () {
+          if (TQUtility.isIOS()) {
+            TQ.SoundMgr.iosForceToResumeAll();
+            TQ.VideoMgr.iosForceToResumeAll();
+          }
+          preview(options);
+        })) {
+        return;
+      }
+    }
+
     TQ.MessageBox.reset();
     WCY.stopAutoSave();
     TQ.SoundMgr.reset();
