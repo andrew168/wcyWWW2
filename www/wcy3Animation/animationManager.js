@@ -8,7 +8,7 @@ TQ.AnimationManager = (function () {
   var UNLIMIT = 99999999,
     MIN_MOVE_TIME = 0.1,
     DEFAULT_DELAY = 0,
-    DEFAULT_DURATION = TQ.FrameCounter.f2t(16); //frames
+    DEFAULT_DURATION = Math.round(TQ.FrameCounter.f2t(16)); //frames
 
   var SagCategory = {
       IN: 1,
@@ -102,8 +102,8 @@ TQ.AnimationManager = (function () {
 
     instance = {
       categoryId: SagCategory.IN,
-      tDelay: 0,
-      tDuration: 1, // seconds
+      tDelay: DEFAULT_DELAY,
+      tDuration: DEFAULT_DURATION, // seconds
       getCurrentTypeSag: getCurrentTypeSag,
       previewAndRemoveLatest: previewAndRemoveLatest,
       state: state,
@@ -113,6 +113,7 @@ TQ.AnimationManager = (function () {
 
       initialize: initialize,
       removeAllSags: removeAllSags,
+      clear: clear,
       reset: reset,
       rotate: rotate,
       twinkle: twinkle,
@@ -137,6 +138,12 @@ TQ.AnimationManager = (function () {
 
   function initialize() {
 
+  }
+
+  function clear() {
+    sagLatest = null;
+    instance.tDelay = DEFAULT_DELAY;
+    instance.tDuration = DEFAULT_DURATION;
   }
 
   function reset(ele) {

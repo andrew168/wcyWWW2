@@ -133,6 +133,13 @@ TQ = TQ || {};
             SoundMgr.items.splice(i,1);
         }
         stopAllDirectSound();
+
+        if (!!SoundMgr._auditioningInstance) {
+          if (SoundMgr.isPlaying(SoundMgr._auditioningInstance)) {
+            SoundMgr._auditioningInstance.stop();
+          }
+          SoundMgr._auditioningInstance = null;
+        }
     };
 
     SoundMgr.reset = function () {

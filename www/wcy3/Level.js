@@ -644,6 +644,11 @@ window.TQ = window.TQ || {};
     TQ.SoundMgr.removeAll();
     TQ.VideoMgr.removeAll();
     TQ.ParticleMgr.removeAll();
+    if (TQ.State.isAddMode) {
+      TQ.SelectSet.clear();
+      TQ.AnimationManager.clear();
+      TQ.SoundMgr.reset();
+    }
     this.state = TQBase.LevelState.EXIT;
   };
 
