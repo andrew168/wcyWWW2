@@ -195,6 +195,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     TQ.State.isPlaying = false;
     state.isMCopying = false;
     TQ.FrameCounter.toggleSpeed(TQ.Const.TOGGLE_RESET, state);
+    TQ.SelectSet.clear();
+    TQ.AnimationManager.clear();
+    TQ.SoundMgr.reset();
   }
 
   function initialize() {
