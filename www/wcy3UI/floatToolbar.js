@@ -11,13 +11,13 @@ window.TQ = window.TQ || {};
     FloatToolbar.onScaleSmall = depreciated;
     FloatToolbar.onRotateLeft = depreciated;
     FloatToolbar.onRotateRight = depreciated;
-    FloatToolbar.onMoveUpLayer = onMoveUpLayer;
-    FloatToolbar.onMoveDownLayer = onMoveDownLayer;
-    FloatToolbar.onMoveToTop = onMoveToTop;
-    FloatToolbar.onMoveToBottom = onMoveToBottom;
+    FloatToolbar.onMoveUpLayer = depreciated;
+    FloatToolbar.onMoveDownLayer = depreciated;
+    FloatToolbar.onMoveToTop = depreciated;
+    FloatToolbar.onMoveToBottom = depreciated;
     FloatToolbar.onDelete = depreciated;
-    FloatToolbar.onMirrorX = onMirrorX;
-    FloatToolbar.onMirrorY = onMirrorY;
+    FloatToolbar.onMirrorX = depreciated;
+    FloatToolbar.onMirrorY = depreciated;
 
     //
     FloatToolbar.initialize = depreciated;
@@ -25,74 +25,6 @@ window.TQ = window.TQ || {};
     FloatToolbar.show = depreciated;
     FloatToolbar.setPosition = depreciated;
     FloatToolbar.close = depreciated;
-
-
-    function onScaleBig(evt)
-    {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.InputCtrl.doScale(TQ.FloatToolbar.selectedElement, 1.2);
-    }
-
-
-    function onScaleSmall(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.InputCtrl.doScale(TQ.FloatToolbar.selectedElement, 0.8);
-    }
-
-    function onRotateLeft(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.IKCtrl.rotate(TQ.FloatToolbar.selectedElement, 10);
-    }
-
-    function onRotateRight(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.IKCtrl.rotate(TQ.FloatToolbar.selectedElement, -10);
-    }
-
-    function onMoveUpLayer(evt) {
-        TQ.AssertExt.depreciated('onMoveUpLayer');
-    }
-    function onMoveDownLayer(evt) {
-        TQ.AssertExt.depreciated('onMoveDownLayer');
-    }
-
-    function onMoveToTop(evt) {
-        TQ.AssertExt.depreciated('onMoveDownLayer');
-    }
-
-    function onMoveToBottom(evt) {
-        TQ.AssertExt.depreciated('onMoveDownLayer');
-    }
-
-    function onDelete(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.SelectSet.delete();
-        TQ.FloatToolbar.close();
-    }
-
-    function onMirrorX(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.InputCtrl.mirrorX(TQ.FloatToolbar.selectedElement);
-    }
-
-    function onMirrorY(evt) {
-        evt.stopPropagation();
-        evt.preventDefault();
-        TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
-        TQ.InputCtrl.mirrorY(TQ.FloatToolbar.selectedElement);
-    }
 
     function depreciated() {
         TQ.Log.depreciated();
