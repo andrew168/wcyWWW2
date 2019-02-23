@@ -138,14 +138,6 @@ TQ = TQ || {};
             TQ.CommandMgr.directDo(cmd);
         }
 
-        if (SelectSet.getElementUnderMouse() == null) {
-            TQ.FloatToolbar.close();
-            //ToDo:@UI
-            // if (TQ.TabsMenu.closeDiv) {
-            //    TQ.TabsMenu.closeDiv();
-            // }
-        }
-
         SelectSet.members.splice(0); // 删除全部选中的物体;
         selectedMarkers.splice(0);
         latestElement = null;
@@ -294,12 +286,6 @@ TQ = TQ || {};
             ele.toggleVisibility();
             target = ele;
         }
-
-        if (target && isVisible) {
-            TQ.FloatToolbar.show(target.getType());
-        } else {
-            TQ.FloatToolbar.close();
-        }
     };
 
     SelectSet.eraseAnimeTrack = function() {
@@ -333,7 +319,6 @@ TQ = TQ || {};
             if (!TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL]) {
                 SelectSet.clear();
             }
-            TQ.FloatToolbar.close();
         }
 
         return TQ.SelectSet.peek();
