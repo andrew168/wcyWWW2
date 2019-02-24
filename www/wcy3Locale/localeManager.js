@@ -49,6 +49,8 @@ TQ.Locale = (function () {
                   onReadyCallback();
                   onReadyCallback = null;
                 }
+            } else {
+              TQ.AssertExt.invalidLogic(false, "dictionary 文件内容错误");
             }
         });
     }
