@@ -113,7 +113,9 @@ TQ = TQ || {};
 
       TQ.Locale.onReady(function () {
         if (TQ.State.isPlayOnly) {
-          TQ.State.waitForFirstClick = true;
+          setTimeout(function () {
+            TQ.State.waitForFirstClick = true;
+          }, 500);
           TQ.MessageBox.promptWithNoCancel(TQ.Locale.getStr('Click OK to start play'), onOk, null, true);
         } else {
           onOk();
