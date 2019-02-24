@@ -113,6 +113,7 @@ TQ = TQ || {};
 
       TQ.Locale.onReady(function () {
         if (TQ.State.isPlayOnly) {
+          TQ.State.waitForFirstClick = true;
           TQ.MessageBox.promptWithNoCancel(TQ.Locale.getStr('Click OK to start play'), onOk, null, true);
         } else {
           onOk();
@@ -120,8 +121,10 @@ TQ = TQ || {};
 
         function onOk() {
           TQ.State.needUserClickToPlayAV = false;
+          TQ.State.waitForFirstClick = false;
           if (callback) {
             callback();
+            currScene.mainLoop();
           }
         }
       });
@@ -192,6 +195,9 @@ TQ = TQ || {};
   };
 
   p.mainLoop = function () {
+    if (TQ.State.waitForFirstClick) {
+      return;
+    }
     requestAnimationFrame(function () {
       if (isStarted) {
         self.onTick();
