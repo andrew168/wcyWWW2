@@ -2179,7 +2179,7 @@ window.TQ = window.TQ || {};
         }
         if (this.children) {
             for (var i = 0; i < this.children.length; i++) {
-                if (this.children.isHighlighter()) {
+                if (!this.children[i] || this.children[i].isHighlighter()) {
                     continue;
                 }
                 z = this.children[i].getZ();
