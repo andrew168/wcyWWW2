@@ -600,7 +600,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var option = {
         iComponentId: TQ.Scene.getWcyId(),
         //ToDo: 素材库已有的图片，直接利用，避免再次上传，只是新素材id而已
-        src: TQ.ScreenShot.getData(),
+        src: TQ.ScreenShot.getDataWithBkgColor(),
       },
       data = {
         matType: currScene.iComponentInfo.type,
