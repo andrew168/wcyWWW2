@@ -534,11 +534,27 @@ TQ = TQ || {};
   };
 
   p.setAsIComponent = function(type) {
+    this.forceToComponent();
     if (!this.iComponentInfo) {
       this.iComponentInfo = {};
     }
     this.iComponentInfo.type = type;
     this.iComponentInfo.thumbPath = this.ssPath;
+  };
+
+  p.forceToComponent = function() {
+    //元件： 必须是以group元素为唯一root， （关节元素属于Element类， 不是group)
+    if (this.levelNum() >= 1) {
+      var level1 = this.levels[0];
+      if ((level1.itemNum() > 1) ||
+        ((level1.itemNum() === 1) && !(level1.elements[0] instanceof TQ.GroupElement))) {
+        var elements = [];
+        for (var i = 0; i < level1.itemNum(); i++) {
+          elements.push(level1.elements[i]);
+        }
+        this.groupIt(elements, false);
+      }
+    }
   };
 
   p.hasMusicCompleted = function () {
