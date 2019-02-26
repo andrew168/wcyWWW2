@@ -1,4 +1,5 @@
-var DomUtility = (function () {
+var TQ = TQ || {};
+TQ.DomUtility = (function () {
     "use strict";
     return {
         createElement: createElement,
