@@ -21,7 +21,7 @@ TQDebugger.Panel = (function () {
     var htmlStr = '<button onclick="debugger_audioMethod(1);">声音1</button>' +
       '<button onclick="debugger_audioMethod(2);">声音2</button>' +
       '<button onclick="debugger_audioMethod(3);">声音3</button>' +
-      '<div id="id-debug-info">debug info</div>';
+      '<div id="id-debug-info"></div>';
 
     TQ.State.audioMethod = parseInt(TQ.Utility.readLocalStorage('audioMethod', 4));
     window.debugger_audioMethod = function(method) {
