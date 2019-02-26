@@ -30,7 +30,7 @@ window.TQ = window.TQ || {};
     };
 
     Utility.getCssSize = function(cssValue) {
-        if (cssValue === 'auto') {
+        if ((cssValue === 'auto') || (!cssValue)) {
             return 0;
         }
         return parseFloat(cssValue.replace("px", ""));
