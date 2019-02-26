@@ -7267,11 +7267,11 @@ this.createjs = this.createjs || {};
 		s._compatibilitySetUp();
 
 		// Listen for document level clicks to unlock WebAudio on iOS. See the _unlock method.
-		if ("ontouchstart" in window && s.context.state != "running") {
+		if ("ontouchstart" in window && !s._unlocked) {
 			s._unlock(); // When played inside of a touch event, this will enable audio on iOS immediately.
-			document.addEventListener("mousedown", s._unlock, true);
-			document.addEventListener("touchstart", s._unlock, true);
-			document.addEventListener("touchend", s._unlock, true);
+			document.addEventListener("mousedown", s._onUserFirstAction, true);
+			document.addEventListener("touchstart", s._onUserFirstAction, true);
+			document.addEventListener("touchend", s._onUserFirstAction, true);
 		}
 
 		s._capabilities = {
@@ -7376,14 +7376,17 @@ this.createjs = this.createjs || {};
 	s._unlock = function() {
 		if (s._unlocked) { return; }
 		s.playEmptySound();
-		if (s.context.state == "running") {
-			document.removeEventListener("mousedown", s._unlock, true);
-			document.removeEventListener("touchend", s._unlock, true);
-			document.removeEventListener("touchstart", s._unlock, true);
-			s._unlocked = true;
-		}
 	};
 
+	s._onUserFirstAction = function () {
+	  s._unlock();
+    if (s.context.state == "running") {
+      document.removeEventListener("mousedown", s._onUserFirstAction, true);
+      document.removeEventListener("touchend", s._onUserFirstAction, true);
+      document.removeEventListener("touchstart", s._onUserFirstAction, true);
+      s._unlocked = true;
+    }
+  };
 
 // Public Methods
 	p.toString = function () {
