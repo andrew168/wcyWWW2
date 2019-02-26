@@ -4,7 +4,17 @@
     color: black;
 }
 
+#id-debug-panel {
+  position: absolute;
+  background: white;
+  border: solid 2px silver;
+}
+
 /* 图层规划 */
+.debug-panel-layer {
+  z-index: 9500;
+}
+
 .message-layer {
     z-index:9000;
 }
@@ -160,3 +170,4 @@
     top: 0;
     right: 0;
 }
+

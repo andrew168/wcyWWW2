@@ -207,6 +207,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     reset();
     $rootScope.$on(TQ.Scene.EVENT_READY, onSceneReady);
     $rootScope.$on(TQ.EVENT.REFRESH_UI, forceToRefreshUI);
+    TQDebugger.Panel.init();
   }
 
   function forceToRenderSlider() {
