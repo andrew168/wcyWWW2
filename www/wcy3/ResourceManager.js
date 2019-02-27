@@ -72,37 +72,6 @@ this.TQ = this.TQ || {};
         TQ.DownloadManager.initialize();
         RM._hasCreated = true;
         RM.hasDefaultResource = false;
-        var plugins;
-        var result;
-        if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3，
-            TQ.Base.Utility.isMobileDevice()) { // 把最希望使用的排在1st位置
-            switch (TQ.State.audioMethod) {
-              case 1:
-                plugins = [createjs.WebAudioPlugin];
-                break;
-              case 2:
-                plugins = [createjs.HTMLAudioPlugin];
-                break;
-              case 3:
-                plugins = [createjs.CordovaAudioPlugin];
-                break;
-              default:
-                plugins = [createjs.CordovaAudioPlugin, createjs.HTMLAudioPlugin, createjs.WebAudioPlugin];
-                break;
-            }
-            result = createjs.Sound.registerPlugins(plugins);
-        } else { // Firefox只在vista以上OS中支持MP3，且自动加载MP3尚未实现， 所以用flash
-            result = createjs.Sound.registerPlugins([createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]);
-
-//            createjs.Sound.registerPlugins([createjs.FlashPlugin, createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]); // need this so it doesn't default to Web Audio
-            // 在Firefox下， 如果只加Flash声音， 则 无法预先加载WAV
-        }
-
-        if (result) {
-          TQDebugger.Panel.logInfo("声音 @" + createjs.Sound.activePlugin.toString());
-        } else {
-          TQDebugger.Panel.logInfo("无声音");
-        }
 		// Instantiate a queue.
         resetPreloader();
         _setupDefaultResource();
