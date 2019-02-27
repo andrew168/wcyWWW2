@@ -66,6 +66,9 @@ TQDebugger.Panel = (function () {
         TQ.Utility.writeLocalStorage('startLeft', newLeft);
       }
     }
+
+    // 如果需要的话，comment下面的句子：
+    close();
   }
 
   function open() {
