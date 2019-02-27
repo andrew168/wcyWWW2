@@ -6,6 +6,8 @@
 
 #id-debug-panel {
   position: absolute;
+  top: 200px;
+  left: 0;
   background: white;
   border: solid 2px silver;
 }

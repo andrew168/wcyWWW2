@@ -39,7 +39,7 @@ TQDebugger.Panel = (function () {
     panel.addEventListener("touchstart", onTouchStart, false);
     panel.addEventListener("touchmove", onTouchMove, false);
     var startX, startY,
-      startTop = TQ.Utility.readLocalStorage('startTop', 0),
+      startTop = TQ.Utility.readLocalStorage('startTop', 200),
       startLeft = TQ.Utility.readLocalStorage('startLeft', 0);
 
     panel.style.left = startLeft + 'px';
@@ -67,8 +67,12 @@ TQDebugger.Panel = (function () {
       }
     }
 
-    // 如果需要的话，comment下面的句子：
-    close();
+    if (!eleLog) {
+      eleLog = document.getElementById('id-debug-info');
+    }
+
+    // 要显示它？un comment下面的句子：
+    // close();
   }
 
   function open() {
@@ -80,10 +84,8 @@ TQDebugger.Panel = (function () {
   }
 
   function logInfo(msg) {
-    if (!eleLog) {
-      eleLog = document.getElementById('id-debug-info');
+    if (eleLog) {
+      eleLog.innerHTML += '<p>' + msg + '</p>';
     }
-
-    eleLog.innerHTML += '<p>' + msg + '</p>';
   }
 }());
