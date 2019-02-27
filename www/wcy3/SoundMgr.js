@@ -208,9 +208,6 @@ TQ = TQ || {};
     }
 
     function tryPlayAudio() {
-      if (createjs.Sound.activePlugin && createjs.Sound.activePlugin.playEmptySound) {
-        createjs.Sound.activePlugin.playEmptySound();
-      }
       var inst = SoundMgr.play(TQ.RM.NOSOUND);
       if (inst) {
         inst.on("complete", onCompleted);
@@ -222,6 +219,9 @@ TQ = TQ || {};
           TQDebugger.Panel.logInfo(msg);
           inst.off("complete", onCompleted);
         }
+      }
+      if (createjs.Sound.activePlugin && createjs.Sound.activePlugin.playEmptySound) {
+        createjs.Sound.activePlugin.playEmptySound();
       }
     }
 

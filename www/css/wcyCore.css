@@ -9,7 +9,9 @@
   top: 200px;
   left: 0;
   background: white;
-  border: solid 2px silver;
+  border: solid 3px silver;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
 /* 图层规划 */

@@ -7380,7 +7380,7 @@ this.createjs = this.createjs || {};
 
 	s._onUserFirstAction = function () {
 	  s._unlock();
-    TQDebugger.Panel.logInfo('in user click, s.context.state = ' + s.context.state);
+    TQDebugger.Panel.logInfo('autounlock, state = ' + s.context.state);
     if (s.context.state == "running") {
       document.removeEventListener("mousedown", s._onUserFirstAction, true);
       document.removeEventListener("touchend", s._onUserFirstAction, true);
