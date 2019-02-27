@@ -4,7 +4,7 @@
 var TQDebugger = TQDebugger || {};
 TQDebugger.Panel = (function () {
   var panel,
-  eleLog;
+    eleLog;
   return {
     init: init,
     open: open,
@@ -21,12 +21,16 @@ TQDebugger.Panel = (function () {
     var htmlStr = '<button onclick="debugger_audioMethod(1);">声音1</button>' +
       '<button onclick="debugger_audioMethod(2);">声音2</button>' +
       '<button onclick="debugger_audioMethod(3);">声音3</button>' +
+      '<button onclick="debugger_close();">关闭</button>' +
       '<div id="id-debug-info"></div>';
 
     TQ.State.audioMethod = parseInt(TQ.Utility.readLocalStorage('audioMethod', 4));
-    window.debugger_audioMethod = function(method) {
+    window.debugger_audioMethod = function (method) {
       TQ.State.audioMethod = method;
       TQ.Utility.writeLocalStorage('audioMethod', TQ.State.audioMethod);
+    };
+    window.debugger_close = function () {
+      TQDebugger.Panel.close();
     };
 
     panel = TQ.DomUtility.createElement(document.body, 'div', 'id-debug-panel', 'debug-panel-layer');
@@ -35,9 +39,9 @@ TQDebugger.Panel = (function () {
     panel.addEventListener("touchstart", onTouchStart, false);
     panel.addEventListener("touchmove", onTouchMove, false);
     var startX, startY,
-      startTop, startLeft;
-    startTop = TQ.Utility.readLocalStorage('startTop', 0);
-    startLeft = TQ.Utility.readLocalStorage('startLeft', 0);
+      startTop = TQ.Utility.readLocalStorage('startTop', 0),
+      startLeft = TQ.Utility.readLocalStorage('startLeft', 0);
+
     panel.style.left = startLeft + 'px';
     panel.style.top = startTop + 'px';
 
@@ -54,10 +58,12 @@ TQDebugger.Panel = (function () {
     function onTouchMove(evt) {
       var touch = evt.touches[0];
       if (touch) {
-        deltaX = touch.clientX - startX;
-        deltaY = touch.clientY - startY;
-        panel.style.left = startLeft + deltaX + 'px';
-        panel.style.top = startTop + deltaY + 'px';
+        var newLeft = startLeft + (touch.clientX - startX),
+          newTop = startTop + (touch.clientY - startY);
+        panel.style.left = newLeft + 'px';
+        panel.style.top = newTop + 'px';
+        TQ.Utility.writeLocalStorage('startTop', newTop);
+        TQ.Utility.writeLocalStorage('startLeft', newLeft);
       }
     }
   }
@@ -77,6 +83,4 @@ TQDebugger.Panel = (function () {
 
     eleLog.innerHTML += '<p>' + msg + '</p>';
   }
-
-
 }());
