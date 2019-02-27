@@ -12,7 +12,6 @@ TQ = TQ || {};
     SoundMgr.started = false;
     SoundMgr.isSupported = false;
     SoundMgr.items = [];
-    var FIRST_SOUND = 'first_sound';
     var isReseting = false,
         directSounds = [],
         unlocked = false;
@@ -47,11 +46,10 @@ TQ = TQ || {};
 
       if (result) {
         TQDebugger.Panel.logInfo("声音 @" + createjs.Sound.activePlugin.toString());
-        createjs.Sound.registerSound(TQ.RM.NOSOUND, FIRST_SOUND);
+
         document.addEventListener("mousedown", unlockAudio, true);
         document.addEventListener("touchstart", unlockAudio, true);
         document.addEventListener("touchend", unlockAudio, true);
-        tryPlayAudio();
       } else {
         TQDebugger.Panel.logInfo("无声音");
       }
@@ -87,8 +85,10 @@ TQ = TQ || {};
             }
             SoundMgr._auditioningInstance = createjs.Sound.play(TQ.RM.getId(item)); // 用Sound.play, 可以播放多个instance， 声音只用ID， 不要resouce data
             directSounds.push(id);
+            return SoundMgr._auditioningInstance;
         } else {
             TQ.RM.addItem(id, function() {SoundMgr.play(id);});
+            return null;
         }
     };
 
@@ -208,14 +208,18 @@ TQ = TQ || {};
     }
 
     function tryPlayAudio() {
-      var inst = createjs.Sound.play(FIRST_SOUND);
-      inst.on("complete", function () {
-        var msg = "Unlocked";
-        if (createjs.Sound.activePlugin.context) {
-          msg += ', state = ' + createjs.Sound.activePlugin.context.state;
+      var inst = SoundMgr.play(TQ.RM.NOSOUND);
+      if (inst) {
+        inst.on("complete", onCompleted);
+        function onCompleted() {
+          var msg = "Unlocked";
+          if (createjs.Sound.activePlugin.context) {
+            msg += ', state = ' + createjs.Sound.activePlugin.context.state;
+          }
+          TQDebugger.Panel.logInfo(msg);
+          inst.off("complete", onCompleted);
         }
-        TQDebugger.Panel.logInfo(msg);
-      });
+      }
     }
 
     TQ.SoundMgr = SoundMgr;
