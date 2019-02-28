@@ -26,7 +26,8 @@ var currScene = null;
     // EDIT_IMAGE: 2200, // 尚未以他们代替 flag变量
     // RECORD_AUDIO: 2300,
     PREVIEW: 2400, // Play, Preview
-    SHARE_PANE: 2410 //属于PREVIEW上的页面
+    SHARE_PANE: 2410, //属于PREVIEW上的页面
+    CONVERT_TO_TOPIC: 2420
   };
 
   TQ.State.editorMode = SceneEditor.NOT_INITIALIZED;
