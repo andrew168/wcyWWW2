@@ -534,6 +534,7 @@ TQ = TQ || {};
   };
 
   p.setAsIComponent = function(type) {
+    TQ.FrameCounter.goto(0);
     this.forceToComponent();
     if (!this.iComponentInfo) {
       this.iComponentInfo = {};
