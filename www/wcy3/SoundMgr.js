@@ -20,6 +20,7 @@ TQ = TQ || {};
         SoundMgr.isSupported = true;
       var plugins;
       var result;
+      TQ.State.audioMethod = 4;
       if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3，
         TQ.Base.Utility.isMobileDevice()) { // 把最希望使用的排在1st位置
         switch (TQ.State.audioMethod) {
