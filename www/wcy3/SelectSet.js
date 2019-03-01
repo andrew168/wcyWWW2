@@ -7,6 +7,7 @@
 TQ = TQ || {};
 (function () {
     var SelectSet = {},
+        isOn = true, // 允许暂时关闭
     // 需要多重选择的命令， 先开始，连续选择，再点1次，执行并结束
     // 需要连续选择的， 先开始， 然后选1个，执行1个，再点1次则结束
     // 需要单一选择的命令，先选择， 再执行。
@@ -71,7 +72,17 @@ TQ = TQ || {};
         }
     };
 
+    SelectSet.turnOn = function () {
+      isOn = true;
+    };
+    SelectSet.turnOff = function () {
+      isOn = false;
+    };
+
     SelectSet.add = function(element) {
+        if (!isOn) {
+          return;
+        }
         assertNotNull(TQ.Dictionary.PleaseSelectOne, element);
         if ((element == null )) return;
         latestElement = element;

@@ -123,6 +123,7 @@ window.TQ = window.TQ || {};
   };
 
   p.groupIt = function (elements) {
+    TQ.SelectSet.turnOff();
     elements.forEach(function (ele) {
       if (ele && ele.hasBBox()) {
         ele.detachDecoration();
@@ -133,6 +134,8 @@ window.TQ = window.TQ || {};
     this.addElementDirect(aGroup);
     this.latestElement = aGroup;
     TQ.DirtyFlag.setLevel(this);
+    TQ.SelectSet.turnOn();
+    TQ.SelectSet.add(aGroup);
   };
 
   p.unGroup = function (elements) {
