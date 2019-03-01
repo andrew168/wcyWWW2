@@ -123,6 +123,12 @@ window.TQ = window.TQ || {};
   };
 
   p.groupIt = function (elements) {
+    elements.forEach(function (ele) {
+      if (ele && ele.hasBBox()) {
+        ele.detachDecoration();
+      }
+    });
+
     var aGroup = TQ.GroupElement.create(this, elements);
     this.addElementDirect(aGroup);
     this.latestElement = aGroup;
