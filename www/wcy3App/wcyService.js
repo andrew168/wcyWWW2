@@ -234,7 +234,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
     });
   }
 
-  function uploadScreenshot() {
+  function uploadScreenshot(newScreenshot) {
     var q = $q.defer();
     if (!_ssSign) {
       setTimeout(function () {
@@ -242,7 +242,12 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
       });
     } else {
       TQ.AssertExt.invalidLogic(!!_ssSign);
-      TQ.ScreenShot.getForPostAsync(function (data) {
+      if (newScreenshot) {
+        doUpload(newScreenshot);
+      } else {
+        TQ.ScreenShot.getForPostAsync(doUpload);
+      }
+      function doUpload(data) {
         NetService.doUploadImage(_ssSign, data).then(
           function (res) {
             onUploadSsSuccess(res);
@@ -251,7 +256,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
             onErrorGeneral(err);
             q.reject(err);
           });
-      });
+      }
     }
 
     return q.promise;
