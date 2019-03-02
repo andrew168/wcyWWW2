@@ -207,10 +207,12 @@ TQ = TQ || {};
     function multiCmdGroupIt() {
         return multiCmd(groupIt, {
             cmdBefore: function () {
+                // TQ.SelectSet.turnOff();
                 btnEffect.group = "effect-working";
             },
             cmdAfter: function () {
                 btnEffect.group = null;
+                TQ.SelectSet.turnOn();
             }
         });
     }

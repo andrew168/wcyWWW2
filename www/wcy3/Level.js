@@ -134,8 +134,7 @@ window.TQ = window.TQ || {};
     this.addElementDirect(aGroup);
     this.latestElement = aGroup;
     TQ.DirtyFlag.setLevel(this);
-    TQ.SelectSet.turnOn();
-    TQ.SelectSet.add(aGroup);
+    return aGroup;
   };
 
   p.unGroup = function (elements) {
