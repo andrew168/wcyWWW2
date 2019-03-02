@@ -78,7 +78,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             TQ.Log.error('must setup default language!');
         }
         angular.element(document).ready(function () {
-          if (!(TQ.State.queryParams && TQ.State.queryParams.noLocale)) {
+          if (!(TQ.QueryParams && TQ.QueryParams.noLocale)) {
             TQ.Locale.initialize(TQ.Env.lang);
           }
         });
