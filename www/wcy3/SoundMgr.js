@@ -48,9 +48,11 @@ TQ = TQ || {};
       if (result) {
         TQDebugger.Panel.logInfo("声音 @" + createjs.Sound.activePlugin.toString());
 
-        document.addEventListener("mousedown", unlockAudio, true);
-        document.addEventListener("touchstart", unlockAudio, true);
-        document.addEventListener("touchend", unlockAudio, true);
+        if (!TQ.QueryParams.disableAudioUnlock) {
+          document.addEventListener("mousedown", unlockAudio, true);
+          document.addEventListener("touchstart", unlockAudio, true);
+          document.addEventListener("touchend", unlockAudio, true);
+        }
       } else {
         TQDebugger.Panel.logInfo("无声音");
       }

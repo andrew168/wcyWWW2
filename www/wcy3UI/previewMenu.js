@@ -34,12 +34,15 @@ var TQ = TQ || {};
         if (!state) {
           state = TQ.State;
         }
+        if (TQ.QueryParams.hideMenu) {
+          return;
+        }
         previewMenuOnCallback = onCallback;
         previewMenuOffCallback = offCallback;
     }
 
     function onPreviewMenuOn(e) {
-        if (!isSelectedEvent(e)) {
+        if (TQ.QueryParams.hideMenu || !isSelectedEvent(e)) {
             return;
         }
         if (!state) {
@@ -70,7 +73,7 @@ var TQ = TQ || {};
     }
 
     function startWatch() {
-        if (isWatching || !allowToWatch) {
+        if (TQ.QueryParams.hideMenu || isWatching || !allowToWatch) {
             return;
         }
         isWatching = true;
@@ -85,7 +88,7 @@ var TQ = TQ || {};
     }
 
     function stopWatch() {
-        if (!isWatching || !allowToWatch) {
+        if (TQ.QueryParams.hideMenu || !isWatching || !allowToWatch) {
             return;
         }
         isWatching = false;
