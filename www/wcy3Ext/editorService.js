@@ -623,8 +623,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     state.isMCopying = !state.isMCopying;
     currCmd = (state.isMCopying) ? CMD_MCOPYING_BEGIN : CMD_MCOPYING_END;
+    if (state.isMCopying) {
+      TQ.SelectSet.btnEffect.mCopy = "effect-working";
+    } else {
+      TQ.SelectSet.btnEffect.mCopy = null;
+    }
     TQ.TouchManager.updateOps(state);
-
   }
 
   function insertMat(data) {
