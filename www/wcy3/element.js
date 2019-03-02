@@ -1126,9 +1126,11 @@ window.TQ = window.TQ || {};
     p._doAddItemToStage = function (upperEle) {
         // 只需要加入一次， 之后， 都是自动更新坐标，角度等等， 不需要反复加入
         // 他们的坐标都控制在 displayObj中，
-        if (!this.isGroup() &&
-            ((null == this.displayObj) || this.isVirtualObject())) { // group物体的虚根
+        if (((null == this.displayObj) || this.isVirtualObject())) { // group物体的虚根
+          if (TQ.Config.useCreateJSFullContainer && this.isGroup()) {
+          } else {
             return;
+          }
         }
 
         if (this.jsonObj.zIndex == -1) {
