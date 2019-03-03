@@ -43,7 +43,7 @@ var TQ = TQ || {};
     };
 
     p.downloadAux = function(resourceId, cacheName, onSuccess, onError) {
-        TQ.Assert.isFalse(p.hasCached(resourceId), "已经cached！！");
+        TQ.Assert.isFalse(this.hasCached(resourceId), "已经cached！！");
         var onLsError;
 
         if (TQ.Config.TwoMatServerEnabled) {
@@ -80,7 +80,7 @@ var TQ = TQ || {};
         var onSuccess = item.onSuccess;
         item.onSuccess = [];
         item.onError = [];
-        p.save();
+        this.save();
         var callback;
         if (onSuccess) {
             while (onSuccess.length >0) {
@@ -103,7 +103,7 @@ var TQ = TQ || {};
         }
 
         _files[resourceId] = null; //  remove old one;
-        p.save();
+        this.save();
         if (!error.handled) {
             if (typeof error.http_status !== 'undefined') {
                 if (error.http_status == 404) {
@@ -137,7 +137,7 @@ var TQ = TQ || {};
 
     p.clearCache = function() {
         _files = {};
-        p.save();
+        this.save();
 
         //ToDo: remove file from cache
     };
@@ -149,7 +149,7 @@ var TQ = TQ || {};
     p.downloadBulk = function(bulk) {
         for (var i = 0; i < bulk.length; i++) {
             if (Array.isArray(bulk[i])) {
-                p.downloadBulk(bulk[i]);
+                this.downloadBulk(bulk[i]);
                 continue;
             }
 
@@ -165,10 +165,10 @@ var TQ = TQ || {};
                 bulk[i].path = cacheName;
             }
 
-            if (p.hasCached(resourceId)) {
+            if (this.hasCached(resourceId)) {
                 continue;
             }
-            p.downloadAux(resourceId, cacheName);
+            this.downloadAux(resourceId, cacheName);
         }
     };
 
@@ -194,7 +194,7 @@ var TQ = TQ || {};
     // private
     function _toFullPathFs(name) { //File Server, such as udoido.com
         name = TQ.RM.toRelative(name);
-        return urlConcat(p.FAST_SERVER, name);
+        return urlConcat(this.FAST_SERVER, name);
     }
 
     function _download(name, cacheName, resourceId, onSuccess, onError) {
@@ -208,7 +208,7 @@ var TQ = TQ || {};
         }
 
         _tasks++;
-        TQ.Base.Utility.triggerEvent(document, p.DOWNLOAD_EVENT, {key: resourceId, source: name, target: cacheName});
+        TQ.Base.Utility.triggerEvent(document, this.DOWNLOAD_EVENT, {key: resourceId, source: name, target: cacheName});
     }
 
     TQ.DownloadManager = DownloadManager;

@@ -14,43 +14,43 @@ window.TQ = window.TQ || {};
     p._on = false;
     p.enabled = false;
     p.start = function(xx, yy) {
-        p.buffer.splice(0);
-        p.buffer.push({x:xx, y:yy});
-        p._on = true;
-        return p.buffer[0];
+      this.buffer.splice(0);
+      this.buffer.push({x: xx, y: yy});
+      this._on = true;
+      return this.buffer[0];
     };
 
     p.close = function() {
-        p.buffer.splice(0);
-        p._on = false;
+      this.buffer.splice(0);
+      this._on = false;
     };
 
     // 添加1个新的点, 获取消抖处理后的点
     p.smooth = function(xx,yy) {
-        if (p.enabled) {
-            if (!p._on)  {
+        if (this.enabled) {
+            if (!this._on)  {
                 assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
-                return p.start(xx, yy);
+                return this.start(xx, yy);
             }
             if (__user_level == 8) {
                 TQ.Log.debugInfo(xx + ", " + yy);
             }
-            if (p.buffer.length >= p._LENGTH) {
-                p.buffer.shift();
+            if (this.buffer.length >= this._LENGTH) {
+                this.buffer.shift();
             }
-            p.buffer.push({x:xx, y:yy});
+            this.buffer.push({x:xx, y:yy});
             xx = 0;
             yy = 0;
-            var num = p.buffer.length;
+            var num = this.buffer.length;
             for (var i = 0; i < num; i++) {
-                xx += p.buffer[i].x / num;
-                yy += p.buffer[i].y / num;
+                xx += this.buffer[i].x / num;
+                yy += this.buffer[i].y / num;
             }
         }
         return {x:xx, y:yy};
     };
 
-    p.isOn = function() { return p._on; };
+    p.isOn = function() { return this._on; };
 
     TQ.DitherRemover = DitherRemover;
 }());
