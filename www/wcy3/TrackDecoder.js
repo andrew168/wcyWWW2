@@ -27,11 +27,11 @@ window.TQ = window.TQ || {};
             TQ.poseDefault.rotation : TrackDecoder.calOneChannel(track, track.rotation, t);
 
         tsrObj.x = (!track.x) ?
-            TQ.poseDefault.x : TrackDecoder.calOneChannel(track, track.x, t);
+            TQ.poseDefault.x : ensureObjectPos(ele.parent, calOneChannelExt(track, track.x, t), 0).x;
         TQ.Assert.isTrue(!isNaN(tsrObj.x),  "x 为 NaN！！！");
 
         tsrObj.y = (!track.y) ?
-            TQ.poseDefault.y : TrackDecoder.calOneChannel(track, track.y, t);
+            TQ.poseDefault.y : ensureObjectPos(ele.parent, 0, calOneChannelExt(track, track.y, t)).y;
         TQ.Assert.isTrue(!isNaN(tsrObj.y),  "y 为 NaN！！！");
 
         tsrObj.sx = (!track.sx) ?
@@ -61,6 +61,10 @@ window.TQ = window.TQ || {};
     };
 
     TrackDecoder.calOneChannel = function (trackTBD, channel, t) {
+      return calOneChannelExt(trackTBD, channel, t).value;
+    };
+
+    calOneChannelExt = function (trackTBD, channel, t) {
         // ToDo: 在Sag控制的时间段，用SAG， 否则用普通的
         // * FlyIn: t < te;
         // * FlyOut: ts < t
@@ -70,7 +74,7 @@ window.TQ = window.TQ || {};
         if (floorSag && floorSag.sag) {
             vSag = calSag(floorSag.sag, channel, t);
             if (floorSag.t1 <= t && t <= floorSag.t) {
-                return vSag;
+                return {value: vSag, isSag: true};
             }
         }
 
@@ -78,9 +82,9 @@ window.TQ = window.TQ || {};
         // 在Sag结束的时候， 更新track， 以保存以sag的末尾状态保持下去
         var floorKfa = calTrack(channel, t);
         if (floorSag && floorSag.sag && (floorKfa.t2 < t ) && (floorKfa.t2 < floorSag.t)) {
-            return vSag;
+          return {value: vSag, isSag: true};
         }
-        return floorKfa.value;
+      return {value: floorKfa.value, isSag: false};
     };
 
     function findSag(channel, t) {
@@ -270,5 +274,28 @@ window.TQ = window.TQ || {};
         return floorKfa;
     }
 
-    TQ.TrackDecoder = TrackDecoder;
+  function ensureObjectPos(eleParent, x, y) {
+    var needToObject = false;
+    if (typeof x === 'object') {
+      if (x.isSag) {
+        needToObject = true;
+      }
+      x = x.value;
+    }
+
+    if (typeof y === 'object') {
+      if (y.isSag) {
+        needToObject = true;
+      }
+      y = y.value;
+    }
+
+    var pos = {x: x, y: y};
+    if (needToObject && eleParent) {
+      pos = eleParent.world2Object(pos);
+    }
+    return pos;
+  }
+
+  TQ.TrackDecoder = TrackDecoder;
 }());
