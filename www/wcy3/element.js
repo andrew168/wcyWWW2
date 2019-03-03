@@ -535,16 +535,16 @@ window.TQ = window.TQ || {};
             }
 
             //从世界坐标, 变换到父物体坐标系: 由Update来做
-            var p = {};
-            p.t = t;
-            Element.copyWorldData(p, child.jsonObj);
+            var pos1 = {};
+            pos1.t = t;
+            Element.copyWorldData(pos1, child.jsonObj);
             var worldData = [];
             this.saveWorldDataAll(worldData, child);
             child.parent = this;
             child.animeTrack = null; // group元素和关节，都会丢失原来的动画轨迹!!!
             this.children.push(child);
             this.toRelative(worldData, child);
-            Element.copyWorldData(child.jsonObj, p);
+            Element.copyWorldData(child.jsonObj, pos1);
 
             //ToDo： 是不是可以不加入到jsonObj.children中？
             // 因为保存的时候， 总是遍历this.children的， 而且会忽视jsonObj.children
@@ -616,12 +616,12 @@ window.TQ = window.TQ || {};
         TQ.Assert.isTrue(this.readyForChild(), "新建立的物体， 至少要新1次，补齐矩阵，才能addChild！");
         // 计算相对坐标， 并且录制。
         for (var i = 0; i < worldData.length; i++) {
-            var p = worldData[i];
+            var pos1 = worldData[i];
             TQ.DirtyFlag.setElement(this);
             child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
-            child.setFlag(p.type);
-            Element.copyWorldData(child.jsonObj, p);
-            child.update(p.t, TQ.Const.NO_RECORDING_FALSE);
+            child.setFlag(pos1.type);
+            Element.copyWorldData(child.jsonObj, pos1);
+            child.update(pos1.t, TQ.Const.NO_RECORDING_FALSE);
         }
     };
 
@@ -630,11 +630,11 @@ window.TQ = window.TQ || {};
         for (var i = 0; i < track.t.length; i++) {
             var t = track.t[i];
             this.update(t, TQ.Const.NO_RECORDING_TRUE);
-            var p = {};
-            p.t = t;
-            p.type = type;
-            Element.copyWorldData(p, this.jsonObj);
-            worldData.push(p);
+            var pos1 = {};
+            pos1.t = t;
+            pos1.type = type;
+            Element.copyWorldData(pos1, this.jsonObj);
+            worldData.push(pos1);
         }
     };
 
