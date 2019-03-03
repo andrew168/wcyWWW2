@@ -194,6 +194,7 @@ window.TQ = window.TQ || {};
         TQ.StageBuffer.open();
         this.initialize(desc);
         TQ.StageBuffer.close();
+        TQ.DirtyFlag.setElement(this); // 强制更新group元素的时间
     };
 
     p._addComponent = function (jsonFiledesc) {
@@ -1882,9 +1883,9 @@ window.TQ = window.TQ || {};
             tMax = Math.max(tMax, this.animeTrack.calculateLastFrame());
         }
 
-        if (!!p.children) {
-            for (var i = 0; i < p.children.length; i++) {
-                tMax = Math.max(tMax, p.children[i].calculateLastFrame());
+        if (!!this.children) {
+            for (var i = 0; i < this.children.length; i++) {
+                tMax = Math.max(tMax, this.children[i].calculateLastFrame());
             }
         }
 
