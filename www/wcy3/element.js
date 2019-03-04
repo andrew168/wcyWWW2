@@ -1687,6 +1687,8 @@ window.TQ = window.TQ || {};
             tsrObj = null;
         }
 
+        tsrObj.mirrorX = this.jsonObj.mirrorX;
+        tsrObj.mirrorY = this.jsonObj.mirrorY;
         return {tsrObj:tsrObj, motionType: motionType};
     };
 

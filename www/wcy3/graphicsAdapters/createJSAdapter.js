@@ -294,32 +294,32 @@ var TQ = TQ || {};
     };
 
     CreateJSAdapter.tsrObject2World = function (pose) {
-        // Pose 总是临时生成的，
-        var tsrObj = pose,
-            shapeObj = [{x: 0, y: 0}],
-            originObj = shapeObj[0];
+      // Pose 总是临时生成的，
+      var tsrObj = pose,
+        shapeObj = [{x: 0, y: 0}],
+        originObj = shapeObj[0];
 
-        // 物体坐标 ===>到 世界坐标下
-        // 平移部分：
-        var tsrWorld = this.jsonObj,
-            originWorld = this.object2World(originObj); //  only平移
-        tsrWorld.x = originWorld.x;
-        tsrWorld.y = originWorld.y;
+      // 物体坐标 ===>到 世界坐标下
+      // 平移部分：
+      var tsrWorld = this.jsonObj,
+        originWorld = this.object2World(originObj); //  only平移
+      tsrWorld.x = originWorld.x;
+      tsrWorld.y = originWorld.y;
 
-        // 比例和旋转部分：
-        var parentTSRWorld = (!this.parent || !this.parent.jsonObj) ? getDefaultRootTsr() : this.parent.jsonObj;
-        tsrWorld.rotation = parentTSRWorld.rotation + tsrObj.rotation;
-        tsrWorld.sx = parentTSRWorld.sx * tsrObj.sx;
-        tsrWorld.sy = parentTSRWorld.sy * tsrObj.sy;
+      // 比例和旋转部分：
+      var parentTSRWorld = (!this.parent || !this.parent.jsonObj) ? getDefaultRootTsr() : this.parent.jsonObj;
+      tsrWorld.rotation = parentTSRWorld.rotation + tsrObj.rotation;
+      tsrWorld.sx = parentTSRWorld.sx * (parentTSRWorld.mirrorY ? -1 : 1) * tsrObj.sx;
+      tsrWorld.sy = parentTSRWorld.sy * (parentTSRWorld.mirrorX ? -1 : 1) * tsrObj.sy;
 
-        // 可见性：
-        tsrWorld.isVis = tsrObj.visible;
-        if (tsrObj.color !== undefined) {
-            tsrWorld.color = tsrObj.color;
-        }
-        if (tsrObj.alpha !== undefined) {
-            tsrWorld.alpha = tsrObj.alpha;
-        }
+      // 可见性：
+      tsrWorld.isVis = tsrObj.visible;
+      if (tsrObj.color !== undefined) {
+        tsrWorld.color = tsrObj.color;
+      }
+      if (tsrObj.alpha !== undefined) {
+        tsrWorld.alpha = tsrObj.alpha;
+      }
     };
 
     CreateJSAdapter.updateM = function (parent, Pose) {
@@ -333,7 +333,16 @@ var TQ = TQ || {};
             parent = getDefaultRootTsr();
         }
 
-        var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, tsrObj.sx, tsrObj.sy);
+        var sx = tsrObj.sx,
+        sy = tsrObj.sy;
+        if (tsrObj.mirrorX) {
+          sx = -sx;
+        }
+        if (tsrObj.mirrorY) {
+          sy = -sy;
+        }
+
+        var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, sx, sy);
         var tsrWorld = this.jsonObj;
         tsrWorld.M = parent.M.multiply(M);
         tsrWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
