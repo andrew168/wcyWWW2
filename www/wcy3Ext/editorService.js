@@ -63,6 +63,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     previewCurrentLevel: previewCurrentLevel,
     play: play,
     stop: stop,
+    exitPreview: exitPreview,
     pause: pause,
     resume: resume,
     replay: replay,
@@ -959,6 +960,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
     if (!currScene) return 0;
     return currScene.levelNum();
+  }
+
+  function exitPreview() {
+    stop();
+    TQ.PreviewMenu.stopWatch();
   }
 
   function stop() {
