@@ -119,6 +119,6 @@ var TQ = TQ || {};
         }
         return true;
     }
-
+    TQ.QueryParams = {};
     TQ.State = State;
 }());

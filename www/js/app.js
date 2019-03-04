@@ -19,19 +19,6 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngFileUpload',
                 StatusBar.styleLightContent();
             }
 
-            var queryParams = TQ.Utility.parseUrl().params;
-            TQ.QueryParams = {
-              hideFirstClickPrompt: !!queryParams.hfcp,
-              disableAudioUnlock: !!queryParams.dau,
-              hideMenu: !!queryParams.hm,
-              wxNickName: queryParams.wnn || '',
-              wxBoneToken: queryParams.wbt || '',
-              noLocale: !!queryParams.nl,
-              openAsTopic: queryParams.ot || '',
-              topicId: queryParams.tid || 0,
-              topicTitle: queryParams.tt || ''
-            };
-
             angular.element(document).ready(function(){
                 if (!DeviceService.isReady()) {
                     // $cordovaProgress.showSimple(true);
