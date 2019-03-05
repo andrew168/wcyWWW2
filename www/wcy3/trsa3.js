@@ -212,6 +212,9 @@ var TQ = TQ || {};
     }
 
     function onDrag(e) {  //// ==mouse的onMove，
+        if (TQ.TouchManager && !TQ.TouchManager.hasStarted()) {
+          return;
+        }
         if (e.type === 'mousemove') {
             return;
         }
@@ -251,6 +254,9 @@ var TQ = TQ || {};
     }
 
     function onPinchAndRotate(e) {
+        if (TQ.TouchManager && !TQ.TouchManager.hasStarted()) {
+          return;
+        }
         if (TQ.SelectSet.isInMultiCmd()) {
             return;
         }
