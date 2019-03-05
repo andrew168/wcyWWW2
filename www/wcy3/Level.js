@@ -531,6 +531,9 @@ window.TQ = window.TQ || {};
     // 非播放状态
     if (this.isDirty) {
       this.calculateLastFrame();
+      if (this.isActive()) {
+        TQ.FrameCounter.setTMax(this.getTime());
+      }
       stage.update();
     }
     if (this.isDirtyZ) {
@@ -815,7 +818,7 @@ window.TQ = window.TQ || {};
     this.tMaxFrame = t;
     this.calculateLastFrame(); // update mixed
     if (this.isActive()) {
-      TQ.FrameCounter.setTMax(this.tMaxFrame);
+      TQ.FrameCounter.setTMax(this.getTime());
     }
   };
 

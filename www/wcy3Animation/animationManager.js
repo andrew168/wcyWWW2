@@ -240,6 +240,7 @@ TQ.AnimationManager = (function () {
 
     if (ele) {
       sagId = TQ.TrackRecorder.recordSag(ele, sags);
+      TQ.DirtyFlag.setElement(ele);
     }
 
     sagLatest = {
@@ -299,6 +300,11 @@ TQ.AnimationManager = (function () {
         break;
     }
 
+    var EPSILON = 0.1; /* 0.1s, 大约少1~2帧, 以免跨入下一个level */
+    if (TQ.FrameCounter.maxTime() < t2) {
+      TQ.FrameCounter.setTMax(t2);
+    }
+    t2 = Math.min(t2, TQ.FrameCounter.maxTime() - EPSILON);
     return {tStart: t1, tEnd: t2, stopAt: currentTime};
   }
 
@@ -660,11 +666,13 @@ TQ.AnimationManager = (function () {
       return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
     }
     TQ.TrackRecorder.removeAllSags(ele);
+    TQ.DirtyFlag.setElement(ele);
   }
 
   function removePreviewedSag() {
     if (sagLatest && sagLatest.ele && sagLatest.sag) {
       TQ.TrackRecorder.removeSag(sagLatest.ele, sagLatest.sag);
+      TQ.DirtyFlag.setElement(sagLatest.ele);
       sagLatest = null;
     }
   }
