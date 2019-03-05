@@ -74,7 +74,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
             onFileSystemReady();
         }
         TQ.Log.checkPoint('file system ready');
-        if (!TQ.Env || !TQ.Env.lang) {
+        if ((!TQ.Env || !TQ.Env.lang) && !TQ.QueryParams.noLocale) {
             TQ.Log.error('must setup default language!');
         }
         angular.element(document).ready(function () {
