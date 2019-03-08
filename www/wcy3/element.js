@@ -2062,7 +2062,7 @@ window.TQ = window.TQ || {};
             if (child.isEditorEle()) {
                 continue;
             }
-            maxZ = Math.max(maxZ, child.getZ());
+            maxZ = Math.max(maxZ, child.getMaxZ());
         }
 
         return maxZ;
