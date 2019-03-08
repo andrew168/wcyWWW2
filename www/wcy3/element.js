@@ -177,7 +177,7 @@ window.TQ = window.TQ || {};
         this.jsonObj = this.fillGap(desc);
         switch (desc.type) {
             case DescType.GROUP_FILE:
-                this._addComponent(desc);
+                this.loadFromFile(desc);
                 break;
             case DescType.BITMAP_ANIMATION:
                 this._addActorByUrl(desc, null);
@@ -188,93 +188,6 @@ window.TQ = window.TQ || {};
 
         /// assertTrue("错误的元素信息: " + JSON.stringify(itemURL), false);
         return null;
-    };
-
-    p._initializeComponent = function (desc) {
-        TQ.StageBuffer.open();
-        this.initialize(desc);
-        TQ.StageBuffer.close();
-        TQ.DirtyFlag.setElement(this); // 强制更新group元素的时间
-    };
-
-    p._addComponent = function (jsonFiledesc) {
-      var opusDesc;
-      this.children = [];
-      // 调入 json文件, 取其中的 elements
-      (function (pt) {
-        $.ajax({
-          type: 'GET',
-          url: jsonFiledesc.src
-        }).done(function (jqResponse) {
-          try {
-            var opusJson = TQ.Scene.decompress(jqResponse.data);
-            opusDesc = JSON.parse(TQ.Element.upgrade(opusJson));
-          } catch (e) {
-            displayInfo2(jqResponse);
-            TQ.Log.error(jqResponse + ". " + e.toString());
-            // 给一个空白文件， 确保可持续进行
-            opusDesc = TQ.Scene.getEmptySceneJSON();
-          }
-
-          if (opusDesc.version !== TQ.Scene.VER_LATEST) {
-            TQ.Scene.upgradeToLatest(opusDesc);
-            opusDesc.version = opusDesc.version;
-          }
-
-          var groupEleDesc = pt._extractComponent(opusDesc, jsonFiledesc.x, jsonFiledesc.y, jsonFiledesc.zIndex);
-          groupEleDesc.t0 = jsonFiledesc.t0;
-
-          if (!TQ.RM.isEmpty) {
-            TQ.RM.onCompleteOnce(function () {
-              var zMax = TQ.Utility.getMaxZ();
-              // 元件的zIndex要升高，使他置于top，可见
-              Element.liftZ(groupEleDesc, zMax);
-              pt._initializeComponent(groupEleDesc);
-            });
-          } else { // 资源都已经装入了，
-            pt._initializeComponent(groupEleDesc);
-          }
-        });
-      })(this);
-
-      // 对元件文件, 生成了一个Group，他们也需要 一个 animeTrack
-      this.animeTrack = this.jsonObj.animeTrack;
-    };
-
-    Element.liftZ = function (jsonObj, zBase) {
-        if (jsonObj.zIndex != -1) { // Group物体的zIndex，总是-1
-            jsonObj.zIndex += zBase;
-        }
-        if (jsonObj.children) {
-            for (var i = 0; i < jsonObj.children.length; i++) {
-                if (jsonObj.children[i]) {
-                    Element.liftZ(jsonObj.children[i], zBase);
-                }
-            }
-        }
-    };
-
-    p._extractComponent = function (objJson, x, y, zMax) {
-        if (!this.jsonObj) {
-            this.jsonObj = {};
-        }
-
-        if (!this.jsonObj.children) {
-            this.jsonObj.children = [];
-        }
-
-        // ToDo: 暂时只支持1个level的组件，（下面的多level合并逻辑，要重新考虑）
-        // 选取 元件中的所有元素, 作为当前元素的子元素, 如果有多个level, 则合并到一个Level
-        TQ.AssertExt.invalidLogic(objJson.levels.length===1, "元件只能有1个场景");
-        TQ.AssertExt.invalidLogic(objJson.levels[0].elements.length === 1, "元件只能有1个根元素");
-        var component = objJson.levels[0].elements;
-        TQ.RM.addElementDescList(component);
-        this.jsonObj = component[0];
-        this.jsonObj.type = "Group";  // 不论是单个物体还是多个物体,总是建立虚拟物体group， 以保留其原有的动画
-        this.jsonObj.x = x;
-        this.jsonObj.y = y;
-        this.jsonObj.zIndex = zMax;
-        return this.jsonObj;
     };
 
     p._addActorByUrl = function (desc, alias) {
