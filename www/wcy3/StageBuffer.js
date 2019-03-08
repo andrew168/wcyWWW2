@@ -44,14 +44,17 @@ window.TQ = window.TQ || {};
     };
 
     StageBuffer.flush = function () {
-        assertTrue(TQ.Dictionary.MustBeBatchMode, StageBuffer.isBatchMode);
+      assertTrue(TQ.Dictionary.MustBeBatchMode, StageBuffer.isBatchMode);
+      if (StageBuffer.members.length > 0) {
         StageBuffer.members.sort(TQ.Element.compare);
+        var ele = StageBuffer.members[0];
+        var upperEle = StageBuffer.findUpperBoundary(ele.jsonObj.zIndex);
         for (var i = 0; i < StageBuffer.members.length; i++) {
-            var ele = StageBuffer.members[i];
-            var upperEle = StageBuffer.findUpperBoundary(ele.jsonObj.zIndex);
-            ele._doAddItemToStage(upperEle);
+          ele = StageBuffer.members[i];
+          ele._doAddItemToStage(upperEle, true);
         }
         StageBuffer.members.splice(0);
+      }
     };
 
     StageBuffer.isEmpty = function() {

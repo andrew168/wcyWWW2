@@ -1037,7 +1037,7 @@ window.TQ = window.TQ || {};
         return stageContainer;
     };
 
-    p._doAddItemToStage = function (upperEle) {
+    p._doAddItemToStage = function (upperEle, ignoreOldZ) {
         // 只需要加入一次， 之后， 都是自动更新坐标，角度等等， 不需要反复加入
         // 他们的坐标都控制在 displayObj中，
         if (((null == this.displayObj) || this.isVirtualObject())) { // group物体的虚根
@@ -1059,11 +1059,11 @@ window.TQ = window.TQ || {};
         var container = this.getContainer();
         { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
             this.setFlag(Element.IN_STAGE);
-            if ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj)) { // 没有在我之上的， 我就是top
+            if (!ignoreOldZ && ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj))) { // 没有在我之上的， 我就是top
                 container.addChild(item);
             } else {
-                var z = container.getChildIndex(upperEle.displayObj);
-                if (z < 0) { // 是 group， 或者其它不可显示的物体
+                var z = (!upperEle) ? 0: container.getChildIndex(upperEle.displayObj);
+                if (z <= 0) { // 是 group， 或者其它不可显示的物体
                     container.addChild(item);
                 } else {
                     assertTrue(TQ.Dictionary.INVALID_PARAMETER, z >= 0); // 第一个元素的z = 0
