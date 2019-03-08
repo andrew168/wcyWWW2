@@ -473,6 +473,10 @@ window.TQ = window.TQ || {};
         this.setupTimer();
       }
       // add all item to stage
+      if (stageContainer.children.length > 0) {
+        this._removeAllItems();
+      }
+
       this.addAllItems();
       this.update(this._t);
       stage.update();
