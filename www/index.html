@@ -100,15 +100,12 @@
     <script type="text/javascript" src="/lib/easeljs-0.6.1.min.js"></script>
     <!-- script type="text/javascript" src="/lib/tweenjs-0.4.1.min.js"></script -->
 
-    <script type="text/javascript" src="/SDK/easeljs/display/DisplayObject.js"></script>
-    <script type="text/javascript" src="/SDK/easeljs/display/Container.js"></script>
-    <script type="text/javascript" src="/SDK/easeljs/display/Stage.js"></script>
-    <script type="text/javascript" src="/SDK/easeljs/display/Bitmap.js"></script>
-    <script type="text/javascript" src="/SDK/easeljs/display/Text.js"></script>
-
-    <script type="text/javascript" src="/SDK/easeljs/display/Sprite.js"></script>
-    <script type="text/javascript" src="/SDK/easeljs/utils/SpriteSheetUtils.js"></script>
-    <!-- 虽然以上文件在min.js库里面已经有了, 但是， 他们是修改过的， 需要打包  -->
+    <script type="text/javascript" src="/wcy3/graphicsAdapters/easeljs/DisplayObjectExt.js"></script>
+    <script type="text/javascript" src="/wcy3/graphicsAdapters/easeljs/ContainerExt.js"></script>
+    <script type="text/javascript" src="/wcy3/graphicsAdapters/easeljs/StageExt.js"></script>
+    <script type="text/javascript" src="/wcy3/graphicsAdapters/easeljs/BitmapExt.js"></script>
+    <script type="text/javascript" src="/wcy3/graphicsAdapters/easeljs/TextExt.js"></script>
+   <!-- 虽然以上文件在min.js库里面已经有了, 但是， 他们是修改过的， 需要打包  -->
 
     <!-- 以下文件在min.js库里面已经有了, load他们是为了 debug, -->
     <!-- script type="text/javascript" src="/SDK/soundjs/Sound.js"></script>
@@ -295,6 +292,7 @@
     <script type="text/javascript" src="/wcy3/debugger/dumpElement.js"></script>
 
     <script src="/js/controllers.js"></script>
+
 
 </head>
 <body class="new-bg  desktop-ok" style="height: 100vh;" ng-app="starter" eventconverter>
