@@ -564,7 +564,7 @@ window.TQ = window.TQ || {};
         return (Math.abs(x) < 0.000001);
     };
 
-    Utility.equalWithin2 = function (x, y) {
+    Utility.equalWithin2 = function (x, y) {// 2位小数点
         return (Math.abs(x - y) < 0.01);
     };
 

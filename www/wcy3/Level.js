@@ -535,8 +535,11 @@ window.TQ = window.TQ || {};
     // 非播放状态
     if (this.isDirty) {
       this.calculateLastFrame();
-      if (this.isActive()) {
+      if (this.isActive() && !TQ.Utility.equalWithin2(TQ.FrameCounter.maxTime(), this.getTime())) {
         TQ.FrameCounter.setTMax(this.getTime());
+        setTimeout(function () {
+          TQ.DirtyFlag.setCurrentLevel();
+        })
       }
       stage.update();
     }

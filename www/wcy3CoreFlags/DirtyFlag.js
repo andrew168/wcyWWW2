@@ -10,6 +10,7 @@ var TQ = TQ || {};
     DirtyFlag.setElement = setElement;
     DirtyFlag.setElementOnly = setElementOnly;
     DirtyFlag.setLevel = setLevel;
+    DirtyFlag.setCurrentLevel = setCurrentLevel;
     DirtyFlag.setScene = setAll;
     DirtyFlag.requestToUpdateAll = requestToUpdateAll;
 
@@ -40,6 +41,10 @@ var TQ = TQ || {};
             }
         }
         currScene.isDirty = true;
+    }
+
+    function setCurrentLevel(requestDirtyZ) {
+      setLevel(currScene.currentLevel, requestDirtyZ);
     }
 
     function setAll() {
