@@ -276,6 +276,9 @@ window.TQ = window.TQ || {};
     FrameCounter.isRecording = function () {return _isRecording;};
     FrameCounter.isRequestedToStop = function () { return (requestState == STATE_STOP); };
     FrameCounter.finished = function () { return (!_isRecording && (FrameCounter.v >= vMax)); };
+    FrameCounter.abPreviewFinished = function () {
+      return (abOptions && (FrameCounter.t() > abOptions.tEnd));
+    };
     FrameCounter.isAutoRewind = function () { return autoRewind; };
 
     FrameCounter.maxTime = function () {

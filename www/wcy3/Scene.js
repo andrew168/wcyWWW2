@@ -268,9 +268,10 @@ TQ = TQ || {};
         // this.updateTimeTable();
       }
       if (TQ.FrameCounter.finished() && TQ.FrameCounter.isPlaying()) {
-        if (this.isLastLevel()) {
+        TQ.FrameCounter.update();
+        if (this.isLastLevel() || TQ.FrameCounter.abPreviewFinished()) {
           // 声音是否播完
-          if (this.hasMusicCompleted()) {
+          if (this.hasMusicCompleted() || TQ.FrameCounter.abPreviewFinished()) {
             if (!TQ.FrameCounter.isAutoRewind()) {
               // this.stop();
               TQ.Log.checkPoint('Scene.EVENT_END_OF_PLAY');

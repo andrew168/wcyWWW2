@@ -239,6 +239,7 @@ window.TQ = window.TQ || {};
     p.calculateLastFrame = function() {
         var tMax = 0,
             tInMax = 0,
+            tIdleMax = 0,
             tOutMax = 0;
         if (this.sags) {
             this.sags.forEach(function (sag) {
@@ -248,10 +249,14 @@ window.TQ = window.TQ || {};
                             tInMax = Math.max(tInMax, sag.t2);
                             break;
                         case TQ.AnimationManager.SagCategory.IDLE:
-                            // ToDo: idle时间是弹性的， = 总时间 - 入场时间 - 离场时间
+                            if (!isNaN(sag.t2)) {
+                              tIdleMax = Math.max(tIdleMax, sag.t2);
+                            }
                             break;
                         case TQ.AnimationManager.SagCategory.OUT:
-                            // ToDo: 计算离场时间
+                            if (!isNaN(sag.t2)) {
+                              tOutMax = Math.max(tOutMax, sag.t2);
+                            }
                             break;
                         default :
                             break;
@@ -259,7 +264,7 @@ window.TQ = window.TQ || {};
                 }
             });
 
-            tMax = Math.max(tInMax, tOutMax);
+            tMax = Math.max(Math.max(tInMax, tIdleMax), tOutMax);
             return tMax;
         }
 
