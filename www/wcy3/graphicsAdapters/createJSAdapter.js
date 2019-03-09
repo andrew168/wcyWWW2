@@ -99,7 +99,11 @@ var TQ = TQ || {};
         } else {
             displayObj.regY = (1 - obj_dc.pivotY) * this.getHeight();
         }
-        displayObj.rotation = obj_dc.rotation;
+        if ((displayObj.scaleX < 0) !== (displayObj.scaleY < 0)) {
+          displayObj.rotation = -obj_dc.rotation;
+        } else {
+          displayObj.rotation = obj_dc.rotation;
+        }
     };
 
     CreateJSAdapter.getScale = function () {
