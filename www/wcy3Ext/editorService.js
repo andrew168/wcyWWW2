@@ -119,6 +119,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     loadLocalImage: loadLocalImage,
     loadLocalSound: loadLocalSound,
     insertPeopleImage: insertPeopleImage, // i.e. FromUrl:
+    insertIComponent: insertIComponent,
     insertPropImage: insertPropImage,
     insertBkImage: insertBkImage,
     insertImageDesc: insertImageDesc,
@@ -667,8 +668,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (!matType) {
       matType = TQ.MatType.PROP;
     }
+    var descType = (matType === TQ.ElementType.GROUP_FILE)? TQ.ElementType.GROUP_FILE: 'Bitmap';
     var desc = {
-      src: filename, type: "Bitmap", eType: TQ.MatType.toEType(matType),
+      src: filename, type: descType, eType: TQ.MatType.toEType(matType),
       autoFit: fitFlag, x: x, y: y
     };
     addItem(desc, matType);
@@ -685,6 +687,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function insertPeopleImage(filename, x, y, fitFlag) {
     insertImage(filename, x, y, TQ.MatType.PEOPLE, fitFlag);
+  }
+
+  function insertIComponent(filename, x, y, fitFlag) {
+    insertImage(filename, x, y, TQ.ElementType.GROUP_FILE, fitFlag);
   }
 
   function insertPropImage(filename, x, y, fitFlag) {

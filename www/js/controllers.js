@@ -195,6 +195,11 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         200, 300, TQ.Element.FitFlag.NO);
     };
 
+    $scope.insertIComponent = function () {
+        EditorService.insertIComponent("https://show.udoido.cn/wcy/0_4698_0_0",
+        200, 300, TQ.Element.FitFlag.NO);
+    };
+
     $scope.insertBkImage = function () {
         EditorService.insertBkImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
             300, 300);

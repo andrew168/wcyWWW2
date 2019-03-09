@@ -23,6 +23,9 @@ TQ.MatType = (function() {
         toEType: function (matType) {
             var eType;
             switch (matType) {
+                case TQ.ElementType.GROUP_FILE:
+                    eType = TQ.ElementType.GROUP_FILE;
+                    break;
                 case TQ.MatType.BKG:
                     eType = TQ.Element.ETYPE_BACKGROUND;
                     break;
