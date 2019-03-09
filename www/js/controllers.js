@@ -192,7 +192,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
 
     $scope.insertPeople = function () {
         EditorService.insertPeopleImage("https://res.cloudinary.com/eplan/image/upload/v1501348053/c29.png",
-        300, 300);
+        200, 300, TQ.Element.FitFlag.NO);
     };
 
     $scope.insertBkImage = function () {
@@ -207,16 +207,18 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertCircle = function () {
-      EditorService.insertCircle(0, 0, 50);
-      EditorService.insertCircle(100, 0, 50);
-      EditorService.insertCircle(200, 0, 50);
-      EditorService.insertCircle(0, 100, 50);
-      EditorService.insertCircle(100, 100, 50);
-      EditorService.insertCircle(200, 100, 50);
-      EditorService.insertCircle(0, 200, 50);
-      EditorService.insertCircle(100, 200, 50);
-      EditorService.insertCircle(200, 200, 50);
-      EditorService.insertCircle(100, 300, 50);
+      EditorService.insertCircle(0, 0, 10);
+      EditorService.insertCircle(100, 0, 10);
+      EditorService.insertCircle(200, 0, 10);
+      EditorService.insertCircle(0, 100, 10);
+      EditorService.insertCircle(100, 100, 10);
+      EditorService.insertCircle(200, 100, 10);
+      EditorService.insertCircle(0, 200, 10);
+      EditorService.insertCircle(100, 200, 10);
+      EditorService.insertCircle(200, 200, 10);
+      EditorService.insertCircle(0, 300, 10);
+      EditorService.insertCircle(100, 300, 10);
+      EditorService.insertCircle(200, 300, 10);
     };
 
     $scope.insertRectangle = function () {

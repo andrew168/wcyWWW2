@@ -660,13 +660,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     return (url && (TQ.Config.whiteListMatHosts.indexOf(mainDomain) < 0));
   }
 
-  function insertImage(filename, x, y, matType) {
+  function insertImage(filename, x, y, matType, fitFlag) {
+    if (!fitFlag) {
+      fitFlag = TQ.Element.FitFlag.WITHIN_FRAME;
+    }
     if (!matType) {
       matType = TQ.MatType.PROP;
     }
     var desc = {
       src: filename, type: "Bitmap", eType: TQ.MatType.toEType(matType),
-      autoFit: TQ.Element.FitFlag.WITHIN_FRAME, x: x, y: y
+      autoFit: fitFlag, x: x, y: y
     };
     addItem(desc, matType);
   }
@@ -680,12 +683,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     TQ.SceneEditor.addItem(desc);
   }
 
-  function insertPeopleImage(filename, x, y) {
-    insertImage(filename, x, y, TQ.MatType.PEOPLE);
+  function insertPeopleImage(filename, x, y, fitFlag) {
+    insertImage(filename, x, y, TQ.MatType.PEOPLE, fitFlag);
   }
 
-  function insertPropImage(filename, x, y) {
-    insertImage(filename, x, y, TQ.MatType.PROP);
+  function insertPropImage(filename, x, y, fitFlag) {
+    insertImage(filename, x, y, TQ.MatType.PROP, fitFlag);
   }
 
   function insertBkImage(filename, x, y) {
