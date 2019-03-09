@@ -74,8 +74,15 @@ var TQ = TQ || {};
         var obj_dc = this.world2Dc();
         displayObj.x = obj_dc.x;
         displayObj.y = obj_dc.y;
-        displayObj.scaleX = (jsonObj.mirrorY ? -obj_dc.sx : obj_dc.sx);
-        displayObj.scaleY = (jsonObj.mirrorX ? -obj_dc.sy : obj_dc.sy);
+        if (this.jsonObj.M) {
+//          TQ.AssertExt.invalidLogic(TQ.Utility.equalWithin2(Math.abs(this.jsonObj.M.elements[0][0]), obj_dc.sx));
+  //        TQ.AssertExt.invalidLogic(TQ.Utility.equalWithin2(Math.abs(this.jsonObj.M.elements[1][1]), obj_dc.sy));
+          displayObj.scaleX = this.jsonObj.M.elements[0][0];
+          displayObj.scaleY = this.jsonObj.M.elements[1][1];
+        } else {
+          displayObj.scaleX = obj_dc.sx;
+          displayObj.scaleY = obj_dc.sy;
+        }
         displayObj.regX = obj_dc.pivotX * this.getWidth();
         displayObj.color = jsonObj.color;
         displayObj.alpha = jsonObj.alpha;
@@ -336,10 +343,10 @@ var TQ = TQ || {};
         var sx = tsrObj.sx,
         sy = tsrObj.sy;
         if (tsrObj.mirrorX) {
-          sx = -sx;
+          sy = -sy;
         }
         if (tsrObj.mirrorY) {
-          sy = -sy;
+          sx = -sx;
         }
 
         var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, sx, sy);
