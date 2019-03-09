@@ -74,14 +74,12 @@ var TQ = TQ || {};
         var obj_dc = this.world2Dc();
         displayObj.x = obj_dc.x;
         displayObj.y = obj_dc.y;
+        if (!this.jsonObj.M) {
+          this.updateM(this.parent, this.jsonObj);
+        }
         if (this.jsonObj.M) {
-//          TQ.AssertExt.invalidLogic(TQ.Utility.equalWithin2(Math.abs(this.jsonObj.M.elements[0][0]), obj_dc.sx));
-  //        TQ.AssertExt.invalidLogic(TQ.Utility.equalWithin2(Math.abs(this.jsonObj.M.elements[1][1]), obj_dc.sy));
           displayObj.scaleX = this.jsonObj.M.elements[0][0];
           displayObj.scaleY = this.jsonObj.M.elements[1][1];
-        } else {
-          displayObj.scaleX = obj_dc.sx;
-          displayObj.scaleY = obj_dc.sy;
         }
         displayObj.regX = obj_dc.pivotX * this.getWidth();
         displayObj.color = jsonObj.color;
