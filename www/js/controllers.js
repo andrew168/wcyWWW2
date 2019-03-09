@@ -196,7 +196,11 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertIComponent = function () {
-        EditorService.insertIComponent("https://show.udoido.cn/wcy/0_4698_0_0",
+      // var iComponentId = 4698;
+      // var iComponentId = 4725;
+      var iComponentId = 4727;
+
+      EditorService.insertIComponent("https://show.udoido.cn/wcy/0_" + iComponentId + "_0_0",
         200, 300, TQ.Element.FitFlag.NO);
     };
 
