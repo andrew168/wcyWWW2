@@ -78,8 +78,8 @@ var TQ = TQ || {};
           this.updateM(this.parent, this.jsonObj);
         }
         if (this.jsonObj.M) {
-          displayObj.scaleX = this.jsonObj.M.elements[0][0];
-          displayObj.scaleY = this.jsonObj.M.elements[1][1];
+          displayObj.scaleX = (jsonObj.mirrorY ? -obj_dc.sx : obj_dc.sx);
+          displayObj.scaleY = (jsonObj.mirrorX ? -obj_dc.sy : obj_dc.sy);
         }
         displayObj.regX = obj_dc.pivotX * this.getWidth();
         displayObj.color = jsonObj.color;
