@@ -48,6 +48,17 @@ window.TQ = window.TQ || {};
         ]);
     };
 
+    Matrix2D.mirrorX = function () {
+      return Matrix2D.scale(1, -1);
+    };
+
+    Matrix2D.mirrorY = function () {
+      return Matrix2D.scale(-1, 1);
+    };
+    Matrix2D.mirrorXY = function () {
+      return Matrix2D.scale(-1, -1);
+    };
+
     Matrix2D.rotation = function(thita) {
         var radian = (thita == null) ? 0: (thita * Matrix2D.DEG_TO_RAD);
         var c = Math.cos(radian), s = Math.sin(radian);
@@ -75,5 +86,12 @@ window.TQ = window.TQ || {};
         ]);
     };
 
-    TQ.Matrix2D = Matrix2D;
+    Matrix2D.angle360 = function(matrix2D) {
+      var vec3 = TQ.Vector2D.create([1, 0, 0]), //X轴，忽略其次坐标
+        rotatedVec3 = matrix2D.multiply(vec3),
+        rotatedVec2 = TQ.Vector2D.create([rotatedVec3.elements[0], rotatedVec3.elements[1]]);
+      return rotatedVec2.angle360();
+    };
+
+  TQ.Matrix2D = Matrix2D;
 }());

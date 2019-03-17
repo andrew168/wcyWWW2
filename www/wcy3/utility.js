@@ -577,6 +577,40 @@ window.TQ = window.TQ || {};
             Utility.equalBoxSize(box1, box2));
     };
 
+    Utility.limitToAcuteAngle = function(angle) {
+      var absAngle = Math.abs(angle);
+      while (absAngle > 180) {
+        if (angle < 0) {
+          angle = 360 + angle;
+        } else {
+          angle = -360 + angle;
+        }
+        absAngle = Math.abs(angle);
+      }
+
+      if (absAngle > 180) {
+        console.error("应该是锐角" + angle);
+      }
+
+      return angle;
+    };
+
+    Utility.limitTo360 = function (angle) {
+      if ((angle > 360) || (angle < -360)) {
+        angle = (angle % 360);
+      }
+      return angle;
+    };
+
+    Utility.mirror = function (pStart, pEnd) {
+      //                  Start--->End
+      //   EndMirrored<---Start
+      return {
+        x: 2 * pStart.x - pEnd.x,
+        y: 2 * pStart.y - pEnd.y
+      };
+    };
+
     Utility.getTopicId = function() {
         var topicIdFromScene = (currScene && currScene.topicId)? currScene.topicId: 0;
         if (!topicIdFromScene) { // 防止"" 和 string型的数字

@@ -25,9 +25,8 @@ window.TQ = window.TQ || {};
 
     p.angle360 = function() {
         assertFalse("vector  not 0", ((this.elements[0] == 0) && (this.elements[1] == 0)));
-
+        TQ.AssertExt.invalidLogic(this.elements.length === 2, "必须是2D向量， 不能用齐次坐标");
         var angle = this.angleFrom($V([1, 0])) * TQ.MathExt.RAD_TO_DEG;
-
         var x = this.elements[0];
         var y = this.elements[1];
 
@@ -48,7 +47,7 @@ window.TQ = window.TQ || {};
     };
 
     p.signFrom = function(vFrom) {
-      var A = $V([vFrom.elements[0], vFrom.elements[1], 0])
+      var A = $V([vFrom.elements[0], vFrom.elements[1], 0]);
       var B = $V([this.elements[0], this.elements[1], 0]);
       var normal = A.cross(B);
       var z = normal.elements[2];
