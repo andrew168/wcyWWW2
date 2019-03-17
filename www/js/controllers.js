@@ -196,10 +196,10 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     };
 
     $scope.insertIComponent = function () {
-      // var iComponentId = 4698;
+      var iComponentId = 4698;
       // var iComponentId = 4725;
       // var iComponentId = 4727;
-      var iComponentId = 4728;
+      // var iComponentId = 4729;
 
       EditorService.insertIComponent("https://show.udoido.cn/wcy/0_" + iComponentId + "_0_0",
         200, 300, TQ.Element.FitFlag.NO);
@@ -552,5 +552,11 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
 
     $scope.getOutro = function () {
         currScene.attachOutro(currScene.levels);
+    };
+
+  $scope.$on(TQ.Scene.EVENT_READY, function () {
+    if (!TQ.State.isPlayOnly) {
+      EditorService.toAddMode();
     }
+  });
 }
