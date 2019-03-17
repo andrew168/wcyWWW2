@@ -12,6 +12,8 @@
   border: solid 3px silver;
   padding-top: 10px;
   padding-bottom: 10px;
+  width: 100%;
+  max-height: 50%;
 }
 
 /* 图层规划 */

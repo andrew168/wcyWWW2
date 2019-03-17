@@ -72,7 +72,7 @@ TQDebugger.Panel = (function () {
     }
 
     // 要显示它？un comment下面的句子：
-    close();
+    // close();
   }
 
   function open() {
@@ -84,8 +84,13 @@ TQDebugger.Panel = (function () {
   }
 
   function logInfo(msg) {
+    var src = eleLog.innerHTML;
+    while (src.length > 400) {
+      var pos= src.indexOf('</p>', 20);
+      src = src.substr(pos);
+    }
     if (eleLog) {
-      eleLog.innerHTML += '<p>' + msg + '</p>';
+      eleLog.innerHTML = src + '<p>' + msg + '</p>';
     }
   }
 }());
