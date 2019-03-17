@@ -28,25 +28,7 @@ window.TQ = window.TQ || {};
     function vec2Angle(S, E, A) { //  从SE 转到SA 需要转多少角度？
         var SE = TQ.Vector2D.calDirection(S, E);
         var SA = TQ.Vector2D.calDirection(S, A);
-        return limitToAcuteAngle(SA.angle360From(SE));
-    }
-
-    function limitToAcuteAngle(angle) {
-        var absAngle = Math.abs(angle);
-        while (absAngle > 180) {
-            if (angle < 0) {
-                angle = 360 + angle;
-            } else {
-                angle = -360 + angle;
-            }
-            absAngle = Math.abs(angle);
-        }
-
-        if (absAngle > 180) {
-            console.error("应该是锐角" + angle);
-        }
-
-        return angle;
+        return TQ.Utility.limitToAcuteAngle(SA.angle360From(SE));
     }
 
     function getEWorld(targetElement) {
@@ -73,7 +55,7 @@ window.TQ = window.TQ || {};
             angle = relativeAngle + parentAngle;
         }
 
-        return limitToAcuteAngle(angle);
+        return TQ.Utility.limitToAcuteAngle(angle);
     }
 
     /*
@@ -114,7 +96,7 @@ window.TQ = window.TQ || {};
         }
     }
 
-    function calOneBone(child, target, A) {
+    function calOneBone(child, target, A, idIterations) {
         // 目的是把E点转动到A点，通过各级bone绕自身轴点S的转动实现
         // S: 转动的支点， 也是当前处理之Bone的pivot点
         // E: 终点， 物体上被鼠标点击的位置，虽然E的物体坐标不变，但其世界坐标在求解过程中是改变的。
@@ -123,6 +105,11 @@ window.TQ = window.TQ || {};
         // target：选中的bone，一般是最末的一个bone。
         var S = child.getPositionInWorld();
         var E = getEWorld(target);
+        TQDebugger.Panel.logInfo(idIterations + ", X, " + child.id + ", EO(" +
+          Math.round(EObj.x) + "," + Math.round(EObj.y) + ") <- A(" +
+          Math.round(A.x) + "," + Math.round(A.y) + ") <- E(" +
+          Math.round(E.x) + "," + Math.round(E.y) + ")");
+
         if (hasAchieved(E, A)) return true;
         var angle = vec2Angle(S, E, A);   // 从SE转到SA,
         var operationFlags = child.getOperationFlags();  // 必须保存， 因为 update和record会清除 此标记。
@@ -132,9 +119,6 @@ window.TQ = window.TQ || {};
         var parent = child.parent;
         if (child.isRoot() || !parent || parent.isPinned() ||
           (parent.isRoot() && TQ.State.fiexdRootJoint)) { // 如果固定了, 不IK
-            TQ.Log.debugInfo("not achieved: (" +
-                Math.round(A.x) + "," + Math.round(A.y) + ") <-- (" +
-                Math.round(E.x) + "," + Math.round(E.y) + ")");
             return false; // 达到根, 迭代了一遍, 未达到目标,
         }
 
@@ -151,7 +135,7 @@ window.TQ = window.TQ || {};
         if (!child) return;
 
         angle = applyLimitation(child, child.jsonObj.rotation + angle);
-        TQ.CommandMgr.directDo(new TQ.RotateCommand(child, angle));
+        child.rotateTo(child.getRotateDirection() * angle);
         child.update(TQ.FrameCounter.t()); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
         TQ.Log.info("IKRotate ele.id " + child.id + " @ angle = " + angle);
         TQ.DirtyFlag.setElement(child);
@@ -167,6 +151,7 @@ window.TQ = window.TQ || {};
         }
 
         var A = element.dc2World(TQ.Utility.eventToDevice(ev));
+
         if (offset.firstTime) {
           EObj = determineE(element, offset, ev);
           offset.firstTime = false;
@@ -177,7 +162,7 @@ window.TQ = window.TQ || {};
         }
 
         for (var i =0; i < TQ.Config.IK_ITERATE_TIME; i++) {
-            if (calOneBone(target, target, A)) {
+            if (calOneBone(target, target, A, i)) {
                 return TQ.Log.debugInfo("achieved");
             }
         }
