@@ -78,8 +78,8 @@ var TQ = TQ || {};
           this.updateM(this.parent, this.jsonObj);
         }
         if (this.jsonObj.M) {
-          displayObj.scaleX = (jsonObj.mirrorY ? -obj_dc.sx : obj_dc.sx);
-          displayObj.scaleY = (jsonObj.mirrorX ? -obj_dc.sy : obj_dc.sy);
+          displayObj.scaleX = (this.getMirrorY() ? -obj_dc.sx : obj_dc.sx);
+          displayObj.scaleY = (this.getMirrorX() ? -obj_dc.sy : obj_dc.sy);
         }
         displayObj.regX = obj_dc.pivotX * this.getWidth();
         displayObj.color = jsonObj.color;
@@ -99,11 +99,7 @@ var TQ = TQ || {};
         } else {
             displayObj.regY = (1 - obj_dc.pivotY) * this.getHeight();
         }
-        if ((displayObj.scaleX < 0) !== (displayObj.scaleY < 0)) {
-          displayObj.rotation = -obj_dc.rotation;
-        } else {
-          displayObj.rotation = obj_dc.rotation;
-        }
+        displayObj.rotation = this.getRotateDirection() * obj_dc.rotation;
     };
 
     CreateJSAdapter.getScale = function () {
@@ -317,9 +313,9 @@ var TQ = TQ || {};
 
       // 比例和旋转部分：
       var parentTSRWorld = (!this.parent || !this.parent.jsonObj) ? getDefaultRootTsr() : this.parent.jsonObj;
-      tsrWorld.rotation = parentTSRWorld.rotation + tsrObj.rotation;
-      tsrWorld.sx = parentTSRWorld.sx * (parentTSRWorld.mirrorY ? -1 : 1) * tsrObj.sx;
-      tsrWorld.sy = parentTSRWorld.sy * (parentTSRWorld.mirrorX ? -1 : 1) * tsrObj.sy;
+      tsrWorld.rotation = TQ.Utility.limitTo360(parentTSRWorld.rotation + tsrObj.rotation);
+      tsrWorld.sx = parentTSRWorld.sx * tsrObj.sx;
+      tsrWorld.sy = parentTSRWorld.sy * tsrObj.sy;
 
       // 可见性：
       tsrWorld.isVis = tsrObj.visible;
@@ -343,17 +339,39 @@ var TQ = TQ || {};
         }
 
         var sx = tsrObj.sx,
-        sy = tsrObj.sy;
-        if (tsrObj.mirrorX) {
-          sy = -sy;
-        }
-        if (tsrObj.mirrorY) {
-          sx = -sx;
-        }
+          sy = tsrObj.sy,
+          selfRotation = tsrObj.rotation,
+          parentRotation = parent.rotation;
 
-        var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, sx, sy);
+
+        // 绕任意点任意轴的镜像和比例：
+        // 先回到原点、正X轴，做比例和镜像，然后在变换回去
+        // translate to (0,0)
+        //    rotate to X
+        //      mirror along X, scale,
+        //    rotate back
+        // translate back
+        var MTranslateToP = TQ.Matrix2D.transformation(-tsrObj.x, -tsrObj.y, 0, 1, 1);
+        var MRotateToX =    TQ.Matrix2D.transformation(0, 0, -parentRotation, 1, 1);
+        var MMirror;
+         if (tsrObj.mirrorX) {
+           if (tsrObj.mirrorY) {
+             MMirror = TQ.Matrix2D.mirrorXY();
+           } else {
+             MMirror = TQ.Matrix2D.mirrorX();
+           }
+         } else if (tsrObj.mirrorY) {
+           MMirror = TQ.Matrix2D.mirrorY();
+         } else {
+           MMirror = TQ.Matrix2D.I();
+         }
+
+        var MRotateBack = TQ.Matrix2D.transformation(0, 0, parentRotation, 1, 1);
+        var MTranslateBack = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, 0, 1, 1);
+        var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, selfRotation, sx, sy);
         var tsrWorld = this.jsonObj;
-        tsrWorld.M = parent.M.multiply(M);
+        tsrWorld.M = parent.M.multiply(MTranslateBack).multiply(MRotateBack).multiply(MMirror).
+          multiply(MRotateToX).multiply(MTranslateToP).multiply(M);
         tsrWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
         tsrWorld.visible = parent.isVis;
         tsrWorld.alpha = tsrWorld.alpha * parent.alpha;

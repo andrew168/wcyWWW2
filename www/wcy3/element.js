@@ -1705,6 +1705,47 @@ window.TQ = window.TQ || {};
         return this.jsonObj.rotation;
     };
 
+    p.rotate = function (angle) {
+      this.rotateTo(this.jsonObj.rotation + (this.getRotateDirection() * angle));
+    };
+
+    p.getRotateDirection = function() {
+      var direction = 1;
+      if (this.jsonObj.mirrorX) {
+        direction = -direction;
+      }
+      if (this.jsonObj.mirrorY) {
+        direction = -direction;
+      }
+      if (this.parent) {
+        return direction * this.parent.getRotateDirection();
+      }
+      return direction;
+    };
+    p.getMirrorX = function () {
+      var result = this.jsonObj.mirrorX;
+      if (this.parent) {
+        if (result) {
+          result = !this.parent.getMirrorX();
+        } else {
+          result = this.parent.getMirrorX();
+        }
+      }
+      return result;
+    };
+
+    p.getMirrorY = function () {
+      var result = this.jsonObj.mirrorY;
+      if (this.parent) {
+        if (result) {
+          result = !this.parent.getMirrorY();
+        } else {
+          result = this.parent.getMirrorY();
+        }
+      }
+      return result;
+    };
+
     p.rotateTo = function (angle) {
         if (this.isPinned()) {
             return;

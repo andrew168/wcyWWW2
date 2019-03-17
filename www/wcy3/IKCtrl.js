@@ -111,7 +111,7 @@ window.TQ = window.TQ || {};
           Math.round(E.x) + "," + Math.round(E.y) + ")");
 
         if (hasAchieved(E, A)) return true;
-        var angle = vec2Angle(S, E, A);   // 从SE转到SA,
+        var angle = child.getRotateDirection() * vec2Angle(S, E, A);   // 从SE转到SA,
         var operationFlags = child.getOperationFlags();  // 必须保存， 因为 update和record会清除 此标记。
         rotate(child, angle);
         if (isSimpleRotationMode) return true;  // 简单旋转， 比不牵涉其它关节，
@@ -159,6 +159,11 @@ window.TQ = window.TQ || {};
 
         if (!EObj) {
           displayInfo2(TQ.Dictionary.PleaseSelectOne);
+        }
+
+        if (element.getRotateDirection()<0) {
+          var EWorld = getEWorld(element);
+          // A = TQ.Utility.mirror(EWorld, A);
         }
 
         for (var i =0; i < TQ.Config.IK_ITERATE_TIME; i++) {
