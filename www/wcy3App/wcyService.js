@@ -191,6 +191,10 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
   }
 
   function getWcy(shareString) {
+    if (currScene) {
+      currScene.close();
+      currScene.reset();
+    }
     TQ.State.isTopicIntro = false;
     _getWcy(shareString);
   }

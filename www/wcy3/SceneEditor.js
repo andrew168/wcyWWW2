@@ -310,7 +310,9 @@ var currScene = null;
     }
     //stage.enableMouseOver();
     TQBase.LevelState.reset();
-    initializeCoreModules();
+    if (!currScene) {
+      initializeCoreModules();
+    }
     loadScene(fileInfo);
     initializeControllers();
   }
@@ -358,16 +360,10 @@ var currScene = null;
       fileInfo = {name: fileInfo, content: null};
     }
 
-    if (currScene) {
-      currScene.reset();
-    }
-
     TQ.MessageBox.reset();
     if (!currScene) {
       currScene = new TQ.Scene();
       TQ.WCY.currentScene = currScene;
-    } else {
-      currScene.close();
     }
     TQ.GarbageCollector.reset();
     currScene.open(fileInfo);
