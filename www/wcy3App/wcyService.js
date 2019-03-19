@@ -492,7 +492,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
       return;
     }
 
-    var url = TQ.Config.OPUS_HOST + '/wcy/' + shareString;
+    var url = TQ.Config.OPUS_HOST + '/wcy/' + TQ.Utility.getShareCodeCore(shareString);
     return $http.get(url);
   }
 

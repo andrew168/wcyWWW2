@@ -307,7 +307,7 @@ window.TQ = window.TQ || {};
 
     Utility.parseUrl = function (url) {
       var params = {},
-        shareCode="";
+        shareCode = "";
       var hash = (!url) ? window.location.hash : TQ.Base.Utility.urlParser(url).hash;
       if (hash) {
         hash = decodeURI(hash);
@@ -321,7 +321,12 @@ window.TQ = window.TQ || {};
         }
       }
 
-      return {shareCode:shareCode, params: params};
+      return {shareCode: shareCode, params: params};
+    };
+
+    Utility.getShareCodeCore = function (shareCodeLong) {
+      var shareCodeDecoded = decodeURIComponent(decodeURIComponent(shareCodeLong));
+      return shareCodeDecoded.split('?')[0];
     };
 
     function transformToAssocArray(parameters) {
