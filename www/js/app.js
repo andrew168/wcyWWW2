@@ -80,10 +80,15 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngFileUpload',
         // Set up the various states which the app can be in.
         // Each state's controller can be found in controllers.js
         $stateProvider
+            .state('do', {
+              url: '/do',
+              templateUrl: '/templates/tab-dash.html',
+              controller: 'DashCtrl'
+            })
             .state('opus', {
-                url: '/opus/:shareCode',
-                templateUrl: '/templates/tab-dash.html',
-                controller: 'DashCtrl'
+              url: '/opus/:shareCode',
+              templateUrl: '/templates/tab-dash.html',
+              controller: 'DashCtrl'
             })
             .state('wcy', {
                 url: '/wcy/:shareCode',

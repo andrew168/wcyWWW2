@@ -1,10 +1,10 @@
 angular.module('starter').controller('DashCtrl', DashCtrl);
-DashCtrl.$inject = ['$scope', '$stateParams', 'WCY', '$cordovaImagePicker',
+DashCtrl.$inject = ['$scope', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
         'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
         'AppService', 'MatLibService', 'UserService', 'DataService'];
 
-function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
+function DashCtrl($scope, WCY, $cordovaImagePicker,
             $cordovaSocialSharing,
             FileService, NetService, DeviceService, WxService, EditorService,
             AppService, MatLibService, UserService, DataService) {
@@ -15,6 +15,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
         selectedSingle: 'Samantha',
         selectedSingleKey: '5'
     };
+
 
     $scope.timelineSlider = TQ.TimerUI.rangeSlider;
     $scope.fontSizes = [
@@ -53,7 +54,7 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
     function onAppStarted() {
         //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
         TQ.Log.checkPoint("App Started");
-        var opus = $stateParams.shareCode || TQ.Utility.getUrlParam('opus');
+        var opus = TQ.QueryParams.shareCode;
         EditorService.initialize();
         if (opus) {
             WCY.getWcy(opus);
@@ -559,4 +560,20 @@ function DashCtrl($scope, $stateParams, WCY, $cordovaImagePicker,
       EditorService.toAddMode();
     }
   });
+
+  function initialize() {
+    TQ.QueryParams = TQ.Utility.parseUrl();
+    $scope.$on('$locationChangeStart', function (evt) {
+      console.log(evt);
+      TQ.QueryParams = TQ.Utility.parseUrl();
+      var opus = TQ.QueryParams.shareCode;
+      if (opus) {
+        WCY.getWcy(opus);
+      } else {
+        WCY.start();
+      }
+    });
+  }
+
+  initialize();
 }

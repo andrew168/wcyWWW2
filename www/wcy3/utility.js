@@ -313,10 +313,19 @@ window.TQ = window.TQ || {};
         hash = decodeURI(hash);
         var words = hash.split(/\/|\?/);// 其中[3]是？之后的全部query参数
         if (words.length >= 3) {
-          shareCode = words[2];
-          var queryString = words[3];
-          if (queryString != null && queryString != "") {
+          var queryString;
+          if (words[1].toLowerCase() === 'do') { // 新的url
+            queryString = words[2];
+          } else {
+            shareCode = words[2];
+            queryString = words[3];
+          }
+
+          if (queryString != null && queryString !== "") {
             params = transformToAssocArray(queryString);
+            if (!shareCode && params.sc) {
+              shareCode = params.sc;
+            }
           }
         }
       }
