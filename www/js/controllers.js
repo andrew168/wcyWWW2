@@ -563,14 +563,19 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
 
   function initialize() {
     TQ.QueryParams = TQ.Utility.parseUrl();
+    var lastOpus = null;
     $scope.$on('$locationChangeStart', function (evt) {
       console.log(evt);
       TQ.QueryParams = TQ.Utility.parseUrl();
-      var opus = TQ.QueryParams.shareCode;
-      if (opus) {
-        WCY.getWcy(opus);
-      } else {
-        WCY.start();
+      var opus = TQ.QueryParams.shareCode || TQ.QueryParamsConverted.shareCode;
+      TQ.QueryParamsConverted = null;
+      if (opus !== lastOpus) {
+        lastOpus = opus;
+        if (opus) {
+          WCY.getWcy(opus);
+        } else {
+          WCY.start();
+        }
       }
     });
   }

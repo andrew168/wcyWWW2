@@ -86,19 +86,19 @@ angular.module('starter', ['ionic', 'ngStorage', 'ngCordova', 'ngFileUpload',
               controller: 'DashCtrl'
             })
             .state('opus', {
-              url: '/opus/:shareCode',
-              templateUrl: '/templates/tab-dash.html',
-              controller: 'DashCtrl'
+                url: '/opus/:shareCode',
+                templateUrl: '/templates/convert.html',
+                controller: 'ConvertCtrl'
             })
             .state('wcy', {
                 url: '/wcy/:shareCode',
-                templateUrl: '/templates/tab-dash.html',
-                controller: 'DashCtrl'
+              templateUrl: '/templates/convert.html',
+              controller: 'ConvertCtrl'
             })
             .state('edit', {
                 url: '/edit/:shareCode',
-                templateUrl: '/templates/tab-dash.html',
-                controller: 'DashCtrl'
+                templateUrl: '/templates/convert.html',
+                controller: 'ConvertCtrl'
             })
             .state('opus.edit', {
                 url: '/edit' //没有templateUrl，也没有controller， 都是父state的，也就不刷新页面了
