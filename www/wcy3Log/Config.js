@@ -12,7 +12,7 @@ window.TQ = window.TQ || {};
     Config.MAX_UNDO_STEP = 100;
     Config.MAX_KEYFRAME = 2000;
     Config.MAX_FILE_SIZE = 1024000; // 1M;
-    Config.MAX_SOUND_FILE_SIZE = 800000; // 800K;
+    Config.MAX_SOUND_FILE_SIZE = 5000000; // 5M;
 
     // 素材限制:
     Config.MAT_MAX_FILE_SIZE_IN_M = 10;
