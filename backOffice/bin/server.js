@@ -56,6 +56,11 @@ function init() {
 //    app.use(vhost('www.kidsafer.org', require('./kidSaferAppServer').app));
 // app.use(vhost('www.kidsafer.org', require('./vHostTest2AppServer').app));
     app.use(vhost('show.udoido.cn', require('./eCardAppServer').app));
+    // app.use(vhost('bone.udoido.cn', require('./eCardAppServer').app));
+    app.use(vhost('bone.udoido.cn', function (req, res) {
+      // res.status(301).redirect("https://show.udoido.cn");
+       res.redirect('https://show.udoido.cn');
+    }));
     // app.use(vhost('any1.udoido11.cn', require('./eCardAppServer').app));
     // app.use(vhost('www.udoido.com', require('./eCardAppServer').app));
     //app.use(vhost('show.udoido.com', require('./eCardAppServer').app));
