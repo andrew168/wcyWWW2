@@ -72,7 +72,7 @@ TQDebugger.Panel = (function () {
     }
 
     // 要显示它？un comment下面的句子：
-    // close();
+    close();
   }
 
   function open() {
