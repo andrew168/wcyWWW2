@@ -47,12 +47,6 @@
             latestOpus = new TQ.DataObject(), // latest published
             fineOpus = new TQ.DataObject(); // latest fine opus
 
-        function updateWork(work, tag, wcyName, screenshot) {
-            work.tag = tag;
-            work.filename = wcyName;
-            work.screenshortName = screenshot;
-        }
-
         function cloneWork(work) {
 
         }
