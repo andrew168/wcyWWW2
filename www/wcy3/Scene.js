@@ -10,7 +10,7 @@ TQ = TQ || {};
     this.topic = TQ.State.topic;
     this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
     this.version = Scene.VER_LATEST;
-    this.filename = null; // filename是文件名， 仅仅只是机器自动生成的唯一编号
+    this.setFilenameById(TQ.Config.UNNAMED_SCENE_ID); // filename是文件名， 仅仅只是机器自动生成的唯一编号
     this.setDesignatedSize(Scene.getDesignatedRegionDefault());
     this.isDirty = true;
     this.tMax = 0;
@@ -64,12 +64,12 @@ TQ = TQ || {};
   Scene.restoreState = restoreState;
   Scene.getDefaultTitle = getDefaultTitle;
   Scene.getWcyId = function () {
-    TQ.AssertExt.invalidLogic(Scene.wcyId !== undefined && Scene.wcyId >= 0, "必须先赋值");
-    return Scene.wcyId;
+    TQ.AssertExt.invalidLogic(currScene && currScene.filename !== undefined && currScene.filename >= 0, "必须先赋值");
+    return currScene.filename;
   };
 
   Scene.setWcyId = function (id) {
-    Scene.wcyId = id;
+    currScene.setFilenameById(id);
   };
 
   function ensureFirstClick(callback) {
@@ -610,7 +610,7 @@ TQ = TQ || {};
     p.isPlayOnly = (fileInfo.isPlayOnly === undefined) ? false : fileInfo.isPlayOnly;
     // TQ.MessageBox.showWaiting(TQ.Locale.getStr('prepare to open...'));
     this.reset();
-    this.setFilename(fileInfo.filename);
+    this.setFilenameById(fileInfo.filename);
     this.screenshotName = fileInfo.screenshotName;
     this.title = null;
 
@@ -669,12 +669,11 @@ TQ = TQ || {};
   };
 
   p.setDefaultValue = function () {
-    Scene.wcyId = undefined;
     this.tMax = 0;
     this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
     this.isShared = false;  //只是打开旧的文件， 没有尚未修改
     this.title = TQ.Config.UNNAMED_SCENE; // 必须reset, 因为currScene在New新作品的时候， reuse了
-    this.filename = null;
+    this.setFilenameById(TQ.Config.UNNAMED_SCENE_ID);
     this.description = null;
     this.ssPath = null; // 初始化， 没有此值
     this.hasScreenShotManual = false;
@@ -1276,10 +1275,6 @@ TQ = TQ || {};
       TQ.FrameCounter.setTMax(this.tMax);
       TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
     }
-  };
-
-  p.setFilename = function (name) {
-    return this.filename = name;
   };
 
   p.setFilenameById = function (wcyId) {

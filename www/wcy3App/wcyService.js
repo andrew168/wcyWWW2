@@ -81,10 +81,9 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
     writeCache(_WCY_ID_, _wcyId);
     if (currScene) {
       currScene.isShared = false;
-      currScene.setFilename(TQ.Config.UNNAMED_SCENE);
+      currScene.setFilenameById(TQ.Config.UNNAMED_SCENE_ID);
       writeCache(_FILENAME, currScene.filename);
     }
-    TQ.Scene.wcyId = undefined;
     TQ.State.isPlayOnly = false;
     TQ.State.isTopicIntro = false;
   }
@@ -440,9 +439,11 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
   function parseCommonData(data) { // the common data in both save and get
     if (!!data && !!data.wcyId) {
       _wcyId = _getWcyId(data);
-      TQ.Scene.setWcyId(_wcyId);
+      if (currScene && !currScene.hasFilename()) {
+        currScene.setWcyId(_wcyId);
+      }
     } else {
-      _wcyId = -1;
+      _wcyId = TQ.Config.UNNAMED_SCENE_ID;
     }
 
     if (!!data.shareCode) {
