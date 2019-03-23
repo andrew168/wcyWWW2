@@ -141,7 +141,7 @@ TQ.MessageBox = (function () {
 
     function toast(str) {
         var duration = 1000;
-        return doShow({unsafeMessage: str, duration: duration, type: TYPE_TOAST});
+        return doShow({unsafeMessage: str, duration: duration, noOk:true, noCancel: true, type: TYPE_TOAST});
     }
 
     function onDuration() {
@@ -193,12 +193,14 @@ TQ.MessageBox = (function () {
             vexOptions.overlayClassName = options.overlayClassName;
         }
 
-        if (!options.okText) {
+        if (!options.noOK) {
+          if (!options.okText) {
             options.okText = TQ.Locale.getStr('OK');
-        }
+          }
 
-        if (options.okText) {
+          if (options.okText) {
             buttons.push($.extend({}, vex.dialog.buttons.YES, {text: options.okText}));
+          }
         }
 
         if (!options.noCancel) {
