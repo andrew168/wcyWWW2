@@ -775,6 +775,9 @@ window.TQ = window.TQ || {};
 
   p.calculateLastFrame = function () {
     var tMaxFrameCalculated = this.calculateRealLastFrame();
+    if (tMaxFrameCalculated > TQ.Config.MAX_LEVEL_LENGTH) {
+      tMaxFrameCalculated = TQ.Config.MAX_LEVEL_LENGTH;
+    }
     this.tMaxFrameMixed = Math.max(this.tMaxFrame, Math.max(DEFAULT_T_MAX_FRAME, tMaxFrameCalculated));
     return tMaxFrameCalculated;
   };
