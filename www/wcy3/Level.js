@@ -830,6 +830,7 @@ window.TQ = window.TQ || {};
     if (this.isActive()) {
       TQ.FrameCounter.setTMax(this.getTime());
     }
+    TQ.DirtyFlag.setLevel(this);
   };
 
   p.setCapacity = function (t) {
