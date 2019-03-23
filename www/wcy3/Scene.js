@@ -669,6 +669,8 @@ TQ = TQ || {};
   };
 
   p.setDefaultValue = function () {
+    allResourceReady = false;
+    allDataReady = false;
     this.tMax = 0;
     this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
     this.isShared = false;  //只是打开旧的文件， 没有尚未修改
