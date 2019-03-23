@@ -822,6 +822,9 @@ window.TQ = window.TQ || {};
   };
 
   p.setTime = function (t) { // 用户指定时长
+    if (t > TQ.Config.MAX_LEVEL_LENGTH) {
+      t = TQ.Config.MAX_LEVEL_LENGTH;
+    }
     this.tMaxFrame = t;
     this.calculateLastFrame(); // update mixed
     if (this.isActive()) {

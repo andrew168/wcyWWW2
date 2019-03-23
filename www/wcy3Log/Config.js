@@ -13,6 +13,7 @@ window.TQ = window.TQ || {};
     Config.MAX_KEYFRAME = 2000;
     Config.MAX_FILE_SIZE = 1024000; // 1M;
     Config.MAX_SOUND_FILE_SIZE = 5000000; // 5M;
+    Config.MAX_LEVEL_LENGTH = 1800; // 每个level最长30分钟*60秒;
 
     // 素材限制:
     Config.MAT_MAX_FILE_SIZE_IN_M = 10;
