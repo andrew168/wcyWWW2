@@ -205,6 +205,7 @@ TQ.AnimationManager = (function () {
 
   function twinkle() {
     var delay = TQ.FrameCounter.gridSnap(getTDelay().t),
+      t1 = delay,
       duration = composeDuration(); // seconds
 
     var ele = TQ.SelectSet.getLastSolidElement();
@@ -226,8 +227,8 @@ TQ.AnimationManager = (function () {
         showT: showT,
         hideT: hideT,
         speed: speed.normSpeed, // only for UI // ToDo: 实际的speed
-        t1: 0,
-        t2: UNLIMIT // end time
+        t1: t1,
+        t2: t1 + duration // UNLIMIT // end time
       };
 
     return recordSag(sag);
