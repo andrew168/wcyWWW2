@@ -247,7 +247,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
     function shareOpus(opus) { //批准发布作品，approveToShareOpus
         var url = C_OPUS_URL + "/approve/" + opus.wcyId;
-        doUpdateOpus(url);
+        return doUpdateOpus(url);
     }
 
     function requestToBanOpus(opus) {
