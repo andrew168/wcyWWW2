@@ -1001,6 +1001,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       }
     }
 
+    currScene.updateReadyFlag();
+    if (!currScene.isAllDataReady()) {
+      document.addEventListener(TQ.Scene.EVENT_ALL_DATA_READY, onAllDataReady);
+      TQ.OverlayMask.turnOn(null, '请稍候，正在准备数据...');
+      function onAllDataReady() {
+        document.removeEventListener(TQ.Scene.EVENT_ALL_DATA_READY, onAllDataReady);
+        TQ.OverlayMask.turnOff();
+      }
+    }
+
     TQ.MessageBox.reset();
     WCY.stopAutoSave();
     TQ.SoundMgr.reset();
@@ -1367,12 +1377,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         levelThumbs[i] = {src: null, timestamp: i + nowTimestamp};
       }
     }
+    TQ.OverlayMask.turnOn(null, "请稍候,正在生成缩略图...");
     doSyncLevelThumbs();
   }
 
   function doSyncLevelThumbs() {
     if (!currScene.isAllResourceReady()) {
-      TQ.MessageBox.toast(TQ.Locale.getStr('processing...'));
       return $timeout(doSyncLevelThumbs, 500);
     }
     TQ.AssertExt.invalidLogic(currScene.isAllResourceReady(), '有level没有完全加载，不能调用');
@@ -1396,6 +1406,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
             makeCheckOne(j)();
           }
         } else {
+          TQ.OverlayMask.turnOff();
           toAddModeDone();
         }
       };

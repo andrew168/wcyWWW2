@@ -14,7 +14,6 @@ window.TQ = window.TQ || {};
     this.tMaxFrameMixed = DEFAULT_T_MAX_FRAME;
     this.tGlobalLastFrame = 0; // 他对作品最大时长的最低要求
     this.t0 = 0;
-    this.resourceReady = false;
     this.initialize(description);
   }
 
@@ -48,7 +47,8 @@ window.TQ = window.TQ || {};
     assertNotNull(TQ.Dictionary.FoundNull, description.name);
     this.name = description.name;
     this.itemCounter = 0;
-    this.dataReady = false;
+    this.resourceReady = false; // img资源加载成功，尚未加入stage canvas
+    this.dataReady = false; // 加入到stage canvas了，
     this.state = TQBase.LevelState.NOT_INIT;
     this.isWaitingForShow = false;
     this.isDirtyZ = false;
@@ -395,6 +395,7 @@ window.TQ = window.TQ || {};
     TQ.VideoMgr.start();
     jsonElements = null;
     this.dataReady = true;
+    TQ.DirtyFlag.setLevel(this);
     this.calculateLastFrame();
   };
 

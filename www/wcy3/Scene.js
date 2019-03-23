@@ -20,6 +20,8 @@ TQ = TQ || {};
   var allResourceReady = false,
     allDataReady = false;
   Scene.EVENT_READY = "sceneReady";
+  Scene.EVENT_ALL_RESOURCE_READY = "all resource sceneReady";
+  Scene.EVENT_ALL_DATA_READY = "all data sceneReady";
   Scene.EVENT_SAVED = "sceneSaved";
   Scene.EVENT_END_OF_PLAY = "end_of_Play";
   Scene.VER1 = "V1";
@@ -260,6 +262,7 @@ TQ = TQ || {};
 
   p.update = function (t) {
     TQ.SceneEditor.updateMode();
+    this.updateReadyFlag();
     this.updateLevelRange();
     // 谁都可以 要求Update， 不只是Player
     if (this.currentLevel != null) {
@@ -376,7 +379,7 @@ TQ = TQ || {};
       thisScene.updateLevelRange();
       TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_READY);
       this.isDirty = true;
-    }
+    };
     this.currentLevel.onSelected();
   };
 
@@ -1234,18 +1237,9 @@ TQ = TQ || {};
       _levelTs.splice(numOfLevel);
     }
 
-    var _allResourceReady = true,
-      _allDataReady = true;
     for (i = 0; i < numOfLevel; i++) {
       level = this.getLevel(i);
-      if (!level.resourceReady) {
-        _allResourceReady = false;
-        _allDataReady = false;
-        continue;
-      }
-
-      if (!level.dataReady) {
-        _allDataReady = false;
+      if (!level.resourceReady || !level.dataReady) {
         continue;
       }
 
@@ -1268,14 +1262,43 @@ TQ = TQ || {};
       tGlobalLastFrame = Math.max(tGlobalLastFrame, level.getGlobalTime());
     }
 
-    allResourceReady = _allResourceReady;
-    allDataReady = _allDataReady;
     te = Math.max(te, tGlobalLastFrame);
     if (Math.abs(this.tMax - te) > 0.1) {
-      this.tMax = (_allResourceReady) ? te : Math.max(this.tMax, te);
+      this.tMax = (allResourceReady) ? te : Math.max(this.tMax, te);
       this.updateT0();
       TQ.FrameCounter.setTMax(this.tMax);
       TQUtility.triggerEvent(document, TQ.EVENT.SCENE_TIME_RANGE_CHANGED);
+    }
+  };
+
+  p.updateReadyFlag = function () {
+    if (allDataReady && allResourceReady) {
+      return;
+    }
+
+    var level,
+      _allResourceReady = true,
+      _allDataReady = true;
+    for (var i = 0; i < this.levelNum(); i++) {
+      level = this.getLevel(i);
+      if (!level.resourceReady) {
+        _allResourceReady = false;
+        _allDataReady = false;
+        break;
+      }
+
+      if (!level.dataReady) {
+        _allDataReady = false;
+      }
+    }
+
+    if (_allResourceReady && !allResourceReady) {
+      allResourceReady = _allResourceReady;
+      TQ.Base.Utility.triggerEvent(document, Scene.EVENT_ALL_RESOURCE_READY);
+    }
+    if (_allDataReady && !allDataReady) {
+      allDataReady = _allDataReady;
+      TQ.Base.Utility.triggerEvent(document, Scene.EVENT_ALL_DATA_READY);
     }
   };
 
