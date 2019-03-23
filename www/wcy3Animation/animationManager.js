@@ -205,7 +205,7 @@ TQ.AnimationManager = (function () {
 
   function twinkle() {
     var delay = TQ.FrameCounter.gridSnap(getTDelay().t),
-      duration = TQ.FrameCounter.gridSnap((getTDuration().t - getTDelay().t)); // seconds
+      duration = composeDuration(); // seconds
 
     var ele = TQ.SelectSet.getLastSolidElement();
     if (!ele) {
@@ -500,6 +500,10 @@ TQ.AnimationManager = (function () {
     return {t: instance.tDelay + instance.tDuration};
   }
 
+  function composeDuration() {
+    return TQ.FrameCounter.gridSnap((getTDuration().t - getTDelay().t));
+  }
+
   // private functions:
   function composeIdleSag(typeId, startPos, destinationPos, extraData) {
     return composeSag(SagCategory.IDLE, typeId, startPos, destinationPos, extraData);
@@ -512,7 +516,7 @@ TQ.AnimationManager = (function () {
   function composeSag(categoryId, typeId, startPos, destinationPos, extraData) {
     var speed = getSpeed(typeId),
       delay = TQ.FrameCounter.gridSnap(getTDelay().t),// seconds
-      duration = TQ.FrameCounter.gridSnap((getTDuration().t - getTDelay().t)), // seconds
+      duration = composeDuration(), // seconds
       t1 = delay,
       dampingDuration = TQ.FrameCounter.gridSnap(TQ.SpringEffect.defaultConfig.dampingDuration), // seconds
       t2 = t1 + duration,
@@ -544,7 +548,7 @@ TQ.AnimationManager = (function () {
   function composeFlyOutSag(typeId, startPos, destinationPos) {
     var speed = getSpeed(typeId),
       delay = TQ.FrameCounter.gridSnap(getTDelay().t),
-      duration = TQ.FrameCounter.gridSnap((getTDuration().t - getTDelay().t)), // seconds
+      duration = composeDuration(), // seconds
       t1 = delay,
       dampingDuration = TQ.FrameCounter.gridSnap(TQ.SpringEffect.defaultConfig.dampingDuration), // seconds
       t2 = t1 + duration,
