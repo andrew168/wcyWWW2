@@ -984,52 +984,39 @@ TQ = TQ || {};
       levelToPreload = 0;
 
     // 设置each Level的resourceReady标志, and start show
-    var level3;
-    for (; levelToPreload < num; levelToPreload++) {
-      level3 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
-      if (!level3.resourceReady) {
-        TQ.RM.onCompleteOnce(makeOnLevelLoaded(level3, levelToPreload));
-        self.startPreloader(level3);
-        break;
-      }
-    }
+    loadOneLevel(null, levelToPreload);
 
-    function makeOnLevelLoaded(level, levelToPreload) {
-      return function () {
-        level.resourceReady = true;
-        if (self.isOutro(levelToPreload)) {
-          level.updateState();
+    function loadOneLevel(level, levelToPreload) {
+      if (levelToPreload === 0) {
+        if ((self.onsceneload !== undefined) && (self.onsceneload != null)) {
+          self.onsceneload();
         }
+      }
 
+      if (level) {
+        level.resourceReady = true;
+        level.updateState();
+        if (level.onResourceReady) {
+          level.onResourceReady();
+        }
         TQ.Log.checkPoint("level asset loaded: " + level.name);
         self.isDirty = true;
-        setTimeout(function () {
-          levelToPreload++;
-          if (self.isOutro(levelToPreload)) {
-            level.updateState();
-          }
-          for (; levelToPreload < num; levelToPreload++) {
-            var level2 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
-            if (!level2.resourceReady) {
-              TQ.RM.onCompleteOnce(makeOnLevelLoaded(level2, levelToPreload));
-              self.startPreloader(level2);
-            }
-          }
-        });
+      }
 
-        if (levelToPreload === 0) {
-          if ((self.onsceneload !== undefined) && (self.onsceneload != null)) {
-            self.onsceneload();
-          }
-        } else {
-          if (level.onResourceReady) {
-            level.onResourceReady();
-          }
-        }
+      var level2;
+      for (; levelToPreload < (num + 1); levelToPreload++) {
+        level2 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
+        if (!level2.resourceReady) {
+          TQ.RM.onCompleteOnce(function(){
+            loadOneLevel(level2, levelToPreload + 1);
+          });
+          self.startPreloader(level2);
+          break;
+      }
       }
     }
 
-    displayInfo2(TQ.Dictionary.Load + "<" + this.title + ">.");
+    TQ.Log.debugInfo(TQ.Locale.getStr('loading resource of ') + " <" + this.title + ">.");
   };
 
   p.setEditor = function () {
