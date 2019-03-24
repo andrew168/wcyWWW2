@@ -44,7 +44,7 @@ TQ.PageTransitionEffect = (function () {
         page1On: false
     };
 
-    var _interface = {
+    return {
         state: state,
         doTransition: doTransition,
         getEffect: getEffect,
@@ -58,7 +58,7 @@ TQ.PageTransitionEffect = (function () {
     function doTransition(transition, callback) {
         var outPage = transition.outPage,
             inPage = transition.inPage;
-        editorService = angular.element(document.body).injector().get('EditorService')
+        editorService = angular.element(document.body).injector().get('EditorService');
         TQ.Log.debugInfo("page transition start...");
         isAnimating = true;
         watchDogTask = TQ.WatchDog.start(function () {
@@ -138,5 +138,4 @@ TQ.PageTransitionEffect = (function () {
         return effectsList[defaultEffectName]
     }
 
-    return _interface;
 }());
