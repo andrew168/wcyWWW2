@@ -1388,22 +1388,22 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     TQ.AssertExt.invalidLogic(currScene.isAllResourceReady(), '有level没有完全加载，不能调用');
     TQ.State.allowPageTransition = false;
 
-    function makeCheckOne(i) {
+    function makeOneThumb(levelId) {
       return function () {
         var j;
-        for (; i >= 0; i--) {
-          if (!levelThumbs[i] || !levelThumbs[i].src) {
-            gotoLevel(i);
+        for (; levelId >= 0; levelId--) {
+          if (!levelThumbs[levelId] || !levelThumbs[levelId].src) {
+            gotoLevel(levelId);
             break;
           }
         }
-        j = i - 1;
+        j = levelId - 1;
         if (j >= 0 && (j < currScene.levelNum())) {
           document.addEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
 
           function handleNextLevel() {
             document.removeEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
-            makeCheckOne(j)();
+            makeOneThumb(j)();
           }
         } else {
           TQ.OverlayMask.turnOff();
@@ -1414,10 +1414,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     if (TQ.PageTransitionEffect.isBusy()) { // 防止再次进入
       setTimeout(function () {
-        makeCheckOne(currScene.levelNum() - 1)();
+        makeOneThumb(currScene.levelNum() - 1)();
       }, 1000);
     } else {
-      makeCheckOne(currScene.levelNum() - 1)();
+      makeOneThumb(currScene.levelNum() - 1)();
     }
   }
 
