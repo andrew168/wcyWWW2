@@ -1003,16 +1003,16 @@ TQ = TQ || {};
         self.isDirty = true;
       }
 
-      var level2;
+      var nextLevel;
       for (; levelToPreload < (num + 1); levelToPreload++) {
-        level2 = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
-        if (!level2.resourceReady) {
-          TQ.RM.onCompleteOnce(function(){
-            loadOneLevel(level2, levelToPreload + 1);
+        nextLevel = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
+        if (!nextLevel.resourceReady) {
+          TQ.RM.onCompleteOnce(function () {
+            loadOneLevel(nextLevel, levelToPreload + 1);
           });
-          self.startPreloader(level2);
+          self.startPreloader(nextLevel);
           break;
-      }
+        }
       }
     }
 
