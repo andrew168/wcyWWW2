@@ -521,10 +521,6 @@ TQ = TQ || {};
     return ((this.currentLevelId + 1) >= this.levelNumWithOutro());
   };
 
-  p.isOutro = function (levelId) {
-    return (levelId >= this.levelNum());
-  };
-
   p.isIComponent = function () {
     return (this.iComponentInfo && !!this.iComponentInfo.Type);
   };

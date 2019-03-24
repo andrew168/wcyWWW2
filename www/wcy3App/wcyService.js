@@ -365,9 +365,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
       if (TQ.userProfile.loggedIn && isNewOpus()) {
         save();
       }
-      if (!currScene.isOutro(currScene.currentLevelId)) {
-        TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
-      }
+      TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
     }
 
     return $timeout(_autoSave, 30000); // 30s
