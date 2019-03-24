@@ -809,16 +809,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   function gotoLevel(id) {
     TQ.Log.debugInfo("gotoLevel " + id);
     if (state.isAddMode || state.isModifyMode) {
-      if (currScene && currScene.currentLevelId >= 0 && !currScene.isOutro(currScene.currentLevelId)) {
-        TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
-      }
-
-      document.addEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
-
-      function makeThumbnail() {
-        document.removeEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
-        if (!levelThumbs[currScene.currentLevelId] && !currScene.isOutro(currScene.currentLevelId)) {
-          TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
+      if (!levelThumbs[id] || !levelThumbs[id].src) {
+        document.addEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
+        function makeThumbnail() {
+          document.removeEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
+          TQ.ScreenShot.saveThumbnail(levelThumbs, id);
           forceToRefreshUI();
         }
       }
@@ -1383,41 +1378,39 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function doSyncLevelThumbs() {
     if (!currScene.isAllResourceReady()) {
-      return $timeout(doSyncLevelThumbs, 500);
+      return $timeout(doSyncLevelThumbs, 200);
     }
     TQ.AssertExt.invalidLogic(currScene.isAllResourceReady(), '有level没有完全加载，不能调用');
     TQ.State.allowPageTransition = false;
 
-    function makeOneThumb(levelId) {
-      return function () {
-        var j;
-        for (; levelId >= 0; levelId--) {
-          if (!levelThumbs[levelId] || !levelThumbs[levelId].src) {
-            gotoLevel(levelId);
-            break;
-          }
-        }
-        j = levelId - 1;
-        if (j >= 0 && (j < currScene.levelNum())) {
-          document.addEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
+    makeOneThumb(currScene.levelNum() - 1);
 
-          function handleNextLevel() {
-            document.removeEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
-            makeOneThumb(j)();
-          }
-        } else {
+    function makeOneThumb(levelId) {
+      for (; levelId >= 0; levelId--) {
+        if (!levelThumbs[levelId] || !levelThumbs[levelId].src) {
+          document.addEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
+          gotoLevel(levelId);
+          break;
+        }
+      }
+
+      function handleNextLevel() {
+        document.removeEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
+        if (levelId === 0) {
           TQ.OverlayMask.turnOff();
           toAddModeDone();
+          return;
         }
-      };
-    }
 
-    if (TQ.PageTransitionEffect.isBusy()) { // 防止再次进入
-      setTimeout(function () {
-        makeOneThumb(currScene.levelNum() - 1)();
-      }, 1000);
-    } else {
-      makeOneThumb(currScene.levelNum() - 1)();
+        --levelId;
+        if (TQ.PageTransitionEffect.isBusy()) { // 防止再次进入
+          setTimeout(function () {
+            makeOneThumb(levelId);
+          }, 100);
+        } else {
+          makeOneThumb(levelId);
+        }
+      }
     }
   }
 
