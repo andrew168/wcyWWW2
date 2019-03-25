@@ -1388,9 +1388,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     function makeOneThumb(levelId) {
       for (; levelId >= 0; levelId--) {
         if (!levelThumbs[levelId] || !levelThumbs[levelId].src) {
-          document.addEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
-          gotoLevel(levelId);
-          break;
+          var level = currScene.getLevel(levelId);
+          if (level.isActive() && level.isShowing()) {
+            TQ.ScreenShot.saveThumbnail(levelThumbs, levelId);
+            forceToRefreshUI();
+          } else {
+            document.addEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
+            gotoLevel(levelId);
+            break;
+          }
         }
       }
 
