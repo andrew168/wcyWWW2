@@ -113,6 +113,7 @@ TQ.PageTransitionEffect = (function () {
             callback();
             editorService.forceToRefreshUI();
         });
+        TQUtility.triggerEvent(document, TQ.PageTransitionEffect.EVENT_COMPLETED);
     }
 
     function detachEffect(page, classes) {
@@ -139,3 +140,5 @@ TQ.PageTransitionEffect = (function () {
     }
 
 }());
+
+TQ.PageTransitionEffect.EVENT_COMPLETED = 'page transition end';

@@ -473,21 +473,23 @@ window.TQ = window.TQ || {};
       if (!this.isOverlay()) {
         this.setupTimer();
       }
-      // add all item to stage
-      if (stageContainer.children.length > 0) {
-        this._removeAllItems();
-      }
 
-      this.addAllItems();
+      if (this.isActive() && !this.inStage) {
+        // add all item to stage
+        if (stageContainer.children.length > 0) {
+          this._removeAllItems();
+        }
+        this.addAllItems();
+      }
       this.update(this._t);
       stage.update();
       this.watchRestart();
       this.state = TQ.SceneEditor.getMode();
       if (this.onLevelRunning != null) this.onLevelRunning();
-      setTimeout(function () {
-        TQ.Base.Utility.triggerEvent(document, Level.EVENT_START_SHOWING);
-      });
       TQ.DirtyFlag.setLevel(this);
+      if (this.isActive() && !this.inStage) {
+        this.readyToShow = true;
+      }
     } else {
       if ((this.state !== TQBase.LevelState.EDITING) && (this.state !== TQBase.LevelState.RUNNING)) {
         assertNotHere(TQ.Dictionary.CurrentState + this.state);
@@ -557,6 +559,16 @@ window.TQ = window.TQ || {};
       if (this.resourceReady) {
         this.onLoaded();
       }
+    }
+  };
+
+	  p.updateRenderFlag = function () {
+    if (!this.inStage && this.readyToShow) {
+      this.inStage = true;
+      var levelId = currScene.currentLevelId;
+      setTimeout(function () {
+        TQ.Base.Utility.triggerEvent(document, Level.EVENT_START_SHOWING, {levelId: levelId});
+      });
     }
   };
 
@@ -668,7 +680,9 @@ window.TQ = window.TQ || {};
       TQ.AnimationManager.clear();
       TQ.SoundMgr.reset();
     }
+    this._removeAllItems();
     this.state = TQBase.LevelState.EXIT;
+    this.inStage = false;
   };
 
   p.prepareForJSONOut = function () {
@@ -872,6 +886,10 @@ window.TQ = window.TQ || {};
 
   p.isActive = function () {
     return (currScene && (currScene.currentLevel === this) || (this.isWaitingForShow));
+  };
+
+  p.isShowing = function () {
+    return this.inStage;
   };
 
   p.isOverlay = function () {

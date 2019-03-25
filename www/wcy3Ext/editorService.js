@@ -807,17 +807,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 	 直接跳转到第id个场景 (id >=0)
 	 */
   function gotoLevel(id) {
-    TQ.Log.debugInfo("gotoLevel " + id);
     if (state.isAddMode || state.isModifyMode) {
-      if (!levelThumbs[id] || !levelThumbs[id].src) {
-        document.addEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
-        function makeThumbnail() {
-          document.removeEventListener(TQ.Level.EVENT_START_SHOWING, makeThumbnail);
-          TQ.ScreenShot.saveThumbnail(levelThumbs, id);
+      var level = currScene.currentLevel;
+      if (level && !level.isOverlay()) {
+        var levelId = currScene.currentLevelId;
+        if (!levelThumbs[levelId] || !levelThumbs[levelId].src) {
+          TQ.ScreenShot.saveThumbnail(levelThumbs, levelId);
           forceToRefreshUI();
         }
       }
     }
+    TQ.Log.debugInfo("gotoLevel " + id);
     if (typeof id === 'string') {
       id = Number(id);
     }
@@ -1394,21 +1394,26 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         }
       }
 
-      function handleNextLevel() {
-        document.removeEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
-        if (levelId === 0) {
-          TQ.OverlayMask.turnOff();
-          toAddModeDone();
+      if (levelId < 0) {
+        TQ.OverlayMask.turnOff();
+        toAddModeDone();
+        return;
+      }
+
+      function handleNextLevel(evt) {
+        if (evt.data.levelId === 'Overlay') {
           return;
         }
-
-        --levelId;
+        var idShowing = parseInt(evt.data.levelId);
+        document.removeEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
         if (TQ.PageTransitionEffect.isBusy()) { // 防止再次进入
-          setTimeout(function () {
-            makeOneThumb(levelId);
-          }, 100);
+          document.addEventListener(TQ.PageTransitionEffect.EVENT_COMPLETED, onPageTransitionCompleted);
+          function onPageTransitionCompleted() {
+            document.removeEventListener(TQ.PageTransitionEffect.EVENT_COMPLETED, onPageTransitionCompleted);
+            makeOneThumb(idShowing-1);
+          }
         } else {
-          makeOneThumb(levelId);
+          makeOneThumb(idShowing-1);
         }
       }
     }

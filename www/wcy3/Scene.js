@@ -204,6 +204,7 @@ TQ = TQ || {};
     }
     requestAnimationFrame(function () {
       if (isStarted) {
+        self.updateAfterRender();
         self.onTick();
         self.mainLoop();
       }
@@ -1282,6 +1283,12 @@ TQ = TQ || {};
     if (_allDataReady && !allDataReady) {
       allDataReady = _allDataReady;
       TQ.Base.Utility.triggerEvent(document, Scene.EVENT_ALL_DATA_READY);
+    }
+  };
+
+  p.updateAfterRender = function () {
+    if (this.currentLevel) {
+      this.currentLevel.updateRenderFlag();
     }
   };
 
