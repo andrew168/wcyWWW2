@@ -135,7 +135,7 @@ window.TQ = window.TQ || {};
         if (!child) return;
 
         angle = applyLimitation(child, child.jsonObj.rotation + angle);
-        child.rotateTo(child.getRotateDirection() * angle);
+        child.rotateTo(angle);
         child.update(TQ.FrameCounter.t()); // 更新本bone以及 所以后续Bone的 物体坐标, 世界坐标
         TQ.Log.info("IKRotate ele.id " + child.id + " @ angle = " + angle);
         TQ.DirtyFlag.setElement(child);
