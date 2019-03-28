@@ -72,21 +72,16 @@ TQ = TQ || {};
                 resourceId = item.ID;
             }
         }
-        if (!!resource) {
+        if (resource) {
             this.loaded = true;
-            this.instance = createjs.Sound.createInstance(resourceId); // 声音只用ID， 不要resouce data
+            this.instance = new TQ.HowlerPlayer(resourceId); // 声音只用ID， 不要resouce data
             //ToDo： 需要在这里play吗？
             //this.instance.play(); //interruptValue, delay, offset, loop);
             // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
             this._afterItemLoaded();
             // this.level.onItemLoaded(this);
         } else {
-            TQ.Assert.isTrue(false, "不支持的操作流程");
-            (function (pt) {
-                TQ.RM.addItem(desc.src, function () {
-                    pt._doLoad(desc);
-                });
-            })(this);
+            TQ.Assert.isTrue(false, "howler不支持的操作流程");
         }
     };
 
@@ -117,7 +112,9 @@ TQ = TQ || {};
 
     p._doRemoveFromStage = function() {
         if (!this.isCrossLevel) { // 支持跨场景的声音
-            this.stop();
+          if (this.instance) {
+            this.instance.stop();
+          }
         }
     };
 
@@ -146,7 +143,7 @@ TQ = TQ || {};
             return this.instance.play();
         }
 
-        if (this.isPaused() || this.isFinished()) { //  在FAILED情况下， 重新开始播放
+        if (this.instance && !this.instance.isPlaying()) { //  在FAILED情况下， 重新开始播放
             var t = TQ.FrameCounter.t();
             if (this.isCrossLevel) {
                 t = currScene.toGlobalTime(t);
@@ -188,21 +185,8 @@ TQ = TQ || {};
 
             var offset = (t - ts) * 1000;
             var SOUND_DATA_BLOCK_SIZE = 1000;
-            if ((offset >= 0) && (offset < Math.max(SOUND_DATA_BLOCK_SIZE, this.instance.duration - SOUND_DATA_BLOCK_SIZE))){
-                if (this.instance.paused) { // 被暂停的， 可以resume
-                    this.instance.resume();
-                    this.instance.setPosition(offset); // 必须是先resume， 在setPosition， 不能对pasued声音设置pos
-                } else if (this.instance.playState == createjs.Sound.PLAY_FINISHED) { // 不是paused， 则不能resume， 需要重新开始播放
-                    // 声音duration剩余1个block的时候， 已经被标记为播放完成了。
-                    // 需要重新建立Instance， 丢弃原来的
-                    var item = TQ.RM.getResource(this.jsonObj.src);
-                    if (item) {
-                        this.instance = createjs.Sound.createInstance(TQ.RM.getId(item)); // 声音只用ID， 不要resouce data
-                    }
-
-                    var interrupt = createjs.Sound.INTERRUPT_NONE, delay = 0;
-                    this.instance.play(interrupt, delay, offset);
-                }
+            if ((offset >= 0) && (offset < Math.max(SOUND_DATA_BLOCK_SIZE, this.instance.duration - SOUND_DATA_BLOCK_SIZE))) {
+              this.instance.resume(offset);
             }
         }
     };
@@ -226,44 +210,21 @@ TQ = TQ || {};
     };
 
     p.isPlaying = function() {
-        if (!this.instance) {
-            assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
-            return false;
-        }
-
-        var state = this.instance.playState;
-        if (!state) return false;
-        return !((state == createjs.Sound.PLAY_FINISHED) ||
-            (state == createjs.Sound.PLAY_INTERRUPTED) ||
-            (state == createjs.Sound.PLAY_FAILED))
+        return (this.instance && this.instance.isPlaying());
     };
 
     p.isPaused = function() {
-        if (!this.instance) {
-            return false;
-        }
-
-        var state = this.instance.playState;
-        if (!state) return false;
-        return this.instance.paused;
+      return (this.instance && this.instance.paused);
     };
 
     p.isFinished = function() {
-        if (!this.instance) {
-            return false;
-        }
-
-        var state = this.instance.playState;
-        if (!state) return false;
-        return state == createjs.Sound.PLAY_FINISHED;
+      return (this.instance && this.instance.hasCompleted());
     };
 
     p.stop = function () {
-        if (!!this.instance) {
-            if (this.isPlaying() && (!this.instance.paused)) {
-                this.instance.stop();
-            }
-        }
+      if (this.instance) {
+        this.instance.stop();
+      }
     };
 
     p.getAlias = function() {

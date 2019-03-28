@@ -13,49 +13,10 @@ TQ = TQ || {};
     SoundMgr.isSupported = false;
     SoundMgr.items = [];
     var isReseting = false,
-        directSounds = [],
-        unlocked = false;
+        directSounds = [];
 
     SoundMgr.initialize = function() {
         SoundMgr.isSupported = true;
-      var plugins;
-      var result;
-      TQ.State.audioMethod = 4;
-      if (createjs.BrowserDetect.isIOS ||   // Chrome, Safari, IOS移动版 都支持MP3，
-        TQ.Base.Utility.isMobileDevice()) { // 把最希望使用的排在1st位置
-        switch (TQ.State.audioMethod) {
-          case 1:
-            plugins = [createjs.WebAudioPlugin];
-            break;
-          case 2:
-            plugins = [createjs.HTMLAudioPlugin];
-            break;
-          case 3:
-            plugins = [createjs.CordovaAudioPlugin];
-            break;
-          default:
-            plugins = [createjs.WebAudioPlugin, createjs.HTMLAudioPlugin, createjs.CordovaAudioPlugin];
-            break;
-        }
-      } else { // Firefox只在vista以上OS中支持MP3，且自动加载MP3尚未实现， 所以用flash
-        plugins = [createjs.WebAudioPlugin, createjs.HTMLAudioPlugin];
-//            createjs.Sound.registerPlugins([createjs.FlashPlugin, createjs.WebAudioPlugin, createjs.HTMLAudioPlugin]); // need this so it doesn't default to Web Audio
-        // 在Firefox下， 如果只加Flash声音， 则 无法预先加载WAV
-      }
-
-      result = createjs.Sound.registerPlugins(plugins);
-
-      if (result) {
-        TQDebugger.Panel.logInfo("声音 @" + createjs.Sound.activePlugin.toString());
-
-        if (!TQ.QueryParams.disableAudioUnlock) {
-          document.addEventListener("mousedown", unlockAudio, true);
-          document.addEventListener("touchstart", unlockAudio, true);
-          document.addEventListener("touchend", unlockAudio, true);
-        }
-      } else {
-        TQDebugger.Panel.logInfo("无声音");
-      }
     };
 
     SoundMgr.start = function ()
@@ -71,41 +32,30 @@ TQ = TQ || {};
      播放声音文件，id就是fileName，是声音文件的路径和名称， （从服务器的根目录计算， 不带域名)，
      例如： "mcSounds/test1.mp3"
      */
-    SoundMgr._auditioningInstance = null;
+    var _auditioningInstance = null;
     SoundMgr.isPlaying = function (soundInstance) {
-        if (!soundInstance) return false;
-        return (soundInstance.playState == createjs.Sound.PLAY_SUCCEEDED); // 包括paused， 不包括已经播完的
+       return (soundInstance && soundInstance.isPlaying());
     };
     SoundMgr.play = function(id) {
-        if (!SoundMgr.isSupported) return;
-        TQ.Log.info("start to play " + id);
-        var item = TQ.RM.getResource(id);
-        if (item) {
-            if (!!SoundMgr._auditioningInstance) {
-                if (SoundMgr.isPlaying(SoundMgr._auditioningInstance)) {
-                    SoundMgr._auditioningInstance.stop();
-                }
-            }
-            SoundMgr._auditioningInstance = createjs.Sound.play(TQ.RM.getId(item)); // 用Sound.play, 可以播放多个instance， 声音只用ID， 不要resouce data
-            directSounds.push(id);
-            return SoundMgr._auditioningInstance;
-        } else {
-            TQ.RM.addItem(id, function() {SoundMgr.play(id);});
-            return null;
+      if (!SoundMgr.isSupported) return;
+      TQ.Log.info("start to play " + id);
+      var item = TQ.RM.getResource(id);
+      if (!!_auditioningInstance) {
+        if (_auditioningInstance.isPlaying()) {
+          _auditioningInstance.stop();
         }
-    };
-
-    SoundMgr.stop = function(id) {
-        createjs.Sound.stop(id);
-        var index = directSounds.indexOf(id);
-        directSounds.splice(index, 1);
+      }
+      _auditioningInstance = new TQ.HowlerPlayer(TQ.RM.getId(item));
+      directSounds.push(_auditioningInstance);
+      _auditioningInstance.play();
+      return _auditioningInstance;
     };
 
     function stopAllDirectSound() {
         if (directSounds.length > 0) {
             var temp = directSounds.slice(0);
-            temp.forEach(function (id) {
-                SoundMgr.stop(id);
+            temp.forEach(function (inst) {
+                inst.stop();
             })
         }
     }
@@ -120,6 +70,7 @@ TQ = TQ || {};
     SoundMgr.deleteItem = function(ele) {
         var id = SoundMgr.items.indexOf(ele);
         if (id >= 0) {
+            ele.stop();
             SoundMgr.items.splice(id, 1);
         }
     };
@@ -148,8 +99,8 @@ TQ = TQ || {};
             var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
             ele.stop();
         }
-        if (!!SoundMgr._auditioningInstance) {
-            SoundMgr._auditioningInstance.stop();
+        if (!!_auditioningInstance) {
+            _auditioningInstance.stop();
         }
         stopAllDirectSound();
     };
@@ -175,11 +126,11 @@ TQ = TQ || {};
         }
         stopAllDirectSound();
 
-        if (!!SoundMgr._auditioningInstance) {
-          if (SoundMgr.isPlaying(SoundMgr._auditioningInstance)) {
-            SoundMgr._auditioningInstance.stop();
+        if (!!_auditioningInstance) {
+          if (SoundMgr.isPlaying(_auditioningInstance)) {
+            _auditioningInstance.stop();
           }
-          SoundMgr._auditioningInstance = null;
+          _auditioningInstance = null;
         }
     };
 
@@ -192,41 +143,11 @@ TQ = TQ || {};
     SoundMgr.close = function() {
         if (!SoundMgr.isSupported) return;
         SoundMgr.stopAll();
-        // createjs.Sound.stop();  // 应该已经被stopAll取代了
         SoundMgr.removeAll();
         SoundMgr.items.splice(0); //在退出微创意的时候，清除跨场景声音
         SoundMgr.started = false;
     };
 
-    function unlockAudio() {
-      if (unlocked) {
-        return;
-      }
-
-      unlocked = true;
-      tryPlayAudio();
-      document.removeEventListener("mousedown", unlockAudio, true);
-      document.removeEventListener("touchend", unlockAudio, true);
-      document.removeEventListener("touchstart", unlockAudio, true);
-    }
-
-    function tryPlayAudio() {
-      var inst = SoundMgr.play(TQ.RM.NOSOUND);
-      if (inst) {
-        inst.on("complete", onCompleted);
-        function onCompleted() {
-          var msg = "Unlocked";
-          if (createjs.Sound.activePlugin.context) {
-            msg += ', state = ' + createjs.Sound.activePlugin.context.state;
-          }
-          TQDebugger.Panel.logInfo(msg);
-          inst.off("complete", onCompleted);
-        }
-      }
-      if (createjs.Sound.activePlugin && createjs.Sound.activePlugin.playEmptySound) {
-        createjs.Sound.activePlugin.playEmptySound();
-      }
-    }
-
+    SoundMgr.stopAllDirectSound = stopAllDirectSound;
     TQ.SoundMgr = SoundMgr;
 }());
