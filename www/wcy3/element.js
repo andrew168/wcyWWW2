@@ -164,7 +164,7 @@ window.TQ = window.TQ || {};
         this.id = createjs.UID.get();
         if ((this.level.isStageReady())) {
             // 如果所需资源都在RM， 则直接init， 否则，sent到RM， 要求调入。完成后， 再init
-            if ((desc.type === DescType.SOUND) || (desc.type === DescType.BITMAP) || (desc.type === DescType.BUTTON)){
+            if ((desc.type === DescType.BITMAP) || (desc.type === DescType.BUTTON)){
                 TQ.Assert.isTrue(TQ.ResourceDesc.isReady(desc), "先准备好资源， 再创建元素");
             }
         }

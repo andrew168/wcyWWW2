@@ -232,7 +232,6 @@ this.TQ = this.TQ || {};
 
     function resetPreloader() {
         RM.preloader = new createjs.LoadQueue(true, null, true); // , "assets/");
-        RM.preloader.installPlugin(createjs.Sound);
         RM.preloader.setMaxConnections(maxConnectionsPerHost);
 
         if (TQ.Base.Utility.isMobileDevice()) {
@@ -272,6 +271,10 @@ this.TQ = this.TQ || {};
     }
 
     RM.addItem = function(resourceId, _callback) {
+        if (isAudio(resourceId)) {
+          return;
+        }
+
         TQ.Assert.isTrue(RM.hasDefaultResource, "没有初始化RM！");
         resourceId = _toKeyPath(resourceId);
         if (_hasResource(resourceId)) {
@@ -482,11 +485,18 @@ this.TQ = this.TQ || {};
     }
 
     RM.hasResourceReady = function(id) {
-        var res = RM.items[_toKeyPath(id)];
-        return (!!res  && !!res.res);
+      if (isAudio(id)) {
+        return true;
+      }
+      var res = RM.items[_toKeyPath(id)];
+      return (!!res && !!res.res);
     };
 
     RM.getResource = function(id) {
+        if (isAudio(id)) {
+          return {ID: id};
+        }
+
         id = _toKeyPath(id);
         if (!RM.items[id]) {// 没有发现， 需要调入
             TQ.Log.info(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
@@ -742,6 +752,10 @@ this.TQ = this.TQ || {};
 
     function isBlob(desc) {
       return desc && desc.src && TQUtility.isBlobUrl(desc.src);
+    }
+
+    function isAudio(id) {
+      return (id.indexOf('.mp3') >= 0);
     }
 
     RM.loadSoundFromFile = loadSoundFromFile;

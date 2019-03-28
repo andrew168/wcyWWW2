@@ -78,8 +78,8 @@ TQ = TQ || {};
     if (!TQ.State.hideWelcomeAutomatically && TQ.State.needUserClickToPlayAV && TQ.QueryParams && !TQ.QueryParams.hideFirstClickPrompt) {
       if (TQ.State.editorMode >= TQ.SceneEditor.MODE.EDIT_OR_PLAY) {
         if (TQUtility.isIOS()) {
-          TQ.SoundMgr.stop();
-          TQ.VideoMgr.stop();
+          TQ.SoundMgr.stopAll();
+          TQ.VideoMgr.stopAll();
         }
       }
       if (TQUtility.isMiniProgramWebView && TQUtility.isMiniProgramWebView()) {
