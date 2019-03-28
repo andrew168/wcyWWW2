@@ -326,9 +326,20 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
 
     $scope.onStopTryMusic = function () {
         if (_currentMusic && _currentMusic.path) {
-            TQ.SoundMgr.stop(_currentMusic.path);
+            TQ.SoundMgr.stopAllDirectSound();
             _currentMusic = null;
         }
+    };
+
+    var howlerPlayer;
+    $scope.playHowlerAudio = function () {
+      if (!howlerPlayer) {
+        howlerPlayer = new TQ.HowlerPlayer('v1528257405/c48.mp3');
+      }
+      howlerPlayer.play(0);
+    };
+    $scope.pauseHowlerAudio = function () {
+      howlerPlayer.pause();
     };
 
     $scope.insertAlbum = function () {
