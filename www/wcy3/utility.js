@@ -305,35 +305,45 @@ window.TQ = window.TQ || {};
       return Utility.parseUrl(url).shareCode;
     };
 
-    Utility.parseUrl = function (url) {
-      var params = {},
-        shareCode = "";
-      var hash = (!url) ? window.location.hash : TQ.Base.Utility.urlParser(url).hash;
-      if (hash) {
-        hash = decodeURI(hash);
-        var words = hash.split(/\/|\?/);// 其中[3]是？之后的全部query参数
-        if (words.length >= 3) {
-          var queryString;
-          if (words[1].toLowerCase() === 'do') { // 新的url
-            queryString = words[2];
-          } else {
-            shareCode = words[2];
-            queryString = words[3];
-          }
+  function getHashFromUrl(url) {
+    return url.substr(url.indexOf('/#/') + 1);
+  }
 
-          if (queryString != null && queryString !== "") {
-            params = transformToAssocArray(queryString);
-            if (!shareCode && params.sc) {
-              shareCode = params.sc;
-            }
-          }
-        }
+  function parseUrl(url) {
+    var params = {},
+      shareCode = "";
+    var hash = (!url) ? window.location.hash : getHashFromUrl(url);
+    if (hash) {
+      hash = decodeURIComponent(decodeURIComponent(hash));
+      var questionMarkPos = hash.indexOf('?'),
+        commandStr,
+        queryString;
+
+      if (questionMarkPos >=0) {
+        commandStr = hash.substr(0, questionMarkPos);
+        queryString = hash.substr(questionMarkPos + 1);
+      } else {
+        commandStr = hash;
+        queryString = '';
       }
 
-      return {shareCode: shareCode, params: params};
-    };
+      var words = commandStr.split(/\/|\?/);// 其中[3]是？之后的全部query参数
+      if (words[1].toLowerCase() !== 'do') { // 新的url
+        shareCode = words[2];
+      }
 
-    Utility.getShareCodeCore = function (shareCodeLong) {
+      if (queryString != null && queryString !== "") {
+        params = transformToAssocArray(queryString);
+        if (!shareCode && params.sc) {
+          shareCode = params.sc;
+        }
+      }
+    }
+
+    return {shareCode: shareCode, params: params};
+  }
+
+  Utility.getShareCodeCore = function (shareCodeLong) {
       var shareCodeDecoded = decodeURIComponent(decodeURIComponent(shareCodeLong));
       return shareCodeDecoded.split('?')[0];
     };
@@ -782,8 +792,7 @@ window.TQ = window.TQ || {};
         return readyToGo;
     }
 
-
-
+    Utility.parseUrl = parseUrl;
     Utility.preventDither = preventDither;
     TQ.Utility = Utility;
 }());
