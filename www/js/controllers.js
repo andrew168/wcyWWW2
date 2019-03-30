@@ -336,7 +336,7 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
       if (!howlerPlayer) {
         howlerPlayer = new TQ.HowlerPlayer('v1528257405/c48.mp3');
       }
-      howlerPlayer.play(0);
+      howlerPlayer.play();
     };
     $scope.pauseHowlerAudio = function () {
       howlerPlayer.pause();
@@ -592,4 +592,8 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
   }
 
   initialize();
+  var howlerPlayer22 = new TQ.HowlerPlayer('v1528257405/c48.mp3');
+  howlerPlayer22.howl.once('load', function () {
+    howlerPlayer22.play();
+  })
 }

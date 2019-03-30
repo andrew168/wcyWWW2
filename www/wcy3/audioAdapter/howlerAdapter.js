@@ -12,14 +12,16 @@ var TQ = TQ || {};
   };
 
   function HowlerPlayer(url) {
-    var self = this;
+    var self = this,
+      canPreload = !!HowlerGlobal.unlocked;
+
     this.state = STATE.UNLOADED;
     this.howlerID = -1;
     this.tryingToPlay = false;
     this.howl = new Howl({
       src: [TQ.RM.toFullPathFs(url)],
       html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
-      preload: true,
+      preload: canPreload,
       onplay: function () {
         self.state = STATE.PLAYING;
         self.tryingToPlay = false;
@@ -43,6 +45,12 @@ var TQ = TQ || {};
         TQ.Log.info('seek...');
       }
     });
+    var sound = self.howl;
+    if (!canPreload) {
+      sound.once('unlock', function () {
+        sound.load();
+      });
+    }
   }
 
   HowlerPlayer.prototype = {
@@ -53,12 +61,33 @@ var TQ = TQ || {};
         return;
       }
 
-      self.tryingToPlay = true;
-      TQ.AssertExt(sound, "需要先建立audio对象");
-      TQDebugger.Panel.logInfo('resume, ' + sound._sounds.length);
-      // Begin playing the sound.
-      if (!sound.playing()) {
-        self.howlerID = sound.play();
+      if (!sound.playing()) { // 同时只有1个实例在播放，不能多个实例{
+          if (self.howlerID < 0) {
+            if (sound.state() === 'unloaded') {
+              sound.once('loaded', function () {
+                self.howlerID = sound.play();
+              });
+              self.tryingToPlay = true;
+            } else {
+              self.howlerID = sound.play(); // 首次播放
+            }
+          } else {
+            TQ.AssertExt(sound, "需要先建立audio对象");
+            TQDebugger.Panel.logInfo('resume, ' + sound._sounds.length);
+            // Begin playing the sound.
+            var newID = sound.play(self.howlerID);
+            if (newID !== self.howlerID) {
+              if (newID > 0) {
+                if (self.howlerID !== newID) {
+                  console.error("为什么不相等？");
+                  self.howlerID = newID;
+                }
+              } else {
+                //  虽然曾经存在，但是已经当做垃圾回收了
+                self.howlerID = sound.play();
+              }
+            }
+          }
       }
     },
 
