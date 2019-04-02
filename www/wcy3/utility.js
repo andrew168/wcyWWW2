@@ -306,7 +306,18 @@ window.TQ = window.TQ || {};
     };
 
   function getHashFromUrl(url) {
-    return url.substr(url.indexOf('/#/') + 1);
+    var pos = url.indexOf('/#/'),
+      hash;
+    if (pos < 0) {
+      if (url.indexOf('#/') == 0) {
+        hash = url;
+      } else {
+        hash = "";
+      }
+    } else {
+      hash = url.substr(pos + 1);
+    }
+    return hash;
   }
 
   function parseUrl(url) {
@@ -329,7 +340,9 @@ window.TQ = window.TQ || {};
 
       var words = commandStr.split(/\/|\?/);// 其中[3]是？之后的全部query参数
       if (words[1].toLowerCase() !== 'do') { // 新的url
-        shareCode = words[2];
+        if (words[2]) {
+          shareCode = words[2];
+        } // "/#/welcome"
       }
 
       if (queryString != null && queryString !== "") {
