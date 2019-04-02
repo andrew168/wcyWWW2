@@ -47,7 +47,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         if (TQUtility.isIOS()) { // IOS X， 必须click，即使是从作品栏目中点击打开的
           TQ.State.needUserClickToPlayAV = true;
         } else {
-          TQ.State.needUserClickToPlayAV = (TQ.Utility.getWcyIdFromUrl(location.href) > 0);
+          TQ.State.needUserClickToPlayAV = (!!TQ.QueryParams.shareCode && (TQ.QueryParams.shareCode > 0));
         }
 
         if (_initialized) {
