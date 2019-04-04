@@ -44,6 +44,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     // 作品管理
     requestToBanOpus: NetService.requestToBanOpus,
     banOpus: NetService.banOpus,
+    refineOpus: NetService.refineOpus,
     requestToShareOpus: NetService.requestToShareOpus,
     shareOpus: NetService.shareOpus,
 

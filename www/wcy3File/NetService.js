@@ -250,6 +250,11 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         return doUpdateOpus(url);
     }
 
+    function refineOpus(opus) { //批准发布作品，approveToShareOpus
+      var url = C_OPUS_URL + "/refine/" + opus.wcyId;
+      return doUpdateOpus(url);
+    }
+
     function requestToBanOpus(opus) {
         TQ.Log.warn("服务器尚未实现此命令，暂时")
         var url = C_OPUS_URL + "/requestToBan/" + opus.wcyId;
@@ -393,6 +398,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         banOpus: banOpus, // 先ban， 后 delete, 不要急于删除， 以避免有些作品还在使用它们
 
         requestToShareOpus: requestToShareOpus,
+        refineOpus: refineOpus,
         shareOpus: shareOpus,
 
         addTopic: addTopic,
