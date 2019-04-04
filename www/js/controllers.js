@@ -150,6 +150,15 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
                 TQ.Log.debugInfo('logout successfully!');
             });
     };
+    $scope.refineOpus = function () {
+      EditorService.refineOpus({wcyId: 2167});
+    };
+    $scope.banOpus = function () {
+      EditorService.banOpus({wcyId: 2167});
+    };
+    $scope.publishOpus = function () {
+      EditorService.publishOpus({wcyId: 2167});
+    };
 
     $scope.deleteLevel = function(id) {
         EditorService.deleteLevel(id);

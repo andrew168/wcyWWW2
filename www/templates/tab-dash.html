@@ -202,6 +202,12 @@
                         data-show-faces="true">
                     </div></div>
 
+
+                <!-- 作品管理 -->
+                <button class="button button-positive" ng-click="banOpus()">禁止</button>
+                <button class="button button-positive" ng-click="publishOpus()">发表</button>
+                <button class="button button-positive" ng-click="refineOpus()">荐优</button>
+
                 <button class="button button-positive" ng-click="EditorService.forkIt()" ng-show="false">ForkIt</button>
                 <button class="button button-positive" ng-click="EditorService.cloneIt()" ng-show="false">CloneIt</button>
                 <button class="button button-positive" ng-click="testDataService()" ng-show="false">素材库读取</button>
@@ -309,7 +315,7 @@
                 <button class="button button-positive" ng-click="gotoNextLevel()">Next</button>
             </div>
 
-            <div style="display: none">
+              <div style="display: none">
                 <label>{{params}}{{getTextMsg()}} </label>
                 <ion-toggle ng-model="isPlaying" ng-change="onChange()">播放</ion-toggle>
             </div>
