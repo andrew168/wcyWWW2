@@ -106,4 +106,25 @@ router.get('/ban/:opusId', authHelper.ensureAuthenticated, function (req, res, n
     });
 });
 
+router.get('/refine/:opusId', authHelper.ensureAuthenticated, function (req, res, next) {
+  var user = status.getUserInfo(req, res);
+  if (!user) {
+    return netCommon.notLogin(req, res);
+  }
+
+  var opusId = req.params.opusId || 0,
+    msg = "not allowed!";
+
+  if (user.canRefine) {
+    opusController.refine(user, opusId, function (result) {
+      if (result !== -1) {
+        msg = opusId + ': refined successfully!';
+      }
+      res.json(msg);
+    });
+  } else {
+    res.json(msg);
+  }
+});
+
 module.exports = router;

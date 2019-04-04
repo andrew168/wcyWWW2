@@ -13,9 +13,10 @@ function setProp(operator, model, id, propName, propValue, callback) {
     }
 
     model.findOne(condition).exec(function (err, data) {
+        var ERROR_CODE = -1;
         if (err || !data) {
             if (callback) {
-                callback(-1);
+                callback(ERROR_CODE);
             }
         } else {
             console.log(data);
@@ -27,6 +28,7 @@ function setProp(operator, model, id, propName, propValue, callback) {
                     }
                 } else {
                     console.error("error in set Prop: " + propName);
+                    callback(ERROR_CODE);
                 }
             });
         }

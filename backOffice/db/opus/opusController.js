@@ -201,6 +201,10 @@ function ban(operator, id, callback) {
     dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.BAN, callback);
 }
 
+function refine(operator, id, callback) {
+  dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.FINE, callback);
+}
+
 function getAuthorName(user) {
     var result = user.displayName;
     if (!result) {
@@ -221,4 +225,5 @@ exports.getFineList = getFineList;
 exports.applyToPublish = applyToPublish;
 exports.approveToPublish = approveToPublish;
 exports.ban = ban;
+exports.refine = refine;
 exports.updateScreenshot = updateScreenshot;
