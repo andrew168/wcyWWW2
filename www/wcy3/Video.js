@@ -60,7 +60,7 @@ TQ = TQ || {};
       this.domEle.style.visibility = 'visible';
       var self = this;
       if (!TQ.State.needUserClickToPlayAV) {
-        const playPromise = this.domEle.play();
+        var playPromise = this.domEle.play();
         // if (playPromise !== null) {
         //   playPromise.catch(function(){self.domEle.play();});
         // }

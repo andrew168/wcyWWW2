@@ -62,7 +62,7 @@ this.tuqiangBase = this.tuqiangBase || {};
      * @param target
      */
     Trsa.displayClips = function (target) {
-        const CLIP_WIDTH_HALF = 16 / 2;
+        var CLIP_WIDTH_HALF = 16 / 2;
         if ((Trsa.clipPoints == undefined) || (Trsa.clipPoints == null)
             ||(Trsa.clipPoints[0] == undefined)) {
             Trsa.generateClips();

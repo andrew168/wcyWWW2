@@ -112,7 +112,7 @@ window.TQBase = window.TQBase || {};
           return ;
         }
 
-        const CLIP_WIDTH_HALF = 16 / 2;
+        var CLIP_WIDTH_HALF = 16 / 2;
         if ((Trsa.clipPoints == undefined) || (Trsa.clipPoints == null)
             ||(Trsa.clipPoints[0] == undefined)) {
             Trsa.generateClips();
