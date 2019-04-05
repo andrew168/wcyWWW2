@@ -70,7 +70,9 @@ gulp.task('wcylib_minify', ['wcylib_concat'], function () {
 
 gulp.task('clean', del.bind(null, ['dist', 'src/tmp']));
 
-gulp.task('build', ['wcylib_minify'], function () {
+gulp.task('del-extra-libs-js', del.bind(null, [dstPath1 + '\\lib\\libs.js'], {force: true}));
+
+gulp.task('build', ['wcylib_minify', 'del-extra-libs-js'], function () {
     return gulp.src('dist/**/*')
         .pipe($.size({title: 'build', gzip: true}))
         .pipe($.zip('ionic' + config.version + '.zip'))
