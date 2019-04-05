@@ -812,10 +812,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       var level = currScene.currentLevel;
       if (level && !level.isOverlay()) {
         var levelId = currScene.currentLevelId;
-        if (!levelThumbs[levelId] || !levelThumbs[levelId].src) {
-          TQ.ScreenShot.saveThumbnail(levelThumbs, levelId);
-          forceToRefreshUI();
-        }
+        WCY.updateThumbnail(levelThumbs, levelId);
       }
     }
     TQ.Log.debugInfo("gotoLevel " + id);
@@ -1391,8 +1388,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (!levelThumbs[levelId] || !levelThumbs[levelId].src) {
           var level = currScene.getLevel(levelId);
           if (level.isActive() && level.isShowing()) {
-            TQ.ScreenShot.saveThumbnail(levelThumbs, levelId);
-            forceToRefreshUI();
+            WCY.updateThumbnail(levelThumbs, levelId);
           } else {
             document.addEventListener(TQ.Level.EVENT_START_SHOWING, handleNextLevel);
             gotoLevel(levelId);

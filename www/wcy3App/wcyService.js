@@ -365,10 +365,18 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
       if (TQ.userProfile.loggedIn && isNewOpus()) {
         save();
       }
-      TQ.ScreenShot.saveThumbnail(levelThumbs, currScene.currentLevelId);
+      updateThumbnail(levelThumbs, currScene.currentLevelId);
     }
 
     return $timeout(_autoSave, 30000); // 30s
+  }
+
+  function updateThumbnail(levelThumbs, levelId) {
+    if (currScene.hasStaleThumbnail || !levelThumbs[levelId] || !levelThumbs[levelId].src) {
+      TQ.ScreenShot.saveThumbnail(levelThumbs, levelId);
+      currScene.hasStaleThumbnail = false;
+      $timeout(null);
+    }
   }
 
   var _autoSaveInitialized = false;
@@ -561,6 +569,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
 
   return {
     levelThumbs: levelThumbs,
+    updateThumbnail: updateThumbnail,
     setOnStarted: setOnStarted,
     start: start,  // start a new one, or load previous one (edited or played)
     create: create,

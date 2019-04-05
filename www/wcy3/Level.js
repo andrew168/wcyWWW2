@@ -666,7 +666,9 @@ window.TQ = window.TQ || {};
     }
     if ((this.state === TQBase.LevelState.EDITING) ||
       (this.state === TQBase.LevelState.RUNNING)) {
-      this.sort(); // 退出本层之前, 必须保存 Z可见性顺序.
+      if (this.isEditMode()) {
+        this.sort(); // 退出本层之前, 必须保存 Z可见性顺序.
+      }
       this.cleanStage();
     } else {
       // is loading
@@ -897,8 +899,10 @@ window.TQ = window.TQ || {};
   };
 
   p.isEditMode = function () {
-    return (this.state === TQBase.LevelState.EDITING);
+    return ((this.state === TQBase.LevelState.EDITING) &&
+      (TQ.State.editorMode === TQ.SceneEditor.MODE.EDIT));
   };
+
   p.hasAnimation = function () {
     return !isStaticImage(this.tMaxFrame);
   };

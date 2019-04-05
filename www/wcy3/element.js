@@ -123,7 +123,7 @@ window.TQ = window.TQ || {};
       var shape = new createjs.Shape();
       shape.rotation = rotationRelative; //相对于它host元素的角度，0， 因为hitArea总是随host主体转动的;
       shape.graphics.beginFill("#F00").drawRect(0, 0, w, h);
-      TQ.DirtyFlag.setElement(host);
+      TQ.DirtyFlag.setEdited(host);
       return shape;
     };
 
@@ -469,7 +469,7 @@ window.TQ = window.TQ || {};
             child.forceToRecord();
             child.update(t); // 必须强制记录， 否则，无法生成AnimeTrack
 
-            TQ.DirtyFlag.setElement(this);
+            TQ.DirtyFlag.setEdited(this);
             child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
             child.setFlag(Element.TO_RELATIVE_POSE);
 
@@ -1685,7 +1685,7 @@ window.TQ = window.TQ || {};
 
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.TRANSLATING);
-        TQ.DirtyFlag.setElement(this);
+        TQ.DirtyFlag.setEdited(this);
         this.dirty2 = true;
     };
 
@@ -1754,7 +1754,7 @@ window.TQ = window.TQ || {};
         this.jsonObj.rotation = snapAngle(angle);
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.ROTATING);
-        TQ.DirtyFlag.setElement(this);
+        TQ.DirtyFlag.setEdited(this);
         this.dirty2 = true;
     };
 
@@ -1770,7 +1770,7 @@ window.TQ = window.TQ || {};
         this.jsonObj.sy = scaleInWorld.sy;
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
         this.setFlag(Element.SCALING);
-        TQ.DirtyFlag.setElement(this);
+        TQ.DirtyFlag.setEdited(this);
         this.dirty2 = true;
     };
 
@@ -1780,7 +1780,7 @@ window.TQ = window.TQ || {};
         }
 
         this.jsonObj.mirrorX = !this.jsonObj.mirrorX;
-        TQ.DirtyFlag.setElement(this);
+        TQ.DirtyFlag.setEdited(this);
         this.dirty2 = true;
     };
 
@@ -1790,7 +1790,7 @@ window.TQ = window.TQ || {};
         }
 
         this.jsonObj.mirrorY = !this.jsonObj.mirrorY;
-        TQ.DirtyFlag.setElement(this);
+        TQ.DirtyFlag.setEdited(this);
         this.dirty2 = true;
     };
 
@@ -1878,7 +1878,7 @@ window.TQ = window.TQ || {};
     p.setColor = function(color) {
         TQBase.LevelState.saveOperation(TQBase.LevelState.OP_FLOATTOOLBAR);
         this.setFlag(Element.COLOR_CHANGED);
-        TQ.DirtyFlag.setElement(this);
+        TQ.DirtyFlag.setEdited(this);
         this.dirty2 = true;
     };
 

@@ -7,7 +7,8 @@ var TQ = TQ || {};
     function DirtyFlag() {
     }
 
-    DirtyFlag.setElement = setElement;
+    DirtyFlag.setEdited = setEdited; // 元素的添加、删除、成组、加关节、TRS等。
+    DirtyFlag.setElement = setElement; // 播放的时候， 也可能有位置变化（但是由于时间变化导致的， 非用户操作）
     DirtyFlag.setElementOnly = setElementOnly;
     DirtyFlag.setLevel = setLevel;
     DirtyFlag.setCurrentLevel = setCurrentLevel;
@@ -18,6 +19,11 @@ var TQ = TQ || {};
         if (!!ele) {
             ele.dirty = true;
         }
+    }
+
+    function setEdited(ele) {
+      currScene.hasStaleThumbnail = true;
+      setElement(ele, true);
     }
 
     function setElement(ele, requestDirtyZ) {
