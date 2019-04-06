@@ -63,8 +63,8 @@ var TQ = TQ || {};
 
       if (!sound.playing()) { // 同时只有1个实例在播放，不能多个实例{
           if (self.howlerID < 0) {
-            if (sound.state() === 'unloaded') {
-              sound.once('loaded', function () {
+            if ((sound.state() === 'unloaded') && !TQUtility.isBlobUrl(sound._src[0])) {
+              sound.once('load', function () {
                 self.howlerID = sound.play();
               });
               self.tryingToPlay = true;
