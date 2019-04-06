@@ -157,7 +157,7 @@ window.TQ = window.TQ || {};
         var inSag = track.getInSag(),
             tInSagEnd = inSag ? inSag.t2 : 0;
         track.forEachChannel(function (channel) {
-            channel.setIdleSagT1(tInSagEnd);
+            channel.adjustIdleSagT1(tInSagEnd);
         });
     }
 

@@ -283,14 +283,16 @@ window.TQ = window.TQ || {};
         return tMax;
     };
 
-    p.setIdleSagT1 = function (t1) {
+    p.adjustIdleSagT1 = function (newT1) {
         if (!this.sags || this.sags.length <= 0) {
             return;
         }
 
         var idleSag = this.sags[TQ.AnimationManager.SagCategory.IDLE];
         if (idleSag) {
-            idleSag.t1 = t1;
+            var dt = newT1 - idleSag.t1;
+            idleSag.t1 = newT1;
+            idleSag.t2 += dt;
         }
     };
 
