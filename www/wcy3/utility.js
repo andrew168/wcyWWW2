@@ -371,6 +371,10 @@ window.TQ = window.TQ || {};
       return params;
     }
 
+    Utility.getWcyIdFromUrl = function (url) {
+      return Utility.shareCode2Id(parseUrl(url).shareCode);
+    };
+
     Utility.wcyId2Url = function (opusId) {
         return TQ.Config.OPUS_HOST + "#/opus/" + Utility.wcyId2ShareCode(opusId);
     };
