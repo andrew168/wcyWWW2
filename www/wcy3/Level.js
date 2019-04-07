@@ -907,6 +907,18 @@ window.TQ = window.TQ || {};
     return !isStaticImage(this.tMaxFrame);
   };
 
+  p.hasGraph = function () {
+    var result = false;
+    this.elements.some(function (ele) {
+      if (ele.hasGraph()) {
+        result = true;
+        return true;
+      }
+      return false;
+    });
+    return result;
+  };
+
   //upgrade:
   Level.upgradeEachElement = function (levelDesc, upgradeElement) {
     var elements;

@@ -157,8 +157,16 @@ TQ = TQ || {};
 
     // ToDo: 暂时只支持1个level的组件，（下面的多level合并逻辑，要重新考虑）
     // 选取 元件中的所有元素, 作为当前元素的子元素, 如果有多个level, 则合并到一个Level
-    TQ.AssertExt.invalidLogic(objJson.levels.length === 1, "元件只能有1个场景");
-    TQ.AssertExt.invalidLogic(objJson.levels[0].elements.length === 1, "元件只能有1个根元素");
+    if (objJson.levels.length > 1) {
+      objJson.levels.splice(1);
+      TQ.Log.error("元件只能有1个场景");
+    }
+
+    if (objJson.levels[0].elements.length > 1) {
+      TQ.Log.error("元件只能有1个根元素");
+      objJson.levels[0].elements.splice(1);
+    }
+
     var component = objJson.levels[0].elements;
     TQ.RM.addElementDescList(component);
     this.jsonObj = component[0];

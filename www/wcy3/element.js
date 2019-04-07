@@ -433,52 +433,54 @@ window.TQ = window.TQ || {};
     };
 
     p.addChild = function (desc, isInObjectSpace) {
-        if (desc.displayObj != null) { // 在group或者joint物体的时候,出现
-            var child = desc; // 已经是物体了, 不用创建了. 但是,需要衔接jsonObj
-            var t = TQ.FrameCounter.t();
-            if (this.neverUpdated()) { // 新创建的元素，必须update以求出矩阵M
-                this.dirty = true;
-                this.update(t, TQ.Const.NO_RECORDING_TRUE);
-            }
-
-            if (isInObjectSpace) {
-                var posWorld = this.object2World(child.jsonObj);
-                child.jsonObj.x = posWorld.x;
-                child.jsonObj.y = posWorld.y;
-            }
-
-            //从世界坐标, 变换到父物体坐标系: 由Update来做
-            var pos1 = {};
-            pos1.t = t;
-            Element.copyWorldData(pos1, child.jsonObj);
-            var worldData = [];
-            this.saveWorldDataAll(worldData, child);
-            child.parent = this;
-            child.animeTrack = null; // group元素和关节，都会丢失原来的动画轨迹!!!
-            this.children.push(child);
-            this.toRelative(worldData, child);
-            Element.copyWorldData(child.jsonObj, pos1);
-
-            //ToDo： 是不是可以不加入到jsonObj.children中？
-            // 因为保存的时候， 总是遍历this.children的， 而且会忽视jsonObj.children
-            if (!this.jsonObj.children) {
-                this.jsonObj.children = [];
-            }
-            this.jsonObj.children.push(child.jsonObj);
-            child.dirty = true;
-            child.forceToRecord();
-            child.update(t); // 必须强制记录， 否则，无法生成AnimeTrack
-
-            TQ.DirtyFlag.setEdited(this);
-            child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
-            child.setFlag(Element.TO_RELATIVE_POSE);
-
-        } else {
-            var host = this;
-            child = Element.build(this.level, desc, host);
-            this.addChildDirect(child);
+      if (desc.displayObj != null) { // 在group或者joint物体的时候,出现
+        var child = desc; // 已经是物体了, 不用创建了. 但是,需要衔接jsonObj
+        var t = TQ.FrameCounter.t();
+        if (this.neverUpdated()) { // 新创建的元素，必须update以求出矩阵M
+          this.dirty = true;
+          this.update(t, TQ.Const.NO_RECORDING_TRUE);
         }
-        return child;
+
+        if (isInObjectSpace) {
+          var posWorld = this.object2World(child.jsonObj);
+          child.jsonObj.x = posWorld.x;
+          child.jsonObj.y = posWorld.y;
+        }
+
+        //从世界坐标, 变换到父物体坐标系: 由Update来做
+        var pos1 = {};
+        pos1.t = t;
+        Element.copyWorldData(pos1, child.jsonObj);
+        var worldData = [];
+        this.saveWorldDataAll(worldData, child);
+        child.parent = this;
+        child.animeTrack = null; // group元素和关节，都会丢失原来的动画轨迹!!!
+        this.children.push(child);
+        this.toRelative(worldData, child);
+        Element.copyWorldData(child.jsonObj, pos1);
+
+        //ToDo： 是不是可以不加入到jsonObj.children中？
+        // 因为保存的时候， 总是遍历this.children的， 而且会忽视jsonObj.children
+        if (!this.jsonObj.children) {
+          this.jsonObj.children = [];
+        }
+        this.jsonObj.children.push(child.jsonObj);
+        child.dirty = true;
+        child.forceToRecord();
+        child.update(t); // 必须强制记录， 否则，无法生成AnimeTrack
+
+        TQ.DirtyFlag.setEdited(this);
+        child.dirty2 = this.dirty2 = true;  // 迫使系统更新child的位置数据位相对坐标
+        child.setFlag(Element.TO_RELATIVE_POSE);
+      } else if (desc instanceof TQ.Element) {
+        this.addChildDirect(desc);
+      } else {
+        var host = this;
+        child = Element.build(this.level, desc, host);
+        this.addChildDirect(child);
+      }
+
+      return child;
     };
 
     /*
@@ -1918,6 +1920,20 @@ window.TQ = window.TQ || {};
         return (!!this.displayObj && (this.displayObj instanceof createjs.Bitmap));
     };
 
+    p.hasGraph = function () {
+      var result = this.isBitmap();
+      if (!result && this.children && this.children.length > 1) {
+        this.children.some(function (ele) {
+          if (ele.hasGraph()) {
+            result = true;
+            return true;
+          }
+        })
+      }
+
+      return result;
+    };
+
     p.isText = function () {
         return false;
     };
@@ -2152,7 +2168,9 @@ window.TQ = window.TQ || {};
             // 正在换皮肤..., 旧的已经从stage移除，新的尚未进来
             return this.jsonObj.zIndex;
         }
-        assertTrue(TQ.INVALID_LOGIC + "没有可见物体的group", false);
+        if (this.hasGraph()) {
+          assertTrue(TQ.INVALID_LOGIC + "没有可见物体的group", false);
+        }
         return z;
     };
 
