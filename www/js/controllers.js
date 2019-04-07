@@ -500,7 +500,8 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
     };
 
     $scope.getLocale = function (id) {
-        return TQ.Lang[id];
+      TQ.Log.depreciated("已经被替代LocaleManager和zh.json代替");
+      return {};
     };
 
     $scope.reloadN = function() {
