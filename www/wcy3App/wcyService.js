@@ -108,7 +108,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
 
     //ToDo: if (has wifi)
     isSaving = true;
-    TQ.MessageBox.promptNoFlash(TQ.Locale.getStr('正在保存。。。'));
+    TQ.MessageBox.promptNoFlash(TQ.Locale.getStr('Saving......'));
     return upload(forkIt).then(onSavedSuccess).finally(function () {
       isSaving = false;
       TQ.MessageBox.hide();
