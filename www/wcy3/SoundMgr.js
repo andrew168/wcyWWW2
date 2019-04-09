@@ -12,8 +12,7 @@ TQ = TQ || {};
     SoundMgr.started = false;
     SoundMgr.isSupported = false;
     SoundMgr.items = [];
-    var isReseting = false,
-        directSounds = [];
+    var isReseting = false;
 
     SoundMgr.initialize = function() {
         SoundMgr.isSupported = true;
@@ -40,24 +39,17 @@ TQ = TQ || {};
       if (!SoundMgr.isSupported) return;
       TQ.Log.info("start to play " + id);
       var item = TQ.RM.getResource(id);
-      if (!!_auditioningInstance) {
-        if (_auditioningInstance.isPlaying()) {
-          _auditioningInstance.stop();
-        }
-      }
+      stopAllDirectSound();
       _auditioningInstance = new TQ.HowlerPlayer(TQ.RM.getId(item));
-      directSounds.push(_auditioningInstance);
       _auditioningInstance.play();
       return _auditioningInstance;
     };
 
     function stopAllDirectSound() {
-        if (directSounds.length > 0) {
-            var temp = directSounds.slice(0);
-            temp.forEach(function (inst) {
-                inst.stop();
-            })
-        }
+       if (!!_auditioningInstance) {
+           _auditioningInstance.stop();
+         _auditioningInstance = null;
+       }
     }
 
     SoundMgr.addItem =function(ele) {
@@ -99,9 +91,6 @@ TQ = TQ || {};
             var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
             ele.stop();
         }
-        if (!!_auditioningInstance) {
-            _auditioningInstance.stop();
-        }
         stopAllDirectSound();
     };
 
@@ -125,13 +114,6 @@ TQ = TQ || {};
             SoundMgr.items.splice(i,1);
         }
         stopAllDirectSound();
-
-        if (!!_auditioningInstance) {
-          if (SoundMgr.isPlaying(_auditioningInstance)) {
-            _auditioningInstance.stop();
-          }
-          _auditioningInstance = null;
-        }
     };
 
     SoundMgr.reset = function () {

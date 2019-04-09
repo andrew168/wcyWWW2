@@ -301,7 +301,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var ele = (evt && evt.data && evt.data.element) ? evt.data.element : null;
     if (ele && ele.level && ele.level.isActive()) {
       if (ele.isSound()) {
-        TQ.SoundMgr.play(ele.jsonObj.src);
+        ele.play(true);
       } else if (ele.isVideo()) {
         TQ.VideoMgr.play(ele.jsonObj.src);
       } else {

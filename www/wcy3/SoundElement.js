@@ -118,7 +118,7 @@ TQ = TQ || {};
         }
     };
 
-    p.play = function () {
+    p.play = function (forceToPlay) {
         if (!this.instance) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             TQ.Log.info(TQ.Dictionary.INVALID_LOGIC + "in SoundElement.resume");
@@ -129,7 +129,9 @@ TQ = TQ || {};
             return; //  不可见； 或者刚才调入， 尚未update生成可见性
         }
 
-        if ((!TQ.FrameCounter.isPlaying() || TQ.FrameCounter.isRequestedToStop())) return;
+        if (!forceToPlay) {
+          if ((!TQ.FrameCounter.isPlaying() || TQ.FrameCounter.isRequestedToStop())) return;
+        }
 
         if (this.isPlaying()) {
             return;
