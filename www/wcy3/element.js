@@ -1922,7 +1922,7 @@ window.TQ = window.TQ || {};
 
     p.hasGraph = function () {
       var result = this.isBitmap();
-      if (!result && this.children && this.children.length > 1) {
+      if (!result && this.children && this.children.length > 0) {
         this.children.some(function (ele) {
           if (ele.hasGraph()) {
             result = true;
