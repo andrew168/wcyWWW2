@@ -184,6 +184,10 @@ window.TQ = window.TQ || {};
     }
 
     function calVisible(sag, channel, t) {
+        if (t > sag.t2) { // 确保在结束的时候， 屏幕上可见
+          return 1;
+        }
+
         var T = sag.hideT + sag.showT,
             cycleNumber = Math.floor((t - sag.t1) / T),
             thisCycle = t - sag.t1 - T * cycleNumber;
