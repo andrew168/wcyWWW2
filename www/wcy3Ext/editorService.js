@@ -872,8 +872,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
     if (!currScene) return;
     var nextLevel = currScene.currentLevelId + 1;
+    var thumbnail = levelThumbs[currScene.currentLevelId].src;
     currScene.duplicateCurrentLevel();
-    levelThumbs.splice(currScene.currentLevelId, 0, {src: null, timestamp: Date.now()});
+    levelThumbs.splice(currScene.currentLevelId, 0, {src: thumbnail, timestamp: Date.now()});
     $timeout(function () {
       gotoLevel(nextLevel);
     });
