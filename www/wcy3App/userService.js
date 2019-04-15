@@ -132,6 +132,10 @@ function UserService($http, $auth) {
             if (user.nameError) {
                 user.passwordError = true;
             }
+        } else {
+          if (!TQ.MessageBox.hasCriticalError()) {
+            TQ.MessageBox.promptWithNoCancel('部分网络有问题，请重新加载,(code=9901');
+          }
         }
         user.loggedIn = false;
         $auth.logout(); // 本地也远程server切换时候遗留的token

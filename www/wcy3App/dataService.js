@@ -230,7 +230,7 @@
             $http({
                 method: 'GET',
                 url: TQ.Config.OPUS_HOST + '/wcyList/' + opusDetail
-            }).then(onSuccess);
+            }).then(onSuccess, onFail);
 
             function onSuccess(response) {
                 var data = (response.status === 200) ? response.data : [],
@@ -256,6 +256,20 @@
                     onDataReady();
                 }
             }
+
+          function onFail(response) {
+            var data = (response.status === 200) ? response.data : [],
+              selected = [];
+
+            mats.setList(selected, matType);
+            state |= stateType;
+            if (state === READY_ALL) {
+              onDataReady();
+            }
+            if (!TQ.MessageBox.hasCriticalError()) {
+              TQ.MessageBox.promptWithNoCancel('部分网络有问题，请重新加载,(code=9901');
+            }
+          }
         }
 
         function onDataReady() {

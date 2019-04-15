@@ -8,16 +8,20 @@ TQ.MessageBox = (function () {
         TYPE_SHOW = 'show',
         TYPE_TOAST = 'toast',
         TYPE_PROGRESS = 'progress';
+    var MESSAGE_CRITICAL = 9,
+        MESSAGE_NO = 0;
 
     var isShowingByForce = false,
         instances = {},
-        timerNoFlash = null;
+        messageLevel = MESSAGE_NO,
+        timerNoFlash = null,
         msgList = [],
         timer = null;
 
     var instance = {
         getInstance: getInstance,
         hide: hide,
+        hasCriticalError: hasCriticalError,
         reset: reset,
         hideProgressBox: hideProgressBox,
         prompt: prompt, //可以被reset.
@@ -88,8 +92,19 @@ TQ.MessageBox = (function () {
         TQ.Log.debugInfo("Ok!");
     }
 
+    function hasCriticalError() {
+      return messageLevel === MESSAGE_CRITICAL;
+    }
+
     function promptWithNoCancel(msg, onOk1) {
-      prompt(msg, onOk1, null, true, {noCancel: true});
+      messageLevel = MESSAGE_CRITICAL;
+      prompt(msg, onOKShell, null, true, {noCancel: true});
+      function onOKShell() {
+        messageLevel = MESSAGE_NO;
+        if (onOk1) {
+          onOk1();
+        }
+      }
     }
 
     function prompt(msg, onOk1, onCancel1, mustClick, options) {
