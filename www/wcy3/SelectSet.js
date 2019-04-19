@@ -443,6 +443,16 @@ TQ = TQ || {};
         return lastSolidElement;
     };
 
+    SelectSet.switchToRootElement = function () {
+      var rootElement = lastSolidElement;
+      SelectSet.empty();
+      while (rootElement && !!rootElement.parent) {
+        rootElement = rootElement.parent;
+      }
+      SelectSet.add(rootElement);
+      return rootElement;
+    };
+
     SelectSet.updateByGesture = function(evt) {
         var selectedNothing = true,
             touches = TQ.Utility.getTouches(evt);

@@ -944,16 +944,18 @@ window.TQ = window.TQ || {};
         }
     };
 
-    p.eraseAnimeTrack = function () {
+    p.eraseAnimeTrack = function (withChildren) {
         if (this.isPinned()) {
             return;
         }
         this.animeTrack = null;
         this.jsonObj.animeTrack = null;
-        if (this.children != null) {
+        if (withChildren) {
+          if (this.children != null) {
             for (var i = 0; i < this.children.length; i++) {
-                this.children[i].eraseAnimeTrack();
+              this.children[i].eraseAnimeTrack();
             }
+          }
         }
 
         this.animeTrack = null;
