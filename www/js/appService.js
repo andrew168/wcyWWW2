@@ -42,13 +42,12 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
         //remove_debugger_end
 
+
         // Chrome规定：必须用户操作之后，才能播放Audio和Video，
         // 如果是从shared link直接打开播放， 则必须要提示用户操作一下，否则video的不触发canplay事件
-        if (TQUtility.isIOS()) { // IOS X， 必须click，即使是从作品栏目中点击打开的
-          TQ.State.needUserClickToPlayAV = true;
-        } else {
-          TQ.State.needUserClickToPlayAV = (!!TQ.QueryParams.shareCode && (TQ.QueryParams.shareCode > 0));
-        }
+        // iOS也一样
+        TQ.State.needUserClickToPlayAV = (!!TQ.QueryParams.shareCode &&
+            (parseInt(TQ.Utility.shareCode2Id(TQ.QueryParams.shareCode)) > 0));
 
         if (_initialized) {
             TQ.Log.error("Duplicated call in _init");
