@@ -795,7 +795,10 @@ window.TQ = window.TQ || {};
     if (tMaxFrameCalculated > TQ.Config.MAX_LEVEL_LENGTH) {
       tMaxFrameCalculated = TQ.Config.MAX_LEVEL_LENGTH;
     }
-    this.tMaxFrameMixed = Math.max(this.tMaxFrame, Math.max(DEFAULT_T_MAX_FRAME, tMaxFrameCalculated));
+    if (tMaxFrameCalculated < 0.5) { // 没有设置时长， 也没有长时间的sound, video
+      tMaxFrameCalculated = DEFAULT_T_MAX_FRAME;
+    }
+    this.tMaxFrameMixed = Math.max(this.tMaxFrame, tMaxFrameCalculated);
     return tMaxFrameCalculated;
   };
 
