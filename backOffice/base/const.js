@@ -35,8 +35,16 @@ AUTH_PREFIX[AUTH.TWITTER] = 'tt';
 AUTH_PREFIX[AUTH.GOOGLE] = 'gg';
 AUTH_PREFIX[AUTH.WX] = 'wx';
 
+var MAT_TYPE = {
+  BKG_IMAGE: 10,
+  PROP_IMAGE: 20, // 'propimage',
+  PEOPLE_IMAGE: 30, // 'peopleimage',
+  SOUND: 40 //,'audio';
+};
+
 exports.AUTH = AUTH;
 exports.AUTH_PREFIX = AUTH_PREFIX;
 exports.SUCCESS = 1;
 exports.FAILED = 0;
+exports.MAT_TYPE = MAT_TYPE;
 exports.DEFAULT_WX_GUEST_NAME = '微信用户';

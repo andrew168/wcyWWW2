@@ -14,6 +14,7 @@ var audioMatSchema = new Schema({
   typeId: Number,
   ip: String,
   path: String,  // 素材在Server上的相对路径，去除host和MatFolder之后
+  extra: String, // extra data, json format, such as sprite, spriteMap, etc
   isShared: {type: Boolean, default: false}, //个人私有/与众共享
   isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到， 包括自己
   requestToBan: {type: Boolean, default: false},// 用户或粗审员请求禁止

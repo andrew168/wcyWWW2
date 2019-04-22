@@ -10,6 +10,7 @@
  */
 var express = require('express'),
     router = express.Router(),
+    Const = require('../base/const'),
     utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
     netCommon = require('../common/netCommonFunc'),
     cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
@@ -21,10 +22,6 @@ var express = require('express'),
     audioMatController = require('../db/material/audioMatController');
 
 var MAT_SHARE_FLAG_DEFAULT = false;
-var TYPE_BKG_IMAGE = 10, // 'bkgimage',
-    TYPE_PROP_IMAGE = 20, // 'propimage',
-    TYPE_PEOPLE_IMAGE = 30, // 'peopleimage',
-    TYPE_SOUND = 40; //,'audio';
 
 router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     console.log("params: " + JSON.stringify(req.params));
@@ -33,6 +30,7 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     var public_id = req.body.public_id || null,
         matType = getMatType(req),
         path = req.body.path || null,
+        extra = req.body.extra || null,
         user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -48,9 +46,9 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     if (!public_id) {
         var originalFilename = req.body.filename || "no_filename",
           iComponentId = req.body.iComponentId || 0;
-        createMatId(req, res, iComponentId, matType, originalFilename);
+        createMatId(req, res, iComponentId, matType, originalFilename, extra);
     } else {
-        updateMatId(req, res, matType, utils.matName2Id(public_id), path);
+        updateMatId(req, res, matType, utils.matName2Id(public_id), path, extra);
     }
 });
 
@@ -74,6 +72,30 @@ router.post('/attachTopic', authHelper.ensureAuthenticated, function (req, res, 
     function onError(err) {
         res.json(err);
     }
+});
+
+router.post('/sprite', authHelper.ensureAuthenticated, function (req, res, next) {
+  var matId = req.body.matId || null,
+    topicId = req.body.topicId || null,
+    matType = getMatType(req),
+    user = status.getUserInfo(req, res);
+
+  if (!user) {
+    return netCommon.notLogin(req, res);
+  }
+
+  status.logUser(user, req, res);
+  if (matType === MatType.SOUND;
+
+  getMatController(matType).addSprite(user, matId, extra, onSuccess, onError);
+
+  function onSuccess(id, doc) {
+    res.json(doc);
+  }
+
+  function onError(err) {
+    res.json(err);
+  }
 });
 
 router.post('/detachTopic', authHelper.ensureAuthenticated, function (req, res, next) {
@@ -147,7 +169,7 @@ router.get('/list/:matType/topic/:topicId/option/:requestAll', authHelper.ensure
     }
 });
 
-function createMatId(req, res, iComponentId, matType, originalFilename) {
+function createMatId(req, res, iComponentId, matType, originalFilename, extra) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -175,7 +197,7 @@ function createMatId(req, res, iComponentId, matType, originalFilename) {
             // ToDo:
             var ip = null;
             var isShared = MAT_SHARE_FLAG_DEFAULT;
-            getMatController(matType).add(user.ID, iComponentId, originalFilename, matType, ip, isShared, onSavedToDb, null);
+            getMatController(matType).add(user.ID, iComponentId, originalFilename, matType, ip, isShared, extra, onSavedToDb, null);
         } else {
             console.log("must be new material");
         }
@@ -191,7 +213,7 @@ function updateMatId(req, res, matType, matId, path) {
         sendBack(data, res);
     }
 
-    getMatController(matType).update(matId, path, onSavedToDb);
+    getMatController(matType).update(matId, path, extra, onSavedToDb);
 }
 
 function banMatId(req, res, newValues, matType, matId) {
@@ -239,10 +261,10 @@ function getMatType(req) {
     if (!req.body.matType) {
         console.warn("需要定义 matType");
     }
-    return req.body.matType || TYPE_BKG_IMAGE;
+    return req.body.matType || Const.MAT_TYPE.BKG_IMAGE;
 }
 
 function getMatController(type) {
-    return (type === TYPE_SOUND) ? audioMatController : pictureMatController;
+    return (type === Const.MAT_TYPE.SOUND) ? audioMatController : pictureMatController;
 }
 module.exports = router;
