@@ -241,6 +241,11 @@ var TQUtility; //
             }
             target[prop] = source[prop];
         }
+        return target;
+    };
+
+    Utility.extend = function (target, source) {
+      return angular.extend(target, source);
     };
 
     Utility.isSoundBlob = function (item) {

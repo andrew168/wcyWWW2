@@ -64,6 +64,9 @@ var TQ = TQ || {};
             return;
         }
         started = true;
+        if (currentOps) {
+          detachOps(currentOps);
+        }
         currentOps = trsaOps;
         attachOps(currentOps);
         TQ.Assert.isTrue(!!TQ.SceneEditor.stage, "Stage 没有初始化！");
@@ -73,16 +76,20 @@ var TQ = TQ || {};
     function updateOps(state) {
         if (currentOps) {
             detachOps(currentOps);
+            currentOps = null;
         }
         if (state.isMCopying) {
-            currentOps = mCopyOps;
+          attachOps(mCopyOps);
         } else {
-            currentOps = trsaOps;
+          attachOps(trsaOps);
         }
-        attachOps(currentOps);
     }
 
     function attachOps(ops, newCanvas) {
+        if (currentOps) {
+          detachOps(currentOps);
+          currentOps = null;
+        }
         if (newCanvas) {
           canvas = newCanvas;
         }
@@ -109,6 +116,9 @@ var TQ = TQ || {};
 
     function restore() {
       canvas = savedState.canvas;
+      if (currentOps) {
+        detachOps(currentOps);
+      }
       attachOps(savedState.ops);
       savedState = null;
     }
