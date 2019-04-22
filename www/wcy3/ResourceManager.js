@@ -40,7 +40,7 @@ this.TQ = this.TQ || {};
         RM = ResourceManager;
 
     RM.DATA_TYPE_SOUND = createjs.AbstractLoader.SOUND; // preloader lib中定义的
-    RM.NOSOUND = "https://res-3.cloudinary.com/eplan/video/upload/v1528860776/p1.mp3";
+    RM.NOSOUND = "https://res.cloudinary.com/eplan/video/upload/v1528860776/p1.mp3";
     RM.NOPIC = "https://res.cloudinary.com/eplan/image/upload/v1518143410/c134.png";
     RM.BASE_PATH = null;
     // RM.BASE_PATH = "http://" + TQ.Config.DOMAIN_NAME;
@@ -123,6 +123,7 @@ this.TQ = this.TQ || {};
                 ((item.src !== RM.FULLPATH_NOSOUND) &&
                 (item.src !== RM.FULLPATH_NOPIC)));
             TQ.Log.info(item.src + ": " + event.toString() );
+            TQUtility.triggerEvent(document, TQ.EVENT.SYSTEM_ERROR, {desc: 'failed to load resource', detail: event});
             var resId = item.id;
             var result = null;
             var altResId = null;

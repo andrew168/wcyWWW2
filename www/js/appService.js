@@ -65,6 +65,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         }
         _initialized = true;
         TQ.Log.debugInfo("_init");
+        document.addEventListener(TQ.EVENT.SYSTEM_ERROR, onSystemError, false);
         configCanvas();
         if (TQ.Config.LocalCacheEnabled) {
             document.addEventListener(TQ.EVENT.FILE_SYSTEM_READY, onFileSystemReady, false);
@@ -148,6 +149,12 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
         if (_state >= STATE_STARTING) {
             _onAppStarting();
         }
+    }
+
+    function onSystemError(evt) {
+      TQ.MessageBox.confim(TQ.Locale.getStr('发现错误，请重新加载！'));
+      TQ.Log.info(evt.toString());
+      TQ.Log.info(JSON.stringify(evt));
     }
 
     return {
