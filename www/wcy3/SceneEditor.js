@@ -27,7 +27,10 @@ var currScene = null;
     // RECORD_AUDIO: 2300,
     PREVIEW: 2400, // Play, Preview
     SHARE_PANE: 2410, //属于PREVIEW上的页面
-    CONVERT_TO_TOPIC: 2420
+    CONVERT_TO_TOPIC: 2420,
+
+    // 互动模式
+    INTERACT: 3000
   };
 
   TQ.State.editorMode = SceneEditor.NOT_INITIALIZED;

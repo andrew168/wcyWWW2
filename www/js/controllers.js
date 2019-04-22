@@ -1,3 +1,5 @@
+var howlerPlayer;
+
 angular.module('starter').controller('DashCtrl', DashCtrl);
 DashCtrl.$inject = ['$scope', 'WCY', '$cordovaImagePicker',
         '$cordovaSocialSharing',
@@ -222,7 +224,7 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
     };
 
     $scope.insertSound = function () {
-        EditorService.insertSound('https://res-3.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3');
+        EditorService.insertSound('https://res.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3');
         // EditorService.gotoNextLevel();
     };
 
@@ -340,12 +342,27 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
         }
     };
 
-    var howlerPlayer;
     $scope.playHowlerAudio = function () {
       if (!howlerPlayer) {
-        howlerPlayer = new TQ.HowlerPlayer('v1528257405/c48.mp3');
+        var spriteMap = [
+          'smile',
+          'cry',
+          'afraid'
+        ],
+          sprite = {
+          'smile': [0, 1500],
+            'cry': [2000, 800],
+            'afraid': [3000, 1500]
+          };
+        // howlerPlayer = new TQ.HowlerPlayer('v1528257405/c48.mp3', sprite, spriteMap);
+        howlerPlayer = EditorService.insertSound({
+          src: 'https://res.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3',
+          sprite: sprite,
+          spriteMap: spriteMap
+        });
       }
-      howlerPlayer.play();
+      // howlerPlayer.play(false, 'smile');
+      howlerPlayer.playNextSound();
     };
     $scope.pauseHowlerAudio = function () {
       howlerPlayer.pause();
@@ -602,8 +619,8 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
   }
 
   initialize();
-  var howlerPlayer22 = new TQ.HowlerPlayer('v1528257405/c48.mp3');
-  howlerPlayer22.howl.once('load', function () {
-    howlerPlayer22.play();
-  })
+  // var howlerPlayer22 = new TQ.HowlerPlayer('v1528257405/c48.mp3');
+  // howlerPlayer22.howl.once('load', function () {
+  //   howlerPlayer22.play();
+  // })
 }

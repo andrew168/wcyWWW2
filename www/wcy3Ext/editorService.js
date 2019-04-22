@@ -776,14 +776,24 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     TQ.SceneEditor.addItem(desc);
   }
 
-  function insertSound(url, resourceName, isCrossLevel) {
+  function insertSound(urlOrConfig, resourceName, isCrossLevel) {
     var desc = {
-      src: url,
       resName: resourceName,
       type: "SOUND",
       eType: TQ.Element.ETYPE_AUDIO,
       isCrossLevel: isCrossLevel
     };
+
+    if (isObject(urlOrConfig)) {
+      desc = TQUtility.extend(desc, urlOrConfig);
+    } else {
+      desc.src = urlOrConfig;
+    }
+
+    if (desc.sprite && !desc.sprite['__default']) {
+      desc.sprite['__default'] = desc.sprite[desc.spriteMap[0]];
+    }
+
     addItem(desc, TQ.MatType.SOUND);
   }
 
