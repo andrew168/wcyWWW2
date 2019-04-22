@@ -2231,5 +2231,16 @@ window.TQ = window.TQ || {};
         return decor;
     };
 
+    p.forEachChildren = function (memberFunctionName) {
+      if (this.children != null) {
+        this.children.forEach(function (child) {
+          TQ.Assert.isTrue(!!child[memberFunctionName], '调用不存在的成员函数： ' + memberFunctionName);
+          if (child[memberFunctionName]) {
+            child[memberFunctionName]();
+          }
+        });
+      }
+    };
+
     TQ.Element = Element;
 }());
