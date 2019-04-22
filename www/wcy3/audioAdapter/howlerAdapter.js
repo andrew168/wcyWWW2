@@ -11,14 +11,14 @@ var TQ = TQ || {};
     ENDED: 4
   };
 
-  function HowlerPlayer(url) {
+  function HowlerPlayer(url, sprite, spriteMap) {
     var self = this,
       canPreload = !!HowlerGlobal.unlocked;
 
     this.state = STATE.UNLOADED;
     this.howlerID = -1;
     this.tryingToPlay = false;
-    this.howl = new Howl({
+    var config = {
       src: [TQ.RM.toFullPathFs(url)],
       html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
       preload: canPreload,
@@ -44,7 +44,15 @@ var TQ = TQ || {};
       onseek: function () {
         TQ.Log.info('seek...');
       }
-    });
+    };
+    if (!!sprite) {
+      config.sprite = sprite;
+      if (spriteMap) {
+        this.spriteMap = spriteMap;
+      }
+    }
+
+    this.howl = new Howl(config);
     var sound = self.howl;
     if (!canPreload) {
       sound.once('unlock', function () {
@@ -54,7 +62,7 @@ var TQ = TQ || {};
   }
 
   HowlerPlayer.prototype = {
-    play: function () {
+    play: function (spriteName) {
       var self = this,
         sound = self.howl;
       if (self.tryingToPlay) {
@@ -65,17 +73,17 @@ var TQ = TQ || {};
           if (self.howlerID < 0) {
             if ((sound.state() === 'unloaded') && !TQUtility.isBlobUrl(sound._src[0])) {
               sound.once('load', function () {
-                self.howlerID = sound.play();
+                self.howlerID = sound.play(spriteName);
               });
               self.tryingToPlay = true;
             } else {
-              self.howlerID = sound.play(); // 首次播放
+              self.howlerID = sound.play(spriteName); // 首次播放
             }
           } else {
             TQ.AssertExt(sound, "需要先建立audio对象");
             TQDebugger.Panel.logInfo('resume, ' + sound._sounds.length);
             // Begin playing the sound.
-            var newID = sound.play(self.howlerID);
+            var newID = sound.play(!!spriteName? spriteName: self.howlerID);
             if (newID !== self.howlerID) {
               if (newID > 0) {
                 if (self.howlerID !== newID) {
@@ -84,7 +92,7 @@ var TQ = TQ || {};
                 }
               } else {
                 //  虽然曾经存在，但是已经当做垃圾回收了
-                self.howlerID = sound.play();
+                self.howlerID = sound.play(spriteName);
               }
             }
           }
@@ -133,7 +141,7 @@ var TQ = TQ || {};
       TQ.Log.info('stopped...');
     },
 
-    resume: function (t) {
+    resume: function (t, spriteName) {
       var self = this,
         sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
@@ -152,7 +160,7 @@ var TQ = TQ || {};
             // sound.once('play', function () {
             //   sound.seek(t, self.howlerID);
             // });
-            self.play();
+            self.play(!!spriteName ? spriteName: self.howlerID);
           }
         }
       }

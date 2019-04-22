@@ -73,7 +73,7 @@ TQ = TQ || {};
         }
     };
 
-    SoundMgr.resume = function () {
+    SoundMgr.resume = function (spriteName) {
         var t = TQ.FrameCounter.t();
         for (var i = 0; i < SoundMgr.items.length; i++) {
             var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
@@ -81,7 +81,7 @@ TQ = TQ || {};
         		var tt = currScene.toGlobalTime(t);
                 ele.resume(tt);
             } else {
-                ele.resume(t);
+                ele.resume(t, spriteName);
             }
         }
     };

@@ -74,7 +74,7 @@ TQ = TQ || {};
         }
         if (resource) {
             this.loaded = true;
-            this.instance = new TQ.HowlerPlayer(resourceId); // 声音只用ID， 不要resouce data
+            this.instance = new TQ.HowlerPlayer(resourceId, desc.sprite, desc.spriteMap); // 声音只用ID， 不要resouce data
             //ToDo： 需要在这里play吗？
             //this.instance.play(); //interruptValue, delay, offset, loop);
             // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
@@ -118,7 +118,7 @@ TQ = TQ || {};
         }
     };
 
-    p.play = function (forceToPlay) {
+    p.play = function (forceToPlay, spriteName) {
         if (!this.instance) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
             TQ.Log.info(TQ.Dictionary.INVALID_LOGIC + "in SoundElement.resume");
@@ -142,7 +142,7 @@ TQ = TQ || {};
             if (this.t0 === undefined) {
                 this.t0 = TQ.FrameCounter.t();   // ToDo:这个t0计算方法有误， 需要根据编辑时插入点的位置， 来计算； 如果播放时，跳开一个位移，则不是播放时的开始位置。
             }
-            return this.instance.play();
+            return this.instance.play(spriteName);
         }
 
         if (this.instance && !this.instance.isPlaying()) { //  在FAILED情况下， 重新开始播放
@@ -150,7 +150,7 @@ TQ = TQ || {};
             if (this.isCrossLevel) {
                 t = currScene.toGlobalTime(t);
             }
-            return this.resume(t);
+            return this.resume(t, spriteName);
         }
     };
 
@@ -167,7 +167,7 @@ TQ = TQ || {};
 
     // t： 对于简单声音，只是本level中的相对时间；
     //     对于跨场景的声音，是全局时间
-    p.resume = function(t) { //
+    p.resume = function(t, spriteName) { //
         var ts;
         if (!this.instance) {
             assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
@@ -181,14 +181,14 @@ TQ = TQ || {};
             }
 
             if (this.isFirstTimePlay) {
-                this.play();
+                this.play(spriteName);
                 return;
             }
 
             var offset = (t - ts) * 1000;
             var SOUND_DATA_BLOCK_SIZE = 1000;
             if ((offset >= 0) && (offset < Math.max(SOUND_DATA_BLOCK_SIZE, this.instance.duration - SOUND_DATA_BLOCK_SIZE))) {
-              this.instance.resume(offset);
+              this.instance.resume(offset, spriteName);
             }
         }
     };
