@@ -169,8 +169,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       })
         .finally(TQ.MessageBox.reset);
     } else {
-      TQ.SceneEditor.addItem(desc);
+      return TQ.SceneEditor.addItem(desc);
     }
+    return null;
   }
 
   function reset() {
@@ -269,7 +270,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       }
 
       function isEditOrPlay() {
-        return (state.isPreviewMode) && (state.editorMode >= TQ.SceneEditor.MODE.EDIT)
+        return (state.editorMode === TQ.SceneEditor.MODE.EDIT) ||
+          (state.editorMode === TQ.SceneEditor.MODE.PREVIEW);
       }
 
       document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
@@ -794,7 +796,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       desc.sprite['__default'] = desc.sprite[desc.spriteMap[0]];
     }
 
-    addItem(desc, TQ.MatType.SOUND);
+    return addItem(desc, TQ.MatType.SOUND);
   }
 
   function addItemByUrl(url, matType, option) {
