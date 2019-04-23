@@ -158,8 +158,23 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
     $scope.banOpus = function () {
       EditorService.banOpus({wcyId: 2167});
     };
-    $scope.publishOpus = function () {
-      EditorService.publishOpus({wcyId: 2167});
+    $scope.addSprite = function () {
+      EditorService.addSprite({
+        public_id: 'c344',
+        matType: TQ.MatType.SOUND,
+        extra: {
+          spriteMap: [
+            'smile',
+            'cry',
+            'afraid'
+          ],
+          sprite: {
+            'smile': [0, 1500],
+            'cry': [2000, 800],
+            'afraid': [3000, 1500]
+          }
+        }
+      });
     };
 
     $scope.deleteLevel = function(id) {

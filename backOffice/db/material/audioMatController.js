@@ -33,7 +33,7 @@ function get(userId, callback) {
   });
 }
 
-function add(userId, iComponentId, audioName, typeId, ip, isShared, extra, onSuccess, onError) {
+function add(userId, iComponentId, audioName, typeId, ip, isShared, onSuccess, onError) {
   var aDoc = new AudioMat({
     userId: userId,
     typeId: typeId,
@@ -41,9 +41,6 @@ function add(userId, iComponentId, audioName, typeId, ip, isShared, extra, onSuc
     ip: ip,
     isShared: isShared
   });
-  if (extra) {
-    aDoc.extra = extra;
-  }
   aDoc.save(function (err, doc) {
     utils.onSave(err, doc, onSuccess, onError);
   });
@@ -108,6 +105,9 @@ function ban(operator, id, newValue, callback) {
 }
 
 function addSprite(operator, id, extra, callback) {
+  if (typeof extra === 'object') {
+    extra = JSON.stringify(extra);
+  }
   dbCommon.setProp(operator, AudioMat, id, 'extra', extra, callback);
 }
 

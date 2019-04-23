@@ -40,6 +40,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     shareMat: NetService.shareMat,
     requestToBanMat: NetService.requestToBanMat,
     requestToShareMat: NetService.requestToShareMat,
+    addSprite: NetService.addSprite,
 
     // 作品管理
     requestToBanOpus: NetService.requestToBanOpus,

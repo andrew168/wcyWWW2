@@ -953,7 +953,7 @@
             function isKeyApi(pathname) {
                 var result = false,
                     keyApis = [
-                    '/material/list/',
+                    '/material/list/', '/material/sprite/',
                     '/user/list', '/user/privilege/',
                     '/wcy/',
                     '/wcyList/', ' /wcyList' // '/wcyList/ban/', '/wcyList/apply/', '/wcyList/approve/'

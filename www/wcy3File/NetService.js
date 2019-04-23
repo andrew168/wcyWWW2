@@ -266,16 +266,23 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         doUpdateOpus(url);
     }
 
+    function addSprite(sound) {
+      doUpdateMat(sound, "sprite/");
+    }
+
     function doUpdateOpus(url) {
         return $http.get(url).then(function (pkg) { // 发出event， 好让dataService等更新自己
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
         });
     }
 
-
-    function doUpdateMat(data) {
+    function doUpdateMat(data, path) {
+        var url = C_MAN_URL;
+        if (path) {
+          url = url + '/' + path;
+        }
         TQ.AssertExt.isNotNull(data.matType, "db必须的参数");
-        return $http.post(C_MAN_URL, angular.toJson(data)).then(function (pkg) { // 发出event， 好让dataService等更新自己
+        return $http.post(url, angular.toJson(data)).then(function (pkg) { // 发出event， 好让dataService等更新自己
             TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
         });
     }
@@ -394,6 +401,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         requestToShareMat: requestToShareMat,
         requestToBanMat: requestToBanMat,
 
+        addSprite: addSprite,
         requestToBanOpus: requestToBanOpus,
         banOpus: banOpus, // 先ban， 后 delete, 不要急于删除， 以避免有些作品还在使用它们
 

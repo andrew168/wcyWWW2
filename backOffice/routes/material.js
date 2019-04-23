@@ -30,7 +30,6 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     var public_id = req.body.public_id || null,
         matType = getMatType(req),
         path = req.body.path || null,
-        extra = req.body.extra || null,
         user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -46,9 +45,9 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     if (!public_id) {
         var originalFilename = req.body.filename || "no_filename",
           iComponentId = req.body.iComponentId || 0;
-        createMatId(req, res, iComponentId, matType, originalFilename, extra);
+        createMatId(req, res, iComponentId, matType, originalFilename);
     } else {
-        updateMatId(req, res, matType, utils.matName2Id(public_id), path, extra);
+        updateMatId(req, res, matType, utils.matName2Id(public_id), path);
     }
 });
 
@@ -76,7 +75,8 @@ router.post('/attachTopic', authHelper.ensureAuthenticated, function (req, res, 
 
 router.post('/sprite', authHelper.ensureAuthenticated, function (req, res, next) {
   var matId = req.body.matId || null,
-    topicId = req.body.topicId || null,
+    public_id = req.body.public_id || null,
+    extra = req.body.extra || null,
     matType = getMatType(req),
     user = status.getUserInfo(req, res);
 
@@ -84,10 +84,16 @@ router.post('/sprite', authHelper.ensureAuthenticated, function (req, res, next)
     return netCommon.notLogin(req, res);
   }
 
-  status.logUser(user, req, res);
-  if (matType === MatType.SOUND;
+  if (!matId) {
+    matId = utils.matName2Id(public_id);
+  }
 
-  getMatController(matType).addSprite(user, matId, extra, onSuccess, onError);
+  status.logUser(user, req, res);
+  if (matType === Const.MAT_TYPE.SOUND) {
+    getMatController(matType).addSprite(user, matId, extra, onSuccess, onError);
+  } else {
+    onError({error: 'sprite is not allowed for mat ' + matType});
+  }
 
   function onSuccess(id, doc) {
     res.json(doc);
@@ -169,7 +175,7 @@ router.get('/list/:matType/topic/:topicId/option/:requestAll', authHelper.ensure
     }
 });
 
-function createMatId(req, res, iComponentId, matType, originalFilename, extra) {
+function createMatId(req, res, iComponentId, matType, originalFilename) {
     var user = status.getUserInfo(req, res);
     if (!user) {
         return netCommon.notLogin(req, res);
@@ -197,7 +203,7 @@ function createMatId(req, res, iComponentId, matType, originalFilename, extra) {
             // ToDo:
             var ip = null;
             var isShared = MAT_SHARE_FLAG_DEFAULT;
-            getMatController(matType).add(user.ID, iComponentId, originalFilename, matType, ip, isShared, extra, onSavedToDb, null);
+            getMatController(matType).add(user.ID, iComponentId, originalFilename, matType, ip, isShared, onSavedToDb, null);
         } else {
             console.log("must be new material");
         }
@@ -213,7 +219,7 @@ function updateMatId(req, res, matType, matId, path) {
         sendBack(data, res);
     }
 
-    getMatController(matType).update(matId, path, extra, onSavedToDb);
+    getMatController(matType).update(matId, path, onSavedToDb);
 }
 
 function banMatId(req, res, newValues, matType, matId) {
