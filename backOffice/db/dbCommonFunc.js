@@ -24,7 +24,7 @@ function setProp(operator, model, id, propName, propValue, callback) {
             data.save(function (err, data) {
                 if (!err) {
                     if (callback) {
-                        callback(data._doc._id);
+                        callback(data._doc._id, data._doc);
                     }
                 } else {
                     console.error("error in set Prop: " + propName);
