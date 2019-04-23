@@ -71,6 +71,7 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
       if (item.path) {
         result.push({
           id: item._id, name: item.name, path: item.path, authorId: item.userId,
+          extra: item.extra,
           isShared: item.isShared, time: item.timestamp
         });
       }

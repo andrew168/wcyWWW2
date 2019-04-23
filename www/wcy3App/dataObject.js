@@ -51,6 +51,9 @@ function DataObject(list) {
     function fixup(items, matType) {
         var i;
         for (i = 0; i < items.length; i++) {
+            if (items[i].extra) {
+              items[i].extra = JSON.parse(items[i].extra);
+            }
             if (!items[i].isProxy) {
                 var oldPath = (matType === TQ.MatType.TOPIC)? items[i].posterPicturePath :
                     items[i].path;
