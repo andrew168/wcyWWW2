@@ -248,7 +248,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       function onGotoBkg() {
         state.isInBkg = true;
         console.log("state on go to bkg!");
-        if (isEditOrPlay()) {
+        if (isEditMode() || isPlayMode()) {
           if (!TQ.FrameCounter.isPaused()) {
             pausedByBkur = true;
             stop();
@@ -264,15 +264,18 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         console.log("state on go to foreground!");
         if (pausedByBkur) {
           pausedByBkur = false;
-          if (isEditOrPlay()) {
+          if (isPlayMode()) {
             play();
           }
         }
       }
 
-      function isEditOrPlay() {
-        return (state.editorMode === TQ.SceneEditor.MODE.EDIT) ||
-          (state.editorMode === TQ.SceneEditor.MODE.PREVIEW);
+      function isEditMode() {
+        return (state.editorMode === TQ.SceneEditor.MODE.EDIT);
+      }
+
+      function isPlayMode() {
+        return (state.editorMode === TQ.SceneEditor.MODE.PREVIEW);
       }
 
       document.addEventListener(TQ.SelectSet.SELECTION_NEW_EVENT, onSelectSetChange);
