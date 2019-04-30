@@ -35,9 +35,13 @@ var TQ = TQ || {};
     State.allowPageTransition = true;
     State.fiexdRootJoint = true; // 关节的根，总是固定的， 不可动的（动态可修改，所以用State，不用Config）
     State.queryParams = {}; // 防止无它导致ensureFirstClick失败
+    Object.defineProperty(State, 'isRecordingAudioMode', {
+        get: function() {
+          return State.editorMode === TQ.SceneEditor.MODE.RECORD_AUDIO;
+        }
+    });
 
     var deviceInfoInitialized = false;
-
     function determineWorkingRegion() {
         if (!deviceInfoInitialized) {
             updateDeviceInfo();

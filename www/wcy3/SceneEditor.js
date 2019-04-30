@@ -24,7 +24,7 @@ var currScene = null;
     EDIT_OR_PLAY: 2000, // 编辑,分享等 （有canvas，>=2000）
     EDIT: 2100, // 编辑
     // EDIT_IMAGE: 2200, // 尚未以他们代替 flag变量
-    // RECORD_AUDIO: 2300,
+    RECORD_AUDIO: 2300,
     PREVIEW: 2400, // Play, Preview
     SHARE_PANE: 2410, //属于PREVIEW上的页面
     CONVERT_TO_TOPIC: 2420,
