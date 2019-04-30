@@ -6,7 +6,7 @@ var fs = require('fs'),
 
 var fbPage = null;
 var $PAGE_URL = 'http://www.udoido.cn/opus/0_839_9749_1511749528598.html',
-    $SAP_URL = 'http://www.udoido.com/#/opus/0_839_9749_1511749528598.html',
+    $SAP_URL = 'http://www.udoido.com/#/do?sc=0_839_9749_1511749528598.html',
     $IMAGE_URL ='https://res.cloudinary.com/eplan/image/upload/v1511418728/c630.png',
     $PAGE_TITLE = 'Animation for you--UDOIDO',
     $PAGE_TITLE_FB = 'Animation for daily life and work -- UDOIDO',

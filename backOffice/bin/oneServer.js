@@ -180,8 +180,16 @@
     }
 
     function redirectToMainApp(req, res) {
-        var shareCode = req.originalUrl.split(/[.|\/]/)[2];
-        return res.redirect('http://show.udoido.com/#/opus/' + shareCode);
+      var NOT_FOUND_PAGE = '0_1_0_0';
+      var shareCode = req.query.sc;
+      if (!shareCode) {
+        shareCode = req.originalUrl.split(/[.|\/]/)[2];
+      }
+      if (!shareCode || shareCode === -1) {
+        shareCode = NOT_FOUND_PAGE;
+      }
+
+      return res.redirect('http://show.udoido.com/#/do?sc=' + shareCode);
     }
 
     function setupBasicRoutes(app, appConfig) {

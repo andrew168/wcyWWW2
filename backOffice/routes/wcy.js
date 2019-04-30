@@ -212,7 +212,7 @@ function shareToFB(shareCode, req, res) {
     var pageShortPath = '/' + shareCode + '.html',
         pageFileName = FB_PAGE_DEPOT + pageShortPath,
         pageUrl = FB_PAGE_ROOT + pageShortPath,
-        spaUrl = 'http://www.udoido.com/#/opus/' + shareCode, // single page app url
+        spaUrl = 'http://www.udoido.com/#/do?sc=' + shareCode, // single page app url
         shareData = {
             imageUrl: req.body.ssPath || null,
             title: req.body.title || null,
