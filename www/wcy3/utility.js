@@ -376,7 +376,7 @@ window.TQ = window.TQ || {};
     };
 
     Utility.wcyId2Url = function (opusId) {
-        return TQ.Config.OPUS_HOST + "#/opus/" + Utility.wcyId2ShareCode(opusId);
+        return TQ.Config.OPUS_HOST + "/#/do?sc=" + Utility.wcyId2ShareCode(opusId);
     };
 
     Utility.shareCode2Id = function (shareCode) {
