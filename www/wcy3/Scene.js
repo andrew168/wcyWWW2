@@ -1025,7 +1025,7 @@ TQ = TQ || {};
     if (level) {
       level.setupPreloader();
     }
-    if (TQ.RM.isEmpty) {
+    if (TQ.RM.isEmpty || TQ.RM.dataReady) {
       TQ.RM.onCompleted();
     }
   };
