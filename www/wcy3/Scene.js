@@ -113,25 +113,6 @@ TQ = TQ || {};
         }
       }
 
-      TQ.Locale.onReady(function () {
-        if (TQ.State.isPlayOnly) {
-          setTimeout(function () {
-            TQ.State.waitForFirstClick = true;
-          }, 500);
-          TQ.MessageBox.promptWithNoCancel(TQ.Locale.getStr('Click OK to start play'), onOk, null, true);
-        } else {
-          onOk();
-        }
-
-        function onOk() {
-          TQ.State.needUserClickToPlayAV = false;
-          TQ.State.waitForFirstClick = false;
-          if (callback) {
-            callback();
-            currScene.mainLoop();
-          }
-        }
-      });
       return false;
     }
     return true;
