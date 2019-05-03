@@ -76,7 +76,7 @@ var TQ = TQ || {};
         }
 
         var topBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight,
-            bottomBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.bottomBarHeight,
+            bottomBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode || State.isRecordingAudioMode) ? 0 : State.bottomBarHeight,
             h = State.innerHeight,
             w = State.innerWidth,
             designated;
