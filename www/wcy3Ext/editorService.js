@@ -1027,6 +1027,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     TQ.VideoMgr.reset();
     TQ.SelectSet.empty(); // 清楚选中的元素， 和highlight
     setPreviewMode();
+    state.requestToRecordAudio = false;  // 在preview的时候，清除
     replay(options);
   }
 
