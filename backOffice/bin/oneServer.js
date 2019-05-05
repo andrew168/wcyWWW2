@@ -17,6 +17,7 @@
      bodyParser = require('body-parser');
 
 // our own module
+    var AGE_ONE_DAY = 24*60*60*1000;
     var userStat = null;
     var _app = null,
         // 实测：
@@ -84,12 +85,15 @@
         app.use(cookieParser());
         app.get('*', function (req, res, next) {
             if (req && (req.url)) {
-                var path = req.url;
-                if (path === '/' || path === '') { // index.html
-                    res.header('Cache-Control', 'public, max-age=0');
-                } else if (path.indexOf('.') >= 0) { // 除了API之外的, (例如： .css, .png, .js, etc)
-                    res.header('Cache-Control', 'public, max-age=25920000');
-                }
+              var path = req.url;
+              if (path === '/' || path === '') { // index.html
+                res.header('Cache-Control', 'public, max-age=0');
+              } else if ((path.indexOf('/features/') >= 0) || // /features/目录下的
+                (path.indexOf('.html') >= 0)) {           // html文件
+                res.header('Cache-Control', 'public, max-age=0');
+              } else if (path.indexOf('.') >= 0) { // 除了API之外的, (例如： .css, .png, .js, etc)
+                res.header('Cache-Control', 'public, max-age=' + AGE_ONE_DAY);
+              }
             }
             next();
         });
