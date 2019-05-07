@@ -70,7 +70,13 @@ var TQ = TQ || {};
 
             } else {
                 State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(topBarEle).height);
-                State.bottomBarHeight = TQ.Utility.getCssSize(window.getComputedStyle(bottomBarEle).height);
+
+                if (window.getComputedStyle(bottomBarEle).display !== 'none') {
+                  State.bottomBarHeight = TQ.Utility.getCssSize(window.getComputedStyle(bottomBarEle).height);
+                } else {
+                  State.bottomBarHeight = 0;
+                }
+
                 if (accompanyToolBarEle) {
                     State.bottomFloatToolHeight = TQ.Utility.getCssSize(window.getComputedStyle(accompanyToolBarEle).height);
                 }
