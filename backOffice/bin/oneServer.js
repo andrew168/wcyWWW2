@@ -17,7 +17,7 @@
      bodyParser = require('body-parser');
 
 // our own module
-    var AGE_ONE_DAY = 24*60*60*1000;
+    var AGE_ONE_DAY = 24*60*60;  // seconds为单位，不是ms
     var userStat = null;
     var _app = null,
         // 实测：
