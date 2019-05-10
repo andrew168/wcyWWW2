@@ -28,7 +28,7 @@ this.TQ.ResourceSync = (function () {
             useBackgroundMode: true
         };
 
-        angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
+        return angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
             .then(function (res) {
                 TQ.Log.debugInfo(res.url);
                 if (ele && ele.jsonObj) {
