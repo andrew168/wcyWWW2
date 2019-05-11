@@ -446,7 +446,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
     if (!!data && !!data.wcyId) {
       _wcyId = _getWcyId(data);
       if (currScene && !currScene.hasFilename()) {
-        currScene.setWcyId(_wcyId);
+        currScene.setFilenameById(_wcyId);
       }
     } else {
       _wcyId = TQ.Config.UNNAMED_SCENE_ID;

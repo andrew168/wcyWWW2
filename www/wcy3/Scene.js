@@ -1278,7 +1278,8 @@ TQ = TQ || {};
   };
 
   p.hasFilename = function () {
-    return (this.filename && (this.filename !== TQ.Config.UNNAMED_SCENE));
+    return (this.filename && (this.filename !== TQ.Config.UNNAMED_SCENE) &&
+      (this.filename !== TQ.Config.UNNAMED_SCENE_ID));
   };
 
   function localT2Global(t) {
