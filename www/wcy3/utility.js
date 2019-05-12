@@ -374,6 +374,10 @@ window.TQ = window.TQ || {};
       return params;
     }
 
+    Utility.isValidWcyId = function(wcyId) {
+        return ((typeof wcyId === 'number') && wcyId >=0);
+    };
+
     Utility.getWcyIdFromUrl = function (url) {
       return Utility.shareCode2Id(parseUrl(url).shareCode);
     };
@@ -815,6 +819,7 @@ window.TQ = window.TQ || {};
       // local Id, 唯一编号，平等对待各种对象，opus，level，element,....
         return 'localId' + localIdTimeBase + '-' + (++localIdCounter);
     }
+
 
     Utility.createLocalId = createLocalId;
     Utility.parseUrl = parseUrl;

@@ -371,6 +371,10 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function onSavedSuccess(res) {
     var data = (!res) ? null : res.data;
+    if (!TQ.Scene.isSameOpus(res.localIdCached)) {
+      return;
+    }
+
     currScene.isSaved = true;
     if (!!data) {
       parseCommonData(data);
