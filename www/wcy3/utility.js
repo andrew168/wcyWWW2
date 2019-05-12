@@ -12,7 +12,7 @@ window.TQ = window.TQ || {};
     }
 
     var localIdCounter = 0,
-      localIdTimeBase = new Date.now();
+      localIdTimeBase = Date.now();
 
     Utility.toCssFont = function(option) {
         // !!! 只接受 合法的 CSS font attribute, ex. "bold 36px Arial"
