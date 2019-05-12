@@ -81,7 +81,7 @@ function StorageManager($q, $timeout, $http, NetService) {
 
       if (!onePackage.ssSign) {
         uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).then(
-          function onUploadCompleted(httpResult) {
+          function (httpResult) {
             httpResult.localIdCached = onePackage.localId;
             if (onePackage.onSuccess) {
               onePackage.onSuccess(httpResult);
@@ -92,7 +92,11 @@ function StorageManager($q, $timeout, $http, NetService) {
                 onePackage.wcyId = TQ.Scene.getWcyId();
               }
 
-              uploadWithSsign();
+              if (!!onePackage.screenshot) {
+                uploadWithSsign();
+              } else {
+                onUploadCompleted(httpResult);
+              }
             }
           }
         ).then(function (value) {
@@ -123,16 +127,16 @@ function StorageManager($q, $timeout, $http, NetService) {
         } else {
           onUploadCompleted({});
         }
+      }
 
-        function onUploadCompleted(httpResult) {
-          httpResult.localIdCached = onePackage.localId;
-          isUploading = false;
-          if (onePackage.onSuccess) {
-            onePackage.onSuccess(httpResult);
-          }
-          if (isReadyForClose() && onReadyForCloseCallback) {
-            onReadyForCloseCallback(httpResult);
-          }
+      function onUploadCompleted(httpResult) {
+        httpResult.localIdCached = onePackage.localId;
+        isUploading = false;
+        if (onePackage.onSuccess) {
+          onePackage.onSuccess(httpResult);
+        }
+        if (isReadyForClose() && onReadyForCloseCallback) {
+          onReadyForCloseCallback(httpResult);
         }
       }
     }
