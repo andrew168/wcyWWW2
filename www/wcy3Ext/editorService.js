@@ -1462,7 +1462,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function forkIt() {
-    WCY.forkIt().then(toAddMode);
+    WCY.forkIt();
+    toAddMode();
   }
 
   function setColorPanel(domPanel) {
