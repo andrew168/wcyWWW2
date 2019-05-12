@@ -156,7 +156,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
     // share
     shareFbWeb: shareFbWeb,
-    saveScreenShot: saveScreenShot
+    saveScreenshot: saveScreenshot
   };
 
   function addItem(desc, matType) {
@@ -1686,7 +1686,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   var screenShotIsDither = false;
 
-  function saveScreenShot() { // 奇怪：截屏按钮点击一次，会触发两次这个函数，
+  function saveScreenshot() { // 奇怪：截屏按钮点击一次，会触发两次这个函数，
     if (screenShotIsDither) {
       return;
     }
