@@ -464,11 +464,7 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
     };
 
     $scope.uploadScreenshot = function () {
-        WCY.uploadScreenshot().then(function(res){
-          console.log(res);
-        }, function(err) {
-          console.log(err);
-        });
+        WCY.uploadScreenshot();
     };
 
     $scope.insertBkImageFromLocal = function () {
