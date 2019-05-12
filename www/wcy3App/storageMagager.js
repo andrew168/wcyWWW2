@@ -21,11 +21,12 @@ function StorageManager($q, $timeout, $http, NetService) {
     }
   }
 
-  function saveAll(wcyId, opusJson, screenshot) {
-    cachedQueue.push({wcyId: wcyId,
+  function saveAll(opusJson, screenshot, onSuccess) {
+    cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
       ssSign: currScene.ssSign,
       opusJson: opusJson,
-      screenshot: screenshot});
+      screenshot: screenshot,
+      onSuccess: onSuccess});
 
     setTimeout(function () {
       startUpload();
@@ -33,8 +34,7 @@ function StorageManager($q, $timeout, $http, NetService) {
   }
 
   function saveOpus(opusJson, options, onSuccess, onError) {
-    var wcyId = TQ.Scene.getWcyId();
-    cachedQueue.push({wcyId: wcyId,
+    cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
       opusJson: opusJson,
       options: options,
       onSuccess: onSuccess,
@@ -46,8 +46,7 @@ function StorageManager($q, $timeout, $http, NetService) {
   }
 
   function saveScreenshot(screenshot, onSuccess, onError) {
-    var wcyId = TQ.Scene.getWcyId();
-    cachedQueue.push({wcyId: wcyId,
+    cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
       ssSign: currScene.ssSign,
       screenshot: screenshot,
       onSuccess: onSuccess,
@@ -59,7 +58,7 @@ function StorageManager($q, $timeout, $http, NetService) {
   }
 
   function startUpload() {
-    if (cachedQueue.length <=0) {
+    if (cachedQueue.length <= 0) {
       return;
     }
     var onePackage = cachedQueue.pop();
@@ -107,7 +106,6 @@ function StorageManager($q, $timeout, $http, NetService) {
       }
     }
   }
-
   function uploadOpus(_wcyId, jsonWcyData, options) {
     var params = '?wcyId=' + _wcyId;
     return $http({

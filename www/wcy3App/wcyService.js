@@ -91,6 +91,13 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     stopAutoSave();
   }
 
+  function saveOpusAndScreenshot(onSuccess) {
+    TQ.ScreenShot.getForPostAsync(function(screenshot) {
+      var opusJson = currScene.getData();
+      StorageManager.saveAll(opusJson, screenshot, onSuccess);
+    });
+  }
+
   function save(forkIt) {
     if (!TQ.userProfile.loggedIn) {
       return TQ.MessageBox.prompt("Login in first!");
@@ -518,6 +525,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     create: create,
     needToSave: needToSave,
     save: save,
+    saveOpusAndScreenshot: saveOpusAndScreenshot,
     createHtmlPage: createHtmlPage,
     forkIt: forkIt,
     cloneIt: cloneIt,
