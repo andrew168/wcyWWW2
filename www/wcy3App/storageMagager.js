@@ -24,7 +24,7 @@ function StorageManager($q, $timeout, $http, NetService) {
   function saveAll(opusJson, screenshot, onSuccess) {
     cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
       localId: TQ.Scene.getLocalId(),
-      ssSign: currScene.ssSign,
+      ssSign: TQ.Scene.getSsSign(),
       opusJson: opusJson,
       screenshot: screenshot,
       onSuccess: onSuccess});
@@ -50,7 +50,7 @@ function StorageManager($q, $timeout, $http, NetService) {
   function saveScreenshot(screenshot, onSuccess, onError) {
     cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
       localId: TQ.Scene.getLocalId(),
-      ssSign: currScene.ssSign,
+      ssSign: TQ.Scene.getSsSign(),
       screenshot: screenshot,
       onSuccess: onSuccess,
       onError: onError});

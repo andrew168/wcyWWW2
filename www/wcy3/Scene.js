@@ -44,7 +44,7 @@ TQ = TQ || {};
   p.title = null;  // title是微创意的标题，
   p.description = null; // 内容描述，摘要， 用于微信分享，FB分享的简介文字
   p.ssPath = null;
-  p.ssSign = null;
+  p.moment = {ssSign: null};
   p.isPreloading = false;
   p.currentLevelId = 0;
   p.currentLevel = null;
@@ -75,13 +75,17 @@ TQ = TQ || {};
   };
 
   Scene.getLocalId = function () {
-    TQ.AssertExt.invalidLogic(!currScene || !currScene.moment, "在建立scene之后才能调用");
+    TQ.AssertExt.invalidLogic(!!currScene || !!currScene.moment, "在建立scene之后才能调用");
 
     if (!currScene.moment.localId) {
       currScene.moment.localId = TQ.Utility.createLocalId();
     }
 
     return currScene.moment.localId;
+  };
+
+  Scene.getSsSign = function () {
+    return currScene.moment.ssSign;
   };
 
   Scene.isSameOpus = function(oldLocalId) {
@@ -673,8 +677,8 @@ TQ = TQ || {};
     this.setFilenameById(TQ.Config.UNNAMED_SCENE_ID);
     this.description = null;
     this.ssPath = null; // 初始化， 没有此值
-    this.ssSign = null;
     this.moment = {
+      ssSign: null,
       localId: TQ.Utility.createLocalId()
     };
     // moment 存储短暂的数据，
@@ -1044,8 +1048,8 @@ TQ = TQ || {};
   };
 
   p.setSsSign = function (ssSign) {
-    if ((!this.ssSign) || (this.ssSign !== ssSign)) {
-      this.ssSign = ssSign;
+    if ((!this.moment.ssSign) || (this.moment.ssSign !== ssSign)) {
+      this.moment.ssSign = ssSign;
       this.isDirty = true;
       this.isSaved = false;
     }
