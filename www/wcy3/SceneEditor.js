@@ -60,7 +60,7 @@ var currScene = null;
   SceneEditor.createScene = function (option) {
     TQ.Assert.isNotNull(option);
     var fileInfo = {
-      filename: option.filename || TQ.Config.UNNAMED_SCENE,
+      filename: option.filename || TQ.Config.UNNAMED_SCENE_ID,
       screenshotName: option.screenshotName,
       content: TQ.Scene.getEmptySceneJSON()
     };

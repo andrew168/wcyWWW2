@@ -495,7 +495,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   function _findFileName(data) {
     var content = JSON.parse(data);
     if (content.filename) return content.filename;
-    return TQ.Config.UNNAMED_SCENE;
+    return TQ.Config.UNNAMED_SCENE_ID;
   }
 
   function setOnStarted(fn) {

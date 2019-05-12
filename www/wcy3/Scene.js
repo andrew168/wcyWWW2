@@ -625,7 +625,7 @@ TQ = TQ || {};
     this.onsceneload = onOpened;
 
     if (!fileInfo.content &&
-      (fileInfo.name === TQ.Config.UNNAMED_SCENE)) {
+      (fileInfo.name === TQ.Config.UNNAMED_SCENE_ID)) {
       fileInfo.content = Scene.getEmptySceneJSON();
     }
 
@@ -1314,8 +1314,8 @@ TQ = TQ || {};
   };
 
   p.hasFilename = function () {
-    return (this.filename && (this.filename !== TQ.Config.UNNAMED_SCENE) &&
-      (this.filename !== TQ.Config.UNNAMED_SCENE_ID));
+    TQ.AssertExt.invalidLogic(this.filename !== TQ.Config.UNNAMED_SCENE, 'filename 已经全部用纯数字的wcyId了');
+    return (this.filename && (this.filename !== TQ.Config.UNNAMED_SCENE_ID));
   };
 
   function localT2Global(t) {
