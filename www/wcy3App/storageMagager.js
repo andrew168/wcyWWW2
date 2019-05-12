@@ -79,10 +79,37 @@ function StorageManager($q, $timeout, $http, NetService) {
       save record,  shared = true
        */
 
-      if (onePackage.screenshot) {
-        uploadScreenshot(onePackage.ssSign, onePackage.screenshot).then(doSaveOpus);
+      if (!onePackage.ssSign) {
+        uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).then(
+          function onUploadCompleted(httpResult) {
+            httpResult.localIdCached = onePackage.localId;
+            if (onePackage.onSuccess) {
+              onePackage.onSuccess(httpResult);
+              if (!onePackage.ssSign) {
+                onePackage.ssSign = TQ.Scene.getSsSign();
+              }
+              if (!TQ.Utility.isValidWcyId(onePackage.wcyId)) {
+                onePackage.wcyId = TQ.Scene.getWcyId();
+              }
+
+              uploadWithSsign();
+            }
+          }
+        ).then(function (value) {
+          console.log('1111');
+        }).then (function (value) {
+          console.log('2222');
+        });
       } else {
-        doSaveOpus();
+        uploadWithSsign();
+      }
+
+      function uploadWithSsign() {
+        if (onePackage.screenshot) {
+          uploadScreenshot(onePackage.ssSign, onePackage.screenshot).then(doSaveOpus);
+        } else {
+          doSaveOpus();
+        }
       }
 
       function doSaveOpus(value) {
@@ -111,6 +138,10 @@ function StorageManager($q, $timeout, $http, NetService) {
     }
   }
   function uploadOpus(_wcyId, jsonWcyData, options) {
+    if (!TQ.Utility.isValidWcyId(_wcyId)) {
+      _wcyId = 0;
+    }
+
     var params = '?wcyId=' + _wcyId,
       forkIt = (!!options && !!options.forkIt);
 
