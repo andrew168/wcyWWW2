@@ -107,10 +107,12 @@ function StorageManager($q, $timeout, $http, NetService) {
     }
   }
   function uploadOpus(_wcyId, jsonWcyData, options) {
-    var params = '?wcyId=' + _wcyId;
+    var params = '?wcyId=' + _wcyId,
+      forkIt = (!!options && !!options.forkIt);
+
     return $http({
       method: 'POST',
-      url: TQ.Config.OPUS_HOST + '/wcy' + params + (options.forkIt ? "&fork=true" : ""),
+      url: TQ.Config.OPUS_HOST + '/wcy' + params + (forkIt ? "&fork=true" : ""),
       headers: {
         'Content-Type': 'application/json'
       },

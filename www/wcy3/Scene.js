@@ -67,7 +67,6 @@ TQ = TQ || {};
   Scene.restoreState = restoreState;
   Scene.getDefaultTitle = getDefaultTitle;
   Scene.getWcyId = function () {
-    TQ.AssertExt.invalidLogic(currScene && currScene.filename !== undefined && currScene.filename >= 0, "必须先赋值");
     return currScene.filename;
   };
 
