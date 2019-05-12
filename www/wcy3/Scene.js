@@ -44,6 +44,7 @@ TQ = TQ || {};
   p.title = null;  // title是微创意的标题，
   p.description = null; // 内容描述，摘要， 用于微信分享，FB分享的简介文字
   p.ssPath = null;
+  p.ssSign = null;
   p.isPreloading = false;
   p.currentLevelId = 0;
   p.currentLevel = null;
@@ -659,6 +660,7 @@ TQ = TQ || {};
     this.setFilenameById(TQ.Config.UNNAMED_SCENE_ID);
     this.description = null;
     this.ssPath = null; // 初始化， 没有此值
+    this.ssSign = null;
     this.hasScreenShotManual = false;
     this.isDirty = true;
     this.hasSavedToCache = false;
@@ -1016,6 +1018,14 @@ TQ = TQ || {};
     ssPath = TQ.RM.toRelative(ssPath);
     if ((!this.ssPath) || (this.ssPath !== ssPath)) {
       this.ssPath = ssPath;
+      this.isDirty = true;
+      this.isSaved = false;
+    }
+  };
+
+  p.setSsSign = function (ssSign) {
+    if ((!this.ssSign) || (this.ssSign !== ssSign)) {
+      this.ssSign = ssSign;
       this.isDirty = true;
       this.isSaved = false;
     }
