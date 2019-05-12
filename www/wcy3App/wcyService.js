@@ -24,9 +24,9 @@ WCY 服务： 提供wcy及其screenshot的创建、保存、编辑、展示等�
    => show
 */
 angular.module('starter').factory("WCY", WCY);
-WCY.$inject = ['$q', '$timeout', '$http', 'FileService', 'WxService', 'NetService'];
+WCY.$inject = ['$q', '$timeout', '$http', 'FileService', 'WxService', 'NetService', 'StorageManager'];
 
-function WCY($q, $timeout, $http, FileService, WxService, NetService) {
+function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageManager) {
   // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
   var user = TQ.userProfile;
   var _AUTO_SAVE_NAME = '_auto_save_name_',
@@ -38,7 +38,6 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
     writeCache = TQ.Base.Utility.writeCache,
     _wcyId = TQ.Config.INVALID_WCY_ID, // 缺省-1， 表示没有保存的作品。，12345678;
     _shareCode = null,
-    _ssSign = null,
     _onStarted = null,
     levelThumbs = [],
     preloadedWcyData = null,
@@ -75,7 +74,6 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
 
   function setAsNew() {
     _wcyId = TQ.Config.INVALID_WCY_ID; // 能够从新分配一个作品ID
-    _ssSign = null;
     _shareCode = null;
     writeCache(_SHARE_CODE_, _shareCode);
     writeCache(_WCY_ID_, _wcyId);
@@ -106,13 +104,11 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
         ', 一个根元素: ' + currScene.levels[0].elements.length);
     }
 
-    //ToDo: if (has wifi)
-    isSaving = true;
-    TQ.MessageBox.promptNoFlash(TQ.Locale.getStr('Saving......'));
-    return upload(forkIt).then(onSavedSuccess).finally(function () {
-      isSaving = false;
-      TQ.MessageBox.hide();
-    });
+    TQ.Assert.isDefined(_wcyId);
+    _wcyId = (_wcyId === -1) ? 0 : _wcyId;
+    TQ.Assert.isTrue(_wcyId >= 0);
+    var jsonWcyData = currScene.getData();
+    StorageManager.saveOpus(jsonWcyData, {forkIt: forkIt}, onSavedSuccess);
   }
 
   function createHtmlPage(screenshotUrl) {
@@ -217,52 +213,12 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
     return !!currScene.ssPath;
   }
 
-  function upload(forkIt) {
-    TQ.Assert.isDefined(_wcyId);
-    _wcyId = (_wcyId === -1) ? 0 : _wcyId;
-    TQ.Assert.isTrue(_wcyId >= 0);
-    var jsonWcyData = currScene.getData();
-    var myToken = '1234567890';
-    var params = '?wcyId=' + _wcyId;
-    return $http({
-      method: 'POST',
-      // url: AUTH_HOST + wechat/sign?url=' + url,
-      url: TQ.Config.OPUS_HOST + '/wcy' + params + (forkIt ? "&fork=true" : ""),
-      headers: {
-        // 'Token' : myToken, // 必须同源，才能用Token
-        'Content-Type': 'application/json'
-        // 'Content-Type': 'text/plain'
-      },
-      data: jsonWcyData
-    });
-  }
-
   function uploadScreenshot(newScreenshot) {
-    var q = $q.defer();
-    if (!_ssSign) {
-      setTimeout(function () {
-        q.reject({errMsg:"failed to uploadScreen: !ssSign ", data:null});
-      });
+    if (newScreenshot) {
+      StorageManager.saveScreenshot(newScreenshot);
     } else {
-      TQ.AssertExt.invalidLogic(!!_ssSign);
-      if (newScreenshot) {
-        doUpload(newScreenshot);
-      } else {
-        TQ.ScreenShot.getForPostAsync(doUpload);
-      }
-      function doUpload(data) {
-        NetService.doUploadImage(_ssSign, data).then(
-          function (res) {
-            onUploadSsSuccess(res);
-            q.resolve(res);
-          }, function (err) {
-            onErrorGeneral(err);
-            q.reject(err);
-          });
-      }
+      TQ.ScreenShot.getForPostAsync(uploadScreenshot);
     }
-
-    return q.promise;
   }
 
   //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）
@@ -405,19 +361,6 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
     }
   }
 
-  function onUploadSsSuccess(res) {
-    var data = (!res) ? null : res.data;
-    if (!!data) {
-      if (!!data.url) {
-        currScene.setSsPath(data.url);
-        // TQ.MessageBox.toast(TQ.Locale.getStr('screenshot uploaded successfully!'));
-        save();
-      }
-
-      TQ.Log.debugInfo(data);
-    }
-  }
-
   function onSavedSuccess(res) {
     var data = (!res) ? null : res.data;
     currScene.isSaved = true;
@@ -425,7 +368,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService) {
       parseCommonData(data);
 
       if (!!data.ssSign) {
-        _ssSign = data.ssSign;
+        currScene.setSsSign(data.ssSign);
       }
 
       if (!!data.ssPath) {
