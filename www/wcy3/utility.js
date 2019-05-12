@@ -11,6 +11,9 @@ window.TQ = window.TQ || {};
 
     }
 
+    var localIdCounter = 0,
+      localIdTimeBase = new Date.now();
+
     Utility.toCssFont = function(option) {
         // !!! 只接受 合法的 CSS font attribute, ex. "bold 36px Arial"
         // 不能带color
@@ -805,6 +808,15 @@ window.TQ = window.TQ || {};
         return readyToGo;
     }
 
+    function createLocalId() {
+      // localId是服务器Id（global Id）的补充，
+      // 避免在object初创，没有global Id的时候导致混乱，简化逻辑
+      // 比如： 缓存http存储的 storageManager就使用opus的localId来区别是否同一个对象
+      // local Id, 唯一编号，平等对待各种对象，opus，level，element,....
+        return 'localId' + localIdTimeBase + '-' + (++localIdCounter);
+    }
+
+    Utility.createLocalId = createLocalId;
     Utility.parseUrl = parseUrl;
     Utility.preventDither = preventDither;
     TQ.Utility = Utility;

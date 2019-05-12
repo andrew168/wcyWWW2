@@ -5,9 +5,9 @@ angular.module('starter').factory("StorageManager", StorageManager);
 StorageManager.$inject = ['$q', '$timeout', '$http', 'NetService'];
 
 function StorageManager($q, $timeout, $http, NetService) {
-  var cachedQueue = [];
-  var isUploading = false;
-  var onReadyForCloseCallback = null;
+  var cachedQueue = [],
+    isUploading = false,
+    onReadyForCloseCallback = null;
 
   function isReadyForClose() {
     return !(isUploading || cachedQueue.length > 0);
@@ -23,6 +23,7 @@ function StorageManager($q, $timeout, $http, NetService) {
 
   function saveAll(opusJson, screenshot, onSuccess) {
     cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
+      localId: TQ.Scene.getLocalId(),
       ssSign: currScene.ssSign,
       opusJson: opusJson,
       screenshot: screenshot,
@@ -35,6 +36,7 @@ function StorageManager($q, $timeout, $http, NetService) {
 
   function saveOpus(opusJson, options, onSuccess, onError) {
     cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
+      localId: TQ.Scene.getLocalId(),
       opusJson: opusJson,
       options: options,
       onSuccess: onSuccess,
@@ -47,6 +49,7 @@ function StorageManager($q, $timeout, $http, NetService) {
 
   function saveScreenshot(screenshot, onSuccess, onError) {
     cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
+      localId: TQ.Scene.getLocalId(),
       ssSign: currScene.ssSign,
       screenshot: screenshot,
       onSuccess: onSuccess,
@@ -95,6 +98,7 @@ function StorageManager($q, $timeout, $http, NetService) {
         }
 
         function onUploadCompleted(httpResult) {
+          httpResult.localIdCached = onePackage.localId;
           isUploading = false;
           if (onePackage.onSuccess) {
             onePackage.onSuccess(httpResult);

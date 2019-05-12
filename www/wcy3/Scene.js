@@ -74,6 +74,20 @@ TQ = TQ || {};
     currScene.setFilenameById(id);
   };
 
+  Scene.getLocalId = function () {
+    TQ.AssertExt.invalidLogic(!currScene || !currScene.moment, "在建立scene之后才能调用");
+
+    if (!currScene.moment.localId) {
+      currScene.moment.localId = TQ.Utility.createLocalId();
+    }
+
+    return currScene.moment.localId;
+  };
+
+  Scene.isSameOpus = function(oldLocalId) {
+    return Scene.getLocalId() === oldLocalId;
+  };
+
   function ensureFirstClick(callback) {
     if (!TQ.State.hideWelcomeAutomatically && TQ.State.needUserClickToPlayAV && TQ.QueryParams && !TQ.QueryParams.hideFirstClickPrompt) {
       if (TQ.State.editorMode >= TQ.SceneEditor.MODE.EDIT_OR_PLAY) {
@@ -660,6 +674,13 @@ TQ = TQ || {};
     this.description = null;
     this.ssPath = null; // 初始化， 没有此值
     this.ssSign = null;
+    this.moment = {
+      localId: TQ.Utility.createLocalId()
+    };
+    // moment 存储短暂的数据，
+    // 1) 不需要永久保存到opus文件中， ==> 例如：localId，ssSign, 但是ssPath不行
+    // 2) 建立新文件的时候，要reset
+
     this.hasScreenShotManual = false;
     this.isDirty = true;
     this.hasSavedToCache = false;
