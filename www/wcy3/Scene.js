@@ -44,7 +44,6 @@ TQ = TQ || {};
   p.title = null;  // title是微创意的标题，
   p.description = null; // 内容描述，摘要， 用于微信分享，FB分享的简介文字
   p.ssPath = null;
-  p.moment = {ssSign: null};
   p.isPreloading = false;
   p.currentLevelId = 0;
   p.currentLevel = null;
@@ -677,14 +676,7 @@ TQ = TQ || {};
     this.setFilenameById(TQ.Config.UNNAMED_SCENE_ID);
     this.description = null;
     this.ssPath = null; // 初始化， 没有此值
-    this.moment = {
-      ssSign: null,
-      localId: TQ.Utility.createLocalId()
-    };
-    // moment 存储短暂的数据，
-    // 1) 不需要永久保存到opus文件中， ==> 例如：localId，ssSign, 但是ssPath不行
-    // 2) 建立新文件的时候，要reset
-
+    this.resetMoment();
     this.hasScreenShotManual = false;
     this.isDirty = true;
     this.hasSavedToCache = false;
@@ -694,6 +686,16 @@ TQ = TQ || {};
     this.topicId = TQ.Utility.getTopicId();
     this.state = TQBase.LevelState.INITING;
     this.backgroundColor = TQ.Config.BACKGROUND_COLOR;
+  };
+
+  p.resetMoment = function () {
+    // moment 存储短暂的数据，
+    // 1) 不需要永久保存到opus文件中， ==> 例如：localId，ssSign, 但是ssPath不行
+    // 2) 建立新文件的时候，要reset
+    this.moment = {
+      ssSign: null,
+      localId: TQ.Utility.createLocalId()
+    };
   };
 
   p.setDesignatedSize = function (region) {

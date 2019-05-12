@@ -78,6 +78,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     writeCache(_SHARE_CODE_, _shareCode);
     writeCache(_WCY_ID_, _wcyId);
     if (currScene) {
+      currScene.resetMoment();
       currScene.isShared = false;
       currScene.setFilenameById(TQ.Config.UNNAMED_SCENE_ID);
       writeCache(_FILENAME, currScene.filename);
