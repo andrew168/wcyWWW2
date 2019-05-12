@@ -91,6 +91,24 @@ TQ = TQ || {};
     return Scene.getLocalId() === oldLocalId;
   };
 
+  Scene.parseOpusSaveResult = function(data) {
+    var _wcyId;
+    if (!!data && !!data.wcyId) {
+      _wcyId = parseInt(data.wcyId);
+      if (currScene && !currScene.hasFilename()) {
+        currScene.setFilenameById(_wcyId);
+      }
+    }
+
+    if (!!data.ssSign) {
+      currScene.setSsSign(data.ssSign);
+    }
+
+    if (!!data.ssPath) {
+      currScene.setSsPath(data.ssPath);
+    }
+  };
+
   function ensureFirstClick(callback) {
     if (!TQ.State.hideWelcomeAutomatically && TQ.State.needUserClickToPlayAV && TQ.QueryParams && !TQ.QueryParams.hideFirstClickPrompt) {
       if (TQ.State.editorMode >= TQ.SceneEditor.MODE.EDIT_OR_PLAY) {

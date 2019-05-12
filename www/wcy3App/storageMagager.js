@@ -83,6 +83,7 @@ function StorageManager($q, $timeout, $http, NetService) {
         uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).then(
           function (httpResult) {
             httpResult.localIdCached = onePackage.localId;
+            TQ.Scene.parseOpusSaveResult(httpResult.data);
             if (onePackage.onSuccess) {
               onePackage.onSuccess(httpResult);
               if (!onePackage.ssSign) {

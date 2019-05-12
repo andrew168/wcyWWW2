@@ -378,15 +378,6 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     currScene.isSaved = true;
     if (!!data) {
       parseCommonData(data);
-
-      if (!!data.ssSign) {
-        currScene.setSsSign(data.ssSign);
-      }
-
-      if (!!data.ssPath) {
-        currScene.setSsPath(data.ssPath);
-      }
-      currScene.setFilenameById(data.wcyId);
       TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
       TQUtility.triggerEvent(document.body, TQ.Scene.EVENT_SAVED);
       TQ.Log.debugInfo(data);
@@ -398,14 +389,8 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function parseCommonData(data) { // the common data in both save and get
-    if (!!data && !!data.wcyId) {
-      _wcyId = _getWcyId(data);
-      if (currScene && !currScene.hasFilename()) {
-        currScene.setFilenameById(_wcyId);
-      }
-    } else {
-      _wcyId = TQ.Config.UNNAMED_SCENE_ID;
-    }
+    TQ.Scene.parseOpusSaveResult(data);
+    _wcyId = TQ.Scene.getWcyId();
 
     if (!!data.shareCode) {
       _shareCode = data.shareCode;
@@ -439,12 +424,6 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
       ssPath: (scene.ssPath) ? TQ.RM.toFullPathFs(scene.ssPath) : null,
       desc: defaultShareForKids.description, // (scene.description) ? scene.description: null,
       code: (_shareCode) ? _shareCode : TQ.Utility.wcyId2ShareCode(_wcyId)
-    }
-  }
-
-  function _getWcyId(resData) {
-    if (resData && resData.wcyId) {
-      return parseInt(resData.wcyId);
     }
   }
 
