@@ -14,6 +14,16 @@ TQ.Interact = (function () {
   };
 
   function start() {
+
+    // 在playOnly和微信的未授权的时候，
+    if (!TQ.TouchManager.hasInitialized()) {
+      TQ.TouchManager.initialize();
+    }
+
+    if (!TQ.TouchManager.hasStarted()) {
+      TQ.TouchManager.start();
+    }
+
     TQ.State.editorMode = TQ.SceneEditor.MODE.INTERACT;
     if (!TQUtility.isMobile()) {// mobile不需要mousedown
       interactOps['mousedown'] = onClick;
