@@ -92,11 +92,13 @@ TQ = TQ || {};
   };
 
   Scene.parseOpusSaveResult = function(data) {
-    var _wcyId;
+    if (!currScene) {
+      return false;
+    }
+
     if (!!data && !!data.wcyId) {
-      _wcyId = parseInt(data.wcyId);
       if (currScene && !currScene.hasFilename()) {
-        currScene.setFilenameById(_wcyId);
+        currScene.setFilenameById(parseInt(data.wcyId));
       }
     }
 

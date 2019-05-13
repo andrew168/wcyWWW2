@@ -198,6 +198,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
       currScene.close();
       currScene.reset();
     }
+
     TQ.State.isTopicIntro = false;
     _getWcy(shareString);
   }
@@ -390,7 +391,11 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function parseCommonData(data) { // the common data in both save and get
     TQ.Scene.parseOpusSaveResult(data);
-    _wcyId = TQ.Scene.getWcyId();
+    if (!!data && !!data.wcyId) {
+      _wcyId = parseInt(data.wcyId);
+    } else {
+      _wcyId = TQ.Config.UNNAMED_SCENE_ID;
+    }
 
     if (!!data.shareCode) {
       _shareCode = data.shareCode;
