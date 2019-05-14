@@ -93,10 +93,17 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function saveOpusAndScreenshot(onSuccess) {
-    TQ.ScreenShot.getForPostAsync(function(screenshot) {
+    TQ.ScreenShot.getForPostAsync(saveToStorage);
+
+    function saveToStorage(screenshot) {
+      if (TQ.ResourceSync.isBusy()) {
+        return TQ.ResourceSync.once('complete', function () {
+          saveToStorage(screenshot);
+        })
+      }
       var opusJson = currScene.getData();
       StorageManager.saveAll(opusJson, screenshot, onSuccess);
-    });
+    }
   }
 
   function save(forkIt) {
@@ -115,8 +122,17 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     TQ.Assert.isDefined(_wcyId);
     _wcyId = (_wcyId === -1) ? 0 : _wcyId;
     TQ.Assert.isTrue(_wcyId >= 0);
-    var jsonWcyData = currScene.getData();
-    StorageManager.saveOpus(jsonWcyData, {forkIt: forkIt}, onSavedSuccess);
+
+    function saveToStorage() {
+      var jsonWcyData = currScene.getData();
+      StorageManager.saveOpus(jsonWcyData, {forkIt: forkIt}, onSavedSuccess);
+    }
+
+    if (TQ.ResourceSync.isBusy()) {
+      TQ.ResourceSync.once('complete', saveToStorage)
+    } else {
+      saveToStorage();
+    }
   }
 
   function createHtmlPage(screenshotUrl) {

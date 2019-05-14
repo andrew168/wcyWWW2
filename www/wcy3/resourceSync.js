@@ -11,15 +11,32 @@
 this.TQ = this.TQ || {};
 
 this.TQ.ResourceSync = (function () {
-    var numActiveTasks = 0;
+    var numActiveTasks = 0,
+      events = {
+        _oncomplete: [] // event name: 'complete'
+      };
 
     return {
+        on: on,
+        once: once,
         isBusy: isBusy,
         local2Cloud: local2Cloud
     };
 
     function isBusy() {
         return numActiveTasks > 0;
+    }
+
+    function once(event, fn) {
+      on(event, fn, 1);
+    }
+
+    function on(event, fn, once) {
+      var listeners = events['_on' + event];
+
+      if (typeof fn === 'function') {
+        listeners.push(once ? {fn: fn, once: once} : {fn: fn});
+      }
     }
 
     function local2Cloud(ele, fileOrBuffer, matType) {
@@ -35,7 +52,23 @@ this.TQ.ResourceSync = (function () {
                   ele.jsonObj.src = TQUtility.unifyFormat(ele.jsonObj.type, res.url);
                 }
                 numActiveTasks--;
-                tryShowCompleteInfo();
+                if (numActiveTasks <=0) {
+                  tryShowCompleteInfo();
+                  var listeners;
+                  if (listeners = events._oncomplete) {
+                    var num = listeners.length,
+                      i;
+                    for (i=0; i<num; i++) {
+                      if (listeners[i].fn) {
+                        setTimeout(listeners[i].fn);
+                      }
+                      if (listeners[i].once) {
+                        listeners.splice(i, 1);
+                        num--;
+                      }
+                    }
+                  }
+                }
             });
     }
 
