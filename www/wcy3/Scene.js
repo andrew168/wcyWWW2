@@ -109,6 +109,12 @@ TQ = TQ || {};
     if (!!data.ssPath) {
       currScene.setSsPath(data.ssPath);
     }
+
+    if (!!data.shareCode) {
+      TQ.State.shareCode = data.shareCode;
+    } else {
+      TQ.State.shareCode = null;
+    }
   };
 
   function ensureFirstClick(callback) {

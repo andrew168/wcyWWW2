@@ -37,12 +37,13 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     readCache = TQ.Base.Utility.readCache,
     writeCache = TQ.Base.Utility.writeCache,
     _wcyId = TQ.Config.INVALID_WCY_ID, // 缺省-1， 表示没有保存的作品。，12345678;
-    _shareCode = null,
     _onStarted = null,
     levelThumbs = [],
     preloadedWcyData = null,
     isPreloadingWcy = false,
     getWcyCalled = false;
+
+    TQ.State.shareCode = null;
 
   function isSafe() {
     return TQ.StageBuffer.isEmpty();
@@ -74,8 +75,8 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function setAsNew() {
     _wcyId = TQ.Config.INVALID_WCY_ID; // 能够从新分配一个作品ID
-    _shareCode = null;
-    writeCache(_SHARE_CODE_, _shareCode);
+    TQ.State.shareCode = null;
+    writeCache(_SHARE_CODE_, TQ.State.shareCode);
     writeCache(_WCY_ID_, _wcyId);
     if (currScene) {
       currScene.resetMoment();
@@ -144,7 +145,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
     return $http({
       method: 'POST',
-      url: TQ.Config.OPUS_HOST + '/wcy/' + _shareCode,
+      url: TQ.Config.OPUS_HOST + '/wcy/' + TQ.State.shareCode,
       data: shareData
     });
   }
@@ -227,7 +228,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function getShareCode() {
-    return _shareCode;
+    return TQ.State.shareCode;
   }
 
   function getScreenshotUrl() {
@@ -278,10 +279,10 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
     var previousSaved = TQ.Config.ignoreCachedFile ? null : readCache(_AUTO_SAVE_NAME, null);
     if (previousSaved) {
-      _shareCode = readCache(_SHARE_CODE_, null);
+      TQ.State.shareCode = readCache(_SHARE_CODE_, null);
       _wcyId = readCache(_WCY_ID_, TQ.Config.INVALID_WCY_ID);
-      if (_shareCode && ((!_wcyId) || (_wcyId < 1))) {
-        _wcyId = TQ.Utility.shareCode2Id(_shareCode);
+      if (TQ.State.shareCode && ((!_wcyId) || (_wcyId < 1))) {
+        _wcyId = TQ.Utility.shareCode2Id(TQ.State.shareCode);
       }
       var filename = readCache(_FILENAME, TQ.Config.UNNAMED_SCENE);
       var fileInfo = {name: filename, content: previousSaved};
@@ -413,13 +414,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
       _wcyId = TQ.Config.UNNAMED_SCENE_ID;
     }
 
-    if (!!data.shareCode) {
-      _shareCode = data.shareCode;
-    } else {
-      _shareCode = null;
-    }
-
-    writeCache(_SHARE_CODE_, _shareCode);
+    writeCache(_SHARE_CODE_, TQ.State.shareCode);
     writeCache(_WCY_ID_, _wcyId);
   }
 
@@ -428,12 +423,12 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function updateWxShareData() { // 在页面url更新之后， 才能初始化微信分享
-    if (TQ.Config.hasWx && _shareCode && (_wcyId > 0)) { //  更新微信的shareCode， 以供用户随时分享。
-      WxService.init(composeWxShareData(currScene, _shareCode));
+    if (TQ.Config.hasWx && TQ.State.shareCode && (_wcyId > 0)) { //  更新微信的shareCode， 以供用户随时分享。
+      WxService.init(composeWxShareData(currScene, TQ.State.shareCode));
     }
   }
 
-  function composeWxShareData(scene, _shareCode) {
+  function composeWxShareData(scene, shareCode) {
     var defaultShareForKids = {
       "title": '儿童创造能力提升',
       "description": '儿童创造能力提升--UDOIDO KIDZ'
@@ -444,7 +439,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
       title: defaultShareForKids.title, // (scene.title) ? scene.title : "UdoIdo",
       ssPath: (scene.ssPath) ? TQ.RM.toFullPathFs(scene.ssPath) : null,
       desc: defaultShareForKids.description, // (scene.description) ? scene.description: null,
-      code: (_shareCode) ? _shareCode : TQ.Utility.wcyId2ShareCode(_wcyId)
+      code: (shareCode) ? shareCode : TQ.Utility.wcyId2ShareCode(_wcyId)
     }
   }
 
@@ -512,7 +507,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function isNewOpus() {
-    return (!_shareCode);
+    return (!TQ.State.shareCode);
   }
 
   function needToSave() {
