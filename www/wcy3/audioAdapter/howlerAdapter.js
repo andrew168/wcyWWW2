@@ -4,7 +4,8 @@
 // 可以播放1个声音， 或者多个声音，由playlist指定
 var TQ = TQ || {};
 (function () {
-  var STATE = {
+  var MAX_SOUND_LENGTH = 120, // 缺省声音是最大120s
+    STATE = {
     UNLOADED: 1,
     PLAYING: 2,
     PAUSED: 3,
@@ -107,7 +108,8 @@ var TQ = TQ || {};
       if (!sound) {
         return 0;
       }
-      return sound.duration() * 1000;
+
+      return 1000* ((sound.state() !== 'loaded')? MAX_SOUND_LENGTH: sound.duration());
     },
 
     get paused() {
