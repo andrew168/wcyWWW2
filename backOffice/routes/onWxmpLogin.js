@@ -18,14 +18,9 @@ function onWxmpLoggin(req, res) {
   var appId = configSvr.wx.boneMiniprogram.appId,
     appSecret = configSvr.wx.boneMiniprogram.appSecret,
     wxCode = req.body.code || req.query.code,
-    boneToken = req.body.boneToken || req.query.boneToken, // 在微信小程序中约定的名称
     nickName = req.body.nickName || req.query.nickName;
     if (!wxCode) {
       wxCode = "";
-    }
-
-    if (!boneToken) {
-      boneToken = 'noBoneToken';
     }
 
     if (!nickName) {
