@@ -239,9 +239,9 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     return !!currScene.ssPath;
   }
 
-  function uploadScreenshot(newScreenshot) {
+  function uploadScreenshot(newScreenshot, onSuccess, onFail) {
     if (newScreenshot) {
-      StorageManager.saveScreenshot(newScreenshot);
+      StorageManager.saveScreenshot(newScreenshot, onSuccess, onFail);
     } else {
       TQ.ScreenShot.getForPostAsync(uploadScreenshot);
     }
