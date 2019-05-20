@@ -916,6 +916,15 @@ TQ = TQ || {};
       objJson = getEmptySceneJSON();
     }
     objJson.alias = (alias == null) ? 'none' : alias;
+    if (objJson.filename === TQ.Config.UNNAMED_SCENE_ID) {
+      var idFromUrl = TQ.Utility.getWcyIdFromUrl(location.href);
+      if (idFromUrl != TQ.Config.UNNAMED_SCENE_ID) {
+        idFromUrl = parseInt(idFromUrl);
+        if (idFromUrl > 0) {
+          objJson.filename = idFromUrl;
+        }
+      }
+    }
     objJson.remote = true;
     if (p.isPlayOnly) {// 播放， 总是从第1场景的第t0=0时刻开始
       objJson.currentLevelId = 0;
