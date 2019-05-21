@@ -217,15 +217,17 @@
         function getOpusList(mats, matType, stateType) {
             var opusDetail = '';
             switch (matType) {
-                case TQ.MatType.PUBLISHED_OPUS:
+                case TQ.MatType.PUBLISHED_OPUS:  // 已经发表的作品，所有人的， 只有admin可以view。
                     opusDetail = 'latest';
                     break;
-                case TQ.MatType.FINE_OPUS:
+                case TQ.MatType.FINE_OPUS: // 已经推荐的优秀作品，所有人都可见。
                     opusDetail = 'fine';
                     break;
                 default:
-                    opusDetail = '';
-                    break;
+                    opusDetail = ''; // “我的”作品：除了ban的都返回
+                    // 对管理员： 所有人的
+                    // 对普通用户： 只是自己的，不包括他人的
+                break;
             }
             $http({
                 method: 'GET',
