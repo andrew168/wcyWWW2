@@ -63,7 +63,7 @@ var TQUtility; //
     }
 
     function isMiniProgramWebView() { //在微信小程序打开的webView
-        return (window && window.__wxjs_environment &&
+        return (window && !!window.__wxjs_environment &&
             (window.__wxjs_environment === "miniprogram"));
     }
 
