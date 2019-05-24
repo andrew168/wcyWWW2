@@ -123,41 +123,42 @@ var currScene = null;
       addVideoItem(dstLevel, aFile, matType, callback);
     } else if (TQ.ImageCliper) {
       TQ.ImageCliper.clipImage(aFile, function (imageData) {
-        if (imageData) {
-          if (imageData instanceof File) {
-            var imageFile = imageData;
-            if (imageFile.size > TQ.Config.MAX_FILE_SIZE) {
-              return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制文件大小 < ' + Math.round(TQ.Config.MAX_FILE_SIZE / 1000) + 'K');
-            }
-          }
-
-          addItemByImageData(dstLevel, imageData, matType, callback);
-        }
+        tryKouTu({data: imageData, errorCode:0});
       });
     } else {
-      var stopReminder = true;
-      TQ.ImageProcess.start(aFile, options,
-        function (buffer) {
-          if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
-            TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
-              TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
-              nextProcess,
-              function () {
-              });
-          } else {
-            nextProcess();
-          }
+      TQ.ImageProcess.start(aFile, options, tryKouTu);
+    }
 
-          function nextProcess() {
-            if (kouTuMain) {
-              koutuMain(buffer.data, matType, function (image64) {
-                addItemByImageData(dstLevel, image64, matType, callback);
-              });
-            } else {
-              addItemByImageData(dstLevel, buffer.data, matType, callback);
-            }
+    var stopReminder = true;
+    function tryKouTu(buffer) {
+      if (buffer.data) {
+        if (buffer.data instanceof File) {
+          var imageFile = buffer.data;
+          if (imageFile.size > TQ.Config.MAX_FILE_SIZE) {
+            return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制文件大小 < ' + Math.round(TQ.Config.MAX_FILE_SIZE / 1000) + 'K');
           }
-        });
+        }
+      }
+
+      if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
+        TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
+          TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
+          nextProcess,
+          function () {
+          });
+      } else {
+        nextProcess();
+      }
+
+      function nextProcess() {
+        if (kouTuMain) {
+          koutuMain(buffer.data, matType, function (image64) {
+            addItemByImageData(dstLevel, image64, matType, callback);
+          });
+        } else {
+          addItemByImageData(dstLevel, buffer.data, matType, callback);
+        }
+      }
     }
   }
 
