@@ -113,7 +113,9 @@ TQ.Graphics = (function () {
         }
         strokes.ss(thickness).beginStroke(edgeColor).
             beginRadialGradientFill([gradientColorS, gradientColorE], [0, 1], 0, 0, 0, 0, 0, radius).
-            drawCircle(x, y, radius).endFill();
+            drawCircle(x, y, 3).
+            drawCircle(x, y, radius).
+            endFill();
     }
 
     function drawSolidCircle(shape, color, x, y, radius, gradientColorS, gradientColorE) { //shape is createJS.Shape

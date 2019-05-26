@@ -24,8 +24,8 @@ TQ = TQ || {};
     };
 
     Marker.RADIUS = 32; // 2个字的大小
-    var GRADIENT_COLOR_S = "#00F",
-        GRADIENT_COLOR_E = "#F00";
+    var GRADIENT_COLOR_S = "#00F0",
+        GRADIENT_COLOR_E = "#F00F";
 
     var p = Marker.prototype = Object.create(TQ.Element.prototype);
     Marker.prototype.constructor = Marker;
