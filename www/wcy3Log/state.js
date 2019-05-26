@@ -30,16 +30,36 @@ var TQ = TQ || {};
     State.bottomFloatToolHeight = 0;
     State.topBarHeight = 0;
     State.buttonHeight = 0;
+
+    var _levelThumbAtBottom;
+    Object.defineProperty(State, 'levelThumbAtBottom', {
+      get: function () {
+        if (typeof _levelThumbAtBottom !== 'undefined') {
+          return _levelThumbAtBottom;
+        } else if (typeof TQUtility !== 'undefined' && typeof TQUtility.isPC === 'function') {
+          _levelThumbAtBottom = !TQUtility.isPC();
+          return _levelThumbAtBottom;
+        }
+        return true;
+      }
+    });
+
     State.determineWorkingRegion = determineWorkingRegion;
     State.updateDeviceInfo = updateDeviceInfo;
     State.allowPageTransition = true;
     State.fiexdRootJoint = true; // 关节的根，总是固定的， 不可动的（动态可修改，所以用State，不用Config）
     State.requestToRecordAudio = false;
-    Object.defineProperty(State, 'isRecordingAudioMode', {
+    Object.defineProperty(State, 'isAddMode', {
         get: function() {
-          return (State.requestToRecordAudio &&
-            (State.editorMode === TQ.SceneEditor.MODE.EDIT));
+          return (State.editorMode === TQ.SceneEditor.MODE.EDIT);
         }
+    });
+
+    Object.defineProperty(State, 'isRecordingAudioMode', {
+      get: function () {
+        return (State.requestToRecordAudio &&
+          (State.editorMode === TQ.SceneEditor.MODE.EDIT));
+      }
     });
 
     var deviceInfoInitialized = false;
@@ -69,8 +89,7 @@ var TQ = TQ || {};
 
             } else {
                 State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(topBarEle).height);
-
-                if (window.getComputedStyle(bottomBarEle).display !== 'none') {
+                if (State.levelThumbAtBottom && window.getComputedStyle(bottomBarEle).display !== 'none') {
                   State.bottomBarHeight = TQ.Utility.getCssSize(window.getComputedStyle(bottomBarEle).height);
                 } else {
                   State.bottomBarHeight = 0;
@@ -88,7 +107,10 @@ var TQ = TQ || {};
             w = State.innerWidth,
             designated;
 
-        h = h - (topBarHeight + bottomBarHeight);
+        if (!TQUtility.isPC()) {
+          h = h - (topBarHeight + bottomBarHeight);
+        }
+
         designated = !currScene ? TQ.Scene.getDesignatedRegionDefault() : currScene.getDesignatedRegion();
         scaleMin = Math.min(w / designated.w, h / designated.h);
         TQ.Config.workingRegionWidth = scaleMin * designated.w;
@@ -99,10 +121,14 @@ var TQ = TQ || {};
             TQ.Config.orientation = TQ.Config.ORIENTATION_LANDSCAPE;
         }
 
-        TQ.Config.workingRegionX0 = Math.round((State.innerWidth - TQ.Config.workingRegionWidth) / 2);
-
-        TQ.Config.workingRegionY0 = Math.round((State.innerHeight - TQ.Config.workingRegionHeight) / 2);
-        TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight) / 2);
+        if (!TQUtility.isPC()) {
+          TQ.Config.workingRegionX0 = Math.round((State.innerWidth - TQ.Config.workingRegionWidth) / 2);
+          TQ.Config.workingRegionY0 = Math.round((State.innerHeight - TQ.Config.workingRegionHeight) / 2);
+          TQ.Config.workingRegionY0 += (topBarHeight - (topBarHeight + bottomBarHeight) / 2);
+        } else {
+          TQ.Config.workingRegionX0 = 0;
+          TQ.Config.workingRegionY0 = 0;
+        }
 
         State.bottomBarHeight = bottomBarHeight;
         State.topBarHeight = topBarHeight;

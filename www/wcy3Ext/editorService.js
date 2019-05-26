@@ -143,6 +143,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     forceToRefreshUI: forceToRefreshUI,
     setAddMode: setAddMode,
     toAddMode: toAddMode,
+    onAddModeDone: onAddModeDone,
     setModifyMode: setModifyMode,
     getTextCursor: getTextCursor,
     setColorPanel: setColorPanel,
@@ -1349,6 +1350,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     return (initialized() && TQ.SceneEditor.isEditMode());
   }
 
+  var addModeDoneCallback = null;
+  function onAddModeDone(callback) {
+    addModeDoneCallback = callback;
+  }
+
   function toAddMode() {
     if (TQ.FrameCounter.isPlaying() && currScene) {
       currScene.stop();
@@ -1378,6 +1384,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       });
     }, 100);
   }
+
+
 
   function syncLevelThumbs() {
     // quick fill, to void undefined element in ng repeat;
@@ -1449,6 +1457,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         TQ.State.isPlayOnly = false;
         updateControllers();
         AppService.configCanvas(); //以防随动按钮出界，此时工具条都显示了，再更新一次工作区size
+        if (addModeDoneCallback) {
+          addModeDoneCallback();
+        }
         // TQ.VideoMgr.resize();
       }, 500);
     }, 500);
