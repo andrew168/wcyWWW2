@@ -413,22 +413,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     return selectLocalFile(matType, useDevice).then(function (filesOrImage64) {
       var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64],
         n = files.length,
-        i,
         mat;
-
-      if ((matType === TQ.MatType.BKG) && (n > 1)) {
-        do {
-          mat = files[n - 1];
-          n--;
-          if (TQ.Utility.isImageFile(mat)) {
-            TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, callback, kouTuMain);
-            callback = function (desc, fileOrBlob, matType) {
-              TQ.ResourceSync.local2Cloud(null, fileOrBlob, matType);
-            };
-            break;
-          }
-        } while (n > 0);
-      }
 
       function processOneFile(i) {
         if (i >= n) {
