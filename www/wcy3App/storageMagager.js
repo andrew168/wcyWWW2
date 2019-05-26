@@ -179,6 +179,11 @@ function StorageManager($q, $timeout, $http, NetService) {
         });
     }
 
+    function onErrorGeneral(e) {
+      TQ.Log.error("网络操作出错：" + JSON.stringify(e).substr(0, 250));
+      TQ.MessageBox.reset();
+    }
+
     return q.promise;
   }
 

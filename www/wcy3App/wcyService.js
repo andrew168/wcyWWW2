@@ -501,11 +501,6 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     _onStarted = fn;
   }
 
-  function onErrorGeneral(e) {
-    TQ.Log.error("网络操作出错：" + JSON.stringify(e).substr(0, 250));
-    TQ.MessageBox.reset();
-  }
-
   function isNewOpus() {
     return (!TQ.State.shareCode);
   }
