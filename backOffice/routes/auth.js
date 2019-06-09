@@ -192,7 +192,7 @@ router.get('/api/me', authHelper.ensureAuthenticated, function (req, res) {
   }
 
   if (!userInfo) {
-    return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, errDesc);
+    return responseError500(res, {message:'需要重新登录!'});
   }
 
   var userInfoPkg = composeUserPkg(userInfo);
