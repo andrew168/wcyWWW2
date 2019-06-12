@@ -26,7 +26,7 @@ router.post('/login', function (req, res) {
     user,
     authInfo = {authorizer: req.body.from || ''};
   if (!email) {
-    return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, "email is empty！");
+    return responseError500(res, {message: 'email is empty！'});
   }
 
   authInfo.isFromWx = (!!authInfo.authorizer && authInfo.authorizer === Const.AUTH.WX);
@@ -204,7 +204,7 @@ router.put('/api/me', authHelper.ensureAuthenticated, function (req, res) {
     console.error("需要吗？");
     User.findById(req.user, function (err, user) {
         if (err) {
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
+            return responseError500(res, err);
         }
 
         if (!user) {
@@ -321,7 +321,7 @@ function responseUserInfo(res, req, condition, profile, authInfo, requestToLink)
     User.findOne(condition, onFound);
     function onFound(err, user) {
         if (err) {
-            return responseError(res, Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR, err.message);
+            return responseError500(res, err);
         } else if (user) {
             user = updateUser(user, profile, authInfo);
         } else {
