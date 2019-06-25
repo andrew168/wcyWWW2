@@ -79,7 +79,7 @@ window.TQ = window.TQ || {};
         }
 
         var mergedCmd;
-        if ((mergedCmd = CommandMgr.mergeCommand(_lastCmd, cmd)) != null) {
+        if ((mergedCmd = mergeCommand(_lastCmd, cmd)) != null) {
             _undoStack.pop();
             cmd = mergedCmd;
         }
@@ -89,8 +89,8 @@ window.TQ = window.TQ || {};
         _lastCmdGroupId = _cmdGroupId;
     };
 
-    CommandMgr.mergeCommand = function (last, cmd) {
-        if ((last != null) &&
+    function mergeCommand(last, cmd) {
+        if ((!!last) && (!!last.receiver) && // CompositeCommand没有receiver
             (_lastCmdGroupId === _cmdGroupId) &&
             (last.constructor.name2 === cmd.constructor.name2) &&
             (last.receiver.id === cmd.receiver.id)) {
@@ -127,15 +127,15 @@ window.TQ = window.TQ || {};
         }
 
         return null;
-    };
+    }
 
-    CommandMgr.addToRedoStack = function (cmd) {
+    function addToRedoStack(cmd) {
         while (_redoStack.length > TQ.Config.MAX_UNDO_STEP) {
             _redoStack.shift();
         }
 
         _redoStack.push(cmd);
-    };
+    }
 
     CommandMgr.directDo = function (cmd) {
         cmd.do();
@@ -163,7 +163,7 @@ window.TQ = window.TQ || {};
         if (_undoStack.length >= 1) {
             var cmd = _undoStack.pop();
             var result = cmd.undo();
-            CommandMgr.addToRedoStack(cmd);
+            addToRedoStack(cmd);
             return result;
         }
         return null;
