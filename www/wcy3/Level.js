@@ -265,6 +265,12 @@ window.TQ = window.TQ || {};
 	*/
   p.deleteElementAt = function (i) {
     var ele = this.removeElementAt(i);
+    if (ele) {
+      this.deleteElementFromStage(ele);
+    }
+  };
+
+  p.deleteElementFromStage = function (ele) {
     if (this.background === ele) {
       this.background = null;
     }
@@ -636,8 +642,12 @@ window.TQ = window.TQ || {};
     if (found) {
       this.isDirty = true;
       return true;
+    } else {
+      this.deleteElementFromStage(ele);
+      TQ.AssertExt.invalidLogic(false, '在level上未找到此元素，但是显示在stage中，已经被删除了？');
+      assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
     }
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
+
     return false;
   };
 
