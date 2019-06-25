@@ -26,8 +26,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   var state = TQ.State,
     levelThumbs = WCY.levelThumbs;
-  state.hasUndo = TQ.CommandMgr.hasUndo; // function
-  state.hasRedo = TQ.CommandMgr.hasUndo; // function
   state.isInBkg = false;
 
   return {
