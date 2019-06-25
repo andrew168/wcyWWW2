@@ -999,14 +999,15 @@ window.TQ = window.TQ || {};
         }
 
         for (var i = 0; i < this.children.length; i++) {
-            if (this.children[i] == ele) {
-                this.children[i]._doRemoveFromStage();
-                this.children.splice(i, 1);
-                this.jsonObj.children.splice(i, 1);
-                return true;
-            }
+          var child = this.children[i];
+          if (child === ele) {
+            child.removeFromStage();
+            this.children.splice(i, 1);
+            this.jsonObj.children.splice(i, 1);
+            return true;
+          }
 
-            if (this.children[i].deleteChild(ele) == true) return true;
+          if (child.deleteChild(ele)) return true;
         }
 
         return false;
