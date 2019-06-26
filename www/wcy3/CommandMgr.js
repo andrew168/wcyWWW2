@@ -93,7 +93,7 @@ window.TQ = window.TQ || {};
     CompositeCommand.open = function() {
         if (!__openedComposite) {
             __openedComposite = new CompositeCommand();
-            $(document).mouseup(CompositeCommand.close);
+            document.addEventListener('mouseup', CompositeCommand.close);
         }
     };
 
@@ -101,6 +101,7 @@ window.TQ = window.TQ || {};
         if (!__openedComposite) {
             return;
         }
+        document.removeEventListener('mouseup', CompositeCommand.close);
         TQ.CommandMgr.addToUndoStack(__openedComposite);
         __openedComposite = null;
     };
