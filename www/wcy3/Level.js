@@ -483,7 +483,7 @@ window.TQ = window.TQ || {};
       if (this.isActive() && !this.inStage) {
         // add all item to stage
         if (stageContainer.children.length > 0) {
-          this._removeAllItems();
+          this._removeAllItemsFromStage();
         }
         this.addAllItems();
       }
@@ -600,11 +600,13 @@ window.TQ = window.TQ || {};
     TQ.SceneEditor.cleanStage();
   };
 
-  p._removeAllItems = function () {
+  p._removeAllItemsFromStage = function () {
     TQ.DirtyFlag.setLevel(this);
     // remove 从stage， 只是不显示， 数据还在
-    for (var i = 0; i < this.elements.length; i++) {
-      this.elements[i].removeFromStage();
+    if (this.elements && (this.elements.length > 0) && (this.elements[0].removeFromStage)) {
+      for (var i = 0; i < this.elements.length; i++) {
+        this.elements[i].removeFromStage();
+      }
     }
   };
 
@@ -612,9 +614,8 @@ window.TQ = window.TQ || {};
     TQ.AssertExt.depreciated("是否已经被 cleanStage代替了？-2018.07.07");
     // 如果是EXIT， 则已经被exit()函数处理过了，
     TQ.DirtyFlag.setLevel(this);
-    if ((this.state === TQBase.LevelState.EDITING) ||
-      (this.state === TQBase.LevelState.RUNNING)) {
-      this._removeAllItems();
+    if (this.isElementInStage()) {
+      this._removeAllItemsFromStage();
     }
   };
 
@@ -674,8 +675,7 @@ window.TQ = window.TQ || {};
     if (this.isEditMode()) {
       this.calculateLastFrame();
     }
-    if ((this.state === TQBase.LevelState.EDITING) ||
-      (this.state === TQBase.LevelState.RUNNING)) {
+    if (this.isElementInStage()) {
       if (this.isEditMode()) {
         this.sort(); // 退出本层之前, 必须保存 Z可见性顺序.
       }
@@ -692,7 +692,7 @@ window.TQ = window.TQ || {};
       TQ.AnimationManager.clear();
       TQ.SoundMgr.reset();
     }
-    this._removeAllItems();
+    this._removeAllItemsFromStage();
     this.state = TQBase.LevelState.EXIT;
     this.inStage = false;
   };
@@ -895,7 +895,11 @@ window.TQ = window.TQ || {};
 
   p.isStageReady = function () {
     return ((this.state === TQBase.LevelState.INITING) ||
-      (this.state === TQBase.LevelState.EDITING) ||
+      (this.isElementInStage()));
+  };
+
+  p.isElementInStage = function () {
+    return ((this.state === TQBase.LevelState.EDITING) ||
       (this.state === TQBase.LevelState.RUNNING));
   };
 
