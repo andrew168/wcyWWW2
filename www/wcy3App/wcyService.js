@@ -217,6 +217,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     }
 
     TQ.State.isTopicIntro = false;
+    TQ.State.shareCode = TQ.QueryParams.shareCode = shareString;
     _getWcy(shareString);
   }
 
