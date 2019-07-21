@@ -120,10 +120,7 @@ function StorageManager($q, $timeout, $http, NetService) {
       function doSaveOpus(value) {
         if (onePackage.opusJson) {
           console.log(value);
-          var newPath = currScene.ssPath;
-          var tempJson = JSON.parse(onePackage.opusJson);
-          tempJson.ssPath = newPath;
-          onePackage.opusJson = JSON.stringify(tempJson);
+          TQ.Scene.updateSSPath(onePackage, currScene.ssPath);
           uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).then(onUploadCompleted);
         } else {
           onUploadCompleted({});

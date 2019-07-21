@@ -55,6 +55,7 @@ TQ = TQ || {};
 
   // static APIs:
   Scene.decompress = decompress;
+  Scene.updateSSPath = updateSSPath;
   Scene.doReplay = doReplay;
   Scene.ensureFirstClick = ensureFirstClick;
   Scene.removeEmptyLevel = removeEmptyLevel;
@@ -1419,11 +1420,11 @@ TQ = TQ || {};
     return wcyData;
   }
 
-  function decompress(wcyData) {
-    var decompressed = wcyData;
+  function decompress(pkgJson) {
+    var decompressed = pkgJson;
 
-    if (!!wcyData && (typeof wcyData === 'string')) {
-      var obj = JSON.parse(wcyData);
+    if (!!pkgJson && (typeof pkgJson === 'string')) {
+      var obj = JSON.parse(pkgJson);
       if (obj.zip64 || obj.zip) {
         if (obj.zip) {
           decompressed = LZString.decompressFromUTF16(obj.data);
@@ -1433,12 +1434,21 @@ TQ = TQ || {};
 
         if (!decompressed || decompressed.length < obj.length) {
           TQ.AssertExt.invalidLogic(false, '解压后的长度小于压缩者，是不是结束符0出现了？');
-          decompressed = wcyData;
+          decompressed = pkgJson;
         }
       }
     }
 
     return decompressed;
+  }
+
+  function updateSSPath(pkg, newPath) {
+    var opusObj = JSON.parse(pkg.opusJson),
+      opusDataObj = JSON.parse(decompress(pkg.opusJson)),
+      title = opusDataObj.title;
+
+    opusDataObj.ssPath = opusObj.ssPath = newPath;
+    pkg.opusJson = compress(JSON.stringify(opusDataObj), newPath, title);
   }
 
   // private
