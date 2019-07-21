@@ -211,6 +211,13 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function getWcy(shareString) {
+    ///任何修改，必须确保5种打开方式都OK:
+    // ** url
+    // ** latest opus
+    // ** my opus pane
+    // ** topic
+    // ** new
+
     if (currScene) {
       currScene.close();
       currScene.reset();
@@ -494,7 +501,9 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function _findFileName(data) {
     var content = JSON.parse(data);
-    if (content.filename) return content.filename;
+    if (content.filename && content.filename !== TQ.Config.UNNAMED_SCENE_ID) {
+      return content.filename;
+    }
     return TQ.Config.UNNAMED_SCENE_ID;
   }
 

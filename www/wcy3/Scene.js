@@ -696,6 +696,7 @@ TQ = TQ || {};
   p.setDefaultValue = function () {
     allResourceReady = false;
     allDataReady = false;
+    TQ.QueryParams.shareCode = '';
     this.tMax = 0;
     this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
     this.isShared = false;  //只是打开旧的文件， 没有尚未修改
@@ -907,6 +908,13 @@ TQ = TQ || {};
   };
 
   p._jsonStrToScene = function (pt, jsonStr, alias) {
+    ///任何修改，必须确保5种打开方式都OK:
+    // ** url
+    // ** latest opus
+    // ** my opus pane
+    // ** topic
+    // ** new
+
     try {
       jsonStr = TQ.Element.upgrade(jsonStr);
       var objJson = JSON.parse(jsonStr);
@@ -917,12 +925,15 @@ TQ = TQ || {};
       objJson = getEmptySceneJSON();
     }
     objJson.alias = (alias == null) ? 'none' : alias;
-    if (objJson.filename === TQ.Config.UNNAMED_SCENE_ID) {
-      var idFromUrl = TQ.Utility.getWcyIdFromUrl(location.href);
-      if (idFromUrl != TQ.Config.UNNAMED_SCENE_ID) {
-        idFromUrl = parseInt(idFromUrl);
-        if (idFromUrl > 0) {
-          objJson.filename = idFromUrl;
+    if (!objJson.filename || objJson.filename === TQ.Config.UNNAMED_SCENE_ID) {
+      objJson.filename = TQ.Config.UNNAMED_SCENE_ID;
+      if (TQ.State.shareCode) {
+        var idFromSC = TQ.Utility.shareCode2Id(TQ.State.shareCode);
+        if (idFromSC && idFromSC !== TQ.Config.UNNAMED_SCENE_ID) {
+          idFromSC = parseInt(idFromSC);
+          if (idFromSC > 0) {
+            objJson.filename = idFromSC;
+          }
         }
       }
     }
@@ -1226,6 +1237,7 @@ TQ = TQ || {};
     // this equals to the WCY01.WDM
     // it is provided to prevent loading WCY01.WDM from server
     var empty = {
+      filename: TQ.Config.UNNAMED_SCENE_ID,
       version: Scene.VER_LATEST,
       topicId: TQ.Utility.getTopicId(),
       topic: TQ.State.topic, // 包括topicId, outroId
