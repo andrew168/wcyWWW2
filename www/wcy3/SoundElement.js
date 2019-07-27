@@ -5,6 +5,8 @@
 TQ = TQ || {};
 
 (function () {
+    var SOUND_TYPE_DUB = 0,  // 实时配音， 新配音可以自动覆盖旧的,缺省值
+        SOUNT_TYPE_EFFECT = 1; // 声音特效， 声音文件，从声音库添加，不能自动覆盖，必须手动删除旧的
     // 用法: 1) 拖入, 只有声音的 resource 名称,
     //       2) 从scene中读入, 是 JSON
     //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
@@ -25,7 +27,15 @@ TQ = TQ || {};
     SoundElement.srcToObj = function(src) {
         return ({type:"SOUND", src: src, isVis:1});
     };
+    SoundElement.setAsDub = function (desc) {
+        desc.subType = SOUND_TYPE_DUB;
+    };
+    SoundElement.setAsEffect = function (desc) {
+        desc.subType = SOUNT_TYPE_EFFECT;
+    };
+
     var p = SoundElement.prototype = Object.create(TQ.Element.prototype);
+
     SoundElement.prototype.constructor = SoundElement;
     p._parent_doShow = p.doShow;
     p.doShow = function(isVisible) {
@@ -237,5 +247,10 @@ TQ = TQ || {};
         return result;
     };
 
-    TQ.SoundElement = SoundElement;
+    p.isDub = function () {
+      // 缺省的subType是配音
+      return (!this.jsonObj.subType || this.jsonObj.subType === SOUND_TYPE_DUB);
+    };
+
+  TQ.SoundElement = SoundElement;
 }());

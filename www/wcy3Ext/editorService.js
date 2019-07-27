@@ -90,6 +90,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     // level and element
     onDelete: onDelete,
     deleteSound: deleteSound,
+    deleteDub: deleteDub,
 
     // element modification (text, sound, image...)
     changeSkin: changeSkin,
@@ -1656,6 +1657,16 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (ele) {
       ele.stop();
       TQ.CommandMgr.directDo(new TQ.DeleteEleCommand(currScene, ele));
+    }
+  }
+
+  function deleteDub() {
+    var dubs;
+    if (currScene && currScene.currentLevel) {
+      dubs = currScene.currentLevel.findAllDub();
+    }
+    if (dubs) {
+      dubs.forEach(deleteSound);
     }
   }
 

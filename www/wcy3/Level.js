@@ -221,6 +221,19 @@ window.TQ = window.TQ || {};
     return result;
   };
 
+  p.findAllDub = function () {
+    // 临时限制：一个场景中只能有1个配音，元件中的配音不能消除
+    // ToDo: 将来允许多个配音， 可以选择是否消除元件中的配音，
+    var result = [];
+    for (var i = 0; i < this.elements.length; i++) {
+      var ele = this.elements[i];
+      if (ele.isSound() && ele.isDub()) {
+        result.push(ele);
+      }
+    }
+    return result;
+  };
+
   p.pickOffChild = function (ele) {
     assertNotNull(TQ.Dictionary.PleaseSelectOne, ele);
     var id = this.elements.indexOf(ele);
