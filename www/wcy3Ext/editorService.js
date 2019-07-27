@@ -259,6 +259,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
       function onGotoForegroud() {
         state.isInBkg = false;
+        if (screenfull) {
+          screenfull.setupAutoEnable();
+        }
         console.log("state on go to foreground!");
         if (pausedByBkur) {
           pausedByBkur = false;

@@ -98,11 +98,15 @@
 				// keyboard in fullscreen even though it doesn't.
 				// Browser sniffing, since the alternative with
 				// setTimeout is even worse.
-				if (/ Version\/5\.1(?:\.\d+)? Safari\//.test(navigator.userAgent)) {
-					elem[request]();
-				} else {
-					elem[request](keyboardAllowed ? Element.ALLOW_KEYBOARD_INPUT : {});
-				}
+        try {
+          if (/ Version\/5\.1(?:\.\d+)? Safari\//.test(navigator.userAgent)) {
+            elem[request]();
+          } else {
+            elem[request](keyboardAllowed ? Element.ALLOW_KEYBOARD_INPUT : {});
+          }
+        } catch (err) {
+          console.log("fullscreen error: " + JSON.stringify(err));
+        }
 
 				this.on('change', onFullScreenEntered);
 			}.bind(this));
@@ -179,6 +183,7 @@
 		}
 	});
 
+    screenfull.setupAutoEnable = setupAutoEnable;
 	if (isCommonjs) {
 		module.exports = screenfull;
 		// TODO: remove this in the next major version
@@ -186,4 +191,19 @@
 	} else {
 		window.screenfull = screenfull;
 	}
+
+  function autoEnableFullscreen() {
+    screenfull.request();
+    document.removeEventListener('touch', autoEnableFullscreen);
+    document.removeEventListener('click', autoEnableFullscreen);
+  }
+
+  function setupAutoEnable() {
+    if (screenfull.enabled) {
+      document.addEventListener('touch', autoEnableFullscreen);
+      document.addEventListener('click', autoEnableFullscreen);
+    }
+  }
+
+  setupAutoEnable();
 })();
