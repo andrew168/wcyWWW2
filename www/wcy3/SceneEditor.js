@@ -151,7 +151,7 @@ var currScene = null;
       }
 
       function nextProcess() {
-        if (kouTuMain) {
+        if (typeof kouTuMain === 'function') {
           koutuMain(buffer.data, matType, function (image64) {
             addItemByImageData(dstLevel, image64, matType, callback);
           });
