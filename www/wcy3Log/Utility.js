@@ -284,13 +284,16 @@ var TQUtility; //
 
     Utility.fileToUrl = function (file, options) {
         // convert blob, local file, to  url
-        var url, oUrl;
+        var url;
+        if (!options) {
+          options = {};
+        }
         if (_isInstanceOf('Blob', file) ||
             _isInstanceOf('File', file)) {
             // Files are also Blob instances, but some browsers
             // (Firefox 3.6) support the File API but not Blobs:
 
-            url = oUrl = _createObjectURL(file);
+            url = _createObjectURL(file);
             // Store the file type for resize processing:
             options._type = file.type;
         } else if (typeof file === 'string') {

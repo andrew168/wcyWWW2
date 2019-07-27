@@ -307,6 +307,12 @@ TQ.ImageCliper = (function () {
   function complete(imageData) {
     isCliping = false;
     if (onClipCompleted) {
+      if (imageData instanceof File) {// 对于未clip的原文件
+        imageData = TQUtility.fileToUrl(imageData);
+      } else if (!TQ.Utility.isImage64(imageData)) {
+        TQ.AssertExt.invalidLogic(false, "错误：未知的图像数据!");
+      }
+
       onClipCompleted(imageData);
     }
     TQ.TouchManager.restore();
