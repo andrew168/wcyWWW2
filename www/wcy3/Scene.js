@@ -166,7 +166,7 @@ TQ = TQ || {};
     stateStack.push({tT: Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
   }
 
-  function restoreState() {
+  function restoreState(options) {
     var state;
 
     do {
@@ -174,7 +174,9 @@ TQ = TQ || {};
     } while (stateStack.length > 0);
 
     if (state) {
-      TQ.TimerUI.setGlobalTime(state.tT);
+      if (!options || !options.hasOwnProperty('levelId')) {
+        TQ.TimerUI.setGlobalTime(state.tT);
+      }
     } else {
       // TQ.Log.error("state is null"); // 首次进入toAddMode，state就是空的
     }
@@ -354,7 +356,8 @@ TQ = TQ || {};
 
     if (!options) {
       if (currScene.currentLevelId !== 0) {
-        currScene.gotoLevel(0);
+        TQ.FrameCounter.gotoBeginning();
+        currScene.gotoLevel(currScene.currentLevelId);
       } else {
         currScene.currentLevelId = -1;
         currScene.gotoLevel(0);

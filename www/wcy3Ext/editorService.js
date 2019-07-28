@@ -1342,11 +1342,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     addModeDoneCallback = callback;
   }
 
-  function toAddMode() {
+  function toAddMode(options) {
     if (TQ.FrameCounter.isPlaying() && currScene) {
       currScene.stop();
     }
-    TQ.Scene.restoreState();
+    TQ.Scene.restoreState(options);
     $timeout(function () {
       TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
       TQ.SelectSet.empty();
@@ -1366,7 +1366,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (!currScene.isEmpty() && currScene.levelNum() > levelThumbs.length) {
           $timeout(syncLevelThumbs);
         } else {
-          toAddModeDone();
+          toAddModeDone(options);
         }
       });
     }, 100);
@@ -1433,12 +1433,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       }
     }
   }
-
-  function toAddModeDone() {
+  function toAddModeDone(options) {
+    var levelId = (options && options.levelId)? options.levelId: 0;
     $timeout(function () {
-      gotoLevel(0);
+      gotoLevel(levelId);
       $timeout(function () {
-        gotoLevel(0);
+        gotoLevel(levelId);
         WCY.startAutoSave();
         TQ.State.allowPageTransition = true;
         TQ.State.isPlayOnly = false;
