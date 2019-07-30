@@ -4,6 +4,8 @@
 
 (function () {
   var p = createjs.Container.prototype;
+  var selectBoxSize = 32;
+  createjs.DisplayObject._hitTestCanvas.width = createjs.DisplayObject._hitTestCanvas.height = selectBoxSize;
   // 覆盖原函数
   p.setChildIndex = function (child, index) {
     var kids = this.children, l = kids.length;
@@ -25,21 +27,28 @@
 
 
   /**
-   * @method _testHit
+   * @method _testHitExt
    * @protected
    * @param {CanvasRenderingContext2D} ctx
    * @return {Boolean}
    **/
-  p._testHit = function (ctx) {
+  p._testHitExt = function (ctx) {
+    var hit = false;
     try {
-      var hit = ctx.getImageData(0, 0, 1, 1).data[3] > 1;
+      var pixels = ctx.getImageData(0, 0, selectBoxSize, selectBoxSize).data;
+      for (var i=3; i < pixels.length; i+=4) {
+        if (pixels[i] > 1) {
+          hit = true;
+          break;
+        }
+      }
     } catch (e) {
       if (!DisplayObject.suppressCrossDomainErrors) {
         throw "An error has occurred. This is most likely due to security restrictions on reading canvas pixel data with local or cross-domain images.";
       }
     }
     return hit;
-  }
+  };
 
 
   /**
@@ -56,6 +65,9 @@
     var ctx = createjs.DisplayObject._hitTestContext;
     var mtx = this._matrix;
     var hasHandler = this._hasMouseHandler(mouseEvents);
+    // 移动到_hitTestContext之canvas的正中间
+    x = x - selectBoxSize / 2;
+    y = y - selectBoxSize / 2;
 
     // if we have a cache handy & this has a handler, we can use it to do a quick check.
     // we can't use the cache for screening children, because they might have hitArea set.
@@ -64,9 +76,9 @@
       ctx.setTransform(mtx.a, mtx.b, mtx.c, mtx.d, mtx.tx - x, mtx.ty - y);
       ctx.globalAlpha = mtx.alpha;
       this.draw(ctx);
-      if (this._testHit(ctx)) {
-        ctx.setTransform(1, 0, 0, 1, 0, 0)
-        ctx.clearRect(0, 0, 2, 2);
+      if (this._testHitExt(ctx)) {
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.clearRect(0, 0, selectBoxSize+1, selectBoxSize+1);
         return this;
       }
     }
@@ -82,7 +94,7 @@
       var childHasHandler = mouseEvents && child._hasMouseHandler(mouseEvents);
 
       // if a child container has a handler and a hitArea then we only need to check its hitArea, so we can treat it as a normal DO:
-      if (child instanceof Container && !(hitArea && childHasHandler)) {
+      if (child instanceof createjs.Container && !(hitArea && childHasHandler)) {
         var result;
         if (hasHandler) {
           // only concerned about the first hit, because this container is going to claim it anyway:
@@ -107,11 +119,11 @@
         ctx.globalAlpha = mtx.alpha;
         ctx.setTransform(mtx.a, mtx.b, mtx.c, mtx.d, mtx.tx - x, mtx.ty - y);
         (hitArea || child).draw(ctx);
-        if (!this._testHit(ctx)) {
+        if (!this._testHitExt(ctx)) {
           continue;
         }
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, 2, 2);
+        ctx.clearRect(0, 0, selectBoxSize+1, selectBoxSize+1);
         if (hasHandler) {
           return this;
         }
