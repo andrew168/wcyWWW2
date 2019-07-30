@@ -463,27 +463,43 @@ TQ = TQ || {};
         var rect = TQ.SceneEditor.stage._getElementRect(TQ.SceneEditor.stage.canvas),
             pageX = touchPoint.pageX - rect.left,
             pageY = touchPoint.pageY - rect.top,
-            eles = TQ.SceneEditor.stageContainer.getObjectsUnderPoint(pageX, pageY);
+            displayObjects = TQ.SceneEditor.stageContainer.getObjectsUnderPoint(pageX, pageY);
 
-        if ((!!eles) && (eles.length > 0)) {
-            for (var i = 0; i < eles.length; i++) {
-                if (!eles[i].ele) {
-                    continue;
-                }
-
-                var ele2 = TQ.SelectSet.getEditableEle(eles[i].ele);
-                if (!!ele2) {
-                    TQ.SelectSet.add(ele2);
-                    selectedNothing = false;
-                    return;
-                }
-            }
+        if ((!!displayObjects) && (displayObjects.length > 0)) {
+          var ele2 = selectTopOnly(displayObjects);
+          if (!!ele2) {
+            TQ.SelectSet.add(ele2);
+            selectedNothing = false;
+            return;
+          }
         }
 
         if (selectedNothing) {
             SelectSet.empty();
         }
     };
+
+    function selectTopOnly(objs) {
+      var result;
+      for (var i = 0; i < objs.length; i++) {
+        if (!objs[i].ele) {
+          continue;
+        }
+        if (!result) {
+          result = objs[i].ele;
+        } else {
+          if (objs[i].ele.getZ() > result.getZ()) {
+            result = objs[i].ele;
+          }
+        }
+      }
+
+      if (result) {
+        result = TQ.SelectSet.getEditableEle(result);
+      }
+
+      return result;
+    }
 
     function peekMarker() {
         if (selectedMarkers.length <= 0) {
