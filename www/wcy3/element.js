@@ -2142,7 +2142,7 @@ window.TQ = window.TQ || {};
             if (child.isEditorEle()) {
                 continue;
             }
-            minZ = Math.min(minZ, child.getZ());
+            minZ = Math.min(minZ, child.getMinZ());
         }
 
         return minZ;
