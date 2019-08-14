@@ -17,6 +17,11 @@ TQ.LazyLoading = (function () {
     loadOne: loadOne
   };
 
+  function onError(err) {
+    console.error(JSON.stringify(err));
+    alert("系统正在升级到新版本，请重新打开!");
+  }
+
   function loadOne(src, onLoaded) {
     var words = src.split('.'),
       ext = words[words.length - 1].toLowerCase(),
@@ -30,7 +35,7 @@ TQ.LazyLoading = (function () {
     ele = d.createElement(tag);
     ele.id = id;
     ele.onload = onLoaded;
-
+    ele.onerror = onError;
     switch (tag) {
       case 'link':
         ele.href = src;
