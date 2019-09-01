@@ -16,6 +16,8 @@ var TQUtility; //
     Utility.isIOS = isIOS;
     Utility.isAndroid = isAndroid;
     Utility.isAndroidPad = isAndroidPad;
+    Utility.isIPad = isIPad;
+    Utility.isPad = isPad;
     Utility.isWeChat = isWeChat;
     Utility.isMiniProgramWebView = isMiniProgramWebView;
     Utility.parsePathname = parsePathname;
@@ -40,6 +42,14 @@ var TQUtility; //
             height = Math.min(w, h);
 
         return isAndroid() && (width > 850 && height > 600);
+    }
+
+    function isIPad() {
+      return ionic.Platform.isIPad();
+    }
+
+    function isPad() {
+      return ionic.Platform.isIPad() || isAndroidPad();
     }
 
     function isIOS() { // only mobile, pad, no mac
