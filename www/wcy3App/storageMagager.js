@@ -101,17 +101,17 @@ function StorageManager($q, $timeout, $http, NetService) {
             }
           }
         ).then(function (value) {
-          console.log('1111');
-        }).then (function (value) {
-          console.log('2222');
-        });
+          console.log('saved successfully!');
+        }, _onNetIOError);
       } else {
         uploadWithSsign();
       }
 
       function uploadWithSsign() {
         if (onePackage.screenshot) {
-          uploadScreenshot(onePackage.ssSign, onePackage.screenshot).then(doSaveOpus);
+          uploadScreenshot(onePackage.ssSign, onePackage.screenshot).
+          then(doSaveOpus, _onNetIOError).
+          catch(_onNetIOError);
         } else {
           doSaveOpus();
         }
@@ -121,7 +121,8 @@ function StorageManager($q, $timeout, $http, NetService) {
         if (onePackage.opusJson) {
           console.log(value);
           TQ.Scene.updateSSPath(onePackage, currScene.ssPath);
-          uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).then(onUploadCompleted);
+          uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).
+          then(onUploadCompleted, _onNetIOError);
         } else {
           onUploadCompleted({});
         }
@@ -158,30 +159,13 @@ function StorageManager($q, $timeout, $http, NetService) {
   }
 
   function uploadScreenshot(ssSign, screenshot) {
-    var q = $q.defer();
+    TQ.AssertExt.invalidLogic(!!ssSign);
+    TQ.AssertExt.invalidLogic(!!screenshot);
     if (!ssSign) {
-      setTimeout(function () {
-        q.reject({errMsg: "failed to uploadScreen: !ssSign ", data: null});
-      });
-    } else {
-      TQ.AssertExt.invalidLogic(!!ssSign);
-      TQ.AssertExt.invalidLogic(!!screenshot);
-      NetService.doUploadImage(ssSign, screenshot).then(
-        function (res) {
-          onUploadSsSuccess(res);
-          q.resolve(res);
-        }, function (err) {
-          onErrorGeneral(err);
-          q.reject(err);
-        });
+      throw new Error('internal error: no ssSign');
     }
 
-    function onErrorGeneral(e) {
-      TQ.Log.error("网络操作出错：" + JSON.stringify(e).substr(0, 250));
-      TQ.MessageBox.reset();
-    }
-
-    return q.promise;
+    return NetService.doUploadImage(ssSign, screenshot).then(onUploadSsSuccess);
   }
 
   function onUploadSsSuccess(res) {
@@ -195,6 +179,11 @@ function StorageManager($q, $timeout, $http, NetService) {
 
       TQ.Log.debugInfo(data);
     }
+  }
+
+  function _onNetIOError(data) {
+    TQ.Log.debugInfo(data);
+    TQ.MessageBox.confirm(TQ.Locale.getStr('hey, the network connection lost'));
   }
 
   return {

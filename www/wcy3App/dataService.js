@@ -109,9 +109,15 @@
             $http.get(url).then(function (response) {
                     console.log(response);
                     var data = (response.status === 200) ? response.data : [];
+                    if ((typeof data === 'string') && (data.startsWith('db error'))) {
+                      TQ.MessageBox.confirm('网络链接有问题，请重新加载,(code=8003)');
+                      data = [];
+                    }
+
                     if (!Array.isArray(data)) {
                         data = [];
                     }
+
                     topics.setList(data, TQ.MatType.TOPIC);
                     $rootScope.$broadcast(EVENT_TOPIC_READY);
                 },
@@ -238,6 +244,11 @@
                 var data = (response.status === 200) ? response.data : [],
                     selected = [];
 
+                if ((typeof data === 'string') && (data.startsWith('db error'))) {
+                  TQ.MessageBox.confirm('网络链接有问题，请重新加载,(code=8003');
+                  data = [];
+                }
+
                 if (!Array.isArray(data)) {
                     data = [];
                 }
@@ -269,7 +280,7 @@
               onDataReady();
             }
             if (!TQ.MessageBox.hasCriticalError()) {
-              TQ.MessageBox.promptWithNoCancel('部分网络有问题，请重新加载,(code=8002');
+              TQ.MessageBox.confirm('网络链接有问题，请重新加载,(code=8002)');
             }
           }
         }
