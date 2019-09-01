@@ -152,9 +152,12 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     }
 
     function onSystemError(evt) {
-      TQ.MessageBox.confim(TQ.Locale.getStr('发现错误，请重新加载！'));
-      TQ.Log.info(evt.toString());
-      TQ.Log.info(JSON.stringify(evt));
+      if (evt) {
+        TQ.Log.error(evt.type);
+        TQ.Log.error(evt.data);
+        TQ.Log.error(TQUtility.stringifyIgnoreCycle(evt));
+      }
+      TQ.MessageBox.confirm(TQ.Locale.getStr('发现错误：无法加载系统文件！ 建议：1）检查网络是否正常连接；2）重新加载。'));
     }
 
     return {

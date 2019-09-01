@@ -123,7 +123,7 @@ this.TQ = this.TQ || {};
                 ((item.src !== RM.FULLPATH_NOSOUND) &&
                 (item.src !== RM.FULLPATH_NOPIC)));
             TQ.Log.info(item.src + ": " + event.toString() );
-            TQUtility.triggerEvent(document, TQ.EVENT.SYSTEM_ERROR, {desc: 'failed to load resource', detail: event});
+            TQUtility.triggerEvent(document, TQ.EVENT.SYSTEM_ERROR, {desc: event.title || 'FILE_LOAD_ERROR', detail: event});
             var resId = item.id;
             var result = null;
             var altResId = null;

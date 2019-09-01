@@ -353,6 +353,19 @@ var TQUtility; //
       return src;
     };
 
+    Utility.stringifyIgnoreCycle = function(obj) {
+      var cache = [];
+      return JSON.stringify(obj, function (key, value) {
+        if (typeof value === 'object' && value !== null) {
+          if (cache.indexOf(value) !== -1) {
+            return;
+          }
+          cache.push(value);
+        }
+        return value;
+      });
+    };
+
     TQ.Base.Utility = Utility;
     TQUtility = Utility;
 }());
