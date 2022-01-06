@@ -1,0 +1,13 @@
+日常开发(本地)
+* 启动数据库和Web服务器：
+   start-server-qianren.bat
+
+
+设置环境(本地)
+* npm install 
+* 复制网络安全证书到相同的disk，目录结构如：E:\data\wwwz
+
+检验：
+  打开网页：http:/show.udoido.cn
+  服务器显示所有被call的js文件
+
