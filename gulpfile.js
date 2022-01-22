@@ -2,10 +2,13 @@
 
 'use strict';
 var srcPath = '.\\www',
+    testPath = '.\\test',
+    distPath = '.\\dist',
     dstPath1 = '..\\cardforvote\\www',
     dstPath2 = '..\\cardforvote\\ksWww';
 const { series, parallel, src, dest } = require('gulp');
 const gulp = require('gulp');
+var sourcemaps = require('gulp-sourcemaps');
 var exec = require('child_process').exec;
 var gettext = require('gulp-angular-gettext');
 
@@ -45,8 +48,7 @@ async function doConfig() {
 }
 
 async function wcylib_concat() {
-    await src('www/index.html')
-        // .pipe(useref(assetOptions)
+    await src('www/index.html', {sourcemaps: true})
         .pipe(gulpif('*.css', gulp_rename(config.app_min_css)))
         .pipe(gulpif(/wcy3all\.js/ && args.remove_logs, gulp_replace(/AuxLog\.log\(.*\);/gm, "")))
         .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
@@ -55,8 +57,7 @@ async function wcylib_concat() {
         .pipe(gulpif('*.html', gulp_replace(/wcy3all\.js/g, config.app_js)))
         .pipe(gulpif('*.css', gulpminifyCss()))
         .pipe(gulpif('*.html', gulp_minifyHtml()))
-
-        .pipe(dest('dist'))
+        .pipe(dest(destPath))
         .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
         .pipe(dest(dstPath1 + '\\lib'))
         .pipe(dest(dstPath1 + '\\lib-debug'))
@@ -68,7 +69,9 @@ async function wcylib_concat() {
 
 async function wcylib_uglify() {
     await src("dist/" + config.app_js, { sourcemaps: true })
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(uglify())
+        .pipe(sourcemaps.write('../maps'))
         .pipe(gulp.dest("uglify/"), { sourcemaps: "." });
 
     console.log("minified => " + 'uglify/' + config.app_min_js);
@@ -78,7 +81,9 @@ async function wcylib_uglify() {
 
 async function wcylib_minify() {
     await src("dist/" + config.app_js, { sourcemaps: true })
+        .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(minify())
+        .pipe(sourcemaps.write('../maps'))
         .pipe(dest(dstPath1 + '\\lib\\'), { sourcemaps: true })
         .pipe(dest(dstPath2 + '\\lib\\'), { sourcemaps: true });
     // ToDo: check file:  config.app_min_js
@@ -90,7 +95,7 @@ async function wcylib_minify() {
 
 
 async function clean() {
-    await del.bind(null, ['dist', 'src / tmp']);
+    await del.bind(null, [destPath, 'src / tmp']);
 }
 
 async function del_extra_libs_js() {
@@ -121,10 +126,11 @@ async function copy_build_tools() {
 }
 
 async function copy_lazyLoad_files() {
+    console.log("copy...")
     await src(srcPath + "\\wcy3Social\\*.*")
         .pipe(dest(dstPath1 + "\\wcy3Social"))
         .pipe(dest(dstPath2 + "\\wcy3Social"));
-    return Promise.resolve();
+    return Promise.resolve("copy completed");
 }
 
 async function copy_worker_files() {
@@ -220,7 +226,11 @@ async function copyTestFiles() {
     srcPath + "/dictionary/*.*",
     ],
         { base: srcPath })
-        .pipe(dest('dist'));
+        .pipe(dest(testPath));
+    
+    src(distPath + "\*.*", { base: distPath })
+        .pipe(dest(testPath));
+    
     return Promise.resolve();
 }
 
@@ -228,7 +238,7 @@ function startHttpServer() {
     console.log("start db server");
     exec("start-db-server-only.bat");
     console.log("start web server");
-    exec("http-server E:/Doc_qian2/WcyCore2/dist -p 80 -o index.html -C E:/data/wwwz/show_udoido_cn.crt -K E:/data/wwwz/udoido.cn-myserver.key");
+    exec("start-web-server.bat");
 }
 
 async function test() {
@@ -242,7 +252,16 @@ exports.default = series(
     parallel(copy_build_tools, copy_dictionary),
     hot_sync,
     wcylib_concat,
-    parallel(wcylib_minify, del_extra_libs_js),
+);
+
+//! 必须与concat一起分开用， 因为文件尚未写到磁盘，导致minify找不到
+exports.rel = series(
+    doConfig,
+    wcylib_minify,
+    del_extra_libs_js,
     build
 );
+
 exports.test = test;
+// exports.test = series(doConfig, wcylib_minify);
+// exports.test = series(doConfig, wcylib_uglify);
