@@ -31,7 +31,7 @@ var config = {
     withDictionary: false //不再发布词典到后续项目
 };
 
-async function doConfig () {
+async function doConfig() {
     //ver info
     config.header = "/*! wcy3 library " + new Date().toLocaleString() + " */\n";
     config.version = require('./package.json').version;
@@ -46,20 +46,20 @@ async function doConfig () {
 async function wcylib_concat() {
     await src('www/index.html')
         // .pipe(useref(assetOptions)
-            .pipe(gulpif('*.css', gulp_rename(config.app_min_css)))
-            .pipe(gulpif(/wcy3all\.js/ && args.remove_logs, gulp_replace(/AuxLog\.log\(.*\);/gm, "")))
-            .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
-            .pipe(gulpif(/wcy3all\.js/, gulp_header(config.header)))
-            .pipe(useref())
-            .pipe(gulpif('*.html', gulp_replace(/wcy3all\.js/g, config.app_js)))
-            .pipe(gulpif('*.css', gulpminifyCss()))
-            .pipe(gulpif('*.html', gulp_minifyHtml()))
+        .pipe(gulpif('*.css', gulp_rename(config.app_min_css)))
+        .pipe(gulpif(/wcy3all\.js/ && args.remove_logs, gulp_replace(/AuxLog\.log\(.*\);/gm, "")))
+        .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
+        .pipe(gulpif(/wcy3all\.js/, gulp_header(config.header)))
+        .pipe(useref())
+        .pipe(gulpif('*.html', gulp_replace(/wcy3all\.js/g, config.app_js)))
+        .pipe(gulpif('*.css', gulpminifyCss()))
+        .pipe(gulpif('*.html', gulp_minifyHtml()))
 
-            .pipe(dest('dist'))
-            .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
-            .pipe(dest(dstPath1 + '\\lib'))
-            .pipe(dest(dstPath1 + '\\lib-debug'))
-            .pipe(dest(dstPath2 + '\\lib'));
+        .pipe(dest('dist'))
+        .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
+        .pipe(dest(dstPath1 + '\\lib'))
+        .pipe(dest(dstPath1 + '\\lib-debug'))
+        .pipe(dest(dstPath2 + '\\lib'));
 
     console.log("concated => " + dstPath1 + '\\lib' + config.app_js);
     return Promise.resolve();
@@ -76,11 +76,11 @@ async function wcylib_uglify() {
 };
 
 async function wcylib_minify() {
-    await src("dist/" + config.app_js,  { sourcemaps: true })
+    await src("dist/" + config.app_js, { sourcemaps: true })
         .pipe(minify())
         .pipe(dest(dstPath1 + '\\lib\\'), { sourcemaps: true })
         .pipe(dest(dstPath2 + '\\lib\\'), { sourcemaps: true });
-// ToDo: check file:  config.app_min_js
+    // ToDo: check file:  config.app_min_js
 
     console.log("minified => " + dstPath1 + '\\lib' + config.app_min_js)
 
@@ -119,8 +119,8 @@ async function copy_build_tools() {
     return Promise.resolve();
 }
 
-async function copy_lazyLoad_files () {
-    await  src(srcPath + "\\wcy3Social\\*.*")
+async function copy_lazyLoad_files() {
+    await src(srcPath + "\\wcy3Social\\*.*")
         .pipe(dest(dstPath1 + "\\wcy3Social"))
         .pipe(dest(dstPath2 + "\\wcy3Social"));
     return Promise.resolve();
@@ -129,7 +129,7 @@ async function copy_lazyLoad_files () {
 async function copy_worker_files() {
     var filesAndDirs = [
         ["", "worker.js"],
-//ToDo:        ["", "lame.min.js"]
+        //ToDo:        ["", "lame.min.js"]
     ];
 
     await filesAndDirs.forEach(async function (resource) {
@@ -139,7 +139,7 @@ async function copy_worker_files() {
     return Promise.resolve("copy_work_files completed!");
 }
 
-async function copy_dictionary () {
+async function copy_dictionary() {
     if (config.withDictionary) {
         await src(srcPath + "\\dictionary\\*.*")
             .pipe(dest(dstPath1 + "\\dictionary\\"))
@@ -178,7 +178,7 @@ async function extract_string_const() {
             "requirejs": false
         }))
         .pipe(dest('po/'));
-    
+
     return Promise.resolve();
 }
 
@@ -188,7 +188,7 @@ async function translations() {
             // options to pass to angular-gettext-tools...
             format: 'json'
         }))
-        .pipe(dest('dist/translations/'));    
+        .pipe(dest('dist/translations/'));
     return Promise.resolve();
 }
 
