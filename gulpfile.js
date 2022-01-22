@@ -6,6 +6,7 @@ var srcPath = '.\\www',
     dstPath2 = '..\\cardforvote\\ksWww';
 const { series, parallel, src, dest } = require('gulp');
 const gulp = require('gulp');
+var exec = require('child_process').exec;
 var gettext = require('gulp-angular-gettext');
 
 var useref = require('gulp-useref'),
@@ -192,6 +193,49 @@ async function translations() {
     return Promise.resolve();
 }
 
+async function copyTestFiles() {
+    await src([srcPath + '/lib/ngStorage.js',
+    srcPath + "/lib/ionic/css/ionic.css",
+    srcPath + "/css/style.css",
+    srcPath + "/css/weui.css",
+    // "wcy3all.css",
+    srcPath + "/lib-debug-duplicated/rzslider.css",
+    srcPath + "/lib/ng-cordova.js",
+    srcPath + "/cordova.js",
+    srcPath + "/lib/ngStorage.js",
+    srcPath + "/js/app.js",
+
+    srcPath + "/lazyLoading.js",
+
+    // "libs.js",
+
+    // srcPath + "/wcy3all.js",
+
+    srcPath + "/lib-debug-duplicated/rzslider.js",
+    srcPath + "/wcy3/debugger/dumpElement.js",
+
+    srcPath + "/js/convert.js",
+    srcPath + "/js/controllers.js",
+    srcPath + "/templates/*.*",
+    srcPath + "/dictionary/*.*",
+    ],
+        { base: srcPath })
+        .pipe(dest('dist'));
+    return Promise.resolve();
+}
+
+function startHttpServer() {
+    console.log("start db server");
+    exec("start-db-server-only.bat");
+    console.log("start web server");
+    exec("http-server E:/Doc_qian2/WcyCore2/dist -p 80 -o index.html -C E:/data/wwwz/show_udoido_cn.crt -K E:/data/wwwz/udoido.cn-myserver.key");
+}
+
+async function test() {
+    copyTestFiles();
+    startHttpServer();
+}
+
 exports.default = series(
     parallel(doConfig, copy_worker_files),
     parallel(copy_lazyLoad_files, copy_debug_tools),
@@ -201,3 +245,4 @@ exports.default = series(
     parallel(wcylib_minify, del_extra_libs_js),
     build
 );
+exports.test = test;
