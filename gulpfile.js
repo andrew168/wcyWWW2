@@ -4,11 +4,21 @@
 var srcPath = '.\\www',
     dstPath1 = '..\\cardforvote\\www',
     dstPath2 = '..\\cardforvote\\ksWww';
-var gulp = require('gulp'),
-    gettext = require('gulp-angular-gettext');
+const { series, parallel, src, dest } = require('gulp');
+const gulp = require('gulp');
+var gettext = require('gulp-angular-gettext');
 
-var $ = require('gulp-load-plugins')(); //jshint ignore:line
-var uglifyjs = require("uglify-js");
+var useref = require('gulp-useref'),
+    gulpif = require('gulp-if'),
+    gulp_size = require('gulp-size'),
+    gulp_zip = require('gulp-zip'),
+    gulpminifyCss = require('gulp-clean-css'),
+    gulp_replace = require('gulp-replace'),
+    gulp_rename = require('gulp-rename'),
+    gulp_header = require('gulp-header'),
+    gulp_minifyHtml = require('gulp-minify-html');
+var minify = require('gulp-minify');
+var uglify = require('gulp-uglify');
 var fs = require('fs');
 var del = require('del');
 var args = require('yargs').argv;
@@ -21,7 +31,7 @@ var config = {
     withDictionary: false //不再发布词典到后续项目
 };
 
-gulp.task('config', ['clean'], function () {
+async function doConfig () {
     //ver info
     config.header = "/*! wcy3 library " + new Date().toLocaleString() + " */\n";
     config.version = require('./package.json').version;
@@ -31,107 +41,127 @@ gulp.task('config', ['clean'], function () {
     config.app_min_js = "/wcy3all" + config.hash + ".min.js";
     config.app_min_js_map = "wcy3all" + config.hash + ".min.map";
     config.app_min_css = "/wcy3all" + config.hash + ".min.css";
-});
+}
 
-gulp.task('wcylib_concat', function () {
-    var wcylib_assets = $.useref.assets({searchPath: '{,www,www/js, www/wcy3}'});
-    return gulp.src('www/index.html')
-        .pipe(wcylib_assets)
-        .pipe($.if('*.css', $.rename(config.app_min_css)))
-        .pipe($.if(/wcy3all\.js/ && args.remove_logs, $.replace(/AuxLog\.log\(.*\);/gm, "")))
-        .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
-        // .pipe($.if(/wcy3all\.js/, $.header(config.header)))
-        .pipe(wcylib_assets.restore())
-        .pipe($.useref())
-        .pipe($.if('*.html', $.replace(/wcy3all\.js/g, config.app_js)))
-        .pipe($.if('*.css', $.minifyCss()))
-        //.pipe($.if('*.html', $.minifyHtml()))
+async function wcylib_concat() {
+    await src('www/index.html')
+        // .pipe(useref(assetOptions)
+            .pipe(gulpif('*.css', gulp_rename(config.app_min_css)))
+            .pipe(gulpif(/wcy3all\.js/ && args.remove_logs, gulp_replace(/AuxLog\.log\(.*\);/gm, "")))
+            .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
+            .pipe(gulpif(/wcy3all\.js/, gulp_header(config.header)))
+            .pipe(useref())
+            .pipe(gulpif('*.html', gulp_replace(/wcy3all\.js/g, config.app_js)))
+            .pipe(gulpif('*.css', gulpminifyCss()))
+            .pipe(gulpif('*.html', gulp_minifyHtml()))
 
-        .pipe(gulp.dest('dist'))
-        .pipe($.if(/wcy3all\.js/, $.rename(config.app_js)))
-        .pipe(gulp.dest(dstPath1 + '\\lib'))
-        .pipe(gulp.dest(dstPath1 + '\\lib-debug'))
-        .pipe(gulp.dest(dstPath2 + '\\lib'));
+            .pipe(dest('dist'))
+            .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
+            .pipe(dest(dstPath1 + '\\lib'))
+            .pipe(dest(dstPath1 + '\\lib-debug'))
+            .pipe(dest(dstPath2 + '\\lib'));
 
-});
+    console.log("concated => " + dstPath1 + '\\lib' + config.app_js);
+    return Promise.resolve();
+}
 
-gulp.task('wcylib_minify', ['wcylib_concat'], function () {
-    var result = uglifyjs.minify(["dist/" + config.app_js], {
-        outSourceMap: config.app_min_js_map,
-        sourceRoot: "",
-        compress: {
-            warnings: false
-        }
-    });
+async function wcylib_uglify() {
+    await src("dist/" + config.app_js, { sourcemaps: true })
+        .pipe(uglify())
+        .pipe(gulp.dest("uglify/"), { sourcemaps: "." });
 
-    fs.writeFileSync(dstPath1 + '\\lib\\' + config.app_min_js, result.code);
-    fs.writeFileSync(dstPath2 + '\\lib\\' + config.app_min_js, result.code);
-});
+    console.log("minified => " + 'uglify/' + config.app_min_js);
 
-gulp.task('clean', del.bind(null, ['dist', 'src/tmp']));
+    return Promise.resolve();
+};
 
-gulp.task('del-extra-libs-js', del.bind(null, [dstPath1 + '\\lib\\libs.js'], {force: true}));
+async function wcylib_minify() {
+    await src("dist/" + config.app_js,  { sourcemaps: true })
+        .pipe(minify())
+        .pipe(dest(dstPath1 + '\\lib\\'), { sourcemaps: true })
+        .pipe(dest(dstPath2 + '\\lib\\'), { sourcemaps: true });
+// ToDo: check file:  config.app_min_js
 
-gulp.task('build', ['wcylib_minify', 'del-extra-libs-js'], function () {
-    return gulp.src('dist/**/*')
-        .pipe($.size({title: 'build', gzip: true}))
-        .pipe($.zip('ionic' + config.version + '.zip'))
-        .pipe(gulp.dest(dstPath1 + '\\lib'))
-        .pipe(gulp.dest(dstPath2 + '\\lib'));
-});
+    console.log("minified => " + dstPath1 + '\\lib' + config.app_min_js)
 
-gulp.task('copy_debug_tools', function () {
-    return gulp.src(srcPath + "\\wcy3\\debugger\\*.*")
-        .pipe(gulp.dest(dstPath1 + "\\wcy3\\debugger"))
-        .pipe(gulp.dest(dstPath2 + "\\wcy3\\debugger"));
-});
+    return Promise.resolve();
+}
 
-gulp.task('copy_build_tools', function () {
-    return gulp.src(srcPath + "\\lazyLoading.js")
-        .pipe(gulp.dest(dstPath1))
-        .pipe(gulp.dest(dstPath2));
-});
 
-gulp.task('copy_lazyLoad_files', function () {
-    return gulp.src(srcPath + "\\wcy3Social\\*.*")
-        .pipe(gulp.dest(dstPath1 + "\\wcy3Social"))
-        .pipe(gulp.dest(dstPath2 + "\\wcy3Social"));
-});
+async function clean() {
+    await del.bind(null, ['dist', 'src / tmp']);
+}
 
-gulp.task('copy_worker_files', function () {
+async function del_extra_libs_js() {
+    await del.bind(null, [dstPath1 + '\\lib\\libs.js'], { force: true });
+}
+
+async function build() {
+    src('dist/**/*')
+        .pipe(gulp_size({ title: 'build', gzip: true }))
+        .pipe(gulp_zip('ionic' + config.version + '.zip'))
+        .pipe(dest(dstPath1 + '\\lib'))
+        .pipe(dest(dstPath2 + '\\lib'));
+    await Promise.resolve("Build completed!");
+}
+
+async function copy_debug_tools() {
+    await src(srcPath + "\\wcy3\\debugger\\*.*")
+        .pipe(dest(dstPath1 + "\\wcy3\\debugger"))
+        .pipe(dest(dstPath2 + "\\wcy3\\debugger"));
+    return Promise.resolve();
+}
+
+async function copy_build_tools() {
+    await src(srcPath + "\\lazyLoading.js")
+        .pipe(dest(dstPath1))
+        .pipe(dest(dstPath2));
+    return Promise.resolve();
+}
+
+async function copy_lazyLoad_files () {
+    await  src(srcPath + "\\wcy3Social\\*.*")
+        .pipe(dest(dstPath1 + "\\wcy3Social"))
+        .pipe(dest(dstPath2 + "\\wcy3Social"));
+    return Promise.resolve();
+}
+
+async function copy_worker_files() {
     var filesAndDirs = [
         ["", "worker.js"],
-        ["", "lame.min.js"]
+//ToDo:        ["", "lame.min.js"]
     ];
 
-    filesAndDirs.forEach(function (resource) {
-        gulp.src(srcPath + '\\' + resource[0] + '\\' + resource[1])
-            .pipe(gulp.dest(dstPath1 + '\\' + resource[0]));
+    await filesAndDirs.forEach(async function (resource) {
+        src(srcPath + '\\' + resource[0] + '\\' + resource[1])
+            .pipe(dest(dstPath1 + '\\' + resource[0]));
     });
-});
+    return Promise.resolve("copy_work_files completed!");
+}
 
-gulp.task('copy_dictionary', function () {
+async function copy_dictionary () {
     if (config.withDictionary) {
-        return gulp.src(srcPath + "\\dictionary\\*.*")
-            .pipe(gulp.dest(dstPath1 + "\\dictionary\\"))
-            .pipe(gulp.dest(dstPath2 + "\\dictionary\\"));
+        await src(srcPath + "\\dictionary\\*.*")
+            .pipe(dest(dstPath1 + "\\dictionary\\"))
+            .pipe(dest(dstPath2 + "\\dictionary\\"));
     }
-});
+    return Promise.resolve();
+}
 
-gulp.task('default', ['hot_sync'], function () {
-    gulp.start('build');
-});
+async function defaultTask() {
+    await build().then("in default!");
+}
 
-gulp.task('hot_sync', ['config', 'copy_worker_files', 'copy_lazyLoad_files', 'copy_debug_tools', 'copy_build_tools', 'copy_dictionary'], function() {
+async function hot_sync() {
     console.log("hot sync souce to voteCard");
-    gulp.start('copy_dictionary');
-});
+    await copy_dictionary();
+}
 
-gulp.task('extract_string_const', function(){
-    var source = [ srcPath + '\\wcy3App\\wcyService.js'];
+async function extract_string_const() {
+    var source = [srcPath + '\\wcy3App\\wcyService.js'];
     // var source = ['www\\wcy3\\stringConstExtractDemo.js'];
     // var source = ['www\\wcy3\\**\\*.js'];
-    return gulp.src(source)
+    await src(source)
         .pipe(gettext.extract('template.pot', {
             "startDelim": '"',
             "endDelim": '"',
@@ -147,14 +177,27 @@ gulp.task('extract_string_const', function(){
             "defaultLanguage": false,
             "requirejs": false
         }))
-        .pipe(gulp.dest('po/'));
-});
+        .pipe(dest('po/'));
+    
+    return Promise.resolve();
+}
 
-gulp.task('translations', function () {
-    return gulp.src('po/**/*.po')
+async function translations() {
+    await src('po/**/*.po')
         .pipe(gettext.compile({
             // options to pass to angular-gettext-tools...
             format: 'json'
         }))
-        .pipe(gulp.dest('dist/translations/'));
-});
+        .pipe(dest('dist/translations/'));    
+    return Promise.resolve();
+}
+
+exports.default = series(
+    parallel(doConfig, copy_worker_files),
+    parallel(copy_lazyLoad_files, copy_debug_tools),
+    parallel(copy_build_tools, copy_dictionary),
+    hot_sync,
+    wcylib_concat,
+    parallel(wcylib_minify, del_extra_libs_js),
+    build
+);
