@@ -57,7 +57,7 @@ async function wcylib_concat() {
         .pipe(gulpif('*.html', gulp_replace(/wcy3all\.js/g, config.app_js)))
         .pipe(gulpif('*.css', gulpminifyCss()))
         .pipe(gulpif('*.html', gulp_minifyHtml()))
-        .pipe(dest(destPath))
+        .pipe(dest(distPath))
         .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
         .pipe(dest(dstPath1 + '\\lib'))
         .pipe(dest(dstPath1 + '\\lib-debug'))
@@ -95,7 +95,7 @@ async function wcylib_minify() {
 
 
 async function clean() {
-    await del.bind(null, [destPath, 'src / tmp']);
+    await del.bind(null, [distPath, 'src / tmp']);
 }
 
 async function del_extra_libs_js() {
@@ -246,9 +246,31 @@ async function test() {
     startHttpServer();
 }
 
+async function makeFolders() {
+    const fs = require("fs"); // Or `import fs from "fs";` with ESM
+    let waitFalg = false;
+    if (!fs.existsSync(distPath)) {
+        exec("mkdir " + distPath);
+        waitFalg = true;
+    }
+    if (!fs.existsSync(testPath)) {
+        exec("mkdir " + testPath);
+        waitFalg = true;
+    }
+
+    if (waitFalg) {    
+        setTimeout(() => {            
+            return Promise.resolve();
+        }, 1000);
+    } else {
+        return Promise.resolve();
+    }
+}
+
 exports.default = series(
-    parallel(doConfig, copy_worker_files),
-    parallel(copy_lazyLoad_files, copy_debug_tools),
+    makeFolders,
+    doConfig,
+    parallel(copy_worker_files, copy_lazyLoad_files, copy_debug_tools),
     parallel(copy_build_tools, copy_dictionary),
     hot_sync,
     wcylib_concat,
@@ -262,6 +284,6 @@ exports.rel = series(
     build
 );
 
-exports.test = test;
+exports.test = makeFolders;  // test;
 // exports.test = series(doConfig, wcylib_minify);
 // exports.test = series(doConfig, wcylib_uglify);
