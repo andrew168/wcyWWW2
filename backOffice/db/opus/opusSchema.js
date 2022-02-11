@@ -22,7 +22,7 @@ var opusSchema = new Schema({
 }, { _id: false });
 
 function setup(autoIncrement) {
-    opusSchema.plugin(autoIncrement, { id: 'opus_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
+    opusSchema.plugin(autoIncrement, { id: 'opus_id', inc_field: '_id'}); 
     mongoose.model('Opus', opusSchema); // 定义名为'Opus'的model，根据opusSchema
 }
 

@@ -26,7 +26,7 @@ var pictureMatSchema = new Schema({
 }, { _id: false });
 
 function setup(autoIncrement) {
-  pictureMatSchema.plugin(autoIncrement, { id: 'pictureMat_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
+  pictureMatSchema.plugin(autoIncrement, { id: 'pictureMat_id', inc_field: '_id'}); 
   mongoose.model('PictureMat', pictureMatSchema);
 }
 

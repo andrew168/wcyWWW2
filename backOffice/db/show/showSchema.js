@@ -17,7 +17,7 @@ var showSchema = new Schema({
 }, { _id: false }); // , {collection: 'presentation', _id:true}
 
 function setup(autoIncrement) {
-    showSchema.plugin(autoIncrement, { id: 'show_id', inc_field: '_id', disable_hooks: true });
+    showSchema.plugin(autoIncrement, { id: 'show_id', inc_field: '_id'});
     mongoose.model('Show', showSchema);
 }
 

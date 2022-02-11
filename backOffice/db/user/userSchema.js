@@ -45,7 +45,7 @@ userSchema.methods.comparePassword = function(password, done) {
 };
 
 function setup(autoIncrement) {
-    userSchema.plugin(autoIncrement, { id: 'user_id', inc_field: '_id', disable_hooks: true });
+    userSchema.plugin(autoIncrement, { id: 'user_id', inc_field: '_id'});
     mongoose.model('User', userSchema);
     console.log("required Paths:" + userSchema.requiredPaths());
     // console.log("indexes:" + userSchema.indexes());

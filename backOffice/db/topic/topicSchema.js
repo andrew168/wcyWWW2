@@ -29,7 +29,7 @@ var topicSchema = new Schema({
 }, { _id: false });
 
 function setup(autoIncrement) {
-    topicSchema.plugin(autoIncrement, { id: 'topic_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
+    topicSchema.plugin(autoIncrement, { id: 'topic_id', inc_field: '_id'}); 
     mongoose.model('Topic', topicSchema); // 定义名为'Topic'的model，根据topicSchema
 }
 

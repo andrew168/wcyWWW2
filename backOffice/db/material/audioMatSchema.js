@@ -24,7 +24,7 @@ var audioMatSchema = new Schema({
 }, {_id: false});
 
 function setup(autoIncrement) {
-  audioMatSchema.plugin(autoIncrement, { id: 'audioMat_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
+  audioMatSchema.plugin(autoIncrement, { id: 'audioMat_id', inc_field: '_id'}); 
   mongoose.model('AudioMat', audioMatSchema);
 }
 

@@ -19,7 +19,7 @@ var shareSchema = new Schema({
 }, { _id: false });
 
 function setup(autoIncrement) {
-    shareSchema.plugin(autoIncrement, {id: 'share_id', inc_field: '_id', disable_hooks: true });
+    shareSchema.plugin(autoIncrement, {id: 'share_id', inc_field: '_id'});
     mongoose.model('Share', shareSchema);
 }
 

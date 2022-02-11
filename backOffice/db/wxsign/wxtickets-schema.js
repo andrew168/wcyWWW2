@@ -14,7 +14,7 @@ var wxTicketSchema = new Schema({
 }, { _id: false });
 
 function setup(autoIncrement) {
-    wxTicketSchema.plugin(autoIncrement, { id: 'wxTicket_id', inc_field: '_id', disable_hooks: true });
+    wxTicketSchema.plugin(autoIncrement, { id: 'wxTicket_id', inc_field: '_id'});
     mongoose.model('WxTickets', wxTicketSchema);
 }
 
