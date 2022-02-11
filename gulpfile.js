@@ -7,7 +7,6 @@ var srcPath = '.\\www',
     dstPath1 = '..\\cardforvote\\www',
     dstPath2 = '..\\cardforvote\\ksWww';
 const { series, parallel, src, dest } = require('gulp');
-const gulp = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var exec = require('child_process').exec;
 var gettext = require('gulp-angular-gettext');
@@ -72,7 +71,7 @@ async function wcylib_uglify() {
         .pipe(sourcemaps.init({ loadMaps: true }))
         .pipe(uglify())
         .pipe(sourcemaps.write('../maps'))
-        .pipe(gulp.dest("uglify/"), { sourcemaps: "." });
+        .pipe(dest("uglify/"), { sourcemaps: "." });
 
     console.log("minified => " + 'uglify/' + config.app_min_js);
 
@@ -247,24 +246,30 @@ async function test() {
 }
 
 async function makeFolders() {
-    const fs = require("fs"); // Or `import fs from "fs";` with ESM
     let waitFalg = false;
-    if (!fs.existsSync(distPath)) {
-        exec("mkdir " + distPath);
-        waitFalg = true;
-    }
-    if (!fs.existsSync(testPath)) {
-        exec("mkdir " + testPath);
-        waitFalg = true;
-    }
+    let folders = [        
+        testPath,
+        distPath,
+    ];
 
-    if (waitFalg) {    
-        setTimeout(() => {            
+    folders.forEach(function (item) {
+        if (!fs.existsSync(item)) {
+            exec("mkdir " + item);
+            waitFalg = true;
+            console.log(item + " made");
+        } else {
+            console.log(item + " exists!");
+        }
+    });
+
+    if (waitFalg) {
+        setTimeout(() => {
             return Promise.resolve();
         }, 1000);
     } else {
         return Promise.resolve();
     }
+    return Promise.resolve();
 }
 
 exports.default = series(
