@@ -14,11 +14,12 @@ var shareSchema = new Schema({
 
     // 分享者的足印信息： 从from地址来， 带有这些参数paras
     from: String,
-    paras: String
-}); 
+    paras: String,
+    _id: Number,
+}, { _id: false });
 
 function setup(autoIncrement) {
-    shareSchema.plugin(autoIncrement.plugin, 'Share');
+    shareSchema.plugin(autoIncrement, {id: 'share_id', inc_field: '_id', disable_hooks: true });
     mongoose.model('Share', shareSchema);
 }
 

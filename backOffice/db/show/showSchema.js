@@ -12,11 +12,12 @@ var showSchema = new Schema({
     // distributionId:Schema.ObjectId,
     duration:Number, // 秒s， 停留时间
     os: String,  // 操作系统ID
-    deviceId: String // 设备型号
-}); // , {collection: 'presentation', _id:true}
+    deviceId: String, // 设备型号
+    _id: Number,
+}, { _id: false }); // , {collection: 'presentation', _id:true}
 
 function setup(autoIncrement) {
-    showSchema.plugin(autoIncrement.plugin, 'Show');
+    showSchema.plugin(autoIncrement, { id: 'show_id', inc_field: '_id', disable_hooks: true });
     mongoose.model('Show', showSchema);
 }
 

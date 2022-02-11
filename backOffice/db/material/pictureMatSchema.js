@@ -21,11 +21,12 @@ var pictureMatSchema = new Schema({
   requestToBan: {type: Boolean, default: false},// 用户或粗审员请求禁止
   requestToShare: {type: Boolean, default: false},// 用户或粗审员请求分享
   topicIds: {type: Array, default: []},
-  uploaded: {type: Boolean, default: false}
-});
+  uploaded: { type: Boolean, default: false },
+  _id: Number
+}, { _id: false });
 
 function setup(autoIncrement) {
-  pictureMatSchema.plugin(autoIncrement.plugin, 'PictureMat');  // 自动添加_id字段
+  pictureMatSchema.plugin(autoIncrement, { id: 'pictureMat_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
   mongoose.model('PictureMat', pictureMatSchema);
 }
 

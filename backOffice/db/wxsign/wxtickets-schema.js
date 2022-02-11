@@ -9,11 +9,12 @@ var wxTicketSchema = new Schema({
     jsapiTicket: String,
     jsapiTicketExpireTime: Number,
     accessToken: String,
-    accessTokenExpireTime: Number
-});
+    accessTokenExpireTime: Number,
+    _id: Number,
+}, { _id: false });
 
 function setup(autoIncrement) {
-    wxTicketSchema.plugin(autoIncrement.plugin, 'WxTickets');
+    wxTicketSchema.plugin(autoIncrement, { id: 'wxTicket_id', inc_field: '_id', disable_hooks: true });
     mongoose.model('WxTickets', wxTicketSchema);
 }
 

@@ -8,7 +8,7 @@ var mongoose = require('mongoose'),//加载mongoose需要花很多时间，导�
     url = configSvr.dbServer,
     Users,
     logger = require('./../common/logger'),
-    autoIncrement = require('mongoose-auto-increment');
+    autoIncrement = require('mongoose-sequence')(mongoose);
 
     logger.config("udoido.log");
 
@@ -81,7 +81,6 @@ function doInit(app, appConfig, callback) {
         var dbAmount = dbList.length;
         var item, ctrl;
 
-        autoIncrement.initialize(connection);
         for (i = 0; i < dbAmount; i++) {
             item = dbList[i];
             // 绑定Schema
@@ -97,13 +96,18 @@ function doInit(app, appConfig, callback) {
         console.log("DB Router start...");
     }
 
-    function tryToConnect() {
+
+    async function tryToConnect() {
         console.log(launchCounter + "time launch....");
         var options = {
-            db: {bufferMaxEntries: 0}
+            autoIndex: false, // Don't build indexes
+            maxPoolSize: 10, // Maintain up to 10 socket connections
+            serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+            socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
+            family: 4 // Use IPv4, skip trying IPv6
         };
 
-        connection = mongoose.connect(url + "?autoReconnect=false", options, function (err) {
+        connection = await mongoose.connect(url, options, function (err) {
             if (!err) {
                 console.log("db started successfully!");
             } else {
@@ -112,7 +116,7 @@ function doInit(app, appConfig, callback) {
         });
     }
 
-    tryToConnect();
+    tryToConnect().catch(err => { console.log("AZError!\n\r");  console.log(err); });
  }
 
 DBMain.stop = function() {
@@ -144,7 +148,11 @@ function onError(e) {
     if (!e) {
         console.error("e is not defined in onError");
     } else {
-        console.error('数据库连接出错：1) 启动数据库 2) 检查网络连接!' + JSON.stringify(e));
+        console.error('数据库连接出错：1) 启动数据库 2) 检查网络连接! \n\r' + JSON.stringify(e));
+        console.log(e);
+        if (!!e.message) {
+            console.log(e.message);
+        }
     }
 }
 

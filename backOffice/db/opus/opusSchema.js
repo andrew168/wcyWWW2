@@ -17,11 +17,12 @@ var opusSchema = new Schema({
     authorName: {type: String, default:""}, // 作者的displayName，冗余信息， 为了加速信息检索，避免由作者的id找
     topicId: Number,
     ssPath: {type: String, default:""},
-    template: {type: Number, default: 0} // 0: no template
-});
+    template: {type: Number, default: 0}, // 0: no template
+    _id: Number,
+}, { _id: false });
 
 function setup(autoIncrement) {
-    opusSchema.plugin(autoIncrement.plugin, 'Opus');  // 自动添加_id字段
+    opusSchema.plugin(autoIncrement, { id: 'opus_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
     mongoose.model('Opus', opusSchema); // 定义名为'Opus'的model，根据opusSchema
 }
 

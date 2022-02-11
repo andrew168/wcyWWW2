@@ -19,11 +19,12 @@ var audioMatSchema = new Schema({
   isBanned: {type: Boolean, default: false},// 禁止， 任何人都看不到， 包括自己
   requestToBan: {type: Boolean, default: false},// 用户或粗审员请求禁止
   requestToShare: {type: Boolean, default: false},// 用户或粗审员请求分享
-  uploaded: {type: Boolean, default: false}
-});
+  uploaded: { type: Boolean, default: false },
+  _id: Number,
+}, {_id: false});
 
 function setup(autoIncrement) {
-  audioMatSchema.plugin(autoIncrement.plugin, 'AudioMat');  // 自动添加_id字段
+  audioMatSchema.plugin(autoIncrement, { id: 'audioMat_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
   mongoose.model('AudioMat', audioMatSchema);
 }
 

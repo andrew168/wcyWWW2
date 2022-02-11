@@ -24,11 +24,12 @@ var topicSchema = new Schema({
     requestToBan: {type: Boolean, default: false},// 用户或粗审员请求禁止
     requestToShare: {type: Boolean, default: false},// 用户或粗审员请求分享
     // 申请共享，批准发表
-    state: {type: Number, default: 10} // 10, 私有的,
-});
+    state: {type: Number, default: 10}, // 10, 私有的,
+    _id: Number,
+}, { _id: false });
 
 function setup(autoIncrement) {
-    topicSchema.plugin(autoIncrement.plugin, 'Topic');  // 自动添加_id字段
+    topicSchema.plugin(autoIncrement, { id: 'topic_id', inc_field: '_id', disable_hooks: true });  // 自动添加_id字段
     mongoose.model('Topic', topicSchema); // 定义名为'Topic'的model，根据topicSchema
 }
 
