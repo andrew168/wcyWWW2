@@ -33,9 +33,9 @@ var sign = function (ret) {
     }
     var rawString = raw(ret);
     jsSHA = require('jssha');
-    shaObj = new jsSHA(rawString, 'TEXT');
-    ret.signature = shaObj.getHash('SHA-1', 'HEX');
-
+    shaObj = new jsSHA('SHA-1', 'TEXT', { encoding: "UTF8" });
+    shaObj.update(rawString);
+    ret.signature = shaObj.getHash('HEX');
     return ret;
 };
 
