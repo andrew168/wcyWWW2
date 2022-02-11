@@ -5,6 +5,7 @@
 var express = require('express');
 var router = express.Router();
 var configSvr = require('../common/configSvr');
+var shaAdapter = require('../common/sha-adapter');
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
@@ -30,10 +31,8 @@ function responseSign(req, res, next) {
 
 var _createSha1 = function (params) {
     params.sort();
-    rawData = params.join("");
-    jsSHA = require('jssha');
-    shaObj = new jsSHA(rawData, 'TEXT');
-    return signature = shaObj.getHash('SHA-1', 'HEX');
+    var rawData = params.join("");    
+    return shaAdapter.getShaHash(rawData);
 };
 
 module.exports = router;

@@ -2,6 +2,7 @@
  * Created by Andrewz on 1/11/2016.
  */
 var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动查找，
+var shaAdapter = require('../common/sha-adapter');
 
 var raw = function (args) {
     var keys = Object.keys(args);
@@ -32,10 +33,7 @@ var sign = function (ret) {
         ret.timestamp = utils.createTimestamp();
     }
     var rawString = raw(ret);
-    jsSHA = require('jssha');
-    shaObj = new jsSHA('SHA-1', 'TEXT', { encoding: "UTF8" });
-    shaObj.update(rawString);
-    ret.signature = shaObj.getHash('HEX');
+    ret.signature = shaAdapter.getShaHash(rawString);
     return ret;
 };
 

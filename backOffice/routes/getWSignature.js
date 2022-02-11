@@ -7,6 +7,7 @@ var https = require('https'),
     configSvr = require('../common/configSvr'),
     utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
     status = require('../common/status');
+var shaAdapter = require('../common/sha-adapter');
 
 var createNonceStr = function () {
     return Math.random().toString(36).substr(2, 15);
@@ -38,10 +39,7 @@ var raw = function (args) {
  */
 var sign = function (ret) {
     var string = raw(ret);
-    jsSHA = require('jssha');
-    shaObj = new jsSHA(string, 'TEXT');
-    ret.signature = shaObj.getHash('SHA-1', 'HEX');
-
+    ret.signature = shaAdapter.getShaHash(string);
     return ret;
 };
 /*
