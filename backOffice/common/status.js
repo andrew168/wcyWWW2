@@ -10,7 +10,7 @@ var assert = require('assert'),
     authHelper = require('../routes/authHelper');
 
 var ANONYMOUS = "anonymous",
-    defaultUserId = 10,
+    defaultUserId = 0, // 缺省用户总是“新用户”，
     COOKIE_LIFE = (90*24*60*60*1000); // 90 days
 var user = {
     ID:0,
