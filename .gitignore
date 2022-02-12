@@ -7,3 +7,8 @@ node_modules/
 platforms/
 plugins/
 .idea/
+* - 副本.js
+ToDo*.txt
+gulpfile_old_bak.js
+backOffice/package-lock.json
+backOffice/package-lock.json
