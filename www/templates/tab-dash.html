@@ -153,7 +153,7 @@
                 <button class="ion-scissors" ng-click="EditorService.trim();">Trim</button>
             </div>
 
-            <div id="timer-bar-div" class="toolbar-layer" ng-show="!state.showTrimTimeline">
+            <div id="timer-bar-div" class="toolbar-layer" ng-show="false && !state.showTrimTimeline">
                 <rzslider
                     data-rz-slider-model="timelineSlider.minValue"
                     data-rz-slider-options="timelineSlider.options">
@@ -169,8 +169,9 @@
             <div id="pay-button-div"> </div>
             <div style="display: block">
                 <div ng-show="false && state.isPlayOnly">播放Only</div>
+                <button class="button button-positive" ng-click="batchUnitTest()">批测试</button>
                 <button class="button button-positive" ng-click="makeOrder()" ng-show="false">下订单</button>
-                <button class="button button-positive" ng-click="testSignUp()" ng-show="false">注册</button>
+                <button class="button button-positive" ng-click="testSignUp()">注册</button>
                 <button class="button button-positive" ng-click="testWxLogin('1111')" ng-show="false">Wx登录</button>
                 <button class="button button-positive" ng-click="testLogin('1111')" ng-show="false">登录toronto1111</button>
                 <button class="button button-positive" ng-click="testLogin('2222')" ng-show="false">22</button>

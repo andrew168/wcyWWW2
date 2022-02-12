@@ -110,6 +110,10 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
         UserService.getUserList();
     };
 
+    $scope.batchUnitTest = function() {
+        WCY.saveOpusAndScreenshot();
+    };
+    
     $scope.testSignUp = function () {
       var email = '8' + (++testUserId) + "@samplexyz.com";
       UserService.signUp({
