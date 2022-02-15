@@ -4,8 +4,8 @@
 var srcPath = '.\\www',
     testPath = '.\\test',
     distPath = '.\\dist',
-    dstPath1 = '..\\cardforvote\\www',
-    dstPath2 = '..\\cardforvote\\ksWww';
+    dstPath1 = '..\\cardforvoteFake\\www',
+    dstPath2 = '..\\cardforvoteFake\\ksWww';
 const { series, parallel, src, dest } = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var exec = require('child_process').exec;
