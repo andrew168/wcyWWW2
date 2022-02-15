@@ -1,0 +1,27 @@
+
+https证书申请：
+先在服务器上生成CSR--Certificate Signing Request 文件：
+
+
+$ sudo apt install openssl
+
+openssl version -a
+
+生成新的private key（每一次都是新生成，建议如此做），并用它生成CSR
+openssl req -new -newkey rsa:2048 -nodes -keyout udoido.com.key -out udoido.com.csr
+
+
+-newkey rsa:2048  升级
+req : 要求CSR文件
+
+-new -newkey： 新的key 
+
+rsa:2048 RSA 2048位
+
+-nodes ： no DES， 不要encrypt 到PKCS#12 文件
+
+指定key文件和csr文件的名称， （名称必须是域名）
+-keyout udoido.com.key ： key文件名称
+-out udoido.com.csr  文件名称
+
+申请得到的crt文件和上面的key文件，一起交给node作为https的启动参数
