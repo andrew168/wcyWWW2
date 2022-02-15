@@ -232,7 +232,7 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
       // var iComponentId = 4727;
       // var iComponentId = 4729;
 
-      EditorService.insertIComponent("https://show.udoido.cn/wcy/0_" + iComponentId + "_0_0",
+      EditorService.insertIComponent("https://" + TQ.Config.ENT_HOST + "/wcy/0_" + iComponentId + "_0_0",
         200, 300, TQ.Element.FitFlag.NO);
     };
 

@@ -147,7 +147,7 @@ function WxService($http, $q) {
         });
     }
 
-    // http://show.udoido.cn/index.html?opus=100_00000025_123_1234567890
+    // http://{host-name}/index.html?opus=100_00000025_123_1234567890
     function shareMessage() {
         if (!TQ.Config.hasWx || !_isReady) {
             return;

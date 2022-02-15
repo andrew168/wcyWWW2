@@ -4,6 +4,7 @@
 var express = require('express'),
     router = express.Router(),
     https = require('https'),
+    configSvr = require('./../common/configSvr'),
     paypal = require('paypal-rest-sdk');
 
 //Sandbox
@@ -37,8 +38,8 @@ function createPayment(req, res, next) {
             payment_method: 'paypal'
         },
         redirect_urls: {
-            return_url: 'http://show.udoido.cn/payment/succeed',
-            cancel_url: 'http://show.udoido.cn/payment/cancel'
+            return_url: 'http://' + configSvr.host + '/payment/succeed',
+            cancel_url: 'http://' + configSvr.host + '/payment/cancel'
         },
         transactions: [{
             amount: {

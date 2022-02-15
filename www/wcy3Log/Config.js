@@ -24,7 +24,7 @@ window.TQ = window.TQ || {};
     // 陈永添加的配置， begin ---
     var host=window.location.host,
         thisDomain = host,
-        MAIN_SERVER_DOMAIN = 'udoido.cn', //用一个总后台，例如：用ali云服务器
+        MAIN_SERVER_DOMAIN = 'udoido.com', //用一个总后台，例如：用ali云服务器
         COM_DOMAIN = 'udoido.com',
         httpProtocol = window.location.protocol,// 'https:' or 'http:'
         api_domain='api.' + MAIN_SERVER_DOMAIN;
@@ -164,30 +164,30 @@ window.TQ = window.TQ || {};
     Config.TwoMatServerEnabled = false;
 
     // 入口服务器配置
-    Config.ENT_HOST = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN;
+    Config.ENT_HOST = httpProtocol + '//www.' + MAIN_SERVER_DOMAIN;
 
     // 管理和控制服务器的参数
     //Config.MAN_HOST = httpProtocol + '//man.' + MAIN_SERVER_DOMAIN;   // 素材管理， 分配素材id
-    Config.MAN_HOST = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN;   // 素材管理， 分配素材id
+    Config.MAN_HOST = httpProtocol + '//www.' + MAIN_SERVER_DOMAIN;   // 素材管理， 分配素材id
 
     // 素材服务器的参数
     // Config.MAT_HOST = httpProtocol + '//www.' + MAIN_SERVER_DOMAIN; // for new material (mXXXX),
     // Config.MAT_HOST = httpProtocol + '//bone.' + MAIN_SERVER_DOMAIN;   // for old material(pXXXX), before transfer
-    Config.MAT_HOST = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN;   // for old material(pXXXX), before transfer
+    Config.MAT_HOST = httpProtocol + '//www.' + MAIN_SERVER_DOMAIN;   // for old material(pXXXX), before transfer
     Config.MAT_CORE_HOST = httpProtocol + '//' + thisDomain;   // for old material(pXXXX), before transfer
     Config.MAT_UPLOAD_API;  // 上传mats所用的url，具体取值，见下面的 两种配置
 
     // 作品服务器
     // Config.OPUS_HOST = httpProtocol + '//opus.' + MAIN_SERVER_DOMAIN;
-    Config.OPUS_HOST = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN;
-    Config.OPUS_HOST_FB = httpProtocol + '//show.' + COM_DOMAIN;
-    Config.OPUS_HOST_FB_STATIC = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN; // 因为com服务器暂时没有后台
+    Config.OPUS_HOST = httpProtocol + '//www.' + MAIN_SERVER_DOMAIN;
+    Config.OPUS_HOST_FB = httpProtocol + '//www.' + COM_DOMAIN;
+    Config.OPUS_HOST_FB_STATIC = httpProtocol + '//www.' + MAIN_SERVER_DOMAIN; // 因为com服务器暂时没有后台
     Config.TEST_HOST = httpProtocol + '//test.' + MAIN_SERVER_DOMAIN;
     Config.BONE_HOST = httpProtocol + '//bone.' + MAIN_SERVER_DOMAIN;
 
     // 签名认证服务器
     // Config.AUTH_HOST = httpProtocol + '//auth.' + MAIN_SERVER_DOMAIN;
-    Config.AUTH_HOST = httpProtocol + '//show.' + MAIN_SERVER_DOMAIN;
+    Config.AUTH_HOST = httpProtocol + '//www.' + MAIN_SERVER_DOMAIN;
 
     Config.cloundaryEnabled = true; // 选择使用哪一种配置： Cloundary云 或者阿里云的bone，
     Config.Cloudinary = {

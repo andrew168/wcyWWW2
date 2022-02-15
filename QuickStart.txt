@@ -8,6 +8,5 @@
 * 复制网络安全证书到相同的disk，目录结构如：E:\data\wwwz
 
 检验：
-  打开网页：http:/show.udoido.cn
+  打开网页：http:/www.udoido.com            
   服务器显示所有被call的js文件
-

@@ -1,10 +1,11 @@
 var debug = require('debug')('iCardSvr2:vHostServer');
 var http = require('http'),
-    https = require('https'),
+    https = require('https'),    
     cors = require('cors'),
     vhost = require('vhost'),
     compression = require('compression'),
     fs = require('fs'),
+    configSvr = require('./../common/configSvr'),
     logger = require('./../common/logger'),
     express = require('express'),
     gracefulExit = require('express-graceful-exit'),
@@ -21,9 +22,9 @@ function init() {
     var cert_Folder = "/data/wwwz";
     var optionForSecuredServer = {
         //证书信息
-        ca: fs.readFileSync( cert_Folder + "/show_udoido_cn.ca-bundle"),
-        key: fs.readFileSync(cert_Folder + "/udoido.cn-myserver.key"),
-        cert: fs.readFileSync(cert_Folder + "/show_udoido_cn.crt")
+        // ca: fs.readFileSync( cert_Folder + "/show_udoido_cn.ca-bundle"),
+        key: fs.readFileSync(cert_Folder + "/www.udoido.com.key"),
+        cert: fs.readFileSync(cert_Folder + "/www.udoido.com.crt")
     };
     app.use(cors());
     app.use(compression());
@@ -55,17 +56,15 @@ function init() {
 
 //    app.use(vhost('www.kidsafer.org', require('./kidSaferAppServer').app));
 // app.use(vhost('www.kidsafer.org', require('./vHostTest2AppServer').app));
-    app.use(vhost('show.udoido.cn', require('./eCardAppServer').app));
+    app.use(vhost(configSvr.host, require('./eCardAppServer').app));
     // app.use(vhost('bone.udoido.cn', require('./eCardAppServer').app));
     app.use(vhost('bone.udoido.cn', function (req, res) {
-      // res.status(301).redirect("https://show.udoido.cn");
-       res.redirect('https://show.udoido.cn');
+      // res.status(301).redirect("https://" + configSvr.host);
+       res.redirect('https://' + configSvr.host);
     }));
     // app.use(vhost('any1.udoido11.cn', require('./eCardAppServer').app));
     // app.use(vhost('www.udoido.com', require('./eCardAppServer').app));
-    //app.use(vhost('show.udoido.com', require('./eCardAppServer').app));
-//app.use(vhost('cyly.udoido.cn', require('./eCardAppServer').app));
-//    app.use(vhost('wish.udoido.cn', require('./wishAppServer').app));
+    // app.use(vhost('wish.udoido.cn', require('./wishAppServer').app));
 
     onlineWxUsers.restore();
     onlineUsers.restore();

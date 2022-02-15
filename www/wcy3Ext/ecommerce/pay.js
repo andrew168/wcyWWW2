@@ -6,9 +6,9 @@ TQ = TQ || {};
 // ToDo: 暂停期间 的时间，要去除， 确保， resume之后 的动作与pause时候的动作是连续播放的，
 TQ.Pay = (function () {
     var ENV_MODE = 'sandbox',
-        CREATE_URL = 'http://show.udoido.cn/payment/create',
-        EXECUTE_URL = 'http://show.udoido.cn/payment/execute/',
-        THANKS_YOU_URL = 'http://show.udoido.cn/payment/execute/';
+        CREATE_URL = TQ.Config.ENT_HOST + '/payment/create',
+        EXECUTE_URL = TQ.Config.ENT_HOST + '/payment/execute/',
+        THANKS_YOU_URL = TQ.Config.ENT_HOST + '/payment/execute/';
 
     return {
         showButton: showButton

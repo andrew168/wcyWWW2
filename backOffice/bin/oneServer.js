@@ -4,7 +4,8 @@
 (function() {
 
     var debug = require('debug')('iCardSvr2:server'),
-      serverConfig = require('./serverConfig'),
+        serverConfig = require('./serverConfig'),
+      configSvr = require('./../common/configSvr'),
       http = require('http'),
        server,
      _config = {},
@@ -193,7 +194,7 @@
         shareCode = NOT_FOUND_PAGE;
       }
 
-      return res.redirect('http://show.udoido.com/#/do?sc=' + shareCode);
+      return res.redirect('http://' + configSvr.host + '/#/do?sc=' + shareCode);
     }
 
     function setupBasicRoutes(app, appConfig) {
