@@ -1,5 +1,9 @@
 #!/bin/sh
-
+#
+# 部署工具（2019版）
+# 安装新版本的前端和后端，
+# 只重新启动WWW服务器，
+# 不重新启动数据库服务器
 #
 # 前台： 解压所有的zip文件（可能不存在）,
 # 放到： wwwz/card2/www目录下
@@ -47,5 +51,5 @@ rm wwwKs.zip
 #
 killall node
 cd /data/wwwz/card2
-nohup node backoffice/bin/server.js
+nohup node backOffice/bin/server.js
 

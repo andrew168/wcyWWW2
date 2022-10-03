@@ -1,0 +1,10 @@
+db数据库
+1) 带auth， 特殊port
+sudo nohup mongod --auth --dbpath /var/lib/mongodb/ --bind_ip=127.0.0.1 --port=57098&
+
+
+程序服务器
+sudo nohup node ./backOffice/bin/server.js&
+
+
+！！！ Office的首字母是大写！！！
