@@ -83,6 +83,7 @@
 	};
 
 	var screenfull = {
+		enabled: undefined,
 		request: function (elem) {
 			return new Promise(function (resolve) {
 				var request = fn.requestFullscreen;
@@ -149,6 +150,22 @@
 				document.removeEventListener(eventName, callback, false);
 			}
 		},
+    update: function () {
+      //
+      // 判断是否在全屏状态（假设browser的zoom值是100%， 否则不对）
+      // outerHeight单位是 screen pixels，但是在zoom非100%时，竟然小于inner，故不用, 
+      // innerWidth 单位 css pixels.
+      // 二者都受browser zoom值的影响。
+      //  在zoom== 100%时，window.outerHeight == screen.height;
+      //                  window.outerHeight > window.innerHeight
+      // 而zoom < 100% （字体小了，window.innerHeight大了），会颠覆这个常识
+      if (TQ.State.innerHeight == screen.height) {
+        screenfull.enabled = true;
+      } else {
+        screenfull.enabled = false;
+        setupAutoEnable();
+      }
+    },
 		raw: fn
 	};
 
@@ -173,17 +190,17 @@
 			get: function () {
 				return document[fn.fullscreenElement];
 			}
-		},
-		enabled: {
-			enumerable: true,
-			get: function () {
-				// Coerce to boolean in case of old WebKit
-				return Boolean(document[fn.fullscreenEnabled]);
-			}
 		}
+		// enabled: {
+		// 	enumerable: true,
+		// 	get: function () {
+		// 		// Coerce to boolean in case of old WebKit
+		// 		return Boolean(document[fn.fullscreenEnabled]);
+		// 	}
+		// }
 	});
 
-    screenfull.setupAutoEnable = setupAutoEnable;
+  screenfull.setupAutoEnable = setupAutoEnable;
 	if (isCommonjs) {
 		module.exports = screenfull;
 		// TODO: remove this in the next major version
@@ -193,13 +210,15 @@
 	}
 
   function autoEnableFullscreen() {
-    screenfull.request();
+    if (!screenfull.enabled) {
+      screenfull.request();
+    }
     document.removeEventListener('touch', autoEnableFullscreen);
     document.removeEventListener('click', autoEnableFullscreen);
   }
 
   function setupAutoEnable() {
-    if (screenfull.enabled) {
+    if (!screenfull.enabled) {
       document.addEventListener('touch', autoEnableFullscreen);
       document.addEventListener('click', autoEnableFullscreen);
     }

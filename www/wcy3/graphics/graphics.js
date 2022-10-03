@@ -95,6 +95,7 @@ TQ.Graphics = (function () {
         if (!!currScene) {
             TQ.Log.debugInfo(TQ.State.innerWidth, TQ.State.innerHeight, "---", TQ.Config.workingRegionWidth, TQ.Config.workingRegionHeight, "---", currScene.getDesignatedWidth(), currScene.getDesignatedHeight(), "AAAAA");
         }
+        window.screenfull.update();
         return canvasStyle;
     }
 
