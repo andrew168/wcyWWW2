@@ -211,7 +211,12 @@
 
   function autoEnableFullscreen() {
     if (!screenfull.enabled) {
-      screenfull.request();
+      if (screenfull.enabled == undefined) {
+        screenfull.update();
+      }
+      if (!screenfull.enabled) {
+        screenfull.request();
+      }
     }
     document.removeEventListener('touch', autoEnableFullscreen);
     document.removeEventListener('click', autoEnableFullscreen);
