@@ -10,3 +10,8 @@
 检验：
   打开网页：http:/www.udoido.com            
   服务器显示所有被call的js文件
+
+
+* 发布新版本到Udoido2
+  release-wcylib-only
+  
