@@ -1,5 +1,9 @@
 {
     "editor.tabSize": 2,
     "editor.detectIndentation": false,
-    "editor.insertSpaces": true
+    "editor.insertSpaces": true,
+    "git.repositoryScanIgnoredFolders": [
+      "node_modules",
+      "backOffice\\node_modules"
+    ]
 }
