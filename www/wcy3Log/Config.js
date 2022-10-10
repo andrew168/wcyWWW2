@@ -144,6 +144,7 @@ window.TQ = window.TQ || {};
     // Config.wx = {appId: 'wxf4837cf4c3f35e1d'}; // udoido 小程序， 需要对应的signature
     Config.hasAudioRecording = false;  // 没有录音功能
     Config.hasPaypal = false; //暂时关闭 paypal， 不需要它和T-shirt功能
+    Config.hasWelcome = false; //暂时关闭 Welcome 页面， 待重新设计新页面
     Config.ChromeFileEnabled = true;
     Config.useCloudinaryMultiHost = false;
     Config.useCloundServerSimulator = true;
