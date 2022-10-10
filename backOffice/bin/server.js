@@ -22,9 +22,9 @@ function init() {
     var cert_Folder = "/data/wwwz";
     var optionForSecuredServer = {
         //证书信息
-        // ca: fs.readFileSync( cert_Folder + "/show_udoido_cn.ca-bundle"),
-        key: fs.readFileSync(cert_Folder + "/www.udoido.com.key"),
-        cert: fs.readFileSync(cert_Folder + "/www.udoido.com.crt")
+        ca: fs.readFileSync( cert_Folder + "/www_udoido_com.ca-bundle"),
+        key: fs.readFileSync(cert_Folder + "/www_udoido_com.key"),
+        cert: fs.readFileSync(cert_Folder + "/www_udoido_com.crt")
     };
     app.use(cors());
     app.use(compression());

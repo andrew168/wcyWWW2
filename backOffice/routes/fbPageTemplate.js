@@ -21,7 +21,8 @@ function init() {
     // !!!而require的当前目录是本js文件所在的目录
     var templateFile = '/data/wwwz/card2/backoffice/resource/fbPageTemplate.html';
     if (serverConfig.isDevEnv) {
-        templateFile = "./resource/fbPageTemplate.html";
+        // templateFile = "./resource/fbPageTemplate.html";
+		    templateFile = '/data/wwwz/backoffice/resource/fbPageTemplate.html';
     }
     fs.readFile(templateFile, 'utf8', onDataReady);
     function onDataReady(err, data) {
