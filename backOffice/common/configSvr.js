@@ -20,7 +20,6 @@ var configSvr = {
           appSecret: '53cba2783f227a3e11e314081cf5d891'
         }
     },
-    // host: "show.udoido.cn",
     host: "www.udoido.com",
 
 // dbServer: 'mongodb://webreaderw!981:savety#$7619@localhost:57098/test', //XX, 在断网的情况下,不能使用
