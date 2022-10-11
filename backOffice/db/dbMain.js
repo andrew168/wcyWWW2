@@ -72,6 +72,11 @@ function doInit(app, appConfig, callback) {
         if (!!callback) {
             callback();
         }
+        maintainDB = require('./../admin/maintainDB');
+        setTimeout(function () {
+            // 必须确认已经登录，才能enable下面的句子
+            // maintainDB.saveAllMatToDB();
+        }, 0);
     });
 
     function onConnected(appConfig) {

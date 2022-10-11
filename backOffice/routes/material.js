@@ -1,3 +1,6 @@
+const { assert } = require('console');
+const { timingSafeEqual } = require('crypto');
+
 /**
  * Created by Andrewz on 1/5/2016.
  * 素材的操作：
@@ -38,8 +41,16 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
     status.logUser(user, req, res);
     var auditResult = audit.process(req);
     if (auditResult.isAudit) {
-        public_id = utils.path2public_id(path);
-        return banMatId(req, res, auditResult.newValues, matType, utils.matName2Id(public_id));
+        if (!public_id) {
+            if ((req.body._id != undefined) && (req.body._id >= 0)) {
+                public_id = req.body._id;
+            } else if ((req.body.id != undefined) && (req.body.id >= 0)) {
+                public_id = req.body.id;
+            } else {
+                assert.ok(false, "素材的public_id缺失!");
+            }
+        }
+        return banMatId(req, res, auditResult.newValues, matType, public_id);
     }
 
     if (!public_id) {

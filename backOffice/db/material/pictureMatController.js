@@ -137,7 +137,17 @@ function add(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onE
   }
 }
 
-function doAdd(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onError) {
+function addFromCloud(userId, iComponentId, picName, typeId, ip, isShared, path) {
+  condition = { "typeId": typeId, "path": path };
+
+  PictureMat.find(condition).exec(function (err, data) {
+    if (!err && (!data || (data.length < 1))) {
+      doAdd(userId, iComponentId, picName, typeId, ip, isShared, null, null, path);
+    }  
+  });
+}
+
+function doAdd(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onError, path=null) {
   var aDoc = new PictureMat({
     userId: userId,
     typeId: typeId,
@@ -146,6 +156,10 @@ function doAdd(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, o
     ip: ip,
     isShared: isShared
   });
+
+  if (path != "") {
+    aDoc.path = path;
+  }
 
   aDoc.save(function (err, doc) {
     utils.onSave(err, doc, onSuccess, onError);
@@ -248,6 +262,7 @@ function hasValidTopic(topicId) {
 }
 
 exports.add = add;
+exports.addFromCloud = addFromCloud;
 exports.attachTopic = attachTopic;
 exports.detachTopic = detachTopic;
 exports.get = get;

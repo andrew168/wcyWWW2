@@ -68,9 +68,13 @@ function onResSave(err, doc, res) {
 function onSave(err, doc, onSuccess, onError) {
     showDocument(err, doc);
     if (!err) {
-        onSuccess(doc._id);
+        if (!!onSuccess) {
+            onSuccess(doc._id);
+        }
     } else {
-        onError(err);
+        if (!!onError) {
+            onError(err);
+        }
     }
 }
 
@@ -97,6 +101,11 @@ function path2public_id(path) {
     return fullName.split('.')[0];
 }
 
+function path2short(fullPath) {
+    const fixedPath = "https://res.cloudinary.com/eplan/image/upload/";
+    return fullPath.replace(fixedPath, '');
+}
+
 // 这个文件的名字就是类的名字，exports的所有输出都是这个类的公共接口函数
 // 所有， 不需要在额外建立一个同名的Object，（因为， Node已经自动为我们做了）
 exports.createTimestamp = createTimestamp;
@@ -111,4 +120,5 @@ exports.onSave = onSave;
 exports.onResSave = onResSave;
 exports.matName2Id = matName2Id;
 exports.path2public_id = path2public_id;
+exports.path2short = path2short;
 exports.matId2Name = matId2name;
