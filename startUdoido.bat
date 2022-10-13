@@ -1,3 +1,4 @@
+chcp 65001
 echo off 
 echo caller' current directory:%CD%
 echo batch file's full path: %~f0
