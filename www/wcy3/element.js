@@ -690,6 +690,9 @@ window.TQ = window.TQ || {};
         }
         marker.show(true);
         marker.moveToTop();
+        if (TQ.InputCtrl.leaveTraceOn && !!this.trace) {
+          this.trace.draw();  
+        }
     };
 
     p.detachDecoration = function () {
@@ -711,6 +714,10 @@ window.TQ = window.TQ || {};
             marker.level = null;
             this.removeChild(marker);
             marker.recycle();
+        }
+        
+        if (TQ.InputCtrl.leaveTraceOn && !!this.trace) {
+          this.trace.removeFromStage();
         }
         return decorations;
     };
@@ -883,7 +890,6 @@ window.TQ = window.TQ || {};
             return;
         }
 
-        TQ.TraceMgr.removeFromStage(this);
         if (this.displayObj) {
             this.getContainer().removeChild(this.displayObj);
         }
@@ -894,7 +900,6 @@ window.TQ = window.TQ || {};
     p.resetStageFlag = function () {
         this.clearFlag(Element.IN_STAGE);
         TQ.DirtyFlag.setElement(this);
-        TQ.TraceMgr.removeFromStage(this);
         for (var i = 0; i < this.children.length; i++) {
             var child = this.children[i];
             child.resetStageFlag();
@@ -1075,10 +1080,6 @@ window.TQ = window.TQ || {};
                     assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < container.getNumChildren());
                     container.addChildAt(item, z);  // 把upperEle 顶起来
                 }
-            }
-
-            if (this.trace) {
-                this.trace.addToStage();
             }
 
             // wrapper function to provide scope for the event handlers:

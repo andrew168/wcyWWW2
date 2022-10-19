@@ -17,6 +17,7 @@ var TOUCH_MOVING_FLAG = 999;
     InputMap.DELETE_KEY = 46;
     InputMap.ERASE_KEY = InputMap.R = 82;
     InputMap.SHOW_ALL_HIDEN_OBJECT_KEY = InputMap.A = 65;
+    InputMap.ADD_VERTEX = InputMap.A = 65;
     InputMap.CLONE_Key = InputMap.C = 67;
     InputMap.TEXT_EDIT_KEY = InputMap.E = 69;
     InputMap.GRID_ON_OFF_KEY = InputMap.G = 71;

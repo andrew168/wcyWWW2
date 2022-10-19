@@ -21,22 +21,29 @@ window.TQ = window.TQ || {};
   TraceMgr.initialize = function () {
   };
 
-  TraceMgr.addNewPosition = function(ele) {
+  TraceMgr.addVertexKeyPressed = false;
+  TraceMgr.addNewPosition = function (ele) {
     var pDevice = TQ.Utility.worldToDevioce(ele.jsonObj.x, ele.jsonObj.y);
     if (!ele.trace) {
+      TQ.InputMap.registerAction(TQ.InputMap.ADD_VERTEX, function () {
+        TraceMgr.addVertexKeyPressed = true;
+      });
       ele.trace = new Trace("#0000FF", 2);
     }
-    ele.trace.add(pDevice);
-  };
-
-  TraceMgr.removeFromStage = function(ele) {
-    if (!ele.trace) return;
-    ele.trace.removeFromStage();
+    if (TraceMgr.addVertexKeyPressed) {
+      TraceMgr.addVertexKeyPressed = false;
+      ele.trace.add(pDevice);
+    } else if(ele.trace.isEmpty()) {
+      ele.trace.add(pDevice);      
+      ele.trace.add(pDevice);      
+    } else {
+      ele.trace.update(pDevice);
+    }
   };
 
   TraceMgr.delete = function(ele) {
     if (!ele.trace) return;
-    TraceMgr.removeFromStage(ele);
+    ele.trace.removeFromStage();
     ele.trace = null;
   };
 
@@ -44,32 +51,56 @@ window.TQ = window.TQ || {};
   var Trace = function(color, thickness) {
     this.color = color;
     this.thickness = thickness;
+
+    this.lastPt = null;
+    this.points = [];
+  };
+
+  Trace.prototype.updateShape = function () {
+  };
+
+  Trace.prototype.update = function (pDevice) {
+    if (this.points.length > 0) {
+      this.points.pop(); // 先丢弃旧的临时点，再记录新的临时点
+    }
+    this.add(pDevice);
+    this.draw();
+  };
+  
+  Trace.prototype.isEmpty = function () {
+    return (this.points.length == 0);  
+  };
+
+  Trace.prototype.add = function (pDevice) {
+    this.points.push(pDevice);
+  };
+
+  Trace.prototype.draw = function () {
+    if (!!this.shape) {
+      this.removeFromStage();
+      this.shape = null;
+      this.graphics = null;
+    }
     this.shape = new createjs.Shape();
     this.addToStage();
     this.shape.x = 0;
     this.graphics = this.shape.graphics;
     this.graphics.setStrokeStyle(this.thickness, "round", null, null).beginStroke(this.color);
-    this.lastPt = null;
     this.shape.uncache();
-    this.points = [];
-  };
 
-  Trace.prototype.add = function (pDevice) {
-    //ToDo: 小线段,丢弃.
-    if (!this.lastPt) {
-      this.lastPt = pDevice;
-      return;
+    var len = this.points.length;
+    var i = 0;
+    if (len > 1) {
+      this.graphics.moveTo(this.points[0].x, this.points[0].y);
+      for (i = 0; i < len; i++) {
+        this.graphics.lineTo(this.points[i].x, this.points[i].y);
+      }
     }
-    this.graphics.moveTo(this.lastPt.x, this.lastPt.y);
-    this.lastPt = pDevice;
-    this.graphics.lineTo(this.lastPt.x, this.lastPt.y);
-    this.points.push(pDevice);
-  };
+  }
 
   Trace.prototype.addToStage = function() {
     stageContainer.addChild(this.shape);
   };
-
 
   Trace.prototype.removeFromStage = function() {
     stageContainer.removeChild(this.shape);
