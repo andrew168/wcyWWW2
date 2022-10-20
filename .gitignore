@@ -12,3 +12,5 @@ ToDo*.txt
 gulpfile_old_bak.js
 backOffice/package-lock.json
 backOffice/package-lock.json
+release-all-new.bat
+backOffice/releaseOne-new.bat
