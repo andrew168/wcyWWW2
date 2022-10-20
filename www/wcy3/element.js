@@ -9,7 +9,7 @@ window.TQ = window.TQ || {};
     ANCHOR_MARKER: "AnchorMarker",
     BITMAP: "Bitmap",
     BITMAP_ANIMATION: "BitmapAnimation",
-    VIDEO: 'VIDEO',
+    VIDEO: "VIDEO",
     BUTTON: "BUTTON",
     BBOX: "BBOX",
     GROUP: "Group",
@@ -101,7 +101,7 @@ window.TQ = window.TQ || {};
   Element.CLEAR_ANIMATATION = 0x8000; //清除全部track, 重新记录;
   Element.IN_STAGE = 0x10000; // 加入到了Stage;
   Element.LOADED = 0x20000; //
-  Element.EVENT_NEW_ELEMENT_ADDED = 'new element added';
+  Element.EVENT_NEW_ELEMENT_ADDED = "new element added";
 
   Element.showHidenObjectFlag = false;  //  个人的state由个人记录, 上级可以控制
   var p = Element.prototype;
@@ -193,18 +193,18 @@ window.TQ = window.TQ || {};
   p._addActorByUrl = function (desc, alias) {
     // 先读入Description文件， 再读入图像。
     var request = new XMLHttpRequest();
-    console.info('Requesting ' + desc.src);
+    console.info("Requesting " + desc.src);
     request.open("GET", desc.src);
 
     (function (parentObj) {
       request.onreadystatechange = function () {
         if (request.readyState == 4) {
           if (request.status == 404) {
-            console.info(desc.src + ' does not exist');
+            console.info(desc.src + " does not exist");
           }
           else {
             var o = JSON.parse(request.responseText);
-            o.alias = (alias == null) ? 'none' : alias;
+            o.alias = (alias == null) ? "none" : alias;
             o.remote = true;
             if (!o.type) {
               o.type = "BitmapAnimation";
@@ -626,7 +626,7 @@ window.TQ = window.TQ || {};
 
     var self = this;
     if (self.isPinned()) {
-      return TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked, continue?'), function () {
+      return TQ.MessageBox.prompt(TQ.Locale.getStr("the object is locked, continue?"), function () {
         self.pinIt();
         self.changeSkin(newSkinImg, onChanged);
       });
@@ -1132,7 +1132,7 @@ window.TQ = window.TQ || {};
             if (!TQ.SelectSet.isSelected(ele)) {
               ele.highlight(false);
             }
-          }
+          };
         })(this);
       }
     }
@@ -1260,7 +1260,7 @@ window.TQ = window.TQ || {};
 
   Element.getShadow = function () {
     if (!Element._shadow) {
-      Element._shadow = new createjs.Shadow('#000000', 1, 1, 10);
+      Element._shadow = new createjs.Shadow("#000000", 1, 1, 10);
     }
     return Element._shadow;
   };
@@ -1452,7 +1452,7 @@ window.TQ = window.TQ || {};
       this.setFlag(TQ.Element.ACTION_CHANGED);
       TQ.ActionRecorder.record(this, name, TQ.FrameCounter.t());
       if (!TQ.FrameCounter.isPlaying()) {
-        $('#play').click();
+        $("#play").click();
       }
     }
   };
@@ -1851,7 +1851,7 @@ window.TQ = window.TQ || {};
       }
     }
 
-    return tMax
+    return tMax;
   };
 
   // upgrade 工具：
@@ -1864,8 +1864,8 @@ window.TQ = window.TQ || {};
       jsonStr = jsonStr.replace("images/", TQ.Config.IMAGES_CORE_PATH);
     }
 
-    if (jsonStr.indexOf('assets/') >= 0) {
-      jsonStr = jsonStr.replace('assets/', TQ.Config.SCENES_CORE_PATH);
+    if (jsonStr.indexOf("assets/") >= 0) {
+      jsonStr = jsonStr.replace("assets/", TQ.Config.SCENES_CORE_PATH);
     }
 
     if (jsonStr.indexOf("thumbs/") >= 0) {
@@ -1932,7 +1932,7 @@ window.TQ = window.TQ || {};
           result = true;
           return true;
         }
-      })
+      });
     }
 
     return result;
@@ -2044,7 +2044,7 @@ window.TQ = window.TQ || {};
 
   p.isVer2plus = function () {
     return ((this.version === TQ.Element.VER2) ||
-      ((typeof this.version === 'number') && (this.version >= Element.VER3)));
+      ((typeof this.version === "number") && (this.version >= Element.VER3)));
   };
 
   p.getRoot = function () {  // 任何时候, 都是root, 唯一化
@@ -2154,7 +2154,7 @@ window.TQ = window.TQ || {};
     var target = this.displayObj;
     var z = (!target) ? -1 : this.getContainer().getChildIndex(target);
     if (z >= 0) {
-      return z
+      return z;
     }
     if (this.children) {
       for (var i = 0; i < this.children.length; i++) {
@@ -2163,7 +2163,7 @@ window.TQ = window.TQ || {};
         }
         z = this.children[i].getZ();
         if (z >= 0) {
-          return z
+          return z;
         }
       }
     }
@@ -2207,7 +2207,7 @@ window.TQ = window.TQ || {};
     if (this.decorations) {
       this.decorations.some(function (item) {
         return (result = item.is(type));
-      })
+      });
     }
 
     return result;
@@ -2227,7 +2227,7 @@ window.TQ = window.TQ || {};
         } else {
           return false;
         }
-      })
+      });
     }
 
     return decor;
@@ -2236,7 +2236,7 @@ window.TQ = window.TQ || {};
   p.forEachChildren = function (memberFunctionName) {
     if (this.children != null) {
       this.children.forEach(function (child) {
-        TQ.Assert.isTrue(!!child[memberFunctionName], '调用不存在的成员函数： ' + memberFunctionName);
+        TQ.Assert.isTrue(!!child[memberFunctionName], "调用不存在的成员函数： " + memberFunctionName);
         if (child[memberFunctionName]) {
           child[memberFunctionName]();
         }
