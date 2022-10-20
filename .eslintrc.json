@@ -3,7 +3,7 @@
         "browser": true,
         "es2021": true
     },
-    "overrides": [
+	"overrides": [
     ],
     "parserOptions": {
         "ecmaVersion": "latest"
@@ -13,18 +13,6 @@
             "error",
             2, 
 			{ "SwitchCase": 1 }
-        ],
-        "linebreak-style": [
-            "error",
-            "windows"
-        ],
-        "quotes": [
-            "error",
-            "double"
-        ],
-        "semi": [
-            "error",
-            "always"
         ]
     }
 }
