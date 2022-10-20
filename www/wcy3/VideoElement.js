@@ -37,7 +37,7 @@ TQ = TQ || {};
         y,
         w = TQ.Config.workingRegionWidth,
         h,
-      xc, yc;
+        xc, yc;
       h = domEle.videoHeight * w / domEle.videoWidth;
       y = (TQ.Config.workingRegionHeight - h) / 2;
       xc = x + w/2;
@@ -66,7 +66,7 @@ TQ = TQ || {};
   p._parent_doShow = p.doShow;
   p.doShow = function (isVisible) {
     this._parent_doShow(isVisible);
-        if (isVisible && TQ.FrameCounter.isPlaying()) {
+    if (isVisible && TQ.FrameCounter.isPlaying()) {
       this.play();
     } else {
       this.stop();
@@ -163,7 +163,7 @@ TQ = TQ || {};
       this.stop();
     }
     if (this.instance) {
-     this.instance.removeFromDom();
+      this.instance.removeFromDom();
     }
   };
 

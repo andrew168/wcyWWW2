@@ -480,7 +480,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       fileElement = $(domEle);
     } else {
       setOptions();
-//            domEle.setAttribute("accept", validFormat.formats);
+      //            domEle.setAttribute("accept", validFormat.formats);
       // domEle.setAttribute("accept", ".jpg, .bmp");
       // domEle.setAttribute("accept", ".wav, .mp3");
       // domEle.setAttribute("accept", ".png, .jpeg, image/png, image/jpeg");
@@ -988,12 +988,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   function preview(options) {
     if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
       if (!TQ.Scene.ensureFirstClick(function () {
-          if (TQUtility.isIOS()) {
-            TQ.SoundMgr.iosForceToResumeAll();
-            TQ.VideoMgr.iosForceToResumeAll();
-          }
-          preview(options);
-        })) {
+        if (TQUtility.isIOS()) {
+          TQ.SoundMgr.iosForceToResumeAll();
+          TQ.VideoMgr.iosForceToResumeAll();
+        }
+        preview(options);
+      })) {
         return;
       }
     }

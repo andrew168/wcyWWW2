@@ -6,42 +6,42 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function Overlay(description) {
-        this.initialize(description);
+  function Overlay(description) {
+    this.initialize(description);
+  }
+
+  var p =Overlay.prototype = new TQ.Level();
+  p.Level_update = p.update;
+  p.Level_initialize = p.initialize;
+  p.initialize = function (desc) {
+    if (!desc.name) {
+      desc.name = "overlay";
     }
+    this.Level_initialize(desc);
+    this.show();
+  };
 
-    var p =Overlay.prototype = new TQ.Level();
-    p.Level_update = p.update;
-    p.Level_initialize = p.initialize;
-    p.initialize = function (desc) {
-        if (!desc.name) {
-          desc.name = "overlay";
-        }
-        this.Level_initialize(desc);
-        this.show();
-    };
+  p.update = function(deltaT) {
+    this.Level_update(deltaT);
+    if (null === stage.selectedItem)
+    {
+      this.hideClipPoint( true);
+    } else {
+      this.hideClipPoint(false);
+    }
+  };
 
-    p.update = function(deltaT) {
-        this.Level_update(deltaT);
-        if (null === stage.selectedItem)
-        {
-            this.hideClipPoint( true);
-        } else {
-            this.hideClipPoint(false);
-        }
-    };
+  p.hideClipPoint = function(isVisible) {
+    for (var i = 0; i < this.elements.length; ++i) {
+      if (this.elements[i].isClipPoint() && (this.elements[i].displayObj != undefined )) {
+        this.elements[i].show(isVisible);
+      }
+    }
+  };
 
-    p.hideClipPoint = function(isVisible) {
-        for (var i = 0; i < this.elements.length; ++i) {
-            if (this.elements[i].isClipPoint() && (this.elements[i].displayObj != undefined )) {
-                this.elements[i].show(isVisible);
-            }
-        }
-    };
+  p.isOverlay = function() {
+    return true;
+  };
 
-    p.isOverlay = function() {
-        return true;
-    };
-
-    TQ.Overlay = Overlay;
+  TQ.Overlay = Overlay;
 }());

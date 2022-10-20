@@ -3,67 +3,67 @@
  */
 var TQ = TQ || {};
 TQ.MatType = (function() {
-    return {
-        //素材
-        BKG: 10, // 'bkgimage',
-        PROP: 20, // 'propimage',
-        PEOPLE: 30, // 'peopleimage',
-        SOUND: 40, //,'audio';
+  return {
+    //素材
+    BKG: 10, // 'bkgimage',
+    PROP: 20, // 'propimage',
+    PEOPLE: 30, // 'peopleimage',
+    SOUND: 40, //,'audio';
 
-        // 作品
-        OPUS: 90,  //  "mywork",
-        TOPIC: 91,  // 主题
-        PUBLISHED_OPUS: 92,
-        FINE_OPUS: 93,
+    // 作品
+    OPUS: 90,  //  "mywork",
+    TOPIC: 91,  // 主题
+    PUBLISHED_OPUS: 92,
+    FINE_OPUS: 93,
 
-        // depreciated
-        LOCAL: -1,
-        ALBUM : -2,
-        CAMERA: -3,
-        toEType: function (matType) {
-            var eType;
-            switch (matType) {
-                case TQ.ElementType.GROUP_FILE:
-                    eType = TQ.ElementType.GROUP_FILE;
-                    break;
-                case TQ.MatType.BKG:
-                    eType = TQ.Element.ETYPE_BACKGROUND;
-                    break;
-                case TQ.MatType.PROP:
-                    eType = TQ.Element.ETYPE_PROP;
-                    break;
-                case TQ.MatType.PEOPLE:
-                    eType = TQ.Element.ETYPE_CHARACTER;
-                    break;
-                case TQ.MatType.SOUND:
-                    eType = TQ.Element.ETYPE_AUDIO;
-                    break;
-                default:
-                    TQ.Log.error("未处理的matType！");
-                    eType = TQ.Element.ETYPE_PROP;
-            }
-            return eType;
-        },
-      toElementType: function (matType) {
-        var type;
-        switch (matType) {
-          case TQ.MatType.BKG:
-            type = TQ.ElementType.BITMAP;
-            break;
-          case TQ.MatType.PROP:
-            type = TQ.ElementType.BITMAP;
-            break;
-          case TQ.MatType.PEOPLE:
-            type = TQ.ElementType.BITMAP;
-            break;
-          case TQ.MatType.SOUND:
-            type = TQ.ElementType.SOUND;
-            break;
-          default:
-            TQ.Log.error("未处理的matType！");
-            type = TQ.ElementType.BITMAP;
-        }
-        return type;
+    // depreciated
+    LOCAL: -1,
+    ALBUM : -2,
+    CAMERA: -3,
+    toEType: function (matType) {
+      var eType;
+      switch (matType) {
+        case TQ.ElementType.GROUP_FILE:
+          eType = TQ.ElementType.GROUP_FILE;
+          break;
+        case TQ.MatType.BKG:
+          eType = TQ.Element.ETYPE_BACKGROUND;
+          break;
+        case TQ.MatType.PROP:
+          eType = TQ.Element.ETYPE_PROP;
+          break;
+        case TQ.MatType.PEOPLE:
+          eType = TQ.Element.ETYPE_CHARACTER;
+          break;
+        case TQ.MatType.SOUND:
+          eType = TQ.Element.ETYPE_AUDIO;
+          break;
+        default:
+          TQ.Log.error("未处理的matType！");
+          eType = TQ.Element.ETYPE_PROP;
       }
-    };
+      return eType;
+    },
+    toElementType: function (matType) {
+      var type;
+      switch (matType) {
+        case TQ.MatType.BKG:
+          type = TQ.ElementType.BITMAP;
+          break;
+        case TQ.MatType.PROP:
+          type = TQ.ElementType.BITMAP;
+          break;
+        case TQ.MatType.PEOPLE:
+          type = TQ.ElementType.BITMAP;
+          break;
+        case TQ.MatType.SOUND:
+          type = TQ.ElementType.SOUND;
+          break;
+        default:
+          TQ.Log.error("未处理的matType！");
+          type = TQ.ElementType.BITMAP;
+      }
+      return type;
+    }
+  };
 })();

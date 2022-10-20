@@ -4,12 +4,12 @@
 var TQ = TQ || {};
 
 TQ.EVENT = (function() {
-    return {
-        SYSTEM_ERROR: 'system error',
-        REFRESH_UI : 'refresh_ui', //通用event， 不属于某个class
-        FILE_SYSTEM_READY: "file system ready",
-        DIR_READY: "directory ready",
-        MAT_CHANGED: "material or opus uploaded (created, updated, or deteled",
-        SCENE_TIME_RANGE_CHANGED: 'scene animation time range change'
-    };
+  return {
+    SYSTEM_ERROR: 'system error',
+    REFRESH_UI : 'refresh_ui', //通用event， 不属于某个class
+    FILE_SYSTEM_READY: "file system ready",
+    DIR_READY: "directory ready",
+    MAT_CHANGED: "material or opus uploaded (created, updated, or deteled",
+    SCENE_TIME_RANGE_CHANGED: 'scene animation time range change'
+  };
 }());

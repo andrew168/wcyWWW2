@@ -31,7 +31,7 @@ this.createjs = this.createjs || {};
 
 (function () {
 
-    /**
+  /**
      * Base class that all filters should inherit from. Filters need to be applied to objects that have been cached using
      * the {{#crossLink "DisplayObject/cache"}}{{/crossLink}} method. If an object changes, please cache it again, or use
      * {{#crossLink "DisplayObject/updateCache"}}{{/crossLink}}.
@@ -56,32 +56,32 @@ this.createjs = this.createjs || {};
      * @class Filter
      * @constructor
      **/
-    var Filter = function () {
-        this.initialize();
-    }
-    var p = Filter.prototype;
+  var Filter = function () {
+    this.initialize();
+  }
+  var p = Filter.prototype;
 
-    // constructor:
-    /** 
+  // constructor:
+  /** 
 	 * Initialization method.
 	 * @method initialize
 	 * @protected
 	 **/
-    p.initialize = function () { }
+  p.initialize = function () { }
 
-    // public methods:
-    /**
+  // public methods:
+  /**
 	 * Returns a rectangle with values indicating the margins required to draw the filter.
 	 * For example, a filter that will extend the drawing area 4 pixels to the left, and 7 pixels to the right
 	 * (but no pixels up or down) would return a rectangle with (x=-4, y=0, width=11, height=0).
 	 * @method getBounds
 	 * @return {Rectangle} a rectangle object indicating the margins required to draw the filter.
 	 **/
-    p.getBounds = function () {
-        return new createjs.Rectangle(0, 0, 0, 0);
-    }
+  p.getBounds = function () {
+    return new createjs.Rectangle(0, 0, 0, 0);
+  }
 
-    /**
+  /**
 	 * Applies the filter to the specified context.
 	 * @method applyFilter
 	 * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
@@ -94,26 +94,26 @@ this.createjs = this.createjs || {};
 	 * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
 	 * @return {Boolean}
 	 **/
-    p.applyFilter = function (ctx, x, y, width, height, targetCtx, targetX, targetY) { }
+  p.applyFilter = function (ctx, x, y, width, height, targetCtx, targetX, targetY) { }
 
-    /**
+  /**
 	 * Returns a string representation of this object.
 	 * @method toString
 	 * @return {String} a string representation of the instance.
 	 **/
-    p.toString = function () {
-        return "[Filter]";
-    }
+  p.toString = function () {
+    return "[Filter]";
+  }
 
 
-    /**
+  /**
 	 * Returns a clone of this Filter instance.
 	 * @method clone
 	 @return {Filter} A clone of the current Filter instance.
 	 **/
-    p.clone = function () {
-        return new Filter();
-    }
+  p.clone = function () {
+    return new Filter();
+  }
 
-    createjs.Filter = Filter;
+  createjs.Filter = Filter;
 }());

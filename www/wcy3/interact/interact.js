@@ -5,7 +5,7 @@ var TQ = TQ || {};
 TQ.Interact = (function () {
   var interactOps = [
       ['touch', onClick]
-   ],
+    ],
     startEle = null;
 
   return {

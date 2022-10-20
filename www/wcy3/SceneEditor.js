@@ -143,9 +143,9 @@ var currScene = null;
       if (!stopReminder && !!buffer.errorCode && buffer.errorCode !== 0) {
         TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
           TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
-          nextProcess,
-          function () {
-          });
+        nextProcess,
+        function () {
+        });
       } else {
         nextProcess();
       }
@@ -404,9 +404,9 @@ var currScene = null;
       && (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
       var filename = currScene.filename;
       TQ.TaskMgr.addTask(function () {
-          netDelete(filename);
-        },
-        null);
+        netDelete(filename);
+      },
+      null);
     } else {
       displayInfo2("<" + title + ">:" + TQ.Dictionary.CanntDelete);
     }
@@ -414,10 +414,10 @@ var currScene = null;
 
   function _doSave(filename, keywords) {
     TQ.TaskMgr.addTask(function () {
-        currScene.save(filename, keywords);
-      },
+      currScene.save(filename, keywords);
+    },
 
-      null);
+    null);
     TQ.InputMap.turnOn();
     localStorage.setItem("sceneName", filename);
   }

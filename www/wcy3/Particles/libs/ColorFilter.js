@@ -31,7 +31,7 @@ this.createjs = this.createjs || {};
 
 (function () {
 
-    /**
+  /**
      * Applies color transforms.
      *
      * See {{#crossLink "Filter"}}{{/crossLink}} for an example of how to apply filters.
@@ -47,87 +47,87 @@ this.createjs = this.createjs || {};
      * @param {Number} blueOffset
      * @param {Number} alphaOffset
      **/
-    var ColorFilter = function (redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
-        this.initialize(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
-    }
-    var p = ColorFilter.prototype = new createjs.Filter();
+  var ColorFilter = function (redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
+    this.initialize(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
+  }
+  var p = ColorFilter.prototype = new createjs.Filter();
 
-    // public properties:
-    /**
+  // public properties:
+  /**
 	 * Red channel multiplier.
 	 * @property redMultiplier
 	 * @type Number
 	 **/
-    p.redMultiplier = 1;
+  p.redMultiplier = 1;
 
-    /** 
+  /** 
 	 * Green channel multiplier.
 	 * @property greenMultiplier
 	 * @type Number
 	 **/
-    p.greenMultiplier = 1;
+  p.greenMultiplier = 1;
 
-    /**
+  /**
 	 * Blue channel multiplier.
 	 * @property blueMultiplier
 	 * @type Number
 	 **/
-    p.blueMultiplier = 1;
+  p.blueMultiplier = 1;
 
-    /**
+  /**
 	 * Alpha channel multiplier.
 	 * @property redMultiplier
 	 * @type Number
 	 **/
-    p.alphaMultiplier = 1;
+  p.alphaMultiplier = 1;
 
-    /**
+  /**
 	 * Red channel offset (added to value).
 	 * @property redOffset
 	 * @type Number
 	 **/
-    p.redOffset = 0;
+  p.redOffset = 0;
 
-    /**
+  /**
 	 * Green channel offset (added to value).
 	 * @property greenOffset
 	 * @type Number
 	 **/
-    p.greenOffset = 0;
+  p.greenOffset = 0;
 
-    /**
+  /**
 	 * Blue channel offset (added to value).
 	 * @property blueOffset
 	 * @type Number
 	 **/
-    p.blueOffset = 0;
+  p.blueOffset = 0;
 
-    /**
+  /**
 	 * Alpha channel offset (added to value).
 	 * @property alphaOffset
 	 * @type Number
 	 **/
-    p.alphaOffset = 0;
+  p.alphaOffset = 0;
 
-    // constructor:
-    /**
+  // constructor:
+  /**
 	 * Initialization method.
 	 * @method initialize
 	 * @protected
 	 **/
-    p.initialize = function (redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
-        this.redMultiplier = redMultiplier != null ? redMultiplier : 1;
-        this.greenMultiplier = greenMultiplier != null ? greenMultiplier : 1;
-        this.blueMultiplier = blueMultiplier != null ? blueMultiplier : 1;
-        this.alphaMultiplier = alphaMultiplier != null ? alphaMultiplier : 1;
-        this.redOffset = redOffset || 0;
-        this.greenOffset = greenOffset || 0;
-        this.blueOffset = blueOffset || 0;
-        this.alphaOffset = alphaOffset || 0;
-    }
+  p.initialize = function (redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
+    this.redMultiplier = redMultiplier != null ? redMultiplier : 1;
+    this.greenMultiplier = greenMultiplier != null ? greenMultiplier : 1;
+    this.blueMultiplier = blueMultiplier != null ? blueMultiplier : 1;
+    this.alphaMultiplier = alphaMultiplier != null ? alphaMultiplier : 1;
+    this.redOffset = redOffset || 0;
+    this.greenOffset = greenOffset || 0;
+    this.blueOffset = blueOffset || 0;
+    this.alphaOffset = alphaOffset || 0;
+  }
 
-    // public methods:
-    /**
+  // public methods:
+  /**
 	 * Applies the filter to the specified context.
 	 * @method applyFilter
 	 * @param {CanvasRenderingContext2D} ctx The 2D context to use as the source.
@@ -140,47 +140,47 @@ this.createjs = this.createjs || {};
 	 * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
 	 * @return {Boolean}
 	 **/
-    p.applyFilter = function (ctx, x, y, width, height, targetCtx, targetX, targetY) {
-        targetCtx = targetCtx || ctx;
-        if (targetX == null) { targetX = x; }
-        if (targetY == null) { targetY = y; }
-        try {
-            var imageData = ctx.getImageData(x, y, width, height);
-        } catch (e) {
-            //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
-            return false;
-        }
-        var data = imageData.data;
-        var l = data.length;
-        for (var i = 0; i < l; i += 4) {
-            data[i] = data[i] * this.redMultiplier + this.redOffset;
-            data[i + 1] = data[i + 1] * this.greenMultiplier + this.greenOffset;
-            data[i + 2] = data[i + 2] * this.blueMultiplier + this.blueOffset;
-            data[i + 3] = data[i + 3] * this.alphaMultiplier + this.alphaOffset;
-        }
-        imageData.data = data;
-        targetCtx.putImageData(imageData, targetX, targetY);
-        return true;
+  p.applyFilter = function (ctx, x, y, width, height, targetCtx, targetX, targetY) {
+    targetCtx = targetCtx || ctx;
+    if (targetX == null) { targetX = x; }
+    if (targetY == null) { targetY = y; }
+    try {
+      var imageData = ctx.getImageData(x, y, width, height);
+    } catch (e) {
+      //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
+      return false;
     }
+    var data = imageData.data;
+    var l = data.length;
+    for (var i = 0; i < l; i += 4) {
+      data[i] = data[i] * this.redMultiplier + this.redOffset;
+      data[i + 1] = data[i + 1] * this.greenMultiplier + this.greenOffset;
+      data[i + 2] = data[i + 2] * this.blueMultiplier + this.blueOffset;
+      data[i + 3] = data[i + 3] * this.alphaMultiplier + this.alphaOffset;
+    }
+    imageData.data = data;
+    targetCtx.putImageData(imageData, targetX, targetY);
+    return true;
+  }
 
-    /**
+  /**
 	 * Returns a string representation of this object.
 	 * @method toString
 	 * @return {String} a string representation of the instance.
 	 **/
-    p.toString = function () {
-        return "[ColorFilter]";
-    }
+  p.toString = function () {
+    return "[ColorFilter]";
+  }
 
 
-    /**
+  /**
 	 * Returns a clone of this ColorFilter instance.
 	 * @method clone
 	 * @return {ColorFilter} A clone of the current ColorFilter instance.
 	 **/
-    p.clone = function () {
-        return new ColorFilter(this.redMultiplier, this.greenMultiplier, this.blueMultiplier, this.alphaMultiplier, this.redOffset, this.greenOffset, this.blueOffset, this.alphaOffset);
-    }
+  p.clone = function () {
+    return new ColorFilter(this.redMultiplier, this.greenMultiplier, this.blueMultiplier, this.alphaMultiplier, this.redOffset, this.greenOffset, this.blueOffset, this.alphaOffset);
+  }
 
-    createjs.ColorFilter = ColorFilter;
+  createjs.ColorFilter = ColorFilter;
 }());

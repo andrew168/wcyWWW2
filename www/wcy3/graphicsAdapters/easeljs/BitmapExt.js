@@ -4,7 +4,7 @@
 
 (function () {
   var p = createjs.Bitmap.prototype;
-// extended method
+  // extended method
   p.getWidth = function (ignoreScale) {
     //  ���û�и�����, ��JS���� null, ���Զ�תΪfalse
     scale = (ignoreScale) ? 1 : this.scaleY;

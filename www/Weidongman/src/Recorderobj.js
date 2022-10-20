@@ -38,19 +38,19 @@ window.TQ = window.TQ || {};
         recorder.startRecording();
       }, function() {
       });
-      else {
-        audio.src = URL.createObjectURL(audioStream);
-        audio.play();
-        if (recorder) recorder.startRecording();
-      }
+    else {
+      audio.src = URL.createObjectURL(audioStream);
+      audio.play();
+      if (recorder) recorder.startRecording();
+    }
 
-      window.isAudio = true;
+    window.isAudio = true;
 
-      this.disabled = true;
+    this.disabled = true;
   }
   //模拟插入耳机时候
-   Recorderobj.getResultStartStop=function(){
-      if (!audioStream)
+  Recorderobj.getResultStartStop=function(){
+    if (!audioStream)
       navigator.getUserMedia(audioConstraints, function(stream) {
         if (window.IsChrome) stream = new window.MediaStream(stream.getAudioTracks());
         audioStream = stream;
@@ -63,19 +63,19 @@ window.TQ = window.TQ || {};
         });
       }, function() {
       });
-      else {
-        audio.src = URL.createObjectURL(audioStream);
-        audio.play();
-      }
+    else {
+      audio.src = URL.createObjectURL(audioStream);
+      audio.play();
+    }
 
-      window.isAudio = true;
+    window.isAudio = true;
 
-      this.disabled = true;
+    this.disabled = true;
 
-     if (recorder){
-       recorder.stopRecording(function(url) {
-       });
-     }
+    if (recorder){
+      recorder.stopRecording(function(url) {
+      });
+    }
   }
 
 

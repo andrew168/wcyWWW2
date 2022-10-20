@@ -6,11 +6,11 @@ var TQ = TQ || {};
 (function () {
   var MAX_SOUND_LENGTH = 120, // 缺省声音是最大120s
     STATE = {
-    UNLOADED: 1,
-    PLAYING: 2,
-    PAUSED: 3,
-    ENDED: 4
-  };
+      UNLOADED: 1,
+      PLAYING: 2,
+      PAUSED: 3,
+      ENDED: 4
+    };
 
   function HowlerPlayer(url, sprite, spriteMap) {
     var self = this,
@@ -71,32 +71,32 @@ var TQ = TQ || {};
       }
 
       if (!sound.playing()) { // 同时只有1个实例在播放，不能多个实例{
-          if (self.howlerID < 0) {
-            if ((sound.state() === 'unloaded') && !TQUtility.isBlobUrl(sound._src[0])) {
-              sound.once('load', function () {
-                self.howlerID = sound.play(spriteName);
-              });
-              self.tryingToPlay = true;
-            } else {
-              self.howlerID = sound.play(spriteName); // 首次播放
-            }
+        if (self.howlerID < 0) {
+          if ((sound.state() === 'unloaded') && !TQUtility.isBlobUrl(sound._src[0])) {
+            sound.once('load', function () {
+              self.howlerID = sound.play(spriteName);
+            });
+            self.tryingToPlay = true;
           } else {
-            TQ.AssertExt(sound, "需要先建立audio对象");
-            TQDebugger.Panel.logInfo('resume, ' + sound._sounds.length);
-            // Begin playing the sound.
-            var newID = sound.play(!!spriteName? spriteName: self.howlerID);
-            if (newID !== self.howlerID) {
-              if (newID > 0) {
-                if (self.howlerID !== newID) {
-                  console.error("为什么不相等？");
-                  self.howlerID = newID;
-                }
-              } else {
-                //  虽然曾经存在，但是已经当做垃圾回收了
-                self.howlerID = sound.play(spriteName);
+            self.howlerID = sound.play(spriteName); // 首次播放
+          }
+        } else {
+          TQ.AssertExt(sound, "需要先建立audio对象");
+          TQDebugger.Panel.logInfo('resume, ' + sound._sounds.length);
+          // Begin playing the sound.
+          var newID = sound.play(!!spriteName? spriteName: self.howlerID);
+          if (newID !== self.howlerID) {
+            if (newID > 0) {
+              if (self.howlerID !== newID) {
+                console.error("为什么不相等？");
+                self.howlerID = newID;
               }
+            } else {
+              //  虽然曾经存在，但是已经当做垃圾回收了
+              self.howlerID = sound.play(spriteName);
             }
           }
+        }
       }
     },
 

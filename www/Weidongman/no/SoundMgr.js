@@ -16,8 +16,8 @@ TQ = TQ || {};
   SoundMgr.initialize = function() {
     createjs.FlashPlugin.BASE_PATH = TQ.Config.SOUND_PLUGIN_PATH; // Initialize the base path from this document to the Flash Plugin
 	
-	// if initializeDefaultPlugins returns false, we cannot play sound in this browser
-	if (!createjs.Sound.initializeDefaultPlugins()) { return; }
+    // if initializeDefaultPlugins returns false, we cannot play sound in this browser
+    if (!createjs.Sound.initializeDefaultPlugins()) { return; }
     SoundMgr.isSupported = true;
 
     // Instantiate a queue.
@@ -50,7 +50,7 @@ TQ = TQ || {};
     if (!SoundMgr.isSupported) return;
 
     // 添加mp3和ogg两种文件， 以便于支持所有的平台
-	//ToDo: 让Sound可以不断添加, 即使启动之后, 也能够添加.
+    //ToDo: 让Sound可以不断添加, 即使启动之后, 也能够添加.
     // ToDo: 不重复加入
     // 只是load新添加的内容,
     // 而系统能够自动启动load
@@ -80,7 +80,7 @@ TQ = TQ || {};
 
     createjs.Sound.stop();
     if (SoundMgr.queue != null) {
-        SoundMgr.queue.removeAll();
+      SoundMgr.queue.removeAll();
     }
     SoundMgr.started = false;
   };

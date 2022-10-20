@@ -43,7 +43,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     isPreloadingWcy = false,
     getWcyCalled = false;
 
-    TQ.State.shareCode = null;
+  TQ.State.shareCode = null;
 
   function isSafe() {
     return TQ.StageBuffer.isEmpty();
@@ -318,8 +318,8 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
           content = JSON.stringify(data);
           _openInJson(data);
         }).error(function (data, status, headers, config) {
-        TQ.Log.debugInfo(data);
-      });
+          TQ.Log.debugInfo(data);
+        });
     } else {
       var fileInfo = {name: filename, content: content};
       _open(fileInfo);

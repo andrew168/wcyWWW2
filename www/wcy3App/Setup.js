@@ -7,66 +7,66 @@ angular.module('starter').factory('Setup', Setup);
 Setup.$inject = ['FileService', 'DeviceService'];
 
 function Setup(FileService, DeviceService) {
-    var dirCounter = 0;
-    var dirs = [TQ.Config.IMAGES_CORE_PATH,
-        TQ.Config.SOUNDS_PATH,
-        TQ.Config.VIDEOS_CORE_PATH,
+  var dirCounter = 0;
+  var dirs = [TQ.Config.IMAGES_CORE_PATH,
+    TQ.Config.SOUNDS_PATH,
+    TQ.Config.VIDEOS_CORE_PATH,
 
-        TQ.Config.WORKS_CORE_PATH,
-        TQ.Config.SCENES_CORE_PATH,
-        TQ.Config.SCREENSHOT_CORE_PATH,
+    TQ.Config.WORKS_CORE_PATH,
+    TQ.Config.SCENES_CORE_PATH,
+    TQ.Config.SCREENSHOT_CORE_PATH,
 
-        TQ.Config.TEMP_CORE_PATH,
-        TQ.Config.LOG_CORE_PATH];
+    TQ.Config.TEMP_CORE_PATH,
+    TQ.Config.LOG_CORE_PATH];
 
-    function createFolders() {
-        if (!DeviceService.isReady()) {
-            TQ.Log.error("Device not ready! in createFolders");
-            return;
-        }
-
-        TQ.Config.setResourceHost(DeviceService.getRootFolder());
-
-        if (TQ.Config.LocalCacheEnabled) {
-            dirCounter = 0;
-            FileService.createDir(dirs[dirCounter], onSuccess, onError);
-        } else {
-            _ready();
-        }
+  function createFolders() {
+    if (!DeviceService.isReady()) {
+      TQ.Log.error("Device not ready! in createFolders");
+      return;
     }
 
-    function onSuccess(success) {
-        dirCounter++;
-        onDirCreated();
+    TQ.Config.setResourceHost(DeviceService.getRootFolder());
+
+    if (TQ.Config.LocalCacheEnabled) {
+      dirCounter = 0;
+      FileService.createDir(dirs[dirCounter], onSuccess, onError);
+    } else {
+      _ready();
+    }
+  }
+
+  function onSuccess(success) {
+    dirCounter++;
+    onDirCreated();
+  }
+
+  function onError(error) {
+    TQ.Log.error("在创建目录的时候出错！！！: " + dirs[dirCounter]);
+    if (!!error) {
+      TQ.Log.error(JSON.stringify(error));
     }
 
-    function onError(error) {
-        TQ.Log.error("在创建目录的时候出错！！！: " + dirs[dirCounter]);
-        if (!!error) {
-            TQ.Log.error(JSON.stringify(error));
-        }
+    dirCounter++;
+    onDirCreated();
+  }
 
-        dirCounter++;
-        onDirCreated();
+  //对于Android，处理速度慢，不能使用for循环连续发出命令，必须使用这种 回调方式
+  function onDirCreated() {
+    if (dirCounter >= dirs.length) {
+      _ready();
+    } else {
+      FileService.createDir(dirs[dirCounter], onSuccess, onError);
     }
+  }
+  function initialize() {
+    createFolders();
+  }
 
-    //对于Android，处理速度慢，不能使用for循环连续发出命令，必须使用这种 回调方式
-    function onDirCreated() {
-        if (dirCounter >= dirs.length) {
-            _ready();
-        } else {
-            FileService.createDir(dirs[dirCounter], onSuccess, onError);
-        }
-    }
-    function initialize() {
-        createFolders();
-    }
+  function _ready() {
+    TQ.Base.Utility.triggerEvent(document, TQ.EVENT.DIR_READY);
+  }
 
-    function _ready() {
-        TQ.Base.Utility.triggerEvent(document, TQ.EVENT.DIR_READY);
-    }
-
-    return {
-        initialize: initialize
-    }
+  return {
+    initialize: initialize
+  }
 }

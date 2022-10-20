@@ -7,7 +7,7 @@
     Stage = createjs.Stage;
 
   Stage.__debugOn = false;
-// extended method
+  // extended method
   p.enableDOMEvents = function (enable) {
     if (enable == null) {
       enable = true;

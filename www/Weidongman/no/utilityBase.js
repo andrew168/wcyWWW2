@@ -16,21 +16,21 @@ window.TQ = window.TQ || {};
  * @return {*}
  */
 TQ.namespace = function(ns) {
-    var parts = ns.split('.'),
-        parent = TQ,
-        i;
-    if (parts[0] === "TQ") {
-        parts = parts.slice(1);
-    }
+  var parts = ns.split('.'),
+    parent = TQ,
+    i;
+  if (parts[0] === "TQ") {
+    parts = parts.slice(1);
+  }
 
-    for (i = 0; i < parts.length; i++) {
-        if (typeof parent[parts[i]] === "undefined") {
-            parent[parts[i]] = {};
-        }
-        parent = parent[parts[i]];
+  for (i = 0; i < parts.length; i++) {
+    if (typeof parent[parts[i]] === "undefined") {
+      parent[parts[i]] = {};
     }
+    parent = parent[parts[i]];
+  }
 
-    return parent;
+  return parent;
 };
 
 /**
@@ -38,17 +38,17 @@ TQ.namespace = function(ns) {
  * @type {*}
  */
 var inherit = (function() {
-    var F = function() {};
-    return function(C, P) {
-        F.prototype = P.prototype;
-        C.prototype = new F();
-        C.uber = P.prototype;
-        C.prototype.constructor = C;
-    }
+  var F = function() {};
+  return function(C, P) {
+    F.prototype = P.prototype;
+    C.prototype = new F();
+    C.uber = P.prototype;
+    C.prototype.constructor = C;
+  }
 }());
 
 
 // 保留6位小数
 Math.truncate6 = function(f) {
-    return Math.floor(f * 1000000) / 1000000;
+  return Math.floor(f * 1000000) / 1000000;
 };

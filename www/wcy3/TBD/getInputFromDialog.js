@@ -14,8 +14,8 @@ window.TQ = window.TQ || {};
   FileDialog.getFilename = function (defaultvalue, closeCallback)
   {
     var name = $( "#name" ),
-    //keywordsEle = $("#keywords"),
-    keywordsEle=$('#mc_type');
+      //keywordsEle = $("#keywords"),
+      keywordsEle=$('#mc_type');
     allFields = $( [] ).add( name),
     myDialog = $( "#save-file" );
     function onEnter(baseKeywords) {
@@ -26,39 +26,39 @@ window.TQ = window.TQ || {};
           && (__filename.lastIndexOf(" ") < 0) // 不能包含空格，
         && (__filename.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) // 不能覆盖系统的演示文件
         && (__filename.lastIndexOf(TQ.Config.UNNAMED_SCENE) < 0)) { // 不能每名称
-          bValid = true;
-        } else {
-          bValid = false;
-        }
+        bValid = true;
+      } else {
+        bValid = false;
+      }
 
-        //var regexp = new RegExp(/[\"\/\\<>\?\*]/); //非法字符集
-        /* var regexp = new RegExp(/[\/\\<>\?\*]/); //非法字符集
+      //var regexp = new RegExp(/[\"\/\\<>\?\*]/); //非法字符集
+      /* var regexp = new RegExp(/[\/\\<>\?\*]/); //非法字符集
         bValid = bValid && ( !regexp.test( __filename ));
         if (!bValid) {
           alert(TQ.Dictionary.INVALID_FILENAME);
           return "";
         } */
 
-        FileDialog.visible = false;
-        allFields.removeClass( "ui-state-error" );
-        FileDialog.keywords = $.trim(keywordsEle.attr('cate_id'));
-        if (FileDialog.keywords.indexOf(TQ.Dictionary.CommaCh) >= 0) {
-          FileDialog.keywords = FileDialog.keywords.replace(TQ.Dictionary.CommaCh, ",");
-        }
+      FileDialog.visible = false;
+      allFields.removeClass( "ui-state-error" );
+      FileDialog.keywords = $.trim(keywordsEle.attr('cate_id'));
+      if (FileDialog.keywords.indexOf(TQ.Dictionary.CommaCh) >= 0) {
+        FileDialog.keywords = FileDialog.keywords.replace(TQ.Dictionary.CommaCh, ",");
+      }
 
-        if (FileDialog.keywords.indexOf(baseKeywords) < 0) {
-          FileDialog.keywords_type = baseKeywords + "," + FileDialog.keywords; //提交到from的
-          FileDialog.keywords = FileDialog.keywords; // 自动添加 “微动漫” 或“元件”,显示出来的
-        }
+      if (FileDialog.keywords.indexOf(baseKeywords) < 0) {
+        FileDialog.keywords_type = baseKeywords + "," + FileDialog.keywords; //提交到from的
+        FileDialog.keywords = FileDialog.keywords; // 自动添加 “微动漫” 或“元件”,显示出来的
+      }
 
-        if ( bValid ) {
-          /* myDialog.dialog( "close" ); */
-          __filename = TQ.Utility.forceExt(__filename);
-          if (closeCallback !== null) {
-            closeCallback(__filename, FileDialog.keywords_type);
-          }
+      if ( bValid ) {
+        /* myDialog.dialog( "close" ); */
+        __filename = TQ.Utility.forceExt(__filename);
+        if (closeCallback !== null) {
+          closeCallback(__filename, FileDialog.keywords_type);
         }
-        return __filename;
+      }
+      return __filename;
     }
 
     var save_flag=false;
@@ -114,24 +114,24 @@ window.TQ = window.TQ || {};
 
       //如果选择了完整的分类
       if(save_flag==true){
-      f.name=name_val;
-      f.cate_id=cate_id;
-      f.mc_type=mc_type_str;
-      f.uid=$('.user_true').attr('uid');
-      var result_msg=MYJS.ajax_obj.post(f,"Weidongman/wfile/netSearch.php",'html');
-      result_msg.success(function(msg){
-        if(msg=='success'){
-          FileDialog.visible  = true; myDialog.keypress(TQ.TextEditor.onEnter);onEnter(mc_type_str);
-          $.fancybox({closeClick:true});
-        }else{
-          $('#change_save_div .change_save_div_content').html('文件已经存在！确认要替换？');
-          easyDialog.open({
-            container : 'change_save_div',
-            fixed : false
-          });
+        f.name=name_val;
+        f.cate_id=cate_id;
+        f.mc_type=mc_type_str;
+        f.uid=$('.user_true').attr('uid');
+        var result_msg=MYJS.ajax_obj.post(f,"Weidongman/wfile/netSearch.php",'html');
+        result_msg.success(function(msg){
+          if(msg=='success'){
+            FileDialog.visible  = true; myDialog.keypress(TQ.TextEditor.onEnter);onEnter(mc_type_str);
+            $.fancybox({closeClick:true});
+          }else{
+            $('#change_save_div .change_save_div_content').html('文件已经存在！确认要替换？');
+            easyDialog.open({
+              container : 'change_save_div',
+              fixed : false
+            });
 
-        }
-      });
+          }
+        });
       }
     });
     //保存替换

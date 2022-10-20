@@ -4,17 +4,17 @@
 this.TQ = this.TQ || {};
 
 (function () {
-    function ResourceDesc() {
+  function ResourceDesc() {
+  }
+
+  function isReady(desc) {
+    if (!!desc.data) { // image buffer
+      return true;
     }
 
-    function isReady(desc) {
-        if (!!desc.data) { // image buffer
-            return true;
-        }
+    return TQ.RM.hasResourceReady(desc.src);
+  }
 
-        return TQ.RM.hasResourceReady(desc.src);
-    }
-
-    ResourceDesc.isReady = isReady;
-    TQ.ResourceDesc = ResourceDesc;
+  ResourceDesc.isReady = isReady;
+  TQ.ResourceDesc = ResourceDesc;
 }());

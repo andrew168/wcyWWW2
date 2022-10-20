@@ -7,66 +7,66 @@
  */
 var TQ = TQ || {};
 TQ.IdleCounter = (function() {
-    // 内部成员变量， 必须在return之前定义， 否则无效
-    var IDLE_DURATION = 1000, // ms
-        callbacks = [],
-        events = ['click', 'keydown', 'touchstart', 'mousedown'],//  'mousemove',  'keyup', 'touchend', 'touchmove', 'mouseup'
-        watchDog = null;
+  // 内部成员变量， 必须在return之前定义， 否则无效
+  var IDLE_DURATION = 1000, // ms
+    callbacks = [],
+    events = ['click', 'keydown', 'touchstart', 'mousedown'],//  'mousemove',  'keyup', 'touchend', 'touchmove', 'mouseup'
+    watchDog = null;
 
-    // 接口函数
-    return {
-        remove: remove,
-        start: start,
-        stop: stop
-    };
+  // 接口函数
+  return {
+    remove: remove,
+    start: start,
+    stop: stop
+  };
 
-    // 所有成员函数， ABC 顺序
-    function onWorking(evt) {
-        if (watchDog) {
-            clearTimeout(watchDog);
-        }
-        var msg = "evt to end idle: ";
-        if (evt) {
-            msg += evt.type;
-        }
-        TQ.Log.debugInfo(msg);
-        watchDog = setTimeout(stop, IDLE_DURATION);
+  // 所有成员函数， ABC 顺序
+  function onWorking(evt) {
+    if (watchDog) {
+      clearTimeout(watchDog);
+    }
+    var msg = "evt to end idle: ";
+    if (evt) {
+      msg += evt.type;
+    }
+    TQ.Log.debugInfo(msg);
+    watchDog = setTimeout(stop, IDLE_DURATION);
+  }
+
+  function remove(callback) {
+    var id = callbacks.indexOf(callback);
+    callbacks.splice(0);
+    // callbacks.shift(id);
+    stop();
+  }
+
+  function start(callback) {
+    if (callbacks.indexOf(callback) < 0) {
+      callbacks.push(callback);
     }
 
-    function remove(callback) {
-        var id = callbacks.indexOf(callback);
-        callbacks.splice(0);
-        // callbacks.shift(id);
-        stop();
+    if (watchDog) {
+      return onWorking();
     }
 
-    function start(callback) {
-        if (callbacks.indexOf(callback) < 0) {
-            callbacks.push(callback);
-        }
+    events.forEach(function(item) {
+      document.addEventListener(item, onWorking, true);
+    });
 
-        if (watchDog) {
-            return onWorking();
-        }
+    watchDog = setTimeout(stop, IDLE_DURATION);
+  }
 
-        events.forEach(function(item) {
-            document.addEventListener(item, onWorking, true);
-        });
+  function stop() {
+    clearTimeout(watchDog);
+    watchDog = null;
+    events.forEach(function(item) {
+      document.removeEventListener(item, onWorking, true);
+    });
 
-        watchDog = setTimeout(stop, IDLE_DURATION);
+    callbacks.forEach(doIt);
+
+    function doIt(item) {
+      item.call();
     }
-
-    function stop() {
-        clearTimeout(watchDog);
-        watchDog = null;
-        events.forEach(function(item) {
-            document.removeEventListener(item, onWorking, true);
-        });
-
-        callbacks.forEach(doIt);
-
-        function doIt(item) {
-            item.call();
-        }
-    }
+  }
 })();

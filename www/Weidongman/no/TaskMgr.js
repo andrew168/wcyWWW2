@@ -5,67 +5,67 @@
 
 window.TQ = window.TQ || {};
 (function () {
-    /** 内部类,记录和执行一条命令
+  /** 内部类,记录和执行一条命令
      **/
-    function Command(f, params, path) {
-        this.f = f;
-        this.params = params;
-        this.path = path==null ? true : path;
-    }
+  function Command(f, params, path) {
+    this.f = f;
+    this.params = params;
+    this.path = path==null ? true : path;
+  }
 
-    Command.prototype.exec = function(scope) { this.f.apply(scope, this.params); };
+  Command.prototype.exec = function(scope) { this.f.apply(scope, this.params); };
 
-    var TaskMgr = {};
+  var TaskMgr = {};
+  TaskMgr.queue = [];
+  TaskMgr.preferredQueue = [];
+  TaskMgr.isWorking = false;
+  TaskMgr._timerID = -1;
+  TaskMgr.initialize = function() {
     TaskMgr.queue = [];
     TaskMgr.preferredQueue = [];
-    TaskMgr.isWorking = false;
+  };
+
+  TaskMgr.invoke = function () {
+    TaskMgr._timerID = setTimeout(function() { TaskMgr._runOnce(); }, 0);
+  };
+
+  TaskMgr.stop = function() {
+    if (TaskMgr._timerID >=0 ) clearTimeout(TaskMgr._timerID);
     TaskMgr._timerID = -1;
-    TaskMgr.initialize = function() {
-        TaskMgr.queue = [];
-        TaskMgr.preferredQueue = [];
-    };
+  };
 
-    TaskMgr.invoke = function () {
-        TaskMgr._timerID = setTimeout(function() { TaskMgr._runOnce(); }, 0);
-    };
+  TaskMgr.addTask = function(func, params, topPriority) {
+    if (topPriority) {
+      TaskMgr.preferredQueue.push(new Command(func, params, null));
+    } else {
+      TaskMgr.queue.push(new Command(func, params, null));
+    }
 
-    TaskMgr.stop = function() {
-        if (TaskMgr._timerID >=0 ) clearTimeout(TaskMgr._timerID);
-        TaskMgr._timerID = -1;
-    };
+    if (!TaskMgr.isWorking) {
+      TaskMgr.invoke();
+    }
+  };
 
-    TaskMgr.addTask = function(func, params, topPriority) {
-        if (topPriority) {
-            TaskMgr.preferredQueue.push(new Command(func, params, null));
-        } else {
-            TaskMgr.queue.push(new Command(func, params, null));
-        }
+  TaskMgr._getTask = function() {
+    // 1) 每一次获取任务的时候, 都先检查高优先级的任务.
+    // ToDo: 实现跳帧, 在绘制时间长的情况下, 只移动time, 不update和Render,直接绘制最新的帧.
+    var task = TaskMgr.preferredQueue.shift();
+    if (task == null) {
+      return TaskMgr.queue.shift();
+    }
 
-        if (!TaskMgr.isWorking) {
-            TaskMgr.invoke();
-        }
-    };
+    return task;
+  };
 
-    TaskMgr._getTask = function() {
-        // 1) 每一次获取任务的时候, 都先检查高优先级的任务.
-        // ToDo: 实现跳帧, 在绘制时间长的情况下, 只移动time, 不update和Render,直接绘制最新的帧.
-        var task = TaskMgr.preferredQueue.shift();
-        if (task == null) {
-            return TaskMgr.queue.shift();
-        }
+  TaskMgr._runOnce = function () {
+    TaskMgr.isWorking = true;
 
-        return task;
-    };
+    for (var task = TaskMgr._getTask(); task != null;  task = TaskMgr._getTask()) {
+      task.exec(TaskMgr);
+    }
 
-    TaskMgr._runOnce = function () {
-        TaskMgr.isWorking = true;
+    TaskMgr.isWorking = false;
+  };
 
-        for (var task = TaskMgr._getTask(); task != null;  task = TaskMgr._getTask()) {
-            task.exec(TaskMgr);
-        }
-
-        TaskMgr.isWorking = false;
-    };
-
-    TQ.TaskMgr = TaskMgr;
+  TQ.TaskMgr = TaskMgr;
 }());

@@ -117,7 +117,7 @@ TQ.ImageCliper = (function () {
   }
 
   function renderImage() {
-      context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, xOffset, yOffset, widthCompressed, heightCompressed);
+    context.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, xOffset, yOffset, widthCompressed, heightCompressed);
   }
 
   function clipImage(imageFile, onCompleted) {
@@ -298,7 +298,7 @@ TQ.ImageCliper = (function () {
     ctx = canvas2.getContext("2d");
     ctx.drawImage(imageObj, 0, 0, imageObj.width, imageObj.height, 0, 0, destWidth, destHeight);
     setTimeout(function () {
-       if (callback) {
+      if (callback) {
         callback(canvas2.toDataURL("image/png"));
       }
     });
@@ -383,7 +383,7 @@ TQ.ImageCliper = (function () {
 
   function doScale(deltaScale) {
     var sx = eleStart.scale.sx * deltaScale.sx,
-    sy = eleStart.scale.sy * deltaScale.sy;
+      sy = eleStart.scale.sy * deltaScale.sy;
     if ((sx* baseRadius < widthCompressed) || (sy * baseRadius <heightCompressed)) {
       scale.sx = sx;
       scale.sy = sy;

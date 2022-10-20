@@ -31,20 +31,20 @@ $(function(){
       }else{
         //指定位置添加
         $('#scenes_ul li').each(function(i){
-           var new_current_index=parseFloat(TQ.Scenes.scenes_current_index).toFixed(1);
-           var c=parseFloat($(this).attr('num')).toFixed(1);
-           //console.log('new___'+new_current_index)
+          var new_current_index=parseFloat(TQ.Scenes.scenes_current_index).toFixed(1);
+          var c=parseFloat($(this).attr('num')).toFixed(1);
+          //console.log('new___'+new_current_index)
 
-           if(new_current_index == c ){
-               TQ.Scenes.isInsert=false;
-               var b=(parseFloat(new_current_index)+0.1).toFixed(1);
-               //console.log(new_current_index)
-               //console.log('b___'+b)
-               $(this).after(TQ.Scenes.scenes_content_html(b,b));
-               TQ.Scenes.scenes_current_index=b;
-               Scenes.scenes_num=parseInt(TQ.Scenes.scenes_num)+1;
-               TQ.WCY.addLevel();
-           }
+          if(new_current_index == c ){
+            TQ.Scenes.isInsert=false;
+            var b=(parseFloat(new_current_index)+0.1).toFixed(1);
+            //console.log(new_current_index)
+            //console.log('b___'+b)
+            $(this).after(TQ.Scenes.scenes_content_html(b,b));
+            TQ.Scenes.scenes_current_index=b;
+            Scenes.scenes_num=parseInt(TQ.Scenes.scenes_num)+1;
+            TQ.WCY.addLevel();
+          }
         });
       }
     }else{
@@ -58,52 +58,52 @@ $(function(){
   };
   //选中一个场景
   Scenes.scenes_click=function(click_num,scenes_click_div_obj){
-     //TQ.Scenes.scenes_current_index=click_num;
-      $('#scenes_ul li').each(function(i){
-          $(this).removeClass('new-right-pop-hover')
-          if($(this).attr('num')==click_num){
-              TQ.Scenes.scenes_current_index=$(this).index()+1;
-              //在指定位置添加时候不需要，未指定时候需要
-              TQ.Scenes.scenes_current=TQ.Scenes.scenes_current_index;
-          }
-      });
-      if(TQ.Scenes.scenes_current_index !=-1){
-          scenes_click_div_obj.addClass('new-right-pop-hover');
-      }else{
-          TQ.Scenes.scenes_current_index='';
-          TQ.Scenes.scenes_current=1
+    //TQ.Scenes.scenes_current_index=click_num;
+    $('#scenes_ul li').each(function(i){
+      $(this).removeClass('new-right-pop-hover')
+      if($(this).attr('num')==click_num){
+        TQ.Scenes.scenes_current_index=$(this).index()+1;
+        //在指定位置添加时候不需要，未指定时候需要
+        TQ.Scenes.scenes_current=TQ.Scenes.scenes_current_index;
       }
+    });
+    if(TQ.Scenes.scenes_current_index !=-1){
+      scenes_click_div_obj.addClass('new-right-pop-hover');
+    }else{
+      TQ.Scenes.scenes_current_index='';
+      TQ.Scenes.scenes_current=1
+    }
   };
   /**
   * @brief 开启场景列表
   * @param changjing_num 场景数量
   */
   Scenes.scenes_open=function(changjing_num){
-      $('#scenes_ul').html(''); 
-      TQ.Scenes.scenes_num=changjing_num;
-      var str='';
-      for(i=1;i<=changjing_num;i++){
-        str+=TQ.Scenes.scenes_content_html(i,i);
-      }
-      $('#scenes_ul').append(str).attr('num',changjing_num);
-      $('#scenes_div').attr('display_status','1');
+    $('#scenes_ul').html(''); 
+    TQ.Scenes.scenes_num=changjing_num;
+    var str='';
+    for(i=1;i<=changjing_num;i++){
+      str+=TQ.Scenes.scenes_content_html(i,i);
+    }
+    $('#scenes_ul').append(str).attr('num',changjing_num);
+    $('#scenes_div').attr('display_status','1');
   };
 
   /**
   * @brief Scenes.scenes_delete 删除场景
   */
   Scenes.scenes_delete=function(num_val){
-      TQ.WCY.deleteLevel(num_val);
-      console.log(TQ.Scenes.scenes_current_index+"_____"+TQ.WCY.getLevelNum())
-      if(TQ.Scenes.scenes_current_index>=TQ.WCY.getLevelNum()){
-          TQ.Scenes.scenes_current_index=TQ.WCY.getLevelNum();
-      }
+    TQ.WCY.deleteLevel(num_val);
+    console.log(TQ.Scenes.scenes_current_index+"_____"+TQ.WCY.getLevelNum())
+    if(TQ.Scenes.scenes_current_index>=TQ.WCY.getLevelNum()){
+      TQ.Scenes.scenes_current_index=TQ.WCY.getLevelNum();
+    }
 
-      if(TQ.WCY.getLevelNum()<=0){
-          $('#scenes_ul').html(TQ.Scenes.scenes_content_html(1,1)).attr('num',1);
-          TQ.WCY.addLevel();
-          TQ.WCY.gotoLevel(1);
-      }
+    if(TQ.WCY.getLevelNum()<=0){
+      $('#scenes_ul').html(TQ.Scenes.scenes_content_html(1,1)).attr('num',1);
+      TQ.WCY.addLevel();
+      TQ.WCY.gotoLevel(1);
+    }
   }
   TQ.Scenes=Scenes;
 }());

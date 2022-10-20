@@ -7,40 +7,40 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    function SkinningCtrl () {
+  function SkinningCtrl () {
 
+  }
+  SkinningCtrl.hasNew = false;
+  SkinningCtrl._stage = null;
+  SkinningCtrl._scene = null;
+  SkinningCtrl._hostObj = null;
+  SkinningCtrl.initialize = function(stage, scene) {
+    SkinningCtrl._stage = stage;
+    SkinningCtrl._scene = scene;
+  };
+
+  SkinningCtrl.start = function() {
+    if ((SkinningCtrl._hostObj = SkinningCtrl._stage.selectedItem) == null) {
+      displayInfo2(TQ.Dictionary.PleaseSelectOne);
+      return;
     }
-    SkinningCtrl.hasNew = false;
-    SkinningCtrl._stage = null;
-    SkinningCtrl._scene = null;
-    SkinningCtrl._hostObj = null;
-    SkinningCtrl.initialize = function(stage, scene) {
-        SkinningCtrl._stage = stage;
-        SkinningCtrl._scene = scene;
-    };
 
-    SkinningCtrl.start = function() {
-        if ((SkinningCtrl._hostObj = SkinningCtrl._stage.selectedItem) == null) {
-            displayInfo2(TQ.Dictionary.PleaseSelectOne);
-            return;
-        }
+    $("#skinning").button("disable");
+    $(document).bind("mousedown", SkinningCtrl.getSkin);
+  };
 
-        $("#skinning").button("disable");
-        $(document).bind("mousedown", SkinningCtrl.getSkin);
-    };
+  SkinningCtrl.getSkin = function () {
+    var ele = TQ.SelectSet.pop();
+    if (ele != null) { var skin = ele.displayObj;}
+    assertNotNull(TQ.Dictionary.PleaseSelectHost, SkinningCtrl._hostObj);
+    if ((skin != null) && (skin.id != SkinningCtrl._hostObj.id)) {
+      SkinningCtrl._scene.skinning(SkinningCtrl._hostObj, skin);
+      TQ.SelectSet.clear();
+      $(document).unbind("mousedown", SkinningCtrl.getSkin);
+      $("#skinning").button("enable");
+      // SkinningCtrl.hasNew = true;
+    }
+  };
 
-    SkinningCtrl.getSkin = function () {
-        var ele = TQ.SelectSet.pop();
-        if (ele != null) { var skin = ele.displayObj;}
-        assertNotNull(TQ.Dictionary.PleaseSelectHost, SkinningCtrl._hostObj);
-        if ((skin != null) && (skin.id != SkinningCtrl._hostObj.id)) {
-            SkinningCtrl._scene.skinning(SkinningCtrl._hostObj, skin);
-            TQ.SelectSet.clear();
-            $(document).unbind("mousedown", SkinningCtrl.getSkin);
-            $("#skinning").button("enable");
-            // SkinningCtrl.hasNew = true;
-        }
-    };
-
-    TQ.SkinningCtrl = SkinningCtrl;
+  TQ.SkinningCtrl = SkinningCtrl;
 }) ();

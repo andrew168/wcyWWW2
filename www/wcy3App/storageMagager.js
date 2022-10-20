@@ -110,8 +110,8 @@ function StorageManager($q, $timeout, $http, NetService) {
       function uploadWithSsign() {
         if (onePackage.screenshot) {
           uploadScreenshot(onePackage.ssSign, onePackage.screenshot).
-          then(doSaveOpus, _onNetIOError).
-          catch(_onNetIOError);
+            then(doSaveOpus, _onNetIOError).
+            catch(_onNetIOError);
         } else {
           doSaveOpus();
         }
@@ -122,7 +122,7 @@ function StorageManager($q, $timeout, $http, NetService) {
           console.log(value);
           TQ.Scene.updateSSPath(onePackage, currScene.ssPath);
           uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).
-          then(onUploadCompleted, _onNetIOError);
+            then(onUploadCompleted, _onNetIOError);
         } else {
           onUploadCompleted({});
         }

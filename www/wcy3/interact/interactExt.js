@@ -7,15 +7,15 @@ window.TQ = window.TQ || {};
   TQ.Element.prototype.playNextSound = function () {
     var spriteMap = this.jsonObj.spriteMap;
     if (spriteMap && spriteMap.length >0) {
-        if (this.spriteID === undefined) {
-          this.spriteID = 0;
-        } else {
-          this.spriteID++;
-        }
-        if (this.spriteID >= spriteMap.length) {
-          this.spriteID = 0;
-        }
-        this.play(true, spriteMap[this.spriteID]);
+      if (this.spriteID === undefined) {
+        this.spriteID = 0;
+      } else {
+        this.spriteID++;
+      }
+      if (this.spriteID >= spriteMap.length) {
+        this.spriteID = 0;
+      }
+      this.play(true, spriteMap[this.spriteID]);
     } else {
       this.play(true);
     }

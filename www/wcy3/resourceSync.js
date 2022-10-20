@@ -11,70 +11,70 @@
 this.TQ = this.TQ || {};
 
 this.TQ.ResourceSync = (function () {
-    var numActiveTasks = 0,
-      events = {
-        _oncomplete: [] // event name: 'complete'
-      };
-
-    return {
-        on: on,
-        once: once,
-        isBusy: isBusy,
-        local2Cloud: local2Cloud
+  var numActiveTasks = 0,
+    events = {
+      _oncomplete: [] // event name: 'complete'
     };
 
-    function isBusy() {
-        return numActiveTasks > 0;
+  return {
+    on: on,
+    once: once,
+    isBusy: isBusy,
+    local2Cloud: local2Cloud
+  };
+
+  function isBusy() {
+    return numActiveTasks > 0;
+  }
+
+  function once(event, fn) {
+    on(event, fn, 1);
+  }
+
+  function on(event, fn, once) {
+    var listeners = events['_on' + event];
+
+    if (typeof fn === 'function') {
+      listeners.push(once ? {fn: fn, once: once} : {fn: fn});
     }
+  }
 
-    function once(event, fn) {
-      on(event, fn, 1);
-    }
+  function local2Cloud(ele, fileOrBuffer, matType) {
+    numActiveTasks ++;
+    var option = {
+      useBackgroundMode: true
+    };
 
-    function on(event, fn, once) {
-      var listeners = events['_on' + event];
-
-      if (typeof fn === 'function') {
-        listeners.push(once ? {fn: fn, once: once} : {fn: fn});
-      }
-    }
-
-    function local2Cloud(ele, fileOrBuffer, matType) {
-        numActiveTasks ++;
-        var option = {
-            useBackgroundMode: true
-        };
-
-        return angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
-            .then(function (res) {
-                TQ.Log.debugInfo(res.url);
-                if (ele && ele.jsonObj) {
-                  ele.jsonObj.src = TQUtility.unifyFormat(ele.jsonObj.type, res.url);
-                }
-                numActiveTasks--;
-                if (numActiveTasks <=0) {
-                  tryShowCompleteInfo();
-                  var listeners;
-                  if (listeners = events._oncomplete) {
-                    var num = listeners.length,
-                      i;
-                    for (i=0; i<num; i++) {
-                      if (listeners[i].fn) {
-                        setTimeout(listeners[i].fn);
-                      }
-                      if (listeners[i].once) {
-                        listeners.splice(i, 1);
-                        num--;
-                      }
-                    }
-                  }
-                }
-            });
-    }
-
-    function tryShowCompleteInfo() {
-        if (numActiveTasks <= 0) {
-            TQ.Log.debugInfo("background sync completed!");
+    return angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
+      .then(function (res) {
+        TQ.Log.debugInfo(res.url);
+        if (ele && ele.jsonObj) {
+          ele.jsonObj.src = TQUtility.unifyFormat(ele.jsonObj.type, res.url);
         }
+        numActiveTasks--;
+        if (numActiveTasks <=0) {
+          tryShowCompleteInfo();
+          var listeners;
+          if (listeners = events._oncomplete) {
+            var num = listeners.length,
+              i;
+            for (i=0; i<num; i++) {
+              if (listeners[i].fn) {
+                setTimeout(listeners[i].fn);
+              }
+              if (listeners[i].once) {
+                listeners.splice(i, 1);
+                num--;
+              }
+            }
+          }
+        }
+      });
+  }
+
+  function tryShowCompleteInfo() {
+    if (numActiveTasks <= 0) {
+      TQ.Log.debugInfo("background sync completed!");
     }
+  }
 })();

@@ -7,35 +7,35 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    var ScreenShot = {};
-    ScreenShot.imageData = null;
-    ScreenShot.imageName = "noname";
-    ScreenShot.SaveScreen = function (imageName, keywords) {
-        ScreenShot.imageName = imageName;
-        ScreenShot.take();
-        ScreenShot.upload(keywords);
-    };
+  var ScreenShot = {};
+  ScreenShot.imageData = null;
+  ScreenShot.imageName = "noname";
+  ScreenShot.SaveScreen = function (imageName, keywords) {
+    ScreenShot.imageName = imageName;
+    ScreenShot.take();
+    ScreenShot.upload(keywords);
+  };
 
-    ScreenShot.take = function () {
-        ScreenShot.imageData = stage.toDataURL(); // 默认生成透明图, 带alpha信息, PNG格式的
-    };
+  ScreenShot.take = function () {
+    ScreenShot.imageData = stage.toDataURL(); // 默认生成透明图, 带alpha信息, PNG格式的
+  };
 
-    ScreenShot.upload = function (_keywords)
-    {
-        assertNotNull(TQ.Dictionary.FoundNull,  ScreenShot.imageData); // 先截取屏幕
-        var f=new FormData();
-        f.append('imageData',ScreenShot.imageData);//base64data
-        f.append('userID',localStorage.getItem("userID"));
-        f.append('imageName',ScreenShot.imageName);
-        f.append('keywords',_keywords);
-        f.append('png','png');
+  ScreenShot.upload = function (_keywords)
+  {
+    assertNotNull(TQ.Dictionary.FoundNull,  ScreenShot.imageData); // 先截取屏幕
+    var f=new FormData();
+    f.append('imageData',ScreenShot.imageData);//base64data
+    f.append('userID',localStorage.getItem("userID"));
+    f.append('imageName',ScreenShot.imageName);
+    f.append('keywords',_keywords);
+    f.append('png','png');
 
-        var result_msg=MYJS.ajax_obj.post_formdata(f,'http://'+TQ.Config.DOMAIN_NAME+'/wcy/screenShot',NET_IO_DATA_TYPE);
-        result_msg.success(function(msg){
-            displayInfo3();
-        });
+    var result_msg=MYJS.ajax_obj.post_formdata(f,'http://'+TQ.Config.DOMAIN_NAME+'/wcy/screenShot',NET_IO_DATA_TYPE);
+    result_msg.success(function(msg){
+      displayInfo3();
+    });
 
-        /*
+    /*
          * 旧版本
          var result_msg=MYJS.ajax_obj.post_formdata(f,'http://'+TQ.Config.DOMAIN_NAME+'/wcy/screenShot',NET_IO_DATA_TYPE);
          result_msg.success(function(msg){
@@ -43,7 +43,7 @@ window.TQ = window.TQ || {};
          });
 
        */
-        /*
+    /*
         $.ajax({
             type: "POST",
             url: 'http://'+TQ.Config.DOMAIN_NAME+'/wcy/screenShot',
@@ -59,10 +59,10 @@ window.TQ = window.TQ || {};
             }
         });
         */
-    };
+  };
 
-    // ToDo: 支持GIF,
-/*
+  // ToDo: 支持GIF,
+  /*
 
     var jsf  = ["/Demos/b64.js", "LZWEncoder.js", "NeuQuant.js", "GIFEncoder.js"];
     var head = document.getElementsByTagName("head")[0];
@@ -119,5 +119,5 @@ window.TQ = window.TQ || {};
 
 */
 
-    TQ.ScreenShot = ScreenShot;
+  TQ.ScreenShot = ScreenShot;
 }());

@@ -4,26 +4,26 @@
  */
 
 TQ.CommandMgr.setTextProperty = function (ele, option) {
-    if (ele && ele.isText()) {
-        var oldOption = {},
-            newOption = option;
+  if (ele && ele.isText()) {
+    var oldOption = {},
+      newOption = option;
 
-        var keys = Object.keys(option),
-            jsonObj = ele.jsonObj;
-        keys.forEach(function (prop) {
-            oldOption[prop] = jsonObj[prop];
-        });
+    var keys = Object.keys(option),
+      jsonObj = ele.jsonObj;
+    keys.forEach(function (prop) {
+      oldOption[prop] = jsonObj[prop];
+    });
 
-        if (option.toggleBold) {
-            oldOption.toggleBold = option.toggleBold;
-        }
-
-        if (option.toggleItalic) {
-            oldOption.toggleItalic = option.toggleItalic;
-        }
-
-        return new TQ.GenCommand(['setProperty', 'setProperty'], ele, newOption, oldOption);
+    if (option.toggleBold) {
+      oldOption.toggleBold = option.toggleBold;
     }
 
-    return null;
+    if (option.toggleItalic) {
+      oldOption.toggleItalic = option.toggleItalic;
+    }
+
+    return new TQ.GenCommand(['setProperty', 'setProperty'], ele, newOption, oldOption);
+  }
+
+  return null;
 };

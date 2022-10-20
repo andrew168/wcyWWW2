@@ -24,7 +24,7 @@ TQ = TQ || {};
   p.show = function(isVisible) {
     if (this.isSound()) {
       if (isVisible) this.play();
-    else this.stop();
+      else this.stop();
     } else {
       this._parent_show(isVisible);
     }

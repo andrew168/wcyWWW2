@@ -4,76 +4,76 @@
 this.createjs = this.createjs || {};
 
 (function () {
-    "use strict"
+  "use strict"
 
-    /**
+  /**
      * A Particle Emitter extends DisplayObject and must be added to a Container object. An emitter will emit a stream of particles
      * adhereing to the given configuration.
      * @class ParticleEmitter
      * @constructor
      * @param {Image} [image] The image to use for each particle. If no image is provided then a simple circle will be drawn.
      **/
-    var ParticleEmitter = function (image) {
+  var ParticleEmitter = function (image) {
 
-        if (image != null) {
-            this.image = image;
-        }
-
-        this.initialize();
+    if (image != null) {
+      this.image = image;
     }
-    var p = ParticleEmitter.prototype = new createjs.DisplayObject();
-    ParticleEmitter.stopped = false;
-    //#region Enums + Constants
 
-    /**
+    this.initialize();
+  }
+  var p = ParticleEmitter.prototype = new createjs.DisplayObject();
+  ParticleEmitter.stopped = false;
+  //#region Enums + Constants
+
+  /**
      * Enum to represent the state of the particle emitter
      **/
-    createjs.ParticleEmitterState = {
-        "Created": 0,
-        "Running": 1,
-        "Finished": 2
-    }
+  createjs.ParticleEmitterState = {
+    "Created": 0,
+    "Running": 1,
+    "Finished": 2
+  }
 
-    /**
+  /**
      * Enum to represent the type of the particle emitter
      **/
-    createjs.ParticleEmitterType = {
-        "Emit": 0,
-        "OneShot": 1
-    }
+  createjs.ParticleEmitterType = {
+    "Emit": 0,
+    "OneShot": 1
+  }
 
-    // ** CONSTANTS:
-    p.REMAIN_UNCHANGED = null;
-    p.INFINITE = -1;
+  // ** CONSTANTS:
+  p.REMAIN_UNCHANGED = null;
+  p.INFINITE = -1;
 
-    //#endregion
+  //#endregion
 
-    // ** BASE METHODS
-    p.DisplayObject_initialise = p.initialize;
-    p.DisplayObject_draw = p.draw;
-    p.DisplayObject_updateContext = p.updateContext;
+  // ** BASE METHODS
+  p.DisplayObject_initialise = p.initialize;
+  p.DisplayObject_draw = p.draw;
+  p.DisplayObject_updateContext = p.updateContext;
 
-    //#region Public Properties (Emitter specific)
+  //#region Public Properties (Emitter specific)
 
-    /**
+  /**
      * Should the emitter be removed from the parent when finished?
      *
      * @property autoRemoveOnFinished
      * @type {boolean}
      * @default false
      **/
-    p.autoRemoveOnFinished = false;
+  p.autoRemoveOnFinished = false;
 
-    /**
+  /**
      * Is debug mode active for this emitter. If so, render debug text.
      *
      * @property debugMode
      * @type {boolean}
      * @default false
      **/
-    p.debugMode = false;
+  p.debugMode = false;
 
-    /**
+  /**
      * The amount of time (milliseconds) that the emitter will last. A value of -1 means that the emitter will
      * last for an infinite amount of time.
      *
@@ -81,93 +81,93 @@ this.createjs = this.createjs || {};
      * @type {number}
      * @default -1
      **/
-    p.duration = p.INFINITE;
+  p.duration = p.INFINITE;
 
-    /**
+  /**
      * The type of particle emitter to create
      *
      * @property emitterType
      * @type {ParticleEmitterType}
      * @default ParticleEmitterType.Emit
      **/
-    p.emitterType = createjs.ParticleEmitterType.Emit;
+  p.emitterType = createjs.ParticleEmitterType.Emit;
 
-    /**
+  /**
      * The total number of particles that can exist at any one time
      *
      * @property maxParticles
      * @type {number}
      * @default 200
      **/
-    p.maxParticles = 200;
+  p.maxParticles = 200;
 
-    /**
+  /**
      * The rate at which particles are generated (number of particles per second)
      *
      * @property emissionRate
      * @type {number}
      * @default 1
      **/
-    p.emissionRate = 1;
+  p.emissionRate = 1;
 
-    /**
+  /**
      * The current state of the particle emitter
      *
      * @property state
      * @type {ParticleEmitterState}
      * @default ParticleEmitterState.Created
      **/
-    p.state = createjs.ParticleEmitterState.Created;
+  p.state = createjs.ParticleEmitterState.Created;
 
-    /**
+  /**
      * The image to show for each particle
      *
      * @property image
      * @type {Image}
      * @default null
      **/
-    p.image = null;
+  p.image = null;
 
-    //#endregion
-    //#region Public Properties (Particle generation)
+  //#endregion
+  //#region Public Properties (Particle generation)
 
-    /**
+  /**
      * The accelerration of each particle in the X axis.
      *
      * @property accelerationX
      * @type {decimal}
      * @default 0
      **/
-    p.accelerationX = 0;
+  p.accelerationX = 0;
 
-    /**
+  /**
      * The accelerration of each particle in the Y axis. This can be used to simulate forces such as Gravity
      *
      * @property accelerationY
      * @type {decimal}
      * @default 0
      **/
-    p.accelerationY = 0;
+  p.accelerationY = 0;
 
-    /**
+  /**
      * The angle (degrees) in which to fire the particle from the origin point
      *
      * @property angle
      * @type {number}
      * @default 0
      **/
-    p.angle = 0;
+  p.angle = 0;
 
-    /**
+  /**
      * The amount of degrees that the angle can vary by
      *
      * @property angleVar
      * @type {number}
      * @default 0
      **/
-    p.angleVar = 0;
+  p.angleVar = 0;
 
-    /**
+  /**
      * The end opacity of each particle, where 1 is opaque and 0 is transparent. A null value signifies that
      * the value will not differ from the start value.
      *
@@ -175,9 +175,9 @@ this.createjs = this.createjs || {};
      * @type {number}
      * @default null
      **/
-    p.endOpacity = p.REMAIN_UNCHANGED;
+  p.endOpacity = p.REMAIN_UNCHANGED;
 
-    /**
+  /**
      * The end color of each particle [r,g,b]. A null value signifies that
      * the value will not differ from the start value.
      *
@@ -185,9 +185,9 @@ this.createjs = this.createjs || {};
      * @type {[r,g,b]}
      * @default null
      **/
-    p.endColor = p.REMAIN_UNCHANGED;
+  p.endColor = p.REMAIN_UNCHANGED;
 
-    /**
+  /**
      * The variance in the end color. A null value signifies that
      * the value will not differ from the start value.
      *
@@ -195,9 +195,9 @@ this.createjs = this.createjs || {};
      * @type {[r,g,b]}
      * @default null
      **/
-    p.endColorVar = [0, 0, 0];
+  p.endColorVar = [0, 0, 0];
 
-    /**
+  /**
      * The end size of each particle, in pixels. A null value signifies that
      * the value will not differ from the start value.
      *
@@ -205,9 +205,9 @@ this.createjs = this.createjs || {};
      * @type {number}
      * @default null
      **/
-    p.endSize = p.REMAIN_UNCHANGED;
+  p.endSize = p.REMAIN_UNCHANGED;
 
-    /**
+  /**
      * The variance in end size, in pixels. A null value signifies that
      * the value will not differ from the start value.
      *
@@ -215,9 +215,9 @@ this.createjs = this.createjs || {};
      * @type {number}
      * @default 0
      **/
-    p.endSizeVar = 0.0;
+  p.endSizeVar = 0.0;
 
-    /**
+  /**
      * The number of degrees to spin each particle per second when each particle is destroyed. A null value signifies that
      * the value will not differ from the start value.
      *
@@ -225,9 +225,9 @@ this.createjs = this.createjs || {};
      * @type {number}
      * @default null
      **/
-    p.endSpin = p.REMAIN_UNCHANGED;
+  p.endSpin = p.REMAIN_UNCHANGED;
 
-    /**
+  /**
      * The variance in end spin. A null value signifies that
      * the value will not differ from the start value.
      *
@@ -235,514 +235,514 @@ this.createjs = this.createjs || {};
      * @type {number}
      * @default 0
      **/
-    p.endSpinVar = 0;
+  p.endSpinVar = 0;
 
-    /**
+  /**
      * The amount of time (milliseconds) that each particle will last before being destroyed
      *
      * @property life
      * @type {number}
      * @default 4000
      **/
-    p.life = 4000;
+  p.life = 4000;
 
-    /**
+  /**
      * The variance in the amount of life time (milliseconds)
      *
      * @property lifeVar
      * @type {number}
      * @default 0
      **/
-    p.lifeVar = 0;
+  p.lifeVar = 0;
 
-    /**
+  /**
      * The variance in the x position of emitted particles
      *
      * @property positionVarX
      * @type {number}
      * @default 0
      **/
-    p.positionVarX = 0;
+  p.positionVarX = 0;
 
-    /**
+  /**
      * The variance in the y position of emitted particles
      *
      * @property positionVarY
      * @type {number}
      * @default 0
      **/
-    p.positionVarY = 0;
+  p.positionVarY = 0;
 
-    /**
+  /**
      * The radial acceleration of the particle
      *
      * @property radialAcceleration
      * @type {number}
      * @default 0
      **/
-    p.radialAcceleration = 0;
+  p.radialAcceleration = 0;
 
-    /**
+  /**
      * The variance of the radial acceleration of the particle
      *
      * @property radialAccelerationVar
      * @type {number}
      * @default 0
      **/
-    p.radialAccelerationVar = 0;
+  p.radialAccelerationVar = 0;
 
-    /**
+  /**
      * The number of pixels per second that the particle will move
      *
      * @property speed
      * @type {number}
      * @default 10
      **/
-    p.speed = 10;
+  p.speed = 10;
 
-    /**
+  /**
      * The number of pixels per second that the speed can vary by
      *
      * @property speedVar
      * @type {number}
      * @default 0
      **/
-    p.speedVar = 0;
+  p.speedVar = 0;
 
-    /**
+  /**
      * The start opacity of each particle, where 1 is opaque and 0 is transparent
      *
      * @property startOpacity
      * @type {number}
      * @default 0
      **/
-    p.startOpacity = 1;
+  p.startOpacity = 1;
 
-    /**
+  /**
      * The color of each particle [r,g,b] when it is created
      *
      * @property startColor
      * @type {[r,g,b]}
      * @default [255,0,0]
      **/
-    p.startColor = [255, 0, 0];
+  p.startColor = [255, 0, 0];
 
-    /**
+  /**
      * The variance in the start color
      *
      * @property startColorVar
      * @type {[r,g,b]}
      * @default [0,0,0]
      **/
-    p.startColorVar = [0, 0, 0];
+  p.startColorVar = [0, 0, 0];
 
-    /**
+  /**
      * The start size of each particle, in pixels
      *
      * @property startSize
      * @type {number}
      * @default 20
      **/
-    p.startSize = 20;
+  p.startSize = 20;
 
-    /**
+  /**
      * The variance in start size, in pixels
      *
      * @property startSizeVar
      * @type {number}
      * @default 0
      **/
-    p.startSizeVar = 0;
+  p.startSizeVar = 0;
 
-    /**
+  /**
      * The number of degrees to spin each particle per second when each particle is created
      *
      * @property startSpin
      * @type {number}
      * @default 0
      **/
-    p.startSpin = 0;
+  p.startSpin = 0;
 
-    /**
+  /**
      * The variance in start spin
      *
      * @property startSpinVar
      * @type {number}
      * @default 0
      **/
-    p.startSpinVar = 0;
+  p.startSpinVar = 0;
 
-    /**
+  /**
      * The tangental acceleration of the particle
      *
      * @property tangentalAcceleration
      * @type {number}
      * @default 0
      **/
-    p.tangentalAcceleration = 0;
+  p.tangentalAcceleration = 0;
 
-    //
-    /**
+  //
+  /**
      * The variance in the tangental acceleration of the particle
      *
      * @property tangentalAccelerationVar
      * @type {number}
      * @default 0
      **/
-    p.tangentalAccelerationVar = 0;
+  p.tangentalAccelerationVar = 0;
 
-    //#endregion
-    //#region Private Properties
+  //#endregion
+  //#region Private Properties
 
-    // The total number of particles emitted by this emitter
-    p._totalEmitted = 0;
+  // The total number of particles emitted by this emitter
+  p._totalEmitted = 0;
 
-    // The time the emitter started
-    p._timeStarted = 0;
+  // The time the emitter started
+  p._timeStarted = 0;
 
-    // The time at which the last particle was emitted
-    p._timeLastParticleEmitted = 0;
+  // The time at which the last particle was emitted
+  p._timeLastParticleEmitted = 0;
 
-    // All the particles currently managed by this emitter
-    p._particles = new Array();
+  // All the particles currently managed by this emitter
+  p._particles = new Array();
 
-    //#endregion
+  //#endregion
 
-    //#region Public Methods
+  //#region Public Methods
 
-    p.changeImage = function(image) {
-        this.image = image;  // image宽度和高度必须与上一个图像的一致
-    };
+  p.changeImage = function(image) {
+    this.image = image;  // image宽度和高度必须与上一个图像的一致
+  };
 
-    /**
+  /**
      * Resets the emitter which removes any active particles before starting all over again.
      *
      * @method reset
      */
-    p.reset = function () {
+  p.reset = function () {
 
-        while (this._particles.length > 0) {
-            var particle = this._particles[0];
+    while (this._particles.length > 0) {
+      var particle = this._particles[0];
 
-            if (particle.filters != null) {
-                for (var filterIndex in particle.filters) {
-                    createjs.Tween.removeTweens(particle.filters[filterIndex]);
-                }
-            }
-
-            particle.uncache();
-            createjs.Tween.removeTweens(particle);
-
-            this._particles.splice(0, 1);
-            this.parent.removeChild(particle);
+      if (particle.filters != null) {
+        for (var filterIndex in particle.filters) {
+          createjs.Tween.removeTweens(particle.filters[filterIndex]);
         }
+      }
 
-        this._timeLastParticleEmitted = 0;
-        this.state = createjs.ParticleEmitterState.Created;
-    };
+      particle.uncache();
+      createjs.Tween.removeTweens(particle);
 
-    //#endregion
-    //#region Private Methods
+      this._particles.splice(0, 1);
+      this.parent.removeChild(particle);
+    }
 
-    p.initialize = function () {
-        this.DisplayObject_initialise();
-    };
+    this._timeLastParticleEmitted = 0;
+    this.state = createjs.ParticleEmitterState.Created;
+  };
 
-    p.updateContext = function (ctx) {
-        this.DisplayObject_updateContext(ctx);
+  //#endregion
+  //#region Private Methods
 
-        var currentTimeMilli = createjs.Ticker.getTime();
+  p.initialize = function () {
+    this.DisplayObject_initialise();
+  };
 
-        if (!TQ.FrameCounter.isPlaying()) {
-            currentTimeMilli = this._lastUpdateTimeMs;
-        }
+  p.updateContext = function (ctx) {
+    this.DisplayObject_updateContext(ctx);
 
-        if (!!ParticleEmitter.stopped) {  // 停止了
-            currentTimeMilli = this._lastUpdateTimeMs;
-        }
+    var currentTimeMilli = createjs.Ticker.getTime();
 
-        // Update state
-        if (this.state == createjs.ParticleEmitterState.Created) {
-            this._timeStarted = currentTimeMilli;
-            this.state = createjs.ParticleEmitterState.Running;
-        }
-        else if (this.duration != this.INFINITE &&
+    if (!TQ.FrameCounter.isPlaying()) {
+      currentTimeMilli = this._lastUpdateTimeMs;
+    }
+
+    if (!!ParticleEmitter.stopped) {  // 停止了
+      currentTimeMilli = this._lastUpdateTimeMs;
+    }
+
+    // Update state
+    if (this.state == createjs.ParticleEmitterState.Created) {
+      this._timeStarted = currentTimeMilli;
+      this.state = createjs.ParticleEmitterState.Running;
+    }
+    else if (this.duration != this.INFINITE &&
             currentTimeMilli > (this._timeStarted + this.duration)) {
-            this.state = createjs.ParticleEmitterState.Finished;
-        }
+      this.state = createjs.ParticleEmitterState.Finished;
+    }
 
-        // If RUNNING, try to generate a particle
-        if (this.state == createjs.ParticleEmitterState.Running) {
-            switch (this.emitterType) {
-                case createjs.ParticleEmitterType.OneShot:
-                    this._oneShot(currentTimeMilli);
-                    break;
-                case createjs.ParticleEmitterType.Emit:
-                default:
-                    this._emit(currentTimeMilli);
-                    break;
-            }
-        }
-        // If FINISHED, remove from parent
-        else if (this.state == createjs.ParticleEmitterState.Finished) {
-            if (this.autoRemoveOnFinished) {
-                this.parent.removeChild(this);
-            }
-        }
+    // If RUNNING, try to generate a particle
+    if (this.state == createjs.ParticleEmitterState.Running) {
+      switch (this.emitterType) {
+        case createjs.ParticleEmitterType.OneShot:
+          this._oneShot(currentTimeMilli);
+          break;
+        case createjs.ParticleEmitterType.Emit:
+        default:
+          this._emit(currentTimeMilli);
+          break;
+      }
+    }
+    // If FINISHED, remove from parent
+    else if (this.state == createjs.ParticleEmitterState.Finished) {
+      if (this.autoRemoveOnFinished) {
+        this.parent.removeChild(this);
+      }
+    }
 
-        // Call updateCache if color tweening is required
-        // NB. ColorFilter (or any other type of filter) tweening is computationally very expensive.
-        // Therefore if you wish to use color tweening, then we recommend trying to minimize:
-        //  a) the emission rate, and
-        //  b) the start and end size of the particles
-        if (this.endColor != p.REMAIN_UNCHANGED) {
-            for (var i = 0; i < this._particles.length; i++) {
-                this._particles[i].updateCache();
-            }
-        }
+    // Call updateCache if color tweening is required
+    // NB. ColorFilter (or any other type of filter) tweening is computationally very expensive.
+    // Therefore if you wish to use color tweening, then we recommend trying to minimize:
+    //  a) the emission rate, and
+    //  b) the start and end size of the particles
+    if (this.endColor != p.REMAIN_UNCHANGED) {
+      for (var i = 0; i < this._particles.length; i++) {
+        this._particles[i].updateCache();
+      }
+    }
+  };
+
+  p._emit = function (currentTimeMilli) {
+
+    var millisecondsPerParticle = 1000 / this.emissionRate;
+    if (currentTimeMilli > (this._timeLastParticleEmitted + millisecondsPerParticle)) {
+      if (this._particles.length < this.maxParticles) {
+        this._generateParticle();
+        this._timeLastParticleEmitted = currentTimeMilli;
+      }
+    }
+  };
+
+  p._oneShot = function (currentTimeMilli) {
+
+    if (this._particles.length == 0) {
+      for (var i = 0; i < this.maxParticles; i++) {
+        this._generateParticle();
+      }
+
+      this._timeLastParticleEmitted = currentTimeMilli;
+    }
+  };
+
+  // Generate a new particle
+  p._generateParticle = function () {
+
+    var o = this;
+    this._debugText("generateParticle");
+
+    // Get properties
+    var startOpacity = this.startOpacity;
+    var startColor = this._getColor(this.startColor, this.startColorVar);
+    var startSize = this._getVariedValue(this.startSize, this.startSizeVar, true);
+    var startSpin = this._getVariedValue(this.startSpin, this.startSpinVar, false);
+    var endColor = this.endColor == this.REMAIN_UNCHANGED ? this.startColor : this._getColor(this.endColor, this.endColorVar);
+    var endSize = this.endSize == this.REMAIN_UNCHANGED ? this.startSize : this._getVariedValue(this.endSize, this.endSizeVar, true);
+    var endSpin = this.endSpin == this.REMAIN_UNCHANGED ? this.startSpin : this._getVariedValue(this.endSpin, this.endSpinVar, true);
+    var endOpacity = this.endOpacity == this.REMAIN_UNCHANGED ? this.startOpacity : this.endOpacity;
+    var scale = endSize / startSize;
+    var speed = this._getVariedValue(this.speed, this.speedVar, true);
+    var life = this._getVariedValue(this.life, this.lifeVar, true);
+    var angle = this._getAngle(this.angle, this.angleVar);
+    var distance = speed * life / 1000;
+    var startPos = {
+      x: this._getVariedValue(this.position.x, this.positionVarX, false),
+      y: this._getVariedValue(this.position.y, this.positionVarY, false)
     };
+    var endPos = this._getPositionInDirection(this.position, angle, distance);
+    var dx = endPos.x - this.position.x;
+    var dy = endPos.y - this.position.y;
 
-    p._emit = function (currentTimeMilli) {
+    // Create shape
+    var shape = this._createParticle(startPos, startColor, startOpacity, startSize, startSpin, life, dx, dy);
+    this.parent.addChild(shape);
 
-        var millisecondsPerParticle = 1000 / this.emissionRate;
-        if (currentTimeMilli > (this._timeLastParticleEmitted + millisecondsPerParticle)) {
-            if (this._particles.length < this.maxParticles) {
-                this._generateParticle();
-                this._timeLastParticleEmitted = currentTimeMilli;
-            }
-        }
-    };
+    // Create color filter
+    var colorFilter = this._createColorFilter(shape, startColor);
 
-    p._oneShot = function (currentTimeMilli) {
+    // Cache shape
+    if (this.image == null) {
+      shape.cache(0, 0, startSize, startSize);
+    }
+    else {
+      shape.cache(0, 0, this.image.width, this.image.height, startSize / this.image.width);
+    }
 
-        if (this._particles.length == 0) {
-            for (var i = 0; i < this.maxParticles; i++) {
-                this._generateParticle();
-            }
+    // Animate
+    scale = scale * shape.scaleX;
+    createjs.Tween.get(shape).to({ scaleX: scale, scaleY: scale, rotation: endSpin, alpha: endOpacity}, life).call(function () {
+      o._onParticleFinished(shape)
+    });
+    createjs.Tween.get(colorFilter).to({ redMultiplier: endColor[0] / 255.0, greenMultiplier: endColor[1] / 255.0, blueMultiplier: endColor[2] / 255.0 }, life);
 
-            this._timeLastParticleEmitted = currentTimeMilli;
-        }
-    };
+    // Finalize
+    this._particles.push(shape);
+    this._totalEmitted++;
 
-    // Generate a new particle
-    p._generateParticle = function () {
+    // Write to console
+    this._debugText(this._format("Particle [s_x:{0}, s_y:{1}, e_x:{2}, e_y:{3}]", this.position.x, this.position.y, endPos.x, endPos.y));
+  };
 
-        var o = this;
-        this._debugText("generateParticle");
+  p._createColorFilter = function (shape, color) {
 
-        // Get properties
-        var startOpacity = this.startOpacity;
-        var startColor = this._getColor(this.startColor, this.startColorVar);
-        var startSize = this._getVariedValue(this.startSize, this.startSizeVar, true);
-        var startSpin = this._getVariedValue(this.startSpin, this.startSpinVar, false);
-        var endColor = this.endColor == this.REMAIN_UNCHANGED ? this.startColor : this._getColor(this.endColor, this.endColorVar);
-        var endSize = this.endSize == this.REMAIN_UNCHANGED ? this.startSize : this._getVariedValue(this.endSize, this.endSizeVar, true);
-        var endSpin = this.endSpin == this.REMAIN_UNCHANGED ? this.startSpin : this._getVariedValue(this.endSpin, this.endSpinVar, true);
-        var endOpacity = this.endOpacity == this.REMAIN_UNCHANGED ? this.startOpacity : this.endOpacity;
-        var scale = endSize / startSize;
-        var speed = this._getVariedValue(this.speed, this.speedVar, true);
-        var life = this._getVariedValue(this.life, this.lifeVar, true);
-        var angle = this._getAngle(this.angle, this.angleVar);
-        var distance = speed * life / 1000;
-        var startPos = {
-            x: this._getVariedValue(this.position.x, this.positionVarX, false),
-            y: this._getVariedValue(this.position.y, this.positionVarY, false)
-        };
-        var endPos = this._getPositionInDirection(this.position, angle, distance);
-        var dx = endPos.x - this.position.x;
-        var dy = endPos.y - this.position.y;
+    var filter = new createjs.ColorFilter(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, 1);
+    shape.filters = [filter];
 
-        // Create shape
-        var shape = this._createParticle(startPos, startColor, startOpacity, startSize, startSpin, life, dx, dy);
-        this.parent.addChild(shape);
+    return filter;
+  };
 
-        // Create color filter
-        var colorFilter = this._createColorFilter(shape, startColor);
+  p._createParticle = function (position, color, alpha, size, spin, life, dx, dy) {
 
-        // Cache shape
-        if (this.image == null) {
-            shape.cache(0, 0, startSize, startSize);
-        }
-        else {
-            shape.cache(0, 0, this.image.width, this.image.height, startSize / this.image.width);
-        }
+    var shape = null;
 
-        // Animate
-        scale = scale * shape.scaleX;
-        createjs.Tween.get(shape).to({ scaleX: scale, scaleY: scale, rotation: endSpin, alpha: endOpacity}, life).call(function () {
-            o._onParticleFinished(shape)
-        });
-        createjs.Tween.get(colorFilter).to({ redMultiplier: endColor[0] / 255.0, greenMultiplier: endColor[1] / 255.0, blueMultiplier: endColor[2] / 255.0 }, life);
+    if (this.image != null) {
+      shape = this._createImageParticle(color, size);
+    }
+    else {
+      shape = this._createCircleParticle(color, size);
+    }
 
-        // Finalize
-        this._particles.push(shape);
-        this._totalEmitted++;
+    var originalWidth = this.image != null ? this.image.width : size;
+    var originalHeight = this.image != null ? this.image.height : size;
 
-        // Write to console
-        this._debugText(this._format("Particle [s_x:{0}, s_y:{1}, e_x:{2}, e_y:{3}]", this.position.x, this.position.y, endPos.x, endPos.y));
-    };
+    shape._baseParticle.originX = this.position.x;
+    shape._baseParticle.originY = this.position.y;
+    shape._baseParticle.linearVelocityX = dx / life * 1000;
+    shape._baseParticle.linearVelocityY = dy / life * 1000;
+    shape._baseParticle.linearAccelerationX = this.accelerationX;
+    shape._baseParticle.linearAccelerationY = this.accelerationY;
+    shape._baseParticle.radialAcceleration = this._getVariedValue(this.radialAcceleration, this.radialAccelerationVar, false);
+    shape._baseParticle.tangentalAcceleration = this._getVariedValue(this.tangentalAcceleration, this.tangentalAccelerationVar, false);
 
-    p._createColorFilter = function (shape, color) {
+    shape.alpha = alpha;
+    shape.rotation = spin;
+    shape.x = position.x;
+    shape.y = position.y;
+    shape.regX = originalWidth / 2;
+    shape.regY = originalHeight / 2;
 
-        var filter = new createjs.ColorFilter(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, 1);
-        shape.filters = [filter];
+    shape.initializeProperties(this._totalEmitted);
 
-        return filter;
-    };
+    return shape;
+  };
 
-    p._createParticle = function (position, color, alpha, size, spin, life, dx, dy) {
+  p._createImageParticle = function (color, size) {
+    var bitmap = new createjs.BitmapParticle(this.image);
+    bitmap.scaleX = size / this.image.width;
+    bitmap.scaleY = bitmap.scaleX;
 
-        var shape = null;
+    return bitmap;
+  };
 
-        if (this.image != null) {
-            shape = this._createImageParticle(color, size);
-        }
-        else {
-            shape = this._createCircleParticle(color, size);
-        }
+  p._createCircleParticle = function (color, size) {
+    var shape = new createjs.ShapeParticle();
+    var colorRgb = createjs.Graphics.getRGB(255, 255, 255);
+    shape.graphics.beginFill(colorRgb).drawCircle(size / 2, size / 2, size / 2);
+    shape.alpha = 255;
 
-        var originalWidth = this.image != null ? this.image.width : size;
-        var originalHeight = this.image != null ? this.image.height : size;
+    return shape;
+  };
 
-        shape._baseParticle.originX = this.position.x;
-        shape._baseParticle.originY = this.position.y;
-        shape._baseParticle.linearVelocityX = dx / life * 1000;
-        shape._baseParticle.linearVelocityY = dy / life * 1000;
-        shape._baseParticle.linearAccelerationX = this.accelerationX;
-        shape._baseParticle.linearAccelerationY = this.accelerationY;
-        shape._baseParticle.radialAcceleration = this._getVariedValue(this.radialAcceleration, this.radialAccelerationVar, false);
-        shape._baseParticle.tangentalAcceleration = this._getVariedValue(this.tangentalAcceleration, this.tangentalAccelerationVar, false);
+  p._debugText = function (text) {
+    if (this.debugMode) {
+      TQ.Log.debugInfo(text);
+    }
+  };
 
-        shape.alpha = alpha;
-        shape.rotation = spin;
-        shape.x = position.x;
-        shape.y = position.y;
-        shape.regX = originalWidth / 2;
-        shape.regY = originalHeight / 2;
+  p._getPositionInDirection = function (startPoint, angle, length) {
+    var newX = startPoint.x + (this._cosd(angle) * length);
+    var newY = startPoint.y + (this._sind(angle) * length);
 
-        shape.initializeProperties(this._totalEmitted);
+    return new createjs.Point(newX, newY);
+  };
 
-        return shape;
-    };
+  p._getVariedValue = function (base, variance, applyLowerLimit) {
 
-    p._createImageParticle = function (color, size) {
-        var bitmap = new createjs.BitmapParticle(this.image);
-        bitmap.scaleX = size / this.image.width;
-        bitmap.scaleY = bitmap.scaleX;
+    var plusOrMinus = this._intRandom(1) == 1 ? 1 : -1;
+    var variedValue = base + (this._intRandom(variance) * plusOrMinus);
 
-        return bitmap;
-    };
+    if (applyLowerLimit || false) {
+      variedValue = this._lowerLimit(variedValue);
+    }
 
-    p._createCircleParticle = function (color, size) {
-        var shape = new createjs.ShapeParticle();
-        var colorRgb = createjs.Graphics.getRGB(255, 255, 255);
-        shape.graphics.beginFill(colorRgb).drawCircle(size / 2, size / 2, size / 2);
-        shape.alpha = 255;
+    return variedValue;
+  };
 
-        return shape;
-    };
+  p._getAngle = function (base, variance) {
 
-    p._debugText = function (text) {
-        if (this.debugMode) {
-            TQ.Log.debugInfo(text);
-        }
-    };
+    var unlimited = this._getVariedValue(base, variance);
+    unlimited = unlimited < 0 ? 360 + unlimited : unlimited;
+    unlimited = unlimited > 360 ? unlimited - 360 : unlimited;
+    return unlimited;
+  };
 
-    p._getPositionInDirection = function (startPoint, angle, length) {
-        var newX = startPoint.x + (this._cosd(angle) * length);
-        var newY = startPoint.y + (this._sind(angle) * length);
+  p._getColor = function (base, variance) {
 
-        return new createjs.Point(newX, newY);
-    };
+    var r = variance == null ? base[0] : this._getVariedValue(base[0], variance[0]);
+    var g = variance == null ? base[1] : this._getVariedValue(base[1], variance[1]);
+    var b = variance == null ? base[2] : this._getVariedValue(base[2], variance[2]);
 
-    p._getVariedValue = function (base, variance, applyLowerLimit) {
+    r = this._rgbLimit(r);
+    g = this._rgbLimit(g);
+    b = this._rgbLimit(b);
 
-        var plusOrMinus = this._intRandom(1) == 1 ? 1 : -1;
-        var variedValue = base + (this._intRandom(variance) * plusOrMinus);
+    var color = [r, g, b];
 
-        if (applyLowerLimit || false) {
-            variedValue = this._lowerLimit(variedValue);
-        }
+    return color;
+  };
 
-        return variedValue;
-    };
+  p._rgbLimit = function (unlimitedVal) {
+    var limitedVal = this._lowerLimit(unlimitedVal);
+    limitedVal = limitedVal > 255 ? 255 : limitedVal;
+    return limitedVal;
+  };
 
-    p._getAngle = function (base, variance) {
+  p._lowerLimit = function (unlimitedVal) {
+    var limitedVal = unlimitedVal < 0 ? 0 : unlimitedVal;
+    return limitedVal;
+  };
 
-        var unlimited = this._getVariedValue(base, variance);
-        unlimited = unlimited < 0 ? 360 + unlimited : unlimited;
-        unlimited = unlimited > 360 ? unlimited - 360 : unlimited;
-        return unlimited;
-    };
+  /*** Generate a random integer between 0-x (inclusive) */
+  p._intRandom = function (upperbound) {
+    return Math.floor(Math.random() * (upperbound + 1));
+  };
 
-    p._getColor = function (base, variance) {
+  p._sind = function (degrees) {
+    return Math.sin(this._toRadians(degrees));
+  };
 
-        var r = variance == null ? base[0] : this._getVariedValue(base[0], variance[0]);
-        var g = variance == null ? base[1] : this._getVariedValue(base[1], variance[1]);
-        var b = variance == null ? base[2] : this._getVariedValue(base[2], variance[2]);
+  p._cosd = function (degrees) {
+    return Math.cos(this._toRadians(degrees));
+  };
 
-        r = this._rgbLimit(r);
-        g = this._rgbLimit(g);
-        b = this._rgbLimit(b);
+  p._toRadians = function (degrees) {
+    return degrees * Math.PI / 180;
+  };
 
-        var color = [r, g, b];
+  p._format = function () {
+    var s = arguments[0];
+    for (var i = 0; i < arguments.length - 1; i++) {
+      var reg = new RegExp("\\{" + i + "\\}", "gm");
+      s = s.replace(reg, arguments[i + 1]);
+    }
+    return s;
+  };
 
-        return color;
-    };
+  //#endregion
+  //#region Private Event Handlers
 
-    p._rgbLimit = function (unlimitedVal) {
-        var limitedVal = this._lowerLimit(unlimitedVal);
-        limitedVal = limitedVal > 255 ? 255 : limitedVal;
-        return limitedVal;
-    };
+  // Called when a particles life is over
+  p._onParticleFinished = function (particle) {
+    particle.uncache();
+    var particleIndex = this._particles.indexOf(particle);
+    this._particles.splice(particleIndex, 1);
+    this.parent.removeChild(particle);
 
-    p._lowerLimit = function (unlimitedVal) {
-        var limitedVal = unlimitedVal < 0 ? 0 : unlimitedVal;
-        return limitedVal;
-    };
+    if (this._particles.length == 0 && this.state == createjs.ParticleEmitterState.Running && this.emitterType == createjs.ParticleEmitterType.OneShot) {
+      this.state = createjs.ParticleEmitterState.Finished;
+    }
+  };
 
-    /*** Generate a random integer between 0-x (inclusive) */
-    p._intRandom = function (upperbound) {
-        return Math.floor(Math.random() * (upperbound + 1));
-    };
+  //#endregion
 
-    p._sind = function (degrees) {
-        return Math.sin(this._toRadians(degrees));
-    };
-
-    p._cosd = function (degrees) {
-        return Math.cos(this._toRadians(degrees));
-    };
-
-    p._toRadians = function (degrees) {
-        return degrees * Math.PI / 180;
-    };
-
-    p._format = function () {
-        var s = arguments[0];
-        for (var i = 0; i < arguments.length - 1; i++) {
-            var reg = new RegExp("\\{" + i + "\\}", "gm");
-            s = s.replace(reg, arguments[i + 1]);
-        }
-        return s;
-    };
-
-    //#endregion
-    //#region Private Event Handlers
-
-    // Called when a particles life is over
-    p._onParticleFinished = function (particle) {
-        particle.uncache();
-        var particleIndex = this._particles.indexOf(particle);
-        this._particles.splice(particleIndex, 1);
-        this.parent.removeChild(particle);
-
-        if (this._particles.length == 0 && this.state == createjs.ParticleEmitterState.Running && this.emitterType == createjs.ParticleEmitterType.OneShot) {
-            this.state = createjs.ParticleEmitterState.Finished;
-        }
-    };
-
-    //#endregion
-
-    createjs.ParticleEmitter = ParticleEmitter;
+  createjs.ParticleEmitter = ParticleEmitter;
 }());

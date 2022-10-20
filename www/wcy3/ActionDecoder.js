@@ -7,28 +7,28 @@ window.TQ = window.TQ || {};
 
 (function (){
 
-    function ActionDecoder()
-    {
+  function ActionDecoder()
+  {
 
+  }
+
+  ActionDecoder.calculate = function (track, t) {
+    TQ.Pose.action = (!track.action) ?
+      TQ.poseDefault.action : TQ.TrackDecoder.calOneChannel(track, track.action, t);
+
+    if (!TQ.Pose.action) {
+      assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.Pose.action);
+      TQ.Pose.action = ActionDecoder._findValidName(track.action.value);
     }
+    return TQ.Pose.action;
+  };
 
-    ActionDecoder.calculate = function (track, t) {
-        TQ.Pose.action = (!track.action) ?
-            TQ.poseDefault.action : TQ.TrackDecoder.calOneChannel(track, track.action, t);
+  ActionDecoder._findValidName = function(names) {
+    for (var i = 0; i < names.length; i++) {
+      if (!names[i]) continue;
+      return names[i];
+    }
+  };
 
-        if (!TQ.Pose.action) {
-            assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.Pose.action);
-            TQ.Pose.action = ActionDecoder._findValidName(track.action.value);
-        }
-        return TQ.Pose.action;
-    };
-
-    ActionDecoder._findValidName = function(names) {
-        for (var i = 0; i < names.length; i++) {
-            if (!names[i]) continue;
-            return names[i];
-        }
-    };
-
-    TQ.ActionDecoder = ActionDecoder;
+  TQ.ActionDecoder = ActionDecoder;
 }());

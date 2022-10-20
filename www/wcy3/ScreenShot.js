@@ -7,37 +7,37 @@
 window.TQ = window.TQ || {};
 
 (function () {
-    var ScreenShot = {};
+  var ScreenShot = {};
 
-    function takeImage(bkgColor) {
-        var imageData;
-        if (!bkgColor) {
-            imageData = stage.toDataURL("image/png"); // 默认生成透明图, 带alpha信息, PNG格式的
-        } else {
-            imageData = stage.toDataURL(bkgColor, "image/png"); // 带背景色， 不再是透明的
-        }
-
-        return imageData;
+  function takeImage(bkgColor) {
+    var imageData;
+    if (!bkgColor) {
+      imageData = stage.toDataURL("image/png"); // 默认生成透明图, 带alpha信息, PNG格式的
+    } else {
+      imageData = stage.toDataURL(bkgColor, "image/png"); // 带背景色， 不再是透明的
     }
 
-    ScreenShot.getData = function() {
-        return takeImage();
-    };
+    return imageData;
+  }
 
-    ScreenShot.saveThumbnail = function (album, id) {
-      var img = new Image();
-      img.onload = function () {
-        album[id] = {
-          src: imageResize(img, 100, 100),
-          timestamp: Date.now()
-        };
+  ScreenShot.getData = function() {
+    return takeImage();
+  };
+
+  ScreenShot.saveThumbnail = function (album, id) {
+    var img = new Image();
+    img.onload = function () {
+      album[id] = {
+        src: imageResize(img, 100, 100),
+        timestamp: Date.now()
       };
-      img.src = takeImage(TQ.Graphics.getCanvasBkgColor());
     };
+    img.src = takeImage(TQ.Graphics.getCanvasBkgColor());
+  };
 
-    ScreenShot.getDataWithBkgColor = function() {
-        return takeImage(TQ.Graphics.getCanvasBkgColor());
-    };
+  ScreenShot.getDataWithBkgColor = function() {
+    return takeImage(TQ.Graphics.getCanvasBkgColor());
+  };
 
 	  /*
 			专门针对社交app帖子插图的优化：要求：不失真，宽度最大化，容许高度溢出或不足
@@ -47,51 +47,51 @@ window.TQ = window.TQ || {};
 	  ScreenShot.getForPostAsync= function (onImageReady) {
 	    var WIDTH_IPHONE_6 = 375,
 	      HEIGHT_IPHONE_6 = 667,
-        fullScreenShot = new Image();
-      fullScreenShot.onload = function () {
-        var resultImage =  imageResize(fullScreenShot, WIDTH_IPHONE_6, HEIGHT_IPHONE_6);
-        if (onImageReady) {
-          onImageReady(resultImage);
-        }
-      };
+      fullScreenShot = new Image();
+    fullScreenShot.onload = function () {
+      var resultImage =  imageResize(fullScreenShot, WIDTH_IPHONE_6, HEIGHT_IPHONE_6);
+      if (onImageReady) {
+        onImageReady(resultImage);
+      }
+    };
 
-      fullScreenShot.src = takeImage(TQ.Graphics.getCanvasBkgColor());
+    fullScreenShot.src = takeImage(TQ.Graphics.getCanvasBkgColor());
 	  };
 
-    function determineScale(img, maxWidth, maxHeight) {//只缩小， 不放大
-        var scale = 1;
+  function determineScale(img, maxWidth, maxHeight) {//只缩小， 不放大
+    var scale = 1;
 
-        if (img.height > maxHeight) {
-            scale = Math.min(1, maxHeight / img.height);
-        }
-
-        if (img.width > maxWidth) {
-            scale = Math.min(scale, maxWidth / img.width);
-        }
-        return scale;
+    if (img.height > maxHeight) {
+      scale = Math.min(1, maxHeight / img.height);
     }
 
-    function imageResize(img, maxWidth, maxHeight) {
-        var scale = determineScale(img, maxWidth, maxHeight),
-            ctx,
-            neededHeight = Math.round(img.height * scale / 8) * 8,
-            neededWidth = Math.round(img.width * scale / 8) * 8,
-            canvasTemp;
-
-        if (!canvasTemp) {
-            canvasTemp = document.createElement("canvas");
-        }
-        canvasTemp.width = neededWidth;
-        canvasTemp.height = neededHeight;
-
-        ctx = canvasTemp.getContext("2d");
-        var xc = 0, yc = 0;
-        ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
-        return canvasTemp.toDataURL("image/png");
+    if (img.width > maxWidth) {
+      scale = Math.min(scale, maxWidth / img.width);
     }
+    return scale;
+  }
 
-    // ToDo: 支持GIF,
-/*
+  function imageResize(img, maxWidth, maxHeight) {
+    var scale = determineScale(img, maxWidth, maxHeight),
+      ctx,
+      neededHeight = Math.round(img.height * scale / 8) * 8,
+      neededWidth = Math.round(img.width * scale / 8) * 8,
+      canvasTemp;
+
+    if (!canvasTemp) {
+      canvasTemp = document.createElement("canvas");
+    }
+    canvasTemp.width = neededWidth;
+    canvasTemp.height = neededHeight;
+
+    ctx = canvasTemp.getContext("2d");
+    var xc = 0, yc = 0;
+    ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
+    return canvasTemp.toDataURL("image/png");
+  }
+
+  // ToDo: 支持GIF,
+  /*
 
     var jsf  = ["/Demos/b64.js", "LZWEncoder.js", "NeuQuant.js", "GIFEncoder.js"];
     var head = document.getElementsByTagName("head")[0];
@@ -148,5 +148,5 @@ window.TQ = window.TQ || {};
 
 */
 
-    TQ.ScreenShot = ScreenShot;
+  TQ.ScreenShot = ScreenShot;
 }());

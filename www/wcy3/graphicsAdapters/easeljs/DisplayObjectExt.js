@@ -4,7 +4,7 @@
 
 (function () {
   var p = createjs.DisplayObject.prototype;
-// extended method
+  // extended method
   p.getWidth = function () {
     return 10;
   };

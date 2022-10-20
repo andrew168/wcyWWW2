@@ -60,7 +60,7 @@ window.TQ = window.TQ || {};
       this.setupTimer2();
     }
     //      this.state = TQBase.LevelState.NOT_INIT;
-//        this.dataReady = false;
+    //        this.dataReady = false;
     TQ.DirtyFlag.setLevel(this);
   };
 

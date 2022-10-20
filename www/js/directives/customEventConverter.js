@@ -8,18 +8,18 @@
 angular.module('starter').directive('eventconverter', EventConverter);
 EventConverter.$inject = ['$rootScope'];
 function EventConverter($rootScope) {
-    return {
-        restrict: 'A',
-        link: function (scope, element, attrs) {
-            var events = [TQ.Scene.EVENT_READY,
-                TQ.Scene.EVENT_SAVED,
-                TQ.Scene.EVENT_END_OF_PLAY,
-                TQ.EVENT.REFRESH_UI];
-            events.forEach(function(evt){
-                element.bind(evt, function () {
-                    $rootScope.$broadcast(evt);
-                });
-            });
-        }
-    };
+  return {
+    restrict: 'A',
+    link: function (scope, element, attrs) {
+      var events = [TQ.Scene.EVENT_READY,
+        TQ.Scene.EVENT_SAVED,
+        TQ.Scene.EVENT_END_OF_PLAY,
+        TQ.EVENT.REFRESH_UI];
+      events.forEach(function(evt){
+        element.bind(evt, function () {
+          $rootScope.$broadcast(evt);
+        });
+      });
+    }
+  };
 }
