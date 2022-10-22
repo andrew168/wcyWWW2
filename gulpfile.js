@@ -57,7 +57,6 @@ async function wcylib_concat() {
     .pipe(gulpif('*.html', gulp_minifyHtml()))
     .pipe(dest(distPath))
     .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
-    // .pipe(dest(prjPath1 + '\\lib'))
     .pipe(dest(prjPath1 + '\\lib-debug'));
 
   console.log("concated => " + prjPath1 + '\\lib' + config.app_js);
@@ -81,14 +80,12 @@ async function wcylib_minify() {
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(minify())
     .pipe(sourcemaps.write('../maps'))
-    .pipe(dest(prjPath1 + '\\lib\\'), { sourcemaps: true });
-  // ToDo: check file:  config.app_min_js
-
+    // 不发布到Udoido2，因为后者dev不使用min，也不发布min
+    // .pipe(dest(prjPath1 + '\\lib\\'), { sourcemaps: true })
+    .pipe(dest(distPath + '\\lib\\'), { sourcemaps: true });
   console.log("minified => " + prjPath1 + '\\lib' + config.app_min_js)
-
   return Promise.resolve();
 }
-
 
 async function clean() {
   await del.bind(null, [distPath, 'src / tmp']);
@@ -122,7 +119,7 @@ async function copy_build_tools() {
 async function copy_lazyLoad_files() {
   console.log("copy...")
   await src(srcPath + "\\wcy3Social\\*.*", { base: srcPath })
-    .pipe(dest(prjPath1 + "\\wcy3Social"));
+    .pipe(dest(prjPath1));
   return Promise.resolve("copy completed");
 }
 
@@ -283,6 +280,4 @@ exports.rel = series(
 );
 
 exports.test = makeFolders;  // test;
-// exports.test = series(doConfig, wcylib_minify);
-// exports.test = series(doConfig, wcylib_uglify);
 exports.nn = copy_debug_tools;
