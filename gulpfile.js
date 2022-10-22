@@ -4,8 +4,7 @@
 var srcPath = '.\\www',
   testPath = '.\\test',
   distPath = '.\\dist',
-  dstPath1 = '..\\cardforvoteFake\\www',
-  dstPath2 = '..\\cardforvoteFake\\ksWww';
+  prjPath1 = '..\\udoido2\\www';
 const { series, parallel, src, dest } = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var exec = require('child_process').exec;
@@ -58,11 +57,10 @@ async function wcylib_concat() {
     .pipe(gulpif('*.html', gulp_minifyHtml()))
     .pipe(dest(distPath))
     .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
-    .pipe(dest(dstPath1 + '\\lib'))
-    .pipe(dest(dstPath1 + '\\lib-debug'))
-    .pipe(dest(dstPath2 + '\\lib'));
+    .pipe(dest(prjPath1 + '\\lib'))
+    .pipe(dest(prjPath1 + '\\lib-debug'));
 
-  console.log("concated => " + dstPath1 + '\\lib' + config.app_js);
+  console.log("concated => " + prjPath1 + '\\lib' + config.app_js);
   return Promise.resolve();
 }
 
@@ -83,11 +81,10 @@ async function wcylib_minify() {
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(minify())
     .pipe(sourcemaps.write('../maps'))
-    .pipe(dest(dstPath1 + '\\lib\\'), { sourcemaps: true })
-    .pipe(dest(dstPath2 + '\\lib\\'), { sourcemaps: true });
+    .pipe(dest(prjPath1 + '\\lib\\'), { sourcemaps: true });
   // ToDo: check file:  config.app_min_js
 
-  console.log("minified => " + dstPath1 + '\\lib' + config.app_min_js)
+  console.log("minified => " + prjPath1 + '\\lib' + config.app_min_js)
 
   return Promise.resolve();
 }
@@ -98,37 +95,33 @@ async function clean() {
 }
 
 async function del_extra_libs_js() {
-  await del.bind(null, [dstPath1 + '\\lib\\libs.js'], { force: true });
+  await del.bind(null, [prjPath1 + '\\lib\\libs.js'], { force: true });
 }
 
 async function build() {
   src('dist/**/*')
     .pipe(gulp_size({ title: 'build', gzip: true }))
     .pipe(gulp_zip('ionic' + config.version + '.zip'))
-    .pipe(dest(dstPath1 + '\\lib'))
-    .pipe(dest(dstPath2 + '\\lib'));
+    .pipe(dest(prjPath1 + '\\lib'));
   await Promise.resolve("Build completed!");
 }
 
 async function copy_debug_tools() {
   await src(srcPath + "\\wcy3\\debugger\\*.*")
-    .pipe(dest(dstPath1 + "\\wcy3\\debugger"))
-    .pipe(dest(dstPath2 + "\\wcy3\\debugger"));
+    .pipe(dest(prjPath1 + "\\wcy3\\debugger"));
   return Promise.resolve();
 }
 
 async function copy_build_tools() {
   await src(srcPath + "\\lazyLoading.js")
-    .pipe(dest(dstPath1))
-    .pipe(dest(dstPath2));
+    .pipe(dest(prjPath1));
   return Promise.resolve();
 }
 
 async function copy_lazyLoad_files() {
   console.log("copy...")
   await src(srcPath + "\\wcy3Social\\*.*")
-    .pipe(dest(dstPath1 + "\\wcy3Social"))
-    .pipe(dest(dstPath2 + "\\wcy3Social"));
+    .pipe(dest(prjPath1 + "\\wcy3Social"));
   return Promise.resolve("copy completed");
 }
 
@@ -140,7 +133,7 @@ async function copy_worker_files() {
 
   await filesAndDirs.forEach(async function (resource) {
     src(srcPath + '\\' + resource[0] + '\\' + resource[1])
-      .pipe(dest(dstPath1 + '\\' + resource[0]));
+      .pipe(dest(prjPath1 + '\\' + resource[0]));
   });
   return Promise.resolve("copy_work_files completed!");
 }
@@ -148,8 +141,7 @@ async function copy_worker_files() {
 async function copy_dictionary() {
   if (config.withDictionary) {
     await src(srcPath + "\\dictionary\\*.*")
-      .pipe(dest(dstPath1 + "\\dictionary\\"))
-      .pipe(dest(dstPath2 + "\\dictionary\\"));
+      .pipe(dest(prjPath1 + "\\dictionary\\"));
   }
   return Promise.resolve();
 }
@@ -159,7 +151,7 @@ async function defaultTask() {
 }
 
 async function hot_sync() {
-  console.log("hot sync souce to voteCard");
+  console.log("hot sync souce to " + prjPath1);
   await copy_dictionary();
 }
 
