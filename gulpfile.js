@@ -192,31 +192,31 @@ async function translations() {
 
 async function copyTestFiles() {
   await src([srcPath + '/lib/ngStorage.js',
-  srcPath + "/lib/ionic/css/ionic.css",
-  srcPath + "/css/style.css",
-  srcPath + "/css/weui.css",
-  // "wcy3all.css",
-  srcPath + "/lib-debug-duplicated/rzslider.css",
-  srcPath + "/lib/ng-cordova.js",
-  srcPath + "/cordova.js",
-  srcPath + "/lib/ngStorage.js",
-  srcPath + "/js/app.js",
+    srcPath + "/lib/ionic/css/ionic.css",
+    srcPath + "/css/style.css",
+    srcPath + "/css/weui.css",
+    // "wcy3all.css",
+    srcPath + "/lib-debug-duplicated/rzslider.css",
+    srcPath + "/lib/ng-cordova.js",
+    srcPath + "/cordova.js",
+    srcPath + "/lib/ngStorage.js",
+    srcPath + "/js/app.js",
 
-  srcPath + "/lazyLoading.js",
+    srcPath + "/lazyLoading.js",
 
-  // "libs.js",
+    // "libs.js",
 
-  // srcPath + "/wcy3all.js",
+    // srcPath + "/wcy3all.js",
 
-  srcPath + "/lib-debug-duplicated/rzslider.js",
-  srcPath + "/wcy3/debugger/dumpElement.js",
+    srcPath + "/lib-debug-duplicated/rzslider.js",
+    srcPath + "/wcy3/debugger/dumpElement.js",
 
-  srcPath + "/js/convert.js",
-  srcPath + "/js/controllers.js",
-  srcPath + "/templates/*.*",
-  srcPath + "/dictionary/*.*",
+    srcPath + "/js/convert.js",
+    srcPath + "/js/controllers.js",
+    srcPath + "/templates/*.*",
+    srcPath + "/dictionary/*.*",
   ],
-    { base: srcPath })
+  { base: srcPath })
     .pipe(dest(testPath));
 
   src(distPath + "\*.*", { base: distPath })
