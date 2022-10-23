@@ -91,8 +91,25 @@ async function clean() {
   await del.bind(null, [distPath, 'src / tmp']);
 }
 
+async function release_libs() {
+  await src(distPath + "\\comLibBasic.js", { base: distPath })
+    .pipe(dest(prjPath1 + "\\lib"));
+  return Promise.resolve();
+}
+
 async function del_extra_libs_js() {
-  await del.bind(null, [prjPath1 + '\\lib\\libs.js'], { force: true });
+  var files = [
+    // prjPath1 + '\\lib-debug\\wcy3all.css',
+    prjPath1 + '\\lib\\ionic1.1.0.zip',
+    prjPath1 + '\\lib\\libs.js',
+    prjPath1 + '\\lib-debug\\comLibBasic.js'];
+  
+  files.forEach(function (item) {
+    console.log("del " + item);
+    del.sync([item], { force: true });
+  });
+
+  return Promise.resolve();
 }
 
 async function build() {
@@ -274,10 +291,8 @@ exports.default = series(
 //! 必须与concat一起分开用， 因为文件尚未写到磁盘，导致minify找不到
 exports.rel = series(
   doConfig,
-  wcylib_minify,
-  del_extra_libs_js,
-  build
+  wcylib_minify,  
+  build,
+  release_libs,
+  del_extra_libs_js
 );
-
-exports.test = makeFolders;  // test;
-exports.nn = copy_debug_tools;
