@@ -27,6 +27,7 @@ var TOUCH_MOVING_FLAG = 999;
   InputMap.ROTATE_KEY = InputMap.Y = 89;
   InputMap.PLAY_STOP_KEY = InputMap.SPACE = 32;
   InputMap.LAST_FRAME_KEY = InputMap.F7 = 118;
+  InputMap.ENTER = 13;
   InputMap.LEFT_SHIFT=16;
   InputMap.LEFT_CTRL=17;
   InputMap.LEFT_ALT=18;
@@ -74,6 +75,12 @@ var TOUCH_MOVING_FLAG = 999;
     InputMap.maps[key] = action;
   };
 
+  InputMap.removeAction = function (key, action) {
+    // key可以是组合键, 例如:
+    // key = InputMap.DELETE_KEY | InputMap.LEFT_SHIFT_FLAG;
+    delete InputMap.maps[key];
+  };
+
   InputMap.restart= function () {
     InputMap.mouseMoving = false;
     InputMap.toolbarState = InputMap.NO_TOOLBAR_ACTION;
@@ -105,7 +112,7 @@ var TOUCH_MOVING_FLAG = 999;
     });
 
     $(document).keydown(function (e) {
-      if (!InputMap._on) {
+      if (!InputMap._on && e.which != InputMap.ENTER) {
         return;
       }
       InputMap.updateSpecialKey(e);

@@ -35,6 +35,19 @@ TQ.Locale = (function () {
     if (!injector) {
       return;
     }
+
+    // Convert browser language to internal lauguage:
+    switch (lang) {
+      case "zh-CN":
+      case "zh-TW":
+        lang = "zh";
+        break;
+      case "en":
+      default:
+        lang = 'en';
+        break;
+    }
+
     currentLang = lang;
     var $http = injector.get('$http');
     $http({
