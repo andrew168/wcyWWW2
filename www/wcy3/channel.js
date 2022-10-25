@@ -205,8 +205,25 @@ window.TQ = window.TQ || {};
   };
 
   p.erase = function () {
-    assertEqualsDelta("t == 0, //ToDo:这是不是错误的限制？", 0, TQ.FrameCounter.tGrid(), 0.001);
-    this.initialize(this.value[0]);  // 简单地丢弃原来的轨迹数组, 重新建立一个新的
+    // 功能单一化， 只是擦除数组中原有的内容，比重新建立新数组要省内存，免回收
+    // 只保留t0的数据，如果t0不是当前time， 则可能自动添加当前
+    if (!!this.t) {
+      this.t.splice(1);
+    }
+    if (!!this.value) {
+      this.value.splice(1);
+    }
+    
+    if (!!this.c) {
+      this.c.splice(1);
+    }
+
+    if (!!this.hasSags) {
+      this.sags.splice(1);
+    }
+
+    this.tid1 = 0; // 这是2个临时变量，现在是fixedUp阶段，不需要恢复存盘前的 tid1、2,
+    this.tid2 = 0;
   };
 
   p.reset = function() {

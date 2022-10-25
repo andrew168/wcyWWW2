@@ -953,18 +953,18 @@ window.TQ = window.TQ || {};
     if (this.isPinned()) {
       return;
     }
-    this.animeTrack = null;
+    this.animeTrack.erase();
     this.jsonObj.animeTrack = null;
     if (withChildren) {
       if (this.children != null) {
         for (var i = 0; i < this.children.length; i++) {
-          this.children[i].eraseAnimeTrack();
+          if (!this.children[i].isHighlighter()) {
+            this.children[i].eraseAnimeTrack(withChildren);
+          }
         }
       }
     }
 
-    this.animeTrack = null;
-    this.jsonObj.animeTrack = null;
     this.forceToRecord();
     TQ.DirtyFlag.setElement(this);
   };

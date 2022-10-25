@@ -306,7 +306,7 @@ TQ = TQ || {};
       var ele = SelectSet.members[i];
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       if (ele.isValid()) {
-        ele.eraseAnimeTrack();
+        ele.eraseAnimeTrack(true);
         ele.updateRecord2(0);
       }
 
