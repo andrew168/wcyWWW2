@@ -145,6 +145,7 @@ window.TQ = window.TQ || {};
   Config.hasAudioRecording = false;  // 没有录音功能
   Config.hasPaypal = false; //暂时关闭 paypal， 不需要它和T-shirt功能
   Config.hasWelcome = false; //暂时关闭 Welcome 页面， 待重新设计新页面
+  Config.hasClip = false; //暂时关闭 上传过程中的素材裁剪，效果不好，以简化上传过程，
   Config.ChromeFileEnabled = true;
   Config.useCloudinaryMultiHost = false;
   Config.useCloundServerSimulator = true;

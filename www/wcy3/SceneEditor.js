@@ -121,9 +121,13 @@ var currScene = null;
 
     if (TQUtility.isVideoFile(aFile)) {
       addVideoItem(dstLevel, aFile, matType, callback);
-    } else if (TQ.ImageCliper) {
+    } else if (TQ.ImageCliper && TQ.Config.hasClip) {
       TQ.ImageCliper.clipImage(aFile, function (imageData) {
-        tryKouTu({data: imageData, errorCode:0});
+        if (!imageData) {
+          // 操作被Cancelled，
+          return;
+        }
+        tryKouTu({ data: imageData, errorCode: 0 });
       });
     } else {
       TQ.ImageProcess.start(aFile, options, tryKouTu);
