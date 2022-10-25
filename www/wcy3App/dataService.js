@@ -110,7 +110,8 @@
         console.log(response);
         var data = (response.status === 200) ? response.data : [];
         if ((typeof data === 'string') && (data.startsWith('db error'))) {
-          TQ.MessageBox.confirm('网络链接有问题，请重新加载,(code=8003)');
+          TQ.MessageBox.confirm("(code=8003): " + TQ.Locale.getStr(
+            "network connection failed, please check network availability"));
           data = [];
         }
 
@@ -245,7 +246,8 @@
           selected = [];
 
         if ((typeof data === 'string') && (data.startsWith('db error'))) {
-          TQ.MessageBox.confirm('网络链接有问题，请重新加载,(code=8003');
+          TQ.MessageBox.confirm("(code=8003): " + TQ.Locale.getStr(
+            "network connection failed, please check network availability"));
           data = [];
         }
 
@@ -280,7 +282,8 @@
           onDataReady();
         }
         if (!TQ.MessageBox.hasCriticalError()) {
-          TQ.MessageBox.confirm('网络链接有问题，请重新加载,(code=8002)');
+          TQ.MessageBox.confirm("(code=8002): " + 
+            TQ.Locale.getStr("network connection failed, please check network availability"));
         }
       }
     }

@@ -157,7 +157,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
       TQ.Log.error(evt.data);
       TQ.Log.error(TQUtility.stringifyIgnoreCycle(evt));
     }
-    TQ.MessageBox.confirm(TQ.Locale.getStr('发现错误：无法加载系统文件！ 建议：1）检查网络是否正常连接；2）重新加载。'));
+    TQ.MessageBox.confirm(TQ.Locale.getStr("Error: Can't load system file"));
   }
 
   return {

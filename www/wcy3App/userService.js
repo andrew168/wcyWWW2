@@ -134,7 +134,8 @@ function UserService($http, $auth) {
       }
     } else {
       if (!TQ.MessageBox.hasCriticalError()) {
-        // TQ.MessageBox.promptWithNoCancel('部分网络有问题，请重新加载,(code=9901');
+        TQ.MessageBox.promptWithNoCancel("(code=9901): " + 
+          TQ.Locale.getStr("network connection failed, please check network availability"));
       }
     }
     user.loggedIn = false;
