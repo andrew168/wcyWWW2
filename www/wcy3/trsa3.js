@@ -7,6 +7,7 @@ var TQ = TQ || {};
   function Trsa3() {
   }
 
+  Trsa3.isDragging = function() { return isDragging; };
   Trsa3.mCopy = mCopy;
   Trsa3.ditherStart = ditherStart;
   Trsa3.onTouchStart = onTouchOrDragStart;
@@ -32,7 +33,8 @@ var TQ = TQ || {};
       ang: 0,
       scale: new TQ.ScaleCalculator()
     };
-  var pos = {x: 0, y: 0},
+  var pos = { x: 0, y: 0 },
+    isDragging = false,
     isMultiTouching = false;
 
   function mCopy(evt) {
@@ -171,6 +173,7 @@ var TQ = TQ || {};
   }
 
   function onTouchOrDragEnd(e) {// ==mouse的onUp，
+    isDragging = false;
     if (e.type === 'mouseup') {
       document.removeEventListener('keyup', onKeyUp);
       TQ.TouchManager.detachHandler('mousemove', onDrag);
@@ -219,6 +222,7 @@ var TQ = TQ || {};
       return;
     }
 
+    isDragging = true;
     if (isMultiTouch(e)) {
       console.error("ignore multi touch, in move handler");
       return;
