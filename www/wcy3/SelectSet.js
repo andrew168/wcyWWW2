@@ -419,6 +419,11 @@ TQ = TQ || {};
     return (SelectSet.members[0]);
   };
 
+  SelectSet.textSelected = function () {
+    return ((SelectSet.members.length > 0) &&
+      SelectSet.members[0].isText());
+  };
+
   function peekLatest () {
     var n = SelectSet.members.length;
     if (n <= 0) {
