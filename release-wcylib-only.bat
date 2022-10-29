@@ -6,6 +6,6 @@ node --version
 rem 生成cat 文件
 start gulp
 
-echo "确认cat文件exist，再开始minify, delay 30s"
-timeout /T 30 /nobreak
+echo "minify： 先delay, 并确认所需要的文件exist，再开始"
+timeout /T 1 /nobreak
 start gulp rel

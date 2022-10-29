@@ -23,6 +23,7 @@ var minify = require('gulp-minify');
 var uglify = require('gulp-uglify');
 var fs = require('fs');
 var del = require('del');
+const { delay1000, waitForFiles, doOnceExist } = require('./gulphelper.js');
 var args = require('yargs').argv;
 JSON.minify = JSON.minify || require("node-json-minify");
 
@@ -76,6 +77,7 @@ async function wcylib_uglify() {
 };
 
 async function wcylib_minify() {
+  await waitForFiles("dist/" + config.app_js);
   await src("dist/" + config.app_js, { sourcemaps: true })
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(minify())

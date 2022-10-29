@@ -1,9 +1,7 @@
 call release-backOffice-only.bat
 call release-wcylib-only.bat
-set src=E:\projects\WcyCore
-set dst=E:\projects\cardforvote
+set src=E:\Doc_qian2\WcyCore2
+set dst=E:\Doc_qian2\Udoido2
 
-copy %src%\start.bat   %dst%
-copy %src%\db-start.bat   %dst%
-rem published server to %dst%
-pause
+copy %src%\startUdoido.bat   %dst%
+
