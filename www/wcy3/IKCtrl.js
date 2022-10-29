@@ -59,8 +59,8 @@ window.TQ = window.TQ || {};
   }
 
   /*
-    设置关节的运动范围限制，limitation有值， 则用之， 否则，以当前的位置作为界限。
-    界限是相对于父物体的，是相对值， 不是绝对值
+    设置关节的运动范围限制，若limitation有值， 则用之， 否则，以当前的位置作为界限。
+    angle： 是绝对值，会被转为相对值（因为界限是相对于父物体的，是相对值， 不是绝对值）
     type = 0: 设置 最小值；
     tyoe = 1: 其它 设置 最大值;
      */
@@ -68,11 +68,11 @@ window.TQ = window.TQ || {};
     var child = TQ.SelectSet.peek();
     if (child == null) return;
     if (angle == null) {
-      angle = child.jsonObj.rotation;
+      angle = child.getRotation();
     }
     var parentAngle = 0;
     if (child.parent != null) {
-      parentAngle = child.parent.jsonObj.rotation;
+      parentAngle = child.parent.getRotation();
     }
     var relativeAngle = angle - parentAngle;  // relative to parent;
 

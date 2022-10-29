@@ -2060,6 +2060,14 @@ window.TQ = window.TQ || {};
   p.setMaxAngle = function (newValue) {
     this.jsonObj.angleMax = newValue;
   };
+  p.removeLimitation = function () {
+    if (this.jsonObj.angleMax != undefined) {
+      this.jsonObj.angleMax = null;
+    }
+    if (this.jsonObj.angleMin != undefined) {
+      this.jsonObj.angleMin = null;
+    }
+  }
   p.moveZ = function (step) {
     TQ.MoveCtrl.cmdMoveLayer(this, step);
   };

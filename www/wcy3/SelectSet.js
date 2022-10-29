@@ -19,7 +19,8 @@ TQ = TQ || {};
 
     btnEffect = {
       group: null,
-      joint: null
+      joint: null,
+      limitJoint: null,
     },
     latestElement = null,
     lastSolidElement = null, // 非null的， 可编辑的 element， 不是marker
@@ -30,6 +31,7 @@ TQ = TQ || {};
   SelectSet.members = [];
   SelectSet.multiCmdGroupIt = multiCmdGroupIt;
   SelectSet.multiCmdJointIt = multiCmdJointIt;
+  SelectSet.multiCmdLimitJoint = multiCmdLimitJoint;
   SelectSet.explode = explode;
   SelectSet.btnEffect = btnEffect;
 
@@ -43,6 +45,7 @@ TQ = TQ || {};
     lastSolidElement = null;
     btnEffect.group = null;
     btnEffect.joint = null;
+    btnEffect.limitJoint = null;
     TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function() {
       if ((!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
         TQ.SelectSet.delete();
@@ -219,7 +222,6 @@ TQ = TQ || {};
 
   var oldStatue = {};
   function multiCmdJointIt() {
-
     return multiCmd(jointIt, {
       cmdBefore: function () {
         oldStatue.inSubobjectMode = TQ.InputCtrl.inSubobjectMode;
@@ -232,6 +234,55 @@ TQ = TQ || {};
         TQ.InputCtrl.inSubobjectMode = oldStatue.inSubobjectMode;
         TQ.Config.useMarkerOn = oldStatue.useMarkerOn;
         btnEffect.joint = null;
+      }
+    });
+  }
+
+  function limitJoint() {
+    // 虽然是空函数，但是必须有
+    // 因为函数使用用来判断是否同一个命令，必须唯一
+  }
+
+  function multiCmdLimitJoint() {
+    let rotation0,
+      rotation1,
+      ee,
+      isValid = false,
+      parentIsPinned = false;
+    return multiCmd(limitJoint, {
+      cmdBefore: function () {
+        // 确保Parent 是固定的
+        ee = SelectSet.peek();
+        if (!!ee || ee.isJoint()) {
+          rotation0 = ee.getRotation();
+          ee.removeLimitation();
+          isValid = true;
+          if (ee.parent && ee.parent.isPinned()) {
+            parentIsPinned = true;
+          } else {
+            ee.parent.pinIt();
+          }
+          btnEffect.limitJoint = "effect-working";
+        } else {
+          TQ.MessageBox.prompt(TQ.Locale.getStr("Please choose a joint, before click the command"));
+        }
+      },
+      cmdAfter: function () {
+        if (isValid) {
+          rotation1 = ee.getRotation();
+          // 确保rotation1 is 最大角
+          if (rotation1 < rotation0) {
+            rotation1 = [rotation0, rotation0 = rotation1][0];
+          }
+          
+          TQ.IKCtrl.setLimitation(0, rotation0);
+          TQ.IKCtrl.setLimitation(1, rotation1);
+          // 确保Parent 是固定的
+          if (!parentIsPinned) {
+            ee.parent.pinIt();
+          }
+          btnEffect.limitJoint = null;
+        }
       }
     });
   }
