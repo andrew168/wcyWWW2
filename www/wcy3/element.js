@@ -4,6 +4,8 @@
  */
 window.TQ = window.TQ || {};
 
+// Element其实是Image元素演化来的，
+// 扩展成了基类
 (function () {
   TQ.ElementType = {
     ANCHOR_MARKER: "AnchorMarker",
@@ -380,6 +382,23 @@ window.TQ = window.TQ || {};
         }
       }
     }
+  };
+
+  p.calGeoBox = function () {
+  // 自身的边界盒，在不考虑children的情况下，
+  // 虚元素（Group，元件等）自身没有边界盒，
+    let selfBox = (this.isVirtualObject())? null: new TQ.GeoBox(this);
+    if (!!this.children) {
+      for (var i = 0; i < this.children.length; i++) {
+        if (this.children[i] && !this.children[i].isHighlighter()) {
+          let childBox = this.children[i].calGeoBox();
+          if (!!childBox) {
+            selfBox = (!selfBox) ? childBox : selfBox.combine(childBox);
+          }
+        }
+      }
+    }
+    return selfBox;
   };
 
   p.getTextBubble = function () {

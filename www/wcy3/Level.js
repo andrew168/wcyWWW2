@@ -14,9 +14,10 @@ window.TQ = window.TQ || {};
     this.tMaxFrameMixed = DEFAULT_T_MAX_FRAME;
     this.tGlobalLastFrame = 0; // 他对作品最大时长的最低要求
     this.t0 = 0;
+    this.updateCompletedHandlers = [];
     this.initialize(description);
   }
-
+ 
   Level.EVENT_START_SHOWING = 'level start showing';
 
   Level.isCurrent = function (id) {
@@ -570,6 +571,12 @@ window.TQ = window.TQ || {};
     }
     this.isDirtyZ = false;
     this.isDirty = false;
+    if (this.updateCompletedHandlers.length > 0) {
+      for (let func of this.updateCompletedHandlers) {
+        func();
+      }
+      this.updateCompletedHandlers.splice(0);
+    }
   };
 
   p.updateState = function () {
@@ -1000,6 +1007,10 @@ window.TQ = window.TQ || {};
       }
     }
   };
+
+  p.registerHandler = function(func) {
+    this.updateCompletedHandlers.push(func);
+  }
 
   TQ.Level = Level;
 }());

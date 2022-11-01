@@ -6,6 +6,7 @@ TQ = TQ || {};
 (function () {
   /*
      BBox是一种特殊的修饰品Decoration. 也是Element类的子类.
+     它同时含有边界盒的几何数据和图形显示信息。
      它的角度总是水平，不随host旋转。但是， 会计算新的大小和位置，确保它是boundary box
      */
   function BBox(level, desc, host) {

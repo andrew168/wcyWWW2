@@ -102,7 +102,24 @@ TQ = TQ || {};
     this.initialize(desc);
     TQ.StageBuffer.close();
     TQ.DirtyFlag.setElement(this); // 强制更新group元素的时间
+    self = this;
+    currScene.currentLevel.registerHandler(function () {
+      self.shrinkToStage();
+    })    
   };
+
+  // 如果超出了屏幕范围，则缩小比例，以占据屏幕正中心的80%
+  p.shrinkToStage = function () {
+    let geoBox = this.calGeoBox(),
+      scale = Math.min(currScene.getDesignatedWidth() * 0.8 / geoBox.getWidth(),
+        currScene.getDesignatedHeight() * 0.8 / geoBox.getHeight());
+    if (scale < 1) {
+      //tips: 必须用Timeout包裹，才能正确地更新,否则，画面不改变
+      setTimeout(function () {
+        self.scale(scale);
+      });
+    }
+  }
 
   p.loadFromFile = function (jsonFiledesc) {
     var opusDesc;
