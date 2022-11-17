@@ -132,7 +132,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     insertRain: TQ.ParticleMgr.insertRain,
     insertMoney: TQ.ParticleMgr.insertMoney,
     uploadIComponentThumbnail: uploadIComponentThumbnail,
-    selectLocalFile: selectLocalFile,
 
     // select set
     emptySelectSet: emptySelectSet,
@@ -382,7 +381,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     });
   }
 
-  function loadLocalSound(matType, useDevice, callback) {
+  function loadLocalSound(matType, useDevice, files, callback) {
     if (WxService.isReady()) {
       // alert("请在浏览器中打开，以便于使用所有功能");
       // return doInsertMatFromLocalWx(matType);
@@ -399,139 +398,41 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
           }, forceToRefreshUI);
         }
       } else {
-        selectLocalFile(matType, useDevice).then(function (files) {
-          var soundFile = files[files.length - 1];
-          if (soundFile.size > TQ.Config.MAX_SOUND_FILE_SIZE) {
-            return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制声音文件大小 < ' + Math.round(TQ.Config.MAX_SOUND_FILE_SIZE/1000) + 'K');
-          }
-          TQ.SceneEditor.addItemByFile(dstLevel, soundFile, matType, callback);
-        });
+        var soundFile = files[files.length - 1];
+        if (soundFile.size > TQ.Config.MAX_SOUND_FILE_SIZE) {
+          return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制声音文件大小 < ' + Math.round(TQ.Config.MAX_SOUND_FILE_SIZE/1000) + 'K');
+        }
+        TQ.SceneEditor.addItemByFile(dstLevel, soundFile, matType, callback);
       }
     }
   }
 
-  function loadLocalImage(matType, useDevice, callback, kouTuMain) {
+  function loadLocalImage(matType, useDevice, filesOrImage64, callback, kouTuMain) {
     var dstLevel = currScene.currentLevel;
-    return selectLocalFile(matType, useDevice).then(function (filesOrImage64) {
-      var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64],
-        n = files.length,
-        mat;
+    var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64],
+      n = files.length,
+      mat;
 
-      function processOneFile(i) {
-        if (i >= n) {
-          return;
-        }
-        mat = files[i];
-        if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat) || TQUtility.isVideoFile(mat)) {
-          TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, onPreprocessCompleted, kouTuMain);
-        }
-
-        function onPreprocessCompleted(desc, fileOrBlob, matType) {
-          callback(desc, fileOrBlob, matType);
-          if ((i + 1) < n) {
-            $timeout(function () {
-              processOneFile(i + 1);
-            });
-          }
-        }
+    function processOneFile(i) {
+      if (i >= n) {
+        return;
+      }
+      mat = files[i];
+      if (TQ.Utility.isImageFile(mat) || TQ.Utility.isImage64(mat) || TQUtility.isVideoFile(mat)) {
+        TQ.SceneEditor.preprocessLocalImage(dstLevel, mat, matType, onPreprocessCompleted, kouTuMain);
       }
 
-      processOneFile(0);
-    }, errorReport);
-  }
-
-  function selectLocalFile(matType, useDevice) {
-    var camera = {
-        // 后缀方法， 和 MIME type方法都要有， 以增强兼容性
-        formats: "image/*", // ;capture=camera",
-        device: "camera"
-      },
-
-      imageFile = {
-        formats: "video/mp4,video/x-m4v,video/*,.bmp, .gif, .jpeg, .png, image/bmp, image/gif, image/jpeg, image/jpg, image/png, image/*;capture=camera",
-        device: ""
-      },
-
-      audio = {
-        formats: "audio/*",
-        device: "audio"
-      },
-
-      audioFile = {
-        formats: "audio/*",
-        // formats: ".wav, .mp3, audio/mpeg, audio/mp3, application/zip, audio/wav, audio/wave, audio/x-wav ",
-        device: ""
-      },
-
-      validFormat = (matType === TQ.MatType.SOUND) ?
-        ((useDevice) ? audio : audioFile) :
-        ((useDevice) ? camera : imageFile);
-
-    // <input type="file" accept="image/*" capture="camera">
-    // Capture can take values like camera, camcorder and audio.
-
-    if (!_initialized) {
-      _initialized = true;
-      domEle = document.createElement('input');
-      domEle.setAttribute('id', '---input-file-test');
-      domEle.setAttribute('type', 'file');
-      setOptions();
-      document.body.appendChild(domEle);
-      fileElement = $(domEle);
-    } else {
-      setOptions();
-      //            domEle.setAttribute("accept", validFormat.formats);
-      // domEle.setAttribute("accept", ".jpg, .bmp");
-      // domEle.setAttribute("accept", ".wav, .mp3");
-      // domEle.setAttribute("accept", ".png, .jpeg, image/png, image/jpeg");
-
-      // capture：指明用设备， 或已有的文件
-      //          if (useDevice) {
-      //              domEle.setAttribute("capture", validFormat.device);
-      //          }
-    }
-
-    function setOptions() {
-      // accept: 指明可接受的media类别
-      // domEle.setAttribute("accept", "image/*");
-      domEle.setAttribute("accept", validFormat.formats);
-      // domEle.setAttribute("accept", ".jpg, .bmp");
-      // domEle.setAttribute("accept", ".wav, .mp3");
-      // domEle.setAttribute("accept", ".png, .jpeg, image/png, image/jpeg");
-
-      // capture：指明用设备， 或已有的文件
-      if (useDevice) {
-        domEle.setAttribute("capture", validFormat.device);
-        domEle.removeAttribute('multiple');
-        // domEle.setAttribute('multiple', false);
-      } else {
-        domEle.removeAttribute("capture"); // 在IOS上， capture值被忽略，
-
-        //选择已有的文件（而不是从device拍照），可以采用多参照！！！
-        domEle.setAttribute('multiple', true); // "multiple" （不论true/false, Safari 都直接打开相册）
+      function onPreprocessCompleted(desc, fileOrBlob, matType) {
+        callback(desc, fileOrBlob, matType);
+        if ((i + 1) < n) {
+          $timeout(function () {
+            processOneFile(i + 1);
+          });
+        }
       }
     }
 
-    fileElement.unbind('change'); // remove old handler
-    fileElement[0].value = null;  // remove old selections
-    fileElement.change(onSelectOne);
-    fileElement.click();
-
-    var q = $q.defer();
-
-    function onSelectOne() {
-      TQ.Log.debugInfo('changed');
-      var files = domEle.files;
-      if ((files.length > 0)) {
-        q.resolve(files);
-      } else {
-        q.reject({error: 1, msg: "未选中文件！"});
-      }
-      fileElement.unbind('change'); // remove old handler
-      fileElement.change(null);
-    }
-
-    return q.promise;
+    processOneFile(0);   
   }
 
   function processOneMat(data) {
@@ -1738,12 +1639,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
           message: "" // not supported by FB?
           // picture, description, captions 等废弃了，--- Jul 17, 2017
         });
-    }
-  }
-
-  function errorReport(pkg) {
-    if (pkg && pkg.error && pkg.msg) {
-      TQ.MessageBox.show(pkg.msg);
     }
   }
 

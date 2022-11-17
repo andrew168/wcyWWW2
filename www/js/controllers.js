@@ -305,17 +305,37 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
     TQ.CameraService.insertFromCamera();
   };
 
-  $scope.insertPropFromLocal = function () {
+  function insertPropFromLocal(evt) {
     var matType = TQ.MatType.PROP,
       useDevice = false;
-    EditorService.loadLocalImage(matType, useDevice, onLocalImageLoaded);
-  };
-
+    console.log(evt);
+    let files = TQ.Utility.getFilesFromEvent(evt);    
+    if (!!files) {
+      EditorService.loadLocalImage(matType, useDevice, evt.target.files, onLocalImageLoaded);
+    }
+  }
+  
   var _currentMusic = null;
-  $scope.insertSoundFromLocal = function (useDevice) {
+  function insertSoundFromLocal(evt) {
+    console.log(evt);
     var matType = TQ.MatType.SOUND;
-    EditorService.loadLocalSound(matType, useDevice, onLocalSoundLoaded);
-  };
+    let useDevice = false;
+    let files = TQ.Utility.getFilesFromEvent(evt);
+    if (!!files) {
+      EditorService.loadLocalSound(matType, useDevice, files, onLocalSoundLoaded);
+    }
+  }
+
+  $scope.insertSoundFromRecorder = function(evt) {
+    let useDevice = true;
+    var matType = TQ.MatType.SOUND;
+    EditorService.loadLocalSound(matType, useDevice, null, onLocalSoundLoaded);
+  }
+
+  setTimeout(function () {
+    document.getElementById("id-input-image").addEventListener("change", insertPropFromLocal);
+    document.getElementById("id-input-sound").addEventListener("change", insertSoundFromLocal);
+  });
 
   function onLocalSoundLoaded(desc, fileOrBlob, matType) {
     desc.isCrossLevel = (TQUtility.isSoundFile(fileOrBlob) ? true : false); //假设：本地文件是背景音， 录音是本场景的

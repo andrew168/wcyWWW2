@@ -14,6 +14,20 @@ window.TQ = window.TQ || {};
   var localIdCounter = 0,
     localIdTimeBase = Date.now();
 
+  Utility.getFilesFromEvent = function(evt) {
+    let files = null;
+    if (!!evt) {
+      if (evt.currentTarget && evt.currentTarget.files) {
+        files = evt.currentTarget.files;
+      } else if (evt.target && evt.target.files) {
+        files = evt.target.files;
+      } else if (evt.srcElement && evt.srcElement.files) {
+        files = evt.srcElement.files;
+      }
+    }
+    return files;
+  }
+
   Utility.toCssFont = function(option) {
     // !!! 只接受 合法的 CSS font attribute, ex. "bold 36px Arial"
     // 不能带color
