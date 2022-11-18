@@ -2006,13 +2006,16 @@ window.TQ = window.TQ || {};
   p.isJoint = function () {
     return ((this.parent != null) && (this.hasFlag(Element.JOINTED)));
   };
+  p.isBone = function () {
+    return this.isJoint() || this.isRoot();
+  };
   p.isFEeffect = function () {
     return false;
   };
   p.isMarker = function () {
     return false;
   };
-
+  
   p.isBBox = function () {
     return false;
   };

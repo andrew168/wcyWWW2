@@ -313,7 +313,7 @@ TQ = TQ || {};
     });
 
     var firstEle = SelectSet.members[0];
-    if (firstEle.isJoint()) {
+    if (firstEle.isBone()) {
       unjoint();
     } else {
       ungroup();
