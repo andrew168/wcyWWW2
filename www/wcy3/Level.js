@@ -104,6 +104,17 @@ window.TQ = window.TQ || {};
       if (!ele) { // 有元素为null？？
         continue;
       }
+
+      // 优先去除外层的附件，每次1层
+      let attachmentID = ele.findAttachment();
+      if (attachmentID >= 0) {
+        let attachment = ele.children[attachmentID];
+        ele.removeChild(attachment);
+        this.addElementDirect(attachment);
+        continue;
+      }
+
+      // 最后拆卸关节
       var parent = ele.parent;
       if (parent != null) {
         assertTrue(TQ.Dictionary.INVALID_PARAMETER, parent != null);
