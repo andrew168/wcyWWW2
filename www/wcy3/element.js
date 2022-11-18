@@ -513,6 +513,20 @@ window.TQ = window.TQ || {};
     this.children.push(child);
   };
 
+  p.explode = function () {
+    // 普通group只炸开1层，
+    // 关节：炸开整条链
+    var parts = [];
+    TQ.Assert.isTrue(!this.hasBBox(), "必须先把BBox去除");
+    if (this.children) {
+      while (this.children.length > 0) {
+        var child = this.removeChild(this.children[0]);
+        parts.push(child);
+      }
+    }
+    return parts;
+  };
+
   p.undeleteChild = function (child) {
     this.addChildDirect(child);
     child.addItemToStage();

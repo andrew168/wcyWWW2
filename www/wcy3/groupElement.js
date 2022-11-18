@@ -77,21 +77,6 @@ TQ = TQ || {};
     return (this.children.length < 2) ? 1 : this.children[0].getHeight();
   };
 
-  p.explode = function() {
-    // 普通group只炸开1层，
-    // 关节：炸开整条链
-    var parts = [];
-    TQ.Assert.isTrue(!this.hasBBox(), "必须先把BBox去除");
-    if (this.children) {
-      while (this.children.length > 0) {
-        var child = this.removeChild(this.children[0]);
-        parts.push(child);
-      }
-    }
-    return parts;
-  };
-
-
   p._initializeComponent = function (desc) {
     // 如果从groupFile来的，
     if ((this instanceof TQ.GroupElement) && (this.isElementFile)) {
