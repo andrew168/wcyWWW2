@@ -123,6 +123,23 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
+  p.uniqueBone = function (elements) {
+    //最多只能有1个Bone，保留首个，剔除多余的
+    let i = 0,
+      num = elements.length,
+      resultID = -1;        
+    for (i = num-1; i >= 0; i--) {
+      let x = elements[i];
+      if (x.isJoint() || x.isRoot()) {
+        if (resultID > -1) {
+          elements.splice(resultID, 1);
+        }
+        resultID = i;          
+      } 
+    }
+    return resultID;
+  }
+
   p.groupIt = function (elements) {
     TQ.SelectSet.turnOff();
     elements.forEach(function (ele) {
@@ -131,9 +148,18 @@ window.TQ = window.TQ || {};
       }
     });
 
+    let boneID = this.uniqueBone(elements);
+    let host = null;
+    if (boneID > -1) {
+      host = elements[boneID];
+      elements.splice(boneID, 1);
+    }
     var aGroup = TQ.GroupElement.create(this, elements);
     this.addElementDirect(aGroup);
     this.latestElement = aGroup;
+    if (!!host) {
+      host.addChild(aGroup);
+    }
     TQ.DirtyFlag.setLevel(this);
     return aGroup;
   };
@@ -141,20 +167,23 @@ window.TQ = window.TQ || {};
   p.unGroup = function (elements) {
     for (var i = 0; i < elements.length; i++) {
       var ele = elements[i];
-      if (ele.isJoint() || ele.hasFlag(TQ.Element.ROOT_JOINT)) {
-        continue;
-      }
-      if (!ele.isVirtualObject()) {
+      // if (ele.isJoint() || ele.isRoot()) {
+      //   continue;
+      // }
+      if (!ele.isVirtualObject() && !!ele.parent) {
         ele = ele.parent;
       }
       if (ele == null) continue;
-      if (ele.isGroup()) {
+      if (ele.isGroup() || ele.children.length > 0) {
+        let needDelete = (ele.isGroup() ? true : false);
         var parts = ele.explode(),
           j;
         for (j = 0; j < parts.length; j++) {
           this.addElementDirect(parts[j]);
         }
-        this.deleteElement(ele);
+        if (needDelete) {
+          this.deleteElement(ele);
+        }
       }
     }
 

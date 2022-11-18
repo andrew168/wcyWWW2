@@ -527,6 +527,19 @@ window.TQ = window.TQ || {};
     return parts;
   };
 
+  p.findAttachment = function () {
+    if (this.isBone())
+    {
+      let num = this.children.length;
+      for (i = num - 1; i >= 0; i--) {
+        if (!this.children[i].isBone()) {
+          return i;
+        }
+      }
+    }  
+    return -1;
+  }
+
   p.undeleteChild = function (child) {
     this.addChildDirect(child);
     child.addItemToStage();
