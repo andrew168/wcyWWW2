@@ -151,6 +151,17 @@ window.TQ = window.TQ || {};
     return resultID;
   }
 
+  p.doAttach = function (boneID, elements) {
+    let host = elements[boneID];
+    assertTrue("host must joint, not root", !!host && host.isJoint() && !host.isRoot());
+    elements.splice(boneID, 1);
+    assertTrue("empty elememts for group?", elements.length > 0);
+    var aGroup = TQ.GroupElement.create(this, elements);
+    host.addChild(aGroup);
+    TQ.DirtyFlag.setLevel(this);
+    return aGroup;
+  };
+
   p.groupIt = function (elements) {
     TQ.SelectSet.turnOff();
     elements.forEach(function (ele) {
@@ -163,14 +174,15 @@ window.TQ = window.TQ || {};
     let host = null;
     if (boneID > -1) {
       host = elements[boneID];
-      elements.splice(boneID, 1);
+      //case： 1个关节链， 转化为元件，
+      if (host.isJoint() && !host.isRoot()) {
+        return this.doAttach(boneID, elements);
+      }
     }
+
     var aGroup = TQ.GroupElement.create(this, elements);
     this.addElementDirect(aGroup);
     this.latestElement = aGroup;
-    if (!!host) {
-      host.addChild(aGroup);
-    }
     TQ.DirtyFlag.setLevel(this);
     return aGroup;
   };
