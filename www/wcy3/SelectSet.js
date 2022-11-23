@@ -88,6 +88,18 @@ TQ = TQ || {};
     }
     assertNotNull(TQ.Dictionary.PleaseSelectOne, element);
     if ((element == null)) return;
+
+    if (TQ.InputMap.isPresseds[TQ.InputMap.LEFT_SHIFT]) {
+      while (element.isMarker()) { //  Decoration 不能记入选择集
+        element = element.host;
+      }
+      if (SelectSet.members.indexOf(element) >= 0) {
+        return SelectSet.remove(element);
+      } else {
+        return;
+      }
+    }
+
     latestElement = element;
     if (element.isMarker()) { //  Decoration 不能记入选择集
       selectedMarkers.splice(0); // 最多只能同时选中、操作1个marker
@@ -161,6 +173,21 @@ TQ = TQ || {};
 
     if (withEvent) {
       TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, { element: null });
+    }
+  };
+
+  SelectSet.remove = function (ele) {
+    assertNotNull(TQ.Dictionary.FoundNull, ele);
+    for (var i = 0; i < SelectSet.members.length; i++) {
+      if (ele.id == SelectSet.members[i].id) {
+        if (ele.isValid()) { // 可能已经被前面的父物体一起删除了
+          ele.highlight(false);
+          ele.detachDecoration();
+          SelectSet.members.splice(i, 1);
+          latestElement = SelectSet.peekEnd();
+          break;
+        }
+      }
     }
   };
 
@@ -470,6 +497,14 @@ TQ = TQ || {};
     return (SelectSet.members[0]);
   };
 
+  // 返回最后加入的元素
+  SelectSet.peekEnd = function () {
+    if (SelectSet.members.length <= 0) {
+      return null;
+    }
+    return (SelectSet.members[SelectSet.members.length - 1]);
+  };
+
   SelectSet.textSelected = function () {
     return ((SelectSet.members.length > 0) &&
       SelectSet.members[0].isText());
@@ -480,7 +515,8 @@ TQ = TQ || {};
     if (n <= 0) {
       return null;
     }
-    return latestElement;
+    // 在扣除模式下，lastElement是null
+    return !latestElement ? SelectSet.peekEnd() : latestElement;
   }
 
   SelectSet.peekEditableEle = function () {
