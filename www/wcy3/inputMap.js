@@ -28,9 +28,9 @@ var TOUCH_MOVING_FLAG = 999;
   InputMap.PLAY_STOP_KEY = InputMap.SPACE = 32;
   InputMap.LAST_FRAME_KEY = InputMap.F7 = 118;
   InputMap.ENTER = 13;
-  InputMap.LEFT_SHIFT=16;
-  InputMap.LEFT_CTRL=17;
-  InputMap.LEFT_ALT=18;
+  InputMap.LEFT_SHIFT = 16;
+  InputMap.LEFT_CTRL = 17;
+  InputMap.LEFT_ALT = 18;
   InputMap.EMPTY_SELECTOR = 27; //ESCAPE;
   InputMap.D0 = 48;
   InputMap.D1 = 49;
@@ -50,26 +50,26 @@ var TOUCH_MOVING_FLAG = 999;
   InputMap.LEFT_CTRL_FLAG = 0x2000;
   InputMap.LEFT_ALT_FLAG = 0x4000;
 
-  InputMap.isMouseDown=false;
+  InputMap.isMouseDown = false;
   InputMap.isTouchMoving = false;
   InputMap.toolbarState = InputMap.NO_TOOLBAR_ACTION = null;
 
   // 私有变量， 用下划线开头， 放在公共变量的后面，必须在所有函数的前面，
   InputMap._on = true;  //  true, 由它处理键盘； false: 不.
 
-  InputMap.setToolbarState = function(buttonIdString) {
+  InputMap.setToolbarState = function (buttonIdString) {
     assertNotNull(TQ.Dictionary.FoundNull, buttonIdString);
     InputMap.toolbarState = buttonIdString;
     TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TOOLBAR);
   };
 
-  InputMap.IsOperating = function() {
+  InputMap.IsOperating = function () {
     return ((InputMap.isTouchMoving || InputMap.isMouseDown) &&
-                (InputMap.toolbarState === null));
+      (InputMap.toolbarState === null));
   };
 
   InputMap.maps = [];
-  InputMap.registerAction = function (key, action){
+  InputMap.registerAction = function (key, action) {
     // key可以是组合键, 例如:
     // key = InputMap.DELETE_KEY | InputMap.LEFT_SHIFT_FLAG;
     InputMap.maps[key] = action;
@@ -81,7 +81,7 @@ var TOUCH_MOVING_FLAG = 999;
     delete InputMap.maps[key];
   };
 
-  InputMap.restart= function () {
+  InputMap.restart = function () {
     InputMap.mouseMoving = false;
     InputMap.toolbarState = InputMap.NO_TOOLBAR_ACTION;
     InputMap.lastPresseds = InputMap.isPresseds;
@@ -93,7 +93,7 @@ var TOUCH_MOVING_FLAG = 999;
     InputMap.isPresseds[InputMap.LEFT_ALT] = InputMap.lastPresseds[InputMap.LEFT_ALT];
   };
 
-  InputMap.initialize = function(playOnlyFlag) {
+  InputMap.initialize = function (playOnlyFlag) {
     if (!!playOnlyFlag) {
       return;
     }
@@ -149,7 +149,7 @@ var TOUCH_MOVING_FLAG = 999;
     return result;
   };
 
-  InputMap.updateSpecialKey = function(e){
+  InputMap.updateSpecialKey = function (e) {
     // 在复合键(例如：alt + Delete 放开的时候, 只有一次keyUp事件, 所有alt键放开的信息丢失了, 所以,需要下面的更新方法)
     InputMap.isPresseds[InputMap.LEFT_CTRL] = e.ctrlKey;
     InputMap.isPresseds[InputMap.LEFT_SHIFT] = e.shiftKey;
@@ -189,20 +189,20 @@ var TOUCH_MOVING_FLAG = 999;
     InputMap.updateTouch(e);
   };
 
-  InputMap.updateTouch = function(e) {
+  InputMap.updateTouch = function (e) {
     switch (e.type) {
       case 'touchmove': InputMap.isTouchMoving = true; break;
       case 'touchstart': InputMap.isTouchMoving = true; break;
-      case 'touchend' : break;
-      default : InputMap.isTouchMoving = false;
+      case 'touchend': break;
+      default: InputMap.isTouchMoving = false;
     }
   };
 
-  InputMap.turnOn = function() {
+  InputMap.turnOn = function () {
     TQ.InputMap._on = true;
   };
 
-  InputMap.turnOff = function() {
+  InputMap.turnOff = function () {
     TQ.InputMap._on = false;
   };
 

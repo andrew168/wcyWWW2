@@ -35,7 +35,7 @@ TQ = TQ || {};
   SelectSet.explode = explode;
   SelectSet.btnEffect = btnEffect;
 
-  SelectSet.initialize = function() {
+  SelectSet.initialize = function () {
     TQ.Marker.init();
     TQ.AnchorMarker.init();
     SelectSet.members.splice(0);
@@ -46,7 +46,7 @@ TQ = TQ || {};
     btnEffect.group = null;
     btnEffect.joint = null;
     btnEffect.limitJoint = null;
-    TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function() {
+    TQ.InputMap.registerAction(TQ.InputMap.DELETE_KEY, function () {
       if ((!TQ.TextEditor.visible) && (!TQ.FileDialog.visible)) {
         TQ.SelectSet.delete();
       }
@@ -61,11 +61,11 @@ TQ = TQ || {};
       4: "smile",
       5: "stand"
     };
-    TQ.InputMap.registerAction(TQ.InputMap.D1, function() { SelectSet.playAnimation(keyActionPair[1]);});
-    TQ.InputMap.registerAction(TQ.InputMap.D2, function() { SelectSet.playAnimation(keyActionPair[2]);});
-    TQ.InputMap.registerAction(TQ.InputMap.D3, function() { SelectSet.playAnimation(keyActionPair[3]);});
-    TQ.InputMap.registerAction(TQ.InputMap.D4, function() { SelectSet.playAnimation(keyActionPair[4]);});
-    TQ.InputMap.registerAction(TQ.InputMap.D5, function() { SelectSet.playAnimation(keyActionPair[5]);});
+    TQ.InputMap.registerAction(TQ.InputMap.D1, function () { SelectSet.playAnimation(keyActionPair[1]); });
+    TQ.InputMap.registerAction(TQ.InputMap.D2, function () { SelectSet.playAnimation(keyActionPair[2]); });
+    TQ.InputMap.registerAction(TQ.InputMap.D3, function () { SelectSet.playAnimation(keyActionPair[3]); });
+    TQ.InputMap.registerAction(TQ.InputMap.D4, function () { SelectSet.playAnimation(keyActionPair[4]); });
+    TQ.InputMap.registerAction(TQ.InputMap.D5, function () { SelectSet.playAnimation(keyActionPair[5]); });
   };
 
   SelectSet.playAnimation = function (actionName) {
@@ -82,12 +82,12 @@ TQ = TQ || {};
     isOn = false;
   };
 
-  SelectSet.add = function(element) {
+  SelectSet.add = function (element) {
     if (!isOn) {
       return;
     }
     assertNotNull(TQ.Dictionary.PleaseSelectOne, element);
-    if ((element == null )) return;
+    if ((element == null)) return;
     latestElement = element;
     if (element.isMarker()) { //  Decoration 不能记入选择集
       selectedMarkers.splice(0); // 最多只能同时选中、操作1个marker
@@ -97,7 +97,7 @@ TQ = TQ || {};
 
     selectedMarkers.splice(0); // 换了物体， Decoration就可能不被选中了。
     if (!(TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyCtrl)) {
-      if (!((SelectSet.members.length == 1) && (SelectSet.members.indexOf(element) ==0))) {
+      if (!((SelectSet.members.length == 1) && (SelectSet.members.indexOf(element) == 0))) {
         SelectSet.clear();
       }
     }
@@ -119,7 +119,7 @@ TQ = TQ || {};
       }
     }
 
-    TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_NEW_EVENT, {element: element});
+    TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_NEW_EVENT, { element: element });
     latestElement = element;
     if (element && !element.isMarker()) {
       lastSolidElement = element;
@@ -133,13 +133,13 @@ TQ = TQ || {};
     SelectSet.clear(true, true);
   };
 
-  SelectSet.clear = function(withDelete, withEvent) {
+  SelectSet.clear = function (withDelete, withEvent) {
     var cmd;
     if (withDelete) {
       cmd = new TQ.CompositeCommand();
     }
 
-    for (var i = 0; i< SelectSet.members.length; i++) {
+    for (var i = 0; i < SelectSet.members.length; i++) {
       var ele = SelectSet.members[i];
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       if (ele.isValid()) ele.highlight(false); // 可能已经被前面的父物体一起删除了
@@ -160,7 +160,7 @@ TQ = TQ || {};
     }
 
     if (withEvent) {
-      TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+      TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, { element: null });
     }
   };
 
@@ -274,7 +274,7 @@ TQ = TQ || {};
           if (rotation1 < rotation0) {
             rotation1 = [rotation0, rotation0 = rotation1][0];
           }
-          
+
           TQ.IKCtrl.setLimitation(0, rotation0);
           TQ.IKCtrl.setLimitation(1, rotation1);
           // 确保Parent 是固定的
@@ -320,8 +320,8 @@ TQ = TQ || {};
     }
   }
 
-  SelectSet.pinIt = function() {
-    for (var i = 0; i< SelectSet.members.length; i++) {
+  SelectSet.pinIt = function () {
+    for (var i = 0; i < SelectSet.members.length; i++) {
       var ele = SelectSet.members[i];
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       if (ele.isValid()) {
@@ -330,16 +330,16 @@ TQ = TQ || {};
     }
   };
 
-  SelectSet.show = function(visible) {
+  SelectSet.show = function (visible) {
     var allowIndividual = TQ.InputCtrl.inSubobjectMode || TQ.InputMap.isPresseds[TQ.InputMap.LEFT_ALT];
     TQ.CommandMgr.directDo(new TQ.HideCommand(SelectSet.members, allowIndividual));
   };
 
-  SelectSet.doShow = function(eles, allowIndividual) {
+  SelectSet.doShow = function (eles, allowIndividual) {
     var isVisible = false,
       target = null;
 
-    for (var i=0; i< eles.length; i++) {
+    for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
       if (!allowIndividual) {
         while (ele.isJoint() && (ele.parent != null)) { // find root for joints
@@ -352,8 +352,8 @@ TQ = TQ || {};
     }
   };
 
-  SelectSet.eraseAnimeTrack = function() {
-    for (var i = 0; i< SelectSet.members.length; i++) {
+  SelectSet.eraseAnimeTrack = function () {
+    for (var i = 0; i < SelectSet.members.length; i++) {
       var ele = SelectSet.members[i];
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       if (ele.isValid()) {
@@ -364,10 +364,10 @@ TQ = TQ || {};
     }
   };
 
-  SelectSet.getElementUnderMouse = function() {
+  SelectSet.getElementUnderMouse = function () {
     TQ.Assert.isTrue(!!stage, "没有初始化stage！");
     var target = stage.selectedItem;
-    var element = (target == null)? null: currScene.findAtom(target);  //包括点击菜单, 此函数也会响应
+    var element = (target == null) ? null : currScene.findAtom(target);  //包括点击菜单, 此函数也会响应
     if (element != null) {
       element = SelectSet.getEditableEle(element);
     }
@@ -375,7 +375,7 @@ TQ = TQ || {};
     return element;
   };
 
-  SelectSet.getSelectedElement = function() {
+  SelectSet.getSelectedElement = function () {
     var element = SelectSet.getElementUnderMouse();
     if (element != null) {
       SelectSet.add(element);
@@ -388,7 +388,7 @@ TQ = TQ || {};
     return TQ.SelectSet.peek();
   };
 
-  SelectSet.getEditableEle = function(ele) {  // 获取Group物体在整体操作模式下的可操作对象
+  SelectSet.getEditableEle = function (ele) {  // 获取Group物体在整体操作模式下的可操作对象
     // Jointed 物体： 获取当前的joint
     // Group的物体: 而且没有打散, 则操作其根
     // 3D打包的物体：操作其根
@@ -415,12 +415,12 @@ TQ = TQ || {};
     return (ele.isGrouped() || ele.parent);
   }
 
-  SelectSet.isSelected = function(ele) {
+  SelectSet.isSelected = function (ele) {
     return ((SelectSet.members.indexOf(ele) >= 0) ||
-            (selectedMarkers.indexOf(ele) >= 0));
+      (selectedMarkers.indexOf(ele) >= 0));
   };
 
-  SelectSet.empty = function() {
+  SelectSet.empty = function () {
     if (SelectSet.members.length > 0) {
       SelectSet.clear(false, true);
     }
@@ -438,11 +438,11 @@ TQ = TQ || {};
 
       //SelectSet.members.splice(0); // 删除全部选中的物体;
       selectedMarkers.splice(0);
-      TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, {element: null});
+      TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_EMPTY_EVENT, { element: null });
     }
   };
 
-  SelectSet.isEmpty = function() {
+  SelectSet.isEmpty = function () {
     return (SelectSet.members.length === 0);
   };
 
@@ -453,7 +453,7 @@ TQ = TQ || {};
   /*
     返回第一个元素，并且，从选择集中删除它
      */
-  SelectSet.pop = function() {
+  SelectSet.pop = function () {
     assertTrue(TQ.Dictionary.INVALID_PARAMETER, SelectSet.members.length > 0); //非空集合
     var ele = SelectSet.members.pop();
     ele.detachDecoration();
@@ -463,7 +463,7 @@ TQ = TQ || {};
   /*
      返回 第一个选中的元素， 但是，仍然保留它在选择集中， 不删除
      */
-  SelectSet.peek = function() {
+  SelectSet.peek = function () {
     if (SelectSet.members.length <= 0) {
       return null;
     }
@@ -475,7 +475,7 @@ TQ = TQ || {};
       SelectSet.members[0].isText());
   };
 
-  function peekLatest () {
+  function peekLatest() {
     var n = SelectSet.members.length;
     if (n <= 0) {
       return null;
@@ -483,7 +483,7 @@ TQ = TQ || {};
     return latestElement;
   }
 
-  SelectSet.peekEditableEle = function() {
+  SelectSet.peekEditableEle = function () {
     return peekMarker() || SelectSet.peek();
   };
 
@@ -509,11 +509,11 @@ TQ = TQ || {};
     return rootElement;
   };
 
-  SelectSet.updateByGesture = function(evt) {
+  SelectSet.updateByGesture = function (evt) {
     var selectedNothing = true,
       touches = TQ.Utility.getTouches(evt);
     if (touches.length <= 0) {
-      TQ.AssertExt.invalidLogic(touches.length <=0, "应该有接触点");
+      TQ.AssertExt.invalidLogic(touches.length <= 0, "应该有接触点");
     }
     var touchPoint = touches[0];
     var rect = TQ.SceneEditor.stage._getElementRect(TQ.SceneEditor.stage.canvas),
@@ -564,7 +564,7 @@ TQ = TQ || {};
     return (selectedMarkers[0]);
   }
 
-  SelectSet.attachDecoration = function(ele){
+  SelectSet.attachDecoration = function (ele) {
     if (!ele.decorations) {
       if (ele.isEditable()) {
         if (TQ.Config.useMarkerOn) {
@@ -587,17 +587,17 @@ TQ = TQ || {};
 
   inherit(GroupCommand, TQ.AbstractCommand);
 
-  GroupCommand.prototype.do = function() {
+  GroupCommand.prototype.do = function () {
     currScene.groupIt(this.receiver, this.newValue);
-    return(this.constructor.name2 + this.receiver);
+    return (this.constructor.name2 + this.receiver);
   };
 
-  GroupCommand.prototype.undo = function() {
+  GroupCommand.prototype.undo = function () {
     if (this.oldValue) {  // ungroup 需要这些元素的根（Group元素）， 而不需要这些元素本身
       assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.receiver.length > 0);
       currScene.groupIt([this.receiver[0].parent], this.oldValue);
     }
-    return(this.constructor.name2 + this.receiver);
+    return (this.constructor.name2 + this.receiver);
   };
 
   GroupCommand.prototype.redo = GroupCommand.prototype.do;
@@ -613,14 +613,14 @@ TQ = TQ || {};
 
   inherit(JointCommand, TQ.AbstractCommand);
 
-  JointCommand.prototype.do = function() {
+  JointCommand.prototype.do = function () {
     currScene.joint(this.receiver, this.newValue);
-    return(this.constructor.name2 + this.receiver);
+    return (this.constructor.name2 + this.receiver);
   };
 
-  JointCommand.prototype.undo = function() {
+  JointCommand.prototype.undo = function () {
     currScene.joint(this.receiver, this.oldValue);
-    return(this.constructor.name2 + this.receiver);
+    return (this.constructor.name2 + this.receiver);
   };
 
   JointCommand.prototype.redo = JointCommand.prototype.do;
@@ -637,14 +637,14 @@ TQ = TQ || {};
 
   inherit(HideCommand, TQ.AbstractCommand);
 
-  HideCommand.prototype.do = function() {
+  HideCommand.prototype.do = function () {
     SelectSet.doShow(this.receiver, this.newValue);
-    return(this.constructor.name2 + this.receiver);
+    return (this.constructor.name2 + this.receiver);
   };
 
-  HideCommand.prototype.undo = function() {
+  HideCommand.prototype.undo = function () {
     SelectSet.doShow(this.receiver, this.oldValue);
-    return(this.constructor.name2 + this.receiver);
+    return (this.constructor.name2 + this.receiver);
   };
 
   HideCommand.prototype.redo = HideCommand.prototype.do;
