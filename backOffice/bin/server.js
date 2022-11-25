@@ -56,10 +56,13 @@ function init() {
 
   //    app.use(vhost('www.kidsafer.org', require('./kidSaferAppServer').app));
   // app.use(vhost('www.kidsafer.org', require('./vHostTest2AppServer').app));
-  app.use(vhost(configSvr.host, require('./eCardAppServer').app));
+  app.use(vhost("*.udoido.com", require('./eCardAppServer').app));
   // app.use(vhost('bone.udoido.cn', require('./eCardAppServer').app));
   app.use(vhost('bone.udoido.cn', function (req, res) {
     // res.status(301).redirect("https://" + configSvr.host);
+    res.redirect('https://' + configSvr.host);
+  }));
+  app.use(vhost('udoido.com', function (req, res) {
     res.redirect('https://' + configSvr.host);
   }));
   // app.use(vhost('any1.udoido11.cn', require('./eCardAppServer').app));
@@ -70,8 +73,8 @@ function init() {
   onlineUsers.restore();
 
   /**
-   * Listen on provided port, on all network interfaces.
-   */
+     * Listen on provided port, on all network interfaces.
+     */
   vHostServer.listen(app.get('port'));
   vHostServer.on('error', onError);
   vHostServer.on('listening', onListening);
