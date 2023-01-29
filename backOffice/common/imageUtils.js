@@ -7,26 +7,26 @@
 var cSignature = require('./cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
 
 function screenshotId2Name(id) {
-    return 's' + id;
+  return 's' + id;
 }
 
 function screenshotName2Id(name) {
-    return Number(name.substr(1));
+  return Number(name.substr(1));
 }
 
 function responseImageId(res, id) {
-    var data = {
-        public_id: id
-    };
-    res.send(data);
+  var data = {
+    public_id: id
+  };
+  res.send(data);
 }
 
 function responseImageIdSigned(res, id) {
-    var data = {
-        public_id: id
-    };
-    cSignature.sign(data);
-    res.send(data);
+  var data = {
+    public_id: id
+  };
+  cSignature.sign(data);
+  res.send(data);
 }
 
 exports.screenshotName2Id = screenshotName2Id;

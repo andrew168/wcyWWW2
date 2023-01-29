@@ -5,19 +5,19 @@ var utils = require('../common/utils'); // 后缀.js可以省略，Node会自动
 var shaAdapter = require('../common/sha-adapter');
 
 var raw = function (args) {
-    var keys = Object.keys(args);
-    keys = keys.sort();
-    var newArgs = {};
-    keys.forEach(function (key) {
-        newArgs[key.toLowerCase()] = args[key];
-    });
+  var keys = Object.keys(args);
+  keys = keys.sort();
+  var newArgs = {};
+  keys.forEach(function (key) {
+    newArgs[key.toLowerCase()] = args[key];
+  });
 
-    var rawString = '';
-    for (var k in newArgs) {
-        rawString += '&' + k + '=' + newArgs[k];
-    }
-    rawString = rawString.substr(1) +"dwwKQ0MPL40ttMSR6SoMH-E1Jrw";
-    return rawString;
+  var rawString = '';
+  for (var k in newArgs) {
+    rawString += '&' + k + '=' + newArgs[k];
+  }
+  rawString = rawString.substr(1) +"dwwKQ0MPL40ttMSR6SoMH-E1Jrw";
+  return rawString;
 };
 
 /**
@@ -29,12 +29,12 @@ var raw = function (args) {
  * @returns
  */
 var sign = function (ret) {
-    if (!ret.timestamp) {
-        ret.timestamp = utils.createTimestamp();
-    }
-    var rawString = raw(ret);
-    ret.signature = shaAdapter.getShaHash(rawString);
-    return ret;
+  if (!ret.timestamp) {
+    ret.timestamp = utils.createTimestamp();
+  }
+  var rawString = raw(ret);
+  ret.signature = shaAdapter.getShaHash(rawString);
+  return ret;
 };
 
 exports.sign = sign;
