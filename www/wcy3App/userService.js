@@ -101,6 +101,7 @@ function UserService($http, $auth) {
 
       TQUtility.extendWithoutObject(user, data);
       user.loggedIn = true;
+      user.hasSignedUp = true;
       user.needManualLogin = false;
       user.age = age;
       user.city = city;

@@ -7,6 +7,7 @@ TQ.userProfile = (function() {
     needManualLogin: true,
     loggedIn: false,  // 没有login，其余的信息都无意义
     isSignUping: false,
+    hasSignedUp: false,  // 尚未注册的用户，显示注册界面。否则显示登录界面
     displayName: "",
     name: "",
     age: 6,         //ToDo: 需要用户录入
@@ -40,6 +41,7 @@ TQ.userProfile = (function() {
     self.name = readCache('user_name', "");
     self.displayName = readCache('user_displayName', "");
     self.ID = readCache('user_ID', "");
+    self.hasSignedUp = readCache('user_hasSignedUp', false);
     self.age = readCache('user_age', self.age);
     self.city = readCache('user_city', self.city);
     self.needManualLogin = TQ.Base.Utility.readCacheWithParse('user_needManualLogin', self.needManualLogin);
@@ -52,6 +54,7 @@ TQ.userProfile = (function() {
     writeCache('user_age', self.age);
     writeCache('user_city', self.city);
     writeCache('user_needManualLogin', self.needManualLogin);
+    writeCache('user_hasSignedUp', self.hasSignedUp);
   }
 
   readFromCache();
