@@ -214,7 +214,17 @@ var TQUtility; //
   // Don't directly use localStorage in other place
   Utility.readCache = function(item, defaultValue) {
     var result = localStorage.getItem(item);
-    return (result ? result : defaultValue);
+    if (result == null || // Chrome, 没有找到
+      (result == "") ||  // Firefox, 没有找到， 就返回"",
+      (result == "null")) { // Chrome, 没有找到， 就返回"null",
+      result = defaultValue;
+    } else {
+      if (typeof defaultValue != 'string') {
+        result = JSON.parse(result);
+      }
+    }
+
+    return result;    
   };
 
   Utility.removeCache = function(item) {

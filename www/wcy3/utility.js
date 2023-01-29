@@ -286,17 +286,11 @@ window.TQ = window.TQ || {};
   };
 
   Utility.readLocalStorage = function (varName, defaultValue) {
-    var realValue = localStorage.getItem(varName);
-    if ((realValue == "") ||  // Firefox, 没有找到， 就返回"",
-            (realValue == "null") ) { // Chrome, 没有找到， 就返回"null",
-      realValue = defaultValue;
-    }
-
-    return realValue;
+    return TQ.Base.Utility.readCache(varName, defaultValue);
   };
 
   Utility.writeLocalStorage = function (varName, value) {
-    return localStorage.setItem(varName, value);
+    TQ.Base.Utility.writeCache(varName, value);
   };
 
   Utility.getUrlParam = function(param) {
