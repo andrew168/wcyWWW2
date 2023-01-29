@@ -24,7 +24,7 @@ var headlines = [
 ];
 
 router.get('/', function (req, res, next) {
-    res.json(headlines);
+  res.json(headlines);
 });
 
 module.exports = router;

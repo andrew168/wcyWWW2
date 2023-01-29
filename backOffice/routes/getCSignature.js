@@ -6,24 +6,24 @@ var router = express.Router();
 var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
 
 var createNonceStr = function () {
-    return Math.random().toString(36).substr(2, 15);
+  return Math.random().toString(36).substr(2, 15);
 };
 
 /* GET users listing. */
 router.get('/', function(req, res, next) {
-    var data = {
-//        nonceStr: createNonceStr(),
-        public_id: req.query.filename || "no_filename"
-        // tag: 'tag'
-    };
+  var data = {
+    //        nonceStr: createNonceStr(),
+    public_id: req.query.filename || "no_filename"
+    // tag: 'tag'
+  };
 
-    cSignature.sign(data);  //data.s = signature;
+  cSignature.sign(data);  //data.s = signature;
 
-    console.log(req);
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  console.log(req);
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 
-    res.json(data);
+  res.json(data);
 });
 
 module.exports = router;

@@ -19,12 +19,12 @@ function onWxmpLoggin(req, res) {
     appSecret = configSvr.wx.boneMiniprogram.appSecret,
     wxCode = req.body.code || req.query.code,
     nickName = req.body.nickName || req.query.nickName;
-    if (!wxCode) {
-      wxCode = "";
-    }
+  if (!wxCode) {
+    wxCode = "";
+  }
 
-    if (!nickName) {
-      nickName = Const.DEFAULT_WX_GUEST_NAME;
+  if (!nickName) {
+    nickName = Const.DEFAULT_WX_GUEST_NAME;
   }
 
   var getOpenIdUrl = 'https://api.weixin.qq.com/sns/jscode2session' +
