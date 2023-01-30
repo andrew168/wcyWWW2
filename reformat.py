@@ -13,7 +13,7 @@ def onedir(dirname):
            else:
               onedir(fullname);
         else:
-          if fname.endswith(".js"):
+          if fname.endswith(".js") and not fname.endswith(".min.js"):
              os.system("npx eslint --fix " + fullname);
           else:
              print("skip non-js file: " + fname) 
