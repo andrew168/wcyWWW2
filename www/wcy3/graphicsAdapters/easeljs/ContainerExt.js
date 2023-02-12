@@ -4,7 +4,7 @@
 
 (function () {
   var p = createjs.Container.prototype;
-  var selectBoxSize = 32;
+  var selectBoxSize = 2;
   createjs.DisplayObject._hitTestCanvas.width = createjs.DisplayObject._hitTestCanvas.height = selectBoxSize;
   // 覆盖原函数
   p.setChildIndex = function (child, index) {
@@ -50,14 +50,16 @@
     return hit;
   };
 
-
+  
   /**
    * @method _getObjectsUnderPoint
    * @param {Number} x
    * @param {Number} y
    * @param {Array} arr
-   * @param {Number} mouseEvents A bitmask indicating which event types to look for. Bit 1 specifies press &
-   * click & double click, bit 2 specifies it should look for mouse over and mouse out. This implementation may change.
+   * @param {Number} mouseEvents A bitmask indicating which event types to look for. 
+   * Bit 1 specifies press & click & double click, 
+   * bit 2 specifies it should look for mouse over and mouse out. 
+   * This implementation may change.
    * @return {Array}
    * @protected
    **/
