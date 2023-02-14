@@ -23,6 +23,7 @@ TQ = TQ || {};
       x: pos.x, // elements[0].jsonObj.x,
       y: pos.y, // elements[0].jsonObj.y,
       type: TQ.ElementType.GROUP,
+      eType: elements[0].jsonObj.eType, // Group的eType同其1st孩子
       autoFit: TQ.Element.FitFlag.KEEP_SIZE
     };
     var ele = TQ.Element.build(level, desc);
@@ -75,6 +76,16 @@ TQ = TQ || {};
 
   p.getHeight = function () {
     return (this.children.length < 2) ? 1 : this.children[0].getHeight();
+  };
+
+  p.getWidthAfterScale = function () {
+    let scale = (this.children.length < 2) ? 1 : this.children[0].getScale();
+    return (this.getWidth() * scale.sx);
+  };
+
+  p.getHeightAfterScale = function () {
+    let scale = (this.children.length < 2) ? 1 : this.children[0].getScale();
+    return (this.getHeight() * scale.sy);
   };
 
   p._initializeComponent = function (desc) {
