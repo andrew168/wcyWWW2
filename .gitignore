@@ -15,3 +15,10 @@ backOffice/package-lock.json
 release-all-new.bat
 backOffice/releaseOne-new.bat
 www/Weidongman-TBD/
+*.njsproj
+/.vs/sln/FileContentIndex
+/.vs/sln
+/sln.njsproj.user
+/sln.sln
+/bin/Microsoft.NodejsTools.WebRole.dll
+/obj/Debug
