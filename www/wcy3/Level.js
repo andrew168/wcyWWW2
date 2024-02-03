@@ -692,9 +692,10 @@ window.TQ = window.TQ || {};
   };
 
   p.deleteElement = function (ele) {
-    if (ele.isPinned()) {
-      return;
-    }
+    //删除level的时候，其中pin的元素也应该被删除
+    //if (ele.isPinned()) {
+    //  return;
+    //}
 
     // 删除数据， 真删除
     var found = false;

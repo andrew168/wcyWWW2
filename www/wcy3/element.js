@@ -932,9 +932,11 @@ window.TQ = window.TQ || {};
   };
 
   p._doRemoveFromStage = function () {
-    if (this.isPinned()) {
-      return;
-    }
+    //!! Pin的实质是不能被直接选中，所以，不能被直接操作（删除，缩放等等），
+    // 但是，可以被间接操作（通过他的父）删除，缩放等。
+    //if (this.isPinned()) {
+    //  return;
+    //}
 
     if (this.displayObj) {
       this.getContainer().removeChild(this.displayObj);
@@ -1041,9 +1043,10 @@ window.TQ = window.TQ || {};
   };
 
   p.deleteChild = function (ele) {
-    if (this.isPinned()) {
-      return;
-    }
+    //删除Parent的时候，其中pin的子元素也应该被删除
+    //if (this.isPinned()) {
+    //  return;
+    //}
 
     if (this.children == null) {
       return false;
