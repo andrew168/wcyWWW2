@@ -41,6 +41,12 @@ var TQ = TQ || {};
     if (TQ.SelectSet.isEmpty()) {
       return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
     }
+
+    if (TQ.Utility.isDithering) {
+      return;
+    }
+    TQ.Utility.ditherStart();
+
     evt = touch2StageXY(evt);
     var results = currScene.currentLevel.cloneElement(TQ.SelectSet.members);
     results.forEach(function(ele) {
