@@ -253,7 +253,9 @@ var currScene = null;
       return ele;
     }
   };
-
+  SceneEditor.getElements = function () {
+    return currScene.getElements();
+  };
   SceneEditor.emptyScene = function () { // empty the current scene
     TQ.AssertExt.isNotNull(currScene);
     if (!currScene) {

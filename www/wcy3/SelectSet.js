@@ -138,6 +138,31 @@ TQ = TQ || {};
     }
   };
 
+  SelectSet.addElements = function (elements) {
+    var nLen = elements.length;
+    if (nLen == 0) return;
+    SelectSet.members.splice(0);
+    for (var i = 0; i < nLen; i++) {
+      var element = elements[i];
+
+      latestElement = element;
+      selectedMarkers.splice(0); // 最多只能同时选中、操作1个marker
+      selectedMarkers.push(element);
+      SelectSet.members.push(element);
+
+      element.highlight(true);
+      SelectSet.attachDecoration(element);
+
+      if (!TQ.InputCtrl.inSubobjectMode && element.isJoint()) {
+        TQ.FloatToolbar.selectedElement = element;
+      } else {
+        TQ.FloatToolbar.selectedElement = element;
+      }
+      TQ.Base.Utility.triggerEvent(document, SelectSet.SELECTION_NEW_EVENT, { element: element });
+    }
+  };
+
+
   /*
      删除当前选中的所有元素
      */

@@ -761,6 +761,10 @@ TQ = TQ || {};
     assertValid("this.currentLevel", this.currentLevel);
     return this.currentLevel.getElement(id);
   };
+  p.getElements = function () {
+    assertValid("this.currentLevel", this.currentLevel);
+    return this.currentLevel.getElements();
+  };
 
   p.getAllSounds = function () { // 只返回当前场景的声音， 不能跨场景操作其它场景里面的声音
     if (this.currentLevel) {

@@ -325,6 +325,11 @@ window.TQ = window.TQ || {};
     return ele;
   };
 
+  p.getElements = function () {
+    return this.elements;
+  };
+
+
   /* 区别 delete 和 remove：
 		 remove: 只是移动， 从一个地方， 移到另外一个地方，比如： 在打包的时候， 从level下移到 复合体的下面。
 		 delete：包括了remove， 但是， 移到了 垃圾箱trash之中, 当undelete的时候， 可以恢复
