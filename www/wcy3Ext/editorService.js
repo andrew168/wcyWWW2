@@ -875,7 +875,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function stop() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
+    // 新建立的账号，没有currScene，但是调用Stop()？
+    // assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
     if (currScene != null) {
       currScene.stop();
       updateMode();
