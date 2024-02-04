@@ -4,7 +4,7 @@
 var srcPath = '.\\www',
   testPath = '.\\test',
   distPath = '.\\dist',
-  prjPath1 = '..\\udoido2\\www';
+  prjPath1 = '..\\udoido3\\www';
 const { series, parallel, src, dest } = require('gulp');
 var sourcemaps = require('gulp-sourcemaps');
 var exec = require('child_process').exec;
@@ -82,7 +82,7 @@ async function wcylib_minify() {
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(minify())
     .pipe(sourcemaps.write('../maps'))
-    // 不发布到Udoido2，因为后者dev不使用min，也不发布min
+    // 不发布到udoido3，因为后者dev不使用min，也不发布min
     // .pipe(dest(prjPath1 + '\\lib\\'), { sourcemaps: true })
     .pipe(dest(distPath + '\\lib\\'), { sourcemaps: true });
   console.log("minified => " + prjPath1 + '\\lib' + config.app_min_js)
