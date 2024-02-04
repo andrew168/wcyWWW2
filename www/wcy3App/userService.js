@@ -48,6 +48,44 @@ function UserService($http, $auth) {
       then(onLogoutDone);
   }
 
+  function sendCode(name, callback) {
+    console.log("sendCode");
+    var data = { 'name': name };
+    $http.post(TQ.Config.AUTH_HOST + '/auth/sendcode', angular.toJson(data)).
+      then(function (result) {
+        console.log("result : ", result);
+        callback(result);
+      },
+      function (reason) {
+        console.log("reason : ", reason);
+        callback(reason);
+      });
+  }
+
+  function confirmCode(name, code, callback) {
+    console.log("confirmCode");
+    var data = { 'name': name, 'code': code };
+    $http.post(TQ.Config.AUTH_HOST + '/auth/confirmcode', angular.toJson(data)).
+      then(function (result) {
+        callback(result);
+      },
+      function (reason) {
+        callback(reason);
+      });
+  }
+
+  function updatePassword(name, code, psw, callback) {
+    console.log("updatePassword");
+    var data = { 'name': name, 'code': code, 'psw': psw };
+    $http.post(TQ.Config.AUTH_HOST + '/auth/updatepassword', angular.toJson(data)).
+      then(function (result) {
+        callback(result);
+      },
+      function (reason) {
+        callback(reason);
+      });
+  }
+
   function signUp(user) {
     return $auth.signup(user).then(onSignUp).catch(onGetProfileFailed);
   }
@@ -163,6 +201,9 @@ function UserService($http, $auth) {
     login: login,
     loginFromWx: loginFromWx,
     logout: logout,
-    signUp: signUp
+    signUp: signUp,
+    sendCode: sendCode,
+    confirmCode: confirmCode,
+    updatePassword: updatePassword
   }
 }
