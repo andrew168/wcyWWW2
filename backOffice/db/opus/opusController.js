@@ -76,6 +76,30 @@ function getList(user, callback) {
   });
 }
 
+function getPageList(user, pageId, callback) {
+  var itemsPerPage = 10;
+  var userId = user.ID,
+    notBanned = {"state": {$ne: CONST.OPUS_STATE.BAN}},
+    userLimit = (userId === null) ? null : {"userId": userId},
+    condition = userLimit;
+
+  if (user.canBan || user.canApprove) {
+    condition = null;
+  }
+
+  if (condition) {
+    condition = {$and: [notBanned, condition]};
+  } else {
+    condition = notBanned;
+  }
+  pageId = pageId !== 0 ? pageId : 1;
+  itemsPerPage = pageId !== 0 ? itemsPerPage : 0;
+  Opus.find(condition).skip((pageId - 1) * itemsPerPage).limit(itemsPerPage).sort({lastModified: -1}).exec(function (err, data) {
+    var result = composeOpusList(err, data);
+    callback(result);
+  });
+}
+
 function composeOpusList(err, data) {
   var i,
     result = [],
@@ -220,6 +244,7 @@ exports.getAuthor = getAuthor;
 exports.get = get;
 exports.add = add;
 exports.getList = getList;
+exports.getPageList = getPageList;
 exports.getLatestList = getLatestList;
 exports.getFineList = getFineList;
 exports.applyToPublish = applyToPublish;

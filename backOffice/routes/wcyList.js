@@ -32,6 +32,24 @@ router.get('/', authHelper.ensureAuthenticated, function(req, res, next) {
   }
 });
 
+router.get('/page/:pageId', authHelper.ensureAuthenticated, function(req, res, next) {
+  var user = status.getUserInfo2(req, res);
+  if (!user) {
+    return netCommon.notLogin(req, res);
+  }
+  var pageId = req.params.pageId || 0;
+  opusController.getPageList(user, pageId, onGotList, onFail);
+  function onGotList(list) {
+    // console.log(list);
+    res.json(list);
+  }
+
+  function onFail(msg) {
+    console.error("failed in get wcyList" + msg);
+    res.json([]);
+  }
+});
+
 router.get('/fine', function (req, res, next) {
   opusController.getFineList(onGotList, onFail);
 
