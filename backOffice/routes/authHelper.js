@@ -24,7 +24,27 @@ var config = {
 
   // OAuth 1.0
   TWITTER_KEY: process.env.TWITTER_KEY || '5BrblmjAPGKbxnfAqo8nFjF6t',
-  TWITTER_SECRET: process.env.TWITTER_SECRET || 'dvHK06QeB68s0CfBkWvTDYiPYZLnf9xOTNKL7FLe2gqVgMgEv4'
+  TWITTER_SECRET: process.env.TWITTER_SECRET || 'dvHK06QeB68s0CfBkWvTDYiPYZLnf9xOTNKL7FLe2gqVgMgEv4',
+
+  //SMTP
+  //Mailtrap
+  /*
+  MAILTRAP_HOST:'sandbox.smtp.mailtrap.io',
+  MAILTRAP_PORT:'2525',
+  MAILTRAP_USER:'e7754c508b4936',
+  MAILTRAP_PASS: 'fed306890a6c4a',
+  */
+
+  //Gmail
+  GMAIL_HOST:'smtp.gmail.com',
+  GMAIL_PORT:'587',
+  GMAIL_ACCOUNT:'test@gmail.com',
+  GMAIL_PASSWORD:'test_password',
+
+  //Phone
+  TWILIO_ACCOUNT_SID: 'AC2e920ea1e04f85da0b0af3ef67e05237',
+  TWILIO_AUTH_TOKEN: 'c5134065ea246ae1cf85084c1a45b013',
+  TWILIO_VERIFY_SID: 'VA0f0b518471fc0bbdd6cfc9f30b08c54a',
 };
 
 function ensureAuthenticated(req, res, next) {

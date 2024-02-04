@@ -1,7 +1,11 @@
+const { resourceLimits } = require('worker_threads');
+
 var express = require('express'),
   router = express.Router(),
   request = require('request'),
   jwt = require('jwt-simple'),
+  jwt_full = require('jsonwebtoken'),
+  nodemailer = require('nodemailer'),
   moment = require('moment'),
   mongoose = require('mongoose'),
   User = mongoose.model('User'),
@@ -182,6 +186,152 @@ router.post('/signup', function (req, res) {
       password: psw
     });
     saveAndResponse(req, res, user);
+  });
+});
+
+router.post('/sendcode', function (req, res) {
+  var name = req.body.name.toLocaleLowerCase();
+  User.findOne({email : name}, function(err, user){
+    if(err){
+      return responseError(res, 200, {user : "user"});
+    }
+
+    if (user){
+      //var payload = {username : name};
+      var payload = {name : name};
+      jwt_full.sign(
+        payload,
+        config.TOKEN_SECRET,
+        {
+          expiresIn : "5m"
+        },
+        (err, token) =>{
+          if(err)
+          {
+            res.send({token : "token"});
+          } else {
+            //send mail or sms
+            if(validateEmail(name))
+            {
+              //mailtrap
+              /*
+              var transport = nodemailer.createTransport({
+                host : config.MAILTRAP_HOST,
+                port : config.MAILTRAP_PORT,
+                auth : {
+                  user : config.MAILTRAP_USER,
+                  pass : config.MAILTRAP_PASS
+              }});
+              */
+
+              //gmail
+              var transport = nodemailer.createTransport({
+                host : config.GMAIL_HOST,
+                port : config.GMAIL_PORT,
+                secure : false,
+                auth : {
+                  user : config.GMAIL_ACCOUNT,
+                  pass : config.GMAIl_PASSWORD
+              }});
+
+              var mailOptions = {
+                from : "noreplay@udoido.com",
+                to : name,
+                subject : "code to reset password",
+                text : token
+              };
+              transport.sendMail(mailOptions, (error, info) => {
+                if(error){
+                  return res.send({error : "error"});
+                } 
+                return res.send({success : "success"});
+              });
+            } else {
+              var accountSid = config.TWILIO_ACCOUNT_SID,
+                  authToken = config.TWILIO_AUTH_TOKEN,
+                  verifySid = config.TWILIO_VERIFY_SID;
+
+              var twilio = require("twilio")(accountSid, authToken);
+              
+              twilio.verify.v2
+                .services(verifySid)
+                .verifications.create({ to : name, channel : "sms"})
+                .then((verification) => {
+                  return res.send({result : verification.status});
+                });
+            }
+          }
+      });
+    } else {
+      return res.send({user : "user"});
+    }
+  });
+});
+
+function validateEmail(email){
+  return String(email)
+    .toLowerCase()
+    .match(
+      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|.(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    );
+}
+
+router.post('/confirmcode', function (req, res) {
+  var code = req.body.code;
+  var name = req.body.name;
+
+  if(validateEmail(name)){
+    jwt_full.verify(code, config.TOKEN_SECRET, function(err, decoded){
+      if(err){
+        return res.send({error : 'error'});
+      } else {
+        return res.send({success : 'success'});
+      }
+    });
+  } else {
+    var accountSid = config.TWILIO_ACCOUNT_SID,
+        authToken = config.TWILIO_AUTH_TOKEN,
+        verifySid = config.TWILIO_VERIFY_SID;
+
+    var twilio = require("twilio")(accountSid, authToken);
+    twilio.verify.v2
+      .services(verifySid)
+      .verificationChecks.create({ to : name, code : code})
+      .then((verification_check) => {
+        return res.send({result : verification_check.status});
+      });
+  }
+});
+
+router.post('/updatepassword', function (req, res) {
+  var name = req.body.name;
+  var code = req.body.code;
+  var password = req.body.psw;
+  jwt_full.verify(code, config.TOKEN_SECRET, function(err, decoded){
+    if(err){
+      res.send({error : 'error'});
+    } else {
+      var name = decoded.name;
+      User.findOne({email : name}, function(err, user){
+        if(err){
+          res.send({error : 'error'});
+        }
+    
+        if (user){
+          user.password = password;
+          user.save(function (err) {
+            if(err)
+            {
+              res.send({error : 'error'});
+            } else {
+              res.send({success : 'success'});
+            }
+          });
+        } else {
+          res.send({error : 'error'});
+        }
+      });
+    }
   });
 });
 
