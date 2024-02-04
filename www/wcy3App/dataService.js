@@ -236,14 +236,37 @@
           // 对普通用户： 只是自己的，不包括他人的
           break;
       }
-      $http({
-        method: 'GET',
-        url: TQ.Config.OPUS_HOST + '/wcyList/' + opusDetail
-      }).then(onSuccess, onFail);
+
+      var selected = [];
+
+      function getPageList(pageId) {
+        $http({
+          method: 'GET',
+          url: TQ.Config.OPUS_HOST + '/wcyList/page/' + pageId
+        }).then((response) => {
+          var listLength = onSuccess(response);
+          if (listLength >= 10) {
+            pageId++;
+            getPageList(pageId);
+          }
+        })
+          .catch(response => {
+            onFail(response);
+          });
+      }
+
+      if (opusDetail === '') {
+        var pageId = 1;
+        getPageList(pageId);
+      } else {
+        $http({
+          method: 'GET',
+          url: TQ.Config.OPUS_HOST + '/wcyList/' + opusDetail
+        }).then(onSuccess, onFail);
+      }
 
       function onSuccess(response) {
-        var data = (response.status === 200) ? response.data : [],
-          selected = [];
+        var data = (response.status === 200) ? response.data : [];
 
         if ((typeof data === 'string') && (data.startsWith('db error'))) {
           TQ.MessageBox.confirm("(code=8003): " + TQ.Locale.getStr(
@@ -265,16 +288,18 @@
           itemCopy.city = TQ.userProfile.city;
           selected.push(itemCopy);
         });
-        mats.setList(selected, matType);
+        var items = [...selected];
+        mats.setList(items, matType);
         state |= stateType;
         if (state === READY_ALL) {
           onDataReady();
         }
+
+        return data.length;
       }
 
       function onFail(response) {
-        var data = (response.status === 200) ? response.data : [],
-          selected = [];
+        var data = (response.status === 200) ? response.data : [];
 
         mats.setList(selected, matType);
         state |= stateType;

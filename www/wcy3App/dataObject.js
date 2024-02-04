@@ -5,6 +5,7 @@
 function DataObject(list) {
   var IMAGE_PAGE_SIZE = 6,
     SOUND_PAGE_SIZE = 4,
+    LARGE_PAGE_SIZE = 20000,
     vm = this,
     bakCurrentPageId = 0,
     currentPageId = 0,
@@ -70,7 +71,9 @@ function DataObject(list) {
             TQ.Log.error("Found unknown format:" + oldPath);
           }
           if (matType === TQ.MatType.OPUS) {
-            items[i].thumbPath = TQ.RM.toOpusThumbNailFullPath(oldPath);
+            if (items[i].thumbPath === undefined) {
+              items[i].thumbPath = TQ.RM.toOpusThumbNailFullPath(oldPath);
+            }
           } else {
             items[i].thumbPath = TQ.RM.toMatThumbNailFullPath(oldPath);
           }
@@ -145,7 +148,8 @@ function DataObject(list) {
     } else {
       fixup(list, matType);
     }
-    prepareColumn(list, (matType === TQ.MatType.SOUND? SOUND_PAGE_SIZE: IMAGE_PAGE_SIZE));
+    prepareColumn(list, (matType === TQ.MatType.SOUND ? SOUND_PAGE_SIZE : (matType === TQ.MatType.OPUS ? LARGE_PAGE_SIZE : IMAGE_PAGE_SIZE)));
+
     currentPageId = bakCurrentPageId;
     updatePageId();
   }
