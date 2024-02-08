@@ -58,14 +58,11 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
     if (requestAll) {
       topicLimit = null;
     }
-  }
-
-  userAndTopicLimit = userLimit;
-
-  if (!topicLimit) {
+  } else if (!topicLimit) {
     topicLimit = allShared;
   }
 
+  userAndTopicLimit = userLimit;
   if (topicLimit) {
     if (userAndTopicLimit) {
       userAndTopicLimit = {$or: [userAndTopicLimit, topicLimit]};
