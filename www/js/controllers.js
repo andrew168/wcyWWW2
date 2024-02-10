@@ -105,9 +105,16 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
   };
 
   var testUserId = Date.now(); // // "TestAuth100007",
-  $scope.setAdmin = function() {
-    // UserService.setAdmin('1759');
+  $scope.setAdmin = function () {
+    TQ.AssertExt.InvalidLog(TQ.userProfile.name != "toronto1111"); // 必须登陆为User "toronto1111";
+
+    // 设置User 1为Admin， 在之前、之后分别list全部user， 查看其权限，比较变化
+    var userId = 1;
     UserService.getUserList();
+    UserService.setAdmin(userId).then(function () {
+      var list = UserService.getUserList();
+      console.log(list.toString());
+    });
   };
 
   $scope.batchUnitTest = function() {
@@ -126,7 +133,7 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
       console.log("signUp successfully!" + data);
     });
   };
-
+  
   $scope.testLogin = function (id) {
     UserService.login('toronto' + id, 'toronto' + id).
       then(function() {

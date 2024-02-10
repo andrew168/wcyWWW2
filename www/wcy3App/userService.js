@@ -106,8 +106,12 @@ function UserService($http, $auth) {
   }
 
   function setAdmin(userId) {
+    const privilege = 0x1ff;
+    setPrivilege(userId, privilege);
+  }
+  function setPrivilege(userId, privilege) {
     if (user.canAdmin) {
-      return $http.get(TQ.Config.AUTH_HOST + '/user/privilege/' + userId + '/255');
+      return $http.get(TQ.Config.AUTH_HOST + '/user/privilege/' + userId + '/' + privilege);
     }
   }
 
@@ -198,6 +202,7 @@ function UserService($http, $auth) {
     getProfile: getProfile,
     getUserList: getUserList,
     setAdmin: setAdmin,
+    setPrivilege: setPrivilege,
     login: login,
     loginFromWx: loginFromWx,
     logout: logout,
