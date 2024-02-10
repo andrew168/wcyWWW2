@@ -1,12 +1,12 @@
 var howlerPlayer;
 
 angular.module('starter').controller('DashCtrl', DashCtrl);
-DashCtrl.$inject = ['$scope', 'WCY', '$cordovaImagePicker',
+DashCtrl.$inject = ['$scope', 'WCY',
   '$cordovaSocialSharing',
   'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
   'AppService', 'MatLibService', 'UserService', 'DataService'];
 
-function DashCtrl($scope, WCY, $cordovaImagePicker,
+function DashCtrl($scope, WCY,
   $cordovaSocialSharing,
   FileService, NetService, DeviceService, WxService, EditorService,
   AppService, MatLibService, UserService, DataService) {
@@ -120,7 +120,7 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
   $scope.batchUnitTest = function() {
     WCY.saveOpusAndScreenshot();
   };
-    
+
   $scope.testSignUp = function () {
     var email = '8' + (++testUserId) + "@samplexyz.com";
     UserService.signUp({
@@ -412,28 +412,6 @@ function DashCtrl($scope, WCY, $cordovaImagePicker,
   };
   $scope.pauseHowlerAudio = function () {
     howlerPlayer.pause();
-  };
-
-  $scope.insertAlbum = function () {
-    var options = {
-      maximumImagesCount: 10,
-      width: 800,
-      height: 800,
-      quality: 80
-    };
-
-    $cordovaImagePicker.getPictures(options)
-      .then(function (results) {
-        for (var i = 0; i < results.length; i++) {
-          TQ.Log.debugInfo('Image URI: ' + results[i]);
-          x += 50;
-          y += 50;
-          EditorService.insertBkImage(results[i], x, y);
-        }
-      }, function (error) {
-        // error getting photos
-      });
-
   };
 
   $scope.deleteElement = function () {
