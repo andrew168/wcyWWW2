@@ -1,6 +1,7 @@
 {
   "env": {
     "browser": true,
+    "node":  true, 
     "es2021": true
   },
   "plugins": [
@@ -200,15 +201,8 @@
       }
     ],
     "padded-blocks": [ 2, "never" ],
-    "quotes": [
-      2,
-      "single",
-      {
-        "avoidEscape": true,
-        "allowTemplateLiterals": true
-      }
-    ],
-    "semi": [ 2, "never" ],
+    "quotes": ["error", "double"],
+    "semi": [ "error", "always" ],
     "semi-spacing": [
       2,
       {
