@@ -5,7 +5,7 @@
  * 是singleton
  */
 TQ = TQ || {};
-(function () {
+(function() {
   function ButtonMgr() {
   }
 
@@ -13,8 +13,8 @@ TQ = TQ || {};
   ButtonMgr.initialize = function() {
   };
 
-  ButtonMgr.addItem =function(ele) {
-    if (ButtonMgr.items.indexOf(ele) >=0) { // 避免同一个元素（跨场景的），重复插入
+  ButtonMgr.addItem = function(ele) {
+    if (ButtonMgr.items.indexOf(ele) >= 0) { // 避免同一个元素（跨场景的），重复插入
       return;
     }
     ButtonMgr.items.push(ele);
@@ -27,11 +27,10 @@ TQ = TQ || {};
     }
   };
 
-  ButtonMgr.removeAll = function()
-  {
-    for (var i = ButtonMgr.items.length - 1; i >=0; i--) {
+  ButtonMgr.removeAll = function() {
+    for (var i = ButtonMgr.items.length - 1; i >= 0; i--) {
       var ele = ButtonMgr.items[i];
-      ButtonMgr.items.splice(i,1);
+      ButtonMgr.items.splice(i, 1);
     }
   };
 

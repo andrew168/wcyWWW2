@@ -5,31 +5,31 @@
  */
 
 (function() {
-  angular.module('starter').factory('DataService', DataService);
-  DataService.$inject = ['$rootScope', '$http'];
+  angular.module("starter").factory("DataService", DataService);
+  DataService.$inject = ["$rootScope", "$http"];
   function DataService($rootScope, $http) {
     var readCacheWithParse = TQ.Base.Utility.readCacheWithParse;
     var writeCache = TQ.Base.Utility.writeCache;
     var initialized = false;
     var MY_WORKS = "_myWorks_";
-    var EVENT_TOPIC_READY = "topic ready",
-      EVENT_DATA_READY = "data ready";
-    var READY_BKG_IMAGE = 0x01,
-      READY_PROP_IMAGE = 0x02,
-      READY_PEOPLE_IMAGE = 0x04,
-      READY_SOUND = 0x08,
-      READY_OPUS = 0x10,
-      READY_PUBLISHED_OPUS = 0x20,
-      READY_FINE_OPUS = 0x40,
-      READY_ALL = READY_BKG_IMAGE | READY_PROP_IMAGE | READY_PEOPLE_IMAGE | READY_SOUND |
+    var EVENT_TOPIC_READY = "topic ready";
+    var EVENT_DATA_READY = "data ready";
+    var READY_BKG_IMAGE = 0x01;
+    var READY_PROP_IMAGE = 0x02;
+    var READY_PEOPLE_IMAGE = 0x04;
+    var READY_SOUND = 0x08;
+    var READY_OPUS = 0x10;
+    var READY_PUBLISHED_OPUS = 0x20;
+    var READY_FINE_OPUS = 0x40;
+    var READY_ALL = READY_BKG_IMAGE | READY_PROP_IMAGE | READY_PEOPLE_IMAGE | READY_SOUND |
                 READY_OPUS | READY_PUBLISHED_OPUS | READY_FINE_OPUS;
-    var state = 0,
-      options = {
-        requestAll: false
-      },
-      workCounter = 0;
+    var state = 0;
+    var options = {
+      requestAll: false
+    };
+    var workCounter = 0;
 
-    //在手机上，图片必须使用相对路径， 不能使用绝对路径！！！
+    // 在手机上，图片必须使用相对路径， 不能使用绝对路径！！！
     var propsLocal = new TQ.DataObject();
 
     var propsAlbum = new TQ.DataObject();
@@ -43,9 +43,9 @@
     var sounds = new TQ.DataObject();
     var topics = new TQ.DataObject();
 
-    var myOpus = new TQ.DataObject(), // only my opus
-      latestOpus = new TQ.DataObject(), // latest published
-      fineOpus = new TQ.DataObject(); // latest fine opus
+    var myOpus = new TQ.DataObject(); // only my opus
+    var latestOpus = new TQ.DataObject(); // latest published
+    var fineOpus = new TQ.DataObject(); // latest fine opus
 
     function cloneWork(work) {
 
@@ -54,7 +54,7 @@
     function generateUUID() {
       var id = workCounter;
       workCounter++;
-      writeCache('workCounter', workCounter);
+      writeCache("workCounter", workCounter);
       return id;
     }
 
@@ -91,7 +91,7 @@
         case TQ.MatType.TOPIC:
           return topics.getPage(pageStep);
         default :
-          console.error('资源类别参数错误');
+          console.error("资源类别参数错误");
           return propsLocal.getPage(pageStep);
       }
     }
@@ -106,10 +106,10 @@
 
     function loadTopics() {
       var url = TQ.Config.OPUS_HOST + "/topic/list";
-      $http.get(url).then(function (response) {
+      $http.get(url).then(function(response) {
         console.log(response);
         var data = (response.status === 200) ? response.data : [];
-        if ((typeof data === 'string') && (data.startsWith('db error'))) {
+        if ((typeof data === "string") && (data.startsWith("db error"))) {
           TQ.MessageBox.confirm("(code=8003): " + TQ.Locale.getStr(
             "network connection failed, please check network availability"));
           data = [];
@@ -122,7 +122,7 @@
         topics.setList(data, TQ.MatType.TOPIC);
         $rootScope.$broadcast(EVENT_TOPIC_READY);
       },
-      function (reason) {
+      function(reason) {
         console.log(reason);
       });
     }
@@ -150,7 +150,7 @@
     }
 
     function reload(matType, ignorePlayFlag) { // 用于 登录之后的刷新
-      if (!ignorePlayFlag && TQ.State.isPlayOnly ) {
+      if (!ignorePlayFlag && TQ.State.isPlayOnly) {
         return onDataReady();
       }
 
@@ -201,11 +201,11 @@
     }
 
     function getMatList(mats, matType, stateType) {
-      var topicId = TQ.Utility.getTopicId(),
-        requestAll = (!topicId) || (topicId <=0) || options.requestAll;
+      var topicId = TQ.Utility.getTopicId();
+      var requestAll = (!topicId) || (topicId <= 0) || options.requestAll;
       $http({
-        method: 'GET',
-        url: TQ.Config.MAN_HOST + '/material/list/' + matType + "/topic/" + topicId + "/option/" + requestAll
+        method: "GET",
+        url: TQ.Config.MAN_HOST + "/material/list/" + matType + "/topic/" + topicId + "/option/" + requestAll
       }).then(onSuccess);
 
       function onSuccess(response) {
@@ -222,16 +222,16 @@
     }
 
     function getOpusList(mats, matType, stateType) {
-      var opusDetail = '';
+      var opusDetail = "";
       switch (matType) {
-        case TQ.MatType.PUBLISHED_OPUS:  // 已经发表的作品，所有人的， 只有admin可以view。
-          opusDetail = 'latest';
+        case TQ.MatType.PUBLISHED_OPUS: // 已经发表的作品，所有人的， 只有admin可以view。
+          opusDetail = "latest";
           break;
         case TQ.MatType.FINE_OPUS: // 已经推荐的优秀作品，所有人都可见。
-          opusDetail = 'fine';
+          opusDetail = "fine";
           break;
         default:
-          opusDetail = ''; // “我的”作品：除了ban的都返回
+          opusDetail = ""; // “我的”作品：除了ban的都返回
           // 对管理员： 所有人的
           // 对普通用户： 只是自己的，不包括他人的
           break;
@@ -241,8 +241,8 @@
 
       function getPageList(pageId) {
         $http({
-          method: 'GET',
-          url: TQ.Config.OPUS_HOST + '/wcyList/page/' + pageId
+          method: "GET",
+          url: TQ.Config.OPUS_HOST + "/wcyList/page/" + pageId
         }).then((response) => {
           var listLength = onSuccess(response);
           if (listLength >= 10) {
@@ -255,20 +255,20 @@
           });
       }
 
-      if (opusDetail === '') {
+      if (opusDetail === "") {
         var pageId = 1;
         getPageList(pageId);
       } else {
         $http({
-          method: 'GET',
-          url: TQ.Config.OPUS_HOST + '/wcyList/' + opusDetail
+          method: "GET",
+          url: TQ.Config.OPUS_HOST + "/wcyList/" + opusDetail
         }).then(onSuccess, onFail);
       }
 
       function onSuccess(response) {
         var data = (response.status === 200) ? response.data : [];
 
-        if ((typeof data === 'string') && (data.startsWith('db error'))) {
+        if ((typeof data === "string") && (data.startsWith("db error"))) {
           TQ.MessageBox.confirm("(code=8003): " + TQ.Locale.getStr(
             "network connection failed, please check network availability"));
           data = [];
@@ -283,7 +283,7 @@
           itemCopy.wcyId = item._id;
           itemCopy.path = item.ssPath;
           itemCopy.title = item.title || "我有一个梦"; // ToDo: 允许用户录入主题， 或系统设置竞赛的主题
-          itemCopy.score = (!item.score ? 1000 : item.score); //起点，（只有创作了作品，系统给你1000点， 然后实时统计
+          itemCopy.score = (!item.score ? 1000 : item.score); // 起点，（只有创作了作品，系统给你1000点， 然后实时统计
           itemCopy.userAge = (!itemCopy.userAge) ? 8 : itemCopy.userAge;
           itemCopy.city = TQ.userProfile.city;
           selected.push(itemCopy);
@@ -307,7 +307,7 @@
           onDataReady();
         }
         if (!TQ.MessageBox.hasCriticalError()) {
-          TQ.MessageBox.confirm("(code=8002): " + 
+          TQ.MessageBox.confirm("(code=8002): " +
             TQ.Locale.getStr("network connection failed, please check network availability"));
         }
       }
@@ -315,7 +315,7 @@
 
     function onDataReady() {
       workCounter = readCacheWithParse("workCounter", 0);
-      TQ.Log.checkPoint('DataService.EVENT_DATA_READY');
+      TQ.Log.checkPoint("DataService.EVENT_DATA_READY");
       $rootScope.$broadcast(EVENT_DATA_READY);
     }
 

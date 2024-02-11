@@ -5,15 +5,15 @@
  * */
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   function Overlay(description) {
     this.initialize(description);
   }
 
-  var p =Overlay.prototype = new TQ.Level();
+  var p = Overlay.prototype = new TQ.Level();
   p.Level_update = p.update;
   p.Level_initialize = p.initialize;
-  p.initialize = function (desc) {
+  p.initialize = function(desc) {
     if (!desc.name) {
       desc.name = "overlay";
     }
@@ -23,9 +23,8 @@ window.TQ = window.TQ || {};
 
   p.update = function(deltaT) {
     this.Level_update(deltaT);
-    if (null === stage.selectedItem)
-    {
-      this.hideClipPoint( true);
+    if (stage.selectedItem === null) {
+      this.hideClipPoint(true);
     } else {
       this.hideClipPoint(false);
     }
@@ -33,7 +32,7 @@ window.TQ = window.TQ || {};
 
   p.hideClipPoint = function(isVisible) {
     for (var i = 0; i < this.elements.length; ++i) {
-      if (this.elements[i].isClipPoint() && (this.elements[i].displayObj != undefined )) {
+      if (this.elements[i].isClipPoint() && (this.elements[i].displayObj != undefined)) {
         this.elements[i].show(isVisible);
       }
     }

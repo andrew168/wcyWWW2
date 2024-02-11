@@ -21,11 +21,11 @@ var TQ = TQ || {};
   }
 
   function invalidLogic(exp, str) {
-    TQ.Assert.isTrue(exp, str + ': ' + TQ.Dictionary.INVALID_LOGIC );
+    TQ.Assert.isTrue(exp, str + ": " + TQ.Dictionary.INVALID_LOGIC);
   }
 
   function isNotNull(exp) {
-    TQ.Assert.isNotNull(exp, TQ.Dictionary.INVALID_LOGIC );
+    TQ.Assert.isNotNull(exp, TQ.Dictionary.INVALID_LOGIC);
   }
 
   function isTrue(exp, msg) {
@@ -39,19 +39,16 @@ var TQ = TQ || {};
   TQ.AssertExt = AssertExt;
 }());
 
-
 function assertNotHere(msg) {
   return assertTrue(TQ.Dictionary.INVALID_LOGIC + ", " + msg, false);
 }
 
-function assertValid(msg, obj)
-{
+function assertValid(msg, obj) {
   assertNotUndefined(TQ.Dictionary.FoundNull + ": " + msg, obj);
-  assertNotNull(msg +"null", obj);
+  assertNotNull(msg + "null", obj);
 }
 
-function assertDepreciated(name)
-{
+function assertDepreciated(name) {
   TQ.AssertExt.depreciated(name);
 }
 

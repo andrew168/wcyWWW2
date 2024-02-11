@@ -3,13 +3,13 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   // 用法: Marker是一种修饰品Decoration. 也是Element类的子类.
   var OP_TYPE = {
-    UNKNOWN: 'unknown',
-    SCALE_X: 'scale x',
-    SCALE_Y: 'scale y',
-    SCALE_XY: 'scale xy'
+    UNKNOWN: "unknown",
+    SCALE_X: "scale x",
+    SCALE_Y: "scale y",
+    SCALE_XY: "scale xy"
   };
 
   // class 中的所有私有变量，都是各个class共用的，都可以修改，如果有多个实例， 就会冲突。
@@ -20,24 +20,24 @@ TQ = TQ || {};
   }
 
   var p = ScaleCalculator.prototype;
-  p.reset = function () {
+  p.reset = function() {
     this.sx = 1;
     this.sy = 1;
     this.type = OP_TYPE.UNKNOWN;
     lastOpType = OP_TYPE.UNKNOWN; // 必须重新初始化， 否则，之前的值会保留
   };
 
-  p.determineScale = function (ele, e) {
+  p.determineScale = function(ele, e) {
     var gesture = e.gesture;
-    var dx = gesture.deltaX,
-      dy = gesture.deltaY,
-      scale = e.gesture.scale;
+    var dx = gesture.deltaX;
+    var dy = gesture.deltaY;
+    var scale = e.gesture.scale;
     // TQ.Log.warn("gesture: (dx, dy):" + gesture.deltaX + ', ' + gesture.deltaY + '  velocity(x, y)' + gesture.velocityX + ', ' + gesture.velocityY);
 
     // 变换到物体空间
     var TANGENT_8_DEGREE = 0.14054; // i.e. tan(8 degree)
     if (ele) { // 没有element，就使用当前的空间坐标系
-      var dObj = ele.dDc2Object({x: dx, y: dy});
+      var dObj = ele.dDc2Object({ x: dx, y: dy });
       dx = Math.abs(dObj.x);
       dy = Math.abs(dObj.y);
     }
@@ -73,9 +73,9 @@ TQ = TQ || {};
     }
 
     this.type = opType;
-    TQ.Log.warn("gesture: (dx, dy):" + gesture.deltaX.toFixed(2) + ',' + gesture.deltaY.toFixed(2) +
-      ' (in Object Space:(dx, dy) =' + dx.toFixed(2) + ', ' + dy.toFixed(2) +
-      '  scale(x, y)' + this.sx.toFixed(2) + ', ' + this.sy.toFixed(2));
+    TQ.Log.warn("gesture: (dx, dy):" + gesture.deltaX.toFixed(2) + "," + gesture.deltaY.toFixed(2) +
+      " (in Object Space:(dx, dy) =" + dx.toFixed(2) + ", " + dy.toFixed(2) +
+      "  scale(x, y)" + this.sx.toFixed(2) + ", " + this.sy.toFixed(2));
   };
 
   TQ.ScaleCalculator = ScaleCalculator;

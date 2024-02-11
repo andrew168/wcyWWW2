@@ -2,9 +2,9 @@
  * Created by Andrewz on 2/20/2017.
  */
 
-(function () {
+(function() {
   TQ.Scene.upgradeToLatest = function(objJson) {
-    TQ.Log.debugInfo("upgrade: old version: " + (!objJson.version? "No" : objJson.version));
+    TQ.Log.debugInfo("upgrade: old version: " + (!objJson.version ? "No" : objJson.version));
     if (!objJson.version || isV_Format(objJson.version)) { // no version, V1, V2, V3
       switch (objJson.version) {
         case TQ.Scene.VER3:
@@ -50,7 +50,7 @@
   function upgrade3_7ToVer3_8(objJson) {
     var num = objJson.levels.length;
     for (var i = 0; i < num; i++) {
-      TQ.Level.upgradeEachElement(objJson.levels[i], function (eleDesc) {
+      TQ.Level.upgradeEachElement(objJson.levels[i], function(eleDesc) {
         if (eleDesc.animeTrack) {
           TQ.AnimeTrack.upgradeTo3_8(eleDesc.animeTrack);
         }
@@ -64,7 +64,7 @@
   function upgrade3_6ToVer3_7(objJson) {
     var num = objJson.levels.length;
     for (var i = 0; i < num; i++) {
-      TQ.Level.upgradeEachElement(objJson.levels[i], function (eleDesc) {
+      TQ.Level.upgradeEachElement(objJson.levels[i], function(eleDesc) {
         var temp = eleDesc.mirrorX;
         eleDesc.mirrorX = eleDesc.mirrorY;
         eleDesc.mirrorY = temp;
@@ -120,7 +120,7 @@
     return objJson;
   }
 
-  function isV_Format(version) { //"V1", --"V3"
+  function isV_Format(version) { // "V1", --"V3"
     return isNaN(version);
   }
 }());

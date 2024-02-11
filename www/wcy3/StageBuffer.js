@@ -6,13 +6,13 @@
 
 window.TQ = window.TQ || {};
 
-(function () {
-  var StageBuffer =function () {
+(function() {
+  var StageBuffer = function() {
   };
-  StageBuffer.isBatchMode = false;  // by default, it's not batchMode, i.e. closed,
+  StageBuffer.isBatchMode = false; // by default, it's not batchMode, i.e. closed,
   StageBuffer.members = [];
-  StageBuffer.open = function () { StageBuffer.isBatchMode = true;};
-  StageBuffer.close = function () {
+  StageBuffer.open = function() { StageBuffer.isBatchMode = true; };
+  StageBuffer.close = function() {
     StageBuffer.flush();
     StageBuffer.isBatchMode = false;
   };
@@ -21,7 +21,7 @@ window.TQ = window.TQ || {};
     求上边界： 即: 在zIndex > z的范围中， 求最小的zIndex（在上边最靠近z）。
      */
   StageBuffer.findUpperBoundary = function(z) {
-    if ((!currScene) || (!currScene.currentLevel) ||(!currScene.currentLevel.elements)) {
+    if ((!currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.elements)) {
       return null;
     }
     if (z == -1) { // group 物体， 不需要进入stage
@@ -30,7 +30,7 @@ window.TQ = window.TQ || {};
     return TQ.MathExt.findUpperBoundary(currScene.currentLevel.elements, z);
   };
 
-  StageBuffer.add = function (ele) {
+  StageBuffer.add = function(ele) {
     if (ele.isHighlighter()) { // 亮显元素， 不加入到stage中
       return;
     }
@@ -43,7 +43,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  StageBuffer.flush = function () {
+  StageBuffer.flush = function() {
     assertTrue(TQ.Dictionary.MustBeBatchMode, StageBuffer.isBatchMode);
     if (StageBuffer.members.length > 0) {
       StageBuffer.members.sort(TQ.Element.compare);
@@ -58,8 +58,8 @@ window.TQ = window.TQ || {};
   };
 
   StageBuffer.isEmpty = function() {
-    return StageBuffer.members.length<=0;
+    return StageBuffer.members.length <= 0;
   };
 
   TQ.StageBuffer = StageBuffer;
-}) ();
+})();

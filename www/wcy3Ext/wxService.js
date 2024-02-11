@@ -1,81 +1,81 @@
-angular.module('starter').factory('WxService', WxService);
-WxService.$inject = ['$http', '$q'];
+angular.module("starter").factory("WxService", WxService);
+WxService.$inject = ["$http", "$q"];
 function WxService($http, $q) {
   // ToDo: CORS 无法读取server设置的cookie，
   //     ==> Auth用户统计， 必须和网页一个host
   //  ==> sever的cookie可以是 http读取only， 不让客户端读写它，以便于追踪
   var _isReady = false;
   var urlConcat = TQ.Base.Utility.urlConcat;
-  var _shareData = null,
-    pageUrlSigned = null;
+  var _shareData = null;
+  var pageUrlSigned = null;
 
-  //在本应用中用到的API，（白名单）
+  // 在本应用中用到的API，（白名单）
   // 1) 白名单之外的API， 将无法使用
   // 2) 要检查、确认用户的环境支持这些API，否则，无法使用，
   var ApiList = [
-    'checkJsApi',
-    'onMenuShareTimeline',
-    'onMenuShareAppMessage',
-    'onMenuShareQQ',
-    'onMenuShareWeibo',
-    'hideMenuItems',
-    'showMenuItems',
-    'hideAllNonBaseMenuItem',
-    'showAllNonBaseMenuItem',
-    'translateVoice',
-    'startRecord',
-    'stopRecord',
-    'onRecordEnd',
-    'playVoice',
-    'pauseVoice',
-    'stopVoice',
-    'uploadVoice',
-    'downloadVoice',
-    'chooseImage',
-    'previewImage',
-    'uploadImage',
-    'downloadImage',
-    'getNetworkType',
-    'openLocation',
-    'getLocation',
-    'hideOptionMenu',
-    'showOptionMenu',
-    'closeWindow',
-    'scanQRCode',
-    'chooseWXPay',
-    'openProductSpecificView',
-    'addCard',
-    'chooseCard',
-    'openCard',
-    'miniProgram',
-    'miniProgram.navigateTo',
-    'miniProgram.navigateTo',
-    'miniProgram.navigateTo',
-    'miniProgram.navigateBack',
-    'miniProgram.switchTab',
-    'miniProgram.reLaunch',
-    'miniProgram.redirectTo',
-    'miniProgram.postMessage',
-    'miniProgram.getEnv'
+    "checkJsApi",
+    "onMenuShareTimeline",
+    "onMenuShareAppMessage",
+    "onMenuShareQQ",
+    "onMenuShareWeibo",
+    "hideMenuItems",
+    "showMenuItems",
+    "hideAllNonBaseMenuItem",
+    "showAllNonBaseMenuItem",
+    "translateVoice",
+    "startRecord",
+    "stopRecord",
+    "onRecordEnd",
+    "playVoice",
+    "pauseVoice",
+    "stopVoice",
+    "uploadVoice",
+    "downloadVoice",
+    "chooseImage",
+    "previewImage",
+    "uploadImage",
+    "downloadImage",
+    "getNetworkType",
+    "openLocation",
+    "getLocation",
+    "hideOptionMenu",
+    "showOptionMenu",
+    "closeWindow",
+    "scanQRCode",
+    "chooseWXPay",
+    "openProductSpecificView",
+    "addCard",
+    "chooseCard",
+    "openCard",
+    "miniProgram",
+    "miniProgram.navigateTo",
+    "miniProgram.navigateTo",
+    "miniProgram.navigateTo",
+    "miniProgram.navigateBack",
+    "miniProgram.switchTab",
+    "miniProgram.reLaunch",
+    "miniProgram.redirectTo",
+    "miniProgram.postMessage",
+    "miniProgram.getEnv"
   ];
 
-  var title = "春节快乐！",
-    desc = "阖家欢乐，财源滚滚！",
-    link = TQ.Config.ENT_HOST,
-    imgUrl = urlConcat(urlConcat(TQ.Config.MAT_HOST, TQ.Config.IMAGES_CORE_PATH), "v1453298300/67.jpg");
+  var title = "春节快乐！";
+  var desc = "阖家欢乐，财源滚滚！";
+  var link = TQ.Config.ENT_HOST;
+  var imgUrl = urlConcat(urlConcat(TQ.Config.MAT_HOST, TQ.Config.IMAGES_CORE_PATH), "v1453298300/67.jpg");
   // TQ.Config.MAT_HOST + "v1453298300/67.jpg"; // "/mcImages/p10324.png",
   // imgUrl = TQ.Config.MAT_HOST + "/mcImages/animation1.gif",
   imgData = imgUrl;
 
-  //微信配置
-  var getSignature = function () {
+  // 微信配置
+  var getSignature = function() {
     if (!TQ.Config.hasWx) {
       return false;
     }
 
     $http({
-      method: 'GET',
-      url: TQ.Config.AUTH_HOST + '/getWSignature?filename=myfile',
+      method: "GET",
+      url: TQ.Config.AUTH_HOST + "/getWSignature?filename=myfile",
       data: {}
     }).success(doConfig);
   };
@@ -96,7 +96,7 @@ function WxService($http, $q) {
       TQ.Log.alertInfo(JSON.stringify(wechat_sign));
     }
 
-    console.log('window.__wxjs_environment = ' + window.__wxjs_environment);
+    console.log("window.__wxjs_environment = " + window.__wxjs_environment);
     wx.config({
       debug: TQ.Config.WX_DEBUG_ENABLED, // true, // false,
       appId: TQ.Config.wx.appId,
@@ -111,7 +111,7 @@ function WxService($http, $q) {
     });
     // 如果更换了页面，则需要向wx重新注册？
     // wx.ready如果注册1次， 则只执行1次。放在doConfig里面，以确保每个页面初始化之后，都能够执行1次
-    wx.ready(function (msg) {
+    wx.ready(function(msg) {
       TQ.Log.alertInfo("Wx Ready! " + JSON.stringify(msg));
       // 对于注册型的API，在此调用
       // checkAPI();
@@ -124,7 +124,7 @@ function WxService($http, $q) {
       }
     });
 
-    wx.error(function (error) {
+    wx.error(function(error) {
       TQ.Log.alertError("Wx Error " + JSON.stringify(error));
     });
   }
@@ -136,10 +136,10 @@ function WxService($http, $q) {
 
     wx.checkJsApi({
       jsApiList: ApiList,
-      success: function (res) {
+      success: function(res) {
         TQ.Log.alertInfo("All is supported!");
       },
-      fail: function (res) {
+      fail: function(res) {
         TQ.Log.alertInfo("不支持" + JSON.stringify(res));
       },
       complete: _onComplete,
@@ -158,16 +158,16 @@ function WxService($http, $q) {
       desc: _shareData.desc,
       link: pageUrlSigned, // link + "?opus=" + shareCode,
       imgUrl: _shareData.ssPath,
-      type: 'link', // 分享类型,music、video或link，不填默认为link
+      type: "link", // 分享类型,music、video或link，不填默认为link
       trigger: _onTrigger,
       // success: _onSuccess,
       // fail: _onFail,
       complete: _onComplete,
 
-      success: function (res) {
+      success: function(res) {
         TQ.Log.alertInfo("微信分享成功！" + JSON.stringify(res));
       },
-      fail: function (res) {
+      fail: function(res) {
         TQ.Log.alertInfo("微信分享不成功，原因" + JSON.stringify(res));
       },
 
@@ -215,21 +215,21 @@ function WxService($http, $q) {
     if (!TQ.Config.hasWx) {
       setTimeout(function() {
         q.reject("no wx");
-      })
+      });
     }
     wx.chooseImage({
       count: 2, // 默认9
-      sizeType: ['original', 'compressed'],
-      sourceType: ['album', 'camera'],
-      success11: function (res) {
+      sizeType: ["original", "compressed"],
+      sourceType: ["album", "camera"],
+      success11: function(res) {
         var localIds = res.localIds; // 返回选定照片的本地ID列表，localId可以作为img标签的src属性显示图片
-        TQ.Log.alertInfo('已选择 ' + localIds + ' 张图片');
-        TQ.Log.alertInfo('已选择 ' + 222 + ' 张图片');
+        TQ.Log.alertInfo("已选择 " + localIds + " 张图片");
+        TQ.Log.alertInfo("已选择 " + 222 + " 张图片");
       },
 
-      success: function (res) {
+      success: function(res) {
         var localId = res.localIds[0];
-        TQ.Log.alertInfo('已选择 ' + res.localIds.length + ' 张图片');
+        TQ.Log.alertInfo("已选择 " + res.localIds.length + " 张图片");
         q.resolve(localId);
       }
     });
@@ -251,7 +251,7 @@ function WxService($http, $q) {
     }
 
     _shareData = shareData;
-    if (!TQUtility.isWeChat()) {  // 如果不在微信里面， 则总是关闭此功能
+    if (!TQUtility.isWeChat()) { // 如果不在微信里面， 则总是关闭此功能
       TQ.Config.hasWx = false;
     }
 
@@ -262,14 +262,14 @@ function WxService($http, $q) {
     return getSignature();
   }
 
-  //扫面印刷品上的二维码（不是微信上的图片)
+  // 扫面印刷品上的二维码（不是微信上的图片)
   function scanQRCode() {
     if (_isReady) {
       wx.scanQRCode({
-        needResult: 0,// 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
-        scanType: ["qrCode"], //可以指定扫二维码还是一维码"barCode"，默认二者都有
-        desc: 'scanQRCode desc',
-        success: function (res) {
+        needResult: 0, // 默认为0，扫描结果由微信处理，1则直接返回扫描结果，
+        scanType: ["qrCode"], // 可以指定扫二维码还是一维码"barCode"，默认二者都有
+        desc: "scanQRCode desc",
+        success: function(res) {
           alert(JSON.stringify(res));
         }
       });

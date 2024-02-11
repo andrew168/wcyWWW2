@@ -6,7 +6,7 @@
 
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   var SkinningCtrl = { };
   SkinningCtrl.hasNew = false;
   SkinningCtrl._scene = null;
@@ -28,11 +28,11 @@ window.TQ = window.TQ || {};
     TQ.InputCtrl.inSubobjectMode = true;
     TQ.SelectSet.getSelectedElement();
     SkinningCtrl._hostObj = TQ.SelectSet.pop();
-    //ToDo: 能够禁止再次进入吗 $("#skinning").button("disable");
+    // ToDo: 能够禁止再次进入吗 $("#skinning").button("disable");
     $(document).bind("mousedown", SkinningCtrl.getSkin);
   };
 
-  SkinningCtrl.getSkin = function () {
+  SkinningCtrl.getSkin = function() {
     var skin = TQ.SelectSet.pop();
     assertNotNull(TQ.Dictionary.PleaseSelectHost, SkinningCtrl._hostObj);
     if ((skin != null) && (skin.displayObj.id != SkinningCtrl._hostObj.displayObj.id)) {
@@ -46,13 +46,13 @@ window.TQ = window.TQ || {};
   SkinningCtrl.end = function() {
     if (SkinningCtrl.isWorking) {
       SkinningCtrl.isWorking = false;
-      if (SkinningCtrl.oldSubjectMode != null){
+      if (SkinningCtrl.oldSubjectMode != null) {
         TQ.InputCtrl.inSubobjectMode = SkinningCtrl.oldSubjectMode;
       }
       $(document).unbind("mousedown", SkinningCtrl.getSkin);
-      //ToDo: 可以吗?  $("#skinning").button("enable");
+      // ToDo: 可以吗?  $("#skinning").button("enable");
     }
   };
 
   TQ.SkinningCtrl = SkinningCtrl;
-}) ();
+})();

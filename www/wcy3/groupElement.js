@@ -3,7 +3,7 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   // 用法: GroupElement, 一个container， 包裹其子孙
   function GroupElement(level, jsonObj) {
     TQ.Element.call(this, level, jsonObj);
@@ -51,8 +51,8 @@ TQ = TQ || {};
   }
 
   function calZ(elements) {
-    var expectedZ = elements[0].getZ(),
-      n = elements.length;
+    var expectedZ = elements[0].getZ();
+    var n = elements.length;
     for (var i = 0; i < n; i++) {
       expectedZ = Math.max(expectedZ, elements[i].getZ());
     }
@@ -60,9 +60,9 @@ TQ = TQ || {};
   }
 
   var p = GroupElement.prototype = Object.create(TQ.Element.prototype);
-  p._doLoad = function () {
-    assertNotNull(TQ.Dictionary.
-      FoundNull, this.jsonObj); // 合并
+  p._doLoad = function() {
+    assertNotNull(TQ.Dictionary
+      .FoundNull, this.jsonObj); // 合并
     // 建立空的 displayObj 以容纳设备空间的参数
     this.displayObj = new createjs.Container();
     this.loaded = true;
@@ -70,25 +70,25 @@ TQ = TQ || {};
     this.setTRSAVZ();
   };
 
-  p.getWidth = function () {
-    return (this.children.length < 2) ? 1: this.children[0].getWidth();
+  p.getWidth = function() {
+    return (this.children.length < 2) ? 1 : this.children[0].getWidth();
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return (this.children.length < 2) ? 1 : this.children[0].getHeight();
   };
 
-  p.getWidthAfterScale = function () {
-    let scale = (this.children.length < 2) ? 1 : this.children[0].getScale();
+  p.getWidthAfterScale = function() {
+    const scale = (this.children.length < 2) ? 1 : this.children[0].getScale();
     return (this.getWidth() * scale.sx);
   };
 
-  p.getHeightAfterScale = function () {
-    let scale = (this.children.length < 2) ? 1 : this.children[0].getScale();
+  p.getHeightAfterScale = function() {
+    const scale = (this.children.length < 2) ? 1 : this.children[0].getScale();
     return (this.getHeight() * scale.sy);
   };
 
-  p._initializeComponent = function (desc) {
+  p._initializeComponent = function(desc) {
     // 如果从groupFile来的，
     if ((this instanceof TQ.GroupElement) && (this.isElementFile)) {
       this.setupZIndex();
@@ -99,33 +99,33 @@ TQ = TQ || {};
     TQ.StageBuffer.close();
     TQ.DirtyFlag.setElement(this); // 强制更新group元素的时间
     self = this;
-    currScene.currentLevel.registerHandler(function () {
+    currScene.currentLevel.registerHandler(function() {
       self.shrinkToStage();
-    })    
+    });
   };
 
   // 如果超出了屏幕范围，则缩小比例，以占据屏幕正中心的80%
-  p.shrinkToStage = function () {
-    let geoBox = this.calGeoBox(),
-      scale = Math.min(currScene.getDesignatedWidth() * 0.8 / geoBox.getWidth(),
-        currScene.getDesignatedHeight() * 0.8 / geoBox.getHeight());
+  p.shrinkToStage = function() {
+    const geoBox = this.calGeoBox();
+    const scale = Math.min(currScene.getDesignatedWidth() * 0.8 / geoBox.getWidth(),
+      currScene.getDesignatedHeight() * 0.8 / geoBox.getHeight());
     if (scale < 1) {
-      //tips: 必须用Timeout包裹，才能正确地更新,否则，画面不改变
-      setTimeout(function () {
+      // tips: 必须用Timeout包裹，才能正确地更新,否则，画面不改变
+      setTimeout(function() {
         self.scale(scale);
       });
     }
-  }
+  };
 
-  p.loadFromFile = function (jsonFiledesc) {
+  p.loadFromFile = function(jsonFiledesc) {
     var opusDesc;
     this.children = [];
     // 调入 json文件, 取其中的 elements
-    (function (pt) {
+    (function(pt) {
       $.ajax({
-        type: 'GET',
+        type: "GET",
         url: jsonFiledesc.src
-      }).done(function (jqResponse) {
+      }).done(function(jqResponse) {
         try {
           var opusJson = TQ.Scene.decompress(jqResponse.data);
           opusDesc = JSON.parse(TQ.Element.upgrade(opusJson));
@@ -146,7 +146,7 @@ TQ = TQ || {};
 
         pt.isElementFile = true;
         if (!TQ.RM.isEmpty) {
-          TQ.RM.onCompleteOnce(function () {
+          TQ.RM.onCompleteOnce(function() {
             pt._initializeComponent(groupEleDesc);
           });
         } else { // 资源都已经装入了，
@@ -159,7 +159,7 @@ TQ = TQ || {};
     this.animeTrack = this.jsonObj.animeTrack;
   };
 
-  p._extractComponent = function (objJson, x, y, zMax) {
+  p._extractComponent = function(objJson, x, y, zMax) {
     if (!this.jsonObj) {
       this.jsonObj = {};
     }
@@ -183,22 +183,22 @@ TQ = TQ || {};
     var component = objJson.levels[0].elements;
     TQ.RM.addElementDescList(component);
     this.jsonObj = component[0];
-    this.jsonObj.type = "Group";  // 不论是单个物体还是多个物体,总是建立虚拟物体group， 以保留其原有的动画
+    this.jsonObj.type = "Group"; // 不论是单个物体还是多个物体,总是建立虚拟物体group， 以保留其原有的动画
     this.jsonObj.x = x;
     this.jsonObj.y = y;
     this.jsonObj.zIndex = zMax;
     return this.jsonObj;
   };
 
-  p.setupZIndex = function () {
+  p.setupZIndex = function() {
     // 新插入的元件，元件各个子元素的zIndex要升高，使他置于top，可见
     if (!this.level.isActive()) {
       return;
     }
 
-    var zMax = TQ.Utility.getMaxZ(),
-      pool = [],
-      children = this.jsonObj.children;
+    var zMax = TQ.Utility.getMaxZ();
+    var pool = [];
+    var children = this.jsonObj.children;
 
     pool.push(this.jsonObj);
     if (children) {
@@ -224,8 +224,8 @@ TQ = TQ || {};
   };
 
   function getChildrenFromDesc(children) {
-    var i,
-      pool = [];
+    var i;
+    var pool = [];
     for (i = 0; i < children.length; i++) {
       pool.push(children[i]);
       if (children[i].children) {

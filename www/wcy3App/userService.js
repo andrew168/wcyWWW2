@@ -2,14 +2,14 @@
  * Created by Andrewz on 4/19/2017.
  */
 
-angular.module('starter').factory("UserService", UserService);
-UserService.$inject = ['$http', '$auth'];
+angular.module("starter").factory("UserService", UserService);
+UserService.$inject = ["$http", "$auth"];
 function UserService($http, $auth) {
-  var user = TQ.userProfile,
-    userList = [];
+  var user = TQ.userProfile;
+  var userList = [];
 
   function canAutoLogin() {
-    return  $auth.isAuthenticated();
+    return $auth.isAuthenticated();
   }
 
   function tryAutoLogin() {
@@ -18,7 +18,7 @@ function UserService($http, $auth) {
   }
 
   function tryAutoSignUp() {
-    var name = 'guest' + (new Date()).getTime();
+    var name = "guest" + (new Date()).getTime();
     return signUp(name, name, name);
   }
 
@@ -26,37 +26,37 @@ function UserService($http, $auth) {
     if (!from) { // 对于WX MiniP 平台, wxCode, 保持原来的大小写
       name = name.toLowerCase();
     }
-    return $auth.login({email: name, password: psw, from: from, nickName: nickName}).
-      then(getProfile).
-      catch(onGetProfileFailed);
+    return $auth.login({ email: name, password: psw, from: from, nickName: nickName })
+      .then(getProfile)
+      .catch(onGetProfileFailed);
   }
 
   function loginFromWx(wxBoneToken, displayName) {
     // return login('wxNewYearCard', 'TqTest123');
-    var authorizer = 'wx'; // AUTH.WX 见服务器的const.js
-    return login(wxBoneToken, 'wxGranted', authorizer, displayName);
+    var authorizer = "wx"; // AUTH.WX 见服务器的const.js
+    return login(wxBoneToken, "wxGranted", authorizer, displayName);
   }
 
   function authenticate(authName) {
-    return $auth.authenticate(authName).
-      then(getProfile).
-      catch(onGetProfileFailed);
+    return $auth.authenticate(authName)
+      .then(getProfile)
+      .catch(onGetProfileFailed);
   }
 
   function logout(name) {
-    return $auth.logout().
-      then(onLogoutDone);
+    return $auth.logout()
+      .then(onLogoutDone);
   }
 
   function sendCode(name, callback) {
     console.log("sendCode");
-    var data = { 'name': name };
-    $http.post(TQ.Config.AUTH_HOST + '/auth/sendcode', angular.toJson(data)).
-      then(function (result) {
+    var data = { "name": name };
+    $http.post(TQ.Config.AUTH_HOST + "/auth/sendcode", angular.toJson(data))
+      .then(function(result) {
         console.log("result : ", result);
         callback(result);
       },
-      function (reason) {
+      function(reason) {
         console.log("reason : ", reason);
         callback(reason);
       });
@@ -64,24 +64,24 @@ function UserService($http, $auth) {
 
   function confirmCode(name, code, callback) {
     console.log("confirmCode");
-    var data = { 'name': name, 'code': code };
-    $http.post(TQ.Config.AUTH_HOST + '/auth/confirmcode', angular.toJson(data)).
-      then(function (result) {
+    var data = { "name": name, "code": code };
+    $http.post(TQ.Config.AUTH_HOST + "/auth/confirmcode", angular.toJson(data))
+      .then(function(result) {
         callback(result);
       },
-      function (reason) {
+      function(reason) {
         callback(reason);
       });
   }
 
   function updatePassword(name, code, psw, callback) {
     console.log("updatePassword");
-    var data = { 'name': name, 'code': code, 'psw': psw };
-    $http.post(TQ.Config.AUTH_HOST + '/auth/updatepassword', angular.toJson(data)).
-      then(function (result) {
+    var data = { "name": name, "code": code, "psw": psw };
+    $http.post(TQ.Config.AUTH_HOST + "/auth/updatepassword", angular.toJson(data))
+      .then(function(result) {
         callback(result);
       },
-      function (reason) {
+      function(reason) {
         callback(reason);
       });
   }
@@ -99,10 +99,10 @@ function UserService($http, $auth) {
   }
 
   function checkName(name) {
-    var url = TQ.Config.AUTH_HOST + '/user/checkname/' + name;
+    var url = TQ.Config.AUTH_HOST + "/user/checkname/" + name;
     $http.get(url)
-      .then(onCheckNameDone).
-      catch(onGetProfileFailed);
+      .then(onCheckNameDone)
+      .catch(onGetProfileFailed);
   }
 
   function setAdmin(userId) {
@@ -111,13 +111,13 @@ function UserService($http, $auth) {
   }
   function setPrivilege(userId, privilege) {
     if (user.canAdmin) {
-      return $http.get(TQ.Config.AUTH_HOST + '/user/privilege/' + userId + '/' + privilege);
+      return $http.get(TQ.Config.AUTH_HOST + "/user/privilege/" + userId + "/" + privilege);
     }
   }
 
   function getUserList() {
     if (user.canAdmin) {
-      return $http.get(TQ.Config.AUTH_HOST + '/user/list')
+      return $http.get(TQ.Config.AUTH_HOST + "/user/list")
         .then(function(netPkg) {
           userList = netPkg.data;
         });
@@ -130,16 +130,16 @@ function UserService($http, $auth) {
   }
 
   function getProfile() {
-    return $http.get(TQ.Config.AUTH_HOST + '/auth/api/me').
-      then(onGetProfileSuccess).
-      catch(onGetProfileFailed);
+    return $http.get(TQ.Config.AUTH_HOST + "/auth/api/me")
+      .then(onGetProfileSuccess)
+      .catch(onGetProfileFailed);
   }
 
   function onGetProfileSuccess(netPkg) {
     var data = netPkg.data;
     if (netPkg.status === TQ.Const.STATUS200) {
-      var age = (!data.age ? user.age : data.age),
-        city = (!data.city ? user.city : data.city);
+      var age = (!data.age ? user.age : data.age);
+      var city = (!data.city ? user.city : data.city);
 
       TQUtility.extendWithoutObject(user, data);
       user.loggedIn = true;
@@ -150,15 +150,15 @@ function UserService($http, $auth) {
       user.isValidName = true;
       user.saveToCache();
       // 有特别能力解决问题的人 superman
-      var superman = ['人人动画_Andrew郅刚', 'toronto1111'];
-      superman.some(function (displayName) {
+      var superman = ["人人动画_Andrew郅刚", "toronto1111"];
+      superman.some(function(displayName) {
         if (user.name === displayName || user.displayName === displayName) {
           user.canSolve = true;
           return true;
         }
       });
 
-      TQ.Log.checkPoint("login successfully!  welcome "+ user.displayName + ", " + user.name);
+      TQ.Log.checkPoint("login successfully!  welcome " + user.displayName + ", " + user.name);
     } else {
       onGetProfileFailed(netPkg);
     }
@@ -177,7 +177,7 @@ function UserService($http, $auth) {
       }
     } else {
       if (!TQ.MessageBox.hasCriticalError()) {
-        TQ.MessageBox.promptWithNoCancel("(code=9901): " + 
+        TQ.MessageBox.promptWithNoCancel("(code=9901): " +
           TQ.Locale.getStr("network connection failed, please check network availability"));
       }
     }
@@ -210,5 +210,5 @@ function UserService($http, $auth) {
     sendCode: sendCode,
     confirmCode: confirmCode,
     updatePassword: updatePassword
-  }
+  };
 }

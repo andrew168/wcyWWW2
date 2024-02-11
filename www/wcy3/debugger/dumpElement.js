@@ -2,7 +2,7 @@
  * Created by Andrewz on 3/18/2017.
  */
 var TQDebugger = TQDebugger || {};
-(function(){
+(function() {
   var _eleSelected = null;
   TQDebugger.dumpAll = dumpAll;
   TQDebugger.dumpSelected = dumpSelected;
@@ -28,7 +28,6 @@ var TQDebugger = TQDebugger || {};
       _eleSelected.rotateTo(angle);
     }
   }
-
 
   function dumpAll() {
     dumpArray(0, currScene.currentLevel.elements.sort(sortByZIndex));
@@ -69,8 +68,8 @@ var TQDebugger = TQDebugger || {};
       return;
     }
 
-    var n = elements.length,
-      i;
+    var n = elements.length;
+    var i;
 
     for (i = 0; i < n; i++) {
       dumpOne(depth, elements[i]);

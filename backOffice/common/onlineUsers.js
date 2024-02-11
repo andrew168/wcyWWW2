@@ -5,12 +5,12 @@
  如果连续N小时不活跃， 则踢出去。
  */
 
-var fs = require('fs'),
-  tempFileName = "/data/onlineUserDump.txt",
-  dataReady = false,
-  readyToStop = false,
-  users = null,
-  allowNRunningClient = false; //普通用户， 一个同时只能在1个机器上登录
+var fs = require("fs");
+var tempFileName = "/data/onlineUserDump.txt";
+var dataReady = false;
+var readyToStop = false;
+var users = null;
+var allowNRunningClient = false; // 普通用户， 一个同时只能在1个机器上登录
 
 function add(aUser, tokenId) {
   if (!users) {
@@ -22,7 +22,7 @@ function add(aUser, tokenId) {
   console.log("before add2:" + JSON.stringify(users[tokenId]));
   console.log("new user:" + JSON.stringify(aUser));
   obsoleteExistingToken(aUser);
-  users[tokenId] = aUser;  // 3rd: 用tokenId做索引
+  users[tokenId] = aUser; // 3rd: 用tokenId做索引
   console.log("after add2:" + JSON.stringify(users[tokenId]));
 }
 
@@ -48,7 +48,7 @@ function getValidUser(tokenId, userId) {
     return null;
   }
 
-  //第三代： tokenId, 支持用户同时在多个机器，多个浏览器，多个window user下使用。
+  // 第三代： tokenId, 支持用户同时在多个机器，多个浏览器，多个window user下使用。
   var candidate = users[tokenId]; // 第3代： userId
   if (!candidate) { // try  第一代tokenID style
     candidate = users[userId];
@@ -77,7 +77,7 @@ function save(callback) {
 
 function restore() {
   function setup(err, data) {
-    users = (!err && data) ? JSON.parse(data): {};
+    users = (!err && data) ? JSON.parse(data) : {};
     if (!users) { // 防止 "null"
       users = {};
     }
@@ -87,8 +87,8 @@ function restore() {
     // console.log("restored users = " + JSON.stringify(users));
   }
   try {
-    fs.readFile(tempFileName, 'utf8', setup);
-  } catch(e) {
+    fs.readFile(tempFileName, "utf8", setup);
+  } catch (e) {
     setup(true, null);
   }
 }
@@ -106,11 +106,11 @@ function obsoleteExistingToken(aUser) {
     return;
   }
   var ids = Object.keys(users);
-  ids.forEach(function (id) {
+  ids.forEach(function(id) {
     if (users[id].ID === aUser.ID) {
       obsolete(id);
     }
-  })
+  });
 }
 
 function obsoleteStaleToken() {
@@ -119,11 +119,11 @@ function obsoleteStaleToken() {
     if (!isValidTokenId(id)) {
       obsolete(id);
     }
-  })
+  });
 }
 
 function isValidTokenId(token) {
-  return (token[0] ==='A'); // 当前有效的token是A字体， （暂时未判断有效期）
+  return (token[0] === "A"); // 当前有效的token是A字体， （暂时未判断有效期）
 }
 exports.add = add;
 exports.get = get;

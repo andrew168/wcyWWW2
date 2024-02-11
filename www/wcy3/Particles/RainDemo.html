@@ -14,52 +14,50 @@
     <script src="src/ShapeParticle.js"></script>
     <script src="src/RainEffect.js"></script>
     <script type="text/javascript">
-        var canvas;         // the canvas element
-        var context;        // the 2d context of the canvas
-        var stage;          // the createjs stage
-        var emitter;        // the emitter
-        var fpsLabel;       // label to show the current frames per second
-        var particleImage;  // the image to use for each particle
+        var canvas; // the canvas element
+        var context; // the 2d context of the canvas
+        var stage; // the createjs stage
+        var emitter; // the emitter
+        var fpsLabel; // label to show the current frames per second
+        var particleImage; // the image to use for each particle
 
         function loadAssets() {
-            particleImage = new Image();
-            particleImage.onload = initCanvas;
-            particleImage.src = "images/yudi3.png";
+          particleImage = new Image();
+          particleImage.onload = initCanvas;
+          particleImage.src = "images/yudi3.png";
 //            particleImage.src = "images/xuehua1.png";
         }
 
         function initCanvas() {
+          canvas = document.getElementById("particleEmitterCanvas");
+          context = canvas.getContext("2d");
+          stage = new createjs.Stage(canvas);
 
-            canvas = document.getElementById('particleEmitterCanvas');
-            context = canvas.getContext("2d");
-            stage = new createjs.Stage(canvas);
+          createjs.Ticker.setFPS(30);
+          createjs.Ticker.addListener(update);
 
-            createjs.Ticker.setFPS(30);
-            createjs.Ticker.addListener(update);
+          addFPS();
+          var snow1 = { density: 40, startSize: 10, direction: 110, dy: 50, v0: 300, endOpacity: -1, endSize: 0, endSizeVar: 5 };
+          var snow2 = snow1.clone();
+          snow2.startSize = 20;
+          snow2.dy = 10;
+          snow2.v0 = 100;
+          snow2.endOpacity = 0.1;
+          snow2.endSize = -1;
+          snow2.endSizeVar = 5;
 
-            addFPS();
-            var snow1 = {density: 40, startSize:10, direction:110,    dy:50, v0:300, endOpacity:-1, endSize:0, endSizeVar:5};
-            var snow2 = snow1.clone();
-            snow2.startSize = 20;
-            snow2.dy = 10;
-            snow2.v0 = 100;
-            snow2.endOpacity = 0.1;
-            snow2.endSize = -1;
-            snow2.endSizeVar = 5;
-
-            // rain(snow1, particleImage);
-            rain(snow2, particleImage);
+          // rain(snow1, particleImage);
+          rain(snow2, particleImage);
         }
 
         function addFPS() {
-
-            fpsLabel = new createjs.Text("-- fps", "bold 14px Arial", "#BBBBBB");
-            stage.addChild(fpsLabel);
+          fpsLabel = new createjs.Text("-- fps", "bold 14px Arial", "#BBBBBB");
+          stage.addChild(fpsLabel);
         }
 
         function update() {
-            fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
-            stage.update();
+          fpsLabel.text = Math.round(createjs.Ticker.getMeasuredFPS()) + " fps";
+          stage.update();
         }
     </script>
 </head>

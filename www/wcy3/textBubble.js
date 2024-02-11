@@ -7,10 +7,10 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   // 用法: TextBubble是一种可变大小的修饰品Decoration. 也是Element类的子类.
   function TextBubble(level, desc, host) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc !== "string"); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
     this.host = host;
     TQ.Element.call(this, level, desc); // 调用父类的初始化函数， 在子类构造函数中
   }
@@ -21,16 +21,16 @@ TQ = TQ || {};
     }
 
     if (host && host.hasBubble && !host.hasBubble()) {
-      var desc = compose(host),
-        bubble = host.addChild(desc);
+      var desc = compose(host);
+      var bubble = host.addChild(desc);
       setTimeout(function() {
         host.detachDecoration();
         bubble.attachAnchorMarker();
-      })
+      });
     }
   };
 
-  TextBubble.detachFrom = function (host) {
+  TextBubble.detachFrom = function(host) {
     if (!host) {
       host = TQ.SelectSet.peekLatestEditableEle();
     }
@@ -54,10 +54,10 @@ TQ = TQ || {};
   TextBubble.RADIUS = 10;
   TextBubble.BORDER_WIDTH = 10;
 
-  var p = TextBubble.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
-  p.constructor = TextBubble; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
+  var p = TextBubble.prototype = Object.create(TQ.Element.prototype); // 继承父类的函数, 子类构造函数的参数，限制少
+  p.constructor = TextBubble; // 把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
   p._parent_update = p.update;
-  p.update = function (t, noRecording) {
+  p.update = function(t, noRecording) {
     textPivot2Bubble(this.jsonObj, this.host);
     this._parent_update(t, noRecording);
     this.updateLayer();
@@ -65,7 +65,7 @@ TQ = TQ || {};
   };
 
   p.parent_doShow = p.doShow;
-  p.doShow = function (flag) {
+  p.doShow = function(flag) {
     if (this.anchorMarker && !flag) {
       this.anchorMarker.doShow(flag);
     }
@@ -73,7 +73,7 @@ TQ = TQ || {};
     this.parent_doShow(flag);
   };
 
-  p.updateLayer = function () { //  总是紧接着host的下一层
+  p.updateLayer = function() { //  总是紧接着host的下一层
     var hostZ = this.host.getZ();
     if (hostZ !== (this.getZ() + 1)) {
       // 新添加， 在host之后添加的， 所以在host之上
@@ -82,7 +82,7 @@ TQ = TQ || {};
     }
   };
 
-  p.createImage = function () {
+  p.createImage = function() {
     // 将替换已有的image，如果有的话
     var s = this.displayObj;
     if (!s) {
@@ -97,22 +97,22 @@ TQ = TQ || {};
   p.createModal = function() {
     if (!this.jsonObj.textBubble) {
       // 左下角， + pivot
-      var anchorWidth = 20,
-        xc = 0,
-        yc = 0,
-        w = this.getWidth(),
-        h = this.getHeight(),
+      var anchorWidth = 20;
+      var xc = 0;
+      var yc = 0;
+      var w = this.getWidth();
+      var h = this.getHeight();
 
-        xmin = xc - w / 2,  // 已经改为物体坐标， 便于使用
-        ymin = yc - h / 2,
-        xmax = xc + w / 2,
-        ymax = yc + h / 2,
-        xa = xmin + w / 2,
-        xa1 = xa + anchorWidth / 2,
-        xa3 = xa - anchorWidth / 2,
-        ya1 = ymin, // anchor在下边缘
-        ya3 = ymin,
-        ya = ya1 - 100;
+      var xmin = xc - w / 2; // 已经改为物体坐标， 便于使用
+      var ymin = yc - h / 2;
+      var xmax = xc + w / 2;
+      var ymax = yc + h / 2;
+      var xa = xmin + w / 2;
+      var xa1 = xa + anchorWidth / 2;
+      var xa3 = xa - anchorWidth / 2;
+      var ya1 = ymin; // anchor在下边缘
+      var ya3 = ymin;
+      var ya = ya1 - 100;
 
       this.jsonObj.textBubble = { // 从设备坐标简单地变为 对象坐标： Y轴变负
         xmin: xmin,
@@ -123,15 +123,15 @@ TQ = TQ || {};
         radiusTR: 1,
         radiusBL: 1,
         radiusBR: 1,
-        anchor: [{x: xa1, y: ya1},
-          {x: xa, y: ya},
-          {x: xa3, y: ya3}
+        anchor: [{ x: xa1, y: ya1 },
+          { x: xa, y: ya },
+          { x: xa3, y: ya3 }
         ]
       };
     }
   };
 
-  p.onMoveMarker = function (marker, ptWorld) {
+  p.onMoveMarker = function(marker, ptWorld) {
     TQ.CommandMgr.directDo(new TQ.MoveAnchorCommand(this, ptWorld));
   };
 
@@ -144,8 +144,8 @@ TQ = TQ || {};
     TQ.DirtyFlag.setElement(this);
   };
 
-  p._doLoad = function () {
-    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
+  p._doLoad = function() {
+    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
     var jsonObj = this.jsonObj;
     var s = new createjs.Shape();
     this.loaded = true;
@@ -158,15 +158,15 @@ TQ = TQ || {};
     this.setTRSAVZ();
   };
 
-  p.apply = function (ele) {
+  p.apply = function(ele) {
     this.dirty2 = true;
   };
 
-  p.isTextBubble = function () {
+  p.isTextBubble = function() {
     return true;
   };
 
-  p.isEditable = function () {
+  p.isEditable = function() {
     return false;
   };
 
@@ -174,11 +174,11 @@ TQ = TQ || {};
     return this.host.getWidth();
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return this.host.getHeight();
   };
 
-  p.allowRecording = function () {
+  p.allowRecording = function() {
     return false;
   };
 
@@ -186,7 +186,7 @@ TQ = TQ || {};
     return this.jsonObj.textBubble.anchor[1];
   };
 
-  p.attachAnchorMarker = function () {
+  p.attachAnchorMarker = function() {
     var anchorMarker = TQ.AnchorMarker.getOne();
     this.attachDecoration([anchorMarker]);
     this.anchorMarker = this.decorations[0];
@@ -195,13 +195,13 @@ TQ = TQ || {};
 
   p.updateAnchorMarker = function() {
     if (this.anchorMarker) {
-      var ptObj = this.getAnchorInObject(),
-        ptWorld = this.object2World(ptObj);
+      var ptObj = this.getAnchorInObject();
+      var ptWorld = this.object2World(ptObj);
       this.anchorMarker.moveTo(ptWorld);
     }
   };
 
-  p.detachAnchorMarker = function () {
+  p.detachAnchorMarker = function() {
     this.detachDecoration();
   };
 

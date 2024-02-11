@@ -2,31 +2,31 @@
  * Created by admin on 12/5/2015.
  */
 // 实现数据库user的增删改查
-var Const = require('../../base/const'),
-  mongoose = require('mongoose'),
-  utils = require('../../common/utils'),
-  dbCommon = require('../dbCommonFunc.js'),
-  User = mongoose.model('User');
+var Const = require("../../base/const");
+var mongoose = require("mongoose");
+var utils = require("../../common/utils");
+var dbCommon = require("../dbCommonFunc.js");
+var User = mongoose.model("User");
 
-var PAGE_SIZE = 1000,
-  USER_TYPE = {
-    STUDENT: 1,
-    PARENT: 2,
-    TEACHER: 3,
-    CREATIVE_TEACHER: 4
-  },
-  PRIVILEGE_APPROVE_TO_PUBLISH = 0x10,
-  PRIVILEGE_REFINE = 0x20,
-  PRIVILEGE_BAN = 0x40,
-  PRIVILEGE_ADMIN = 0x80,
-  PRIVILEGE_CREATE_TEACHER = 0x100,
-  PRIVILEGE_ARTIST = 0x200;
+var PAGE_SIZE = 1000;
+var USER_TYPE = {
+  STUDENT: 1,
+  PARENT: 2,
+  TEACHER: 3,
+  CREATIVE_TEACHER: 4
+};
+var PRIVILEGE_APPROVE_TO_PUBLISH = 0x10;
+var PRIVILEGE_REFINE = 0x20;
+var PRIVILEGE_BAN = 0x40;
+var PRIVILEGE_ADMIN = 0x80;
+var PRIVILEGE_CREATE_TEACHER = 0x100;
+var PRIVILEGE_ARTIST = 0x200;
 
 function get(id) {
-  User.findOne({_id: id})
-    .exec(function (err, data) {
+  User.findOne({ _id: id })
+    .exec(function(err, data) {
       if (!data) {
-        console.error(404, {msg: 'not found!' + id});
+        console.error(404, { msg: "not found!" + id });
       } else {
         console.log(data);
       }
@@ -34,7 +34,7 @@ function get(id) {
 }
 
 function getByWxOpenId(openId, callback) {
-  User.findOne({wx: openId})
+  User.findOne({ wx: openId })
     .exec(callback);
 }
 
@@ -58,14 +58,14 @@ function composeErrorPkg(err, errorId) {
 }
 
 function composeUserPkg(model) {
-  var aModel = (Array.isArray(model)) ? model[0] : model,
-    isModel = !!(aModel._doc),
-    userInfo = (isModel? aModel._doc : aModel),
-    userID = (isModel? aModel._id : userInfo.ID),
-    groupId = userInfo.groupId || "00000",
-    isAdmin = false,
-    privilege = type2Privilege(userInfo.type) || userInfo.privilege;
-  if (userInfo.name && (userInfo.name.toLowerCase() === 'toronto1111')) {
+  var aModel = (Array.isArray(model)) ? model[0] : model;
+  var isModel = !!(aModel._doc);
+  var userInfo = (isModel ? aModel._doc : aModel);
+  var userID = (isModel ? aModel._id : userInfo.ID);
+  var groupId = userInfo.groupId || "00000";
+  var isAdmin = false;
+  var privilege = type2Privilege(userInfo.type) || userInfo.privilege;
+  if (userInfo.name && (userInfo.name.toLowerCase() === "toronto1111")) {
     userInfo.type = USER_TYPE.CREATIVE_TEACHER;
     isAdmin = true;
   }
@@ -93,15 +93,15 @@ function composeUserPkg(model) {
 
 function add(req, onSuccess, onError) {
   var aDoc = new User({
-    name:'andrew' + new Date().getTime(),
-    score: 100 //多余的字段， 将被忽略
+    name: "andrew" + new Date().getTime(),
+    score: 100 // 多余的字段， 将被忽略
   });
 
   try {
     aDoc.save(function(err, model) {
       if (err || !model) {
         if (!err) {
-          err = "model为空!"
+          err = "model为空!";
         }
         if (onError) {
           onError(err);
@@ -110,7 +110,7 @@ function add(req, onSuccess, onError) {
         onSuccess(model._doc);
       }
     });
-  } catch(e) {
+  } catch (e) {
     console.log("Fatal error: at user doc read/write");
     console.log(e);
   }
@@ -123,10 +123,10 @@ function getList(aUser, callback) {
     return callback(result);
   }
 
-  User.find(null).sort({_id: -1})
-    .exec(function (err, data) {
+  User.find(null).sort({ _id: -1 })
+    .exec(function(err, data) {
       if (!data) {
-        console.error(404, {msg: 'not found!'});
+        console.error(404, { msg: "not found!" });
         callback(result);
       }
       result = getLatest(data);
@@ -143,9 +143,9 @@ function getList(aUser, callback) {
       console.error("data 是null？什么情况？");
     }
 
-    var i,
-      result = [],
-      num = (!data ? 0 : Math.min(PAGE_SIZE, data.length));
+    var i;
+    var result = [];
+    var num = (!data ? 0 : Math.min(PAGE_SIZE, data.length));
 
     for (i = 0; i < num; i++) {
       var doc1 = data[i]._doc;
@@ -157,11 +157,11 @@ function getList(aUser, callback) {
 }
 
 function setPrivilege(operator, id, code, callback) {
-  dbCommon.setProp(operator, User, id, 'privilege', code, callback);
+  dbCommon.setProp(operator, User, id, "privilege", code, callback);
 }
 
 function type2Privilege(type) {
-  var privilege = 3; //缺省值，见schema
+  var privilege = 3; // 缺省值，见schema
   if (!type) { // 实施type之前的用户， 都是缺省用户：（学生）
     type = USER_TYPE.STUDENT;
   }

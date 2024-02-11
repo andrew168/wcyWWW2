@@ -6,24 +6,24 @@
 // 2) 上传素材，(先获取ID， 上传到Cloundary，在通知：以及上传成功
 //
 
-var mongoose = require('mongoose'),
-  utils = require('../../common/utils'),
-  dbCommon = require('../dbCommonFunc.js'),
-  AudioMat = mongoose.model('AudioMat');
+var mongoose = require("mongoose");
+var utils = require("../../common/utils");
+var dbCommon = require("../dbCommonFunc.js");
+var AudioMat = mongoose.model("AudioMat");
 
-//ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
+// ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
 function get(userId, callback) {
-  AudioMat.find({uploaded: true}).exec(function (err, data) {
+  AudioMat.find({ uploaded: true }).exec(function(err, data) {
     if (!data) {
-      console.error(404, {msg: 'not found data!'});
+      console.error(404, { msg: "not found data!" });
     } else {
       console.log(data);
     }
 
     if (callback) {
       var result = [];
-      var num = data.length,
-        i;
+      var num = data.length;
+      var i;
 
       for (i = 0; i < num; i++) {
         result.push(data[i]._doc.path);
@@ -41,25 +41,25 @@ function add(userId, iComponentId, audioName, typeId, ip, isShared, onSuccess, o
     ip: ip,
     isShared: isShared
   });
-  aDoc.save(function (err, doc) {
+  aDoc.save(function(err, doc) {
     utils.onSave(err, doc, onSuccess, onError);
   });
 }
 
 function getList(userId, typeId, topicId, onSuccess, isAdmin) {
-  var userLimit = (userId === null) ? null : {$or: [{"userId": userId}, {"isShared": true}]},
-    condition = {$and: [{"isBanned": false}, {"typeId": typeId}]};
+  var userLimit = (userId === null) ? null : { $or: [{ "userId": userId }, { "isShared": true }] };
+  var condition = { $and: [{ "isBanned": false }, { "typeId": typeId }] };
 
   if (userLimit && !isAdmin) {
     condition.$and.push(userLimit);
   }
 
-  AudioMat.find(condition).sort({timestamp: -1}).exec(onSeachResult);
+  AudioMat.find(condition).sort({ timestamp: -1 }).exec(onSeachResult);
 
   function onSeachResult(err, data) {
     var result = [];
     if (!data) {
-      console.error(404, {msg: 'not found!' + err});
+      console.error(404, { msg: "not found!" + err });
     } else {
       data.forEach(copyItem);
     }
@@ -80,15 +80,15 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
 }
 
 function update(id, path, callback) {
-  AudioMat.findOne({_id: id})
-    .exec(function (err, data) {
+  AudioMat.findOne({ _id: id })
+    .exec(function(err, data) {
       if (!data) {
-        console.error(404, {msg: 'not found!' + id});
+        console.error(404, { msg: "not found!" + id });
       } else {
         console.log(data);
-        data.set('uploaded', true);
-        data.set('path', path);
-        data.save(function (err, data) {
+        data.set("uploaded", true);
+        data.set("path", path);
+        data.save(function(err, data) {
           if (!err) {
             if (callback) {
               callback(data._id);
@@ -106,10 +106,10 @@ function ban(operator, id, newValue, callback) {
 }
 
 function addSprite(operator, id, extra, callback) {
-  if (typeof extra === 'object') {
+  if (typeof extra === "object") {
     extra = JSON.stringify(extra);
   }
-  dbCommon.setProp(operator, AudioMat, id, 'extra', extra, callback);
+  dbCommon.setProp(operator, AudioMat, id, "extra", extra, callback);
 }
 
 exports.get = get;

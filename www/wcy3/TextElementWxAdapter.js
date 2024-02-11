@@ -12,7 +12,7 @@ TQ.TextElementWxAdapter = (function() {
     if (TQ.TextElementWxAdapter.cssFontSizeFactor > -1) {
       return;
     }
-    var stdTextDomEle = createElement200(document.body, 'div', 200);
+    var stdTextDomEle = createElement200(document.body, "div", 200);
     cssFontSize200 = TQ.Utility.getCssSize(window.getComputedStyle(stdTextDomEle).fontSize);
     cssFontSizeFactor = 200 / cssFontSize200;
     document.body.removeChild(stdTextDomEle);
@@ -21,8 +21,8 @@ TQ.TextElementWxAdapter = (function() {
 
   function createElement200(parent, tag, fontSize) {
     var ele = document.createElement(tag);
-    ele.style.visibility = 'hidden';
-    ele.style.fontSize = fontSize + 'px';
+    ele.style.visibility = "hidden";
+    ele.style.fontSize = fontSize + "px";
 
     if (parent) {
       parent.appendChild(ele);
@@ -30,5 +30,4 @@ TQ.TextElementWxAdapter = (function() {
 
     return ele;
   }
-
 }());

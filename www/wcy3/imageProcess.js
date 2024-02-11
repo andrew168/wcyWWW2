@@ -6,7 +6,7 @@
  */
 var TQ = TQ || {};
 
-(function(lib){
+(function(lib) {
   function ImageProcess() {
   }
 
@@ -14,9 +14,9 @@ var TQ = TQ || {};
 
   function start(file, options, callback) {
     var url = TQUtility.fileToUrl(file, options);
-    loadImage.parseMetaData(file, function (data) {
+    loadImage.parseMetaData(file, function(data) {
       if (data.exif) {
-        options.orientation = data.exif.get('Orientation');
+        options.orientation = data.exif.get("Orientation");
       }
       loadData(url, file.name, options, callback);
     });
@@ -25,26 +25,26 @@ var TQ = TQ || {};
   function loadData(url, filename, options, callback) {
     var ele = new Image();
     ele.onload = onload;
-    if (!!options.crossOrigin) {
+    if (options.crossOrigin) {
       ele.crossOrigin = options.crossOrigin;
     }
     ele.src = url;
 
-    function determineScale(img) {//只缩小， 不放大，不能超过屏幕的w和h
+    function determineScale(img) { // 只缩小， 不放大，不能超过屏幕的w和h
       var scale = Math.min(1, TQ.Config.designatedHeight / img.height);
       return Math.min(scale, TQ.Config.designatedWidth / img.width);
     }
 
-    function onload () {
+    function onload() {
       var errorCode = 0;
-      if ((ele.width > TQ.Config.designatedWidth)  || (ele.height > TQ.Config.designatedHeight)) {
+      if ((ele.width > TQ.Config.designatedWidth) || (ele.height > TQ.Config.designatedHeight)) {
         errorCode = 1;
       }
 
-      var scale = determineScale(ele),
-        ctx,
-        neededHeight = Math.round(ele.height * scale / 8) * 8,
-        neededWidth = Math.round(ele.width * scale / 8) * 8;
+      var scale = determineScale(ele);
+      var ctx;
+      var neededHeight = Math.round(ele.height * scale / 8) * 8;
+      var neededWidth = Math.round(ele.width * scale / 8) * 8;
 
       if (!_canvas) {
         _canvas = document.createElement("canvas");
@@ -54,23 +54,23 @@ var TQ = TQ || {};
 
       ctx = _canvas.getContext("2d");
 
-      if (!!options.orientation) {
+      if (options.orientation) {
         applyOrientation(ctx, _canvas, options);
       }
 
-      var xc = 0, yc =0;
+      var xc = 0; var yc = 0;
       ctx.drawImage(ele, xc, yc, neededWidth, neededHeight);
       if (callback) {
-        callback({errorCode: errorCode, name:filename, data: _canvas.toDataURL("image/png")});
+        callback({ errorCode: errorCode, name: filename, data: _canvas.toDataURL("image/png") });
       }
     }
   }
 
   // helper
   function applyOrientation(ctx, canvas, options) {
-    var width = canvas.width,
-      height = canvas.height,
-      orientation = options.orientation;
+    var width = canvas.width;
+    var height = canvas.height;
+    var orientation = options.orientation;
 
     if (!orientation || orientation > 8) {
       return;

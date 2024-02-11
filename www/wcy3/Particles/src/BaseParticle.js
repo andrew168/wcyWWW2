@@ -1,9 +1,7 @@
 ﻿this.createjs = this.createjs || {};
 
-(function () {
-
-  var BaseParticle = function (particleObject) {
-
+(function() {
+  var BaseParticle = function(particleObject) {
     this.initialize(particleObject);
   };
   var p = BaseParticle.prototype;
@@ -12,34 +10,32 @@
   p.debugMode = true;
   p.originX = 0;
   p.originY = 0;
-  p.velocityX = 0;                //pixels per second
-  p.velocityY = 0;                //pixels per second
-  p.linearVelocityX = 0;          //pixels per second
-  p.linearVelocityY = 0;          //pixels per second
-  p.radialVelocity = 0;           //pixels per second, 角速度
-  p.tangentalVelocity = 0;        //pixels per second，切线速度， 切线方向随物体的旋转而改变
-  p.radialAcceleration = 0;       //pixels per second per second
-  p.tangentalAcceleration = 0;    //pixels per second per second
-  p.linearAccelerationX = 0;      //pixels per second per second
-  p.linearAccelerationY = 0;      //pixels per second per second
+  p.velocityX = 0; // pixels per second
+  p.velocityY = 0; // pixels per second
+  p.linearVelocityX = 0; // pixels per second
+  p.linearVelocityY = 0; // pixels per second
+  p.radialVelocity = 0; // pixels per second, 角速度
+  p.tangentalVelocity = 0; // pixels per second，切线速度， 切线方向随物体的旋转而改变
+  p.radialAcceleration = 0; // pixels per second per second
+  p.tangentalAcceleration = 0; // pixels per second per second
+  p.linearAccelerationX = 0; // pixels per second per second
+  p.linearAccelerationY = 0; // pixels per second per second
   p.particleBaseId = 0;
 
   // ** PRIVATE PROPERTIES:
   p._lastUpdateTimeMs = 0;
 
   // ** CONSTRUCTOR:
-  p.initialize = function (particleObject) {
-
+  p.initialize = function(particleObject) {
     this._particleObject = particleObject;
   };
 
   // ** PUBLIC METHODS:
-  p.initializeProperties = function (id) {
+  p.initializeProperties = function(id) {
     this.particleBaseId = id;
   };
 
-  p.updateParticle = function (ctx) {
-
+  p.updateParticle = function(ctx) {
     var currentTimeMs = createjs.Ticker.getTime();
 
     if (!TQ.FrameCounter.isPlaying()) {
@@ -49,8 +45,7 @@
     this.updatePosition(currentTimeMs);
   };
 
-  p.updatePosition = function (currentTimeMs) {
-
+  p.updatePosition = function(currentTimeMs) {
     var diffTimeMs = currentTimeMs - this._lastUpdateTimeMs;
     var fractionTime = diffTimeMs / 1000;
 
@@ -77,7 +72,7 @@
   };
 
   // ** PRIVATE METHODS:
-  p._processLinearAcceleration = function (fractionTime) {
+  p._processLinearAcceleration = function(fractionTime) {
     var accelerationTickX = this.linearAccelerationX * fractionTime;
     var accelerationTickY = this.linearAccelerationY * fractionTime;
 
@@ -85,20 +80,19 @@
     this.linearVelocityY += accelerationTickY;
   };
 
-  p._processRadialAcceleration = function (fractionTime) {
+  p._processRadialAcceleration = function(fractionTime) {
     var radialAceelerationTick = this.radialAcceleration * fractionTime;
 
     this.radialVelocity += radialAceelerationTick;
   };
 
-  p._processTangentalAcceleration = function (fractionTime) {
+  p._processTangentalAcceleration = function(fractionTime) {
     var tangentalAceelerationTick = this.tangentalAcceleration * fractionTime;
 
     this.tangentalVelocity += tangentalAceelerationTick;
   };
 
-  p._processLinearVelocity = function (fractionTime) {
-
+  p._processLinearVelocity = function(fractionTime) {
     var velocityTickY = this.linearVelocityY * fractionTime;
     var velocityTickX = this.linearVelocityX * fractionTime;
 
@@ -106,8 +100,7 @@
     this.velocityY += velocityTickY;
   };
 
-  p._processRadialAndTangentalVelocity = function (fractionTime) {
-
+  p._processRadialAndTangentalVelocity = function(fractionTime) {
     var center = this._getParticleCenter();
     var deltaY = this.originY - center.y;
     var deltaX = this.originX - center.x;
@@ -117,8 +110,7 @@
     this._processTangentalVelocity(fractionTime, angle);
   };
 
-  p._processRadialVelocity = function (fractionTime, angle) {
-
+  p._processRadialVelocity = function(fractionTime, angle) {
     var velocityTickX = this.radialVelocity * fractionTime * Math.cos(angle);
     var velocityTickY = this.radialVelocity * fractionTime * Math.sin(angle);
 
@@ -126,8 +118,7 @@
     this.velocityY += velocityTickY;
   };
 
-  p._processTangentalVelocity = function (fractionTime, angle) {
-
+  p._processTangentalVelocity = function(fractionTime, angle) {
     var velocityTickX = this.tangentalVelocity * fractionTime * Math.cos(angle - (Math.PI / 2));
     var velocityTickY = this.tangentalVelocity * fractionTime * Math.sin(angle - (Math.PI / 2));
 
@@ -135,14 +126,12 @@
     this.velocityY += velocityTickY;
   };
 
-  p._processVelocity = function () {
-
+  p._processVelocity = function() {
     this._particleObject.x += this.velocityX;
     this._particleObject.y += this.velocityY;
   };
 
-  p._getParticleCenter = function () {
-
+  p._getParticleCenter = function() {
     var center = {
       x: this._particleObject.x,
       y: this._particleObject.y
@@ -151,7 +140,7 @@
     return center;
   };
 
-  p._debugText = function (text) {
+  p._debugText = function(text) {
     if (this.debugMode) {
       TQ.Log.debugInfo(text);
     }

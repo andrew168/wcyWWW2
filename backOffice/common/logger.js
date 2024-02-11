@@ -1,21 +1,20 @@
 /**
  * Created by Andrewz on 2/25/2016.
  */
-var fs = require('fs'),
-  callerId = require('caller-id');
+var fs = require("fs");
+var callerId = require("caller-id");
 
-var logger = logger|| {};
+var logger = logger || {};
 (function() {
-  if (!!logger.initialized ) {
+  if (logger.initialized) {
     return;
   }
 
   var originalConsoleLog = console.log;
-  var logFolder = '/logs/udoido/';
+  var logFolder = "/logs/udoido/";
   logger.logFilename = "udoido2-25.log";
 
-  function init()
-  {
+  function init() {
     if (!logger.initialized) {
       logger.initialized = true;
       logger.error = logger.warn = logger.log = logger.debug = logger.info;
@@ -33,13 +32,13 @@ var logger = logger|| {};
   };
 
   function replaceConsole() {
-    ['log','debug','info','warn','error'].forEach(function (item) {
-      console[item] = (item === 'log' ? logger.info : logger[item]);
+    ["log", "debug", "info", "warn", "error"].forEach(function(item) {
+      console[item] = (item === "log" ? logger.info : logger[item]);
     });
   }
 
   function restoreConsole() {
-    ['log', 'debug', 'info', 'warn', 'error'].forEach(function (item) {
+    ["log", "debug", "info", "warn", "error"].forEach(function(item) {
       console[item] = originalConsoleFunctions[item];
     });
   }
@@ -62,7 +61,7 @@ var logger = logger|| {};
     }
 
     fs.appendFile(logFolder + logger.logFilename,
-      new Date().toLocaleString() + ' - ' + entry + '\r\n',
+      new Date().toLocaleString() + " - " + entry + "\r\n",
       options,
       onCompleted);
   };
@@ -70,9 +69,9 @@ var logger = logger|| {};
   logger.info = function(msg) {
     var stackTrace;
     try {
-      var caller = callerId.getData(),
-        fullPath = caller.filePath.replace(/\\/g, '/'),
-        shortPath = fullPath.substr(fullPath.lastIndexOf('/') + 1);
+      var caller = callerId.getData();
+      var fullPath = caller.filePath.replace(/\\/g, "/");
+      var shortPath = fullPath.substr(fullPath.lastIndexOf("/") + 1);
       stackTrace = "--" + shortPath + ", " + caller.functionName + "(" + caller.lineNumber + ")";
     } catch (err) {
       stackTrace = " : @@caller info is not found";
@@ -82,11 +81,10 @@ var logger = logger|| {};
     log2File(msg);
   };
 
-  logger.shutdown = function () {
+  logger.shutdown = function() {
     restoreConsole();
   };
   init();
-
 })();
 
 module.exports = logger;

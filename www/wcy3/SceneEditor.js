@@ -4,8 +4,7 @@ var stage = null;
 var stageContainer = null;
 var currScene = null;
 
-(function () {
-
+(function() {
   // 场景编辑器,
   function SceneEditor() {
   }
@@ -26,7 +25,7 @@ var currScene = null;
     // EDIT_IMAGE: 2200, // 尚未以他们代替 flag变量
     RECORD_AUDIO: 2300,
     PREVIEW: 2400, // Play, Preview
-    SHARE_PANE: 2410, //属于PREVIEW上的页面
+    SHARE_PANE: 2410, // 属于PREVIEW上的页面
     CONVERT_TO_TOPIC: 2420,
 
     // 互动模式
@@ -34,11 +33,11 @@ var currScene = null;
   };
 
   TQ.State.editorMode = SceneEditor.NOT_INITIALIZED;
-  var editorOn = false,
-    _auxContainer;
+  var editorOn = false;
+  var _auxContainer;
 
-  Object.defineProperty(SceneEditor, 'auxContainer', {
-    get: function () {
+  Object.defineProperty(SceneEditor, "auxContainer", {
+    get: function() {
       return _auxContainer;
     }
   });
@@ -50,14 +49,14 @@ var currScene = null;
   SceneEditor.preprocessLocalImage = preprocessLocalImage;
   SceneEditor.lastSoundElement = null;
 
-  SceneEditor.openScene = function (fileInfo) {
+  SceneEditor.openScene = function(fileInfo) {
     if (fileInfo.isPlayOnly === undefined) {
       fileInfo.isPlayOnly = false;
     }
     init(fileInfo);
   };
 
-  SceneEditor.createScene = function (option) {
+  SceneEditor.createScene = function(option) {
     TQ.Assert.isNotNull(option);
     var fileInfo = {
       filename: option.filename || TQ.Config.UNNAMED_SCENE_ID,
@@ -70,7 +69,7 @@ var currScene = null;
 
   function createStage() {
     canvas = TQ.Graphics.getCanvas();
-    //ToDo:AZ
+    // ToDo:AZ
     // addHammer(canvas);
     // create a new stage and point it at our canvas:
     stage = new createjs.Stage(canvas);
@@ -81,7 +80,7 @@ var currScene = null;
     SceneEditor.stage = stage;
   }
 
-  SceneEditor.cleanStage = function () {
+  SceneEditor.cleanStage = function() {
     if (stageContainer) {
       stageContainer.children.splice(0);
     }
@@ -91,38 +90,38 @@ var currScene = null;
     }
   };
 
-  SceneEditor.addItemByFile = function (dstLevel, data, matType, callback) {
+  SceneEditor.addItemByFile = function(dstLevel, data, matType, callback) {
     var aFile = data.aFile || data;
 
     if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-      return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
+      return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + "M");
     }
 
     if (matType === TQ.MatType.SOUND) {
       if (!TQUtility.isSoundFile(aFile) && !TQUtility.isSoundBlob(aFile)) {
-        var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
+        var str = TQ.Locale.getStr("found audio format unsupported, please use wav or map3") + ": " + aFile.type;
         TQ.MessageBox.show(str);
       } else {
         if (aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-          return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
+          return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + "M");
         }
         addItemBySoundFile(dstLevel, aFile, matType, callback);
       }
     }
   };
 
-  function preprocessLocalImage(dstLevel, data, matType, callback, kouTuMain) {// reduce size,
-    var aFile = data.aFile || data,
-      options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
+  function preprocessLocalImage(dstLevel, data, matType, callback, kouTuMain) { // reduce size,
+    var aFile = data.aFile || data;
+    var options = { crossOrigin: "Anonymous" }; // "Use-Credentials";
 
     if ((aFile instanceof File) && aFile.size > TQ.Config.MAT_MAX_FILE_SIZE) {
-      return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + 'M');
+      return TQ.MessageBox.show("Resource file size should less than " + TQ.Config.MAT_MAX_FILE_SIZE_IN_M + "M");
     }
 
     if (TQUtility.isVideoFile(aFile)) {
       addVideoItem(dstLevel, aFile, matType, callback);
     } else if (TQ.ImageCliper && TQ.Config.hasClip) {
-      TQ.ImageCliper.clipImage(aFile, function (imageData) {
+      TQ.ImageCliper.clipImage(aFile, function(imageData) {
         if (!imageData) {
           // 操作被Cancelled，
           return;
@@ -139,7 +138,7 @@ var currScene = null;
         if (buffer.data instanceof File) {
           var imageFile = buffer.data;
           if (imageFile.size > TQ.Config.MAX_FILE_SIZE) {
-            return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制文件大小 < ' + Math.round(TQ.Config.MAX_FILE_SIZE / 1000) + 'K');
+            return TQ.MessageBox.confirm("文件太大，影响打开速度，请限制文件大小 < " + Math.round(TQ.Config.MAX_FILE_SIZE / 1000) + "K");
           }
         }
       }
@@ -148,15 +147,15 @@ var currScene = null;
         TQ.MessageBox.prompt("For this design, the image file's width and height should be <= " +
           TQ.Config.designatedWidth + " by " + TQ.Config.designatedHeight + ", do you want to resize automatically?",
         nextProcess,
-        function () {
+        function() {
         });
       } else {
         nextProcess();
       }
 
       function nextProcess() {
-        if (typeof kouTuMain === 'function') {
-          koutuMain(buffer.data, matType, function (image64) {
+        if (typeof kouTuMain === "function") {
+          koutuMain(buffer.data, matType, function(image64) {
             addItemByImageData(dstLevel, image64, matType, callback);
           });
         } else {
@@ -211,7 +210,7 @@ var currScene = null;
   }
 
   function addItemBySoundFile(dstLevel, fileOrBlob, matType, callback) {
-    TQ.RM.loadSoundFromFile(fileOrBlob, function (result) {
+    TQ.RM.loadSoundFromFile(fileOrBlob, function(result) {
       var desc = {
         data: TQ.RM.getResource(result.item.id).res,
         src: result.item.id, type: TQ.ElementType.SOUND,
@@ -223,8 +222,8 @@ var currScene = null;
     });
   }
 
-  SceneEditor.addItem = function (desc) {
-    desc.version = TQ.Element.VER3;  // 新增加的元素都是2.0
+  SceneEditor.addItem = function(desc) {
+    desc.version = TQ.Element.VER3; // 新增加的元素都是2.0
     if (!desc.eType) {
       TQ.Log.error("未定义的eType");
     }
@@ -253,10 +252,10 @@ var currScene = null;
       return ele;
     }
   };
-  SceneEditor.getElements = function () {
+  SceneEditor.getElements = function() {
     return currScene.getElements();
   };
-  SceneEditor.emptyScene = function () { // empty the current scene
+  SceneEditor.emptyScene = function() { // empty the current scene
     TQ.AssertExt.isNotNull(currScene);
     if (!currScene) {
       return false;
@@ -265,14 +264,14 @@ var currScene = null;
     currScene.empty();
   };
 
-  SceneEditor.getMode = function () {
+  SceneEditor.getMode = function() {
     if (TQ.State.isPlayOnly) {
       return TQBase.LevelState.RUNNING;
     }
     return SceneEditor._mode;
   };
 
-  SceneEditor.setEditMode = function () {
+  SceneEditor.setEditMode = function() {
     if (!currScene) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return false;
@@ -281,7 +280,7 @@ var currScene = null;
     SceneEditor.setMode(TQBase.LevelState.EDITING);
   };
 
-  SceneEditor.setPlayMode = function () {
+  SceneEditor.setPlayMode = function() {
     if (!currScene) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return false;
@@ -290,20 +289,20 @@ var currScene = null;
     SceneEditor.setMode(TQBase.LevelState.RUNNING);
   };
 
-  SceneEditor.updateMode = function () {
+  SceneEditor.updateMode = function() {
     if (SceneEditor._requestMode == null) return;
     SceneEditor._mode = SceneEditor._requestMode;
     SceneEditor._requestMode = null;
   };
 
-  SceneEditor.setMode = function (mode) {
+  SceneEditor.setMode = function(mode) {
     SceneEditor._requestMode = mode;
   };
-  SceneEditor.isEditMode = function () {
+  SceneEditor.isEditMode = function() {
     SceneEditor.updateMode();
     return (SceneEditor.getMode() == TQBase.LevelState.EDITING);
   };
-  SceneEditor.isPlayMode = function () {
+  SceneEditor.isPlayMode = function() {
     SceneEditor.updateMode();
     return (SceneEditor.getMode() == TQBase.LevelState.RUNNING);
   };
@@ -313,12 +312,12 @@ var currScene = null;
 
   function init(fileInfo) {
     if ((typeof fileInfo) === "string") {
-      fileInfo = {name: fileInfo, content: null};
+      fileInfo = { name: fileInfo, content: null };
     }
     if (!TQ.SceneEditor.stage) {
       createStage();
     }
-    //stage.enableMouseOver();
+    // stage.enableMouseOver();
     TQBase.LevelState.reset();
     if (!currScene) {
       initializeCoreModules();
@@ -362,12 +361,11 @@ var currScene = null;
     TQ.ActionRecorder.initialize();
     TQ.SelectSet.initialize();
     TQ.AnimationManager.initialize();
-
   }
 
   function loadScene(fileInfo) {
     if ((typeof fileInfo) === "string") {
-      fileInfo = {name: fileInfo, content: null};
+      fileInfo = { name: fileInfo, content: null };
     }
 
     TQ.MessageBox.reset();
@@ -388,8 +386,8 @@ var currScene = null;
   }
 
   function getDefaultTitle(givenName) {
-    var defaultTitle = ((!currScene) || (!currScene.title)) ?
-      givenName : currScene.title;
+    var defaultTitle = ((!currScene) || (!currScene.title))
+      ? givenName : currScene.title;
     if (!defaultTitle) {
       defaultTitle = TQ.Config.UNNAMED_SCENE;
     }
@@ -403,13 +401,12 @@ var currScene = null;
     return TQ.Utility.forceExt(shortTitle);
   }
 
-
   function deleteScene() {
     var title = currScene.title;
-    if ((title.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) // 不能覆盖系统的演示文件
-      && (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
+    if ((title.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) && // 不能覆盖系统的演示文件
+      (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
       var filename = currScene.filename;
-      TQ.TaskMgr.addTask(function () {
+      TQ.TaskMgr.addTask(function() {
         netDelete(filename);
       },
       null);
@@ -419,7 +416,7 @@ var currScene = null;
   }
 
   function _doSave(filename, keywords) {
-    TQ.TaskMgr.addTask(function () {
+    TQ.TaskMgr.addTask(function() {
       currScene.save(filename, keywords);
     },
 
@@ -433,7 +430,7 @@ var currScene = null;
   }
 
   function addAnimationTest() {
-    currScene.addItem({src: TQ.Config.SCENES_CORE_PATH + "AnimationDesc.adm", type: "BitmapAnimation"});
+    currScene.addItem({ src: TQ.Config.SCENES_CORE_PATH + "AnimationDesc.adm", type: "BitmapAnimation" });
   }
 
   function makeAnimationTest() {
@@ -463,7 +460,6 @@ var currScene = null;
     // Create the pop-up window:
     var popup = window.open(url, "ImageWindow", specs);
     popup.focus();
-
   } // End of function.
 
   function create3DElement() {
@@ -491,7 +487,7 @@ var currScene = null;
     return (matType === TQ.MatType.BKG);
   }
 
-  SceneEditor.revokeLastSound = function () {
+  SceneEditor.revokeLastSound = function() {
     if (SceneEditor.lastSoundElement) {
       SceneEditor.lastSoundElement.stop();
       currScene.deleteElement(SceneEditor.lastSoundElement);

@@ -4,16 +4,16 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   /**
      * MultiView, 是带有多个view的元素集合， 模仿3D物体， 同时只能有一个元素可见。
      * @param jsonObj
      * @constructor
      */
   function MultiView(jsonObj) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string');
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !== "string");
     this.viewId = 0; // 默认显示第一个视图的元素
-    this.fixedUp(jsonObj);  //用于从数据文件建立动画
+    this.fixedUp(jsonObj); // 用于从数据文件建立动画
   }
 
   var p = MultiView.prototype;
@@ -40,11 +40,11 @@ TQ = TQ || {};
   };
 
   p.changeView = function(adjust) {
-    if (this.parent == null)  return;
+    if (this.parent == null) return;
 
     this.viewId += adjust;
     var num = this.parent.children.length;
-    this.viewId  = TQ.MathExt.range(this.viewId, 0, num-1 );
+    this.viewId = TQ.MathExt.range(this.viewId, 0, num - 1);
     for (var i = 0; i < num; i++) {
       var e = this.parent.children[i];
       e.show(i == this.viewId);
@@ -89,8 +89,7 @@ TQ = TQ || {};
     }
   };
 
-  p.toJSON = function()
-  {
+  p.toJSON = function() {
     return this.viewId;
   };
 

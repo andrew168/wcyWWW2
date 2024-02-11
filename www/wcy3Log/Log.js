@@ -6,7 +6,7 @@
 
 var TQ = TQ || {};
 
-TQ.Log = (function () {
+TQ.Log = (function() {
   var self = {
     CLOSE: 0,
     CRITICAL_LEVEL: 1,
@@ -35,10 +35,10 @@ TQ.Log = (function () {
 
   var logLevel = TQ.Config.LOG_LEVEL;
 
-  function open() { logLevel = self.INFO_LEVEL;}
-  function close() {logLevel = self.CLOSE;}
-  function setLevel(level) { logLevel = level;}
-  function trace(str) {  //  只用于跟踪调试, (改info为trace), 不能直接出现在 release版中,
+  function open() { logLevel = self.INFO_LEVEL; }
+  function close() { logLevel = self.CLOSE; }
+  function setLevel(level) { logLevel = level; }
+  function trace(str) { //  只用于跟踪调试, (改info为trace), 不能直接出现在 release版中,
     for (var i = 1; i < arguments.length; i++) {
       str += "," + arguments[i];
     }
@@ -105,7 +105,7 @@ TQ.Log = (function () {
       }
 
       if (obj.rotation !== undefined && obj.rotation !== null && !isNaN(obj.rotation)) {
-        newMsg += " A:" + obj.rotation.toFixed(2)
+        newMsg += " A:" + obj.rotation.toFixed(2);
       }
 
       debugInfo(msg + newMsg);
@@ -127,7 +127,7 @@ TQ.Log = (function () {
 
   function alertError(str) {
     // 主要是 debug 微信的程序使用
-    if (typeof str != "string") {
+    if (typeof str !== "string") {
       str = JSON.stringify(str);
     }
 
@@ -143,7 +143,7 @@ TQ.Log = (function () {
   }
   function alertInfo(str) {
     // 主要是 debug 微信的程序使用
-    if (typeof str != "string") {
+    if (typeof str !== "string") {
       str = JSON.stringify(str);
     }
     for (var i = 1; i < arguments.length; i++) {
@@ -172,7 +172,7 @@ TQ.Log = (function () {
 
   // init
   if (logLevel >= self.INFO_LEVEL) {
-    self.info = self.out = function (str) {
+    self.info = self.out = function(str) {
       if (logLevel >= self.INFO_LEVEL) {
         for (var i = 1; i < arguments.length; i++) {
           str += "," + arguments[i];
@@ -181,9 +181,9 @@ TQ.Log = (function () {
       }
     };
   } else {
-    self.debugInfo = self.info = self.out = function () {
+    self.debugInfo = self.info = self.out = function() {
     };
   }
 
   return self;
-}) ();
+})();

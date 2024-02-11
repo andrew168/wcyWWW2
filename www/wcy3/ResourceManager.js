@@ -4,7 +4,7 @@
  */
 this.TQ = this.TQ || {};
 
-(function () {
+(function() {
   // ToDo: RM内部只保存相对路径， 外部使用全路径。
   //      内部全部使用fullPath， 只有在保存文件的时候， 才使用相对路径， 既便于移植到不同的环节， 又能够唯一化代码
   // ToDo: 避免重复加入到Queue中，在addItem的时候， 如果已经在Queue中， 也不要加入，只处理其callback，
@@ -31,13 +31,13 @@ this.TQ = this.TQ || {};
   function ResourceManager() {
   }
 
-  var THUMBNAIL_EXP = "w_100,h_100,c_limit/",
-    OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/";
+  var THUMBNAIL_EXP = "w_100,h_100,c_limit/";
+  var OPUS_THUMBNAIL_EXP = "w_180,h_180,c_limit/";
 
-  var urlParser = TQ.Base.Utility.urlParser,
-    urlConcat = TQ.Base.Utility.urlConcat,
-    maxConnectionsPerHost = 6,
-    RM = ResourceManager;
+  var urlParser = TQ.Base.Utility.urlParser;
+  var urlConcat = TQ.Base.Utility.urlConcat;
+  var maxConnectionsPerHost = 6;
+  var RM = ResourceManager;
 
   RM.DATA_TYPE_SOUND = createjs.AbstractLoader.SOUND; // preloader lib中定义的
   RM.NOSOUND = "./mcSounds/p1.wav";
@@ -56,16 +56,16 @@ this.TQ = this.TQ || {};
   RM.completeOnceHandlers = [];
 
   RM.initialize = function() {
-    //var MAX_CONNECTIONS_PER_HOST={
+    // var MAX_CONNECTIONS_PER_HOST={
     //    'chrome': 6,
     //    'safari': 6,
     //    'firefox': 6,
     //    'ie11': 8,
     //    'chrome mobile': 6,
     //    'safari mobile': 6,
-    //};
+    // };
 
-    if (!!RM._hasCreated) { // 确保只创建一次
+    if (RM._hasCreated) { // 确保只创建一次
       return;
     }
 
@@ -84,16 +84,16 @@ this.TQ = this.TQ || {};
   }
 
   RM.setupListeners = function() {
-    //Available PreloadJS callbacks
+    // Available PreloadJS callbacks
     var fileCounter = 0;
     RM.preloader.on("fileload", function(event) {
       var resId = event.item.id;
       var result = event.result;
-      //ToDo: 唯一化断言
+      // ToDo: 唯一化断言
       RM.items[resId].res = result;
       RM.items[resId].type = event.item.type;
-      fileCounter ++;
-      TQ.Log.info("Loaded: (" + fileCounter + "/" + Object.keys(RM.items).length +"): " + event.item.id);
+      fileCounter++;
+      TQ.Log.info("Loaded: (" + fileCounter + "/" + Object.keys(RM.items).length + "): " + event.item.id);
       RM.onFileLoad(resId, result, event);
     });
 
@@ -117,13 +117,13 @@ this.TQ = this.TQ || {};
     }
 
     RM.onCompleted = onCompleted;
-    RM.preloader.addEventListener("error",  function(event) {
+    RM.preloader.addEventListener("error", function(event) {
       var item = event.data;
       assertTrue("缺少系统文件",
         ((item.src !== RM.FULLPATH_NOSOUND) &&
                 (item.src !== RM.FULLPATH_NOPIC)));
-      TQ.Log.info(item.src + ": " + event.toString() );
-      TQUtility.triggerEvent(document, TQ.EVENT.SYSTEM_ERROR, {desc: event.title || 'FILE_LOAD_ERROR', detail: event});
+      TQ.Log.info(item.src + ": " + event.toString());
+      TQUtility.triggerEvent(document, TQ.EVENT.SYSTEM_ERROR, { desc: event.title || "FILE_LOAD_ERROR", detail: event });
       var resId = item.id;
       var result = null;
       var altResId = null;
@@ -145,7 +145,7 @@ this.TQ = this.TQ || {};
             altResId = RM.FULLPATH_NOSOUND;
             item.type = createjs.LoadQueue.SOUND;
           } else {
-            TQ.Log.error(item.type +": 未处理的资源类型!");
+            TQ.Log.error(item.type + ": 未处理的资源类型!");
           }
           break;
         case createjs.LoadQueue.VIDEO:
@@ -154,7 +154,7 @@ this.TQ = this.TQ || {};
           break;
 
         default :
-          TQ.Log.error(item.type +": 未处理的资源类型!");
+          TQ.Log.error(item.type + ": 未处理的资源类型!");
       }
 
       if ((altResId != null) && (!!RM.items[altResId])) {
@@ -163,11 +163,11 @@ this.TQ = this.TQ || {};
         assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       }
 
-      RM.items[resId] = { ID: resId, res:result, type:item.type};
+      RM.items[resId] = { ID: resId, res: result, type: item.type };
       if (result == null) {
         RM.addItem(altResId, function() {
-          var item = RM.items[resId],
-            altItem = RM.items[altResId];
+          var item = RM.items[resId];
+          var altItem = RM.items[altResId];
 
           if (item && altItem) {
             item.res = altItem.res;
@@ -184,14 +184,14 @@ this.TQ = this.TQ || {};
       }
     });
 
-    RM.preloader.addEventListener("progress",  function(event) {
+    RM.preloader.addEventListener("progress", function(event) {
       // TQ.Log.info("." + event.toString() + ": " + event.loaded);
     });
     RM.dataReady = false;
   };
 
   RM.onFileLoad = function(resId, result, event) {
-    //check for callback
+    // check for callback
     for (var i = 0; i < RM.callbackList.length; i++) {
       if (RM.callbackList[i].ID == resId) {
         TQ.Log.info("find immediate call back to do");
@@ -228,7 +228,6 @@ this.TQ = this.TQ || {};
       }
     }
     RM.isEmpty = true;
-
   };
 
   function resetPreloader() {
@@ -242,15 +241,14 @@ this.TQ = this.TQ || {};
   }
 
   // 信号：暂停预加载，以便于处理时间敏感的判定， 必须是短时间
-  RM.setPaused = function(value)
-  {
+  RM.setPaused = function(value) {
     RM.preloader.setPaused(value);
   };
 
   // 完成加载的顺序与开始加载顺序无关。 最先开始加载的资源， 如果很大，最后才加载完成。 如果后开始加载的资源下。
   // 只有遍历
   RM.on = function(eventName, callback) {
-    RM.preloader.addEventListener(eventName,  callback);
+    RM.preloader.addEventListener(eventName, callback);
   };
 
   RM.onCompleteOnce = function(callback) {
@@ -258,17 +256,17 @@ this.TQ = this.TQ || {};
   };
 
   RM.removeEventListener = function(eventName, callback) {
-    RM.preloader.removeEventListener(eventName,  callback);
+    RM.preloader.removeEventListener(eventName, callback);
   };
 
   function _addReference(resourceId, _callback) {
     var item = RM.getResource(resourceId);
     assertTrue("_addReference: 先确保resource 存在！", !!item);
-    if (!!_callback) {
-      RM.callbackList.push({ID:resourceId, func:_callback});
+    if (_callback) {
+      RM.callbackList.push({ ID: resourceId, func: _callback });
     }
 
-    //ToDo:@@@ 增加和减少 reference Counter
+    // ToDo:@@@ 增加和减少 reference Counter
   }
 
   RM.addItem = function(resourceId, _callback) {
@@ -292,14 +290,14 @@ this.TQ = this.TQ || {};
 
   function loadResource(resourcePath, resourceId, type, _callback) {
     if (TQUtility.isVideoUrl(resourcePath) || TQUtility.isVideoFile(resourcePath)) {
-      type = createjs.AbstractLoader.VIDEO; //'video'
+      type = createjs.AbstractLoader.VIDEO; // 'video'
     }
     // 添加Item 到预加载队列中， 并启动运行预加载（如果没有运行的话）
-    //ToDo: RM.Items.push({});
-    RM.items[resourceId] = {ID: resourceId, res: null, type: type};
+    // ToDo: RM.Items.push({});
+    RM.items[resourceId] = { ID: resourceId, res: null, type: type };
 
-    if (!!_callback) {
-      RM.callbackList.push({ID: resourceId, func: _callback});
+    if (_callback) {
+      RM.callbackList.push({ ID: resourceId, func: _callback });
     }
 
     // RM.preloader.loadFile("assets/image0.jpg");
@@ -308,21 +306,20 @@ this.TQ = this.TQ || {};
     addToPreloader(resourcePath, resourceId, type);
   }
 
-  function loadSoundFromFile(aFile, callback)
-  {
+  function loadSoundFromFile(aFile, callback) {
     var resourcePath = TQUtility.fileToUrl(aFile, {});
     loadResource(resourcePath, resourcePath, RM.DATA_TYPE_SOUND, callback);
   }
 
   var cloudinarySubdomains = [
-    'res.cloudinary.com',
-    'res-3.cloudinary.com'];
+    "res.cloudinary.com",
+    "res-3.cloudinary.com"];
 
   function accelerateByMultiHost(fullPath) {
-    var mainHost = 'res.cloudinary.com';
+    var mainHost = "res.cloudinary.com";
     if (fullPath.indexOf(mainHost) > -1) {
       try {
-        var idIndex = fullPath.lastIndexOf('.');
+        var idIndex = fullPath.lastIndexOf(".");
         var fileId = parseInt(fullPath[idIndex - 1]) % 2;
         return fullPath.replace(mainHost, cloudinarySubdomains[fileId]);
       } catch (e) {
@@ -335,9 +332,9 @@ this.TQ = this.TQ || {};
   function addToPreloader(fullPath, resourceId, type) {
     RM.preloader.loadManifest([{
       type: type, // 对于本地声音， 必须加，因为blob类的url无法提供类别信息
-      src: (TQ.Config.useCloudinaryMultiHost? accelerateByMultiHost(fullPath) : fullPath),
-      id: resourceId,   // Sound资源的id是字符串, 不是数字
-      data: 3  // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
+      src: (TQ.Config.useCloudinaryMultiHost ? accelerateByMultiHost(fullPath) : fullPath),
+      id: resourceId, // Sound资源的id是字符串, 不是数字
+      data: 3 // 本资源最大允许同时播放N=3个instance。（主要是针对声音）
     }]);
   }
 
@@ -346,22 +343,22 @@ this.TQ = this.TQ || {};
     function makeOnSuccess1(fullPath, ID) {
       return function() {
         addToPreloader(fullPath, ID);
-      }
+      };
     }
 
-    TQ.Assert.isTrue(resourceId.indexOf('imgcache') !== 0);
+    TQ.Assert.isTrue(resourceId.indexOf("imgcache") !== 0);
     // 先从本App的服务器下载， 没有的话， 在从File Server下载
     if (_isLocalFileSystem(resourceId)) {
       resourcePath = resourceId;
     } else {
       if (TQ.Config.LocalCacheEnabled) {
-        TQ.Assert.isTrue(false, 'ToDo: 需要重新修改');
+        TQ.Assert.isTrue(false, "ToDo: 需要重新修改");
         var cacheName = toCachePath(resourceId);
         if (TQ.DownloadManager.hasCached(resourceId)) {
           resourcePath = cacheName;
         } else {
           var onSuccess = makeOnSuccess1(cacheName, resourceId);
-          TQ.DownloadManager.downloadAux(resourceId, cacheName, onSuccess, function () {
+          TQ.DownloadManager.downloadAux(resourceId, cacheName, onSuccess, function() {
             TQ.Log.error(resourceId + "资源加载出错！");
           });
         }
@@ -379,14 +376,14 @@ this.TQ = this.TQ || {};
   RM.addElementDesc = function(desc, callback) {
     TQ.AssertExt.isNotNull(desc);
     if (!desc) return false;
-    var allChildrenReady = !(desc.children && desc.children.length >0),
-      iReady = !desc.src;
+    var allChildrenReady = !(desc.children && desc.children.length > 0);
+    var iReady = !desc.src;
 
     tryCallback(); // 预防空的元素
 
-    if (!allChildrenReady) {  // 先调入子孙的资源， 以便于执行callback
-      var numOkChildren = 0,
-        numChildren = desc.children.length;
+    if (!allChildrenReady) { // 先调入子孙的资源， 以便于执行callback
+      var numOkChildren = 0;
+      var numChildren = desc.children.length;
       function onChildReady() {
         numOkChildren++;
         if (numOkChildren >= numChildren) {
@@ -402,7 +399,7 @@ this.TQ = this.TQ || {};
       }
     }
 
-    if (!iReady) {  // 处理自己的资源
+    if (!iReady) { // 处理自己的资源
       var resName = desc.src;
       iReady = RM.hasResourceReady(resName);
       if (iReady) {
@@ -426,7 +423,7 @@ this.TQ = this.TQ || {};
     return allChildrenReady && iReady;
   };
 
-  RM.addElementDescList = function (jsonElements) {
+  RM.addElementDescList = function(jsonElements) {
     var foundInvalidElement = false;
     for (var i = 0; i < jsonElements.length; i++) {
       var desc = jsonElements[i];
@@ -439,7 +436,7 @@ this.TQ = this.TQ || {};
       }
     }
 
-    if (foundInvalidElement) { //删除非法element
+    if (foundInvalidElement) { // 删除非法element
       for (i = jsonElements.length - 1; i >= 0; i--) {
         if (!jsonElements[i]) {
           jsonElements.splice(i, 1);
@@ -460,7 +457,7 @@ this.TQ = this.TQ || {};
     if (!desc) return true;
     var result = true;
 
-    if (!!desc.children) {  // 先调入子孙的资源， 以便于执行callback
+    if (desc.children) { // 先调入子孙的资源， 以便于执行callback
       for (var i = 0; i < desc.children.length; i++) {
         TQ.Assert.isTrue(false, "addElementDesc or hasElementDesc???");
         if (!desc.children[i]) {
@@ -472,7 +469,7 @@ this.TQ = this.TQ || {};
       }
     }
 
-    if (!!desc.src) {  // 处理自己的资源
+    if (desc.src) { // 处理自己的资源
       return RM.hasResourceReady(desc.src);
     }
 
@@ -480,8 +477,8 @@ this.TQ = this.TQ || {};
     return result;
   };
 
-  function _hasResource(id) {  // registered, may not loaded
-    TQ.Assert.isTrue(_isKeyPath(id), '应该是Key路径');
+  function _hasResource(id) { // registered, may not loaded
+    TQ.Assert.isTrue(_isKeyPath(id), "应该是Key路径");
     return !(!RM.items[id]);
   }
 
@@ -495,11 +492,11 @@ this.TQ = this.TQ || {};
 
   RM.getResource = function(id) {
     if (isAudio(id)) {
-      return {ID: id};
+      return { ID: id };
     }
 
     id = _toKeyPath(id);
-    if (!RM.items[id]) {// 没有发现， 需要调入
+    if (!RM.items[id]) { // 没有发现， 需要调入
       TQ.Log.info(id + ": 没有此资源, 需要加载, 如果需要回调函数，用 addItem 替代 getResource");
       // 添加到预加载列表中
       // 设置回调函数
@@ -518,7 +515,7 @@ this.TQ = this.TQ || {};
       str = _removeMatFolder(str);
       str = _removeFirstSeperator(str);
       str = _removeImgCacheString(str);
-      TQ.Assert.isTrue((str[0] !== '\\') && (str[0] !== '/'),
+      TQ.Assert.isTrue((str[0] !== "\\") && (str[0] !== "/"),
         "相对路径，开头不能是\\或者/");
       return str;
     }
@@ -540,17 +537,16 @@ this.TQ = this.TQ || {};
     return RM.toRelative(str);
   };
 
-  RM.getNameFromUrl = function (url) {
+  RM.getNameFromUrl = function(url) {
     if (!url) {
       return url;
     }
-    var words = url.split('/');
+    var words = url.split("/");
     return words[words.length - 1];
   };
 
-
   function handleAndroidLocalhost(pathname) {
-    var ANDROID_LOCALHOST = '/android_asset/www';
+    var ANDROID_LOCALHOST = "/android_asset/www";
     if (pathname.indexOf(ANDROID_LOCALHOST) === 0) {
       pathname = pathname.substr(ANDROID_LOCALHOST.length);
     }
@@ -559,10 +555,10 @@ this.TQ = this.TQ || {};
   }
 
   function _removeMatFolder(pathname) {
-    if ((TQ.Config.IMAGES_CORE_PATH != '') && (pathname.indexOf(TQ.Config.IMAGES_CORE_PATH) >=0)) {
+    if ((TQ.Config.IMAGES_CORE_PATH != "") && (pathname.indexOf(TQ.Config.IMAGES_CORE_PATH) >= 0)) {
       pathname = pathname.substr(TQ.Config.IMAGES_CORE_PATH.length);
     }
-    if ((TQ.Config.SOUNDS_PATH != '') && (pathname.indexOf(TQ.Config.SOUNDS_PATH) >=0)) {
+    if ((TQ.Config.SOUNDS_PATH != "") && (pathname.indexOf(TQ.Config.SOUNDS_PATH) >= 0)) {
       pathname = pathname.substr(TQ.Config.SOUNDS_PATH.length);
     }
 
@@ -570,7 +566,7 @@ this.TQ = this.TQ || {};
   }
 
   function _removeFirstSeperator(path) {
-    if ((path[0] === '\\') || (path[0] === '/')) {
+    if ((path[0] === "\\") || (path[0] === "/")) {
       return path.substr(1);
     }
     return path;
@@ -581,7 +577,7 @@ this.TQ = this.TQ || {};
       return pathname;
     }
 
-    var IMG_CACHE = 'imgcache/';
+    var IMG_CACHE = "imgcache/";
     if (pathname.indexOf(IMG_CACHE) === 0) {
       pathname = pathname.substr(IMG_CACHE.length);
     }
@@ -595,15 +591,15 @@ this.TQ = this.TQ || {};
     }
 
     var cachePath = _toStdFolder(RM.toRelative(path));
-    return urlConcat(TQ. Config.getResourceHost(), cachePath);
+    return urlConcat(TQ.Config.getResourceHost(), cachePath);
   }
 
   function _isCachePath(path) {
-    return (path.indexOf(TQ. Config.getResourceHost()) === 0);
+    return (path.indexOf(TQ.Config.getResourceHost()) === 0);
   }
 
   function _removeCacheRoot(path) {
-    return (path.substr(TQ. Config.getResourceHost().length));
+    return (path.substr(TQ.Config.getResourceHost().length));
   }
 
   function _toStdFolder(path) {
@@ -632,8 +628,8 @@ this.TQ = this.TQ || {};
       return path;
     }
 
-    //ToDo: get unique file ID, like p123456.png;
-    path = path.replace(/\//g,'_');
+    // ToDo: get unique file ID, like p123456.png;
+    path = path.replace(/\//g, "_");
     var start = path.length - MAX_FILE_NAME;
     if (start > 0) {
       path = path.substr(start);
@@ -643,9 +639,9 @@ this.TQ = this.TQ || {};
   }
 
   function _isFullPath(name) {
-    var protocols = ['filesystem:', 'file:', 'http://', 'https://'];
+    var protocols = ["filesystem:", "file:", "http://", "https://"];
     for (var i = 0; i < protocols.length; i++) {
-      if (name.indexOf(protocols[i]) ===0 ) {
+      if (name.indexOf(protocols[i]) === 0) {
         return true;
       }
     }
@@ -692,7 +688,7 @@ this.TQ = this.TQ || {};
     return fullpath;
   }
 
-  function _toFullPathLs(name) {  //Local Server: the server I'm running
+  function _toFullPathLs(name) { // Local Server: the server I'm running
     if (_isLocalFileSystem(name) || _isFullPath(name)) {
       return name;
     }
@@ -719,35 +715,35 @@ this.TQ = this.TQ || {};
     return !_isFullPath(path);
   }
 
-  RM.toRelativeFromThumbnail = function (url) {
-    var pathname = TQ.Base.Utility.urlParser(url).pathname,
-      parts = (!pathname) ? [] : pathname.split("/");
+  RM.toRelativeFromThumbnail = function(url) {
+    var pathname = TQ.Base.Utility.urlParser(url).pathname;
+    var parts = (!pathname) ? [] : pathname.split("/");
     return (parts.length < 2) ? url : parts[parts.length - 2] + "/" + parts[parts.length - 1];
   };
 
-  RM.toMatFullPath = function (relativePath) {
+  RM.toMatFullPath = function(relativePath) {
     return TQ.Config.MAT_UPLOAD_API + "/" + relativePath;
   };
 
-  RM.toMatThumbNailFullPath = function (relativePath) {
+  RM.toMatThumbNailFullPath = function(relativePath) {
     return (!relativePath) ? null : RM.toFullPathFs(toThumbNail(relativePath));
   };
 
-  RM.toOpusThumbNailFullPath = function (relativePath) {
-    return (!relativePath) ? null: RM.toFullPathFs(toOpusThumbNail(relativePath));
+  RM.toOpusThumbNailFullPath = function(relativePath) {
+    return (!relativePath) ? null : RM.toFullPathFs(toOpusThumbNail(relativePath));
   };
 
-  RM.removeThumbNail = function (path) {
+  RM.removeThumbNail = function(path) {
     return path.replace(THUMBNAIL_EXP, "").replace(OPUS_THUMBNAIL_EXP, "");
   };
 
   function toOpusThumbNail(path) {
-    TQ.Assert.isTrue(path[0] != '/', "not separator");
+    TQ.Assert.isTrue(path[0] != "/", "not separator");
     return (TQ.Utility.isImage(path) ? OPUS_THUMBNAIL_EXP : "") + path;
   }
 
   function toThumbNail(path) {
-    TQ.Assert.isTrue(path[0] != '/', "not separator");
+    TQ.Assert.isTrue(path[0] != "/", "not separator");
     return (TQ.Utility.isImage(path) ? THUMBNAIL_EXP : "") + path;
   }
 
@@ -756,7 +752,7 @@ this.TQ = this.TQ || {};
   }
 
   function isAudio(id) {
-    return (id.indexOf('.mp3') >= 0);
+    return (id.indexOf(".mp3") >= 0);
   }
 
   RM.loadSoundFromFile = loadSoundFromFile;

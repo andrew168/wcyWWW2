@@ -2,22 +2,21 @@
  * Created by Andrewz on 3/7/19.
  */
 
-(function () {
+(function() {
   var p = createjs.Text.prototype;
-  p.getWidth = function () {
+  p.getWidth = function() {
     return this.getMeasuredWidth();
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return this.getMeasuredHeight();
   };
 
-  p.naturalHeight = function () {
+  p.naturalHeight = function() {
     return this.getMeasuredHeight();
   };
 
-  p.naturalWidth = function () {
+  p.naturalWidth = function() {
     return this.getMeasuredWidth();
   };
-
 }());

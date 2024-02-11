@@ -3,7 +3,6 @@
   WCY： 提供作品级别的服务
   EditorService： 综合提供元素级别的服务， 并且调用WCY中的服务
 
-
 WCY 服务： 提供wcy及其screenshot的创建、保存、编辑、展示等服务；
   * 首次保存的时候， 也保存一份截图（当前画面的）
   * 再次保存的时候， 不再自动保存截图，
@@ -23,25 +22,25 @@ WCY 服务： 提供wcy及其screenshot的创建、保存、编辑、展示等�
    => edit
    => show
 */
-angular.module('starter').factory("WCY", WCY);
-WCY.$inject = ['$q', '$timeout', '$http', 'FileService', 'WxService', 'NetService', 'StorageManager'];
+angular.module("starter").factory("WCY", WCY);
+WCY.$inject = ["$q", "$timeout", "$http", "FileService", "WxService", "NetService", "StorageManager"];
 
 function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageManager) {
   // 类的私有变量， 全部用_开头， 以区别于函数的局部变量
   var user = TQ.userProfile;
-  var _AUTO_SAVE_NAME = '_auto_save_name_',
-    isSaving = false,
-    _FILENAME = '_filename_',
-    _SHARE_CODE_ = '_shareCode',
-    _WCY_ID_ = "_wcy_id",
-    readCache = TQ.Base.Utility.readCache,
-    writeCache = TQ.Base.Utility.writeCache,
-    _wcyId = TQ.Config.INVALID_WCY_ID, // 缺省-1， 表示没有保存的作品。，12345678;
-    _onStarted = null,
-    levelThumbs = [],
-    preloadedWcyData = null,
-    isPreloadingWcy = false,
-    getWcyCalled = false;
+  var _AUTO_SAVE_NAME = "_auto_save_name_";
+  var isSaving = false;
+  var _FILENAME = "_filename_";
+  var _SHARE_CODE_ = "_shareCode";
+  var _WCY_ID_ = "_wcy_id";
+  var readCache = TQ.Base.Utility.readCache;
+  var writeCache = TQ.Base.Utility.writeCache;
+  var _wcyId = TQ.Config.INVALID_WCY_ID; // 缺省-1， 表示没有保存的作品。，12345678;
+  var _onStarted = null;
+  var levelThumbs = [];
+  var preloadedWcyData = null;
+  var isPreloadingWcy = false;
+  var getWcyCalled = false;
 
   TQ.State.shareCode = null;
 
@@ -55,7 +54,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function create(option) {
     if (TQ.userProfile.loggedIn && needToSave()) {
-      return save().then(function () {
+      return save().then(function() {
         create(option); // 数据已经保存，到内存， 网络上传还需要时间
       }, _onFail);
     }
@@ -98,9 +97,9 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
     function saveToStorage(screenshot) {
       if (TQ.ResourceSync.isBusy()) {
-        return TQ.ResourceSync.once('complete', function () {
+        return TQ.ResourceSync.once("complete", function() {
           saveToStorage(screenshot);
-        })
+        });
       }
       var opusJson = currScene.getData();
       StorageManager.saveAll(opusJson, screenshot, onSuccess);
@@ -116,8 +115,8 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     }
 
     if (currScene.isIComponent() && !currScene.isValidIComponent()) {
-      return TQ.MessageBox.prompt('智能元件需要满足以下条件：一个场景:' + currScene.levelNum() +
-        ', 一个根元素: ' + currScene.levels[0].elements.length);
+      return TQ.MessageBox.prompt("智能元件需要满足以下条件：一个场景:" + currScene.levelNum() +
+        ", 一个根元素: " + currScene.levels[0].elements.length);
     }
 
     TQ.Assert.isDefined(_wcyId);
@@ -126,11 +125,11 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
     function saveToStorage() {
       var jsonWcyData = currScene.getData();
-      StorageManager.saveOpus(jsonWcyData, {forkIt: forkIt}, onSavedSuccess);
+      StorageManager.saveOpus(jsonWcyData, { forkIt: forkIt }, onSavedSuccess);
     }
 
     if (TQ.ResourceSync.isBusy()) {
-      TQ.ResourceSync.once('complete', saveToStorage)
+      TQ.ResourceSync.once("complete", saveToStorage);
     } else {
       saveToStorage();
     }
@@ -144,8 +143,8 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     };
 
     return $http({
-      method: 'POST',
-      url: TQ.Config.OPUS_HOST + '/wcy/' + TQ.State.shareCode,
+      method: "POST",
+      url: TQ.Config.OPUS_HOST + "/wcy/" + TQ.State.shareCode,
       data: shareData
     });
   }
@@ -153,7 +152,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   function saveToCache() {
     TQ.Assert.isObject(currScene);
     var data = currScene.getData();
-    data = new Blob([data], {type: 'text/plain'});
+    data = new Blob([data], { type: "text/plain" });
     var fileName = TQ.Config.WORKS_CORE_PATH + "nn.wcy";
     FileService.saveFile(fileName, data,
       function onSuccess(e) {
@@ -167,7 +166,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function _getWcy(shareString) {
     if (TQ.userProfile.loggedIn && needToSave()) {
-      return save().then(function () {
+      return save().then(function() {
         _getWcy(shareString);
       });
     }
@@ -196,7 +195,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
     isPreloadingWcy = true;
     doGetOpusFromServer(shareString)
-      .then(function (res) {
+      .then(function(res) {
         isPreloadingWcy = false;
         if (getWcyCalled) {
           _onReceivedWcyData(res);
@@ -211,7 +210,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function getWcy(shareString) {
-    ///任何修改，必须确保5种打开方式都OK:
+    // /任何修改，必须确保5种打开方式都OK:
     // ** url
     // ** latest opus
     // ** my opus pane
@@ -255,7 +254,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     }
   }
 
-  //ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）
+  // ToDo： 在Server端实现, 记录播放的次数，(client端是不可靠的， 可能被黑客的）
   function edit(sceneId) {
     TQ.WCY.isPlayOnly = false;
     return _load(sceneId);
@@ -280,7 +279,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function start() {
     if (TQ.userProfile.loggedIn && needToSave()) {
-      return save().then(function () {
+      return save().then(function() {
         start();
       });
     }
@@ -293,7 +292,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
         _wcyId = TQ.Utility.shareCode2Id(TQ.State.shareCode);
       }
       var filename = readCache(_FILENAME, TQ.Config.UNNAMED_SCENE);
-      var fileInfo = {name: filename, content: previousSaved};
+      var fileInfo = { name: filename, content: previousSaved };
       _open(fileInfo);
     } else {
       TQ.WCY.isPlayOnly = false; // 新创作的， 当然是可以修改的
@@ -307,27 +306,27 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     var content = null;
 
     if (sceneId) {
-      filename = 'p' + sceneId + '.wdm';
+      filename = "p" + sceneId + ".wdm";
     }
 
-    var url = TQ.Config.BONE_HOST + '/wcy/wdmOpen?filename=' + filename;
+    var url = TQ.Config.BONE_HOST + "/wcy/wdmOpen?filename=" + filename;
     if (!content) {
       $http.get(url, {})
-        .success(function (data, status, headers, config) {
+        .success(function(data, status, headers, config) {
           TQ.Log.debugInfo(data);
           content = JSON.stringify(data);
           _openInJson(data);
-        }).error(function (data, status, headers, config) {
+        }).error(function(data, status, headers, config) {
           TQ.Log.debugInfo(data);
         });
     } else {
-      var fileInfo = {name: filename, content: content};
+      var fileInfo = { name: filename, content: content };
       _open(fileInfo);
     }
   }
 
   function _open(fileinfo) {
-    //ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
+    // ToDo:@UI  initCreateEnvironment(TQ.WCY.isPlayOnly);
     TQ.SceneEditor.openScene(fileinfo);
     doStarted();
   }
@@ -402,9 +401,9 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     }
 
     currScene.isSaved = true;
-    if (!!data) {
+    if (data) {
       parseCommonData(data);
-      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
+      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, { matType: TQ.MatType.OPUS });
       TQUtility.triggerEvent(document.body, TQ.Scene.EVENT_SAVED);
       TQ.Log.debugInfo(data);
     }
@@ -438,8 +437,8 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function composeWxShareData(scene, shareCode) {
     var defaultShareForKids = {
-      "title": '儿童创造能力提升',
-      "description": '儿童创造能力提升--UDOIDO KIDZ'
+      "title": "儿童创造能力提升",
+      "description": "儿童创造能力提升--UDOIDO KIDZ"
     };
 
     TQ.Assert(_wcyId > 0, "必须先保存，才能调用");
@@ -447,13 +446,13 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
       title: defaultShareForKids.title, // (scene.title) ? scene.title : "UdoIdo",
       ssPath: (scene.ssPath) ? TQ.RM.toFullPathFs(scene.ssPath) : null,
       desc: defaultShareForKids.description, // (scene.description) ? scene.description: null,
-      code: (shareCode) ? shareCode : TQ.Utility.wcyId2ShareCode(_wcyId)
-    }
+      code: (shareCode) || TQ.Utility.wcyId2ShareCode(_wcyId)
+    };
   }
 
   function _onFail(data) {
     TQ.Log.debugInfo(data);
-    TQ.MessageBox.prompt(TQ.Locale.getStr('hey, the network connection lost'));
+    TQ.MessageBox.prompt(TQ.Locale.getStr("hey, the network connection lost"));
   }
 
   function doGetOpusFromServer(shareString) {
@@ -461,23 +460,23 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
       return;
     }
 
-    var url = TQ.Config.OPUS_HOST + '/wcy/' + TQ.Utility.getShareCodeCore(shareString);
+    var url = TQ.Config.OPUS_HOST + "/wcy/" + TQ.Utility.getShareCodeCore(shareString);
     return $http.get(url);
   }
 
   function getOutro(outroId) {
     return doGetOpusFromServer(TQ.Utility.wcyId2ShareCode(outroId))
-      .then( _onReceivedOutroData, _onReceivedOutroData);
+      .then(_onReceivedOutroData, _onReceivedOutroData);
   }
 
   function _onReceivedWcyData(res) {
-    TQ.MessageBox.reset();  // end of loading，no resource yet
+    TQ.MessageBox.reset(); // end of loading，no resource yet
     var data = res.data;
     parseCommonData(data);
     TQ.State.isPlayOnly = (TQ.State.isTopicIntro ? true : data.isPlayOnly);
     TQ.State.determineWorkingRegion();
     TQ.WCY.authorId = data.authorId;
-    if (!!data.data) {
+    if (data.data) {
       _openInJson(TQ.Scene.decompress(data.data));
     }
   }
@@ -493,8 +492,8 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   }
 
   function _openInJson(content) {
-    var filename = _findFileName(content),
-      fileInfo = {name: filename, content: content};
+    var filename = _findFileName(content);
+    var fileInfo = { name: filename, content: content };
     fileInfo.isPlayOnly = TQ.WCY.isPlayOnly;
     _open(fileInfo);
   }
@@ -526,7 +525,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     levelThumbs: levelThumbs,
     updateThumbnail: updateThumbnail,
     setOnStarted: setOnStarted,
-    start: start,  // start a new one, or load previous one (edited or played)
+    start: start, // start a new one, or load previous one (edited or played)
     create: create,
     needToSave: needToSave,
     save: save,
@@ -538,7 +537,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     startAutoSave: startAutoSave,
     stopAutoSave: stopAutoSave,
     uploadScreenshot: uploadScreenshot,
-    edit: edit,  // open for edit
+    edit: edit, // open for edit
     getWcy: getWcy,
     getOutro: getOutro,
     preloadWcy: preloadWcy,
@@ -548,7 +547,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
     getScreenshotUrl: getScreenshotUrl,
     hasSsPath: hasSsPath,
     onUrlChanged: onUrlChanged,
-    show: show,  // open for show only
+    show: show, // open for show only
 
     // old api will be depreciated
     test: show,

@@ -4,13 +4,13 @@
  */
 
 window.TQ = window.TQ || {};
-(function () {
+(function() {
   /** 内部类,记录和执行一条命令
      **/
   function Command(f, params, path) {
     this.f = f;
     this.params = params;
-    this.path = path==null ? true : path;
+    this.path = path == null ? true : path;
   }
 
   Command.prototype.exec = function(scope) { this.f.apply(scope, this.params); };
@@ -25,12 +25,12 @@ window.TQ = window.TQ || {};
     TaskMgr.preferredQueue = [];
   };
 
-  TaskMgr.invoke = function () {
+  TaskMgr.invoke = function() {
     TaskMgr._timerId = setTimeout(function() { TaskMgr._runOnce(); }, 0);
   };
 
   TaskMgr.stop = function() {
-    if (TaskMgr._timerId >=0 ) clearTimeout(TaskMgr._timerId);
+    if (TaskMgr._timerId >= 0) clearTimeout(TaskMgr._timerId);
     TaskMgr._timerId = -1;
   };
 
@@ -57,10 +57,10 @@ window.TQ = window.TQ || {};
     return task;
   };
 
-  TaskMgr._runOnce = function () {
+  TaskMgr._runOnce = function() {
     TaskMgr.isWorking = true;
 
-    for (var task = TaskMgr._getTask(); task != null;  task = TaskMgr._getTask()) {
+    for (var task = TaskMgr._getTask(); task != null; task = TaskMgr._getTask()) {
       task.exec(TaskMgr);
     }
 

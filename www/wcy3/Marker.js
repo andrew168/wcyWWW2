@@ -4,10 +4,10 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   // 用法: Marker是一种修饰品Decoration. 也是Element类的子类.
   function Marker(level, jsonObj) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !== "string"); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
     this.level = level;
     this.children = [];
     this.decorations = null;
@@ -24,8 +24,8 @@ TQ = TQ || {};
   };
 
   Marker.RADIUS = 32; // 2个字的大小
-  var GRADIENT_COLOR_S = "#00F0",
-    GRADIENT_COLOR_E = "#F00F";
+  var GRADIENT_COLOR_S = "#00F0";
+  var GRADIENT_COLOR_E = "#F00F";
 
   var p = Marker.prototype = Object.create(TQ.Element.prototype);
   Marker.prototype.constructor = Marker;
@@ -68,8 +68,8 @@ TQ = TQ || {};
     TQ.Graphics.drawCircle(s, 0, 0, Marker.RADIUS, GRADIENT_COLOR_S, GRADIENT_COLOR_E);
   };
 
-  p._loadMarker = function () {
-    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
+  p._loadMarker = function() {
+    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
     var jsonObj = this.jsonObj;
     var s = new createjs.Shape();
     this.loaded = true;
@@ -85,7 +85,7 @@ TQ = TQ || {};
     this.jsonObj.y = ele.jsonObj.y;
     this.dirty2 = true;
     this.setFlag(TQ.Element.TRANSLATING);
-    if (TQBase.LevelState.isOperatingCanvas()){
+    if (TQBase.LevelState.isOperatingCanvas()) {
       this.createImage();
     }
   };
@@ -94,15 +94,15 @@ TQ = TQ || {};
     return true;
   };
 
-  p.getWidth = function () {
+  p.getWidth = function() {
     return 2 * Marker.RADIUS;
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return 2 * Marker.RADIUS;
   };
 
-  p.reset = function () {
+  p.reset = function() {
     this.jsonObj.x = 0;
     this.jsonObj.y = 0;
     this.jsonObj.sx = 1;
@@ -112,7 +112,7 @@ TQ = TQ || {};
     this.jsonObj.M = this.jsonObj.IM = null;
   };
 
-  p.allowRecording = function () {
+  p.allowRecording = function() {
     return false;
   };
 
@@ -122,27 +122,27 @@ TQ = TQ || {};
     this.jsonObj.sy = 1;
   };
 
-  p.tsrObject2World = function (pose) {
+  p.tsrObject2World = function(pose) {
     var bakIsVis = this.jsonObj.isVis;
     TQ.CreateJSAdapter.tsrObject2World.call(this, pose);
     this.jsonObj.isVis = bakIsVis;
     this.noScaleRotation();
   };
 
-  /// singleton
-  var markers = [],
-    workingMarkers = [];
+  // / singleton
+  var markers = [];
+  var workingMarkers = [];
 
-  Marker.getOne = function () {
+  Marker.getOne = function() {
     var decs = markers.pop();
     if (decs == null) {
-      decs = TQ.Element.build(currScene.currentLevel, {isVis: 0, type: TQ.ElementType.JOINT_MARKER});
+      decs = TQ.Element.build(currScene.currentLevel, { isVis: 0, type: TQ.ElementType.JOINT_MARKER });
     }
     workingMarkers.push(decs);
     return decs;
   };
 
-  p.recycle = function () {
+  p.recycle = function() {
     var aMarker = this;
     var id = workingMarkers.indexOf(aMarker);
     workingMarkers.splice(id, 1);
@@ -150,15 +150,15 @@ TQ = TQ || {};
     aMarker.removeFromStage();
   };
 
-  p.isEditable = function () {
+  p.isEditable = function() {
     return !!TQ.InputCtrl.inSubobjectMode;
   };
 
-  p.canSave = function () {
+  p.canSave = function() {
     return false;
   };
 
-  p.toJSON = function () { // 不保存
+  p.toJSON = function() { // 不保存
     return null;
   };
 

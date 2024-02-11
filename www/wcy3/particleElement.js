@@ -4,16 +4,16 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
   function ParticleElement(level, jsonObj) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !== "string"); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
     this.level = level;
     this.children = [];
     this.instance = null;
     this._isNewSkin = false;
     this.isFirstTimePlay = true;
-    if (!!jsonObj.t0) { // 记录插入点， 只在插入点开始播放
+    if (jsonObj.t0) { // 记录插入点， 只在插入点开始播放
       this.t0 = jsonObj.t0;
     } else {
       this.t0 = 0;
@@ -32,17 +32,17 @@ TQ = TQ || {};
     }
 
     this.version = jsonObj.version;
-    this.isCrossLevel = (this.isVer2plus()) ? true : false;
+    this.isCrossLevel = !!(this.isVer2plus());
     this.initialize(jsonObj);
   }
 
   var p = ParticleElement.prototype = new TQ.Element(null, null, null, null);
   p._parent_doShow = p.doShow;
-  p.isSelectable = function () {
+  p.isSelectable = function() {
     return false;
   };
 
-  p._doLoad = function () {
+  p._doLoad = function() {
     this.isPlaying = false;
     if (!this.jsonObj.particles) {
       this.jsonObj.particles = TQ.SnowEffect.getDefaultOptions(this.jsonObj.subType);
@@ -56,7 +56,7 @@ TQ = TQ || {};
     TQ.DirtyFlag.setElement(this);
   };
 
-  p.setTRSAVZ = function () {
+  p.setTRSAVZ = function() {
     var jsonObj = this.jsonObj;
     // 可见性由父子共同决定：
     //  如果父物体为空， 该物体的可见性由自己的标志完全决定
@@ -77,7 +77,7 @@ TQ = TQ || {};
     this.doShow(visSum);
   };
 
-  p.doShow = function (isVisible) {
+  p.doShow = function(isVisible) {
     this._parent_doShow(isVisible);
     if (isVisible) {
       this.play();
@@ -94,7 +94,7 @@ TQ = TQ || {};
     this.play();
   };
 
-  p.play = function () {
+  p.play = function() {
     if (this.isPlaying || !this.isVisible()) {
       return;
     }
@@ -112,7 +112,7 @@ TQ = TQ || {};
     }
   };
 
-  p.stop = function () {
+  p.stop = function() {
     if (this.isPlaying) {
       this.isPlaying = false;
       if (this.isFEeffect()) {
@@ -124,18 +124,18 @@ TQ = TQ || {};
     }
   };
 
-  p._doAddItemToStage = function () {};
-  p._doRemoveFromStage = function () {};
-  p.highlight = function(){};
+  p._doAddItemToStage = function() {};
+  p._doRemoveFromStage = function() {};
+  p.highlight = function() {};
 
-  p.calculateLastFrame = function () {
+  p.calculateLastFrame = function() {
     if (!this.instance) return 0;
-    if (this.isCrossLevel) return 0;  // ToDo: 需要补改变当前的录制长度， （如：200帧的默认值），跨场景的声音， 不能用来计算本场景的最后一帧
+    if (this.isCrossLevel) return 0; // ToDo: 需要补改变当前的录制长度， （如：200帧的默认值），跨场景的声音， 不能用来计算本场景的最后一帧
     return (this.t0 + this.instance.duration / 1000);
   };
 
   // 计算元素插入点的绝对时刻（与当前level无关， 只与元素所在level有关），
-  p.toGlobalTime = function (t) {
+  p.toGlobalTime = function(t) {
     return (this.level.getT0() + t);
   };
 

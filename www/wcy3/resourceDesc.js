@@ -3,12 +3,12 @@
  */
 this.TQ = this.TQ || {};
 
-(function () {
+(function() {
   function ResourceDesc() {
   }
 
   function isReady(desc) {
-    if (!!desc.data) { // image buffer
+    if (desc.data) { // image buffer
       return true;
     }
 

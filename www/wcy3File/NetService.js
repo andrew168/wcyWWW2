@@ -4,18 +4,18 @@
  *     * uploadOne
  * 在controller中直接使用
  */
-angular.module('starter').factory("NetService", NetService);
-NetService.$inject = ['$q', '$http', '$cordovaFileTransfer', 'Upload'];
+angular.module("starter").factory("NetService", NetService);
+NetService.$inject = ["$q", "$http", "$cordovaFileTransfer", "Upload"];
 
 function NetService($q, $http, $cordovaFileTransfer, Upload) {
-  var baseUrl = TQ.Config.BONE_HOST,
-    urlConcat = TQ.Base.Utility.urlConcat,
-    IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API,
-    C_OPUS_URL = TQ.Config.MAN_HOST + '/wcyList';
-  C_MAN_URL = TQ.Config.MAN_HOST + '/material';
+  var baseUrl = TQ.Config.BONE_HOST;
+  var urlConcat = TQ.Base.Utility.urlConcat;
+  var IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API;
+  var C_OPUS_URL = TQ.Config.MAN_HOST + "/wcyList";
+  C_MAN_URL = TQ.Config.MAN_HOST + "/material";
 
   function isFullPath(url) {
-    var protocols = ['http://', 'https://'];
+    var protocols = ["http://", "https://"];
     for (var i = 0; i < protocols.length; i++) {
       if (url.indexOf(protocols[i]) === 0) {
         return true;
@@ -34,7 +34,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
       }
     }
 
-    angular.forEach(files, function (file) {
+    angular.forEach(files, function(file) {
       uploadOne(file, _onSuccess);
     });
   }
@@ -53,17 +53,17 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
         file.name = generateName(file);
       }
       option.filename = file.name;
-      if (!!file.isWx) {
+      if (file.isWx) {
         TQ.Log.alertInfo("isWx");
         TQ.Log.alertInfo(JSON.stringify(file));
         get(file.path);
       }
     } else {
-      var filename = hasFileName(file) ? file.name :
-        (isFullPath(file) ? file : getImageNameWithoutExt());
+      var filename = hasFileName(file) ? file.name
+        : (isFullPath(file) ? file : getImageNameWithoutExt());
       option.filename = filename;
-      option.tags = 'myphotoalbum';
-      option.context = 'photo=' + "No";
+      option.tags = "myphotoalbum";
+      option.context = "photo=" + "No";
     }
     createMatId(option)
       .success(onMatIdCreated)
@@ -102,7 +102,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
   function doUploadImage(signData, fileOrBuffer, option) {
     if (option && !option.useBackgroundMode) {
-      TQ.MessageBox.showWaiting(TQ.Locale.getStr('uploading...'));
+      TQ.MessageBox.showWaiting(TQ.Locale.getStr("uploading..."));
     }
     // TQ.Log.debugInfo(JSON.stringify(signData)); // 图像数据太大
     signData.api_key = TQ.Config.Cloudinary.api_key;
@@ -110,7 +110,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     if (TQUtility.isLocalFileOrBlob(fileOrBuffer)) {
       signData.file = fileOrBuffer;
       res = doUploadLocalFile(signData);
-      res.progress(function (e) {
+      res.progress(function(e) {
         fileOrBuffer.progress = Math.round((e.loaded * 100.0) / e.total);
         fileOrBuffer.status = "Uploading... " + fileOrBuffer.progress + "%";
       });
@@ -137,19 +137,19 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     // CHROME - browsers
     var xhr = new XMLHttpRequest();
     TQ.Log.alertInfo("X1: " + uri);
-    xhr.open('GET', uri, true);
-    xhr.responseType = 'blob';
+    xhr.open("GET", uri, true);
+    xhr.responseType = "blob";
     var headers = {};
-    xhr.onload = function () {
+    xhr.onload = function() {
       TQ.Log.alertInfo("X2");
       TQ.Log.alertInfo(xhr.response.size + ",  " + xhr.response.type);
       if (xhr.response && (xhr.status === 200 || xhr.status === 0)) {
         TQ.Log.alertInfo("X2.5");
       } else {
-        TQ.Log.alertInfo('Image could not be downloaded: ' + xhr.status);
+        TQ.Log.alertInfo("Image could not be downloaded: " + xhr.status);
       }
     };
-    xhr.onerror = function () {
+    xhr.onerror = function() {
       TQ.Log.alertInfo("X3 : " + xhr.status);
     };
     xhr.send();
@@ -171,13 +171,13 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     if (TQ.Base.Utility.isMobileDevice() && TQ.Base.Utility.isCordovaDevice()) {
       TQ.Log.alertInfo("Get 3");
       $cordovaFileTransfer.download(urlSource, urlTarget, options, trustHosts)
-        .then(function (result) {
+        .then(function(result) {
           TQ.Log.debugInfo(result);
           onSuccess(result);
-        }, function (err) {
+        }, function(err) {
           TQ.Log.error(err);
           onError(err);
-        }, function (progress) {
+        }, function(progress) {
           var ratio = progress.loaded / progress.total;
           TQ.Log.debugInfo(ratio + ": " + progress);
           // $timeout(function () {
@@ -191,7 +191,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
   }
 
   function put(path) {
-    console.error('depreciated??? replace by post??');
+    console.error("depreciated??? replace by post??");
     var url = urlConcat(baseUrl, path);
     TQ.Log.debugInfo("put " + path + " to ===> " + url);
   }
@@ -203,7 +203,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     return "p" + (counter++);
   }
 
-  var createMatId = function (option) {
+  var createMatId = function(option) {
     if (!option.useBackgroundMode) {
       // TQ.MessageBox.showWaiting(TQ.Locale.getStr('get material ID...'));
     }
@@ -245,18 +245,18 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     doUpdateOpus(url);
   }
 
-  function shareOpus(opus) { //批准发布作品，approveToShareOpus
+  function shareOpus(opus) { // 批准发布作品，approveToShareOpus
     var url = C_OPUS_URL + "/approve/" + opus.wcyId;
     return doUpdateOpus(url);
   }
 
-  function refineOpus(opus) { //批准发布作品，approveToShareOpus
+  function refineOpus(opus) { // 批准发布作品，approveToShareOpus
     var url = C_OPUS_URL + "/refine/" + opus.wcyId;
     return doUpdateOpus(url);
   }
 
   function requestToBanOpus(opus) {
-    TQ.Log.warn("服务器尚未实现此命令，暂时")
+    TQ.Log.warn("服务器尚未实现此命令，暂时");
     var url = C_OPUS_URL + "/requestToBan/" + opus.wcyId;
     doUpdateOpus(url);
   }
@@ -271,19 +271,19 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
   }
 
   function doUpdateOpus(url) {
-    return $http.get(url).then(function (pkg) { // 发出event， 好让dataService等更新自己
-      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: TQ.MatType.OPUS});
+    return $http.get(url).then(function(pkg) { // 发出event， 好让dataService等更新自己
+      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, { matType: TQ.MatType.OPUS });
     });
   }
 
   function doUpdateMat(data, path) {
     var url = C_MAN_URL;
     if (path) {
-      url = url + '/' + path;
+      url = url + "/" + path;
     }
     TQ.AssertExt.isNotNull(data.matType, "db必须的参数");
-    return $http.post(url, angular.toJson(data)).then(function (pkg) { // 发出event， 好让dataService等更新自己
-      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
+    return $http.post(url, angular.toJson(data)).then(function(pkg) { // 发出event， 好让dataService等更新自己
+      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, { matType: data.matType });
     });
   }
 
@@ -293,7 +293,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     TQ.Log.debugInfo("update: " + path + " to ==> " + url);
   }
 
-  function del(path) {  // delete is reserved key word!!!
+  function del(path) { // delete is reserved key word!!!
     var url = urlConcat(baseUrl, path);
     TQ.Log.debugInfo("delete: " + url);
   }
@@ -325,18 +325,18 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
 
   function generateName(blobOrBuffer) {
     var prefix = {
-        'audio': '配音',
-        'image': '照片'
-      },
-      dateString = (new Date()).toLocaleString().replace(/[^0-9]/g, '-');
+      "audio": "配音",
+      "image": "照片"
+    };
+    var dateString = (new Date()).toLocaleString().replace(/[^0-9]/g, "-");
 
     if (blobOrBuffer.type) {
-      var words = blobOrBuffer.type.split('/'),
-        type = words[0],
-        extension = words[words.length - 1];
+      var words = blobOrBuffer.type.split("/");
+      var type = words[0];
+      var extension = words[words.length - 1];
     }
 
-    return prefix[type] + dateString + '.' + extension;
+    return prefix[type] + dateString + "." + extension;
   }
 
   function addTopic(topic) {
@@ -358,10 +358,10 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     if (TQ.State.isAudit) {
       url += "?isAudit=true";
     }
-    $http.post(url, JSON.stringify(topic)).then(function (value) {
+    $http.post(url, JSON.stringify(topic)).then(function(value) {
       console.log(value);
     },
-    function (reason) {
+    function(reason) {
       console.log(reason);
     });
   }
@@ -385,12 +385,12 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
   function doUpdateMatTopic(operation, data) {
     var url = C_MAN_URL + "/" + operation;
     TQ.AssertExt.isNotNull(data.matType, "db必须的参数");
-    $http.post(url, JSON.stringify(data)).then(function (value) {
+    $http.post(url, JSON.stringify(data)).then(function(value) {
       console.log(value);
       // 发出event， 好让dataService等更新自己
-      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, {matType: data.matType});
+      TQUtility.triggerEvent(document, TQ.EVENT.MAT_CHANGED, { matType: data.matType });
     },
-    function (reason) {
+    function(reason) {
       console.log(reason);
     });
   }
@@ -424,5 +424,5 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     doUploadImage: doUploadImage,
     update: update,
     del: del
-  }
+  };
 }

@@ -1,15 +1,13 @@
 ﻿// NAMESPACE:
 this.createjs = this.createjs || {};
 
-(function () {
-
+(function() {
   /**
      * A shape particle
      * @constructor
      * @extends createjs.Shape
      */
-  var ShapeParticle = function () {
-
+  var ShapeParticle = function() {
     this.initialize();
   };
   var p = ShapeParticle.prototype = new createjs.Shape();
@@ -26,18 +24,18 @@ this.createjs = this.createjs || {};
   p._baseParticle = null;
 
   // ** CONSTRUCTOR:
-  p.initialize = function () {
+  p.initialize = function() {
     this.Shape_initialise();
     this._baseParticle = new createjs.BaseParticle(this);
   };
 
   // ** PUBLIC METHODS:
-  p.initializeProperties = function (id) {
+  p.initializeProperties = function(id) {
     this.particleId = id;
     this._baseParticle.initializeProperties(id);
   };
 
-  p.updateContext = function (ctx) {
+  p.updateContext = function(ctx) {
     this.Shape_updateContext(ctx);
     this._baseParticle.updateParticle();
   };

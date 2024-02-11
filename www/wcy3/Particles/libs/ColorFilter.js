@@ -3,7 +3,7 @@
 * Visit http://createjs.com/ for documentation, updates and examples.
 *
 * Copyright (c) 2010 gskinner.com, inc.
-* 
+*
 * Permission is hereby granted, free of charge, to any person
 * obtaining a copy of this software and associated documentation
 * files (the "Software"), to deal in the Software without
@@ -12,10 +12,10 @@
 * copies of the Software, and to permit persons to whom the
 * Software is furnished to do so, subject to the following
 * conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be
 * included in all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,8 +29,7 @@
 // namespace:
 this.createjs = this.createjs || {};
 
-(function () {
-
+(function() {
   /**
      * Applies color transforms.
      *
@@ -47,9 +46,9 @@ this.createjs = this.createjs || {};
      * @param {Number} blueOffset
      * @param {Number} alphaOffset
      **/
-  var ColorFilter = function (redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
+  var ColorFilter = function(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
     this.initialize(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset);
-  }
+  };
   var p = ColorFilter.prototype = new createjs.Filter();
 
   // public properties:
@@ -60,7 +59,7 @@ this.createjs = this.createjs || {};
 	 **/
   p.redMultiplier = 1;
 
-  /** 
+  /**
 	 * Green channel multiplier.
 	 * @property greenMultiplier
 	 * @type Number
@@ -115,7 +114,7 @@ this.createjs = this.createjs || {};
 	 * @method initialize
 	 * @protected
 	 **/
-  p.initialize = function (redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
+  p.initialize = function(redMultiplier, greenMultiplier, blueMultiplier, alphaMultiplier, redOffset, greenOffset, blueOffset, alphaOffset) {
     this.redMultiplier = redMultiplier != null ? redMultiplier : 1;
     this.greenMultiplier = greenMultiplier != null ? greenMultiplier : 1;
     this.blueMultiplier = blueMultiplier != null ? blueMultiplier : 1;
@@ -124,7 +123,7 @@ this.createjs = this.createjs || {};
     this.greenOffset = greenOffset || 0;
     this.blueOffset = blueOffset || 0;
     this.alphaOffset = alphaOffset || 0;
-  }
+  };
 
   // public methods:
   /**
@@ -140,14 +139,14 @@ this.createjs = this.createjs || {};
 	 * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
 	 * @return {Boolean}
 	 **/
-  p.applyFilter = function (ctx, x, y, width, height, targetCtx, targetX, targetY) {
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) {
     targetCtx = targetCtx || ctx;
     if (targetX == null) { targetX = x; }
     if (targetY == null) { targetY = y; }
     try {
       var imageData = ctx.getImageData(x, y, width, height);
     } catch (e) {
-      //if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
+      // if (!this.suppressCrossDomainErrors) throw new Error("unable to access local image data: " + e);
       return false;
     }
     var data = imageData.data;
@@ -161,26 +160,25 @@ this.createjs = this.createjs || {};
     imageData.data = data;
     targetCtx.putImageData(imageData, targetX, targetY);
     return true;
-  }
+  };
 
   /**
 	 * Returns a string representation of this object.
 	 * @method toString
 	 * @return {String} a string representation of the instance.
 	 **/
-  p.toString = function () {
+  p.toString = function() {
     return "[ColorFilter]";
-  }
-
+  };
 
   /**
 	 * Returns a clone of this ColorFilter instance.
 	 * @method clone
 	 * @return {ColorFilter} A clone of the current ColorFilter instance.
 	 **/
-  p.clone = function () {
+  p.clone = function() {
     return new ColorFilter(this.redMultiplier, this.greenMultiplier, this.blueMultiplier, this.alphaMultiplier, this.redOffset, this.greenOffset, this.blueOffset, this.alphaOffset);
-  }
+  };
 
   createjs.ColorFilter = ColorFilter;
 }());

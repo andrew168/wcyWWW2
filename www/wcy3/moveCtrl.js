@@ -6,14 +6,14 @@
 
 window.TQ = window.TQ || {};
 
-TQ.MoveCtrl = (function () {
-  var TO_TOP = 99999,
-    TO_BOTTOM = -99999,
-    _stage = null,
-    _queue = [],
-    _direction,
-    _accumulateStep = 0, // 连续Z向移动， 距离越远， 移动的越多。与鼠标运动快慢， 一致。
-    _lastItemId = -1;
+TQ.MoveCtrl = (function() {
+  var TO_TOP = 99999;
+  var TO_BOTTOM = -99999;
+  var _stage = null;
+  var _queue = [];
+  var _direction;
+  var _accumulateStep = 0; // 连续Z向移动， 距离越远， 移动的越多。与鼠标运动快慢， 一致。
+  var _lastItemId = -1;
 
   var _self = {
     initialize: initialize,
@@ -28,7 +28,7 @@ TQ.MoveCtrl = (function () {
   function initialize() {
     _queue.splice(0);
     _direction = 1;
-    $(document).mouseup(function () {
+    $(document).mouseup(function() {
       _accumulateStep = 0;
     });
   }
@@ -42,13 +42,13 @@ TQ.MoveCtrl = (function () {
     var target = ele.displayObj;
     // offset 是 hit点与图像定位点之间的偏移， 在MouseDown的时候由Element的onPress计算的
     var deltaY = TQ.Utility.deltaYinWorld(target, offset, ev);
-    var step = Math.floor(deltaY /TQ.Config.MouseSensitivity);
-    var deltaStep = (isSameItem(target))? (step - _accumulateStep) : step;
+    var step = Math.floor(deltaY / TQ.Config.MouseSensitivity);
+    var deltaStep = (isSameItem(target)) ? (step - _accumulateStep) : step;
     if (deltaStep != 0) {
       _accumulateStep = step;
       _doMoveZ(ele, deltaStep);
-      TQ.Log.out("ID:" + _lastItemId + "sum" + _accumulateStep
-                +", step: " + step + ", delta: " + deltaStep);
+      TQ.Log.out("ID:" + _lastItemId + "sum" + _accumulateStep +
+                ", step: " + step + ", delta: " + deltaStep);
       TQ.DirtyFlag.setElement(ele, true);
     }
   }
@@ -59,9 +59,9 @@ TQ.MoveCtrl = (function () {
       _stage = TQ.Graphics.getStage();
     }
 
-    var oldZ = (step >0) ? ele.getMaxZ(): ele.getMinZ();  // 防止，目标z落在自身
-    if ((oldZ <= 0) && (step <=0)) { // 已经是最底层， 不能再move了
-      TQ.MessageBox.toast(TQ.Locale.getStr('already in lowest layer!'));
+    var oldZ = (step > 0) ? ele.getMaxZ() : ele.getMinZ(); // 防止，目标z落在自身
+    if ((oldZ <= 0) && (step <= 0)) { // 已经是最底层， 不能再move了
+      TQ.MessageBox.toast(TQ.Locale.getStr("already in lowest layer!"));
     } else {
       step = zAdjustForGroup(oldZ, step); // 防止目标z录入复合体内
       if (step === 0) {
@@ -73,12 +73,12 @@ TQ.MoveCtrl = (function () {
   }
 
   function zAdjustForGroup(oldZ, step) {
-    var maxZ,
-      newZ = oldZ + step;
+    var maxZ;
+    var newZ = oldZ + step;
     if (newZ < 0) {
       newZ = 0;
     } else {
-      if (newZ > (maxZ = (_stage.getNumChildren()-1))) {
+      if (newZ > (maxZ = (_stage.getNumChildren() - 1))) {
         newZ = maxZ;
       }
     }
@@ -150,11 +150,11 @@ TQ.MoveCtrl = (function () {
   function _doMoveZ(ele, step) {
     var target = ele.displayObj;
     // move up the selected object toward more visible
-    if (null != target) {
+    if (target != null) {
       _moveZOne(ele);
       _lastItemId = target.id;
-      if (!!ele.children) {
-        for (var i=0; i< ele.children.length; i++) {
+      if (ele.children) {
+        for (var i = 0; i < ele.children.length; i++) {
           var child = ele.children[i];
           if (!child.isEditorEle()) {
             _doMoveZ(child, step);
@@ -164,8 +164,7 @@ TQ.MoveCtrl = (function () {
     }
   }
 
-  function _moveZOne(ele)
-  {
+  function _moveZOne(ele) {
     if (!_stage) {
       _stage = TQ.Graphics.getStage();
     }
@@ -173,7 +172,7 @@ TQ.MoveCtrl = (function () {
     if (!ele.displayObj) return;
     var id = _stage.getChildIndex(ele.displayObj);
     if (id >= 0) {
-      _queue.push({"id": id, "ele":ele});
+      _queue.push({ "id": id, "ele": ele });
     }
   }
 
@@ -191,22 +190,22 @@ TQ.MoveCtrl = (function () {
     var num = _queue.length;
     if (num > 0) {
       if (_direction < 0) {
-        _queue.sort(function(a, b) {return a.id - b.id;})
+        _queue.sort(function(a, b) { return a.id - b.id; });
       } else {
-        _queue.sort(function(a, b) {return b.id - a.id;})
+        _queue.sort(function(a, b) { return b.id - a.id; });
       }
       var step = _direction;
       // 上移一层但是已经到顶，或者下移一层但是已经到底， 就不再操作）
-      if ( (step == 1) && ((_stage.getNumChildren() - 1) == _queue[0].id)) {return; }
-      if ( (step == -1) && (0 == _queue[0].id)) {return; }
+      if ((step == 1) && ((_stage.getNumChildren() - 1) == _queue[0].id)) { return; }
+      if ((step == -1) && (_queue[0].id == 0)) { return; }
       // 到底、到顶操作：确保各个子元素的移动距离是一样的， 不能都奔到最顶最低
       if (step === TO_TOP) {
         step = (_stage.getNumChildren() - 1) - _queue[0].id;
       } else if (step === TO_BOTTOM) {
-        step = - _queue[0].id;
+        step = -_queue[0].id;
       }
       if (step == 0) return;
-      for (var i = 0; i < num; i ++) {
+      for (var i = 0; i < num; i++) {
         var item = _queue.shift();
         _doMoveZOne(item.ele, step);
         if (item.ele) {
@@ -216,13 +215,12 @@ TQ.MoveCtrl = (function () {
     }
 
     // 在IOS上， 迫使系统再次刷新,
-    setTimeout(function(){
+    setTimeout(function() {
       TQ.DirtyFlag.setElement(lastEditableEle);
     });
   }
 
-  function _doMoveZOne(ele, step)
-  {
+  function _doMoveZOne(ele, step) {
     if (!_stage) {
       _stage = TQ.Graphics.getStage();
     }
@@ -233,7 +231,7 @@ TQ.MoveCtrl = (function () {
     if (id >= 0) {
       var newId = TQ.MathExt.range(id + step, 0, _stage.getNumChildren() - 1);
       if (id != newId) {
-        if ((step > 1) || (step < -1))  { // move to Top, or Bottom
+        if ((step > 1) || (step < -1)) { // move to Top, or Bottom
           _stage.setChildIndex(ele.displayObj, newId);
         } else {
           _stage.swapChildrenAt(id, newId);

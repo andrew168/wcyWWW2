@@ -1,19 +1,19 @@
 /**
  * Created by Andrewz on 1/24/2016.
  */
-var assert = require('assert'),
-  Const = require('../base/const'),
-  userController = require('../db/user/userController'),
-  onlineUsers = require('./onlineUsers'),
-  onlineWxUsers = require('./onlineWxUsers'),
-  serverConfig = require('./../bin/serverConfig'),
-  authHelper = require('../routes/authHelper');
+var assert = require("assert");
+var Const = require("../base/const");
+var userController = require("../db/user/userController");
+var onlineUsers = require("./onlineUsers");
+var onlineWxUsers = require("./onlineWxUsers");
+var serverConfig = require("./../bin/serverConfig");
+var authHelper = require("../routes/authHelper");
 
-var ANONYMOUS = "anonymous",
-  defaultUserId = 0, // 缺省用户总是“新用户”，
-  COOKIE_LIFE = (90*24*60*60*1000); // 90 days
+var ANONYMOUS = "anonymous";
+var defaultUserId = 0; // 缺省用户总是“新用户”，
+var COOKIE_LIFE = (90 * 24 * 60 * 60 * 1000); // 90 days
 var user = {
-  ID:0,
+  ID: 0,
   loggedIn: false,
   isRegistered: false,
   name: ANONYMOUS,
@@ -23,7 +23,7 @@ var user = {
 
 function extendWithoutObject(target, source) {
   for (var prop in source) {
-    if (!source.hasOwnProperty(prop) || ((typeof (source[prop])) === 'object')) {
+    if (!source.hasOwnProperty(prop) || ((typeof (source[prop])) === "object")) {
       continue;
     }
     target[prop] = source[prop];
@@ -41,13 +41,13 @@ function onLoginSucceed(req, res, data, tokenId, authInfo) {
   setUserCookie(user, res);
 
   setTimeout(function() {
-    //case： 在同一台机器上， 分别用不同的账号，登录， 退出
+    // case： 在同一台机器上， 分别用不同的账号，登录， 退出
     onlineUsers.add(user, tokenId);
     if (authInfo && (authInfo.authorizer === Const.AUTH.WX)) {
-      if (!!authInfo.wx) {
+      if (authInfo.wx) {
         onlineWxUsers.add(user, authInfo.wx);
       }
-      if (!!authInfo.wxCode) {
+      if (authInfo.wxCode) {
         onlineWxUsers.add(user, authInfo.wxCode);
       }
     }
@@ -77,30 +77,30 @@ function logUser(user, req, res, callback) {
     return;
   }
 
-  var ua = req.headers['user-agent'],
-    ip = req.ip,
-    url = req.originalUrl || req.path,
-    ips = req.ips;
+  var ua = req.headers["user-agent"];
+  var ip = req.ip;
+  var url = req.originalUrl || req.path;
+  var ips = req.ips;
 
-  validateUser(req, res, function () {
+  validateUser(req, res, function() {
     console.log("access: user=" + JSON.stringify(user) + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
     if (callback) {
       callback();
     }
-  }, function (msg) {
+  }, function(msg) {
     console.log("非法逻辑，非法用户，新add也不成功，: user=" + JSON.stringify(user) + ", url=" + url + ", ip = " + ip + ", ua=" + ua + ", ips=" + ips);
     console.log(msg);
     if (callback) {
       callback(msg);
     }
-  })
+  });
 }
 
 function setUserCookie(user, res, callback) {
   try {
     user.timesCalled++;
-    res.cookie('timesCalled', user.timesCalled.toString(), {maxAge: COOKIE_LIFE, httpOnly: true, path: '/'});
-    res.clearCookie('oldCookie1');
+    res.cookie("timesCalled", user.timesCalled.toString(), { maxAge: COOKIE_LIFE, httpOnly: true, path: "/" });
+    res.clearCookie("oldCookie1");
   } catch (err) {
     console.error("error in set cookie!");
   }
@@ -111,8 +111,8 @@ function setUserCookie(user, res, callback) {
 }
 
 function validateUser(req, res, callback, onError) {
-  user.ID = getCookieNumber(req, 'userId', defaultUserId);
-  user.timesCalled = getCookieNumber(req, 'timesCalled', 0);
+  user.ID = getCookieNumber(req, "userId", defaultUserId);
+  user.timesCalled = getCookieNumber(req, "timesCalled", 0);
   if (isNewUser(user.ID)) {
     user.timesCalled = 0;
     userController.add(req, function(doc) {
@@ -192,13 +192,13 @@ function getUserInfoByTokenId(tokenId, userId) {
 }
 
 function getUserIdFromCookie(req, res) {
-  return getCookieNumber(req, 'userId', defaultUserId);
+  return getCookieNumber(req, "userId", defaultUserId);
 }
 
 exports.getUserInfo = getUserInfo;
 exports.getUserInfo2 = getUserInfo2;
 exports.getUserInfoByTokenId = getUserInfoByTokenId;
-exports.getUserIdFromCookie = getUserIdFromCookie; //TBD
+exports.getUserIdFromCookie = getUserIdFromCookie; // TBD
 exports.logUser = logUser;
 exports.setUserCookie = setUserCookie;
 exports.onLoginSucceed = onLoginSucceed;

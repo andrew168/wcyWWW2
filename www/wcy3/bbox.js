@@ -3,27 +3,27 @@
  * 专利产品 领先技术
  */
 TQ = TQ || {};
-(function () {
+(function() {
   /*
      BBox是一种特殊的修饰品Decoration. 也是Element类的子类.
      它同时含有边界盒的几何数据和图形显示信息。
      它的角度总是水平，不随host旋转。但是， 会计算新的大小和位置，确保它是boundary box
      */
   function BBox(level, desc, host) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc !== "string"); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
     this.host = host;
     TQ.Element.call(this, level, desc); // 调用父类的初始化函数， 在子类构造函数中
   }
 
-  BBox.CHANGED = 'bbox changed';
+  BBox.CHANGED = "bbox changed";
   var showPointOn = false;
-  var p = BBox.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
+  var p = BBox.prototype = Object.create(TQ.Element.prototype); // 继承父类的函数, 子类构造函数的参数，限制少
 
-  p.constructor = BBox; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
+  p.constructor = BBox; // 把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
   p._parent_update = p.update;
 
-  p.update = function (t, noRecording) {
-    if (!this.host) {  // 发生在删除， detach的时候
+  p.update = function(t, noRecording) {
+    if (!this.host) { // 发生在删除， detach的时候
       return;
     }
     if (this.dirty || this.dirty2) {
@@ -34,11 +34,11 @@ TQ = TQ || {};
     this.jsonObj.pivotX = 0.5;
     this.jsonObj.pivotY = -0.5;
     this.setTRSAVZ();
-    TQ.Log.debugInfo("BBOX: jsonObj = " + this.jsonObj.x + ',' + this.jsonObj.y);
+    TQ.Log.debugInfo("BBOX: jsonObj = " + this.jsonObj.x + "," + this.jsonObj.y);
     this.dirty = this.dirty2 = false;
   };
 
-  p.updateLayer = function () { //  总是紧接着host的下一层
+  p.updateLayer = function() { //  总是紧接着host的下一层
     var hostZ = this.host.getZ();
     if (hostZ !== (this.getZ() + 1)) {
       // 新添加， 在host之后添加的， 所以在host之上
@@ -47,7 +47,7 @@ TQ = TQ || {};
     }
   };
 
-  p.createImage = function () {
+  p.createImage = function() {
     // 将替换已有的image，如果有的话
     var s = this.displayObj;
     if (!s) {
@@ -56,41 +56,41 @@ TQ = TQ || {};
     }
 
     s.graphics.clear(); // 清除老的边框
-    var radius = 0,
-      bbox = this.jsonObj.bbox;
+    var radius = 0;
+    var bbox = this.jsonObj.bbox;
     TQ.Graphics.drawRectC(s, 0, 0, bbox.w, bbox.h, radius);
   };
 
-  p.createModal = function () {
-    var hasPoint = false,
-      boxChanged = false;
+  p.createModal = function() {
+    var hasPoint = false;
+    var boxChanged = false;
     if (this.host.has(TQ.ElementType.POINT)) {
       hasPoint = true;
     }
 
-    var bbox = {},
-      host = this.host,
-      pivotX = host.jsonObj.pivotX,
-      pivotY = host.jsonObj.pivotY,
-      w = host.getWidth(),
-      h = host.getHeight(),
-      x1 = -pivotX * w,
-      y1 = -pivotY * h,
-      x2 = x1 + w,
-      y2 = y1 + h,
-      objPts = [
-        {x: x1, y: y1},
-        {x: x2, y: y1},
-        {x: x2, y: y2},
-        {x: x1, y: y2}];
+    var bbox = {};
+    var host = this.host;
+    var pivotX = host.jsonObj.pivotX;
+    var pivotY = host.jsonObj.pivotY;
+    var w = host.getWidth();
+    var h = host.getHeight();
+    var x1 = -pivotX * w;
+    var y1 = -pivotY * h;
+    var x2 = x1 + w;
+    var y2 = y1 + h;
+    var objPts = [
+      { x: x1, y: y1 },
+      { x: x2, y: y1 },
+      { x: x2, y: y2 },
+      { x: x1, y: y2 }];
 
     if (host.jsonObj.M) {
       TQ.Log.matrixDebugInfo("bbox", host.jsonObj.M);
     }
 
-    objPts.forEach(function (pt) {
+    objPts.forEach(function(pt) {
       if (!hasPoint && showPointOn) {
-        TQ.Point.attachTo(host, {obj: pt, world: null});
+        TQ.Point.attachTo(host, { obj: pt, world: null });
       }
       pt = host.object2World(pt);
       if ((bbox.xmin === undefined) || (bbox.xmin > pt.x)) {
@@ -121,27 +121,27 @@ TQ = TQ || {};
     }
 
     if (boxChanged && host.getBBox()) {
-      TQ.Base.Utility.triggerEvent(document, BBox.CHANGED, {element: host});
+      TQ.Base.Utility.triggerEvent(document, BBox.CHANGED, { element: host });
     }
   };
 
   p.getBBoxTopRight = function() {
-    return {x: this.jsonObj.bbox.xmax, y: this.jsonObj.bbox.ymax};
+    return { x: this.jsonObj.bbox.xmax, y: this.jsonObj.bbox.ymax };
   };
 
-  p.getBBoxBottomRight = function () {
-    return {x: this.jsonObj.bbox.xmax, y: this.jsonObj.bbox.ymin};
+  p.getBBoxBottomRight = function() {
+    return { x: this.jsonObj.bbox.xmax, y: this.jsonObj.bbox.ymin };
   };
 
   p.getBBoxTopLeft = function() {
-    return {x: this.jsonObj.bbox.xmin, y: this.jsonObj.bbox.ymax};
+    return { x: this.jsonObj.bbox.xmin, y: this.jsonObj.bbox.ymax };
   };
 
-  p.getBBoxBottomLeft = function () {
-    return {x: this.jsonObj.bbox.xmin, y: this.jsonObj.bbox.ymin};
+  p.getBBoxBottomLeft = function() {
+    return { x: this.jsonObj.bbox.xmin, y: this.jsonObj.bbox.ymin };
   };
-  p._doLoad = function () {
-    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
+  p._doLoad = function() {
+    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
     var jsonObj = this.jsonObj;
     var s = new createjs.Shape();
     this.loaded = true;
@@ -155,43 +155,43 @@ TQ = TQ || {};
     }
   };
 
-  p.apply = function (ele) {
+  p.apply = function(ele) {
     this.dirty2 = true;
   };
 
-  p.isBBox = function () {
+  p.isBBox = function() {
     return true;
   };
 
-  p.isHighlighter = function () {
+  p.isHighlighter = function() {
     return true;
   };
 
-  p.isEditable = function () {
+  p.isEditable = function() {
     return false;
   };
 
-  p.canSave = function () {
+  p.canSave = function() {
     return false;
   };
 
-  p.getWidth = function () {
+  p.getWidth = function() {
     return (this.jsonObj.bbox.w);
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return (this.jsonObj.bbox.h);
   };
 
-  p.allowRecording = function () {
+  p.allowRecording = function() {
     return false;
   };
 
-  p.toJSON = function () { // 不保存
+  p.toJSON = function() { // 不保存
     return null;
   };
 
-  p.recycle = p.moveToTop = p.reset = function () {
+  p.recycle = p.moveToTop = p.reset = function() {
   };
 
   function compose(host) {
@@ -210,16 +210,16 @@ TQ = TQ || {};
     return jsonObj;
   }
 
-  BBox.attachTo = function (host) {
+  BBox.attachTo = function(host) {
     TQ.AssertExt.isNotNull(host);
     if (host && !host.hasBBox()) {
-      var desc = compose(host),
-        bbox = TQ.Element.build(host.level, desc, host);
+      var desc = compose(host);
+      var bbox = TQ.Element.build(host.level, desc, host);
       host.attachDecoration([bbox]);
     }
   };
 
-  BBox.detachFrom = function (host) {
+  BBox.detachFrom = function(host) {
     TQ.AssertExt.isNotNull(host);
     TQ.AssertExt.isNotNull(host.hasBBox);
     if (host && host.hasBBox()) {

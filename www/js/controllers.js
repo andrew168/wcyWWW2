@@ -1,33 +1,31 @@
 var howlerPlayer;
 
-angular.module('starter').controller('DashCtrl', DashCtrl);
-DashCtrl.$inject = ['$scope', 'WCY',
-  '$cordovaSocialSharing',
-  'FileService', 'NetService', 'DeviceService', 'WxService', 'EditorService',
-  'AppService', 'MatLibService', 'UserService', 'DataService'];
+angular.module("starter").controller("DashCtrl", DashCtrl);
+DashCtrl.$inject = ["$scope", "WCY",
+  "$cordovaSocialSharing",
+  "FileService", "NetService", "DeviceService", "WxService", "EditorService",
+  "AppService", "MatLibService", "UserService", "DataService"];
 
 function DashCtrl($scope, WCY,
   $cordovaSocialSharing,
   FileService, NetService, DeviceService, WxService, EditorService,
   AppService, MatLibService, UserService, DataService) {
-
   var vm = this;
   $scope.font = {
     selectedValue: null,
-    selectedSingle: 'Samantha',
-    selectedSingleKey: '5'
+    selectedSingle: "Samantha",
+    selectedSingleKey: "5"
   };
-
 
   $scope.timelineSlider = TQ.TimerUI.rangeSlider;
   $scope.fontSizes = [
-    {value: 1, size: '1'},
-    {value: 2, size: '2'},
-    {value: 3, size: '3'},
-    {value: 4, size: '4'},
-    {value: 5, size: '5'},
-    {value: 6, size: '6'},
-    {value: 7, size: '7'}];
+    { value: 1, size: "1" },
+    { value: 2, size: "2" },
+    { value: 3, size: "3" },
+    { value: 4, size: "4" },
+    { value: 5, size: "5" },
+    { value: 6, size: "6" },
+    { value: 7, size: "7" }];
 
   $scope.localImage1 = null;
   $scope.localImage2 = null;
@@ -40,21 +38,20 @@ function DashCtrl($scope, WCY,
   $scope.testPrompt = testPrompt;
   $scope.testDataService = testDataService;
 
-
   // implementation, abc order
   function testShowMsg() {
-    TQ.MessageBox.showWaiting(TQ.Locale.getStr('loading...'));
+    TQ.MessageBox.showWaiting(TQ.Locale.getStr("loading..."));
   }
 
   function testPrompt() {
-    TQ.MessageBox.prompt(TQ.Locale.getStr('Are you sure?'));
+    TQ.MessageBox.prompt(TQ.Locale.getStr("Are you sure?"));
   }
 
   // AppService.onAppStarting(onAppStaring);
   AppService.onAppStarted(onAppStarted);
 
   function onAppStarted() {
-    //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
+    // TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
     TQ.Log.checkPoint("App Started");
     var opus = TQ.QueryParams.shareCode;
     EditorService.initialize();
@@ -66,30 +63,29 @@ function DashCtrl($scope, WCY,
   }
 
   if (TQ.Config.TECH_TEST1_LOCAL_CACHE_ON) {
-    $(document).ready(function () {
-      $('#clear_cache').click(function (e) {
+    $(document).ready(function() {
+      $("#clear_cache").click(function(e) {
         e.preventDefault();
         ImgCache.clearCache();
         TQ.DownloadManager.clearCache();
       });
-      $('#cache_folder').click(function (e) {
+      $("#cache_folder").click(function(e) {
         e.preventDefault();
         window.open(DeviceService.getRootFolder());
       });
     });
   }
 
-
   // WCY.test();
   $scope.params = 0;
-  $scope.getTextMsg = function () {
-    var msg = (( !currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name)) ?
-      "" : currScene.currentLevel.name;
+  $scope.getTextMsg = function() {
+    var msg = ((!currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.name))
+      ? "" : currScene.currentLevel.name;
 
     return msg + ": " + TQ.FrameCounter.t();
   };
 
-  $scope.testCreateLevel = function () {
+  $scope.testCreateLevel = function() {
     var id = currScene.currentLevelId;
     currScene.addLevel(id);
     currScene.gotoLevel(id);
@@ -105,13 +101,13 @@ function DashCtrl($scope, WCY,
   };
 
   var testUserId = Date.now(); // // "TestAuth100007",
-  $scope.setAdmin = function () {
+  $scope.setAdmin = function() {
     TQ.AssertExt.InvalidLog(TQ.userProfile.name != "toronto1111"); // 必须登陆为User "toronto1111";
 
     // 设置User 1为Admin， 在之前、之后分别list全部user， 查看其权限，比较变化
     var userId = 1;
     UserService.getUserList();
-    UserService.setAdmin(userId).then(function () {
+    UserService.setAdmin(userId).then(function() {
       var list = UserService.getUserList();
       console.log(list.toString());
     });
@@ -121,34 +117,34 @@ function DashCtrl($scope, WCY,
     WCY.saveOpusAndScreenshot();
   };
 
-  $scope.testSignUp = function () {
-    var email = '8' + (++testUserId) + "@samplexyz.com";
+  $scope.testSignUp = function() {
+    var email = "8" + (++testUserId) + "@samplexyz.com";
     UserService.signUp({
       email: email,
-      password: 'pswwwwww' + testUserId,
-      displayName: 'display' + testUserId,
+      password: "pswwwwww" + testUserId,
+      displayName: "display" + testUserId,
       userType: 1,
-      groupId: '1111'
-    }).then(function (data) {
+      groupId: "1111"
+    }).then(function(data) {
       console.log("signUp successfully!" + data);
     });
   };
-  
-  $scope.testLogin = function (id) {
-    UserService.login('toronto' + id, 'toronto' + id).
-      then(function() {
+
+  $scope.testLogin = function(id) {
+    UserService.login("toronto" + id, "toronto" + id)
+      .then(function() {
         if (TQ.userProfile.loggedIn) {
           DataService.reload();
         }
       });
   };
 
-  $scope.testWxLogin = function (id) {
-    var wxBoneToken = 'code123456ABC#%^*()', displayName = '大写小写特殊码';
-    UserService.loginFromWx(wxBoneToken, displayName).then(function () {
+  $scope.testWxLogin = function(id) {
+    var wxBoneToken = "code123456ABC#%^*()"; var displayName = "大写小写特殊码";
+    UserService.loginFromWx(wxBoneToken, displayName).then(function() {
       if (TQ.userProfile.loggedIn) {
         DataService.reload();
-        console.log('OOOOOOOOOK!');
+        console.log("OOOOOOOOOK!");
       }
     });
   };
@@ -158,31 +154,31 @@ function DashCtrl($scope, WCY,
   };
 
   $scope.testLogout = function() {
-    UserService.logout().
-      then(function() {
-        TQ.Log.debugInfo('logout successfully!');
+    UserService.logout()
+      .then(function() {
+        TQ.Log.debugInfo("logout successfully!");
       });
   };
-  $scope.refineOpus = function () {
-    EditorService.refineOpus({wcyId: 2167});
+  $scope.refineOpus = function() {
+    EditorService.refineOpus({ wcyId: 2167 });
   };
-  $scope.banOpus = function () {
-    EditorService.banOpus({wcyId: 2167});
+  $scope.banOpus = function() {
+    EditorService.banOpus({ wcyId: 2167 });
   };
-  $scope.addSprite = function () {
+  $scope.addSprite = function() {
     EditorService.addSprite({
-      public_id: 'c344',
+      public_id: "c344",
       matType: TQ.MatType.SOUND,
       extra: {
         spriteMap: [
-          'smile',
-          'cry',
-          'afraid'
+          "smile",
+          "cry",
+          "afraid"
         ],
         sprite: {
-          'smile': [0, 1500],
-          'cry': [2000, 800],
-          'afraid': [3000, 1500]
+          "smile": [0, 1500],
+          "cry": [2000, 800],
+          "afraid": [3000, 1500]
         }
       }
     });
@@ -196,7 +192,7 @@ function DashCtrl($scope, WCY,
     EditorService.deleteCurrentLevel();
   };
 
-  $scope.gotoPreLevel = function () {
+  $scope.gotoPreLevel = function() {
     EditorService.gotoPreviousLevel();
   };
 
@@ -205,7 +201,7 @@ function DashCtrl($scope, WCY,
   };
 
   $scope.isPlaying = TQ.FrameCounter.isPlaying();
-  $scope.onChange = function () {
+  $scope.onChange = function() {
     $scope.isPlaying = !$scope.isPlaying;
     if ($scope.isPlaying) {
       TQ.FrameCounter.play();
@@ -214,9 +210,9 @@ function DashCtrl($scope, WCY,
     }
   };
 
-  var x = 300,
-    y = 300;
-  $scope.testInsert = function () {
+  var x = 300;
+  var y = 300;
+  $scope.testInsert = function() {
     x = currScene.getDesignatedWidth() / 2;
     y = currScene.getDesignatedHeight() / 2;
     EditorService.insertText("国hello", x, y);
@@ -228,12 +224,12 @@ function DashCtrl($scope, WCY,
     EditorService.insertPropImage(prop, 300, 300);
   };
 
-  $scope.insertPeople = function () {
+  $scope.insertPeople = function() {
     EditorService.insertPeopleImage("https://res.cloudinary.com/eplan/image/upload/v1501348053/c29.png",
       200, 300, TQ.Element.FitFlag.NO);
   };
 
-  $scope.insertIComponent = function () {
+  $scope.insertIComponent = function() {
     var iComponentId = 4698;
     // var iComponentId = 4725;
     // var iComponentId = 4727;
@@ -243,18 +239,18 @@ function DashCtrl($scope, WCY,
       200, 300, TQ.Element.FitFlag.NO);
   };
 
-  $scope.insertBkImage = function () {
+  $scope.insertBkImage = function() {
     EditorService.insertBkImage("https://res.cloudinary.com/eplan/image/upload/v1484036387/c1.png",
       300, 300);
     // EditorService.gotoNextLevel();
   };
 
-  $scope.insertSound = function () {
-    EditorService.insertSound('https://res.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3');
+  $scope.insertSound = function() {
+    EditorService.insertSound("https://res.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3");
     // EditorService.gotoNextLevel();
   };
 
-  $scope.insertCircle = function () {
+  $scope.insertCircle = function() {
     EditorService.insertCircle(0, 0, 10);
     EditorService.insertCircle(100, 0, 10);
     EditorService.insertCircle(200, 0, 10);
@@ -269,7 +265,7 @@ function DashCtrl($scope, WCY,
     EditorService.insertCircle(200, 300, 10);
   };
 
-  $scope.insertRectangle = function () {
+  $scope.insertRectangle = function() {
     EditorService.insertRectangle(0, 0, 100, 100);
     EditorService.insertRectangle(100, 0, 100, 100);
     EditorService.insertRectangle(200, 0, 100, 100);
@@ -290,70 +286,70 @@ function DashCtrl($scope, WCY,
     EditorService.stopRecord();
   };
 
-  $scope.setBigFont = function () {
+  $scope.setBigFont = function() {
     var ele = TQ.SelectSet.peek();
     if (ele && ele.isText()) {
-      var fontLevel = '7';
+      var fontLevel = "7";
       EditorService.state.fontLevel = fontLevel;
       ele.setSize(EditorService.state.getFontSize());
     }
   };
 
-  $scope.setColor = function (colorPicker) {
+  $scope.setColor = function(colorPicker) {
     var ele = TQ.SelectSet.peek();
     if (ele && ele.isText()) {
-      var color = '#' + colorPicker.toString();
+      var color = "#" + colorPicker.toString();
       EditorService.state.fontColor = color;
       ele.setColor(color);
     }
   };
 
-  $scope.insertFromCamera = function () {
+  $scope.insertFromCamera = function() {
     TQ.CameraService.insertFromCamera();
   };
 
   function insertPropFromLocal(evt) {
-    var matType = TQ.MatType.PROP,
-      useDevice = false;
+    var matType = TQ.MatType.PROP;
+    var useDevice = false;
     console.log(evt);
-    let files = TQ.Utility.getFilesFromEvent(evt);    
-    if (!!files) {
+    const files = TQ.Utility.getFilesFromEvent(evt);
+    if (files) {
       EditorService.loadLocalImage(matType, useDevice, evt.target.files, onLocalImageLoaded);
     }
   }
-  
+
   var _currentMusic = null;
   function insertSoundFromLocal(evt) {
     console.log(evt);
     var matType = TQ.MatType.SOUND;
-    let useDevice = false;
-    let files = TQ.Utility.getFilesFromEvent(evt);
-    if (!!files) {
+    const useDevice = false;
+    const files = TQ.Utility.getFilesFromEvent(evt);
+    if (files) {
       EditorService.loadLocalSound(matType, useDevice, files, onLocalSoundLoaded);
     }
   }
 
   $scope.insertSoundFromRecorder = function(evt) {
-    let useDevice = true;
+    const useDevice = true;
     var matType = TQ.MatType.SOUND;
     EditorService.loadLocalSound(matType, useDevice, null, onLocalSoundLoaded);
-  }
+  };
 
-  setTimeout(function () {
+  setTimeout(function() {
     document.getElementById("id-input-image").addEventListener("change", insertPropFromLocal);
     document.getElementById("id-input-sound").addEventListener("change", insertSoundFromLocal);
   });
 
   function onLocalSoundLoaded(desc, fileOrBlob, matType) {
-    desc.isCrossLevel = (TQUtility.isSoundFile(fileOrBlob) ? true : false); //假设：本地文件是背景音， 录音是本场景的
+    desc.isCrossLevel = (!!TQUtility.isSoundFile(fileOrBlob)); // 假设：本地文件是背景音， 录音是本场景的
     if (TQUtility.isSoundFile(fileOrBlob)) {
       doAddLocalSound(desc, fileOrBlob);
-    } else {// 实时录音
+    } else { // 实时录音
       lastVoiceRecording = {
         desc: desc,
         fileOrBlob: fileOrBlob
       };
-      onTryMusic({path: desc.src});
+      onTryMusic({ path: desc.src });
     }
   }
 
@@ -364,7 +360,7 @@ function DashCtrl($scope, WCY,
     TQ.ResourceSync.local2Cloud(ele, fileOrBlob, TQ.MatType.SOUND);
   }
 
-  $scope.stopAudioRecording = function () {
+  $scope.stopAudioRecording = function() {
     if (TQ.AudioRecorder.isRecording) {
       return TQ.AudioRecorder.stop();
     }
@@ -381,28 +377,28 @@ function DashCtrl($scope, WCY,
     }
   }
 
-  $scope.onStopTryMusic = function () {
+  $scope.onStopTryMusic = function() {
     if (_currentMusic && _currentMusic.path) {
       TQ.SoundMgr.stopAllDirectSound();
       _currentMusic = null;
     }
   };
 
-  $scope.playHowlerAudio = function () {
+  $scope.playHowlerAudio = function() {
     if (!howlerPlayer) {
       var spriteMap = [
-          'smile',
-          'cry',
-          'afraid'
-        ],
-        sprite = {
-          'smile': [0, 1500],
-          'cry': [2000, 800],
-          'afraid': [3000, 1500]
-        };
+        "smile",
+        "cry",
+        "afraid"
+      ];
+      var sprite = {
+        "smile": [0, 1500],
+        "cry": [2000, 800],
+        "afraid": [3000, 1500]
+      };
         // howlerPlayer = new TQ.HowlerPlayer('v1528257405/c48.mp3', sprite, spriteMap);
       howlerPlayer = EditorService.insertSound({
-        src: 'https://res.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3',
+        src: "https://res.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3",
         sprite: sprite,
         spriteMap: spriteMap
       });
@@ -410,14 +406,13 @@ function DashCtrl($scope, WCY,
     // howlerPlayer.play(false, 'smile');
     howlerPlayer.playNextSound();
   };
-  $scope.pauseHowlerAudio = function () {
+  $scope.pauseHowlerAudio = function() {
     howlerPlayer.pause();
   };
 
-  $scope.deleteElement = function () {
+  $scope.deleteElement = function() {
     TQ.SelectSet.delete();
   };
-
 
   $scope.undo = function() {
     TQ.CommandMgr.undo();
@@ -427,7 +422,7 @@ function DashCtrl($scope, WCY,
     TQ.CommandMgr.redo();
   };
 
-  $scope.testDownloadBulk = function () {
+  $scope.testDownloadBulk = function() {
     // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "ppppp111.png");
     // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p10324.png");
     // TQ.RM.addItem(TQ.Config.IMAGES_CORE_PATH + "p12504.png");
@@ -449,36 +444,36 @@ function DashCtrl($scope, WCY,
              {name:"人物", path:'mcImages/p15345.png'},
              {name:"人物", path:'mcImages/p15349.png'},
              */
-      {name: "人物", path: 'mcImages/p15357.png'},
-      {name: "人物", path: 'mcImages/p15343.png'}
+      { name: "人物", path: "mcImages/p15357.png" },
+      { name: "人物", path: "mcImages/p15343.png" }
     ];
     TQ.DownloadManager.downloadBulk(people_local);
 
-    $scope.localImage1 = DeviceService.getRootFolder() + 'mcImages/p12504.png';
-    $scope.localImage2 = DeviceService.getRootFolder() + 'mcImages/p10324.png';
+    $scope.localImage1 = DeviceService.getRootFolder() + "mcImages/p12504.png";
+    $scope.localImage2 = DeviceService.getRootFolder() + "mcImages/p10324.png";
   };
 
-  $scope.testDownload = function () {
+  $scope.testDownload = function() {
     var path = "p12504.png";
     var server1File = TQ.Config.BONE_HOST + "/mcImages/" + path;
     NetService.get(server1File);
   };
 
-  $scope.createWcy = function () {
+  $scope.createWcy = function() {
     WCY.create();
   };
 
-  $scope.testClearAll = function () {
+  $scope.testClearAll = function() {
     TQ.SceneEditor.emptyScene();
   };
 
-  $scope.uploadScreenshot = function () {
+  $scope.uploadScreenshot = function() {
     WCY.uploadScreenshot();
   };
 
-  $scope.insertBkImageFromLocal = function () {
-    var matType = TQ.MatType.BKG,
-      useDevice = true;
+  $scope.insertBkImageFromLocal = function() {
+    var matType = TQ.MatType.BKG;
+    var useDevice = true;
 
     EditorService.loadLocalImage(matType, useDevice, onLocalImageLoaded);
   };
@@ -490,11 +485,11 @@ function DashCtrl($scope, WCY,
     }
   }
 
-  $scope.saveWorks = function () {
+  $scope.saveWorks = function() {
     WCY.save();
   };
 
-  $scope.getWcy = function () {
+  $scope.getWcy = function() {
     WCY.getWcy("100_12345678_123_1234567890");
   };
 
@@ -504,39 +499,39 @@ function DashCtrl($scope, WCY,
   var subject = "title etc";
   var file = "this is file";
 
-  $scope.share = function () {
+  $scope.share = function() {
     $cordovaSocialSharing
       .share(message, subject, file, link) // Share via native share sheet
-      .then(function (result) {
-        TQ.Log.debugInfo('fb success!');
+      .then(function(result) {
+        TQ.Log.debugInfo("fb success!");
         TQ.Log.debugInfo(result);
-      }, function (err) {
-        TQ.Log.debugInfo('fb error!');
+      }, function(err) {
+        TQ.Log.debugInfo("fb error!");
         TQ.Log.error(err);
       });
   };
 
-  $scope.shareFB = function () {
+  $scope.shareFB = function() {
     EditorService.shareFbWeb();
   };
 
-  $scope.shareFbApp = function () {
+  $scope.shareFbApp = function() {
     $cordovaSocialSharing
       .shareViaFacebook(message, image, link)
-      .then(function (result) {
-        TQ.Log.debugInfo('fb success!');
+      .then(function(result) {
+        TQ.Log.debugInfo("fb success!");
         TQ.Log.debugInfo(result);
-      }, function (err) {
-        TQ.Log.debugInfo('fb error!');
+      }, function(err) {
+        TQ.Log.debugInfo("fb error!");
         TQ.Log.error(err);
       });
   };
 
-  $scope.shareWx = function () {
+  $scope.shareWx = function() {
     WxService.shareMessage();
   };
 
-  $scope.getLocale = function (id) {
+  $scope.getLocale = function(id) {
     TQ.Log.depreciated("已经被替代LocaleManager和zh.json代替");
     return {};
   };
@@ -553,11 +548,11 @@ function DashCtrl($scope, WCY,
     return TQ.Locale.getStr(tag);
   };
 
-  $scope.setLang = function (lang) {
+  $scope.setLang = function(lang) {
     return TQ.Locale.setLang(lang);
   };
 
-  $scope.$on(TQ.Scene.EVENT_END_OF_PLAY, function () {
+  $scope.$on(TQ.Scene.EVENT_END_OF_PLAY, function() {
     // EditorService.toAddMode()
   });
 
@@ -582,7 +577,7 @@ function DashCtrl($scope, WCY,
     EditorService.addTopic(topic);
   };
 
-  $scope.updateTopic = function () {
+  $scope.updateTopic = function() {
     var topic = {
       _id: 7,
       title: "小马2"
@@ -590,11 +585,11 @@ function DashCtrl($scope, WCY,
     EditorService.updateTopic(topic);
   };
 
-  $scope.getTopics = function () {
+  $scope.getTopics = function() {
     DataService.getTopics();
   };
 
-  $scope.attachTopic = function () {
+  $scope.attachTopic = function() {
     // EditorService.attachTopic(10, "218", 7);
     // EditorService.attachTopic(10, "196", 7);
     // EditorService.attachTopic(20, "271", 7);
@@ -605,15 +600,15 @@ function DashCtrl($scope, WCY,
     EditorService.attachTopic(20, "97", 7);
   };
 
-  $scope.detachTopic = function () {
+  $scope.detachTopic = function() {
     EditorService.detachTopic(30, "29", 7);
   };
 
-  $scope.getOutro = function () {
+  $scope.getOutro = function() {
     currScene.attachOutro(currScene.levels);
   };
 
-  $scope.$on(TQ.Scene.EVENT_READY, function () {
+  $scope.$on(TQ.Scene.EVENT_READY, function() {
     if (!TQ.State.isPlayOnly) {
       EditorService.toAddMode();
     }
@@ -622,7 +617,7 @@ function DashCtrl($scope, WCY,
   function initialize() {
     TQ.QueryParams = TQ.Utility.parseUrl();
     var lastOpus = null;
-    $scope.$on('$locationChangeStart', function (evt) {
+    $scope.$on("$locationChangeStart", function(evt) {
       console.log(evt);
       TQ.QueryParams = TQ.Utility.parseUrl();
       var opus = TQ.QueryParams.shareCode || TQ.QueryParamsConverted.shareCode;

@@ -4,11 +4,11 @@
  */
 
 function invalidOperation(req, res) {
-  res.json("invalid operation: " + req.url)
+  res.json("invalid operation: " + req.url);
 }
 
 function notLogin(req, res) {
-  res.json("please login: " + req.url)
+  res.json("please login: " + req.url);
 }
 
 exports.invalidOperation = invalidOperation;

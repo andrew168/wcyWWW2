@@ -7,16 +7,14 @@
 window.TQ = window.TQ || {};
 var __gGifGenerator = null;
 
-(function (){
-  function GifManager()
-  {
+(function() {
+  function GifManager() {
     assertNotHere(TQ.Dictionary.INVALID_LOGIC); // Singleton, 禁止调用
   }
   GifManager.isWorking = false;
   GifManager.isOpen = false;
 
-  GifManager.begin = function ()
-  {
+  GifManager.begin = function() {
     if (GifManager.isWorking) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return;
@@ -24,30 +22,30 @@ var __gGifGenerator = null;
 
     if (!__gGifGenerator) {
       __gGifGenerator = new GIF({
-        workers:'4',
-        quality:'90',
-        repeat:'0',
-        background:'#000000',
-        width:'180',
-        height:'180'
+        workers: "4",
+        quality: "90",
+        repeat: "0",
+        background: "#000000",
+        width: "180",
+        height: "180"
       });
     }
     GifManager.isWorking = true;
     GifManager.isOpen = true;
   };
 
-  GifManager.end = function () {
+  GifManager.end = function() {
     if (!GifManager.isOpen) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return;
     }
 
     if (__gGifGenerator) {
-      __gGifGenerator.on('finished', function (blob) {
+      __gGifGenerator.on("finished", function(blob) {
         if (TQ.Utility.hasEnv(TQ.Utility.BR_CHROME)) {
           window.open(window.webkitURL.createObjectURL(blob));
         } else {
-          window.open(window.URL.createObjectURL(blob));  // FireFox
+          window.open(window.URL.createObjectURL(blob)); // FireFox
         }
         __gGifGenerator = null;
         GifManager.isWorking = false;
@@ -59,11 +57,11 @@ var __gGifGenerator = null;
     }
   };
 
-  GifManager.addFrame = function () {
+  GifManager.addFrame = function() {
     if ((!GifManager.isOpen) || (!__gGifGenerator)) {
       return;
     }
-    __gGifGenerator.addFrame(canvas, {copy: true, delay: 20});
+    __gGifGenerator.addFrame(canvas, { copy: true, delay: 20 });
   };
 
   TQ.GifManager = GifManager;

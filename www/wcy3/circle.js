@@ -6,17 +6,17 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   // 用法: Circle是一种可变大小的简单元素. 也是Element类的子类.
   function Circle(level, desc) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc != 'string');
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc !== "string");
     TQ.Element.call(this, level, desc); // 调用父类的初始化函数， 在子类构造函数中
   }
 
-  var p = Circle.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
-  p.constructor = Circle; //把构造函数也放到prototype中, 使得copy，clone之类的函数， 可以返回本子类的类别
+  var p = Circle.prototype = Object.create(TQ.Element.prototype); // 继承父类的函数, 子类构造函数的参数，限制少
+  p.constructor = Circle; // 把构造函数也放到prototype中, 使得copy，clone之类的函数， 可以返回本子类的类别
   p.parent_fillGap = p.fillGap;
-  p.fillGap = function (desc) {
+  p.fillGap = function(desc) {
     if (desc.pivotX === undefined) {
       desc.pivotX = 0.5;
       desc.pivotY = 0.5;
@@ -34,34 +34,34 @@ TQ = TQ || {};
     return this.parent_fillGap(desc);
   };
 
-  p.createImage = function () {
+  p.createImage = function() {
     var jsonObj = this.jsonObj;
     var s = new createjs.Shape();
-    var x0 = jsonObj.x,
-      y0 = jsonObj.y,
-      w = this.getWidth(),
-      h = this.getHeight(),
-      r = jsonObj.radius;
+    var x0 = jsonObj.x;
+    var y0 = jsonObj.y;
+    var w = this.getWidth();
+    var h = this.getHeight();
+    var r = jsonObj.radius;
     s.x = x0;
     s.y = y0;
     s.graphics.clear(); // 清除老的边框
-    TQ.Graphics.drawSolidCircle(s, '#FF0000', jsonObj.pivotX * w, -jsonObj.pivotY * h, r);
+    TQ.Graphics.drawSolidCircle(s, "#FF0000", jsonObj.pivotX * w, -jsonObj.pivotY * h, r);
     return s;
   };
 
-  p._doLoad = function () {
-    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
+  p._doLoad = function() {
+    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
     this.displayObj = this.createImage();
     this.loaded = true;
     this._afterItemLoaded();
     this.setTRSAVZ();
   };
 
-  p.getWidth = function () {
+  p.getWidth = function() {
     return this.jsonObj.radius * 2;
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return this.jsonObj.radius * 2;
   };
 

@@ -4,15 +4,14 @@
  */
 window.TQ = window.TQ || {};
 
-(function () {
-  TQ.Element.upgradeToVer2 = function(desc)
-  {
+(function() {
+  TQ.Element.upgradeToVer2 = function(desc) {
     desc.version = (!desc.version) ? TQ.Element.VER1 : desc.version;
-    if (desc.isPinned == undefined) {desc.isPinned = false;}
+    if (desc.isPinned == undefined) { desc.isPinned = false; }
   };
 
   // 工厂, 根据数据制作
-  TQ.Element.build = function (level, desc, host) {
+  TQ.Element.build = function(level, desc, host) {
     if (!desc) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, !desc);
       return TQ.ERROR;
@@ -21,7 +20,7 @@ window.TQ = window.TQ || {};
     TQ.Element.upgradeToVer2(desc);
     var DescType = TQ.ElementType;
     if (!desc.eType) {
-      TQ.Log.error('未定义的元素类别eType');
+      TQ.Log.error("未定义的元素类别eType");
     }
     switch (desc.type) {
       case DescType.ANCHOR_MARKER:
@@ -63,14 +62,14 @@ window.TQ = window.TQ || {};
     return new TQ.Element(level, desc);
   };
 
-  TQ.Element.isVideo = function (filename) {
+  TQ.Element.isVideo = function(filename) {
     if (!filename) {
       return false;
     }
 
-    var videoExtension = ['mp4', 'mov'];
+    var videoExtension = ["mp4", "mov"];
     var ext = "";
-    var index = filename.lastIndexOf('.');
+    var index = filename.lastIndexOf(".");
     if (index >= 0) {
       ext = filename.substr(index + 1);
       if (videoExtension.indexOf(ext) >= 0) {
@@ -80,5 +79,4 @@ window.TQ = window.TQ || {};
 
     return false;
   };
-
 }());

@@ -8,9 +8,9 @@
 var TQ = TQ || {};
 TQ.IdleCounter = (function() {
   // 内部成员变量， 必须在return之前定义， 否则无效
-  var IDLE_DURATION = 1000, // ms
-    callbacks = [],
-    events = ['click', 'keydown', 'touchstart', 'mousedown'],//  'mousemove',  'keyup', 'touchend', 'touchmove', 'mouseup'
+  var IDLE_DURATION = 1000; // ms
+  var callbacks = [];
+  var events = ["click", "keydown", "touchstart", "mousedown"]; var //  'mousemove',  'keyup', 'touchend', 'touchmove', 'mouseup'
     watchDog = null;
 
   // 接口函数

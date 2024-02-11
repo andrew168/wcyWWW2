@@ -1,23 +1,23 @@
 /**
  * Created by admin on 11/21/2015.
  */
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var cSignature = require('../common/cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
+var cSignature = require("../common/cloundarySignature"); // 后缀.js可以省略，Node会自动查找，
 
-var createNonceStr = function () {
+var createNonceStr = function() {
   return Math.random().toString(36).substr(2, 15);
 };
 
 /* GET users listing. */
-router.get('/', function(req, res, next) {
+router.get("/", function(req, res, next) {
   var data = {
     //        nonceStr: createNonceStr(),
     public_id: req.query.filename || "no_filename"
     // tag: 'tag'
   };
 
-  cSignature.sign(data);  //data.s = signature;
+  cSignature.sign(data); // data.s = signature;
 
   console.log(req);
   res.header("Access-Control-Allow-Origin", "*");

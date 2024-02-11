@@ -5,7 +5,7 @@
  * 是singleton
  */
 TQ = TQ || {};
-(function () {
+(function() {
   function SoundMgr() {
   }
 
@@ -18,8 +18,7 @@ TQ = TQ || {};
     SoundMgr.isSupported = true;
   };
 
-  SoundMgr.start = function ()
-  {
+  SoundMgr.start = function() {
     if (!SoundMgr.isSupported) return;
 
     // ToDo: 不重复 start ??
@@ -32,7 +31,7 @@ TQ = TQ || {};
      例如： "mcSounds/test1.mp3"
      */
   var _auditioningInstance = null;
-  SoundMgr.isPlaying = function (soundInstance) {
+  SoundMgr.isPlaying = function(soundInstance) {
     return (soundInstance && soundInstance.isPlaying());
   };
   SoundMgr.play = function(id) {
@@ -46,14 +45,14 @@ TQ = TQ || {};
   };
 
   function stopAllDirectSound() {
-    if (!!_auditioningInstance) {
+    if (_auditioningInstance) {
       _auditioningInstance.stop();
       _auditioningInstance = null;
     }
   }
 
-  SoundMgr.addItem =function(ele) {
-    if (SoundMgr.items.indexOf(ele) >=0) { // 避免同一个元素（跨场景的），重复插入
+  SoundMgr.addItem = function(ele) {
+    if (SoundMgr.items.indexOf(ele) >= 0) { // 避免同一个元素（跨场景的），重复插入
       return;
     }
     SoundMgr.items.push(ele);
@@ -67,16 +66,16 @@ TQ = TQ || {};
     }
   };
 
-  SoundMgr.pause = function () {
-    for (var i = SoundMgr.items.length; i--; ) {
+  SoundMgr.pause = function() {
+    for (var i = SoundMgr.items.length; i--;) {
       SoundMgr.items[i].pause();
     }
   };
 
-  SoundMgr.resume = function (spriteName) {
+  SoundMgr.resume = function(spriteName) {
     var t = TQ.FrameCounter.t();
     for (var i = 0; i < SoundMgr.items.length; i++) {
-      var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = SoundMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       if (ele.isCrossLevel) {
         		var tt = currScene.toGlobalTime(t);
         ele.resume(tt);
@@ -88,15 +87,15 @@ TQ = TQ || {};
 
   SoundMgr.stopAll = function() {
     for (var i = 0; i < SoundMgr.items.length; i++) {
-      var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = SoundMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       ele.stop();
     }
     stopAllDirectSound();
   };
 
-  SoundMgr.iosForceToResumeAll = function () {
+  SoundMgr.iosForceToResumeAll = function() {
     for (var i = 0; i < SoundMgr.items.length; i++) {
-      var ele = SoundMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = SoundMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       if (ele.isVisible()) {
         ele.forceToReplay();
       }
@@ -104,19 +103,18 @@ TQ = TQ || {};
     stopAllDirectSound();
   };
 
-  SoundMgr.removeAll = function()
-  {
+  SoundMgr.removeAll = function() {
     // 只删除那些不跨场景的
-    for (var i = SoundMgr.items.length - 1; i >=0; i--) {
+    for (var i = SoundMgr.items.length - 1; i >= 0; i--) {
       var ele = SoundMgr.items[i];
       if (ele.isCrossLevel && !isReseting) continue;
       ele.stop();
-      SoundMgr.items.splice(i,1);
+      SoundMgr.items.splice(i, 1);
     }
     stopAllDirectSound();
   };
 
-  SoundMgr.reset = function () {
+  SoundMgr.reset = function() {
     isReseting = true;
     SoundMgr.close();
     isReseting = false;
@@ -126,7 +124,7 @@ TQ = TQ || {};
     if (!SoundMgr.isSupported) return;
     SoundMgr.stopAll();
     SoundMgr.removeAll();
-    SoundMgr.items.splice(0); //在退出微创意的时候，清除跨场景声音
+    SoundMgr.items.splice(0); // 在退出微创意的时候，清除跨场景声音
     SoundMgr.started = false;
   };
 

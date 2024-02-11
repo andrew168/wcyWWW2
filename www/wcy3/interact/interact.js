@@ -2,11 +2,11 @@
  * Created by Andrewz on 4/19/19.
  */
 var TQ = TQ || {};
-TQ.Interact = (function () {
+TQ.Interact = (function() {
   var interactOps = [
-      ['touch', onClick]
-    ],
-    startEle = null;
+    ["touch", onClick]
+  ];
+  var startEle = null;
 
   return {
     start: start,
@@ -14,7 +14,6 @@ TQ.Interact = (function () {
   };
 
   function start() {
-
     // 在playOnly和微信的未授权的时候，
     if (!TQ.TouchManager.hasInitialized()) {
       TQ.TouchManager.initialize();
@@ -25,8 +24,8 @@ TQ.Interact = (function () {
     }
 
     TQ.State.editorMode = TQ.SceneEditor.MODE.INTERACT;
-    if (!TQUtility.isMobile()) {// mobile不需要mousedown
-      interactOps['mousedown'] = onClick;
+    if (!TQUtility.isMobile()) { // mobile不需要mousedown
+      interactOps["mousedown"] = onClick;
     }
     TQ.TouchManager.save();
     TQ.TouchManager.attachOps(interactOps);

@@ -6,8 +6,8 @@
 
 window.TQ = window.TQ || {};
 
-(function () {
-  function IKCtrl () {
+(function() {
+  function IKCtrl() {
 
   }
 
@@ -15,12 +15,12 @@ window.TQ = window.TQ || {};
 
   IKCtrl.applyLimitation = applyLimitation;
   IKCtrl.do = doIK;
-  IKCtrl.rotate =rotate;
+  IKCtrl.rotate = rotate;
   IKCtrl.setLimitation = setLimitation;
 
   // 任何时候, 都是IK动画, 除非是 Break it 进入子物体编辑模式. 默认就是最好的状态, 精锐尽出
-  var EObj = null,  // E点在对象空间的坐标值， 在拖动过程中是不变的， 但是在世界坐标下是变的
-    isSimpleRotationMode = false; // 切换IK模式 和 单一物体的简单旋转模式。
+  var EObj = null; // E点在对象空间的坐标值， 在拖动过程中是不变的， 但是在世界坐标下是变的
+  var isSimpleRotationMode = false; // 切换IK模式 和 单一物体的简单旋转模式。
 
   function initialize(aStage, scene) {
   }
@@ -43,14 +43,14 @@ window.TQ = window.TQ || {};
   }
 
   function applyLimitation(child, angle) {
-    if ((child.jsonObj.angleMin != null)  || (child.jsonObj.angleMax != null)) {
-      var angleMin = child.jsonObj.angleMin, angleMax = child.jsonObj.angleMax;
+    if ((child.jsonObj.angleMin != null) || (child.jsonObj.angleMax != null)) {
+      var angleMin = child.jsonObj.angleMin; var angleMax = child.jsonObj.angleMax;
 
       var parentAngle = 0;
       if (child.parent != null) {
         parentAngle = child.parent.jsonObj.rotation;
       }
-      var relativeAngle = angle - parentAngle;  // relative to parent;
+      var relativeAngle = angle - parentAngle; // relative to parent;
       relativeAngle = TQ.MathExt.range(relativeAngle, angleMin, angleMax);
       angle = relativeAngle + parentAngle;
     }
@@ -74,23 +74,23 @@ window.TQ = window.TQ || {};
     if (child.parent != null) {
       parentAngle = child.parent.getRotation();
     }
-    var relativeAngle = angle - parentAngle;  // relative to parent;
+    var relativeAngle = angle - parentAngle; // relative to parent;
 
     var oldValue;
     var cmd_type;
     if (type == 0) {
-      oldValue = (child.jsonObj.angleMin == undefined) ? null: child.jsonObj.angleMin;
+      oldValue = (child.jsonObj.angleMin == undefined) ? null : child.jsonObj.angleMin;
       cmd_type = TQ.GenCommand.MIN_JOINT_ANGLE;
     } else {
-      oldValue = (child.jsonObj.angleMax == undefined) ? null: child.jsonObj.angleMax;
+      oldValue = (child.jsonObj.angleMax == undefined) ? null : child.jsonObj.angleMax;
       cmd_type = TQ.GenCommand.MAX_JOINT_ANGLE;
     }
     TQ.CommandMgr.directDo(new TQ.GenCommand(cmd_type,
       child, relativeAngle, oldValue));
 
-    //检查合法性
+    // 检查合法性
     if ((child.jsonObj.angleMin != null) && (child.jsonObj.angleMax != null)) {
-      if (child.jsonObj.angleMin  > child.jsonObj.angleMax) {
+      if (child.jsonObj.angleMin > child.jsonObj.angleMax) {
         TQ.MessageBubble(TQ.Dictionary.INVALID_PARAMETER);
       }
     }
@@ -111,10 +111,10 @@ window.TQ = window.TQ || {};
           Math.round(E.x) + "," + Math.round(E.y) + ")");
 
     if (hasAchieved(E, A)) return true;
-    var angle = child.getRotateDirection() * vec2Angle(S, E, A);   // 从SE转到SA,
-    var operationFlags = child.getOperationFlags();  // 必须保存， 因为 update和record会清除 此标记。
+    var angle = child.getRotateDirection() * vec2Angle(S, E, A); // 从SE转到SA,
+    var operationFlags = child.getOperationFlags(); // 必须保存， 因为 update和record会清除 此标记。
     rotate(child, angle);
-    if (isSimpleRotationMode) return true;  // 简单旋转， 比不牵涉其它关节，
+    if (isSimpleRotationMode) return true; // 简单旋转， 比不牵涉其它关节，
 
     var parent = child.parent;
     if (child.isRoot() || !parent || parent.isPinned() ||
@@ -122,7 +122,7 @@ window.TQ = window.TQ || {};
       return false; // 达到根, 迭代了一遍, 未达到目标,
     }
 
-    assertNotNull(TQ.Dictionary.FoundNull, child.parent); //非root关节,有parent
+    assertNotNull(TQ.Dictionary.FoundNull, child.parent); // 非root关节,有parent
     child.parent.setFlag(operationFlags);
     return calOneBone(child.parent, target, A);
   }
@@ -144,7 +144,7 @@ window.TQ = window.TQ || {};
   function doIK(element, offset, ev, isSimpleRotation) {
     TQ.Log.debugInfo("ele.id =", element.id, "offest = ", JSON.stringify(offset));
     isSimpleRotationMode = isSimpleRotation;
-    var target  = TQ.SelectSet.peek();
+    var target = TQ.SelectSet.peek();
     if (target == null) {
       TQ.Log.debugInfo(TQ.Dictionary.PleaseSelectOne);
       return;
@@ -161,12 +161,12 @@ window.TQ = window.TQ || {};
       displayInfo2(TQ.Dictionary.PleaseSelectOne);
     }
 
-    if (element.getRotateDirection()<0) {
+    if (element.getRotateDirection() < 0) {
       var EWorld = getEWorld(element);
       // A = TQ.Utility.mirror(EWorld, A);
     }
 
-    for (var i =0; i < TQ.Config.IK_ITERATE_TIME; i++) {
+    for (var i = 0; i < TQ.Config.IK_ITERATE_TIME; i++) {
       if (calOneBone(target, target, A, i)) {
         return TQ.Log.debugInfo("achieved");
       }
@@ -176,10 +176,10 @@ window.TQ = window.TQ || {};
   function determineE(element, offset, ev) {
     // 求E点在element元素物体空间的坐标
     // 设备坐标 --》 世界坐标 --》 物体坐标。
-    var eDevice = TQ.Utility.eventToDevice(ev),
-      eWorld = element.dc2World(eDevice);
+    var eDevice = TQ.Utility.eventToDevice(ev);
+    var eWorld = element.dc2World(eDevice);
     return element.world2Object(eWorld);
   }
 
   TQ.IKCtrl = IKCtrl;
-}) ();
+})();

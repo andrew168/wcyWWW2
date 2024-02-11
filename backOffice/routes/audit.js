@@ -3,9 +3,9 @@
  */
 
 function process(req) {
-  var isAudit = false,
-    reqBody = req.body,
-    newValues = {};
+  var isAudit = false;
+  var reqBody = req.body;
+  var newValues = {};
 
   if (reqBody.ban !== undefined) {
     newValues.isBanned = reqBody.ban;
@@ -27,9 +27,9 @@ function process(req) {
     isAudit = true;
   }
 
-  return {isAudit: isAudit,
+  return { isAudit: isAudit,
     newValues: newValues,
-    _id: reqBody._id};
+    _id: reqBody._id };
 }
 
 exports.process = process;

@@ -16,7 +16,7 @@ window.TQ = window.TQ || {};
 
   Grid._initialized = false;
   Grid._on = false;
-  Grid.initialize = function () {
+  Grid.initialize = function() {
     Grid.M = 100;
     Grid.N = 100;
     Grid.COLOR = "#cbcbcb";//  "#bfbfbf";
@@ -34,7 +34,7 @@ window.TQ = window.TQ || {};
       ln1.add(TQ.Utility.worldToDevioce(dx * i, yMax));
       Grid.grids.push(ln1);
     }
-    for (var i = 0; i <Grid.N; i++) {
+    for (var i = 0; i < Grid.N; i++) {
       thickness = (i % 5) ? Grid.THIN : Grid.THICK;
       ln1 = new TQ.Trace(Grid.COLOR, thickness);
       ln1.add(TQ.Utility.worldToDevioce(0, dy * i));
@@ -65,8 +65,7 @@ window.TQ = window.TQ || {};
 
   TQ.Grid = Grid;
 
-  TQ.InputMap.registerAction(TQ.InputMap.GRID_ON_OFF_KEY,  function() {
+  TQ.InputMap.registerAction(TQ.InputMap.GRID_ON_OFF_KEY, function() {
     TQ.Grid.show(!Grid._on);
   });
-
 }());

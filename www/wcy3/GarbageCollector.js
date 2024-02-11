@@ -15,7 +15,7 @@ window.TQ = window.TQ || {};
   };
   GarbageCollector._members = [];
 
-  GarbageCollector.initialize = function () {
+  GarbageCollector.initialize = function() {
     GarbageCollector.clear();
   };
 
@@ -35,7 +35,7 @@ window.TQ = window.TQ || {};
   };
 
   GarbageCollector.clear = function() {
-    for (var i = 0; i< GarbageCollector._members.length; i++) {
+    for (var i = 0; i < GarbageCollector._members.length; i++) {
       var ele = GarbageCollector._members[i];
       assertNotNull(TQ.Dictionary.FoundNull, ele);
       GarbageCollector._members.splice(i, 1);

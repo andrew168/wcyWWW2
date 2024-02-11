@@ -1,15 +1,15 @@
 window.TQ = window.TQ || {};
 
-(function () {
-  var WatchDog = {},
-    tasks = [null];
-  WatchDog.start = function (callback, duration) {
+(function() {
+  var WatchDog = {};
+  var tasks = [null];
+  WatchDog.start = function(callback, duration) {
     tasks.push(setTimeout(callback, duration));
-    return tasks.length-1;
+    return tasks.length - 1;
   };
 
-  WatchDog.clear = function (taskId) {
-    if (taskId > 0 && tasks[taskId] > 0 ) {
+  WatchDog.clear = function(taskId) {
+    if (taskId > 0 && tasks[taskId] > 0) {
       clearTimeout(tasks[taskId]);
       delete tasks[taskId];
     }

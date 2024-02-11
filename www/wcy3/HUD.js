@@ -4,26 +4,26 @@
  */
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   function HUD() {
     this.icons = new Array();
     this.createIcons();
   }
 
-  HUD.prototype.getNumOfIcons = function () {
+  HUD.prototype.getNumOfIcons = function() {
     return this.icons.length;
   },
 
-  HUD.prototype.createIcons = function () {
+  HUD.prototype.createIcons = function() {
     // Define a spritesheet. Note that this data was exported by Zoë.
     var ss = new createjs.SpriteSheet({
-      "images":["assets/3-wq.png"],
-      "frames":{
-        "height":98,
-        "width":103,
-        "regX":0,
-        "regY":0,
-        "count":5
+      "images": ["assets/3-wq.png"],
+      "frames": {
+        "height": 98,
+        "width": 103,
+        "regX": 0,
+        "regY": 0,
+        "count": 5
       }
     });
 
@@ -42,7 +42,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  HUD.prototype.getIcon = function (i) {
+  HUD.prototype.getIcon = function(i) {
     if (i < this.icons.length) {
       return this.icons[i];
     }
@@ -50,7 +50,7 @@ window.TQ = window.TQ || {};
     return null;
   };
 
-  HUD.prototype.addIcons = function () {
+  HUD.prototype.addIcons = function() {
     for (var i = 0; i < 5; i++) {
       stageContainer.addChild(this.icons[i]);
     }
@@ -60,7 +60,7 @@ window.TQ = window.TQ || {};
     // createjs.Ticker.addListener(stage);
   };
 
-  HUD.prototype.removeIcons = function () {
+  HUD.prototype.removeIcons = function() {
     for (var i = 0; i < 5; i++) {
       if (stageContainer.contains(this.icons[i])) {
         stageContainer.removeChild(this.icons[i]);

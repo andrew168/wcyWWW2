@@ -5,18 +5,16 @@
  */
 window.TQ = window.TQ || {};
 
-(function (){
-
-  function TrackRecorder()
-  {
+(function() {
+  function TrackRecorder() {
 
   }
 
   TrackRecorder.style = TQ.Channel.LINE_INTERPOLATION;
-  TrackRecorder.initialize = function () {};
+  TrackRecorder.initialize = function() {};
 
   // 参见: Decorder的说明
-  TrackRecorder.record = function (element, t) {
+  TrackRecorder.record = function(element, t) {
     t = TQ.FrameCounter.gridSnap(t);
     var track = element.animeTrack;
     var jsonObj = element.jsonObj;
@@ -78,27 +76,27 @@ window.TQ = window.TQ || {};
       }
     }
 
-    if ((track.x.t.length > TQ.Config.MAX_KEYFRAME)  ||
+    if ((track.x.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.y.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.sx.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.sy.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.rotation.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.alpha.t.length > TQ.Config.MAX_KEYFRAME) ||
             (track.colorR.t.length > TQ.Config.MAX_KEYFRAME)) {
-      TQ.MessageBox.toast(TQ.Locale.getStr('the animation of this element is out of limit!'));
+      TQ.MessageBox.toast(TQ.Locale.getStr("the animation of this element is out of limit!"));
     }
 
-    element.clearFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING
-            | TQ.Element.ALPHAING | TQ.Element.ZING | TQ.Element.VISIBLE_CHANGED | TQ.Element.COLOR_CHANGED);
+    element.clearFlag(TQ.Element.TRANSLATING | TQ.Element.ROTATING | TQ.Element.SCALING |
+            TQ.Element.ALPHAING | TQ.Element.ZING | TQ.Element.VISIBLE_CHANGED | TQ.Element.COLOR_CHANGED);
   };
 
   // 参见: Decorder的说明
-  TrackRecorder.recordSag = function (element, sags) {
+  TrackRecorder.recordSag = function(element, sags) {
     var track = element.animeTrack;
     TQ.AssertExt.invalidLogic(!!(track && track.x && track.y && track.sx && track.sy && track.rotation), "新case， 未赋值");
-    var SagType = TQ.AnimationManager.SagType,
-      sag =sags[0],
-      sag2= (sags.length >= 2) ? sags[1] : sag;
+    var SagType = TQ.AnimationManager.SagType;
+    var sag = sags[0];
+    var sag2 = (sags.length >= 2) ? sags[1] : sag;
 
     switch (sag.typeId) {
       case SagType.FADE_IN:
@@ -154,18 +152,18 @@ window.TQ = window.TQ || {};
   };
 
   function adjustIdleSagTime(track) {
-    var inSag = track.getInSag(),
-      tInSagEnd = inSag ? inSag.t2 : 0;
-    track.forEachChannel(function (channel) {
+    var inSag = track.getInSag();
+    var tInSagEnd = inSag ? inSag.t2 : 0;
+    track.forEachChannel(function(channel) {
       channel.adjustIdleSagT1(tInSagEnd);
     });
   }
 
-  TrackRecorder.removeSag = function (element, sag) {
+  TrackRecorder.removeSag = function(element, sag) {
     var track = element.animeTrack;
-    var SagType = TQ.AnimationManager.SagType,
-      sagTypeId = sag.typeId,
-      SagCategoryId = sag.categoryId;
+    var SagType = TQ.AnimationManager.SagType;
+    var sagTypeId = sag.typeId;
+    var SagCategoryId = sag.categoryId;
     switch (sagTypeId) {
       case SagType.FADE_IN:
       case SagType.FADE_OUT:
@@ -206,11 +204,11 @@ window.TQ = window.TQ || {};
     track.updateSagFlag();
   };
 
-  TrackRecorder.recordOneChannel = function (track, channel, t, v, interpolationMethod) {
+  TrackRecorder.recordOneChannel = function(track, channel, t, v, interpolationMethod) {
     assertDepreciated(TQ.Dictionary.isDepreciated + "， 移到了channel类中的record！");
     assertNotNull(TQ.Dictionary.FoundNull, channel);
     assertNotUndefined(TQ.Dictionary.FoundNull, channel.tid1);
-    assertNotNull(TQ.Dictionary.FoundNull,channel.tid1);
+    assertNotNull(TQ.Dictionary.FoundNull, channel.tid1);
     return channel.record(track, t, v, interpolationMethod);
   };
 
@@ -230,12 +228,12 @@ window.TQ = window.TQ || {};
       return false;
     }
 
-    var sags = track.sags,
-      n = sags.length,
-      i;
+    var sags = track.sags;
+    var n = sags.length;
+    var i;
     for (i = 0; i < n; i++) {
       var item = sags[i];
-      if (!item ) {
+      if (!item) {
         continue;
       }
 
@@ -269,7 +267,7 @@ window.TQ = window.TQ || {};
   function trimOneChannel(channel, t) {
     // 处理特殊情况, 只有1帧:
     if (channel.t.length <= 1) {
-      assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0); //只有1帧
+      assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0); // 只有1帧
       channel.tid1 = channel.tid2 = 0;
       return;
     }

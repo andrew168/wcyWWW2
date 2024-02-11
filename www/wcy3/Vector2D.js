@@ -4,20 +4,20 @@
  */
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   // 这个构造函数， 应该很少被外面直接调用， 因为是其中的值是没有初始化的。
   //  替代地， 应该用create函数, 直接构造有变换的矩阵
   function Vector2D() {
   }
 
-  var p = Vector2D.prototype = $V([  1,  0]);
+  var p = Vector2D.prototype = $V([1, 0]);
 
   Vector2D.create = function(elements) {
     var M = new Vector2D();
     return M.setElements(elements);
   };
 
-  Vector2D.calDirection = function (startP, endP) {
+  Vector2D.calDirection = function(startP, endP) {
     var direction = Vector2D.create([endP.x - startP.x, endP.y - startP.y]);
     var unitVector = direction.toUnitVector();
     return Vector2D.create(unitVector.elements);
@@ -30,13 +30,12 @@ window.TQ = window.TQ || {};
     var x = this.elements[0];
     var y = this.elements[1];
 
-    if (y >0) {
+    if (y > 0) {
       return angle;
     } else if (y < 0) {
       return (360 - angle);
-    }
-    else {
-      if (x > 0 ) {
+    } else {
+      if (x > 0) {
         return angle;
       } else if (x < 0) {
         return 180;

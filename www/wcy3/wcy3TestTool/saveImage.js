@@ -3,10 +3,10 @@
  */
 var TQ = TQ || {};
 TQ.Tool = TQ.Tool || {};
-(function () {
-  var timestamp = new Date().getTime(),
-    TEMP_IMG_NODE_ID = "_tq_temp_img" + timestamp,
-    TEMP_LINK_NODE_ID = "_tq_temp_link" + timestamp;
+(function() {
+  var timestamp = new Date().getTime();
+  var TEMP_IMG_NODE_ID = "_tq_temp_img" + timestamp;
+  var TEMP_LINK_NODE_ID = "_tq_temp_link" + timestamp;
 
   TQ.Tool.saveImage = saveImage;
   TQ.Tool.resetDom = resetDom;
@@ -30,7 +30,7 @@ TQ.Tool = TQ.Tool || {};
   function _saveAs(image64png, filename) {
     // create a new image and add to the document
     var imgNode = document.getElementById(TEMP_IMG_NODE_ID);
-    if (!!imgNode) { // 防止未清除的
+    if (imgNode) { // 防止未清除的
       resetDom();
     }
 

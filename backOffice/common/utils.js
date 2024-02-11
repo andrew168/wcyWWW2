@@ -1,8 +1,8 @@
 /**
  * Created by admin on 12/5/2015.
  */
-var createTimestamp = function () {
-  return parseInt(new Date().getTime() / 1000) + '';
+var createTimestamp = function() {
+  return parseInt(new Date().getTime() / 1000) + "";
 };
 
 /*
@@ -14,21 +14,20 @@ function composeShareCode(shareId, wcyId, userId, timestamp) {
   if (!timestamp) {
     timestamp = (new Date()).getTime();
   }
-  return shareId + '_' + wcyId + '_' + userId + '_' + timestamp;
+  return shareId + "_" + wcyId + "_" + userId + "_" + timestamp;
 }
 
 function decomposeShareCode(shareCode) {
-  var values = shareCode.split('_');
+  var values = shareCode.split("_");
   if (!values || values.length !== 4) {
     console.log("错误的分享代号");
   }
-  return {shareId: values[0],
+  return { shareId: values[0],
     wcyId: values[1],
     userId: values[2],
     timestamp: values[3]
   };
 }
-
 
 function getCookie(req, name, defaultValue) {
   var para = null;
@@ -43,7 +42,7 @@ function getCookie(req, name, defaultValue) {
 }
 
 function getCookieNumber(req, name, defaultValue) {
-  var para = getCookie(req, name, defaultValue + '');
+  var para = getCookie(req, name, defaultValue + "");
   para = parseInt(para);
   return (isNaN(para)) ? defaultValue : para;
 }
@@ -68,18 +67,18 @@ function onResSave(err, doc, res) {
 function onSave(err, doc, onSuccess, onError) {
   showDocument(err, doc);
   if (!err) {
-    if (!!onSuccess) {
+    if (onSuccess) {
       onSuccess(doc._id);
     }
   } else {
-    if (!!onError) {
+    if (onError) {
       onError(err);
     }
   }
 }
 
 function notFound(res, data) {
-  res.json(404, {msg: 'not found ' + data});
+  res.json(404, { msg: "not found " + data });
 }
 
 function showDocument(err, doc) {
@@ -96,14 +95,14 @@ function matName2Id(name) {
 }
 
 function path2public_id(path) {
-  var words = path.split('/'),
-    fullName = words[words.length - 1];
-  return fullName.split('.')[0];
+  var words = path.split("/");
+  var fullName = words[words.length - 1];
+  return fullName.split(".")[0];
 }
 
 function path2short(fullPath) {
   const fixedPath = "https://res.cloudinary.com/eplan/image/upload/";
-  return fullPath.replace(fixedPath, '');
+  return fullPath.replace(fixedPath, "");
 }
 
 // 这个文件的名字就是类的名字，exports的所有输出都是这个类的公共接口函数

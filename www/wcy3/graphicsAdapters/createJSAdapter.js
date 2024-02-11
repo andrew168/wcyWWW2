@@ -4,8 +4,8 @@
  * 以便于将来更换为其它的 lib
  */
 var TQ = TQ || {};
-(function () {
-  'use strict';
+(function() {
+  "use strict";
   function CreateJSAdapter() {
   }
 
@@ -16,8 +16,8 @@ var TQ = TQ || {};
     sx: 1,
     sy: 1,
     M: TQ.Matrix2D.I(),
-    IM: TQ.Matrix2D.I(),   // Inverse Matrix, 逆矩阵
-    visible: true,  // 没有animeTrack， 没有M， 都应该是可见的
+    IM: TQ.Matrix2D.I(), // Inverse Matrix, 逆矩阵
+    visible: true, // 没有animeTrack， 没有M， 都应该是可见的
     alpha: 1
   };
 
@@ -41,9 +41,9 @@ var TQ = TQ || {};
     return p;
   };
 
-  CreateJSAdapter.getWidth = function () {
+  CreateJSAdapter.getWidth = function() {
     var w;
-    if (this.isVirtualObject()) {// 对于Group物体
+    if (this.isVirtualObject()) { // 对于Group物体
       w = 1;
     } else if (this.isBitmap()) {
       w = this.displayObj.naturalWidth();
@@ -54,9 +54,9 @@ var TQ = TQ || {};
     return w;
   };
 
-  CreateJSAdapter.getHeight = function () {
+  CreateJSAdapter.getHeight = function() {
     var h;
-    if (this.isVirtualObject()) {// 对于Group物体
+    if (this.isVirtualObject()) { // 对于Group物体
       h = 1;
     } else if (this.isBitmap()) {
       h = this.displayObj.naturalHeight();
@@ -66,10 +66,10 @@ var TQ = TQ || {};
     return h;
   };
 
-  CreateJSAdapter.toDeviceCoord = function (displayObj, jsonObj) {
+  CreateJSAdapter.toDeviceCoord = function(displayObj, jsonObj) {
     if (!this.justMoved) {
     }
-    TQ.Log.debugInfo(this.jsonObj.type + ', jsonObj(x,y) = ' + this.jsonObj.x + ',' + this.jsonObj.y );
+    TQ.Log.debugInfo(this.jsonObj.type + ", jsonObj(x,y) = " + this.jsonObj.x + "," + this.jsonObj.y);
     this.justMoved = false;
     var obj_dc = this.world2Dc();
     displayObj.x = obj_dc.x;
@@ -102,35 +102,35 @@ var TQ = TQ || {};
     displayObj.rotation = this.getRotateDirection() * obj_dc.rotation;
   };
 
-  CreateJSAdapter.getScale = function () {
+  CreateJSAdapter.getScale = function() {
     return this.getScaleInWorld();
   };
 
-  CreateJSAdapter.getScaleInWorld = function () {
-    return {sx: this.jsonObj.sx, sy: this.jsonObj.sy};
+  CreateJSAdapter.getScaleInWorld = function() {
+    return { sx: this.jsonObj.sx, sy: this.jsonObj.sy };
   };
 
-  CreateJSAdapter.getPosition = function () { // in PDC
+  CreateJSAdapter.getPosition = function() { // in PDC
     return this.getPositionInWorld();
   };
 
-  CreateJSAdapter.getPositionInWorld = function () {
-    return {x: this.jsonObj.x, y: this.jsonObj.y};
+  CreateJSAdapter.getPositionInWorld = function() {
+    return { x: this.jsonObj.x, y: this.jsonObj.y };
   };
 
-  CreateJSAdapter.getPositionInDc = function () {
+  CreateJSAdapter.getPositionInDc = function() {
     var obj_dc = this.world2Dc();
-    return {x: obj_dc.x, y: obj_dc.y};
+    return { x: obj_dc.x, y: obj_dc.y };
   };
 
-  CreateJSAdapter.getPositionInNdc = function () {
+  CreateJSAdapter.getPositionInNdc = function() {
     return this.pdc2Ndc(this.getPositionInWorld());
   };
 
-  CreateJSAdapter.nw2World = function (oNWorld) {
+  CreateJSAdapter.nw2World = function(oNWorld) {
     // 从规范化的世界坐标Normalized World到世界坐标系(像素坐标)
-    var sx = currScene.getDesignatedWidth(),
-      sy = currScene.getDesignatedHeight();
+    var sx = currScene.getDesignatedWidth();
+    var sy = currScene.getDesignatedHeight();
 
     var oWorld = {
       x: oNWorld.x * sx,
@@ -146,14 +146,14 @@ var TQ = TQ || {};
     return oWorld;
   };
 
-  CreateJSAdapter.pdc2Ndc = function (obj) {
+  CreateJSAdapter.pdc2Ndc = function(obj) {
     /* NDC 是归一化的设备坐标，DC， Y轴向上，[0,1]范围，jsonObj保存的是NDC坐标
          PDC是 伪设备坐标，DC， Y轴向上
          DC：是设备坐标， Y轴向下，用于displayObj
          */
     this.justMoved = true;
-    var sx = 1 / TQ.Config.workingRegionWidth,
-      sy = 1 / TQ.Config.workingRegionHeight;
+    var sx = 1 / TQ.Config.workingRegionWidth;
+    var sy = 1 / TQ.Config.workingRegionHeight;
 
     return {
       x: (obj.x === undefined) ? Number.NaN : obj.x * sx,
@@ -172,21 +172,21 @@ var TQ = TQ || {};
     return {
       x: (ptDc.x === undefined) ? 0 : ptDc.x * scale.sx,
       y: (ptDc.y === undefined) ? 0 : TQ.Utility.toWorldCoord(ptDc.y) * scale.sy,
-      //sx: (ptDc.sx === undefined) ? 1 : ptDc.sx * sx,
-      //sy: (ptDc.sy === undefined) ? 1 : ptDc.sy * sy,
-      //fontSize: (ptDc.fontSize === undefined) ? 0 : ptDc.fontSize * sx,
-      rotation: (ptDc.rotation === undefined) ? 0 : - ptDc.rotation,
-      //pivotX: (ptDc.pivotX === undefined) ? 0 : ptDc.pivotX,
-      //pivotY: (ptDc.pivotY === undefined) ? 0 : ptDc.pivotY
+      // sx: (ptDc.sx === undefined) ? 1 : ptDc.sx * sx,
+      // sy: (ptDc.sy === undefined) ? 1 : ptDc.sy * sy,
+      // fontSize: (ptDc.fontSize === undefined) ? 0 : ptDc.fontSize * sx,
+      rotation: (ptDc.rotation === undefined) ? 0 : -ptDc.rotation
+      // pivotX: (ptDc.pivotX === undefined) ? 0 : ptDc.pivotX,
+      // pivotY: (ptDc.pivotY === undefined) ? 0 : ptDc.pivotY
     };
   };
 
-  CreateJSAdapter.dc2World2 = function (ptDc) {
+  CreateJSAdapter.dc2World2 = function(ptDc) {
     // DC坐标：是event中的(pageX, pageY)，window的innerWidth和Height坐标系，不含address bar， 原点在左上角，
     // World坐标： Canvas上的实际绘图区，
-    var scale = TQ.Utility.getDc2WorldScale(),
-      x0d = (TQ.State.innerWidth - TQ.Config.workingRegionWidth)/2,
-      y0d = TQ.State.innerHeight - (TQ.State.innerHeight - TQ.Config.workingRegionHeight)/2;
+    var scale = TQ.Utility.getDc2WorldScale();
+    var x0d = (TQ.State.innerWidth - TQ.Config.workingRegionWidth) / 2;
+    var y0d = TQ.State.innerHeight - (TQ.State.innerHeight - TQ.Config.workingRegionHeight) / 2;
 
     if (ptDc.x === undefined) {
       ptDc.x = 0;
@@ -205,12 +205,12 @@ var TQ = TQ || {};
     };
   };
 
-  CreateJSAdapter.world2Dc = function (ptWorld) {
-    var scale = TQ.Utility.getWorld2DcScale(),
-      sx = scale.sx,
-      sy = scale.sy,
-      sMin = Math.min(sx, sy),
-      ptDc;
+  CreateJSAdapter.world2Dc = function(ptWorld) {
+    var scale = TQ.Utility.getWorld2DcScale();
+    var sx = scale.sx;
+    var sy = scale.sy;
+    var sMin = Math.min(sx, sy);
+    var ptDc;
 
     sx = sy = sMin; // 可以自适应到任何屏幕， 但是， 必须等比例
     if (!ptWorld) {
@@ -218,8 +218,8 @@ var TQ = TQ || {};
       ptDc = {
         sx: (ptWorld.sx === undefined) ? 1 : ptWorld.sx * sx,
         sy: (ptWorld.sy === undefined) ? 1 : ptWorld.sy * sy,
-        //fontSize: (ptWorld.fontSize === undefined) ? 0 : ptWorld.fontSize * sx,
-        //createJS的角度： 逆时针是负的，所以要 改之
+        // fontSize: (ptWorld.fontSize === undefined) ? 0 : ptWorld.fontSize * sx,
+        // createJS的角度： 逆时针是负的，所以要 改之
         rotation: (ptWorld.rotation === undefined) ? 0 : -ptWorld.rotation,
         pivotX: (ptWorld.pivotX === undefined) ? 0.5 : ptWorld.pivotX,
         pivotY: (ptWorld.pivotY === undefined) ? 0.5 : ptWorld.pivotY
@@ -247,23 +247,22 @@ var TQ = TQ || {};
     }
 
     var ptObject = this.jsonObj.IM.multiply($V([ptWorld.x, ptWorld.y, 1]));
-    return {x: ptObject.elements[0], y: ptObject.elements[1]};
+    return { x: ptObject.elements[0], y: ptObject.elements[1] };
   };
 
-  CreateJSAdapter.dWorld2Object = function (displacementInWorld) {
-    var originInWorld = {x:0, y:0},
-      originInObject = this.world2Object(originInWorld),
-      displacementInObj = this.world2Object(displacementInWorld);
-    return {x: displacementInObj.x - originInObject.x, y: displacementInObj.y - originInObject.y};
+  CreateJSAdapter.dWorld2Object = function(displacementInWorld) {
+    var originInWorld = { x: 0, y: 0 };
+    var originInObject = this.world2Object(originInWorld);
+    var displacementInObj = this.world2Object(displacementInWorld);
+    return { x: displacementInObj.x - originInObject.x, y: displacementInObj.y - originInObject.y };
   };
 
-  CreateJSAdapter.dDc2Object = function (ptDc) {
-    var p0Dc = {x: 0, y:0, rotation: 0},
-      p0World = this.dc2World2(p0Dc),
-      ptWorld = this.dc2World2(ptDc),
-      p0Object = this.world2Object(p0World),
-      ptObject = this.world2Object(ptWorld);
-
+  CreateJSAdapter.dDc2Object = function(ptDc) {
+    var p0Dc = { x: 0, y: 0, rotation: 0 };
+    var p0World = this.dc2World2(p0Dc);
+    var ptWorld = this.dc2World2(ptDc);
+    var p0Object = this.world2Object(p0World);
+    var ptObject = this.world2Object(ptWorld);
 
     return {
       x: ptObject.x - p0Object.x,
@@ -272,7 +271,7 @@ var TQ = TQ || {};
     };
   };
 
-  CreateJSAdapter.parentWorld2Object = function (ptWorld) {
+  CreateJSAdapter.parentWorld2Object = function(ptWorld) {
     if (!ptWorld) {
       ptWorld = this.jsonObj;
     }
@@ -284,7 +283,7 @@ var TQ = TQ || {};
     return this.parent.world2Object(ptWorld);
   };
 
-  CreateJSAdapter.object2World = function (ptObj) {
+  CreateJSAdapter.object2World = function(ptObj) {
     if (!ptObj || !this.jsonObj.M) {
       console.error("must have ptObj 和 M");
       return ptObj;
@@ -292,22 +291,22 @@ var TQ = TQ || {};
 
     var ptWorld = this.jsonObj.M.multiply($V([ptObj.x, ptObj.y, 1]));
     if ((ptWorld.elements[2] < 0.99) || (ptWorld.elements[2] > 1.01)) {
-      assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, ptWorld.elements[2], 0.01); //齐次分量应该近似为1
+      assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, ptWorld.elements[2], 0.01); // 齐次分量应该近似为1
     }
 
-    return {x: ptWorld.elements[0], y: ptWorld.elements[1]};
+    return { x: ptWorld.elements[0], y: ptWorld.elements[1] };
   };
 
-  CreateJSAdapter.tsrObject2World = function (pose) {
+  CreateJSAdapter.tsrObject2World = function(pose) {
     // Pose 总是临时生成的，
-    var tsrObj = pose,
-      shapeObj = [{x: 0, y: 0}],
-      originObj = shapeObj[0];
+    var tsrObj = pose;
+    var shapeObj = [{ x: 0, y: 0 }];
+    var originObj = shapeObj[0];
 
     // 物体坐标 ===>到 世界坐标下
     // 平移部分：
-    var tsrWorld = this.jsonObj,
-      originWorld = this.object2World(originObj); //  only平移
+    var tsrWorld = this.jsonObj;
+    var originWorld = this.object2World(originObj); //  only平移
     tsrWorld.x = originWorld.x;
     tsrWorld.y = originWorld.y;
 
@@ -327,7 +326,7 @@ var TQ = TQ || {};
     }
   };
 
-  CreateJSAdapter.updateM = function (parent, Pose) {
+  CreateJSAdapter.updateM = function(parent, Pose) {
     var tsrObj = Pose;
     if (!tsrObj) {
       TQ.Log.debugInfo("Root element, use default trsObj");
@@ -338,11 +337,10 @@ var TQ = TQ || {};
       parent = getDefaultRootTsr();
     }
 
-    var sx = tsrObj.sx,
-      sy = tsrObj.sy,
-      selfRotation = tsrObj.rotation,
-      parentRotation = parent.rotation;
-
+    var sx = tsrObj.sx;
+    var sy = tsrObj.sy;
+    var selfRotation = tsrObj.rotation;
+    var parentRotation = parent.rotation;
 
     // 绕任意点任意轴的镜像和比例：
     // 先回到原点、正X轴，做比例和镜像，然后在变换回去
@@ -352,7 +350,7 @@ var TQ = TQ || {};
     //    rotate back
     // translate back
     var MTranslateToP = TQ.Matrix2D.transformation(-tsrObj.x, -tsrObj.y, 0, 1, 1);
-    var MRotateToX =    TQ.Matrix2D.transformation(0, 0, -parentRotation, 1, 1);
+    var MRotateToX = TQ.Matrix2D.transformation(0, 0, -parentRotation, 1, 1);
     var MMirror;
     if (tsrObj.mirrorX) {
       if (tsrObj.mirrorY) {
@@ -370,24 +368,24 @@ var TQ = TQ || {};
     var MTranslateBack = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, 0, 1, 1);
     var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, selfRotation, sx, sy);
     var tsrWorld = this.jsonObj;
-    tsrWorld.M = parent.M.multiply(MTranslateBack).multiply(MRotateBack).multiply(MMirror).
-      multiply(MRotateToX).multiply(MTranslateToP).multiply(M);
-    tsrWorld.IM = null;   // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
+    tsrWorld.M = parent.M.multiply(MTranslateBack).multiply(MRotateBack).multiply(MMirror)
+      .multiply(MRotateToX).multiply(MTranslateToP).multiply(M);
+    tsrWorld.IM = null; // 必须清除上一个时刻的 IM,因为M变了,IM过时了, 但是, 不要计算, 等到用时再算.
     tsrWorld.visible = parent.isVis;
     tsrWorld.alpha = tsrWorld.alpha * parent.alpha;
     // TQ.Log.matrixDebugInfo("parent: ", parent.M);
     TQ.Log.matrixDebugInfo(this.id + ": ", tsrWorld.M);
   };
 
-  CreateJSAdapter.scaleOne = function (desc) {
+  CreateJSAdapter.scaleOne = function(desc) {
     desc.sx = desc.sy = 1;
   };
 
-  CreateJSAdapter.markerScaleOne = function (desc) {
+  CreateJSAdapter.markerScaleOne = function(desc) {
     desc.sx = desc.sy = 1;
   };
 
-  CreateJSAdapter.fontScaleOne = function (desc) {
+  CreateJSAdapter.fontScaleOne = function(desc) {
     desc.sx = desc.sy = 1;
   };
 

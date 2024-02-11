@@ -5,7 +5,7 @@
 
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   /**
      * 抽象命令类， 定义命令的接口
      * @constructor
@@ -13,15 +13,15 @@ window.TQ = window.TQ || {};
   function AbstractCommand() {
   }
 
-  //定义一个变量p代表该类的原型，以方便为其添加函数。
+  // 定义一个变量p代表该类的原型，以方便为其添加函数。
   var p = AbstractCommand.prototype;
   p.do = function() {};
   p.undo = function() {};
   p.redo = function() {};
-  //以下内容支持 复合命令
-  p.addCommand = function(cmd) {return cmd;};
-  p.removeCommand = function(cmd) {return cmd;};
-  p.getCommand = function(id) {return id;};
+  // 以下内容支持 复合命令
+  p.addCommand = function(cmd) { return cmd; };
+  p.removeCommand = function(cmd) { return cmd; };
+  p.getCommand = function(id) { return id; };
 
   /**
      * 复合命令
@@ -36,7 +36,7 @@ window.TQ = window.TQ || {};
     return __openedComposite;
   };
 
-  CompositeCommand.addCommand = function (cmd) {
+  CompositeCommand.addCommand = function(cmd) {
     if (!__openedComposite) {
       return TQ.Assert(!__openedComposite, "没有opened的compositeCommand");
     }
@@ -46,19 +46,19 @@ window.TQ = window.TQ || {};
 
   inherit(CompositeCommand, AbstractCommand);
   CompositeCommand.prototype.do = function() {
-    for (var i=0; i < this.commands.length; i++) {
+    for (var i = 0; i < this.commands.length; i++) {
       this.commands[i].do();
     }
   };
 
   CompositeCommand.prototype.redo = function() {
-    for (var i=0; i < this.commands.length; i++) {
+    for (var i = 0; i < this.commands.length; i++) {
       this.commands[i].redo();
     }
   };
 
   CompositeCommand.prototype.undo = function() {
-    for (var i=this.commands.length-1; i >= 0; i--) {
+    for (var i = this.commands.length - 1; i >= 0; i--) {
       this.commands[i].undo();
     }
   };
@@ -73,7 +73,7 @@ window.TQ = window.TQ || {};
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return false;
     }
-    return (null != this.commands.splice(i,1));
+    return (this.commands.splice(i, 1) != null);
   };
 
   CompositeCommand.prototype.getCommand = function(id) {
@@ -93,7 +93,7 @@ window.TQ = window.TQ || {};
   CompositeCommand.open = function() {
     if (!__openedComposite) {
       __openedComposite = new CompositeCommand();
-      document.addEventListener('mouseup', CompositeCommand.close);
+      document.addEventListener("mouseup", CompositeCommand.close);
     }
   };
 
@@ -101,7 +101,7 @@ window.TQ = window.TQ || {};
     if (!__openedComposite) {
       return;
     }
-    document.removeEventListener('mouseup', CompositeCommand.close);
+    document.removeEventListener("mouseup", CompositeCommand.close);
     TQ.CommandMgr.addToUndoStack(__openedComposite);
     __openedComposite = null;
   };
@@ -116,17 +116,17 @@ window.TQ = window.TQ || {};
 
   RotateCommand.prototype.do = function() {
     this.receiver.rotateTo(this.newValue);
-    return("rotate" + this.receiver);
+    return ("rotate" + this.receiver);
   };
 
   RotateCommand.prototype.undo = function() {
     this.receiver.rotateTo(this.oldValue);
-    return("undo rotate" + this.receiver);
+    return ("undo rotate" + this.receiver);
   };
 
   RotateCommand.prototype.redo = function() {
     this.receiver.rotateTo(this.newValue);
-    return("redo rotate" + this.receiver);
+    return ("redo rotate" + this.receiver);
   };
 
   /* scale */
@@ -140,17 +140,17 @@ window.TQ = window.TQ || {};
 
   ScaleCommand.prototype.do = function() {
     this.receiver.scaleTo(this.newValue);
-    return("scale" + this.receiver);
+    return ("scale" + this.receiver);
   };
 
   ScaleCommand.prototype.undo = function() {
     this.receiver.scaleTo(this.oldValue);
-    return("undo scale" + this.receiver);
+    return ("undo scale" + this.receiver);
   };
 
   ScaleCommand.prototype.redo = function() {
     this.receiver.scaleTo(this.newValue);
-    return("redo scale" + this.receiver);
+    return ("redo scale" + this.receiver);
   };
 
   /* font, setSize */
@@ -164,17 +164,17 @@ window.TQ = window.TQ || {};
 
   SetSizeCommand.prototype.do = function() {
     this.receiver.setSize(this.newValue);
-    return("setSize" + this.receiver);
+    return ("setSize" + this.receiver);
   };
 
   SetSizeCommand.prototype.undo = function() {
     this.receiver.setSize(this.oldValue);
-    return("undo setSize" + this.receiver);
+    return ("undo setSize" + this.receiver);
   };
 
   SetSizeCommand.prototype.redo = function() {
     this.receiver.setSize(this.newValue);
-    return("redo setSize" + this.receiver);
+    return ("redo setSize" + this.receiver);
   };
 
   /* font, setColor */
@@ -188,17 +188,17 @@ window.TQ = window.TQ || {};
 
   SetColorCommand.prototype.do = function() {
     this.receiver.setColor(this.newValue);
-    return("setColor" + this.receiver);
+    return ("setColor" + this.receiver);
   };
 
   SetColorCommand.prototype.undo = function() {
     this.receiver.setColor(this.oldValue);
-    return("undo setColor" + this.receiver);
+    return ("undo setColor" + this.receiver);
   };
 
   SetColorCommand.prototype.redo = function() {
     this.receiver.setColor(this.newValue);
-    return("redo setColor" + this.receiver);
+    return ("redo setColor" + this.receiver);
   };
 
   // Move
@@ -212,45 +212,45 @@ window.TQ = window.TQ || {};
 
   MoveCommand.prototype.do = function() {
     this.receiver.moveTo(this.newValue);
-    return("move" + this.receiver);
+    return ("move" + this.receiver);
   };
 
   MoveCommand.prototype.undo = function() {
     this.receiver.moveTo(this.oldValue);
-    return("undo move" + this.receiver);
+    return ("undo move" + this.receiver);
   };
 
   MoveCommand.prototype.redo = function() {
     this.receiver.moveTo(this.newValue);
-    return("redo move" + this.receiver);
+    return ("redo move" + this.receiver);
   };
 
   // move pivot
   function MovePivotCommand(ele, pivot, pos, marker) {
     this.receiver = ele;
     this.receiver2 = marker;
-    var oldPivot = {pivotX: Math.truncate6(ele.jsonObj.pivotX), pivotY:Math.truncate6(ele.jsonObj.pivotY)};
+    var oldPivot = { pivotX: Math.truncate6(ele.jsonObj.pivotX), pivotY: Math.truncate6(ele.jsonObj.pivotY) };
     var oldPos = ele.getPositionInWorld();
     oldPos.x = Math.truncate6(oldPos.x);
     oldPos.y = Math.truncate6(oldPos.y);
-    this.oldValue = {pivot: oldPivot, pos:oldPos};
+    this.oldValue = { pivot: oldPivot, pos: oldPos };
     pivot.pivotX = Math.truncate6(pivot.pivotX);
     pivot.pivotY = Math.truncate6(pivot.pivotY);
     pos.x = Math.truncate6(pos.x);
     pos.y = Math.truncate6(pos.y);
-    this.newValue = {pivot:pivot, pos:pos};
+    this.newValue = { pivot: pivot, pos: pos };
   }
 
   inherit(MovePivotCommand, AbstractCommand);
 
   MovePivotCommand.prototype.do = function() {
     this.receiver.movePivot(this.newValue.pivot, this.newValue.pos, this.receiver2);
-    return(this.name + this.receiver);
+    return (this.name + this.receiver);
   };
 
   MovePivotCommand.prototype.undo = function() {
     this.receiver.movePivot(this.oldValue.pivot, this.oldValue.pos, this.receiver2);
-    return("undo move" + this.receiver);
+    return ("undo move" + this.receiver);
   };
 
   MovePivotCommand.prototype.redo = MovePivotCommand.prototype.do;
@@ -264,12 +264,12 @@ window.TQ = window.TQ || {};
 
   inherit(MoveAnchorCommand, AbstractCommand);
 
-  MoveAnchorCommand.prototype.do = function () {
+  MoveAnchorCommand.prototype.do = function() {
     this.receiver.moveAnchorTo(this.newValue);
     return ("move" + this.receiver);
   };
 
-  MoveAnchorCommand.prototype.undo = function () {
+  MoveAnchorCommand.prototype.undo = function() {
     this.receiver.moveAnchorTo(this.oldValue);
     return ("undo move" + this.receiver);
   };
@@ -312,7 +312,7 @@ window.TQ = window.TQ || {};
   };
 
   DeleteEleCommand.prototype.undo = function() {
-    if (this.receiver2 != null)  {
+    if (this.receiver2 != null) {
       this.receiver2.undeleteChild(this.oldValue);
     } else {
       this.receiver.undeleteElement(this.oldValue);
@@ -321,17 +321,17 @@ window.TQ = window.TQ || {};
 
   DeleteEleCommand.prototype.redo = DeleteEleCommand.prototype.do;
 
-  AbstractCommand.name2 = 'AbstractCommand';
-  CompositeCommand.name2 = 'CompositeCommand';
-  MoveCommand.name2 = 'MoveCommand';
-  MoveAnchorCommand.name2 = 'MoveAnchorCommand';
-  MovePivotCommand.name2 = 'MovePivotCommand';
-  ScaleCommand.name2 = 'ScaleCommand';
-  SetColorCommand.name2 = 'SetColorCommand';
-  SetSizeCommand.name2 = 'SetSizeCommand';
-  RotateCommand.name2 = 'RotateCommand';
-  SetTimeCommand.name2 = 'SetTimeCommand';
-  DeleteEleCommand.name2 = 'DeleteEleCommand';
+  AbstractCommand.name2 = "AbstractCommand";
+  CompositeCommand.name2 = "CompositeCommand";
+  MoveCommand.name2 = "MoveCommand";
+  MoveAnchorCommand.name2 = "MoveAnchorCommand";
+  MovePivotCommand.name2 = "MovePivotCommand";
+  ScaleCommand.name2 = "ScaleCommand";
+  SetColorCommand.name2 = "SetColorCommand";
+  SetSizeCommand.name2 = "SetSizeCommand";
+  RotateCommand.name2 = "RotateCommand";
+  SetTimeCommand.name2 = "SetTimeCommand";
+  DeleteEleCommand.name2 = "DeleteEleCommand";
 
   TQ.AbstractCommand = AbstractCommand;
   TQ.CompositeCommand = CompositeCommand;
@@ -345,13 +345,12 @@ window.TQ = window.TQ || {};
   TQ.SetTimeCommand = SetTimeCommand;
   TQ.DeleteEleCommand = DeleteEleCommand;
 
-  TQ.CommandMgr.scale = function (ele, newScale) {
-    var oldValue = {sx: ele.jsonObj.sx, sy: ele.jsonObj.sy};
+  TQ.CommandMgr.scale = function(ele, newScale) {
+    var oldValue = { sx: ele.jsonObj.sx, sy: ele.jsonObj.sy };
     TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.SCALE, ele, newScale, oldValue));
   };
 
-  TQ.CommandMgr.pinIt = function (ele) {
+  TQ.CommandMgr.pinIt = function(ele) {
     TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.PINIT, ele, null, null));
   };
-
 }());

@@ -3,8 +3,8 @@
    */
 window.TQ = window.TQ || {};
 
-(function () {
-  /// 以下是接口部分
+(function() {
+  // / 以下是接口部分
   function FloatToolbar() {}
   FloatToolbar.selectedElement = null;
   FloatToolbar.onScaleBig = depreciated;

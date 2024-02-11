@@ -6,14 +6,14 @@
  * ** 点击任何地方都关闭： startClickOtherPlaceToClose
  */
 var TQ = TQ || {};
-TQ.OverlayMask = (function () {
-  var operations = ['touch', 'touchstart', 'click'],
-    _isOn = false,
-    _operateElementId,
-	      _promptOnClick;
+TQ.OverlayMask = (function() {
+  var operations = ["touch", "touchstart", "click"];
+  var _isOn = false;
+  var _operateElementId;
+	      var _promptOnClick;
 
   return {
-    isOn : function () {return _isOn;},
+    isOn: function() { return _isOn; },
     startClickOtherPlaceToClose: startClickOtherPlaceToClose,
 	      startClickAnywhereToClose: startClickAnywhereToClose,
     turnOn: turnOn,
@@ -30,19 +30,19 @@ TQ.OverlayMask = (function () {
   function turnOff() {
     _operateElementId = null;
     _isOn = false;
-    operations.forEach(function (op) {
+    operations.forEach(function(op) {
       document.removeEventListener(op, onTouch);
     });
   }
 
   function startClickAnywhereToClose(onClickToClose) {
-	    return startClickOtherPlaceToClose('no-object-defined', onClickToClose)
+	    return startClickOtherPlaceToClose("no-object-defined", onClickToClose);
   }
 
   function startClickOtherPlaceToClose(operateElementId, onClickToClose) {
     _operateElementId = operateElementId;
     _onClickToClose = onClickToClose;
-    operations.forEach(function (op) {
+    operations.forEach(function(op) {
       document.addEventListener(op, onTouch);
     });
   }
@@ -67,7 +67,7 @@ TQ.OverlayMask = (function () {
   }
 
   function isChildElement(elementId, target) {
-    for (; target && (target.nodeName !== 'BODY'); target = target.parentElement) {
+    for (; target && (target.nodeName !== "BODY"); target = target.parentElement) {
       if (target.id === elementId) {
         return true;
       }

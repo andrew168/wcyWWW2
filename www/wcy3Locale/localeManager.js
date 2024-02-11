@@ -2,22 +2,22 @@
  * Created by Andrewz on 4/25/2017.
  */
 var TQ = TQ || {};
-TQ.Locale = (function () {
+TQ.Locale = (function() {
   "use strict";
-  var defaultLang = 'en',
-    currentLang = null,
-    fondNewTag = false,
-    dataReady = false,
-    onReadyCallback,
-    dict = {},
-    self = {
-      isReady: function () {return dataReady;},
-      onReady: onReady,
-      getStr: getStr,
-      initialize: initialize,
-      output: output,
-      setLang: setLang
-    };
+  var defaultLang = "en";
+  var currentLang = null;
+  var fondNewTag = false;
+  var dataReady = false;
+  var onReadyCallback;
+  var dict = {};
+  var self = {
+    isReady: function() { return dataReady; },
+    onReady: onReady,
+    getStr: getStr,
+    initialize: initialize,
+    output: output,
+    setLang: setLang
+  };
 
   function onReady(callback) {
     if (dataReady) {
@@ -44,18 +44,18 @@ TQ.Locale = (function () {
         break;
       case "en":
       default:
-        lang = 'en';
+        lang = "en";
         break;
     }
 
     currentLang = lang;
-    var $http = injector.get('$http');
+    var $http = injector.get("$http");
     $http({
-      method: 'GET',
-      url: '/dictionary/' + lang +'.json'
+      method: "GET",
+      url: "/dictionary/" + lang + ".json"
     }).then(function onSuccess(response) {
       var data = (response.status === 200) ? response.data : [];
-      if (typeof data === 'object') {
+      if (typeof data === "object") {
         dict = data;
         dataReady = true;
         if (onReadyCallback) {
@@ -84,7 +84,7 @@ TQ.Locale = (function () {
   }
 
   function tag2String(tag) {
-    return tag.replace(/-/g, ' ');
+    return tag.replace(/-/g, " ");
   }
 
   function initialize(lang) {
@@ -96,7 +96,7 @@ TQ.Locale = (function () {
 
   function output() {
     if (!fondNewTag) {
-      console.log('new new tag found!');
+      console.log("new new tag found!");
     } else {
       console.log(JSON.stringify(dict));
     }

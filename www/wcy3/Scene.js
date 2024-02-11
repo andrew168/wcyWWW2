@@ -1,6 +1,5 @@
 TQ = TQ || {};
-(function () {
-
+(function() {
   var self;
 
   function Scene() {
@@ -8,7 +7,7 @@ TQ = TQ || {};
     this.levels = [];
     this.outro = null;
     this.topic = TQ.State.topic;
-    this.onsceneload = null;     // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
+    this.onsceneload = null; // 不能使用系统 的函数名称，比如： onload， 这样会是混淆
     this.version = Scene.VER_LATEST;
     this.setFilenameById(TQ.Config.UNNAMED_SCENE_ID); // filename是文件名， 仅仅只是机器自动生成的唯一编号
     this.setDesignatedSize(Scene.getDesignatedRegionDefault());
@@ -17,8 +16,8 @@ TQ = TQ || {};
     this.iComponentInfo = null; // 不是iComponents
   }
 
-  var allResourceReady = false,
-    allDataReady = false;
+  var allResourceReady = false;
+  var allDataReady = false;
   Scene.EVENT_READY = "sceneReady";
   Scene.EVENT_ALL_RESOURCE_READY = "all resource sceneReady";
   Scene.EVENT_ALL_DATA_READY = "all data sceneReady";
@@ -37,11 +36,11 @@ TQ = TQ || {};
   Scene.VER_LATEST = Scene.VER3_8;
   var stateStack = [];
   var p = Scene.prototype;
-  var _levelTs = [],
-    _levelTe = [];
+  var _levelTs = [];
+  var _levelTe = [];
 
   TQ.EventHandler.initialize(p); // 为它添加事件处理能力
-  p.title = null;  // title是微创意的标题，
+  p.title = null; // title是微创意的标题，
   p.description = null; // 内容描述，摘要， 用于微信分享，FB分享的简介文字
   p.ssPath = null;
   p.isPreloading = false;
@@ -66,15 +65,15 @@ TQ = TQ || {};
   Scene.saveState = saveState;
   Scene.restoreState = restoreState;
   Scene.getDefaultTitle = getDefaultTitle;
-  Scene.getWcyId = function () {
+  Scene.getWcyId = function() {
     return currScene.filename;
   };
 
-  Scene.setWcyId = function (id) {
+  Scene.setWcyId = function(id) {
     currScene.setFilenameById(id);
   };
 
-  Scene.getLocalId = function () {
+  Scene.getLocalId = function() {
     TQ.AssertExt.invalidLogic(!!currScene || !!currScene.moment, "在建立scene之后才能调用");
 
     if (!currScene.moment.localId) {
@@ -84,7 +83,7 @@ TQ = TQ || {};
     return currScene.moment.localId;
   };
 
-  Scene.getSsSign = function () {
+  Scene.getSsSign = function() {
     return currScene.moment.ssSign;
   };
 
@@ -103,15 +102,15 @@ TQ = TQ || {};
       }
     }
 
-    if (!!data.ssSign) {
+    if (data.ssSign) {
       currScene.setSsSign(data.ssSign);
     }
 
-    if (!!data.ssPath) {
+    if (data.ssPath) {
       currScene.setSsPath(data.ssPath);
     }
 
-    if (!!data.shareCode) {
+    if (data.shareCode) {
       TQ.State.shareCode = data.shareCode;
     } else {
       TQ.State.shareCode = null;
@@ -138,7 +137,7 @@ TQ = TQ || {};
           // }
           wx.miniProgram.navigateBack({
             delta: 1,
-            complete: function () {
+            complete: function() {
               // if (callback) {
               //   callback();
               // }
@@ -163,7 +162,7 @@ TQ = TQ || {};
   }
 
   function saveState() {
-    stateStack.push({tT: Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId});
+    stateStack.push({ tT: Scene.localT2Global(TQ.FrameCounter.t()), levelId: currScene.currentLevelId });
   }
 
   function restoreState(options) {
@@ -174,7 +173,7 @@ TQ = TQ || {};
     } while (stateStack.length > 0);
 
     if (state) {
-      if (!options || !options.hasOwnProperty('levelId')) {
+      if (!options || !options.hasOwnProperty("levelId")) {
         TQ.TimerUI.setGlobalTime(state.tT);
       }
     } else {
@@ -182,20 +181,20 @@ TQ = TQ || {};
     }
   }
 
-  p.getDesignatedRegion = function () {
+  p.getDesignatedRegion = function() {
     return {
       w: this.getDesignatedWidth(),
       h: this.getDesignatedHeight()
-    }
+    };
   };
 
-  Scene.getDesignatedRegionDefault = function () {
+  Scene.getDesignatedRegionDefault = function() {
     var designated;
     if (TQUtility.isMobile()) {
       designated = {
         w: TQ.State.innerWidth,
         h: TQ.State.innerHeight
-      }
+      };
     } else {
       if (!TQ.State.designatedWidth || !TQ.State.designatedHeight) {
         TQ.State.designatedWidth = TQ.Config.designatedWidth;
@@ -204,13 +203,13 @@ TQ = TQ || {};
       designated = {
         w: TQ.State.designatedWidth,
         h: TQ.State.designatedHeight
-      }
+      };
     }
     return designated;
   };
 
   // dynamic APIs
-  p.shooting = function () {
+  p.shooting = function() {
     this.state = TQBase.LevelState.SHOOTING;
   };
 
@@ -218,18 +217,18 @@ TQ = TQ || {};
   // 这是scene的主控程序
   var isStarted = false;
 
-  p.start = function () {
+  p.start = function() {
     if (!isStarted) {
       isStarted = true;
       self.mainLoop();
     }
   };
 
-  p.mainLoop = function () {
+  p.mainLoop = function() {
     if (TQ.State.waitForFirstClick) {
       return;
     }
-    requestAnimationFrame(function () {
+    requestAnimationFrame(function() {
       if (isStarted) {
         self.updateAfterRender();
         self.onTick();
@@ -238,13 +237,13 @@ TQ = TQ || {};
     });
   };
 
-  p.onTick = function () {
+  p.onTick = function() {
     if (this.state <= TQBase.LevelState.INITING) {
       this.update(0); // 只更新状态,
     }
 
     if ((this.state < TQBase.LevelState.RUNNING) || // Running 之前, 包括:init, loading等等, 不适合update
-      (this.isUpdating) ||  // 避免重复进入
+      (this.isUpdating) || // 避免重复进入
       (TQ.State.editorMode <= TQ.SceneEditor.MODE.FIRST)) { // UI：在欢迎页面，首页， 不update
       return;
     }
@@ -256,8 +255,8 @@ TQ = TQ || {};
     }
 
     this.isUpdating = true;
-    TQ.FrameCounter.update();  // 前进一帧, 只有play和播放的时候, 才移动Frame
-    //ToDo:@UI  TQ.TimerUI.update();  // 必须先更新数据, 在更新UI
+    TQ.FrameCounter.update(); // 前进一帧, 只有play和播放的时候, 才移动Frame
+    // ToDo:@UI  TQ.TimerUI.update();  // 必须先更新数据, 在更新UI
     if (this.isDirty || TQ.FrameCounter.isPlaying()) {
       this.update(TQ.FrameCounter.t());
       if (this.overlay) {
@@ -280,7 +279,7 @@ TQ = TQ || {};
     this.isUpdating = false;
   };
 
-  p.onReadyToShow = function (callback) {
+  p.onReadyToShow = function(callback) {
     if (this.isReadyToShow && callback) {
       callback();
     } else {
@@ -288,7 +287,7 @@ TQ = TQ || {};
     }
   };
 
-  p.update = function (t) {
+  p.update = function(t) {
     TQ.SceneEditor.updateMode();
     this.updateReadyFlag();
     this.updateLevelRange();
@@ -305,7 +304,7 @@ TQ = TQ || {};
           if (this.hasMusicCompleted() || TQ.FrameCounter.abPreviewFinished()) {
             if (!TQ.FrameCounter.isAutoRewind()) {
               // this.stop();
-              TQ.Log.checkPoint('Scene.EVENT_END_OF_PLAY');
+              TQ.Log.checkPoint("Scene.EVENT_END_OF_PLAY");
               TQ.Base.Utility.triggerEvent(document.body, Scene.EVENT_END_OF_PLAY);
               this.stop();
             } else if (!TQ.FrameCounter.isInverse()) {
@@ -319,16 +318,16 @@ TQ = TQ || {};
     }
   };
 
-  p.updateTimeTable = function () {
+  p.updateTimeTable = function() {
     // update 当前level的时间
-    if (!TQ.SceneEditor.isEditMode()) {  //录制的时候， 自动延长 本场景的时间长度
+    if (!TQ.SceneEditor.isEditMode()) { // 录制的时候， 自动延长 本场景的时间长度
       TQ.FrameCounter.setTMax(this.currentLevel.getTime());
     }
     // update 其它level的 相对时间点
     this.updateT0();
   };
 
-  p.updateT0 = function () {
+  p.updateT0 = function() {
     var t = 0;
     for (var i = 0; i < this.levelNum(); i++) {
       var level = this.getLevel(i);
@@ -373,14 +372,14 @@ TQ = TQ || {};
     currScene.play();
   }
 
-  p.render = function () {
+  p.render = function() {
     TQ.Assert.isNotNull(stage);
     stage.update();
   };
 
-  p.showLevel = function () {
+  p.showLevel = function() {
     TQ.MessageBox.reset();
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNumWithOutro()); //level ID 超界
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.currentLevelId < this.levelNumWithOutro()); // level ID 超界
     if (this.currentLevelId < 0) {
       TQ.AssertExt.isTrue(this.currentLevelId >= 0, "为什么会是负的？");
       this.currentLevelId = 0;
@@ -393,12 +392,12 @@ TQ = TQ || {};
     this.isDirty = true;
   };
 
-  p.selectLevel = function (id) {
+  p.selectLevel = function(id) {
     this.currentLevelId = id;
     this.currentLevel = this.getLevel(this.currentLevelId);
     assertNotNull(TQ.Dictionary.INVALID_LOGIC, this.currentLevel);
     var thisScene = this;
-    this.currentLevel.onLevelRunning = function () {
+    this.currentLevel.onLevelRunning = function() {
       if ((thisScene.state === TQBase.LevelState.RUNNING) ||
         (thisScene.state === TQBase.LevelState.EDITING)) {
         return;
@@ -412,7 +411,7 @@ TQ = TQ || {};
     this.currentLevel.onSelected();
   };
 
-  p.joint = function (elements, hasUnJointFlag) {
+  p.joint = function(elements, hasUnJointFlag) {
     if (hasUnJointFlag) {
       this.currentLevel.unJoint(elements);
     } else {
@@ -420,13 +419,13 @@ TQ = TQ || {};
         TQ.InputCtrl.setSubobjectMode();
       }
       this.currentLevel.joint(elements);
-      TQ.InputCtrl.clearSubjectModeAndMultiSelect()
+      TQ.InputCtrl.clearSubjectModeAndMultiSelect();
     }
 
     this.isSaved = false;
   };
 
-  p.groupIt = function (elements, hasUnGroupFlag) {
+  p.groupIt = function(elements, hasUnGroupFlag) {
     if (hasUnGroupFlag) {
       this.currentLevel.unGroup(elements);
     } else {
@@ -436,22 +435,22 @@ TQ = TQ || {};
     this.isSaved = false;
   };
 
-  p.skinning = function (parent, child) {
+  p.skinning = function(parent, child) {
     this.currentLevel.skinning(parent, child);
     this.isSaved = false;
   };
 
   // for both image and animation
-  p.addItem = function (desc) {
+  p.addItem = function(desc) {
     this.isDirty = true;
     var level = desc.dstLevel;
-    delete(desc.dstLevel);
+    delete (desc.dstLevel);
     if ((desc.toOverlay == undefined) || (desc.toOverlay == null)) {
       if (desc.levelId != undefined) {
         level = this.getLevel(desc.levelId);
       }
     } else {
-      assertTrue(TQ.Dictionary.INVALID_PARAMETER + ": " + desc.toOverlay, (desc.toOverlay == 1)); //overlay参数有误
+      assertTrue(TQ.Dictionary.INVALID_PARAMETER + ": " + desc.toOverlay, (desc.toOverlay == 1)); // overlay参数有误
       assertTrue("is empty? ", this.overlay);
       if (this.overlay) {
         level = this.overlay;
@@ -476,13 +475,13 @@ TQ = TQ || {};
     return ele;
   };
 
-  p.undeleteElement = function (ele) {
+  p.undeleteElement = function(ele) {
     TQ.GarbageCollector.remove(ele);
     ele.level = this.currentLevel;
     this.addElementDirect(ele);
   };
 
-  p.addElementDirect = function (ele) {
+  p.addElementDirect = function(ele) {
     var level = ele.level;
     this.isDirty = true;
     level.addElementDirect(ele);
@@ -491,38 +490,37 @@ TQ = TQ || {};
     }
   };
 
-  p.addText = function (desc) {
+  p.addText = function(desc) {
     this.isDirty = true;
     return this.currentLevel.addElement(desc);
   };
 
-  p.deleteElement = function (ele) {
+  p.deleteElement = function(ele) {
     this.isDirty = true;
     assertNotNull(TQ.Dictionary.PleaseSelectOne, ele);
     if (ele != null) {
       this.currentLevel.deleteElement(ele);
       if (ele.isSound()) {
         TQ.SoundMgr.deleteItem(ele);
-      } else if (ele.isVideo()){
+      } else if (ele.isVideo()) {
         TQ.VideoMgr.deleteItem(ele);
       }
     }
   };
 
-  p.preLevel = function () {
+  p.preLevel = function() {
     if (this.currentLevelId > 0) {
       this.gotoLevel(this.currentLevelId - 1);
     }
   };
 
-  p.nextLevel = function () {
+  p.nextLevel = function() {
     if (!this.isLastLevel()) {
       this.gotoLevel(this.currentLevelId + 1);
     }
   };
 
-
-  p.isEmpty = function () {
+  p.isEmpty = function() {
     for (var i = 0; i < this.levelNum(); i++) {
       if (!this.getLevel(i).isEmpty()) {
         return false;
@@ -532,33 +530,33 @@ TQ = TQ || {};
     return true;
   };
 
-  p.isCurrentLevelEmpty = function () {
+  p.isCurrentLevelEmpty = function() {
     return ((this.levelNum() == 0) ||
       !this.currentLevel ||
       this.currentLevel.isEmpty());
   };
 
-  p.isAllResourceReady = function () {
+  p.isAllResourceReady = function() {
     return allResourceReady;
   };
 
-  p.isAllDataReady = function () {
+  p.isAllDataReady = function() {
     return allDataReady;
   };
 
-  p.isLastLevel = function () {
+  p.isLastLevel = function() {
     return ((this.currentLevelId + 1) >= this.levelNumWithOutro());
   };
 
-  p.isIComponent = function () {
+  p.isIComponent = function() {
     return (this.iComponentInfo && !!this.iComponentInfo.Type);
   };
 
-  p.iComponentHasThumbnail = function () {
+  p.iComponentHasThumbnail = function() {
     return (this.iComponentInfo && !!this.iComponentInfo.thumbPath);
   };
 
-  p.isValidIComponent = function () {
+  p.isValidIComponent = function() {
     return (this.levelNum() === 1 && this.levels[0].itemNum() === 1);
   };
 
@@ -573,7 +571,7 @@ TQ = TQ || {};
   };
 
   p.forceToComponent = function() {
-    //元件： 必须是以group元素为唯一root， （关节元素属于Element类， 不是group)
+    // 元件： 必须是以group元素为唯一root， （关节元素属于Element类， 不是group)
     if (this.levelNum() >= 1) {
       var level1 = this.levels[0];
       if ((level1.itemNum() > 1) ||
@@ -587,15 +585,15 @@ TQ = TQ || {};
     }
   };
 
-  p.hasMusicCompleted = function () {
+  p.hasMusicCompleted = function() {
     return (this.tMax < this.toGlobalTime(TQ.FrameCounter.t()));
   };
 
-  p.hasAnimation = function () {
+  p.hasAnimation = function() {
     return ((this.levelNum() === 1) && this.getLevel(0).hasAnimation());
   };
 
-  p.gotoLevel = function (id) {
+  p.gotoLevel = function(id) {
     this.isDirty = true;
     id = (id >= this.levelNumWithOutro()) ? (this.levelNumWithOutro() - 1) : id;
     id = (id < 0) ? 0 : id;
@@ -604,22 +602,22 @@ TQ = TQ || {};
       if (level.resourceReady) {
         self.doTransition(id);
       } else {
-        level.onResourceReady = function () {
-          setTimeout(function () { // 避免直接调用
+        level.onResourceReady = function() {
+          setTimeout(function() { // 避免直接调用
             self.doTransition(id);
           });
-        }
+        };
       }
     }
   };
 
-  p.doTransition = function (id) {
+  p.doTransition = function(id) {
     TQ.FloatToolbar.close();
     if (this.currentLevelId !== id) {
       if (TQ.State.allowPageTransition && TQ.PageTransition && (this.currentLevelId >= 0)) {
-        TQ.PageTransition.start(self.currentLevelId, id, function () {
+        TQ.PageTransition.start(self.currentLevelId, id, function() {
           self.doGotoLevel(id);
-        })
+        });
       } else {
         self.doGotoLevel(id);
       }
@@ -628,13 +626,13 @@ TQ = TQ || {};
     }
   };
 
-  p.doGotoLevel = function (id) {
+  p.doGotoLevel = function(id) {
     this.currentLevel.exit();
     this.currentLevelId = id;
     this.showLevel();
   };
 
-  p.open = function (fileInfo) {
+  p.open = function(fileInfo) {
     p.isPlayOnly = (fileInfo.isPlayOnly === undefined) ? false : fileInfo.isPlayOnly;
     // TQ.MessageBox.showWaiting(TQ.Locale.getStr('prepare to open...'));
     this.reset();
@@ -644,10 +642,10 @@ TQ = TQ || {};
 
     // 删除 旧的Levels。
     function onOpened() {
-      TQ.Log.checkPoint('scene opened, 1st level: ' + self.currentLevelId);
+      TQ.Log.checkPoint("scene opened, 1st level: " + self.currentLevelId);
       self.showLevel();
       TQ.MessageBox.reset();
-      setTimeout(function () {
+      setTimeout(function() {
         self.start();
       });
     }
@@ -660,24 +658,24 @@ TQ = TQ || {};
     }
 
     if (!fileInfo.content) {
-      this.loadFromJson(fileInfo.name, 'gameScenes');
+      this.loadFromJson(fileInfo.name, "gameScenes");
     } else {
-      this._jsonStrToScene(this, fileInfo.content, 'gameScene');
+      this._jsonStrToScene(this, fileInfo.content, "gameScene");
     }
-    if (null == this.overlay) {
+    if (this.overlay == null) {
       this.overlay = new TQ.Overlay({});
     }
     this.isDirty = true;
   };
 
-  p.reset = function () { // 在打开文件，或者创建新文件的时候， 重新设置环境
+  p.reset = function() { // 在打开文件，或者创建新文件的时候， 重新设置环境
     //   $('#stop').trigger('click');
     this.setEditor();
     this.setDefaultValue();
     _levelTe.splice(0);
     _levelTs.splice(0);
     this.setDesignatedSize(Scene.getDesignatedRegionDefault());
-    //ToDo:@UI   initMenu(); // 重新设置菜单
+    // ToDo:@UI   initMenu(); // 重新设置菜单
 
     // close current if  has one;
     if (!((this.currentLevel == undefined) || (this.currentLevel == null))) {
@@ -696,13 +694,13 @@ TQ = TQ || {};
     }
   };
 
-  p.setDefaultValue = function () {
+  p.setDefaultValue = function() {
     allResourceReady = false;
     allDataReady = false;
-    TQ.QueryParams.shareCode = '';
+    TQ.QueryParams.shareCode = "";
     this.tMax = 0;
-    this.isSaved = true;  //只是打开旧的文件， 没有尚未修改
-    this.isShared = false;  //只是打开旧的文件， 没有尚未修改
+    this.isSaved = true; // 只是打开旧的文件， 没有尚未修改
+    this.isShared = false; // 只是打开旧的文件， 没有尚未修改
     this.title = TQ.Config.UNNAMED_SCENE; // 必须reset, 因为currScene在New新作品的时候， reuse了
     this.setFilenameById(TQ.Config.UNNAMED_SCENE_ID);
     this.description = null;
@@ -719,7 +717,7 @@ TQ = TQ || {};
     this.backgroundColor = TQ.Config.BACKGROUND_COLOR;
   };
 
-  p.resetMoment = function () {
+  p.resetMoment = function() {
     // moment 存储短暂的数据，
     // 1) 不需要永久保存到opus文件中， ==> 例如：localId，ssSign, 但是ssPath不行
     // 2) 建立新文件的时候，要reset
@@ -729,7 +727,7 @@ TQ = TQ || {};
     };
   };
 
-  p.setDesignatedSize = function (region) {
+  p.setDesignatedSize = function(region) {
     this.designatedWidth = region.w;
     this.designatedHeight = region.h;
     TQ.Config.snapDX = this.designatedWidth / 20;
@@ -737,15 +735,15 @@ TQ = TQ || {};
     TQ.Config.FONT_LEVEL_UNIT = Math.min(this.designatedWidth, this.designatedHeight) / 30;
   };
 
-  p.getDesignatedWidth = function () {
+  p.getDesignatedWidth = function() {
     return this.designatedWidth;
   };
 
-  p.getDesignatedHeight = function () {
+  p.getDesignatedHeight = function() {
     return this.designatedHeight;
   };
 
-  p.getLevel = function (id) {
+  p.getLevel = function(id) {
     if (id < this.levelNum()) {
       return this.levels[id];
     } else {
@@ -757,16 +755,16 @@ TQ = TQ || {};
     return null;
   };
 
-  p.getElement = function (id) {
+  p.getElement = function(id) {
     assertValid("this.currentLevel", this.currentLevel);
     return this.currentLevel.getElement(id);
   };
-  p.getElements = function () {
+  p.getElements = function() {
     assertValid("this.currentLevel", this.currentLevel);
     return this.currentLevel.getElements();
   };
 
-  p.getAllSounds = function () { // 只返回当前场景的声音， 不能跨场景操作其它场景里面的声音
+  p.getAllSounds = function() { // 只返回当前场景的声音， 不能跨场景操作其它场景里面的声音
     if (this.currentLevel) {
       var result = this.currentLevel.getSounds();
     } else {
@@ -775,24 +773,24 @@ TQ = TQ || {};
     return result;
   };
 
-  p.findAtom = function (displayObj) {
+  p.findAtom = function(displayObj) {
     assertValid("this.currentLevel", this.currentLevel);
     return this.currentLevel.findAtom(displayObj);
   };
 
-  p.getSelectedElement = function () {
+  p.getSelectedElement = function() {
     assertTrue(TQ.Dictionary.isDepreciated, false);
   };
 
-  p.levelNum = function () {
+  p.levelNum = function() {
     return this.levels.length;
   };
 
-  p.levelNumWithOutro = function () {
+  p.levelNumWithOutro = function() {
     return this.levelNum() + this.outroLevelNum();
   };
 
-  p.outroLevelNum = function () {
+  p.outroLevelNum = function() {
     return (!this.outro) ? 0 : this.outro.length;
   };
 
@@ -803,7 +801,7 @@ TQ = TQ || {};
 	 如果id没有定义，则自动在末尾添加一个场景
 	 返回值是最大level编号
 	 */
-  p.addLevel = function (id, levelContent) {
+  p.addLevel = function(id, levelContent) {
     var levelNum = this.levelNum();
     if (id === undefined) {
       id = levelNum;
@@ -812,7 +810,7 @@ TQ = TQ || {};
     this.isDirty = true;
     if (!levelContent) {
       var levelName = levelNum; // levelNum只是一个流水号， 暂时没有其它用途
-      levelContent = new TQ.Level({name: levelName});
+      levelContent = new TQ.Level({ name: levelName });
       levelContent.onLoaded(); // 新建立的，没有任何元素， 所以,直接调用onLoaded, 以设置dataReady等标志
     }
     this.levels.splice(id, 0, levelContent);
@@ -823,11 +821,11 @@ TQ = TQ || {};
 	 删除第id(id >=0）个场景， 并且把此后的场景前移。
 	 如果id超出边界（id < 0)，则忽略
 	 */
-  p.deleteLevel = function (id) {
+  p.deleteLevel = function(id) {
     return this.cutLevel(id);
   };
 
-  p.cutLevel = function (id) {
+  p.cutLevel = function(id) {
     if ((id < 0) || (id >= this.levelNum())) {
       assertTrue(TQ.Dictionary.INVALID_PARAMETER, false);
       return;
@@ -846,7 +844,7 @@ TQ = TQ || {};
 	 注意：srcId和dstId都是在执行此函数之前， 按照场景的顺序来编号的。
 	 用户不需要关心
 	 */
-  p.moveTo = function (srcId, dstId) {
+  p.moveTo = function(srcId, dstId) {
     var content = this.cutLevel(srcId);
     if (srcId < dstId) {
       dstId--;
@@ -857,10 +855,10 @@ TQ = TQ || {};
   /*
 	 复制序号为srcId的场景的内容，并插入到序号dstId的场景之前，
 	 */
-  p.copyTo = function (srcId, dstId) {
-    var srcLevel = this.getLevel(srcId),
-      jsonData,
-      newLevel;
+  p.copyTo = function(srcId, dstId) {
+    var srcLevel = this.getLevel(srcId);
+    var jsonData;
+    var newLevel;
     srcLevel.prepareForJSONOut();
     jsonData = JSON.stringify(srcLevel);
     srcLevel.afterToJSON();
@@ -868,12 +866,12 @@ TQ = TQ || {};
     return this.addLevel(dstId, newLevel);
   };
 
-  p.duplicateCurrentLevel = function () {
+  p.duplicateCurrentLevel = function() {
     // 新增的level, 紧随currentLevel之后，id+1， 并且，设置为新的currentLevel
-    var newLevelId = this.currentLevelId + 1,
-      newLevel;
+    var newLevelId = this.currentLevelId + 1;
+    var newLevel;
     this.copyTo(this.currentLevelId, newLevelId);
-    TQ.RM.onCompleteOnce(function () {
+    TQ.RM.onCompleteOnce(function() {
       newLevel.onLoaded();
     });
     newLevel = this.getLevel(newLevelId);
@@ -882,11 +880,11 @@ TQ = TQ || {};
 
   // !!! can not recover, be careful!
   // empty the current scene
-  p.empty = function () {
+  p.empty = function() {
     var level;
     if (!this.isEmpty()) {
       this.stop();
-      this.close(true);  // discard
+      this.close(true); // discard
       while (this.levelNum() > 1) {
         var levelId = this.levelNum() - 1;
         this.deleteLevel(levelId);
@@ -905,17 +903,17 @@ TQ = TQ || {};
   };
 
   // JQuery Ajax version
-  p.loadFromJson = function (filename, alias) {
+  p.loadFromJson = function(filename, alias) {
     // TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
-    (function (pt) {
-      netOpen(filename, function (jqResponse) {
+    (function(pt) {
+      netOpen(filename, function(jqResponse) {
         pt._jsonStrToScene(pt, jqResponse, alias);
       });
     })(this);
   };
 
-  p._jsonStrToScene = function (pt, jsonStr, alias) {
-    ///任何修改，必须确保5种打开方式都OK:
+  p._jsonStrToScene = function(pt, jsonStr, alias) {
+    // /任何修改，必须确保5种打开方式都OK:
     // ** url
     // ** latest opus
     // ** my opus pane
@@ -931,7 +929,7 @@ TQ = TQ || {};
       // 给一个空白文件， 确保可可持续进行
       objJson = getEmptySceneJSON();
     }
-    objJson.alias = (alias == null) ? 'none' : alias;
+    objJson.alias = (alias == null) ? "none" : alias;
     if (!objJson.filename || objJson.filename === TQ.Config.UNNAMED_SCENE_ID) {
       objJson.filename = TQ.Config.UNNAMED_SCENE_ID;
       if (TQ.State.shareCode) {
@@ -945,7 +943,7 @@ TQ = TQ || {};
       }
     }
     objJson.remote = true;
-    if (p.isPlayOnly) {// 播放， 总是从第1场景的第t0=0时刻开始
+    if (p.isPlayOnly) { // 播放， 总是从第1场景的第t0=0时刻开始
       objJson.currentLevelId = 0;
       objJson.levels[0].t0 = 0.0;
     }
@@ -957,7 +955,7 @@ TQ = TQ || {};
     for (var i = jsonObj.levels.length - 1; i >= 0; i--) {
       var desc = jsonObj.levels[i];
       if ((desc.elements == null) || (desc.elements.length <= 0)) {
-        if ((i != 0) || (jsonObj.levels.length > 1)) { //至少保留一个level, 不论空白与否。
+        if ((i != 0) || (jsonObj.levels.length > 1)) { // 至少保留一个level, 不论空白与否。
           this.isDirty = true;
           jsonObj.levels.splice(i, 1);
         }
@@ -966,12 +964,12 @@ TQ = TQ || {};
     this.isDirty = true;
   }
 
-  p._fixedUp = function (objJson) {
+  p._fixedUp = function(objJson) {
     if (TQ.Config.REMOVE_EMPTY_LEVEL_ON) {
       Scene.removeEmptyLevel(objJson);
     }
     // 删除临时办理，（升级用，防止，旧文件中带有这些参数）
-    delete(objJson.isPlayOnly);
+    delete (objJson.isPlayOnly);
 
     if (objJson.currentLevelId >= objJson.levels.length) {
       objJson.currentLevelId = 0;
@@ -983,7 +981,7 @@ TQ = TQ || {};
     objJson.topic = null;
     this.state = TQBase.LevelState.NOT_INIT;
     if (!objJson.version) {
-      this.version = Scene.VER1;  // 升级旧版的作品， 添加其版本号
+      this.version = Scene.VER1; // 升级旧版的作品， 添加其版本号
     }
 
     if (objJson.version !== Scene.VER_LATEST) {
@@ -998,14 +996,14 @@ TQ = TQ || {};
       designated = {
         w: objJson.designatedWidth,
         h: objJson.designatedHeight
-      }
+      };
     }
 
     this.setDesignatedSize(designated);
-    //initialize with defaults
+    // initialize with defaults
     objJson.currentLevelId = (objJson.currentLevelId == undefined) ? 0 : objJson.currentLevelId;
     this.currentLevelId = objJson.currentLevelId;
-    this.currentLevelId = 0; //ToDo: 迫使系统总是打开第一个场景
+    this.currentLevelId = 0; // ToDo: 迫使系统总是打开第一个场景
     this.title = (!objJson.title) ? null : objJson.title;
     this.topicId = objJson.topicId || 0;
     this.tMax = (objJson.tMax === undefined) ? this.tMax : objJson.tMax;
@@ -1018,7 +1016,7 @@ TQ = TQ || {};
     this.preload();
   };
 
-  p.fixedUpLevels = function (levels, objJson) {
+  p.fixedUpLevels = function(levels, objJson) {
     // create levels
     var desc = null;
     var num = (!objJson || !objJson.levels) ? 0 : objJson.levels.length;
@@ -1037,11 +1035,11 @@ TQ = TQ || {};
     }
   };
 
-  p.preload = function () {
-    //start preloader
-    var self = this,
-      num = self.levelNumWithOutro(),
-      levelToPreload = 0;
+  p.preload = function() {
+    // start preloader
+    var self = this;
+    var num = self.levelNumWithOutro();
+    var levelToPreload = 0;
 
     // 设置each Level的resourceReady标志, and start show
     loadOneLevel(null, levelToPreload);
@@ -1067,7 +1065,7 @@ TQ = TQ || {};
       for (; levelToPreload < (num + 1); levelToPreload++) {
         nextLevel = (levelToPreload === num) ? self.overlay : self.getLevel(levelToPreload);
         if (!nextLevel.resourceReady) {
-          TQ.RM.onCompleteOnce(function () {
+          TQ.RM.onCompleteOnce(function() {
             loadOneLevel(nextLevel, levelToPreload + 1);
           });
           self.startPreloader(nextLevel);
@@ -1076,10 +1074,10 @@ TQ = TQ || {};
       }
     }
 
-    TQ.Log.debugInfo(TQ.Locale.getStr('loading resource of ') + " <" + this.title + ">.");
+    TQ.Log.debugInfo(TQ.Locale.getStr("loading resource of ") + " <" + this.title + ">.");
   };
 
-  p.setEditor = function () {
+  p.setEditor = function() {
     if (TQ.SceneEditor.isEditMode()) {
       // $('#playRecord').click();
     } else if (TQ.SceneEditor.isPlayMode()) {
@@ -1094,7 +1092,7 @@ TQ = TQ || {};
     this.isDirty = true;
   };
 
-  p.setSsPath = function (ssPath) {
+  p.setSsPath = function(ssPath) {
     ssPath = TQ.RM.toRelative(ssPath);
     if ((!this.ssPath) || (this.ssPath !== ssPath)) {
       this.ssPath = ssPath;
@@ -1103,7 +1101,7 @@ TQ = TQ || {};
     }
   };
 
-  p.setSsSign = function (ssSign) {
+  p.setSsSign = function(ssSign) {
     if ((!this.moment.ssSign) || (this.moment.ssSign !== ssSign)) {
       this.moment.ssSign = ssSign;
       this.isDirty = true;
@@ -1111,7 +1109,7 @@ TQ = TQ || {};
     }
   };
 
-  p.startPreloader = function (level) {
+  p.startPreloader = function(level) {
     if (level) {
       level.setupPreloader();
     }
@@ -1120,32 +1118,32 @@ TQ = TQ || {};
     }
   };
 
-  p.afterToJSON = function () {
+  p.afterToJSON = function() {
     for (var i = 0; i < this.levelNum(); i++) {
       this.getLevel(i).afterToJSON();
     }
   };
 
-  p.toJSON = function () {
+  p.toJSON = function() {
     var scene2 = TQ.Base.Utility.shadowCopy(this);
-    //必须忽略这些临时的变量，否则， 在open的时候，他们就会覆盖currScene中的值
-    delete(scene2.currentLevel);
-    delete(scene2.isUpdating);
-    delete(scene2.isSaved);
-    delete(scene2.onsceneload);
-    delete(scene2.isPlayOnly);
-    delete(scene2.state);
+    // 必须忽略这些临时的变量，否则， 在open的时候，他们就会覆盖currScene中的值
+    delete (scene2.currentLevel);
+    delete (scene2.isUpdating);
+    delete (scene2.isSaved);
+    delete (scene2.onsceneload);
+    delete (scene2.isPlayOnly);
+    delete (scene2.state);
     if (scene2.outro !== undefined) {
-      delete(scene2.outro);
+      delete (scene2.outro);
     }
     if (scene2.outroInitialized !== undefined) { // 不需要保存的临时状态， 放在一个变量里面
-      delete(scene2.outroInitialized);
+      delete (scene2.outroInitialized);
     }
     return scene2;
   };
 
-  p.getData = function () {
-    TQ.AssertExt.invalidLogic(allDataReady, '有level没有完全加载和build，不能调用');
+  p.getData = function() {
+    TQ.AssertExt.invalidLogic(allDataReady, "有level没有完全加载和build，不能调用");
     for (var i = 0; i < this.levelNum(); i++) {
       this.getLevel(i).prepareForJSONOut();
     }
@@ -1154,13 +1152,13 @@ TQ = TQ || {};
     this.afterToJSON();
 
     if (data.length > TQ.Config.MAX_FILE_SIZE) {
-      TQ.MessageBox.toast(TQ.Locale.getStr('file is too long, please save your work ASAP'));
+      TQ.MessageBox.toast(TQ.Locale.getStr("file is too long, please save your work ASAP"));
     }
 
     return compress(data, this.ssPath, this.title);
   };
 
-  p.attachOutro = function (outroJson) {
+  p.attachOutro = function(outroJson) {
     this.outroInitialized = true;
     var tempOutro = [];
     this.fixedUpLevels(tempOutro, outroJson);
@@ -1170,14 +1168,14 @@ TQ = TQ || {};
     }
   };
 
-  p.getOutroId = function () {
+  p.getOutroId = function() {
     if (this.topic && this.topic.outroId !== undefined && this.topic.outroId != 0) {
       return this.topic.outroId;
     }
     return null;
   };
 
-  p.updateShareData = function () {
+  p.updateShareData = function() {
     var level1 = (this.levelNum() > 0) ? this.getLevel(0) : null;
     if (level1) {
       this.title = this.title || level1.getText(0);
@@ -1188,8 +1186,8 @@ TQ = TQ || {};
     }
   };
 
-  /// close current scene
-  p.close = function (discard) {
+  // / close current scene
+  p.close = function(discard) {
     if (this.isSaved || this.isEmpty() || !!discard) {
       if (this.currentLevel != null) {
         TQ.RM.reset(); // 必须先停止RM，否则其中的callback如果引用了Level对象就会出错
@@ -1199,7 +1197,7 @@ TQ = TQ || {};
         this.currentLevel.exit();
         this.currentLevel = null;
       }
-      this.levels.splice(1, this.levelNum() - 1);  // 释放原来的数据
+      this.levels.splice(1, this.levelNum() - 1); // 释放原来的数据
       this.currentLevel = this.getLevel(0);
       this.currentLevelId = 0;
       this.currentLevel.empty();
@@ -1212,7 +1210,7 @@ TQ = TQ || {};
     return false;
   };
 
-  p.toGlobalTime = function (t) {
+  p.toGlobalTime = function(t) {
     if (!this.currentLevel) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return t;
@@ -1220,7 +1218,7 @@ TQ = TQ || {};
     return (t + this.currentLevel.getT0());
   };
 
-  p.stop = function () {
+  p.stop = function() {
     if (this.currentLevel) {
       this.currentLevel.stop();
     }
@@ -1230,7 +1228,7 @@ TQ = TQ || {};
     TQ.ParticleMgr.pause();
   };
 
-  p.play = function () {
+  p.play = function() {
     TQ.FloatToolbar.close();
     TQ.FrameCounter.play();
     TQ.SoundMgr.resume();
@@ -1274,13 +1272,13 @@ TQ = TQ || {};
     return JSON.stringify(empty);
   }
 
-  p.updateLevelRange = function () {
-    var i = 0,
-      ts = 0,
-      te = 0,
-      tGlobalLastFrame = 0,
-      numOfLevel = (TQ.FrameCounter.isPlaying() ? this.levelNumWithOutro() : this.levelNum()),
-      level = null;
+  p.updateLevelRange = function() {
+    var i = 0;
+    var ts = 0;
+    var te = 0;
+    var tGlobalLastFrame = 0;
+    var numOfLevel = (TQ.FrameCounter.isPlaying() ? this.levelNumWithOutro() : this.levelNum());
+    var level = null;
 
     if (TQ.FrameCounter.isRecording()) {
       if (this.currentLevel && (this.currentLevel.getTime() < TQ.FrameCounter.maxTime())) {
@@ -1327,14 +1325,14 @@ TQ = TQ || {};
     }
   };
 
-  p.updateReadyFlag = function () {
+  p.updateReadyFlag = function() {
     if (allDataReady && allResourceReady) {
       return;
     }
 
-    var level,
-      _allResourceReady = true,
-      _allDataReady = true;
+    var level;
+    var _allResourceReady = true;
+    var _allDataReady = true;
     for (var i = 0; i < this.levelNum(); i++) {
       level = this.getLevel(i);
       if (!level.resourceReady) {
@@ -1358,18 +1356,18 @@ TQ = TQ || {};
     }
   };
 
-  p.updateAfterRender = function () {
+  p.updateAfterRender = function() {
     if (this.currentLevel) {
       this.currentLevel.updateRenderFlag();
     }
   };
 
-  p.setFilenameById = function (wcyId) {
+  p.setFilenameById = function(wcyId) {
     return this.filename = wcyId;
   };
 
-  p.hasFilename = function () {
-    TQ.AssertExt.invalidLogic(this.filename !== TQ.Config.UNNAMED_SCENE, 'filename 已经全部用纯数字的wcyId了');
+  p.hasFilename = function() {
+    TQ.AssertExt.invalidLogic(this.filename !== TQ.Config.UNNAMED_SCENE, "filename 已经全部用纯数字的wcyId了");
     return (this.filename && (this.filename !== TQ.Config.UNNAMED_SCENE_ID));
   };
 
@@ -1384,7 +1382,7 @@ TQ = TQ || {};
         return _levelTs[_levelTs.length - 1];
       } else {
         if (t > 0) {
-          TQ.Log.debugWarn('not initialized' + t);
+          TQ.Log.debugWarn("not initialized" + t);
         }
         return t;
       }
@@ -1421,7 +1419,7 @@ TQ = TQ || {};
       }
     }
 
-    return {levelId: id, t: t - _levelTs[id], gt: t};
+    return { levelId: id, t: t - _levelTs[id], gt: t };
   }
 
   function getTMax() {
@@ -1442,7 +1440,7 @@ TQ = TQ || {};
   function decompress(pkgJson) {
     var decompressed = pkgJson;
 
-    if (!!pkgJson && (typeof pkgJson === 'string')) {
+    if (!!pkgJson && (typeof pkgJson === "string")) {
       var obj = JSON.parse(pkgJson);
       if (obj.zip64 || obj.zip) {
         if (obj.zip) {
@@ -1452,7 +1450,7 @@ TQ = TQ || {};
         }
 
         if (!decompressed || decompressed.length < obj.length) {
-          TQ.AssertExt.invalidLogic(false, '解压后的长度小于压缩者，是不是结束符0出现了？');
+          TQ.AssertExt.invalidLogic(false, "解压后的长度小于压缩者，是不是结束符0出现了？");
           decompressed = pkgJson;
         }
       }
@@ -1462,9 +1460,9 @@ TQ = TQ || {};
   }
 
   function updateSSPath(pkg, newPath) {
-    var opusObj = JSON.parse(pkg.opusJson),
-      opusDataObj = JSON.parse(decompress(pkg.opusJson)),
-      title = opusDataObj.title;
+    var opusObj = JSON.parse(pkg.opusJson);
+    var opusDataObj = JSON.parse(decompress(pkg.opusJson));
+    var title = opusDataObj.title;
 
     opusDataObj.ssPath = opusObj.ssPath = newPath;
     pkg.opusJson = compress(JSON.stringify(opusDataObj), newPath, title);
@@ -1472,8 +1470,8 @@ TQ = TQ || {};
 
   // private
   function getDefaultTitle() {
-    return (TQ.State && TQ.State.topic && TQ.State.topic.title) ?
-      TQ.State.topic.title : TQ.Config.UNNAMED_SCENE;
+    return (TQ.State && TQ.State.topic && TQ.State.topic.title)
+      ? TQ.State.topic.title : TQ.Config.UNNAMED_SCENE;
   }
 
   TQ.Scene = Scene;

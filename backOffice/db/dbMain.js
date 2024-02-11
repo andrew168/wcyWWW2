@@ -2,18 +2,18 @@
  * Created by admin on 12/1/2015.
  */
 // getting-started.js
-var mongoose = require('mongoose'),//加载mongoose需要花很多时间，导致server启动的慢
-  assert = require('assert'),
-  configSvr = require('./../common/configSvr'),
-  url = configSvr.dbServer,
-  Users,
-  logger = require('./../common/logger'),
-  autoIncrement = require('mongoose-sequence')(mongoose);
+var mongoose = require("mongoose"); var // 加载mongoose需要花很多时间，导致server启动的慢
+  assert = require("assert");
+var configSvr = require("./../common/configSvr");
+var url = configSvr.dbServer;
+var Users;
+var logger = require("./../common/logger");
+var autoIncrement = require("mongoose-sequence")(mongoose);
 
 logger.config("udoido.log");
 
-var ObjectId = require('mongodb').ObjectID;
-//数据库操作类
+var ObjectId = require("mongodb").ObjectID;
+// 数据库操作类
 function DBMain() {
 
 }
@@ -37,7 +37,7 @@ function doInit(app, appConfig, callback) {
 
   function onErrorExt(err) {
     onError(err);
-    if (err && err.state && (err.state=== 1 || err.state === 2)) {
+    if (err && err.state && (err.state === 1 || err.state === 2)) {
       if (mongoose.connection) {
         mongoose.connection.close();
         console.log("try connect after close");
@@ -47,10 +47,10 @@ function doInit(app, appConfig, callback) {
       }
     }
 
-    if (err && err.name && err.name=== "MongoError") {
-      if (err.message === "connect ECONNREFUSED"){
+    if (err && err.name && err.name === "MongoError") {
+      if (err.message === "connect ECONNREFUSED") {
         if (launchCounter < 300) {
-          launchCounter ++;
+          launchCounter++;
           setTimeout(function() {
             tryToConnect();
           }, 2000);
@@ -60,8 +60,8 @@ function doInit(app, appConfig, callback) {
   }
 
   var db = mongoose.connection;
-  db.on('error', onErrorExt);
-  db.once('open', function (msg) {
+  db.on("error", onErrorExt);
+  db.once("open", function(msg) {
     DBMain.initialized = true;
     console.log("Database is opened successfully.");
     if (msg) {
@@ -69,11 +69,11 @@ function doInit(app, appConfig, callback) {
     }
 
     onConnected(appConfig);
-    if (!!callback) {
+    if (callback) {
       callback();
     }
-    maintainDB = require('./../admin/maintainDB');
-    setTimeout(function () {
+    maintainDB = require("./../admin/maintainDB");
+    setTimeout(function() {
       // 必须确认已经登录，才能enable下面的句子
       // maintainDB.saveAllMatToDB();
     }, 0);
@@ -95,12 +95,11 @@ function doInit(app, appConfig, callback) {
       // 链接数据库读写组件
       ctrl = require(item.ctrl);
 
-      //设置数据库的路由
+      // 设置数据库的路由
       // app.use('/' + item.name, ctrl.add);
     }
     console.log("DB Router start...");
   }
-
 
   async function tryToConnect() {
     console.log(launchCounter + "time launch....");
@@ -112,7 +111,7 @@ function doInit(app, appConfig, callback) {
       family: 4 // Use IPv4, skip trying IPv6
     };
 
-    connection = await mongoose.connect(url, options, function (err) {
+    connection = await mongoose.connect(url, options, function(err) {
       if (!err) {
         console.log("db started successfully!");
       } else {
@@ -121,13 +120,13 @@ function doInit(app, appConfig, callback) {
     });
   }
 
-  tryToConnect().catch(err => { console.log("AZError!\n\r");  console.log(err); });
+  tryToConnect().catch(err => { console.log("AZError!\n\r"); console.log(err); });
 }
 
 DBMain.stop = function() {
   if (!DBMain.initialized) {
     console.log("cmd to start db: ");
-    console.log('mongod -dbpath D:\\Tools\\dbMongo\\db');
+    console.log("mongod -dbpath D:\\Tools\\dbMongo\\db");
     assert.ok(false, "错误：没有initialization,  需要先 Start DB, first!");
     return;
   }
@@ -141,11 +140,11 @@ function showDocument(err, doc) {
 }
 
 var findUser = function() {
-  var query = Users.findOne().where('score', 100);
+  var query = Users.findOne().where("score", 100);
   query.exec(showDocument);
 };
 
-var updateRestaurants = function (db, callback) {
+var updateRestaurants = function(db, callback) {
 };
 
 // private functions:
@@ -153,9 +152,9 @@ function onError(e) {
   if (!e) {
     console.error("e is not defined in onError");
   } else {
-    console.error('数据库连接出错：1) 启动数据库 2) 检查网络连接! \n\r' + JSON.stringify(e));
+    console.error("数据库连接出错：1) 启动数据库 2) 检查网络连接! \n\r" + JSON.stringify(e));
     console.log(e);
-    if (!!e.message) {
+    if (e.message) {
       console.log(e.message);
     }
   }

@@ -6,7 +6,7 @@
  */
 
 TQ = TQ || {};
-(function () {
+(function() {
   function Video(src, onStarted) {
     this.playState = 0;
     this.host = null;
@@ -25,8 +25,8 @@ TQ = TQ || {};
   var contentDiv;
 
   Video.loadVideoRes = loadVideoRes;
-  Video.play = function (resId, onStarted) {
-    var instance = new Video(resId, function () {
+  Video.play = function(resId, onStarted) {
+    var instance = new Video(resId, function() {
       instance.play();
       if (onStarted) {
         onStarted(instance);
@@ -35,17 +35,17 @@ TQ = TQ || {};
     return instance;
   };
 
-  Video.stop = function (instance) {
+  Video.stop = function(instance) {
     if (instance) {
       instance.stop();
     }
   };
 
   var p = Video.prototype;
-  p.initialize = function () {
+  p.initialize = function() {
   };
 
-  p.reset = function () {
+  p.reset = function() {
     if (this.domEle) {
       this.domEle.currentTime = 0;
     }
@@ -53,11 +53,11 @@ TQ = TQ || {};
 
   p.play = function() {
     if (!this.domEle) {
-      TQ.AssertExt.depreciated('不支持这种case，必须有domEle，因为这是内部函数, 应该简化');
+      TQ.AssertExt.depreciated("不支持这种case，必须有domEle，因为这是内部函数, 应该简化");
     }
     this.addToDom();
     if (this.domEle) {
-      this.domEle.style.visibility = 'visible';
+      this.domEle.style.visibility = "visible";
       var self = this;
       if (!TQ.State.needUserClickToPlayAV) {
         var playPromise = this.domEle.play();
@@ -66,27 +66,27 @@ TQ = TQ || {};
         // }
 
         if (playPromise !== undefined) {
-          playPromise.then(function (value) {
+          playPromise.then(function(value) {
             self.domEle.play();
             if (self.host) {
               TQ.DirtyFlag.setElement(self.host);
             }
-          }).catch(function (error) {
+          }).catch(function(error) {
             console.log(error);
-            console.log('Autoplay was prevented.' +
-              'Show a "Play" button so that user can start playback');
+            console.log("Autoplay was prevented." +
+              "Show a \"Play\" button so that user can start playback");
           });
         }
       }
     }
   };
 
-  p.addToDom = function () {
+  p.addToDom = function() {
     if (!this.isInDom) {
       this.isInDom = true;
       this.duration = this.domEle.duration;
       if (!contentDiv) {
-        contentDiv = document.getElementById('testCanvas');
+        contentDiv = document.getElementById("testCanvas");
         if (contentDiv && contentDiv.parentElement) {
           contentDiv = contentDiv.parentElement;
         }
@@ -100,17 +100,17 @@ TQ = TQ || {};
     }
   };
 
-  p.stop = function (res) {
+  p.stop = function(res) {
     if (this.domEle) {
       this.domEle.pause();
     }
     this.playState = Video.PLAY_INTERRUPTED;
   };
-  p.resume = function () {
+  p.resume = function() {
     this.play();
   };
 
-  p.removeFromDom = function () {
+  p.removeFromDom = function() {
     if (this.isInDom) {
       this.isInDom = false;
       if (this.domEle && this.domEle.parentElement) {
@@ -120,7 +120,7 @@ TQ = TQ || {};
     }
   };
 
-  p.createVideoElement = function (src, onloadeddata) {
+  p.createVideoElement = function(src, onloadeddata) {
     var self = this;
     if (self.isGenerating) {
       return;
@@ -128,7 +128,7 @@ TQ = TQ || {};
     self.isGenerating = true;
     self.src = src;
 
-    loadVideoRes(src, function (ele) {
+    loadVideoRes(src, function(ele) {
       self.domEle = ele;
       self.addToDom();
       if (onloadeddata) {
@@ -138,47 +138,47 @@ TQ = TQ || {};
   };
 
   function loadVideoRes(src, callback) {
-    var ele = document.createElement('video'),
-      starTime = Date.now();
+    var ele = document.createElement("video");
+    var starTime = Date.now();
 
-    ele.addEventListener('loadeddata', onLoadedData, false);
+    ele.addEventListener("loadeddata", onLoadedData, false);
 
     function onLoadedData(evt) {
       self.isGenerating = false;
       // this.updateSize();
-      console.log(evt.srcElement.id + ' :' + starTime + ':' + (Date.now() - starTime) + " who fast: onloadeddata");
+      console.log(evt.srcElement.id + " :" + starTime + ":" + (Date.now() - starTime) + " who fast: onloadeddata");
       if (callback) {
         callback(ele);
       }
     }
 
     // ele.addEventListener('loadstart', onWhoFast, false);
-    ele.addEventListener('canplay', onWhoFast, false);
-    ele.addEventListener('loadedmetadata', onWhoFast, false);
-    ele.addEventListener('canplaythrough', onWhoFast, false);
+    ele.addEventListener("canplay", onWhoFast, false);
+    ele.addEventListener("loadedmetadata", onWhoFast, false);
+    ele.addEventListener("canplaythrough", onWhoFast, false);
 
     function onWhoFast(evt) {
-      ele.removeEventListener('canplay', onWhoFast, false);
-      ele.removeEventListener('loadedmetadata', onWhoFast, false);
-      ele.removeEventListener('canplaythrough', onWhoFast, false);
-      console.log(evt.srcElement.id + ' :' + starTime + ':' + (Date.now() - starTime) +
-        ' who fast: ' + evt.type + ', ' + JSON.stringify(evt));
+      ele.removeEventListener("canplay", onWhoFast, false);
+      ele.removeEventListener("loadedmetadata", onWhoFast, false);
+      ele.removeEventListener("canplaythrough", onWhoFast, false);
+      console.log(evt.srcElement.id + " :" + starTime + ":" + (Date.now() - starTime) +
+        " who fast: " + evt.type + ", " + JSON.stringify(evt));
     }
 
     if (!TQUtility.isBlobUrl(src)) {
       src = TQ.RM.toFullPathFs(src);
     }
     ele.src = src;
-    ele.id = src.substr(-10, 10).replace(/\/|\./g, '_') + starTime;
+    ele.id = src.substr(-10, 10).replace(/\/|\./g, "_") + starTime;
     ele.autoplay = true;
-    ele.preload = 'metadata';
-    ele.style.visibility = 'none';
-    ele.className = 'video-layer video-container';
+    ele.preload = "metadata";
+    ele.style.visibility = "none";
+    ele.className = "video-layer video-container";
     // ele.controls = true;
     // ele.setAttribute("controls", "false");
   }
 
-  p.getDuration = function () {
+  p.getDuration = function() {
     if (this.duration && !isNaN(this.duration)) {
       return this.duration;
     }

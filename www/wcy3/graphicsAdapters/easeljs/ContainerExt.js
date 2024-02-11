@@ -2,13 +2,13 @@
  * Created by Andrewz on 3/7/19.
  */
 
-(function () {
+(function() {
   var p = createjs.Container.prototype;
   var selectBoxSize = 2;
   createjs.DisplayObject._hitTestCanvas.width = createjs.DisplayObject._hitTestCanvas.height = selectBoxSize;
   // 覆盖原函数
-  p.setChildIndex = function (child, index) {
-    var kids = this.children, l = kids.length;
+  p.setChildIndex = function(child, index) {
+    var kids = this.children; var l = kids.length;
     if (child.parent != this || index < 0 || index >= l) {
       return;
     }
@@ -25,18 +25,17 @@
     kids.splice(index, 0, child);
   };
 
-
   /**
    * @method _testHitExt
    * @protected
    * @param {CanvasRenderingContext2D} ctx
    * @return {Boolean}
    **/
-  p._testHitExt = function (ctx) {
+  p._testHitExt = function(ctx) {
     var hit = false;
     try {
       var pixels = ctx.getImageData(0, 0, selectBoxSize, selectBoxSize).data;
-      for (var i=3; i < pixels.length; i+=4) {
+      for (var i = 3; i < pixels.length; i += 4) {
         if (pixels[i] > 1) {
           hit = true;
           break;
@@ -50,20 +49,19 @@
     return hit;
   };
 
-  
   /**
    * @method _getObjectsUnderPoint
    * @param {Number} x
    * @param {Number} y
    * @param {Array} arr
-   * @param {Number} mouseEvents A bitmask indicating which event types to look for. 
-   * Bit 1 specifies press & click & double click, 
-   * bit 2 specifies it should look for mouse over and mouse out. 
+   * @param {Number} mouseEvents A bitmask indicating which event types to look for.
+   * Bit 1 specifies press & click & double click,
+   * bit 2 specifies it should look for mouse over and mouse out.
    * This implementation may change.
    * @return {Array}
    * @protected
    **/
-  p._getObjectsUnderPoint = function (x, y, arr, mouseEvents) {
+  p._getObjectsUnderPoint = function(x, y, arr, mouseEvents) {
     var ctx = createjs.DisplayObject._hitTestContext;
     var mtx = this._matrix;
     var hasHandler = this._hasMouseHandler(mouseEvents);
@@ -80,7 +78,7 @@
       this.draw(ctx);
       if (this._testHitExt(ctx)) {
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, selectBoxSize+1, selectBoxSize+1);
+        ctx.clearRect(0, 0, selectBoxSize + 1, selectBoxSize + 1);
         return this;
       }
     }
@@ -125,19 +123,16 @@
           continue;
         }
         ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.clearRect(0, 0, selectBoxSize+1, selectBoxSize+1);
+        ctx.clearRect(0, 0, selectBoxSize + 1, selectBoxSize + 1);
         if (hasHandler) {
           return this;
-        }
-        else if (arr) {
+        } else if (arr) {
           arr.push(child);
-        }
-        else {
+        } else {
           return child;
         }
       }
     }
     return null;
   };
-
 }());

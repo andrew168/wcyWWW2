@@ -2,12 +2,12 @@
  * Created by Andrewz on 8/25/17.
  */
 var TQ = TQ || {};
-TQ.PageTransition = (function () {
+TQ.PageTransition = (function() {
   var taskQue = [];
 
   function start(currentId, targetId, callback) {
     if (TQ.PageTransitionEffect.isBusy()) {
-      TQ.Log.debugInfo("busy, delay " + currentId +' to ' + targetId + ", total: " + taskQue.length);
+      TQ.Log.debugInfo("busy, delay " + currentId + " to " + targetId + ", total: " + taskQue.length);
       var task = [currentId, targetId, callback];
       if (isNewTask(task)) {
         addOrMergeTask(task);
@@ -17,7 +17,7 @@ TQ.PageTransition = (function () {
       return;
     }
 
-    TQ.Log.debugInfo("do busy, delay " + currentId + ' to ' + targetId + ", total: " + taskQue.length);
+    TQ.Log.debugInfo("do busy, delay " + currentId + " to " + targetId + ", total: " + taskQue.length);
 
     if (needFastPaging()) {
       callback();
@@ -36,7 +36,7 @@ TQ.PageTransition = (function () {
   function nextPage() {
     var outPage = getCurrentPage();
     var inPage = getTargetPage();
-    var effects = TQ.PageTransitionEffect.getEffect('rotateFoldLeft');
+    var effects = TQ.PageTransitionEffect.getEffect("rotateFoldLeft");
     var transition = {
       outPage: outPage,
       outClass: effects.outClass,
@@ -49,7 +49,7 @@ TQ.PageTransition = (function () {
   function prevPage() {
     var outPage = getCurrentPage();
     var inPage = getTargetPage();
-    var effects = TQ.PageTransitionEffect.getEffect('rotateFoldRight');
+    var effects = TQ.PageTransitionEffect.getEffect("rotateFoldRight");
     var transition = {
       outPage: outPage,
       outClass: effects.outClass,
@@ -62,7 +62,7 @@ TQ.PageTransition = (function () {
   function checkQue() {
     var next = taskQue.shift();
     if (next) {
-      TQ.Log.debugInfo("from delay que: " + taskQue.length +': ' + next[0] + ' to ' + next[1]);
+      TQ.Log.debugInfo("from delay que: " + taskQue.length + ": " + next[0] + " to " + next[1]);
       start(next[0], next[1], next[2]);
     }
   }
@@ -79,11 +79,11 @@ TQ.PageTransition = (function () {
   }
 
   function getCurrentPage() {
-    return $('#id-page-effect1');
+    return $("#id-page-effect1");
   }
 
   function getTargetPage() {
-    return $('#testCanvas');
+    return $("#testCanvas");
   }
 
   function needFastPaging() {

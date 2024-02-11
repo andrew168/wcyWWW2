@@ -8,18 +8,18 @@
  */
 var TQ = TQ || {};
 
-(function () {
+(function() {
   // 状态参数，及其getter、setter都定义在此
   // State中的参数都是实时生成的， 可以覆盖，下次再调入的时候， 可以恢复。
   // 区别: Config中的参数都是预先定义的， 不可以覆盖的
   function State() {
   }
 
-  Object.defineProperty(State, 'isPlayOnly', {
-    get: function () {
+  Object.defineProperty(State, "isPlayOnly", {
+    get: function() {
       return TQ.WCY.isPlayOnly;
     },
-    set: function (x) {
+    set: function(x) {
       TQ.WCY.isPlayOnly = x;
     }
   });
@@ -32,11 +32,11 @@ var TQ = TQ || {};
   State.buttonHeight = 0;
 
   var _levelThumbAtBottom;
-  Object.defineProperty(State, 'levelThumbAtBottom', {
-    get: function () {
-      if (typeof _levelThumbAtBottom !== 'undefined') {
+  Object.defineProperty(State, "levelThumbAtBottom", {
+    get: function() {
+      if (typeof _levelThumbAtBottom !== "undefined") {
         return _levelThumbAtBottom;
-      } else if (typeof TQUtility !== 'undefined' && typeof TQUtility.isPC === 'function') {
+      } else if (typeof TQUtility !== "undefined" && typeof TQUtility.isPC === "function") {
         _levelThumbAtBottom = !TQUtility.isPC();
         return _levelThumbAtBottom;
       }
@@ -49,14 +49,14 @@ var TQ = TQ || {};
   State.allowPageTransition = true;
   State.fiexdRootJoint = true; // 关节的根，总是固定的， 不可动的（动态可修改，所以用State，不用Config）
   State.requestToRecordAudio = false;
-  Object.defineProperty(State, 'isAddMode', {
+  Object.defineProperty(State, "isAddMode", {
     get: function() {
       return (State.editorMode === TQ.SceneEditor.MODE.EDIT);
     }
   });
 
-  Object.defineProperty(State, 'isRecordingAudioMode', {
-    get: function () {
+  Object.defineProperty(State, "isRecordingAudioMode", {
+    get: function() {
       return (State.requestToRecordAudio &&
           (State.editorMode === TQ.SceneEditor.MODE.EDIT));
     }
@@ -69,12 +69,12 @@ var TQ = TQ || {};
     }
 
     // top bar的min-height是 11vmin
-    var topBarEle = document.getElementById('id_top_bar'),
-      bottomBarEle = document.getElementsByClassName('footer')[0],
-      accompanyToolBarEle = document.getElementsByClassName('cao_icon')[0],
-      buttonEle;
+    var topBarEle = document.getElementById("id_top_bar");
+    var bottomBarEle = document.getElementsByClassName("footer")[0];
+    var accompanyToolBarEle = document.getElementsByClassName("cao_icon")[0];
+    var buttonEle;
     if (!topBarEle && !bottomBarEle) {
-      buttonEle = document.getElementById('id-delete');
+      buttonEle = document.getElementById("id-delete");
       if (!buttonEle) {
         buttonEle = document.getElementsByClassName("button")[0];
       }
@@ -89,7 +89,7 @@ var TQ = TQ || {};
 
       } else {
         State.buttonHeight = TQ.Utility.getCssSize(window.getComputedStyle(topBarEle).height);
-        if (State.levelThumbAtBottom && window.getComputedStyle(bottomBarEle).display !== 'none') {
+        if (State.levelThumbAtBottom && window.getComputedStyle(bottomBarEle).display !== "none") {
           State.bottomBarHeight = TQ.Utility.getCssSize(window.getComputedStyle(bottomBarEle).height);
         } else {
           State.bottomBarHeight = 0;
@@ -101,11 +101,11 @@ var TQ = TQ || {};
       }
     }
 
-    var topBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight,
-      bottomBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode || State.isRecordingAudioMode) ? 0 : State.bottomBarHeight,
-      h = State.innerHeight,
-      w = State.innerWidth,
-      designated;
+    var topBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode) ? 0 : State.buttonHeight;
+    var bottomBarHeight = (State.isPlayOnly || State.isPlaying || State.isPreviewMode || State.isRecordingAudioMode) ? 0 : State.bottomBarHeight;
+    var h = State.innerHeight;
+    var w = State.innerWidth;
+    var designated;
 
     if (!State.topBarUseZeroHeight) { // ToDo：topBar可以挪到左右两侧，不占用高度，
       // 默认：topbar在顶上，占用height，
@@ -137,7 +137,7 @@ var TQ = TQ || {};
 
   function updateDeviceInfo() {
     deviceInfoInitialized = true;
-    var desktopEle = $('.desktop-ok')[0];
+    var desktopEle = $(".desktop-ok")[0];
     if (desktopEle) {
       var bodyCss = window.getComputedStyle(desktopEle);
       State.innerWidth = TQ.Utility.getCssSize(bodyCss.width);

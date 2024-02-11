@@ -1,20 +1,17 @@
 ﻿// NAMESPACE:
 this.createjs = this.createjs || {};
 
-(function () {
-
+(function() {
   // ** ENUMS
-
 
   /**
      * A shape particle
      * @constructor
      * @extends createjs.Bitmap
      */
-  var BitmapParticle = function (image) {
-
+  var BitmapParticle = function(image) {
     this.initialize(image);
-  }
+  };
   var p = BitmapParticle.prototype = new createjs.Bitmap();
 
   // ** BASE METHODS
@@ -29,21 +26,20 @@ this.createjs = this.createjs || {};
   p._baseParticle = null;
 
   // ** CONSTRUCTOR:
-  p.initialize = function (image) {
+  p.initialize = function(image) {
     this.Bitmap_initialise(image);
     this._baseParticle = new createjs.BaseParticle(this);
   };
 
   // ** PUBLIC METHODS:
-  p.initializeProperties = function (id) {
+  p.initializeProperties = function(id) {
     this.particleId = id;
     this._baseParticle.initializeProperties(id);
   };
 
-  p.updateContext = function (ctx) {
+  p.updateContext = function(ctx) {
     this._baseParticle.updateParticle();
     this.Bitmap_updateContext(ctx);
-
   };
 
   // ** PRIVATE METHODS:

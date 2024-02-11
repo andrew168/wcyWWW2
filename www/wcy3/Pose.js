@@ -4,7 +4,7 @@
  */
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   var _rootBoneDefault = {};
   _rootBoneDefault.x = 0;
   _rootBoneDefault.y = 0;
@@ -14,10 +14,10 @@ window.TQ = window.TQ || {};
   _rootBoneDefault.alpha = 1;
   _rootBoneDefault.color = TQ.Config.color;
   _rootBoneDefault.M = TQ.Matrix2D.I();
-  _rootBoneDefault.IM = TQ.Matrix2D.I();   // Inverse Matrix, 逆矩阵
+  _rootBoneDefault.IM = TQ.Matrix2D.I(); // Inverse Matrix, 逆矩阵
 
   var poseDefault = {};
-  function Pose () {}
+  function Pose() {}
   Pose.x = poseDefault.x = 0;
   Pose.y = poseDefault.y = 0;
   Pose.rotation = poseDefault.rotation = 0;
@@ -51,18 +51,17 @@ window.TQ = window.TQ || {};
     var V = parentPoseWorld.IM.multiply($V([poseWorld.x, poseWorld.y, 1]));
     Pose.x = V.elements[0];
     Pose.y = V.elements[1];
-    TQ.Assert.isTrue(!isNaN(Pose.x),  "x 为 NaN！！！");
-    TQ.Assert.isTrue(!isNaN(Pose.y),  "y 为 NaN！！！");
-    if ((V.elements[2]< 0.99) || (V.elements[2]> 1.01) )
-    {
-      assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, V.elements[2], 0.01);  //齐次分量应该近似为1
+    TQ.Assert.isTrue(!isNaN(Pose.x), "x 为 NaN！！！");
+    TQ.Assert.isTrue(!isNaN(Pose.y), "y 为 NaN！！！");
+    if ((V.elements[2] < 0.99) || (V.elements[2] > 1.01)) {
+      assertEqualsDelta(TQ.Dictionary.INVALID_PARAMETER, 1, V.elements[2], 0.01); // 齐次分量应该近似为1
     }
   };
 
-  Pose.tsrWorld2Object = function (ele) {
-    var tsrWorld = ele.jsonObj,
-      originObj = ele.parentWorld2Object(tsrWorld),
-      parentTsrWorld = (!ele.parent || !ele.parent.jsonObj) ? _rootBoneDefault : ele.parent.jsonObj; // 获取上个函数的修改（改 null为有意义的值）
+  Pose.tsrWorld2Object = function(ele) {
+    var tsrWorld = ele.jsonObj;
+    var originObj = ele.parentWorld2Object(tsrWorld);
+    var parentTsrWorld = (!ele.parent || !ele.parent.jsonObj) ? _rootBoneDefault : ele.parent.jsonObj; // 获取上个函数的修改（改 null为有意义的值）
 
     var tsrObj = Pose;
     tsrObj.x = originObj.x;
@@ -78,7 +77,7 @@ window.TQ = window.TQ || {};
     var M = TQ.Matrix2D.transformation(tsrObj.x, tsrObj.y, tsrObj.rotation, tsrObj.sx, tsrObj.sy);
     tsrWorld.M = parentTsrWorld.M.multiply(M);
     tsrWorld.IM = tsrWorld.M.inverse();
-    assertNotNull(tsrWorld.IM);  // 好习惯, 检查重要数据的出口, 确保是合格的
+    assertNotNull(tsrWorld.IM); // 好习惯, 检查重要数据的出口, 确保是合格的
   };
   TQ.poseDefault = poseDefault;
   TQ.Pose = Pose;

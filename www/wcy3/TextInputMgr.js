@@ -4,29 +4,29 @@
  */
 
 window.TQ = window.TQ || {};
-(function () {
+(function() {
   function TextInputMgr() {
 
   }
 
   var option = {
-    canvas:  document.getElementById('testCanvas1122'),
+    canvas: document.getElementById("testCanvas1122"),
     fontSize: 38,
-    fontFamily: 'Arial',
-    fontColor: '#212121',
-    fontWeight: 'bold',  // normal
-    fontStyle: 'italic',  // normal
+    fontFamily: "Arial",
+    fontColor: "#212121",
+    fontWeight: "bold", // normal
+    fontStyle: "italic", // normal
     x: 200,
     y: 200,
     width: 300,
     padding: 8,
 
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: "#000",
     borderRadius: 3,
-    boxShadow: '1px 1px 0px #fff',
-    innerShadow: '0px 0px 5px rgba(0, 0, 0, 0.5)',
-    placeHolder: 'Enter message here...'
+    boxShadow: "1px 1px 0px #fff",
+    innerShadow: "0px 0px 5px rgba(0, 0, 0, 0.5)",
+    placeHolder: "Enter message here..."
   };
 
   TextInputMgr.start = function() {

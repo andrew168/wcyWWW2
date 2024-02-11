@@ -11,22 +11,22 @@
  * 是singleton
  */
 TQ = TQ || {};
-(function () {
+(function() {
   function VideoMgr() {
   }
 
   VideoMgr.started = false;
   VideoMgr.isSupported = false;
   VideoMgr.items = [];
-  var isReseting = false,
-    isResizing = false,
-    directVideos = {};
+  var isReseting = false;
+  var isResizing = false;
+  var directVideos = {};
 
-  VideoMgr.initialize = function () {
+  VideoMgr.initialize = function() {
     VideoMgr.isSupported = true;
   };
 
-  VideoMgr.start = function () {
+  VideoMgr.start = function() {
     if (!VideoMgr.isSupported) return;
 
     // ToDo: 不重复 start ??
@@ -37,17 +37,17 @@ TQ = TQ || {};
 		专门用于试播，同时只允许播放1个。 试看新的，必须关闭旧的。
 	 */
   var _auditioningInstance = null;
-  VideoMgr.isPlaying = function (instance) {
+  VideoMgr.isPlaying = function(instance) {
     if (!instance) return false;
     return (instance.playState === TQ.Video.PLAY_SUCCEEDED); // 包括paused， 不包括已经播完的
   };
 
-  VideoMgr.play = function (id, onStarted) {
+  VideoMgr.play = function(id, onStarted) {
     if (!VideoMgr.isSupported) return;
     TQ.Log.info("start to play " + id);
     var inst = directVideos[id];
     if (inst) {
-      if (!!_auditioningInstance) {
+      if (_auditioningInstance) {
         if (VideoMgr.isPlaying(_auditioningInstance)) {
           _auditioningInstance.stop();
         }
@@ -58,7 +58,7 @@ TQ = TQ || {};
         onStarted(inst);
       }
     } else {
-      TQ.Video.play(id, function (inst) {
+      TQ.Video.play(id, function(inst) {
         directVideos[id] = _auditioningInstance = inst;
         if (onStarted) {
           onStarted(inst);
@@ -67,7 +67,7 @@ TQ = TQ || {};
     }
   };
   VideoMgr.createInstance = VideoMgr.play;
-  VideoMgr.stop = function (id) {
+  VideoMgr.stop = function(id) {
     TQ.Video.stop(directVideos[id]);
     delete directVideos[id];
   };
@@ -84,7 +84,7 @@ TQ = TQ || {};
     }
   }
 
-  VideoMgr.addItem = function (ele) {
+  VideoMgr.addItem = function(ele) {
     if (VideoMgr.items.indexOf(ele) >= 0) { // 避免同一个元素（跨场景的），重复插入
       return;
     }
@@ -95,23 +95,23 @@ TQ = TQ || {};
     VideoMgr.items.push(ele);
   };
 
-  VideoMgr.deleteItem = function (ele) {
+  VideoMgr.deleteItem = function(ele) {
     var id = VideoMgr.items.indexOf(ele);
     if (id >= 0) {
       VideoMgr.items.splice(id, 1);
     }
   };
 
-  VideoMgr.pause = function () {
+  VideoMgr.pause = function() {
     for (var i = VideoMgr.items.length; i--;) {
       VideoMgr.items[i].pause();
     }
   };
 
-  VideoMgr.resume = function () {
+  VideoMgr.resume = function() {
     var t = TQ.FrameCounter.t();
     for (var i = 0; i < VideoMgr.items.length; i++) {
-      var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = VideoMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       if (ele.isCrossLevel) {
         var tt = currScene.toGlobalTime(t);
         ele.resume(tt);
@@ -121,20 +121,20 @@ TQ = TQ || {};
     }
   };
 
-  VideoMgr.stopAll = function () {
+  VideoMgr.stopAll = function() {
     for (var i = 0; i < VideoMgr.items.length; i++) {
-      var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = VideoMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       ele.stop();
     }
-    if (!!_auditioningInstance) {
+    if (_auditioningInstance) {
       _auditioningInstance.stop();
     }
     stopAllDirectVideo();
   };
 
-  VideoMgr.iosForceToResumeAll = function () {
+  VideoMgr.iosForceToResumeAll = function() {
     for (var i = 0; i < VideoMgr.items.length; i++) {
-      var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = VideoMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       if (ele.isVisible()) {
         ele.forceToReplay();
       }
@@ -142,7 +142,7 @@ TQ = TQ || {};
     stopAllDirectVideo();
   };
 
-  VideoMgr.removeAll = function () {
+  VideoMgr.removeAll = function() {
     // 只删除那些不跨场景的
     for (var i = VideoMgr.items.length - 1; i >= 0; i--) {
       var ele = VideoMgr.items[i];
@@ -155,39 +155,39 @@ TQ = TQ || {};
     stopAllDirectVideo();
   };
 
-  VideoMgr.reset = function () {
+  VideoMgr.reset = function() {
     isReseting = true;
     VideoMgr.stopAll();
     for (var i = 0; i < VideoMgr.items.length; i++) {
-      var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = VideoMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       ele.reset();
     }
-    if (!!_auditioningInstance) {
+    if (_auditioningInstance) {
       _auditioningInstance.reset();
     }
     resetAllDirectVideo();
     isReseting = false;
   };
 
-  VideoMgr.resize = function () {
+  VideoMgr.resize = function() {
     isResizing = true;
     for (var i = 0; i < VideoMgr.items.length; i++) {
-      var ele = VideoMgr.items[i];  //保留下来，避免正在resume的时候， 播完了， 被remove
+      var ele = VideoMgr.items[i]; // 保留下来，避免正在resume的时候， 播完了， 被remove
       if (ele.instance) {
         ele.instance.resize();
       }
     }
-    if (!!_auditioningInstance) {
+    if (_auditioningInstance) {
       _auditioningInstance.resize();
     }
     isResizing = false;
   };
 
-  VideoMgr.close = function () {
+  VideoMgr.close = function() {
     if (!VideoMgr.isSupported) return;
     VideoMgr.stopAll();
     VideoMgr.removeAll();
-    VideoMgr.items.splice(0); //在退出微创意的时候，清除跨场景声音
+    VideoMgr.items.splice(0); // 在退出微创意的时候，清除跨场景声音
     VideoMgr.started = false;
   };
 

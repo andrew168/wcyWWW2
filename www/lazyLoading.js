@@ -3,15 +3,15 @@
  */
 
 var TQ = TQ || {};
-TQ.LazyLoading = (function () {
+TQ.LazyLoading = (function() {
   var tagType = {
-      css: 'link',
-      js: 'script',
-      jpg: 'img',
-      png: 'img',
-      mp3: 'audio'
-    },
-    d = document;
+    css: "link",
+    js: "script",
+    jpg: "img",
+    png: "img",
+    mp3: "audio"
+  };
+  var d = document;
 
   return {
     loadOne: loadOne
@@ -23,12 +23,12 @@ TQ.LazyLoading = (function () {
   }
 
   function loadOne(src, onLoaded) {
-    var words = src.split('.'),
-      ext = words[words.length - 1].toLowerCase(),
-      tag = tagType[ext],
-      id = src.replace(/\W/g, '_');
-    var ele, fjs = d.getElementsByTagName(tag)[0],
-      parent = d.body;
+    var words = src.split(".");
+    var ext = words[words.length - 1].toLowerCase();
+    var tag = tagType[ext];
+    var id = src.replace(/\W/g, "_");
+    var ele; var fjs = d.getElementsByTagName(tag)[0];
+    var parent = d.body;
     if (d.getElementById(id)) {
       return;
     }
@@ -37,23 +37,23 @@ TQ.LazyLoading = (function () {
     ele.onload = onLoaded;
     ele.onerror = onError;
     switch (tag) {
-      case 'link':
+      case "link":
         ele.href = src;
-        ele.rel = 'stylesheet';
-        ele.type = 'text/css';
-        d.getElementsByTagName('head')[0].appendChild(ele);
+        ele.rel = "stylesheet";
+        ele.type = "text/css";
+        d.getElementsByTagName("head")[0].appendChild(ele);
         break;
-      case 'script':
+      case "script":
         ele.src = src;
         fjs.parentNode.insertBefore(ele, fjs);
         parent.appendChild(ele);
         break;
-      case 'img':
+      case "img":
         ele.src = src;
-        ele.style.visibility = 'hidden';
+        ele.style.visibility = "hidden";
         parent.appendChild(ele);
         break;
-      case 'audio':
+      case "audio":
         ele.src = src;
         parent.appendChild(ele);
         break;

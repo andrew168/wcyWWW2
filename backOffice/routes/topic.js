@@ -6,24 +6,24 @@
  * * 删除：post，从数据库和Cloundary中删除，(只是ban，非真删除)
  * * 获取：get，我的全部主题
  */
-var express = require('express'),
-  router = express.Router(),
-  netCommon = require('../common/netCommonFunc'),
-  status = require('../common/status'),
-  authHelper = require('./authHelper'),
-  audit = require('./audit'),
-  topicController = require('../db/topic/topicController');
+var express = require("express");
+var router = express.Router();
+var netCommon = require("../common/netCommonFunc");
+var status = require("../common/status");
+var authHelper = require("./authHelper");
+var audit = require("./audit");
+var topicController = require("../db/topic/topicController");
 
 // 添加，修改，禁止，发布，等
-router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
+router.post("/", authHelper.ensureAuthenticated, function(req, res, next) {
   console.log("params: " + JSON.stringify(req.params));
   console.log("body: " + JSON.stringify(req.body));
   console.log("query: " + JSON.stringify(req.query));
 
-  var topicDataObj = req.body,// 已经自动转为object了， 虽然传输是json，
-    user = status.getUserInfo(req, res),
-    isAudit = (req.query && req.query.isAudit)? req.query.isAudit: false,
-    auditResult;
+  var topicDataObj = req.body; var // 已经自动转为object了， 虽然传输是json，
+    user = status.getUserInfo(req, res);
+  var isAudit = (req.query && req.query.isAudit) ? req.query.isAudit : false;
+  var auditResult;
 
   if (!user) {
     return netCommon.notLogin(req, res);
@@ -62,8 +62,8 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res, next) {
   }
 });
 
-router.get('/list', function (req, res, next) {
-  var user = (!authHelper.hasAuthInfo(req)) ? null: status.getUserInfo2(req, res);
+router.get("/list", function(req, res, next) {
+  var user = (!authHelper.hasAuthInfo(req)) ? null : status.getUserInfo2(req, res);
   topicController.getList(user, onGotList, onError);
   function onGotList(list) {
     res.json(list);
@@ -76,7 +76,7 @@ router.get('/list', function (req, res, next) {
 
 // private functions:
 function isNewTopic(obj) {
-  return (!obj || ((obj.id === undefined) && (obj._id === undefined)))
+  return (!obj || ((obj.id === undefined) && (obj._id === undefined)));
 }
 
 module.exports = router;

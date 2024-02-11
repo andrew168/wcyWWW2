@@ -3,10 +3,10 @@
  */
 window.TQ = window.TQ || {};
 
-(function () {
-  TQ.Element.prototype.playNextSound = function () {
+(function() {
+  TQ.Element.prototype.playNextSound = function() {
     var spriteMap = this.jsonObj.spriteMap;
-    if (spriteMap && spriteMap.length >0) {
+    if (spriteMap && spriteMap.length > 0) {
       if (this.spriteID === undefined) {
         this.spriteID = 0;
       } else {
@@ -19,7 +19,7 @@ window.TQ = window.TQ || {};
     } else {
       this.play(true);
     }
-    this.forEachChildren('playNextSound');
+    this.forEachChildren("playNextSound");
     console.log("play next sound");
-  }
+  };
 }());

@@ -7,8 +7,8 @@
  *    .saveFile
  * 在WCYService中使用
  */
-angular.module('starter').factory("FileService", FileService);
-FileService.$inject = ['$cordovaFile', 'DeviceService'];
+angular.module("starter").factory("FileService", FileService);
+FileService.$inject = ["$cordovaFile", "DeviceService"];
 
 function FileService($cordovaFile, DeviceService) {
   var rootFolder = "";
@@ -17,15 +17,15 @@ function FileService($cordovaFile, DeviceService) {
     // 确保建立， 避免重复建立
     rootFolder = DeviceService.getRootFolder();
     var finalPath = DeviceService.getFullPath(dir);
-    if (dir[dir.length - 1] === '/') {
+    if (dir[dir.length - 1] === "/") {
       dir = dir.substr(0, dir.length - 1);
     }
 
     if (TQ.Base.Utility.isMobileDevice() && TQ.Base.Utility.isCordovaDevice()) {
       $cordovaFile.checkDir(rootFolder, dir)
-        .then(function (success) {
-          if (!!onSuccess) onSuccess(success);
-        }, function (error) {
+        .then(function(success) {
+          if (onSuccess) onSuccess(success);
+        }, function(error) {
           $cordovaFile.createDir(rootFolder, dir, false)
             .then(onSuccess, onError);
         });
@@ -51,23 +51,23 @@ function FileService($cordovaFile, DeviceService) {
 
   function saveImage64(fullPath, image64Data, onSuccess, onError) {
     image64Data = image64Data.replace(/^data:image\/\w+;base64,/, "");
-    image64Data = new Blob([Base64Binary.decodeArrayBuffer(image64Data)], {type: 'image/png', encoding: 'utf-8'});
+    image64Data = new Blob([Base64Binary.decodeArrayBuffer(image64Data)], { type: "image/png", encoding: "utf-8" });
     return saveFile(fullPath, image64Data, onSuccess, onError);
   }
 
   function saveWcy(fullPath, data, onSuccess, onError) {
-    data = new Blob([data], {type: 'text/plain'});
+    data = new Blob([data], { type: "text/plain" });
     return saveFile(fullPath, data, onSuccess, onError);
   }
 
   function onSuccess(info) {
-    if (!!info) {
+    if (info) {
       TQ.Log.info(JSON.stringify(info));
     }
   }
 
   function onError(e) {
-    if (!!e) {
+    if (e) {
       TQ.Log.info(JSON.stringify(e));
     }
   }
@@ -83,101 +83,101 @@ function FileService($cordovaFile, DeviceService) {
   function testFilePathOP() {
     rootFolder = cordova.file.dataDirectory;
     $cordovaFile.getFreeDiskSpace()
-      .then(function (success) {
+      .then(function(success) {
         // success in kilobytes
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     // CHECK
     $cordovaFile.checkDir(rootFolder, "demoDir1")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     $cordovaFile.checkFile(rootFolder, "demoFile1.txt")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     // CREATE
     $cordovaFile.createDir(rootFolder, "demoDir1", false)
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     $cordovaFile.createFile(rootFolder + "/demoDir1", "demoFile2.txt", true)
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     // WRITE
     $cordovaFile.writeFile(rootFolder, "demoFile3.txt", "demo data huge buffer end", true)
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     // READ
     $cordovaFile.readAsText(rootFolder, "demoFile3.txt")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     $cordovaFile.writeExistingFile(rootFolder, "demoFile3.txt", "overriteFile")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     // READ
     $cordovaFile.readAsText(rootFolder, "demoFile3.txt")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     // MOVE
     $cordovaFile.moveDir(rootFolder, "dir", cordova.file.tempDirectory, "demoDir1")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     $cordovaFile.moveFile(rootFolder, "demoFile3.txt", cordova.file.tempDirectory)
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     // COPY
     $cordovaFile.copyDir(rootFolder, "dir", cordova.file.tempDirectory, "demoDir1")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
     $cordovaFile.copyFile(rootFolder, "demoFile3.txt", cordova.file.tempDirectory, "demoFile2.txt")
-      .then(function (success) {
+      .then(function(success) {
         TQ.Log.debugInfo(success);
-      }, function (error) {
+      }, function(error) {
         TQ.Log.error(error);
       });
 
@@ -212,5 +212,5 @@ function FileService($cordovaFile, DeviceService) {
     saveWcy: saveWcy,
     readFile: readFile,
     testFilePathOP: testFilePathOP
-  }
+  };
 }

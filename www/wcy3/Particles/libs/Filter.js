@@ -3,7 +3,7 @@
 * Visit http://createjs.com/ for documentation, updates and examples.
 *
 * Copyright (c) 2010 gskinner.com, inc.
-* 
+*
 * Permission is hereby granted, free of charge, to any person
 * obtaining a copy of this software and associated documentation
 * files (the "Software"), to deal in the Software without
@@ -12,10 +12,10 @@
 * copies of the Software, and to permit persons to whom the
 * Software is furnished to do so, subject to the following
 * conditions:
-* 
+*
 * The above copyright notice and this permission notice shall be
 * included in all copies or substantial portions of the Software.
-* 
+*
 * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
 * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
 * OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
@@ -29,8 +29,7 @@
 // namespace:
 this.createjs = this.createjs || {};
 
-(function () {
-
+(function() {
   /**
      * Base class that all filters should inherit from. Filters need to be applied to objects that have been cached using
      * the {{#crossLink "DisplayObject/cache"}}{{/crossLink}} method. If an object changes, please cache it again, or use
@@ -56,18 +55,18 @@ this.createjs = this.createjs || {};
      * @class Filter
      * @constructor
      **/
-  var Filter = function () {
+  var Filter = function() {
     this.initialize();
-  }
+  };
   var p = Filter.prototype;
 
   // constructor:
-  /** 
+  /**
 	 * Initialization method.
 	 * @method initialize
 	 * @protected
 	 **/
-  p.initialize = function () { }
+  p.initialize = function() { };
 
   // public methods:
   /**
@@ -77,9 +76,9 @@ this.createjs = this.createjs || {};
 	 * @method getBounds
 	 * @return {Rectangle} a rectangle object indicating the margins required to draw the filter.
 	 **/
-  p.getBounds = function () {
+  p.getBounds = function() {
     return new createjs.Rectangle(0, 0, 0, 0);
-  }
+  };
 
   /**
 	 * Applies the filter to the specified context.
@@ -94,26 +93,25 @@ this.createjs = this.createjs || {};
 	 * @param {Number} targetY Optional. The y position to draw the result to. Defaults to the value passed to y.
 	 * @return {Boolean}
 	 **/
-  p.applyFilter = function (ctx, x, y, width, height, targetCtx, targetX, targetY) { }
+  p.applyFilter = function(ctx, x, y, width, height, targetCtx, targetX, targetY) { };
 
   /**
 	 * Returns a string representation of this object.
 	 * @method toString
 	 * @return {String} a string representation of the instance.
 	 **/
-  p.toString = function () {
+  p.toString = function() {
     return "[Filter]";
-  }
-
+  };
 
   /**
 	 * Returns a clone of this Filter instance.
 	 * @method clone
 	 @return {Filter} A clone of the current Filter instance.
 	 **/
-  p.clone = function () {
+  p.clone = function() {
     return new Filter();
-  }
+  };
 
   createjs.Filter = Filter;
 }());

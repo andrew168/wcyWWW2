@@ -4,28 +4,28 @@
  * * 可以调用更多的模块（比editor）， 比如图片上传模块
  */
 
-angular.module('starter').factory('EditorService', EditorService);
-EditorService.$inject = ['$q', '$rootScope', '$timeout', 'NetService', 'WxService', 'WCY', 'AppService'];
+angular.module("starter").factory("EditorService", EditorService);
+EditorService.$inject = ["$q", "$rootScope", "$timeout", "NetService", "WxService", "WCY", "AppService"];
 
 function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, AppService) {
-  var CMD_UNKNOWN = "unknown",
-    CMD_MCOPYING_BEGIN = 'mcopying begin',
-    CMD_MCOPYING_END = 'mcopying end';
+  var CMD_UNKNOWN = "unknown";
+  var CMD_MCOPYING_BEGIN = "mcopying begin";
+  var CMD_MCOPYING_END = "mcopying end";
 
-  var _initialized = false,
-    _sceneReady = false,
-    _colorPanel = null,
-    _lastSelected = null,
-    fileElement = null,
-    isSharingToFB = false,
-    domEle = null,
-    lastCmd = CMD_UNKNOWN,
-    currCmd = CMD_UNKNOWN;
+  var _initialized = false;
+  var _sceneReady = false;
+  var _colorPanel = null;
+  var _lastSelected = null;
+  var fileElement = null;
+  var isSharingToFB = false;
+  var domEle = null;
+  var lastCmd = CMD_UNKNOWN;
+  var currCmd = CMD_UNKNOWN;
 
   var canvas;
 
-  var state = TQ.State,
-    levelThumbs = WCY.levelThumbs;
+  var state = TQ.State;
+  var levelThumbs = WCY.levelThumbs;
   state.isInBkg = false;
 
   return {
@@ -151,7 +151,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     onEventByToolbar: onEventByToolbar,
 
     // particle Effect
-    ParticleMgr: TQ.ParticleMgr,  // start, stop, change(option)
+    ParticleMgr: TQ.ParticleMgr, // start, stop, change(option)
 
     // share
     shareFbWeb: shareFbWeb
@@ -159,11 +159,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function addItem(desc, matType) {
     if (isProxyMat(desc.src)) {
-      NetService.uploadOne(desc.src, matType).then(function (res) {
+      NetService.uploadOne(desc.src, matType).then(function(res) {
         TQ.Log.alertInfo("uploaded " + desc.src + " to " + res.url);
         desc.src = res.url;
         TQ.SceneEditor.addItem(desc);
-      }, function (err) {
+      }, function(err) {
         TQ.Log.error(err);
       })
         .finally(TQ.MessageBox.reset);
@@ -184,7 +184,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     state.isLocked = false;
     state.isFont = false;
     state.showTimer = false;
-    state.showTrimTimeline = false; //false;
+    state.showTrimTimeline = false; // false;
 
     // editor's mode
     if (currScene && !TQ.State.isPlayOnly) {
@@ -214,8 +214,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function forceToRenderSlider() {
-    $timeout(function () { // 初始化slider模块
-      $rootScope.$broadcast('rzSliderForceRender');
+    $timeout(function() { // 初始化slider模块
+      $rootScope.$broadcast("rzSliderForceRender");
     });
   }
 
@@ -236,7 +236,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       TQ.AssertExt.invalidLogic(!_sceneReady, "不能反复调用");
       _sceneReady = true;
       window.addEventListener("resize", onResize);
-      window.addEventListener('orientationchange', function () {
+      window.addEventListener("orientationchange", function() {
         $timeout(onResize); // ！！ 必须用timeout 之后， 否则ipad上不起作用。
       });
       window.addEventListener("blur", onGotoBkg);
@@ -312,7 +312,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       } else if (ele.isVideo()) {
         TQ.VideoMgr.play(ele.jsonObj.src);
       } else {
-        if (!ele.isSound() && ele.isSelectable()) { //particle不能够纳入普通的选择集
+        if (!ele.isSound() && ele.isSelectable()) { // particle不能够纳入普通的选择集
           TQ.SelectSet.add(ele);
         }
       }
@@ -331,7 +331,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (TQ.TouchManager.hasStarted() && TQ.State.isPlayOnly) {
       TQ.TouchManager.stop();
     }
-
   }
 
   function onResize() {
@@ -341,42 +340,42 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
   }
 
-  var hasTouch = false,
-    hasMouse = false;
+  var hasTouch = false;
+  var hasMouse = false;
 
   function isSelectedEvent(e) {
     if (hasTouch) {
-      if (e.type === 'click') {
+      if (e.type === "click") {
         return false;
       }
     }
 
     if (hasMouse) {
-      if (e.type === 'touchstart') {
+      if (e.type === "touchstart") {
         return false;
       }
     }
 
-    if (e.type === 'touchstart') {
+    if (e.type === "touchstart") {
       hasTouch = true;
-    } else if (e.type === 'click') {
+    } else if (e.type === "click") {
       hasMouse = false;
     } else {
-      console.error('wrong events: ' + e.type);
+      console.error("wrong events: " + e.type);
     }
 
     return true;
   }
 
   function onPreviewMenuOn() {
-    $timeout(function () {
+    $timeout(function() {
       TQ.IdleCounter.remove(TQ.PreviewMenu.hide);
       $timeout(forceToRenderSlider, 200);
     });
   }
 
   function onPreviewMenuOff() {
-    $timeout(function () {
+    $timeout(function() {
       state.isPreviewMenuOn = false;
     });
   }
@@ -393,14 +392,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
         if (TQ.AudioRecorder.isRecording) {
           return TQ.AudioRecorder.stop();
         } else {
-          return TQ.AudioRecorder.start(function (data) {
+          return TQ.AudioRecorder.start(function(data) {
             TQ.SceneEditor.addItemByFile(dstLevel, data, matType, callback);
           }, forceToRefreshUI);
         }
       } else {
         var soundFile = files[files.length - 1];
         if (soundFile.size > TQ.Config.MAX_SOUND_FILE_SIZE) {
-          return TQ.MessageBox.confirm('文件太大，影响打开速度，请限制声音文件大小 < ' + Math.round(TQ.Config.MAX_SOUND_FILE_SIZE/1000) + 'K');
+          return TQ.MessageBox.confirm("文件太大，影响打开速度，请限制声音文件大小 < " + Math.round(TQ.Config.MAX_SOUND_FILE_SIZE / 1000) + "K");
         }
         TQ.SceneEditor.addItemByFile(dstLevel, soundFile, matType, callback);
       }
@@ -409,9 +408,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function loadLocalImage(matType, useDevice, filesOrImage64, callback, kouTuMain) {
     var dstLevel = currScene.currentLevel;
-    var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64],
-      n = files.length,
-      mat;
+    var files = (filesOrImage64 instanceof FileList) ? filesOrImage64 : [filesOrImage64];
+    var n = files.length;
+    var mat;
 
     function processOneFile(i) {
       if (i >= n) {
@@ -425,19 +424,19 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       function onPreprocessCompleted(desc, fileOrBlob, matType) {
         callback(desc, fileOrBlob, matType);
         if ((i + 1) < n) {
-          $timeout(function () {
+          $timeout(function() {
             processOneFile(i + 1);
           });
         }
       }
     }
 
-    processOneFile(0);   
+    processOneFile(0);
   }
 
   function processOneMat(data) {
-    var aFile = data.aFile,
-      matType = data.matType;
+    var aFile = data.aFile;
+    var matType = data.matType;
 
     var wxAbility = {
       FileAPI: !!window.FileAPI,
@@ -450,17 +449,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       atob: !!window.atob
     };
 
-    TQ.MessageBox.showWaiting(TQ.Locale.getStr('processing...'));
+    TQ.MessageBox.showWaiting(TQ.Locale.getStr("processing..."));
     TQ.Log.alertInfo("before uploadOne:" + JSON.stringify(wxAbility));
 
     var q = $q.defer();
 
-    //ToDo: 检查合法的文件类别
+    // ToDo: 检查合法的文件类别
     switch (matType) {
       case TQ.MatType.BKG:
-        var options = {crossOrigin: "Anonymous"};  // "Use-Credentials";
+        var options = { crossOrigin: "Anonymous" }; // "Use-Credentials";
         TQ.ImageProcess.start(aFile, options,
-          function (buffer) {
+          function(buffer) {
             data.fileOrBuffer = buffer;
             q.resolve(data);
           });
@@ -468,9 +467,9 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       default:
         if (matType === TQ.MatType.SOUND) {
           if (!TQUtility.isSoundFile(aFile)) {
-            var str = TQ.Locale.getStr('found audio format unsupported, please use wav or map3') + ': ' + aFile.type;
+            var str = TQ.Locale.getStr("found audio format unsupported, please use wav or map3") + ": " + aFile.type;
             TQ.MessageBox.show(str);
-            q.reject({error: 1, msg: str});
+            q.reject({ error: 1, msg: str });
             break;
           }
         }
@@ -482,11 +481,11 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function uploadMat(data, option) {
-    var fileOrBuffer = data.fileOrBuffer,
-      matType = data.matType,
-      q = $q.defer();
+    var fileOrBuffer = data.fileOrBuffer;
+    var matType = data.matType;
+    var q = $q.defer();
 
-    NetService.uploadOne(fileOrBuffer, matType, option).then(function (res) {
+    NetService.uploadOne(fileOrBuffer, matType, option).then(function(res) {
       data.url = res.url;
       q.resolve(data);
     });
@@ -496,14 +495,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function uploadIComponentThumbnail() {
     var option = {
-        iComponentId: TQ.Scene.getWcyId(),
-        //ToDo: 素材库已有的图片，直接利用，避免再次上传，只是新素材id而已
-        src: TQ.ScreenShot.getDataWithBkgColor(),
-      },
-      data = {
-        matType: currScene.iComponentInfo.type,
-        fileOrBuffer: option.src
-      };
+      iComponentId: TQ.Scene.getWcyId(),
+      // ToDo: 素材库已有的图片，直接利用，避免再次上传，只是新素材id而已
+      src: TQ.ScreenShot.getDataWithBkgColor()
+    };
+    var data = {
+      matType: currScene.iComponentInfo.type,
+      fileOrBuffer: option.src
+    };
 
     return uploadMat(data, option);
   }
@@ -515,7 +514,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function mCopyToggle() {
     if (TQ.SelectSet.isEmpty() && !state.isMCopying) {
-      return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
+      return TQ.MessageBox.prompt(TQ.Locale.getStr("please select an object first!"));
     }
 
     state.isMCopying = !state.isMCopying;
@@ -529,7 +528,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function insertMat(data) {
-    return uploadMat(data).then(addItemByData, function (err) {
+    return uploadMat(data).then(addItemByData, function(err) {
       TQ.Log.error(err);
     })
       .finally(TQ.MessageBox.reset);
@@ -537,7 +536,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   // private functions:
   function doInsertMatFromLocalWx(matType) {
-    WxService.chooseImage().then(function (filePath) {
+    WxService.chooseImage().then(function(filePath) {
       var aFile = {
         path: filePath,
         type: matType,
@@ -546,7 +545,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
       TQ.Log.alertInfo("微信InsertLocal：" + JSON.stringify(aFile));
       processOneMat(aFile, matType);
-    }, function (err) {
+    }, function(err) {
       TQ.Log.error(err);
     });
   }
@@ -563,7 +562,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (!matType) {
       matType = TQ.MatType.PROP;
     }
-    var descType = (matType === TQ.ElementType.GROUP_FILE)? TQ.ElementType.GROUP_FILE: 'Bitmap';
+    var descType = (matType === TQ.ElementType.GROUP_FILE) ? TQ.ElementType.GROUP_FILE : "Bitmap";
     var desc = {
       src: filename, type: descType, eType: TQ.MatType.toEType(matType),
       autoFit: fitFlag, x: x, y: y
@@ -647,7 +646,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       width: r,
       height: r,
       radius: r,
-      color: '#FF0000'
+      color: "#FF0000"
     };
 
     TQ.SceneEditor.addItem(desc);
@@ -684,21 +683,21 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       desc.src = urlOrConfig;
     }
 
-    if (desc.sprite && !desc.sprite['__default']) {
-      desc.sprite['__default'] = desc.sprite[desc.spriteMap[0]];
+    if (desc.sprite && !desc.sprite["__default"]) {
+      desc.sprite["__default"] = desc.sprite[desc.spriteMap[0]];
     }
 
     return addItem(desc, TQ.MatType.SOUND);
   }
 
   function addItemByUrl(url, matType, option) {
-    var eleType = (matType === TQ.MatType.SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP,
-      autoFitRule = (matType === TQ.MatType.BKG) ?
-        TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.WITHIN_FRAME,
-      desc = option || {};
+    var eleType = (matType === TQ.MatType.SOUND) ? TQ.ElementType.SOUND : TQ.ElementType.BITMAP;
+    var autoFitRule = (matType === TQ.MatType.BKG)
+      ? TQ.Element.FitFlag.FULL_SCREEN : TQ.Element.FitFlag.WITHIN_FRAME;
+    var desc = option || {};
     desc.src = url;
     desc.type = eleType;
-    if (!desc.hasOwnProperty('autoFit')) {
+    if (!desc.hasOwnProperty("autoFit")) {
       desc.autoFit = autoFitRule;
     }
     TQ.SceneEditor.addItem(desc);
@@ -720,7 +719,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       }
     }
     TQ.Log.debugInfo("gotoLevel " + id);
-    if (typeof id === 'string') {
+    if (typeof id === "string") {
       id = Number(id);
     }
     assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
@@ -758,7 +757,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (!currScene) return -1;
 
     currScene.addLevel(id);
-    levelThumbs.splice(currScene.currentLevelId + 1, 0, {src: null, timestamp: Date.now()});
+    levelThumbs.splice(currScene.currentLevelId + 1, 0, { src: null, timestamp: Date.now() });
     gotoLevel(id);
     return id;
   }
@@ -778,8 +777,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var nextLevel = currScene.currentLevelId + 1;
     var thumbnail = levelThumbs[currScene.currentLevelId].src;
     currScene.duplicateCurrentLevel();
-    levelThumbs.splice(currScene.currentLevelId, 0, {src: thumbnail, timestamp: Date.now()});
-    $timeout(function () {
+    levelThumbs.splice(currScene.currentLevelId, 0, { src: thumbnail, timestamp: Date.now() });
+    $timeout(function() {
       gotoLevel(nextLevel);
     });
   }
@@ -812,7 +811,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       // $timeout(function() {
       //     deleteLevel(0);
       // });
-      return TQ.MessageBox.prompt(TQ.Locale.getStr('at least 1 scene!'));
+      return TQ.MessageBox.prompt(TQ.Locale.getStr("at least 1 scene!"));
     }
 
     assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
@@ -828,7 +827,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       levelThumbs[0] = null;
     } else {
       currScene.gotoLevel(nextLevel);
-      $timeout(function () {
+      $timeout(function() {
         deleteLevel(id);
       });
     }
@@ -882,14 +881,14 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       updateMode();
     }
     TQ.State.isPlaying = false;
-    $timeout(function () { // 用timeout迫使angularjs 刷新UI,
+    $timeout(function() { // 用timeout迫使angularjs 刷新UI,
       // 只是stop，不涉及修改canvas
     });
   }
 
   function preview(options) {
     if (TQ.Config.AutoPlay && currScene && !TQ.State.isAddMode) {
-      if (!TQ.Scene.ensureFirstClick(function () {
+      if (!TQ.Scene.ensureFirstClick(function() {
         if (TQUtility.isIOS()) {
           TQ.SoundMgr.iosForceToResumeAll();
           TQ.VideoMgr.iosForceToResumeAll();
@@ -903,7 +902,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     currScene.updateReadyFlag();
     if (!currScene.isAllDataReady()) {
       document.addEventListener(TQ.Scene.EVENT_ALL_DATA_READY, onAllDataReady);
-      TQ.OverlayMask.turnOn(null, '请稍候，正在准备数据...');
+      TQ.OverlayMask.turnOn(null, "请稍候，正在准备数据...");
       function onAllDataReady() {
         document.removeEventListener(TQ.Scene.EVENT_ALL_DATA_READY, onAllDataReady);
         TQ.OverlayMask.turnOff();
@@ -916,12 +915,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     TQ.VideoMgr.reset();
     TQ.SelectSet.empty(); // 清楚选中的元素， 和highlight
     setPreviewMode();
-    state.requestToRecordAudio = false;  // 在preview的时候，清除
+    state.requestToRecordAudio = false; // 在preview的时候，清除
     replay(options);
   }
 
   function previewCurrentLevel() {
-    preview({thisLevelOnly: true});
+    preview({ thisLevelOnly: true });
   }
 
   function play() {
@@ -953,7 +952,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       TQ.TouchManager.stop();
     }
     TQ.State.isPlaying = true;
-    $timeout(function () { // 用timeout跳过本次touch的end或mouse的up引起的事件
+    $timeout(function() { // 用timeout跳过本次touch的end或mouse的up引起的事件
       AppService.configCanvas();
     }, 100);
     TQ.IdleCounter.start(TQ.PreviewMenu.hide);
@@ -1016,7 +1015,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function setWorkingRegion(w, h, asDefault) {
     if (currScene) {
-      currScene.setDesignatedSize({w: w, h: h});
+      currScene.setDesignatedSize({ w: w, h: h });
     }
 
     if (asDefault) {
@@ -1039,7 +1038,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     $timeout(onResize);
   }
 
-  //------------- 以下的函数用于配置系统参数 -------------------------
+  // ------------- 以下的函数用于配置系统参数 -------------------------
   // 设置零件标志的大小， 默认是10：
   function setMarkerSize(radius) {
     TQ.Marker.RADIUS = radius;
@@ -1089,10 +1088,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       return;
     }
     console.warn("TRIM command: ...", tObj1, tObj2);
-    var selectedElement = TQ.SelectSet.peek(),
-      tObj1 = TQ.TimerUI.getTObject1(),
-      tObj2 = TQ.TimerUI.getTObject2(),
-      tTemp;
+    var selectedElement = TQ.SelectSet.peek();
+    var tObj1 = TQ.TimerUI.getTObject1();
+    var tObj2 = TQ.TimerUI.getTObject2();
+    var tTemp;
 
     if ((tObj1.levelId > tObj2.levelId) ||
       ((tObj1.levelId === tObj2.levelId) && (tObj1.t > tObj2.t))) {
@@ -1101,15 +1100,15 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       tObj2 = tTemp;
     }
 
-    TQ.MessageBox.prompt("This operation is not revertable, Are you sure? <br/>Apply to all objects", function () {
+    TQ.MessageBox.prompt("This operation is not revertable, Are you sure? <br/>Apply to all objects", function() {
       $timeout(onOK);
     }, turnOffTrim);
 
     function onOK() {
       console.warn("TRIM: onOK...", tObj1, tObj2);
-      //if (selectedElement && (tObj1.levelId === tObj2.levelId)) {
+      // if (selectedElement && (tObj1.levelId === tObj2.levelId)) {
       //    selectedElement.trim(tObj1.t, tObj2.t);
-      //} else
+      // } else
 
       if (currScene && currScene.currentLevel) {
         doTrim(tObj1, tObj2);
@@ -1183,7 +1182,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
   }
 
-
   function updateColorPanel() {
     if (_colorPanel) {
       _colorPanel.style.color = state.color;
@@ -1191,10 +1189,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function setColor(colorPicker) {
-    if ((typeof colorPicker === 'string') && colorPicker[0] === '#') {
+    if ((typeof colorPicker === "string") && colorPicker[0] === "#") {
       state.color = colorPicker;
     } else {
-      state.color = '#' + colorPicker.toString();
+      state.color = "#" + colorPicker.toString();
     }
     updateColorPanel();
     var selectedElement = TQ.SelectSet.peek();
@@ -1249,7 +1247,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       currScene.stop();
     }
     TQ.Scene.restoreState(options);
-    $timeout(function () {
+    $timeout(function() {
       TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
       TQ.SelectSet.empty();
       if (state.isPreviewMode) {
@@ -1262,7 +1260,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       TQ.State.isPlaying = false;
       AppService.configCanvas();
       forceToRefreshUI();
-      $timeout(function () { //在UI（top bar等）更新之后，必须重新计算canvas大小，
+      $timeout(function() { // 在UI（top bar等）更新之后，必须重新计算canvas大小，
         AppService.configCanvas();
         forceToRefreshUI();
         if (!currScene.isEmpty() && currScene.levelNum() > levelThumbs.length) {
@@ -1274,14 +1272,12 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }, 100);
   }
 
-
-
   function syncLevelThumbs() {
     // quick fill, to void undefined element in ng repeat;
     var nowTimestamp = Date.now();
     for (var i = 0; i < currScene.levelNum(); i++) {
       if (!levelThumbs[i]) {
-        levelThumbs[i] = {src: null, timestamp: i + nowTimestamp};
+        levelThumbs[i] = { src: null, timestamp: i + nowTimestamp };
       }
     }
     TQ.OverlayMask.turnOn(null, "请稍候,正在生成缩略图...");
@@ -1292,7 +1288,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (!currScene.isAllResourceReady()) {
       return $timeout(doSyncLevelThumbs, 200);
     }
-    TQ.AssertExt.invalidLogic(currScene.isAllResourceReady(), '有level没有完全加载，不能调用');
+    TQ.AssertExt.invalidLogic(currScene.isAllResourceReady(), "有level没有完全加载，不能调用");
     TQ.State.allowPageTransition = false;
 
     makeOneThumb(currScene.levelNum() - 1);
@@ -1318,7 +1314,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       }
 
       function handleNextLevel(evt) {
-        if (evt.data.levelId === 'Overlay') {
+        if (evt.data.levelId === "Overlay") {
           return;
         }
         var idShowing = parseInt(evt.data.levelId);
@@ -1327,25 +1323,25 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
           document.addEventListener(TQ.PageTransitionEffect.EVENT_COMPLETED, onPageTransitionCompleted);
           function onPageTransitionCompleted() {
             document.removeEventListener(TQ.PageTransitionEffect.EVENT_COMPLETED, onPageTransitionCompleted);
-            makeOneThumb(idShowing-1);
+            makeOneThumb(idShowing - 1);
           }
         } else {
-          makeOneThumb(idShowing-1);
+          makeOneThumb(idShowing - 1);
         }
       }
     }
   }
   function toAddModeDone(options) {
-    var levelId = (options && options.levelId)? options.levelId: 0;
-    $timeout(function () {
+    var levelId = (options && options.levelId) ? options.levelId : 0;
+    $timeout(function() {
       gotoLevel(levelId);
-      $timeout(function () {
+      $timeout(function() {
         gotoLevel(levelId);
         WCY.startAutoSave();
         TQ.State.allowPageTransition = true;
         TQ.State.isPlayOnly = false;
         updateControllers();
-        AppService.configCanvas(); //以防随动按钮出界，此时工具条都显示了，再更新一次工作区size
+        AppService.configCanvas(); // 以防随动按钮出界，此时工具条都显示了，再更新一次工作区size
         if (addModeDoneCallback) {
           addModeDoneCallback();
         }
@@ -1462,23 +1458,23 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function getTextCursor() {
     var x = TQ.MathExt.range(state.x, 0, 0.9);
-    var y = state.y,
-      fontHeight = getFontSize() / TQ.Config.workingRegionHeight;
+    var y = state.y;
+    var fontHeight = getFontSize() / TQ.Config.workingRegionHeight;
 
     if (_lastSelected && _lastSelected.isText()) {
       y -= fontHeight;
     }
 
     if (y < (2 * fontHeight)) {
-      y = 1;  // go to top again;
+      y = 1; // go to top again;
     }
 
-    return {x: x, y: y};
+    return { x: x, y: y };
   }
 
   function updateElementState() {
-    var hasChanged = false,
-      ele = TQ.SelectSet.peek();
+    var hasChanged = false;
+    var ele = TQ.SelectSet.peek();
     TQ.AssertExt.isNotNull(ele);
     updatePosition(ele);
     if (ele && state.isModifyMode) {
@@ -1574,13 +1570,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function changeSkin(newSkinUrl, onChanged) {
     if (TQ.SelectSet.isEmpty()) {
-      TQ.MessageBox.show(TQ.Locale.getStr('select the element to be changed!'));
+      TQ.MessageBox.show(TQ.Locale.getStr("select the element to be changed!"));
       return null;
     }
 
     var ele = TQ.SelectSet.peekLatestEditableEle();
     if (ele.isPinned()) {
-      TQ.MessageBox.prompt(TQ.Locale.getStr('the object is locked, continue?'), function () {
+      TQ.MessageBox.prompt(TQ.Locale.getStr("the object is locked, continue?"), function() {
         TQ.CommandMgr.pinIt(ele);
         changeSkin(newSkinUrl, onChanged);
       });
@@ -1618,13 +1614,13 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       shareFbWeb();
     }
 
-    var spaUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB, "?opus=" + WCY.getShareCode()),
-      staticUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB_STATIC, "/opus/" + WCY.getShareCode() + ".html"),
-      screenshotUrl = WCY.getScreenshotUrl(),
-      redirectUrlParams = '',
-      linkParams = '';  //'?play=true'
+    var spaUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB, "?opus=" + WCY.getShareCode());
+    var staticUrl = TQUtility.urlConcat(TQ.Config.OPUS_HOST_FB_STATIC, "/opus/" + WCY.getShareCode() + ".html");
+    var screenshotUrl = WCY.getScreenshotUrl();
+    var redirectUrlParams = "";
+    var linkParams = ""; // '?play=true'
 
-    //ToDo: （需要去掉page中的tag吗？）
+    // ToDo: （需要去掉page中的tag吗？）
     // "share" 需要page中的tag支持，
     // "feed", 不需要
     WCY.createHtmlPage(screenshotUrl).then(doFbShare);
@@ -1633,8 +1629,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       FB.ui(
         {
           app_id: "273410813018932",
-          method: 'feed',
-          name: 'A Picture is Worth a Thousand Words -- idiom',
+          method: "feed",
+          name: "A Picture is Worth a Thousand Words -- idiom",
           redirect_uri: staticUrl + redirectUrlParams,
           link: staticUrl + linkParams,
           message: "" // not supported by FB?
@@ -1649,7 +1645,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       evt.stopPropagation();
     }
 
-    //结束批命令:
+    // 结束批命令:
     if (state.isMCopying) {
       if ((lastCmd === CMD_MCOPYING_BEGIN) && (currCmd !== CMD_MCOPYING_END)) {
         mCopyToggle();
@@ -1659,6 +1655,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     lastCmd = currCmd;
     currCmd = CMD_UNKNOWN;
 
-    //ToDo: 　Joint, group
+    // ToDo: 　Joint, group
   }
 }

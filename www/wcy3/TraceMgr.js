@@ -18,14 +18,14 @@ window.TQ = window.TQ || {};
     throw "TraceMgr cannot be instantiated";
   };
 
-  TraceMgr.initialize = function () {
+  TraceMgr.initialize = function() {
   };
 
   TraceMgr.addVertexKeyPressed = false;
-  TraceMgr.addNewPosition = function (ele) {
+  TraceMgr.addNewPosition = function(ele) {
     var pDevice = TQ.Utility.worldToDevioce(ele.jsonObj.x, ele.jsonObj.y);
     if (!ele.trace) {
-      TQ.InputMap.registerAction(TQ.InputMap.ADD_VERTEX, function () {
+      TQ.InputMap.registerAction(TQ.InputMap.ADD_VERTEX, function() {
         TraceMgr.addVertexKeyPressed = true;
       });
       ele.trace = new Trace("#0000FF", 2);
@@ -33,9 +33,9 @@ window.TQ = window.TQ || {};
     if (TraceMgr.addVertexKeyPressed) {
       TraceMgr.addVertexKeyPressed = false;
       ele.trace.add(pDevice);
-    } else if(ele.trace.isEmpty()) {
-      ele.trace.add(pDevice);      
-      ele.trace.add(pDevice);      
+    } else if (ele.trace.isEmpty()) {
+      ele.trace.add(pDevice);
+      ele.trace.add(pDevice);
     } else {
       ele.trace.update(pDevice);
     }
@@ -56,27 +56,27 @@ window.TQ = window.TQ || {};
     this.points = [];
   };
 
-  Trace.prototype.updateShape = function () {
+  Trace.prototype.updateShape = function() {
   };
 
-  Trace.prototype.update = function (pDevice) {
+  Trace.prototype.update = function(pDevice) {
     if (this.points.length > 0) {
       this.points.pop(); // 先丢弃旧的临时点，再记录新的临时点
     }
     this.add(pDevice);
     this.draw();
   };
-  
-  Trace.prototype.isEmpty = function () {
-    return (this.points.length == 0);  
+
+  Trace.prototype.isEmpty = function() {
+    return (this.points.length == 0);
   };
 
-  Trace.prototype.add = function (pDevice) {
+  Trace.prototype.add = function(pDevice) {
     this.points.push(pDevice);
   };
 
-  Trace.prototype.draw = function () {
-    if (!!this.shape) {
+  Trace.prototype.draw = function() {
+    if (this.shape) {
       this.removeFromStage();
       this.shape = null;
       this.graphics = null;
@@ -96,7 +96,7 @@ window.TQ = window.TQ || {};
         this.graphics.lineTo(this.points[i].x, this.points[i].y);
       }
     }
-  }
+  };
 
   Trace.prototype.addToStage = function() {
     stageContainer.addChild(this.shape);
@@ -113,7 +113,7 @@ window.TQ = window.TQ || {};
   };
 
   Trace.prototype.toJSON = function() {
-    return {color: this.color, thickness: this.thickness, points: this.points};
+    return { color: this.color, thickness: this.thickness, points: this.points };
   };
 
   // static 函数

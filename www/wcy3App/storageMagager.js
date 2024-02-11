@@ -1,13 +1,13 @@
 /**
  * Created by Andrewz on 5/11/19.
  */
-angular.module('starter').factory("StorageManager", StorageManager);
-StorageManager.$inject = ['$q', '$timeout', '$http', 'NetService'];
+angular.module("starter").factory("StorageManager", StorageManager);
+StorageManager.$inject = ["$q", "$timeout", "$http", "NetService"];
 
 function StorageManager($q, $timeout, $http, NetService) {
-  var cachedQueue = [],
-    isUploading = false,
-    onReadyForCloseCallback = null;
+  var cachedQueue = [];
+  var isUploading = false;
+  var onReadyForCloseCallback = null;
 
   function isReadyForClose() {
     return !(isUploading || cachedQueue.length > 0);
@@ -22,42 +22,42 @@ function StorageManager($q, $timeout, $http, NetService) {
   }
 
   function saveAll(opusJson, screenshot, onSuccess) {
-    cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
+    cachedQueue.push({ wcyId: TQ.Scene.getWcyId(),
       localId: TQ.Scene.getLocalId(),
       ssSign: TQ.Scene.getSsSign(),
       opusJson: opusJson,
       screenshot: screenshot,
-      onSuccess: onSuccess});
+      onSuccess: onSuccess });
 
-    setTimeout(function () {
+    setTimeout(function() {
       startUpload();
-    })
+    });
   }
 
   function saveOpus(opusJson, options, onSuccess, onError) {
-    cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
+    cachedQueue.push({ wcyId: TQ.Scene.getWcyId(),
       localId: TQ.Scene.getLocalId(),
       opusJson: opusJson,
       options: options,
       onSuccess: onSuccess,
-      onError: onError});
+      onError: onError });
 
-    setTimeout(function () {
+    setTimeout(function() {
       startUpload();
-    })
+    });
   }
 
   function saveScreenshot(screenshot, onSuccess, onError) {
-    cachedQueue.push({wcyId: TQ.Scene.getWcyId(),
+    cachedQueue.push({ wcyId: TQ.Scene.getWcyId(),
       localId: TQ.Scene.getLocalId(),
       ssSign: TQ.Scene.getSsSign(),
       screenshot: screenshot,
       onSuccess: onSuccess,
-      onError: onError});
+      onError: onError });
 
-    setTimeout(function () {
+    setTimeout(function() {
       startUpload();
-    })
+    });
   }
 
   function startUpload() {
@@ -70,7 +70,7 @@ function StorageManager($q, $timeout, $http, NetService) {
       if (!onePackage.opusJson) {
         console.log("screenshot only");
       }
-      console.log('upload ' + onePackage.wcyId + ', ' + onePackage.length);
+      console.log("upload " + onePackage.wcyId + ", " + onePackage.length);
 
       /*
       // if no wcyId , apply wcyId, shared = true
@@ -81,7 +81,7 @@ function StorageManager($q, $timeout, $http, NetService) {
 
       if (!onePackage.ssSign) {
         uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).then(
-          function (httpResult) {
+          function(httpResult) {
             httpResult.localIdCached = onePackage.localId;
             TQ.Scene.parseOpusSaveResult(httpResult.data);
             if (onePackage.onSuccess) {
@@ -93,15 +93,15 @@ function StorageManager($q, $timeout, $http, NetService) {
                 onePackage.wcyId = TQ.Scene.getWcyId();
               }
 
-              if (!!onePackage.screenshot) {
+              if (onePackage.screenshot) {
                 uploadWithSsign();
               } else {
                 onUploadCompleted(httpResult);
               }
             }
           }
-        ).then(function (value) {
-          console.log('saved successfully!');
+        ).then(function(value) {
+          console.log("saved successfully!");
         }, _onNetIOError);
       } else {
         uploadWithSsign();
@@ -109,9 +109,9 @@ function StorageManager($q, $timeout, $http, NetService) {
 
       function uploadWithSsign() {
         if (onePackage.screenshot) {
-          uploadScreenshot(onePackage.ssSign, onePackage.screenshot).
-            then(doSaveOpus, _onNetIOError).
-            catch(_onNetIOError);
+          uploadScreenshot(onePackage.ssSign, onePackage.screenshot)
+            .then(doSaveOpus, _onNetIOError)
+            .catch(_onNetIOError);
         } else {
           doSaveOpus();
         }
@@ -121,8 +121,8 @@ function StorageManager($q, $timeout, $http, NetService) {
         if (onePackage.opusJson) {
           console.log(value);
           TQ.Scene.updateSSPath(onePackage, currScene.ssPath);
-          uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options).
-            then(onUploadCompleted, _onNetIOError);
+          uploadOpus(onePackage.wcyId, onePackage.opusJson, onePackage.options)
+            .then(onUploadCompleted, _onNetIOError);
         } else {
           onUploadCompleted({});
         }
@@ -145,14 +145,14 @@ function StorageManager($q, $timeout, $http, NetService) {
       _wcyId = 0;
     }
 
-    var params = '?wcyId=' + _wcyId,
-      forkIt = (!!options && !!options.forkIt);
+    var params = "?wcyId=" + _wcyId;
+    var forkIt = (!!options && !!options.forkIt);
 
     return $http({
-      method: 'POST',
-      url: TQ.Config.OPUS_HOST + '/wcy' + params + (forkIt ? "&fork=true" : ""),
+      method: "POST",
+      url: TQ.Config.OPUS_HOST + "/wcy" + params + (forkIt ? "&fork=true" : ""),
       headers: {
-        'Content-Type': 'application/json'
+        "Content-Type": "application/json"
       },
       data: jsonWcyData
     });
@@ -162,7 +162,7 @@ function StorageManager($q, $timeout, $http, NetService) {
     TQ.AssertExt.invalidLogic(!!ssSign);
     TQ.AssertExt.invalidLogic(!!screenshot);
     if (!ssSign) {
-      throw new Error('internal error: no ssSign');
+      throw new Error("internal error: no ssSign");
     }
 
     return NetService.doUploadImage(ssSign, screenshot).then(onUploadSsSuccess);
@@ -170,8 +170,8 @@ function StorageManager($q, $timeout, $http, NetService) {
 
   function onUploadSsSuccess(res) {
     var data = (!res) ? null : res.data;
-    if (!!data) {
-      if (!!data.url) {
+    if (data) {
+      if (data.url) {
         currScene.setSsPath(data.url);
         // TQ.MessageBox.toast(TQ.Locale.getStr('screenshot uploaded successfully!'));
         // save();
@@ -183,7 +183,7 @@ function StorageManager($q, $timeout, $http, NetService) {
 
   function _onNetIOError(data) {
     TQ.Log.debugInfo(data);
-    TQ.MessageBox.confirm(TQ.Locale.getStr('hey, the network connection lost'));
+    TQ.MessageBox.confirm(TQ.Locale.getStr("hey, the network connection lost"));
   }
 
   return {
@@ -192,5 +192,5 @@ function StorageManager($q, $timeout, $http, NetService) {
     saveAll: saveAll,
     saveOpus: saveOpus,
     saveScreenshot: saveScreenshot
-  }
+  };
 }

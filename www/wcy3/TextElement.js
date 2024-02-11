@@ -4,7 +4,7 @@
  */
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   function TextElement(level, desc) {
     desc.eType = TQ.Element.ETYPE_TEXT;
     TQ.Element.call(this, level, desc);
@@ -13,7 +13,7 @@ window.TQ = window.TQ || {};
       var host = this;
 
       if (TQ.Config.textBubbleOn) {
-        setTimeout(function () { // 用timeout避免超大时间片
+        setTimeout(function() { // 用timeout避免超大时间片
           TQ.TextBubble.attachTo(host);
         });
       }
@@ -25,7 +25,7 @@ window.TQ = window.TQ || {};
 
   p.parent_detachDecoration = p.detachDecoration;
   p.parent_attachMarker = p.attachMarker;
-  p.attachMarker = function () {
+  p.attachMarker = function() {
     var bubble = this.getTextBubble();
     if (bubble) {
       return bubble.attachAnchorMarker();
@@ -34,7 +34,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.detachDecoration = function () {
+  p.detachDecoration = function() {
     var bubble = this.getTextBubble();
     if (bubble) {
       bubble.detachAnchorMarker();
@@ -61,19 +61,19 @@ window.TQ = window.TQ || {};
   p.parent_setColor = p.setColor;
   p.setColor = function(fontColor) {
     this.parent_setColor(fontColor);
-    this.setProperty({fontColor: fontColor});
+    this.setProperty({ fontColor: fontColor });
   };
 
   p.setSize = function(fontSize) {
-    this.setProperty({fontSize: fontSize});
+    this.setProperty({ fontSize: fontSize });
   };
 
   p.setFont = function(fontFace) {
-    this.setProperty({fontFace: fontFace});
+    this.setProperty({ fontFace: fontFace });
   };
 
-  p.setText = function (str, fontFamily, fontSize, fontColor) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText()); //应该是Text元素
+  p.setText = function(str, fontFamily, fontSize, fontColor) {
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText()); // 应该是Text元素
     // 此处不用再检验, 因为他不直接对用户, 只要那些直接对用户的函数, 把好关就行.
     // 但是一定要断言, 确信: 外围站岗的尽责了.
     if (this.displayObj != null) {
@@ -83,7 +83,7 @@ window.TQ = window.TQ || {};
       }
     }
 
-    this.setProperty({text: str, fontFace: fontFamily, fontSize: fontSize, fontColor: fontColor});
+    this.setProperty({ text: str, fontFace: fontFamily, fontSize: fontSize, fontColor: fontColor });
   };
 
   p.setProperty = function(option) {
@@ -129,7 +129,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p._doLoad = function () {
+  p._doLoad = function() {
     assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
     var jsonObj = this.jsonObj;
     var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj), jsonObj.color);
@@ -153,7 +153,7 @@ window.TQ = window.TQ || {};
     return !!this.getTextBubble();
   };
 
-  //p.addBubble = function() {
+  // p.addBubble = function() {
   //    var bubble;
   //    if (!this.jsonObj.bubble) {
   //        bubble = new TQ.TextBubble(this);
@@ -162,10 +162,10 @@ window.TQ = window.TQ || {};
   //    }
   //
   //    this.addChildDirect(bubble);
-  //};
+  // };
 
   p.parent_hightlight = p.highlight;
-  p.highlight = function (enable) {
+  p.highlight = function(enable) {
     this.parent_hightlight(enable);
     var bubble = this.getTextBubble();
     if (!bubble) {
@@ -181,15 +181,15 @@ window.TQ = window.TQ || {};
     if (desc.font) {
       _upgradeFont(desc);
     }
-    if (!desc.fontFace)  desc.fontFace = TQ.Config.fontFace;
-    if (!desc.fontSize)  desc.fontSize = TQ.Config.fontSize;
-    if (!desc.color)  desc.color = TQ.Config.color;
+    if (!desc.fontFace) desc.fontFace = TQ.Config.fontFace;
+    if (!desc.fontSize) desc.fontSize = TQ.Config.fontSize;
+    if (!desc.color) desc.color = TQ.Config.color;
     return this.parent_fillGap(desc);
   };
   p.parent_onMoveMarker = p.onMoveMarker;
   p.onMoveMarker = function(marker, ptWorld) { // keep anchor's position in world
     var bubble = this.getTextBubble();
-    if (!bubble) {//没有bubble的时候，可以修改text的pivot
+    if (!bubble) { // 没有bubble的时候，可以修改text的pivot
       this.parent_onMoveMarker(marker, ptWorld);
     }
   };
@@ -203,19 +203,19 @@ window.TQ = window.TQ || {};
   };
 
   // 样例： <font color="#f74107" size="6" face="隶书">用克隆键</font>
-  p.toHtmlStr = function () {
-    return '<font color="' + this.jsonObj.color + '" size="' +
-            ((this.jsonObj.fontSize - 6) / 5) + '" face="' +
-            this.jsonObj.fontFace + '">' +
-            this.jsonObj.text + '</font>';
+  p.toHtmlStr = function() {
+    return "<font color=\"" + this.jsonObj.color + "\" size=\"" +
+            ((this.jsonObj.fontSize - 6) / 5) + "\" face=\"" +
+            this.jsonObj.fontFace + "\">" +
+            this.jsonObj.text + "</font>";
   };
 
   p.parent_update = p.update;
-  p.update = function (t, noRecording) {
+  p.update = function(t, noRecording) {
     this.parent_update(t, noRecording);
   };
 
-  Element.parseHtmlStr = function (jsonObj, htmlStr) {
+  Element.parseHtmlStr = function(jsonObj, htmlStr) {
     jsonObj.text = TQ.Utility.extractTag("font", htmlStr, jsonObj.text);
     var oldSize = jsonObj.fontSize;
     jsonObj.fontSize = TQ.Utility.extractAttr("font", "size", htmlStr, jsonObj.fontSize);
@@ -226,25 +226,24 @@ window.TQ = window.TQ || {};
     jsonObj.color = TQ.Utility.extractAttr("font", "color", htmlStr, jsonObj.color);
   };
 
-
   // private:
-  function _upgradeFont (desc) { // R308引入，
+  function _upgradeFont(desc) { // R308引入，
     var str = desc.font.replace("px", "");
     var arr = str.split(" ");
     if (arr.length >= 1) {
-      if (!desc.fontFace)  desc.fontFace = arr[1];
-      if (!desc.fontSize)  desc.fontSize = arr[0];
+      if (!desc.fontFace) desc.fontFace = arr[1];
+      if (!desc.fontSize) desc.fontSize = arr[0];
     }
-    if (!desc.fontFace)  desc.fontFace = TQ.Config.fontFace;
-    if (!desc.fontSize)  desc.fontSize = TQ.Config.fontSize;
-    if (!desc.color)  desc.color = TQ.Config.color;
+    if (!desc.fontFace) desc.fontFace = TQ.Config.fontFace;
+    if (!desc.fontSize) desc.fontSize = TQ.Config.fontSize;
+    if (!desc.color) desc.color = TQ.Config.color;
   }
 
-  p.getWidth = function () {
+  p.getWidth = function() {
     return getMeasuredWidthModified(this.displayObj);
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return getMeasuredHeightModified(this.displayObj);
   };
 

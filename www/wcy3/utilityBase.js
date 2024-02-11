@@ -7,7 +7,6 @@
  * JS编程的基本工具
  */
 
-
 window.TQ = window.TQ || {};
 TQ = TQ || {};
 
@@ -17,9 +16,9 @@ TQ = TQ || {};
  * @return {*}
  */
 TQ.namespace = function(ns) {
-  var parts = ns.split('.'),
-    parent = TQ,
-    i;
+  var parts = ns.split(".");
+  var parent = TQ;
+  var i;
   if (parts[0] === "TQ") {
     parts = parts.slice(1);
   }
@@ -45,15 +44,13 @@ var inherit = (function() {
     C.prototype = new F();
     C.uber = P.prototype;
     C.prototype.constructor = C;
-  }
+  };
 }());
-
 
 // 保留6位小数
 Math.truncate6 = function(f) {
   return Math.floor(f * 1000000) / 1000000;
 };
 
-
-//定义常用的宏，     避免使用数字常量
+// 定义常用的宏，     避免使用数字常量
 TQ.ERROR = -1;

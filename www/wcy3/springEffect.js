@@ -9,13 +9,13 @@
  */
 
 var TQ = TQ || {};
-TQ.SpringEffect = (function () {
-  var PHI = -90 * Math.PI / 180,
-    defaultConfig = {
-      actualSpeed: 1,
-      dampingDuration: 0.4,
-      numCycles: 2
-    };
+TQ.SpringEffect = (function() {
+  var PHI = -90 * Math.PI / 180;
+  var defaultConfig = {
+    actualSpeed: 1,
+    dampingDuration: 0.4,
+    numCycles: 2
+  };
 
   return {
     defaultConfig: defaultConfig,
@@ -39,14 +39,14 @@ TQ.SpringEffect = (function () {
          * 半衰减期时长0.693* Lambda(占1个周期T） :  ==> Lambda = T/0.693
          * 角速度： w = 2*PI*f = 2*PI * 1/T
          */
-    var speed0 = sag.actualSpeed || defaultConfig.actualSpeed,
-      dampingDuration = sag.dampingDuration || defaultConfig.dampingDuration,
-      numCycles = sag.numCycles || defaultConfig.numCycles,
-      T = dampingDuration / numCycles,
-      A = speed0 * T / 4 / 5,// 比 1/4周期，再缩小1/5, 幅度不能太大，
-      lambda = 20 * T / 0.693, //* 增大20倍， 以快速衰减
-      w = 2 * Math.PI / T,
-      deltaY = 0;
+    var speed0 = sag.actualSpeed || defaultConfig.actualSpeed;
+    var dampingDuration = sag.dampingDuration || defaultConfig.dampingDuration;
+    var numCycles = sag.numCycles || defaultConfig.numCycles;
+    var T = dampingDuration / numCycles;
+    var A = speed0 * T / 4 / 5; var // 比 1/4周期，再缩小1/5, 幅度不能太大，
+      lambda = 20 * T / 0.693; //* 增大20倍， 以快速衰减
+    var w = 2 * Math.PI / T;
+    var deltaY = 0;
 
     // 好数据：
     // A = 20;
@@ -61,8 +61,8 @@ TQ.SpringEffect = (function () {
   }
 
   function getDampingT0(sag) {
-    var dampingDuration = (!sag || sag.dampingDuration===undefined)? defaultConfig.dampingDuration:
-      sag.dampingDuration;
+    var dampingDuration = (!sag || sag.dampingDuration === undefined) ? defaultConfig.dampingDuration
+      : sag.dampingDuration;
 
     return sag.t2 - dampingDuration;
   }

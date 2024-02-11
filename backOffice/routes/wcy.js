@@ -1,39 +1,39 @@
 /**
  * Created by admin on 12/5/2015.
  */
-var express = require('express'),
-  fbPageTemplate = require('./fbPageTemplate'),
-  router = express.Router(),
-  utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
-  imageUtils = require('../common/imageUtils'), // 后缀.js可以省略，Node会自动查找，
-  status = require('../common/status'),
-  netCommon = require('../common/netCommonFunc'),
-  fs = require('fs'),
-  serverConfig = require('./../bin/serverConfig'),
-  opusController = require('../db/opus/opusController'),
-  cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
-  authHelper = require('./authHelper'),
-  WCY_DEPOT = "/data/wcydepot/",
-  FB_PAGE_DEPOT = '/data/wwwz/card2/www/opus',
-  FB_PAGE_ROOT = 'http://www.udoido.cn/opus'; // fs的当前目录是服务器的根目录
+var express = require("express");
+var fbPageTemplate = require("./fbPageTemplate");
+var router = express.Router();
+var utils = require("../common/utils"); // 后缀.js可以省略，Node会自动查找，
+var imageUtils = require("../common/imageUtils"); // 后缀.js可以省略，Node会自动查找，
+var status = require("../common/status");
+var netCommon = require("../common/netCommonFunc");
+var fs = require("fs");
+var serverConfig = require("./../bin/serverConfig");
+var opusController = require("../db/opus/opusController");
+var cSignature = require("../common/cloundarySignature"); // 后缀.js可以省略，Node会自动查找，
+var authHelper = require("./authHelper");
+var WCY_DEPOT = "/data/wcydepot/";
+var FB_PAGE_DEPOT = "/data/wwwz/card2/www/opus";
+var FB_PAGE_ROOT = "http://www.udoido.cn/opus"; // fs的当前目录是服务器的根目录
 
-var defaultWcyData = '{"levels":[{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true}],"version":"V2","isDirty":false,"filename":"wcy01","title":"wcy01","currentLevelId":0,"alias":"gameScene","remote":true,"isPreloading":false,"overlay":{"elements":[],"FPS":20,"tMaxFrame":200,"_t":0,"name":"overlay","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false},"currentLevel":{"latestElement":null,"tMaxFrame":200,"t0":0,"resourceReady":true,"elements":[],"FPS":20,"_t":0,"name":"0","itemCounter":0,"dataReady":true,"state":5,"isWaitingForShow":false,"dirtyZ":false,"isDirty":false,"hasSentToRM":true},"stage":null}';
+var defaultWcyData = "{\"levels\":[{\"latestElement\":null,\"tMaxFrame\":200,\"t0\":0,\"resourceReady\":true,\"elements\":[],\"FPS\":20,\"_t\":0,\"name\":\"0\",\"itemCounter\":0,\"dataReady\":true,\"state\":5,\"isWaitingForShow\":false,\"dirtyZ\":false,\"isDirty\":false,\"hasSentToRM\":true}],\"version\":\"V2\",\"isDirty\":false,\"filename\":\"wcy01\",\"title\":\"wcy01\",\"currentLevelId\":0,\"alias\":\"gameScene\",\"remote\":true,\"isPreloading\":false,\"overlay\":{\"elements\":[],\"FPS\":20,\"tMaxFrame\":200,\"_t\":0,\"name\":\"overlay\",\"itemCounter\":0,\"dataReady\":true,\"state\":5,\"isWaitingForShow\":false,\"dirtyZ\":false,\"isDirty\":false},\"currentLevel\":{\"latestElement\":null,\"tMaxFrame\":200,\"t0\":0,\"resourceReady\":true,\"elements\":[],\"FPS\":20,\"_t\":0,\"name\":\"0\",\"itemCounter\":0,\"dataReady\":true,\"state\":5,\"isWaitingForShow\":false,\"dirtyZ\":false,\"isDirty\":false,\"hasSentToRM\":true},\"stage\":null}";
 if (serverConfig.isDevEnv) {
-  FB_PAGE_DEPOT = '../www/opus';
+  FB_PAGE_DEPOT = "../www/opus";
 }
 // 定义RESTFull API（路径）中的参数， 形参
-router.param('shareCode', function (req, res, next, id) {
+router.param("shareCode", function(req, res, next, id) {
   next();
 });
 
-router.get('/:shareCode', function (req, res) {
+router.get("/:shareCode", function(req, res) {
   var shareCode = req.params.shareCode || 0;
   console.log("shareCode =", shareCode);
   var wcyId = utils.decomposeShareCode(shareCode).wcyId;
   sendBackWcy(req, res, wcyId);
 });
 
-router.post('/', authHelper.ensureAuthenticated, function (req, res) {
+router.post("/", authHelper.ensureAuthenticated, function(req, res) {
   var userId = req.userId;// 这是ensureAuthenticated写入的
   if (!userId) { // 没有authentication信息， 在getUserId中已经response了
     return;
@@ -51,11 +51,11 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
   console.log("params: " + JSON.stringify(req.params));
   // console.log("body: " + JSON.stringify(req.body));
   console.log("query: " + JSON.stringify(req.query));
-  //ToDo:@@@
-  var templateId = 0,
-    wcyDataObj = req.body,
-    wcyData = JSON.stringify(wcyDataObj),
-    ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
+  // ToDo:@@@
+  var templateId = 0;
+  var wcyDataObj = req.body;
+  var wcyData = JSON.stringify(wcyDataObj);
+  var ssPath = (!wcyDataObj.ssPath) ? null : wcyDataObj.ssPath;
 
   if (!wcyData) {
     var msg = "wrong format: must have wcyId, and wcyData!";
@@ -77,13 +77,13 @@ router.post('/', authHelper.ensureAuthenticated, function (req, res) {
   }
 });
 
-router.post('/:shareCode', authHelper.ensureAuthenticated, function (req, res) {
+router.post("/:shareCode", authHelper.ensureAuthenticated, function(req, res) {
   var userId = req.userId;// 这是ensureAuthenticated写入的
   if (!userId) { // 没有authentication信息， 在getUserId中已经response了
     return;
   }
-  var user = (!userId) ? null : status.getUserInfoByTokenId(req.tokenId, userId),
-    shareCode = req.params.shareCode || 0;
+  var user = (!userId) ? null : status.getUserInfoByTokenId(req.tokenId, userId);
+  var shareCode = req.params.shareCode || 0;
 
   if (!user || !shareCode) {
     return netCommon.notLogin(req, res);
@@ -107,8 +107,8 @@ function _saveWcy(req, res, user, wcyId, ssPath, wcyData) {
 }
 
 function resWcySaved(req, res, user, wcyId, ssPath, msg) {
-  var shareId = 0,
-    shareCode = utils.composeShareCode(shareId, wcyId, user.ID);
+  var shareId = 0;
+  var shareCode = utils.composeShareCode(shareId, wcyId, user.ID);
   if (!user) {
     return netCommon.notLogin(req, res);
   }
@@ -118,22 +118,22 @@ function resWcySaved(req, res, user, wcyId, ssPath, msg) {
     public_id: imageUtils.screenshotId2Name(wcyId)
   };
   cSignature.sign(data);
-  res.send({wcyId: wcyId, ssPath: ssPath, ssSign: data, shareCode: shareCode, msg: msg});
+  res.send({ wcyId: wcyId, ssPath: ssPath, ssSign: data, shareCode: shareCode, msg: msg });
 }
 
-/// private function:
+// / private function:
 function response(req, res, data, wcyId, authorData) {
-  var user = authHelper.hasAuthInfo(req) ?  status.getUserInfo2(req, res) : null,
-    userId = (!user) ? 0 : user.ID,
-    url = req.headers.origin,
-    // var url = req.headers.referer;
-    shareId = 0,
-    shareCode = utils.composeShareCode(shareId, wcyId, userId);
+  var user = authHelper.hasAuthInfo(req) ? status.getUserInfo2(req, res) : null;
+  var userId = (!user) ? 0 : user.ID;
+  var url = req.headers.origin;
+  // var url = req.headers.referer;
+  var shareId = 0;
+  var shareCode = utils.composeShareCode(shareId, wcyId, userId);
 
   var data = {
     timestamp: utils.createTimestamp(),
-    url: 'url' + url,
-    referer: 'url' + req.headers.referer,
+    url: "url" + url,
+    referer: "url" + req.headers.referer,
     timesCalled: status.timesCalled,
     wcyId: wcyId,
     shareCode: shareCode,
@@ -148,7 +148,7 @@ function response(req, res, data, wcyId, authorData) {
 }
 
 function wcyId2Filename(wcyId) {
-  if (typeof wcyId != "number") {
+  if (typeof wcyId !== "number") {
     wcyId = parseFloat(wcyId);
   }
   return WCY_DEPOT + wcyId + ".wcy";
@@ -161,14 +161,14 @@ function filename2WcyId(filename) {
 
 function sendBackWcy(req, res, wcyId) {
   var // userReady = false,
-    dataReady,
-    authorData,
-    error = null,
-    wcyData = null,
-    user;
+    dataReady;
+  var authorData;
+  var error = null;
+  var wcyData = null;
+  var user;
 
   opusController.getAuthor(wcyId, onGotAuthorData);
-  fs.readFile(wcyId2Filename(wcyId), 'utf8', onDataReady);
+  fs.readFile(wcyId2Filename(wcyId), "utf8", onDataReady);
   function onGotAuthorData(data) {
     authorData = data;
     if (dataReady && authorData) {
@@ -185,13 +185,13 @@ function sendBackWcy(req, res, wcyId) {
     }
   }
 
-  //function onUserReady() {
+  // function onUserReady() {
   //    user = status.getUserInfo(req, res);
   //    userReady = true;
   //    if (userReady && dataReady && authorData) {
   //        doSendBackWcy(error, wcyData);
   //    }
-  //}
+  // }
 
   function doSendBackWcy(err, data) {
     if (err) {
@@ -201,24 +201,24 @@ function sendBackWcy(req, res, wcyId) {
 
     // if (user && user.isRegistered) {
     response(req, res, data, wcyId, authorData);
-    //} else {
+    // } else {
     //    response(req, res, data, wcyId, authorData);
     //    console.log("对于非注册用户， 如何处理？");
-    //}
+    // }
   }
 }
 
 function shareToFB(shareCode, req, res) {
-  var pageShortPath = '/' + shareCode + '.html',
-    pageFileName = FB_PAGE_DEPOT + pageShortPath,
-    pageUrl = FB_PAGE_ROOT + pageShortPath,
-    spaUrl = 'http://www.udoido.com/#/do?sc=' + shareCode, // single page app url
-    shareData = {
-      imageUrl: req.body.ssPath || null,
-      title: req.body.title || null,
-      description: req.body.description || null
-    },
-    fbPage;
+  var pageShortPath = "/" + shareCode + ".html";
+  var pageFileName = FB_PAGE_DEPOT + pageShortPath;
+  var pageUrl = FB_PAGE_ROOT + pageShortPath;
+  var spaUrl = "http://www.udoido.com/#/do?sc=" + shareCode; // single page app url
+  var shareData = {
+    imageUrl: req.body.ssPath || null,
+    title: req.body.title || null,
+    description: req.body.description || null
+  };
+  var fbPage;
 
   fbPage = fbPageTemplate.createPage(pageUrl, shareData);
 
@@ -232,13 +232,13 @@ function shareToFB(shareCode, req, res) {
     }
 
     console.log(msg);
-    res.send({msg: msg});
+    res.send({ msg: msg });
   }
 }
 
 // private functions:
 function isNewWcy(wcyId) {
-  return ((wcyId === '0') || (wcyId === '-1'));
+  return ((wcyId === "0") || (wcyId === "-1"));
 }
 
 module.exports = router;

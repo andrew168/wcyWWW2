@@ -7,7 +7,7 @@
 
 window.TQBase = window.TQBase || {};
 
-(function () {
+(function() {
   function LevelState() {
   }
 
@@ -29,10 +29,10 @@ window.TQBase = window.TQBase || {};
   LevelState.OP_CANVAS = 0x10F; //  具体的操作, 及其元素, 见Element
   LevelState.OP_FLOATTOOLBAR = 0x11F;
   LevelState.operation = LevelState.OP_NO;
-  LevelState.saveOperation = function (op) { LevelState.operation = op; };
-  LevelState.isOperatingCanvas = function () {return (LevelState.operation == LevelState.OP_CANVAS); };
-  LevelState.isOperatingTimerUI = function () {return (LevelState.operation == LevelState.OP_TIMER_UI); }
-  LevelState.reset = function () {
+  LevelState.saveOperation = function(op) { LevelState.operation = op; };
+  LevelState.isOperatingCanvas = function() { return (LevelState.operation == LevelState.OP_CANVAS); };
+  LevelState.isOperatingTimerUI = function() { return (LevelState.operation == LevelState.OP_TIMER_UI); };
+  LevelState.reset = function() {
     LevelState.operation = 0;
   };
 

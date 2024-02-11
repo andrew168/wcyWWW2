@@ -1,29 +1,29 @@
 /**
  * Created by admin on 11/21/2015.
  */
-var express = require('express');
+var express = require("express");
 var router = express.Router();
-var https = require('https'),
-  configSvr = require('../common/configSvr'),
-  utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
-  status = require('../common/status');
-var shaAdapter = require('../common/sha-adapter');
+var https = require("https");
+var configSvr = require("../common/configSvr");
+var utils = require("../common/utils"); // 后缀.js可以省略，Node会自动查找，
+var status = require("../common/status");
+var shaAdapter = require("../common/sha-adapter");
 
-var createNonceStr = function () {
+var createNonceStr = function() {
   return Math.random().toString(36).substr(2, 15);
 };
 
-var raw = function (args) {
+var raw = function(args) {
   var keys = Object.keys(args);
   keys = keys.sort();
   var newArgs = {};
-  keys.forEach(function (key) {
+  keys.forEach(function(key) {
     newArgs[key.toLowerCase()] = args[key];
   });
 
-  var string = '';
+  var string = "";
   for (var k in newArgs) {
-    string += '&' + k + '=' + newArgs[k];
+    string += "&" + k + "=" + newArgs[k];
   }
   string = string.substr(1);
   return string;
@@ -37,7 +37,7 @@ var raw = function (args) {
  *
  * @returns
  */
-var sign = function (ret) {
+var sign = function(ret) {
   var string = raw(ret);
   ret.signature = shaAdapter.getShaHash(string);
   return ret;
@@ -50,19 +50,19 @@ var sign = function (ret) {
 var jsapiTicket = "bxLdikRXVbTPdHSM05e5u6sMAbQ-4wKaZjQssNrkbxe6fIV1i6BJ_as-MOtj7-2RpuJbwZzotgMS2bjpWeBXzQ";
 var jsapiTicketExpireTime = 0;
 var accessToken;
-var accessTokenExpireTime  = 0;
-router.get('/', function(req, res, next) {
+var accessTokenExpireTime = 0;
+router.get("/", function(req, res, next) {
   if (isValidJsapiTicket()) {
     responseSign(req, res, next);
   } else {
-    getTicket(function() {responseSign(req, res, next);});
+    getTicket(function() { responseSign(req, res, next); });
   }
 });
 
-/// private function:
+// / private function:
 function responseSign(req, res, next) {
   var url = req.headers.referer || req.headers.origin || req.headers.host;
-  if (url.indexOf("http") <0) {
+  if (url.indexOf("http") < 0) {
     url = "http://" + url;
   }
   var data = {
@@ -74,7 +74,7 @@ function responseSign(req, res, next) {
   };
 
   // console.log(req);
-  sign(data);  //data.s = signature;
+  sign(data); // data.s = signature;
   // res.header("Access-Control-Allow-Origin", "*");
   // res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
   res.json(data);
@@ -86,19 +86,19 @@ function getTicket(cb) {
   } else {
     getToken(function() {
       doGetTicket(cb);
-    })
+    });
   }
 }
 
 function doGetTicket(cb) {
-  var ticketUrl = 'https://api.weixin.qq.com/cgi-bin/ticket/getticket?' +
-                    'access_token=' + accessToken + '&type=jsapi';
+  var ticketUrl = "https://api.weixin.qq.com/cgi-bin/ticket/getticket?" +
+                    "access_token=" + accessToken + "&type=jsapi";
 
   https.get(ticketUrl, function(res) {
-    console.log('STATUS: ' + res.statusCode);
-    console.log('HEADERS: ' + JSON.stringify(res.headers));
-    res.setEncoding('utf8');
-    res.on('data', function(data) {
+    console.log("STATUS: " + res.statusCode);
+    console.log("HEADERS: " + JSON.stringify(res.headers));
+    res.setEncoding("utf8");
+    res.on("data", function(data) {
       var jsonData = JSON.parse(data);
       if (jsonData.errcode === 0) {
         jsapiTicket = jsonData.ticket;
@@ -109,7 +109,7 @@ function doGetTicket(cb) {
       }
       cb();
     });
-  }).on('error', function(e) {
+  }).on("error", function(e) {
     console.log("error in doGetTicket: " + e.message);
     cb();
   });
@@ -121,16 +121,16 @@ function getToken(cb) {
 
   appId = configSvr.wx.udoido.appId;
   appSecret = configSvr.wx.udoido.appSecret;
-  var getTokenUrl = 'https://api.weixin.qq.com/cgi-bin/token?' +
-        'grant_type=client_credential' +
-        '&appid=' + appId + '&secret=' + appSecret;
+  var getTokenUrl = "https://api.weixin.qq.com/cgi-bin/token?" +
+        "grant_type=client_credential" +
+        "&appid=" + appId + "&secret=" + appSecret;
 
   // !! 注意调用所有微信接口时均需使用https协议
   https.get(getTokenUrl, function(res) {
     console.log("Got response: " + res.statusCode);
     // console.log("Got response: " + res);
-    res.setEncoding('utf8');
-    res.on('data', function(data) {
+    res.setEncoding("utf8");
+    res.on("data", function(data) {
       console.log(data);
       var jsonData = JSON.parse(data);
       accessToken = jsonData.access_token;
@@ -138,7 +138,7 @@ function getToken(cb) {
       console.log("get new token.");
       cb();
     });
-  }).on('error', function(e) {
+  }).on("error", function(e) {
     console.log("Got error: " + e.message);
     cb();
   });

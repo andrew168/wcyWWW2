@@ -3,8 +3,8 @@
  */
 this.createjs = this.createjs || {};
 
-(function () {
-  "use strict"
+(function() {
+  "use strict";
 
   /**
      * A Particle Emitter extends DisplayObject and must be added to a Container object. An emitter will emit a stream of particles
@@ -13,17 +13,16 @@ this.createjs = this.createjs || {};
      * @constructor
      * @param {Image} [image] The image to use for each particle. If no image is provided then a simple circle will be drawn.
      **/
-  var ParticleEmitter = function (image) {
-
+  var ParticleEmitter = function(image) {
     if (image != null) {
       this.image = image;
     }
 
     this.initialize();
-  }
+  };
   var p = ParticleEmitter.prototype = new createjs.DisplayObject();
   ParticleEmitter.stopped = false;
-  //#region Enums + Constants
+  // #region Enums + Constants
 
   /**
      * Enum to represent the state of the particle emitter
@@ -32,7 +31,7 @@ this.createjs = this.createjs || {};
     "Created": 0,
     "Running": 1,
     "Finished": 2
-  }
+  };
 
   /**
      * Enum to represent the type of the particle emitter
@@ -40,20 +39,20 @@ this.createjs = this.createjs || {};
   createjs.ParticleEmitterType = {
     "Emit": 0,
     "OneShot": 1
-  }
+  };
 
   // ** CONSTANTS:
   p.REMAIN_UNCHANGED = null;
   p.INFINITE = -1;
 
-  //#endregion
+  // #endregion
 
   // ** BASE METHODS
   p.DisplayObject_initialise = p.initialize;
   p.DisplayObject_draw = p.draw;
   p.DisplayObject_updateContext = p.updateContext;
 
-  //#region Public Properties (Emitter specific)
+  // #region Public Properties (Emitter specific)
 
   /**
      * Should the emitter be removed from the parent when finished?
@@ -128,8 +127,8 @@ this.createjs = this.createjs || {};
      **/
   p.image = null;
 
-  //#endregion
-  //#region Public Properties (Particle generation)
+  // #endregion
+  // #region Public Properties (Particle generation)
 
   /**
      * The accelerration of each particle in the X axis.
@@ -391,8 +390,8 @@ this.createjs = this.createjs || {};
      **/
   p.tangentalAccelerationVar = 0;
 
-  //#endregion
-  //#region Private Properties
+  // #endregion
+  // #region Private Properties
 
   // The total number of particles emitted by this emitter
   p._totalEmitted = 0;
@@ -406,12 +405,12 @@ this.createjs = this.createjs || {};
   // All the particles currently managed by this emitter
   p._particles = new Array();
 
-  //#endregion
+  // #endregion
 
-  //#region Public Methods
+  // #region Public Methods
 
   p.changeImage = function(image) {
-    this.image = image;  // image宽度和高度必须与上一个图像的一致
+    this.image = image; // image宽度和高度必须与上一个图像的一致
   };
 
   /**
@@ -419,8 +418,7 @@ this.createjs = this.createjs || {};
      *
      * @method reset
      */
-  p.reset = function () {
-
+  p.reset = function() {
     while (this._particles.length > 0) {
       var particle = this._particles[0];
 
@@ -441,14 +439,14 @@ this.createjs = this.createjs || {};
     this.state = createjs.ParticleEmitterState.Created;
   };
 
-  //#endregion
-  //#region Private Methods
+  // #endregion
+  // #region Private Methods
 
-  p.initialize = function () {
+  p.initialize = function() {
     this.DisplayObject_initialise();
   };
 
-  p.updateContext = function (ctx) {
+  p.updateContext = function(ctx) {
     this.DisplayObject_updateContext(ctx);
 
     var currentTimeMilli = createjs.Ticker.getTime();
@@ -457,7 +455,7 @@ this.createjs = this.createjs || {};
       currentTimeMilli = this._lastUpdateTimeMs;
     }
 
-    if (!!ParticleEmitter.stopped) {  // 停止了
+    if (ParticleEmitter.stopped) { // 停止了
       currentTimeMilli = this._lastUpdateTimeMs;
     }
 
@@ -465,8 +463,7 @@ this.createjs = this.createjs || {};
     if (this.state == createjs.ParticleEmitterState.Created) {
       this._timeStarted = currentTimeMilli;
       this.state = createjs.ParticleEmitterState.Running;
-    }
-    else if (this.duration != this.INFINITE &&
+    } else if (this.duration != this.INFINITE &&
             currentTimeMilli > (this._timeStarted + this.duration)) {
       this.state = createjs.ParticleEmitterState.Finished;
     }
@@ -502,8 +499,7 @@ this.createjs = this.createjs || {};
     }
   };
 
-  p._emit = function (currentTimeMilli) {
-
+  p._emit = function(currentTimeMilli) {
     var millisecondsPerParticle = 1000 / this.emissionRate;
     if (currentTimeMilli > (this._timeLastParticleEmitted + millisecondsPerParticle)) {
       if (this._particles.length < this.maxParticles) {
@@ -513,8 +509,7 @@ this.createjs = this.createjs || {};
     }
   };
 
-  p._oneShot = function (currentTimeMilli) {
-
+  p._oneShot = function(currentTimeMilli) {
     if (this._particles.length == 0) {
       for (var i = 0; i < this.maxParticles; i++) {
         this._generateParticle();
@@ -525,8 +520,7 @@ this.createjs = this.createjs || {};
   };
 
   // Generate a new particle
-  p._generateParticle = function () {
-
+  p._generateParticle = function() {
     var o = this;
     this._debugText("generateParticle");
 
@@ -562,15 +556,14 @@ this.createjs = this.createjs || {};
     // Cache shape
     if (this.image == null) {
       shape.cache(0, 0, startSize, startSize);
-    }
-    else {
+    } else {
       shape.cache(0, 0, this.image.width, this.image.height, startSize / this.image.width);
     }
 
     // Animate
     scale = scale * shape.scaleX;
-    createjs.Tween.get(shape).to({ scaleX: scale, scaleY: scale, rotation: endSpin, alpha: endOpacity}, life).call(function () {
-      o._onParticleFinished(shape)
+    createjs.Tween.get(shape).to({ scaleX: scale, scaleY: scale, rotation: endSpin, alpha: endOpacity }, life).call(function() {
+      o._onParticleFinished(shape);
     });
     createjs.Tween.get(colorFilter).to({ redMultiplier: endColor[0] / 255.0, greenMultiplier: endColor[1] / 255.0, blueMultiplier: endColor[2] / 255.0 }, life);
 
@@ -582,22 +575,19 @@ this.createjs = this.createjs || {};
     this._debugText(this._format("Particle [s_x:{0}, s_y:{1}, e_x:{2}, e_y:{3}]", this.position.x, this.position.y, endPos.x, endPos.y));
   };
 
-  p._createColorFilter = function (shape, color) {
-
+  p._createColorFilter = function(shape, color) {
     var filter = new createjs.ColorFilter(color[0] / 255.0, color[1] / 255.0, color[2] / 255.0, 1);
     shape.filters = [filter];
 
     return filter;
   };
 
-  p._createParticle = function (position, color, alpha, size, spin, life, dx, dy) {
-
+  p._createParticle = function(position, color, alpha, size, spin, life, dx, dy) {
     var shape = null;
 
     if (this.image != null) {
       shape = this._createImageParticle(color, size);
-    }
-    else {
+    } else {
       shape = this._createCircleParticle(color, size);
     }
 
@@ -625,7 +615,7 @@ this.createjs = this.createjs || {};
     return shape;
   };
 
-  p._createImageParticle = function (color, size) {
+  p._createImageParticle = function(color, size) {
     var bitmap = new createjs.BitmapParticle(this.image);
     bitmap.scaleX = size / this.image.width;
     bitmap.scaleY = bitmap.scaleX;
@@ -633,7 +623,7 @@ this.createjs = this.createjs || {};
     return bitmap;
   };
 
-  p._createCircleParticle = function (color, size) {
+  p._createCircleParticle = function(color, size) {
     var shape = new createjs.ShapeParticle();
     var colorRgb = createjs.Graphics.getRGB(255, 255, 255);
     shape.graphics.beginFill(colorRgb).drawCircle(size / 2, size / 2, size / 2);
@@ -642,21 +632,20 @@ this.createjs = this.createjs || {};
     return shape;
   };
 
-  p._debugText = function (text) {
+  p._debugText = function(text) {
     if (this.debugMode) {
       TQ.Log.debugInfo(text);
     }
   };
 
-  p._getPositionInDirection = function (startPoint, angle, length) {
+  p._getPositionInDirection = function(startPoint, angle, length) {
     var newX = startPoint.x + (this._cosd(angle) * length);
     var newY = startPoint.y + (this._sind(angle) * length);
 
     return new createjs.Point(newX, newY);
   };
 
-  p._getVariedValue = function (base, variance, applyLowerLimit) {
-
+  p._getVariedValue = function(base, variance, applyLowerLimit) {
     var plusOrMinus = this._intRandom(1) == 1 ? 1 : -1;
     var variedValue = base + (this._intRandom(variance) * plusOrMinus);
 
@@ -667,16 +656,14 @@ this.createjs = this.createjs || {};
     return variedValue;
   };
 
-  p._getAngle = function (base, variance) {
-
+  p._getAngle = function(base, variance) {
     var unlimited = this._getVariedValue(base, variance);
     unlimited = unlimited < 0 ? 360 + unlimited : unlimited;
     unlimited = unlimited > 360 ? unlimited - 360 : unlimited;
     return unlimited;
   };
 
-  p._getColor = function (base, variance) {
-
+  p._getColor = function(base, variance) {
     var r = variance == null ? base[0] : this._getVariedValue(base[0], variance[0]);
     var g = variance == null ? base[1] : this._getVariedValue(base[1], variance[1]);
     var b = variance == null ? base[2] : this._getVariedValue(base[2], variance[2]);
@@ -690,35 +677,35 @@ this.createjs = this.createjs || {};
     return color;
   };
 
-  p._rgbLimit = function (unlimitedVal) {
+  p._rgbLimit = function(unlimitedVal) {
     var limitedVal = this._lowerLimit(unlimitedVal);
     limitedVal = limitedVal > 255 ? 255 : limitedVal;
     return limitedVal;
   };
 
-  p._lowerLimit = function (unlimitedVal) {
+  p._lowerLimit = function(unlimitedVal) {
     var limitedVal = unlimitedVal < 0 ? 0 : unlimitedVal;
     return limitedVal;
   };
 
-  /*** Generate a random integer between 0-x (inclusive) */
-  p._intRandom = function (upperbound) {
+  /** * Generate a random integer between 0-x (inclusive) */
+  p._intRandom = function(upperbound) {
     return Math.floor(Math.random() * (upperbound + 1));
   };
 
-  p._sind = function (degrees) {
+  p._sind = function(degrees) {
     return Math.sin(this._toRadians(degrees));
   };
 
-  p._cosd = function (degrees) {
+  p._cosd = function(degrees) {
     return Math.cos(this._toRadians(degrees));
   };
 
-  p._toRadians = function (degrees) {
+  p._toRadians = function(degrees) {
     return degrees * Math.PI / 180;
   };
 
-  p._format = function () {
+  p._format = function() {
     var s = arguments[0];
     for (var i = 0; i < arguments.length - 1; i++) {
       var reg = new RegExp("\\{" + i + "\\}", "gm");
@@ -727,11 +714,11 @@ this.createjs = this.createjs || {};
     return s;
   };
 
-  //#endregion
-  //#region Private Event Handlers
+  // #endregion
+  // #region Private Event Handlers
 
   // Called when a particles life is over
-  p._onParticleFinished = function (particle) {
+  p._onParticleFinished = function(particle) {
     particle.uncache();
     var particleIndex = this._particles.indexOf(particle);
     this._particles.splice(particleIndex, 1);
@@ -742,7 +729,7 @@ this.createjs = this.createjs || {};
     }
   };
 
-  //#endregion
+  // #endregion
 
   createjs.ParticleEmitter = ParticleEmitter;
 }());

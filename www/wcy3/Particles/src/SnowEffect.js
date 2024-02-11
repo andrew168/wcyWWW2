@@ -1,14 +1,14 @@
 ﻿var TQ = TQ || {};
 
-(function () {
-  'use strict';
+(function() {
+  "use strict";
 
   /**
      * A shape particle
      * @constructor
      * @extends createjs.Shape
      */
-  var SnowEffect = function () {
+  var SnowEffect = function() {
   };
 
   var FeParticle = SnowEffect;
@@ -32,7 +32,7 @@
     endOpacity: 0.1,
     endSize: -1,
     endSizeVar: 5,
-    imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/xuehua1.png"
+    imageSrc: "http://" + TQ.Config.DOMAIN_NAME + "/mcImages/xuehua1.png"
   };
 
   var rainOps = {
@@ -44,7 +44,7 @@
     endOpacity: 0.1,
     endSize: -1,
     endSizeVar: 5,
-    imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/yudi3.png"
+    imageSrc: "http://" + TQ.Config.DOMAIN_NAME + "/mcImages/yudi3.png"
   };
 
   var yuanbaoOps = {
@@ -56,15 +56,15 @@
     endOpacity: 0.1,
     endSize: -1,
     endSizeVar: 5,
-    imageSrc: 'http://' + TQ.Config.DOMAIN_NAME + "/mcImages/yuanbao1.png"
+    imageSrc: "http://" + TQ.Config.DOMAIN_NAME + "/mcImages/yuanbao1.png"
   };
 
-  var defaultOps = snowOps,
-    para1 = null,
-    emitters = [],
-    created = false,
-    particleImage = null,
-    images = {};
+  var defaultOps = snowOps;
+  var para1 = null;
+  var emitters = [];
+  var created = false;
+  var particleImage = null;
+  var images = {};
 
   function initialize() {
     emitters.splice(0);
@@ -114,7 +114,7 @@
 
   function set(option) {
     option.startSize = TQ.MathExt.unifyValue10(parseFloat(option.nStartSize), 10, 20);
-    option.direction = TQ.MathExt.unifyValue10(parseFloat(option.nDirection), 90-15, 90+15);
+    option.direction = TQ.MathExt.unifyValue10(parseFloat(option.nDirection), 90 - 15, 90 + 15);
     option.density = TQ.MathExt.unifyValue10(parseFloat(option.nDensity), 30, 40);
     option.v0 = parseFloat(option.v0);
     para1 = option;
@@ -132,7 +132,7 @@
     emitter1.angle = para1.direction;
     emitter1.endOpacity = para1.endOpacity;
     emitter1.startSize = para1.startSize;
-    emitter1.startSizeVar = para1.startSize / 2; //10;
+    emitter1.startSizeVar = para1.startSize / 2; // 10;
     emitter1.endSizeVar = para1.endSizeVar;
     emitter1.changeImage(particleImage);
   }
@@ -143,7 +143,7 @@
       initEmitter(asset);
     } else {
       asset = new Image();
-      asset.onload = function () {
+      asset.onload = function() {
         images[para1.imageSrc] = asset;
         initEmitter(asset);
       };
@@ -156,7 +156,7 @@
   }
 
   // 停止下雨
-  function stop() {// 立即停止，消失所有的雨滴
+  function stop() { // 立即停止，消失所有的雨滴
     createjs.ParticleEmitter.stopped = true;
   }
 
@@ -167,9 +167,9 @@
   }
 
   function reset(para) {
-    var M = para.density;  // 雪花的密度，
+    var M = para.density; // 雪花的密度，
     var N = 1;
-    var k=0;
+    var k = 0;
     for (var i = 0; i < M; i++) {
       for (var j = 0; j < N; j++) {
         var x = i / M * canvas.width + canvas.width / 10;
@@ -187,11 +187,11 @@
     createjs.ParticleEmitter.stopped = false;
   }
 
-  function addParticleEmitter (para) {
+  function addParticleEmitter(para) {
     var emitter = new createjs.ParticleEmitter(particleImage);
     emitter.position = new createjs.Point(para.x, para.y);
     emitter.emitterType = createjs.ParticleEmitterType.Emit;
-    emitter.emissionRate = 2;  // 产生新粒子的速度
+    emitter.emissionRate = 2; // 产生新粒子的速度
     emitter.maxParticles = 2000; // 粒子库的大小
     emitter.life = 9000; // 粒子的寿命长度
     emitter.lifeVar = 500;
@@ -218,7 +218,7 @@
     emitter.endColorVar = null;
     emitter.endOpacity = para.endOpacity;
     emitter.startSize = para.startSize;
-    emitter.startSizeVar = para.startSize / 2; //10;
+    emitter.startSizeVar = para.startSize / 2; // 10;
     emitter.endSize = 0;
     emitter.endSizeVar = para.endSizeVar;
     stageContainer.addChild(emitter);

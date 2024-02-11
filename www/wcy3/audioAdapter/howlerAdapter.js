@@ -3,18 +3,18 @@
  */
 // 可以播放1个声音， 或者多个声音，由playlist指定
 var TQ = TQ || {};
-(function () {
-  var MAX_SOUND_LENGTH = 120, // 缺省声音是最大120s
-    STATE = {
-      UNLOADED: 1,
-      PLAYING: 2,
-      PAUSED: 3,
-      ENDED: 4
-    };
+(function() {
+  var MAX_SOUND_LENGTH = 120; // 缺省声音是最大120s
+  var STATE = {
+    UNLOADED: 1,
+    PLAYING: 2,
+    PAUSED: 3,
+    ENDED: 4
+  };
 
   function HowlerPlayer(url, sprite, spriteMap) {
-    var self = this,
-      canPreload = !!HowlerGlobal.unlocked;
+    var self = this;
+    var canPreload = !!HowlerGlobal.unlocked;
 
     this.state = STATE.UNLOADED;
     this.howlerID = -1;
@@ -23,30 +23,30 @@ var TQ = TQ || {};
       src: [TQ.RM.toFullPathFs(url)],
       html5: true, // Force to HTML5 so that the audio can stream in (best for large files).
       preload: canPreload,
-      onplay: function () {
+      onplay: function() {
         self.state = STATE.PLAYING;
         self.tryingToPlay = false;
       },
-      onload: function () {
-        TQ.Log.info('loaded...');
+      onload: function() {
+        TQ.Log.info("loaded...");
       },
-      onend: function () {
-        TQ.Log.info('end...');
+      onend: function() {
+        TQ.Log.info("end...");
         self.state = STATE.ENDED;
       },
-      onpause: function () {
-        TQ.Log.info('pause...');
+      onpause: function() {
+        TQ.Log.info("pause...");
         self.state = STATE.PAUSED;
       },
-      onstop: function () {
-        TQ.Log.info('stop...');
+      onstop: function() {
+        TQ.Log.info("stop...");
         self.state = STATE.PAUSED;
       },
-      onseek: function () {
-        TQ.Log.info('seek...');
+      onseek: function() {
+        TQ.Log.info("seek...");
       }
     };
-    if (!!sprite) {
+    if (sprite) {
       config.sprite = sprite;
       if (spriteMap) {
         this.spriteMap = spriteMap;
@@ -56,24 +56,24 @@ var TQ = TQ || {};
     this.howl = new Howl(config);
     var sound = self.howl;
     if (!canPreload) {
-      sound.once('unlock', function () {
+      sound.once("unlock", function() {
         sound.load();
       });
     }
   }
 
   HowlerPlayer.prototype = {
-    play: function (spriteName) {
-      var self = this,
-        sound = self.howl;
+    play: function(spriteName) {
+      var self = this;
+      var sound = self.howl;
       if (self.tryingToPlay) {
         return;
       }
 
       if (!sound.playing()) { // 同时只有1个实例在播放，不能多个实例{
         if (self.howlerID < 0) {
-          if ((sound.state() === 'unloaded') && !TQUtility.isBlobUrl(sound._src[0])) {
-            sound.once('load', function () {
+          if ((sound.state() === "unloaded") && !TQUtility.isBlobUrl(sound._src[0])) {
+            sound.once("load", function() {
               self.howlerID = sound.play(spriteName);
             });
             self.tryingToPlay = true;
@@ -82,9 +82,9 @@ var TQ = TQ || {};
           }
         } else {
           TQ.AssertExt(sound, "需要先建立audio对象");
-          TQDebugger.Panel.logInfo('resume, ' + sound._sounds.length);
+          TQDebugger.Panel.logInfo("resume, " + sound._sounds.length);
           // Begin playing the sound.
-          var newID = sound.play(!!spriteName? spriteName: self.howlerID);
+          var newID = sound.play(spriteName || self.howlerID);
           if (newID !== self.howlerID) {
             if (newID > 0) {
               if (self.howlerID !== newID) {
@@ -101,15 +101,15 @@ var TQ = TQ || {};
     },
 
     get duration() {
-      var self = this,
-        sound = self.howl;
+      var self = this;
+      var sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
 
       if (!sound) {
         return 0;
       }
 
-      return 1000* ((sound.state() !== 'loaded')? MAX_SOUND_LENGTH: sound.duration());
+      return 1000 * ((sound.state() !== "loaded") ? MAX_SOUND_LENGTH : sound.duration());
     },
 
     get paused() {
@@ -119,35 +119,35 @@ var TQ = TQ || {};
     /**
      * Pause the currently playing track.
      */
-    pause: function () {
-      var self = this,
-        sound = self.howl;
+    pause: function() {
+      var self = this;
+      var sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
 
       if (sound) {
         sound.pause();
       }
 
-      TQ.Log.info('pause...');
+      TQ.Log.info("pause...");
     },
 
-    stop: function () {
-      var self = this,
-        sound = self.howl;
+    stop: function() {
+      var self = this;
+      var sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
 
       if (sound) {
         sound.stop();
       }
 
-      TQ.Log.info('stopped...');
+      TQ.Log.info("stopped...");
     },
 
-    resume: function (t, spriteName) {
-      var self = this,
-        sound = self.howl;
+    resume: function(t, spriteName) {
+      var self = this;
+      var sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
-      TQDebugger.Panel.logInfo('resume, ' + sound._sounds.length);
+      TQDebugger.Panel.logInfo("resume, " + sound._sounds.length);
       if (sound._sounds.length > 1) {
         // sound.stop();
         // setTimeout(function() {sound.play();}, 100);
@@ -162,7 +162,7 @@ var TQ = TQ || {};
             // sound.once('play', function () {
             //   sound.seek(t, self.howlerID);
             // });
-            self.play(!!spriteName ? spriteName: self.howlerID);
+            self.play(spriteName || self.howlerID);
           }
         }
       }
@@ -172,17 +172,17 @@ var TQ = TQ || {};
      * Set the volume and update the volume slider display.
      * @param  {Number} val Volume between 0 and 1.
      */
-    volume: function (val) {
-      var self = this,
-        sound = self.howl;
+    volume: function(val) {
+      var self = this;
+      var sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
       sound.volume(val);
-      TQ.Log.info('volume ' + val);
+      TQ.Log.info("volume " + val);
     },
 
-    seek: function (t) {
-      var self = this,
-        sound = self.howl;
+    seek: function(t) {
+      var self = this;
+      var sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
 
       // Convert the percent into a seek position.
@@ -191,16 +191,16 @@ var TQ = TQ || {};
       }
     },
 
-    setPosition: function (t) {
+    setPosition: function(t) {
       this.seek(t);
     },
 
     /**
      * The step called within requestAnimationFrame to update the playback position.
      */
-    step: function () {
-      var self = this,
-        sound = self.howl;
+    step: function() {
+      var self = this;
+      var sound = self.howl;
       TQ.AssertExt(sound, "需要先建立audio对象");
 
       if (sound) {
@@ -209,11 +209,11 @@ var TQ = TQ || {};
       TQ.Log.info(self.formatTime(Math.round(seek)));
     },
 
-    isPlaying: function () {
+    isPlaying: function() {
       return (this.howl.playing());
     },
 
-    hasCompleted: function () {
+    hasCompleted: function() {
       return (this.state === STATE.ENDED);
     },
     /**
@@ -221,11 +221,11 @@ var TQ = TQ || {};
      * @param  {Number} secs Seconds to format.
      * @return {String}      Formatted time.
      */
-    formatTime: function (secs) {
+    formatTime: function(secs) {
       var minutes = Math.floor(secs / 60) || 0;
       var seconds = (secs - minutes * 60) || 0;
 
-      return minutes + ':' + (seconds < 10 ? '0' : '') + seconds;
+      return minutes + ":" + (seconds < 10 ? "0" : "") + seconds;
     }
   };
 

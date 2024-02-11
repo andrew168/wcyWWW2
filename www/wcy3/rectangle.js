@@ -6,17 +6,17 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   // 用法: Rectangle是一种可变大小的修饰品Decoration. 也是Element类的子类.
   function Rectangle(level, desc) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc != 'string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof desc !== "string"); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
     TQ.Element.call(this, level, desc); // 调用父类的初始化函数， 在子类构造函数中
   }
 
-  var p = Rectangle.prototype = Object.create(TQ.Element.prototype); //继承父类的函数, 子类构造函数的参数，限制少
-  p.constructor = Rectangle; //把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
+  var p = Rectangle.prototype = Object.create(TQ.Element.prototype); // 继承父类的函数, 子类构造函数的参数，限制少
+  p.constructor = Rectangle; // 把构造函数也放到prototype中, 是的copy，clone之类的函数， 可以返回本子类的类别
   p.parent_fillGap = p.fillGap;
-  p.fillGap = function (desc) {
+  p.fillGap = function(desc) {
     if (desc.pivotX === undefined) {
       desc.pivotX = 0.5;
       desc.pivotY = 0.5;
@@ -31,32 +31,32 @@ TQ = TQ || {};
     return this.parent_fillGap(desc);
   };
 
-  p.createImage = function () {
+  p.createImage = function() {
     var jsonObj = this.jsonObj;
     var s = new createjs.Shape();
-    var w = this.getWidth(),
-      h = this.getHeight();
+    var w = this.getWidth();
+    var h = this.getHeight();
 
     s.x = jsonObj.x;
     s.y = jsonObj.y;
     s.graphics.clear(); // 清除老的边框
-    TQ.Graphics.drawSolidRect(s, '#FF0000', -jsonObj.pivotX * w, -h -jsonObj.pivotY * h, w, h);
+    TQ.Graphics.drawSolidRect(s, "#FF0000", -jsonObj.pivotX * w, -h - jsonObj.pivotY * h, w, h);
     return s;
   };
 
-  p._doLoad = function () {
-    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); //合并jsonObj
+  p._doLoad = function() {
+    assertNotNull(TQ.Dictionary.FoundNull, this.jsonObj); // 合并jsonObj
     this.displayObj = this.createImage();
     this.loaded = true;
     this._afterItemLoaded();
     this.setTRSAVZ();
   };
 
-  p.getWidth = function () {
+  p.getWidth = function() {
     return this.jsonObj.width;
   };
 
-  p.getHeight = function () {
+  p.getHeight = function() {
     return this.jsonObj.height;
   };
 

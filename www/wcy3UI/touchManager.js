@@ -1,16 +1,16 @@
 var TQ = TQ || {};
-(function () {
-  'use strict';
+(function() {
+  "use strict";
   function TouchManager() {
   }
 
-  var enableTouchScreen = true,
-    initialized = false,
-    started = false,
-    canvas = null,
-    currentOps = null,
-    trsaOps = null,
-    mCopyOps = null;
+  var enableTouchScreen = true;
+  var initialized = false;
+  var started = false;
+  var canvas = null;
+  var currentOps = null;
+  var trsaOps = null;
+  var mCopyOps = null;
 
   function addHandler(gesture, handler) {
     TQ.AssertExt.invalidLogic(!!canvas, "canvas is not initialized!");
@@ -24,26 +24,26 @@ var TQ = TQ || {};
 
   function initialize() {
     trsaOps = [
-      ['touch', TQ.Trsa3.onTouchStart],
-      ['mousedown', TQ.Trsa3.onMouseDown],
+      ["touch", TQ.Trsa3.onTouchStart],
+      ["mousedown", TQ.Trsa3.onMouseDown],
 
-      ['touchend', TQ.Trsa3.onTouchEnd],
-      ['mouseup', TQ.Trsa3.onMouseUp],
+      ["touchend", TQ.Trsa3.onTouchEnd],
+      ["mouseup", TQ.Trsa3.onMouseUp],
 
-      ['release', TQ.Trsa3.onRelease],
-      ['rotate', TQ.Trsa3.onPinchAndRotate],
-      ['pinch', TQ.Trsa3.onPinchAndRotate],
+      ["release", TQ.Trsa3.onRelease],
+      ["rotate", TQ.Trsa3.onPinchAndRotate],
+      ["pinch", TQ.Trsa3.onPinchAndRotate],
       // 'scale': not work
       //
       // ['pinchin', onPinch],
       // ['pinchout', onPinch],
-      ['drag', TQ.Trsa3.onDrag],
-      ['touchmove', notHandled],
+      ["drag", TQ.Trsa3.onDrag],
+      ["touchmove", notHandled]
       // 其余事件： 'swipeup'.
     ];
 
     mCopyOps = [
-      ['touch', TQ.Trsa3.mCopy]
+      ["touch", TQ.Trsa3.mCopy]
     ];
 
     canvas = TQ.Graphics.getCanvas();
@@ -60,7 +60,7 @@ var TQ = TQ || {};
     if (started) {
       TQ.AssertExt.invalidLogic(true, "重复启动touchManager！");
       TQ.Trsa3.reset();
-      updateOps({isMCopying: false});
+      updateOps({ isMCopying: false });
       return;
     }
     started = true;
@@ -70,7 +70,7 @@ var TQ = TQ || {};
     currentOps = trsaOps;
     attachOps(currentOps);
     TQ.Assert.isTrue(!!TQ.SceneEditor.stage, "Stage 没有初始化！");
-    TQ.SceneEditor.stage.addEventListener('touch', TQ.Trsa3.onTouchStage);
+    TQ.SceneEditor.stage.addEventListener("touch", TQ.Trsa3.onTouchStage);
   }
 
   function updateOps(state) {
@@ -93,8 +93,8 @@ var TQ = TQ || {};
     if (newCanvas) {
       canvas = newCanvas;
     }
-    if (!!ops) {
-      ops.forEach(function (item) {
+    if (ops) {
+      ops.forEach(function(item) {
         addHandler(item[0], item[1]);
       });
       currentOps = ops;
@@ -102,8 +102,8 @@ var TQ = TQ || {};
   }
 
   function detachOps(ops) {
-    if (!!ops) {
-      ops.forEach(function (item) {
+    if (ops) {
+      ops.forEach(function(item) {
         detachHandler(item[0], item[1]);
       });
     }
@@ -111,7 +111,7 @@ var TQ = TQ || {};
 
   var savedState;
   function save() {
-    savedState = {ops: currentOps, canvas: canvas};
+    savedState = { ops: currentOps, canvas: canvas };
   }
 
   function restore() {
@@ -135,7 +135,7 @@ var TQ = TQ || {};
     }
 
     TQ.Assert.isTrue(!!TQ.SceneEditor.stage, "Stage 没有初始化！");
-    TQ.SceneEditor.stage.removeEventListener('touch', TQ.Trsa3.onTouchStage);
+    TQ.SceneEditor.stage.removeEventListener("touch", TQ.Trsa3.onTouchStage);
   }
 
   function isFirstTouch(e) {
@@ -143,7 +143,7 @@ var TQ = TQ || {};
   }
 
   function disableBrowserZooming() {
-    document.addEventListener('mousewheel', function (e) {
+    document.addEventListener("mousewheel", function(e) {
       // TQ.Log.debugInfo(e.type, e.deltaX, e.deltaY, e.wheelDeltaX, e.wheelDeltaY);
       e.preventDefault();
     });
@@ -154,13 +154,13 @@ var TQ = TQ || {};
     document.ontouchstart = disableScroll;
     document.ontouchmove = disableScroll;
 
-    document.addEventListener('touchmove', disableScroll, true);
-    document.addEventListener('touchstart', disableScroll, true);
+    document.addEventListener("touchmove", disableScroll, true);
+    document.addEventListener("touchstart", disableScroll, true);
 
     function disableScroll(e) {
       // TQ.Log.debugInfo(e.type, e.target.tagName, e.srcElement.tagName, e.currentTarget ? e.currentTarget.tagName: 'None',
       //     e.target.nodeName, e.srcElement.nodeName, e.currentTarget ? e.currentTarget.nodeName: 'None');
-      var whiteList = ["BUTTON", 'INPUT', 'TEXTAREA'];
+      var whiteList = ["BUTTON", "INPUT", "TEXTAREA"];
       var tag = "";
       if (e.target && e.target.nodeName) {
         tag = e.target.nodeName.toUpperCase();
@@ -173,7 +173,7 @@ var TQ = TQ || {};
   }
 
   function notHandled(e) {
-    TQ.Log.debugInfo("event not handled: " + e.type + ", " + (e.touches? e.touches.length: 0));
+    TQ.Log.debugInfo("event not handled: " + e.type + ", " + (e.touches ? e.touches.length : 0));
   }
 
   function hasStarted() {

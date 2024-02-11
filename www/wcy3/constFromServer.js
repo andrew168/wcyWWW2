@@ -13,6 +13,6 @@ TQ.OPUS_STATE = {
   BAN: 70
 };
 
-if (typeof exports === 'object') {
+if (typeof exports === "object") {
   exports.OPUS_STATE = TQ.OPUS_STATE;
 }

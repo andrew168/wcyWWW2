@@ -2,8 +2,8 @@
  * Created by Andrewz on 7/10/2016.
  */
 
-angular.module('starter').factory("MatLibService", MatLibService);
-MatLibService.$inject = ['$http'];
+angular.module("starter").factory("MatLibService", MatLibService);
+MatLibService.$inject = ["$http"];
 
 function MatLibService($http) {
   var buffer = [];
@@ -23,11 +23,11 @@ function MatLibService($http) {
 
   function search(keyword) {
     $http({
-      method: 'GET',
-      url: 'https://openclipart.org//search/json/?query=' + keyword + '&amount=20&page=0&sort=downloads'
+      method: "GET",
+      url: "https://openclipart.org//search/json/?query=" + keyword + "&amount=20&page=0&sort=downloads"
     }).then(onReceived);
 
-    function onReceived(pkg){
+    function onReceived(pkg) {
       var list = [];
 
       if ((pkg.status === 200) &&

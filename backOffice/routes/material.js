@@ -1,5 +1,5 @@
-const { assert } = require('console');
-const { timingSafeEqual } = require('crypto');
+const { assert } = require("console");
+const { timingSafeEqual } = require("crypto");
 
 /**
  * Created by Andrewz on 1/5/2016.
@@ -11,29 +11,29 @@ const { timingSafeEqual } = require('crypto');
  *
  * 在客户端，根据文件名， 决定素材的类别（Picture， Audio， Video，等）
  */
-var express = require('express'),
-  router = express.Router(),
-  Const = require('../base/const'),
-  utils = require('../common/utils'), // 后缀.js可以省略，Node会自动查找，
-  netCommon = require('../common/netCommonFunc'),
-  cSignature = require('../common/cloundarySignature'), // 后缀.js可以省略，Node会自动查找，
-  status = require('../common/status'),
-  audit = require('./audit'),
-  fs = require('fs'),
-  authHelper = require('./authHelper'),
-  pictureMatController = require('../db/material/pictureMatController'),
-  audioMatController = require('../db/material/audioMatController');
+var express = require("express");
+var router = express.Router();
+var Const = require("../base/const");
+var utils = require("../common/utils"); // 后缀.js可以省略，Node会自动查找，
+var netCommon = require("../common/netCommonFunc");
+var cSignature = require("../common/cloundarySignature"); // 后缀.js可以省略，Node会自动查找，
+var status = require("../common/status");
+var audit = require("./audit");
+var fs = require("fs");
+var authHelper = require("./authHelper");
+var pictureMatController = require("../db/material/pictureMatController");
+var audioMatController = require("../db/material/audioMatController");
 
 var MAT_SHARE_FLAG_DEFAULT = false;
 
-router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
+router.post("/", authHelper.ensureAuthenticated, function(req, res, next) {
   console.log("params: " + JSON.stringify(req.params));
   console.log("body: " + JSON.stringify(req.body));
   console.log("query: " + JSON.stringify(req.query));
-  var public_id = req.body.public_id || null,
-    matType = getMatType(req),
-    path = req.body.path || null,
-    user = status.getUserInfo(req, res);
+  var public_id = req.body.public_id || null;
+  var matType = getMatType(req);
+  var path = req.body.path || null;
+  var user = status.getUserInfo(req, res);
   if (!user) {
     return netCommon.notLogin(req, res);
   }
@@ -54,19 +54,19 @@ router.post('/', authHelper.ensureAuthenticated, function(req, res, next) {
   }
 
   if (!public_id) {
-    var originalFilename = req.body.filename || "no_filename",
-      iComponentId = req.body.iComponentId || 0;
+    var originalFilename = req.body.filename || "no_filename";
+    var iComponentId = req.body.iComponentId || 0;
     createMatId(req, res, iComponentId, matType, originalFilename);
   } else {
     updateMatId(req, res, matType, utils.matName2Id(public_id), path);
   }
 });
 
-router.post('/attachTopic', authHelper.ensureAuthenticated, function (req, res, next) {
-  var matId = req.body.matId || null,
-    topicId = req.body.topicId || null,
-    matType = getMatType(req),
-    user = status.getUserInfo(req, res);
+router.post("/attachTopic", authHelper.ensureAuthenticated, function(req, res, next) {
+  var matId = req.body.matId || null;
+  var topicId = req.body.topicId || null;
+  var matType = getMatType(req);
+  var user = status.getUserInfo(req, res);
 
   if (!user) {
     return netCommon.notLogin(req, res);
@@ -84,12 +84,12 @@ router.post('/attachTopic', authHelper.ensureAuthenticated, function (req, res, 
   }
 });
 
-router.post('/sprite', authHelper.ensureAuthenticated, function (req, res, next) {
-  var matId = req.body.matId || null,
-    public_id = req.body.public_id || null,
-    extra = req.body.extra || null,
-    matType = getMatType(req),
-    user = status.getUserInfo(req, res);
+router.post("/sprite", authHelper.ensureAuthenticated, function(req, res, next) {
+  var matId = req.body.matId || null;
+  var public_id = req.body.public_id || null;
+  var extra = req.body.extra || null;
+  var matType = getMatType(req);
+  var user = status.getUserInfo(req, res);
 
   if (!user) {
     return netCommon.notLogin(req, res);
@@ -103,7 +103,7 @@ router.post('/sprite', authHelper.ensureAuthenticated, function (req, res, next)
   if (matType === Const.MAT_TYPE.SOUND) {
     getMatController(matType).addSprite(user, matId, extra, onSuccess, onError);
   } else {
-    onError({error: 'sprite is not allowed for mat ' + matType});
+    onError({ error: "sprite is not allowed for mat " + matType });
   }
 
   function onSuccess(id, doc) {
@@ -115,11 +115,11 @@ router.post('/sprite', authHelper.ensureAuthenticated, function (req, res, next)
   }
 });
 
-router.post('/detachTopic', authHelper.ensureAuthenticated, function (req, res, next) {
-  var matId = req.body.matId || null,
-    topicId = req.body.topicId || null,
-    matType = getMatType(req),
-    user = status.getUserInfo(req, res);
+router.post("/detachTopic", authHelper.ensureAuthenticated, function(req, res, next) {
+  var matId = req.body.matId || null;
+  var topicId = req.body.topicId || null;
+  var matType = getMatType(req);
+  var user = status.getUserInfo(req, res);
 
   if (topicId) {
     topicId = Number(topicId);
@@ -141,30 +141,30 @@ router.post('/detachTopic', authHelper.ensureAuthenticated, function (req, res, 
   }
 });
 
-router.get('/', function(req, res, next) {
+router.get("/", function(req, res, next) {
   console.log("params: " + JSON.stringify(req.params));
   console.log("body: " + JSON.stringify(req.body));
   console.log("query: " + JSON.stringify(req.query));
 
-  //ToDo:@@@
+  // ToDo:@@@
   getMatIds(req, res, getMatType(req));
 });
 
 // 定义RESTFull API（路径）中的参数，形参
-router.param('matType', function (req, res, next, id) {
+router.param("matType", function(req, res, next, id) {
   next();
 });
 // 定义RESTFull API（路径）中的参数，形参
-router.param('topicId', function (req, res, next, id) {
+router.param("topicId", function(req, res, next, id) {
   next();
 });
-router.param('requestAll', function (req, res, next, id) {
+router.param("requestAll", function(req, res, next, id) {
   next();
 });
 
-router.get('/list/:matType/topic/:topicId/option/:requestAll', authHelper.ensureAuthenticated, function(req, res, next) {
-  var matType = req.params.matType,
-    requestAll =  utils.getParamsBoolean(req.params.requestAll, false);
+router.get("/list/:matType/topic/:topicId/option/:requestAll", authHelper.ensureAuthenticated, function(req, res, next) {
+  var matType = req.params.matType;
+  var requestAll = utils.getParamsBoolean(req.params.requestAll, false);
   topicId = req.params.topicId || null,
   user = status.getUserInfo2(req, res);
 
@@ -269,7 +269,7 @@ function sendBack(data, res) {
 }
 
 // private functions:
-//ToDo: @@@
+// ToDo: @@@
 function isNewMaterial(mat_id) {
   return true;
 }

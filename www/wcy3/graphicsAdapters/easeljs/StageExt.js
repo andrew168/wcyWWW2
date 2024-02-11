@@ -2,17 +2,17 @@
  * Created by Andrewz on 3/7/19.
  */
 
-(function () {
-  var p = createjs.Stage.prototype,
-    Stage = createjs.Stage;
+(function() {
+  var p = createjs.Stage.prototype;
+  var Stage = createjs.Stage;
 
   Stage.__debugOn = false;
   // extended method
-  p.enableDOMEvents = function (enable) {
+  p.enableDOMEvents = function(enable) {
     if (enable == null) {
       enable = true;
     }
-    var n, o, ls = this._eventListeners;
+    var n; var o; var ls = this._eventListeners;
     if (!enable && ls) {
       for (n in ls) {
         o = ls[n];
@@ -24,31 +24,31 @@
       var _this = this;
       ls = this._eventListeners = {};
       ls["mouseup"] = {
-        t: t, f: function (e) {
-          _this._handleMouseUp(e)
+        t: t, f: function(e) {
+          _this._handleMouseUp(e);
         }
       };
       // ls["touchend"] = {t:t, f:function(e) { _this._handleTouchEnd(e)} };
       // ls["touchcancel"] = {t:this.canvas, f:function(e) { _this._handleTouchCancel(e)} };
       ls["mousemove"] = {
-        t: t, f: function (e) {
-          _this._handleMouseMove(e)
+        t: t, f: function(e) {
+          _this._handleMouseMove(e);
         }
       };
       // ls["touchmove"] = {t:t, f:function(e) { _this._handleTouchMove(e)} };
-      ls['dblclick'] = {
-        t: t, f: function (e) {
-          _this._handleDoubleClick(e)
+      ls["dblclick"] = {
+        t: t, f: function(e) {
+          _this._handleDoubleClick(e);
         }
       };
-      ls['mousedown'] = {
-        t: this.canvas, f: function (e) {
-          _this._handleMouseDown(e)
+      ls["mousedown"] = {
+        t: this.canvas, f: function(e) {
+          _this._handleMouseDown(e);
         }
       };
-      ls['touchstart'] = {
-        t: this.canvas, f: function (e) {
-          _this._handleTouchStart(e)
+      ls["touchstart"] = {
+        t: this.canvas, f: function(e) {
+          _this._handleTouchStart(e);
         }
       };
 
@@ -57,12 +57,11 @@
         o.t.addEventListener(n, o.f);
       }
     }
-  }
-
+  };
 
   var _isProcessing = false;
-  p._handleTouchMove = function (e) {
-    if (!!Stage.__debugOn) {
+  p._handleTouchMove = function(e) {
+    if (Stage.__debugOn) {
       console.log("Touch Move");
     }
 
@@ -72,7 +71,7 @@
       return;
     }
     _isProcessing = true;
-    setTimeout(function () {
+    setTimeout(function() {
       _isProcessing = false;
     }, 100); // 最多200ms处理一个event
 
@@ -83,7 +82,7 @@
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, e.touches);
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, e.changedTouches);
     if (e.touches && (e.touches.length >= 1)) {
-      var xx = e.touches[0].clientX; //ToDo: 暂时只处理第一个触摸物体
+      var xx = e.touches[0].clientX; // ToDo: 暂时只处理第一个触摸物体
       var yy = e.touches[0].clientY;
       this._handlePointerMove(-1, e, xx, yy);
     }
@@ -97,7 +96,7 @@
    * @param {Number} pageX
    * @param {Number} pageY
    **/
-  p._handlePointerMove = function (id, e, pageX, pageY) {
+  p._handlePointerMove = function(id, e, pageX, pageY) {
     if (!this.canvas) {
       return;
     } // this.mouseX = this.mouseY = null;
@@ -133,32 +132,31 @@
       e.preventDefault();
       e.stopPropagation();
     }
-  }
+  };
 
-  p._handleMouseUp = function (e) {
-    if (!!Stage.__debugOn) {
+  p._handleMouseUp = function(e) {
+    if (Stage.__debugOn) {
       console.log("Mouse Up");
     }
     this._handlePointerUp(-1, e, false);
   };
 
-  p._handleTouchEnd = function (e) {
-    if (!!Stage.__debugOn) {
+  p._handleTouchEnd = function(e) {
+    if (Stage.__debugOn) {
       console.log("Touch End");
     }
 
     this._handlePointerUp(-1, e, false);
   };
 
-  p._handleTouchCancel = function (e) {
-    if (!!Stage.__debugOn) {
+  p._handleTouchCancel = function(e) {
+    if (Stage.__debugOn) {
       console.log("Touch Cancel");
     }
     this._handlePointerUp(-1, e, false);
   };
 
-
-  p._handlePointerUp = function (id, e, clear) {
+  p._handlePointerUp = function(id, e, clear) {
     var o = this._getPointerData(id);
     var evt;
     TQ.DitherRemover.close();
@@ -186,7 +184,7 @@
       if (id == this._primaryPointerID) {
         this._primaryPointerID = null;
       }
-      delete(this._pointerData[id]);
+      delete (this._pointerData[id]);
     } else {
       o.event = o.target = null;
     }
@@ -196,9 +194,9 @@
       e.stopPropagation();
       e.preventDefault();
     }
-  }
+  };
 
-  p._handleTouchStart = function (e) {
+  p._handleTouchStart = function(e) {
     if (Stage.__debugOn) {
       console.log("Touch Start");
     }
@@ -209,13 +207,13 @@
       return;
     }
     _isProcessing = true;
-    setTimeout(function () {
+    setTimeout(function() {
       _isProcessing = false;
     }, 1); // 最多200ms处理一个event
     this._handlePointerDown(-1, e, false);
   };
 
-  p._handlePointerDown = function (id, e, x, y) {
+  p._handlePointerDown = function(id, e, x, y) {
     var o = this._getPointerData(id);
 
     if (e.touches && (e.touches.length >= 1)) {
@@ -254,9 +252,9 @@
       e.stopPropagation();
       e.preventDefault();
     }
-  }
+  };
 
-  p._handleDoubleClick = function (e) {
+  p._handleDoubleClick = function(e) {
     var o = this._getPointerData(-1);
     var target = this._getObjectsUnderPoint(o.x, o.y, null, (this._mouseOverIntervalID ? 3 : 1));
     this._setSelectedItem(target);
@@ -267,15 +265,15 @@
     }
   };
 
-  p.getObjectsUnderPointer2 = function (e) {
+  p.getObjectsUnderPointer2 = function(e) {
     var o = this._getPointerData(-1);
     var target = this._getObjectsUnderPoint(o.x, o.y, null, (this._mouseOverIntervalID ? 3 : 1));
     this._setSelectedItem(target);
     return target;
   };
 
-  p._setSelectedItem = function (item) {
-    if (null == item) {
+  p._setSelectedItem = function(item) {
+    if (item == null) {
       this.selectedItem = item;
       this.selectedClipPoint = false;
       return;
@@ -291,6 +289,4 @@
 
   p.selectedItem = null;
   p.selectedClipPoint = false;
-
-
 }());

@@ -3,8 +3,8 @@
  * 建立系统目录
  * ToDo：避免重复建立
  */
-angular.module('starter').factory('Setup', Setup);
-Setup.$inject = ['FileService', 'DeviceService'];
+angular.module("starter").factory("Setup", Setup);
+Setup.$inject = ["FileService", "DeviceService"];
 
 function Setup(FileService, DeviceService) {
   var dirCounter = 0;
@@ -42,7 +42,7 @@ function Setup(FileService, DeviceService) {
 
   function onError(error) {
     TQ.Log.error("在创建目录的时候出错！！！: " + dirs[dirCounter]);
-    if (!!error) {
+    if (error) {
       TQ.Log.error(JSON.stringify(error));
     }
 
@@ -50,7 +50,7 @@ function Setup(FileService, DeviceService) {
     onDirCreated();
   }
 
-  //对于Android，处理速度慢，不能使用for循环连续发出命令，必须使用这种 回调方式
+  // 对于Android，处理速度慢，不能使用for循环连续发出命令，必须使用这种 回调方式
   function onDirCreated() {
     if (dirCounter >= dirs.length) {
       _ready();
@@ -68,5 +68,5 @@ function Setup(FileService, DeviceService) {
 
   return {
     initialize: initialize
-  }
+  };
 }

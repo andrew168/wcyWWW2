@@ -2,42 +2,42 @@
  * Created by Andrewz on 8/22/17.
  */
 var TQ = TQ || {};
-TQ.PageTransitionEffect = (function () {
-  var isAnimating = false,
-    watchDogMaxTime = 2000, // 超过2000ms，还没有结束动画， 则迫使结束
-    watchDogTask = -1,
-    outPageEnd = false,
-    inPageEnd = false,
-    animEndEventNames = {
-      'WebkitAnimation': 'webkitAnimationEnd',
-      'OAnimation': 'oAnimationEnd',
-      'msAnimation': 'MSAnimationEnd',
-      'animation': 'animationend'
-    },
+TQ.PageTransitionEffect = (function() {
+  var isAnimating = false;
+  var watchDogMaxTime = 2000; // 超过2000ms，还没有结束动画， 则迫使结束
+  var watchDogTask = -1;
+  var outPageEnd = false;
+  var inPageEnd = false;
+  var animEndEventNames = {
+    "WebkitAnimation": "webkitAnimationEnd",
+    "OAnimation": "oAnimationEnd",
+    "msAnimation": "MSAnimationEnd",
+    "animation": "animationend"
+  };
     // animation end event name
-    animEndEventName = animEndEventNames[Modernizr.prefixed('animation')],
-    // support css animations
-    support = Modernizr.cssanimations,
-    defaultEffectName = 'rotateFoldLeft',
-    editorService,
-    effectsList = {
-      'rotateFoldLeft': {
-        outClass: 'pt-page-rotateFoldLeft', // 左翻
-        inClass: 'pt-page-moveFromRightFade'
-      },
-      'rotateFoldRight': {
-        outClass: 'pt-page-rotateFoldRight', // 右翻
-        inClass: 'pt-page-moveFromLeftFade'
-      },
-      'rotateFoldTop pt-page-ontop': {
-        outClass: 'pt-page-rotateFoldTop pt-page-ontop', // 上翻
-        inClass: 'pt-page-moveFromBottomFade'
-      },
-      'rotateFoldBottom': {
-        outClass: 'pt-page-rotateFoldBottom', // 下翻
-        inClass: 'pt-page-moveFromTopFade'
-      }
-    };
+  var animEndEventName = animEndEventNames[Modernizr.prefixed("animation")];
+  // support css animations
+  var support = Modernizr.cssanimations;
+  var defaultEffectName = "rotateFoldLeft";
+  var editorService;
+  var effectsList = {
+    "rotateFoldLeft": {
+      outClass: "pt-page-rotateFoldLeft", // 左翻
+      inClass: "pt-page-moveFromRightFade"
+    },
+    "rotateFoldRight": {
+      outClass: "pt-page-rotateFoldRight", // 右翻
+      inClass: "pt-page-moveFromLeftFade"
+    },
+    "rotateFoldTop pt-page-ontop": {
+      outClass: "pt-page-rotateFoldTop pt-page-ontop", // 上翻
+      inClass: "pt-page-moveFromBottomFade"
+    },
+    "rotateFoldBottom": {
+      outClass: "pt-page-rotateFoldBottom", // 下翻
+      inClass: "pt-page-moveFromTopFade"
+    }
+  };
 
   var state = {
     page1Image: null,
@@ -56,13 +56,13 @@ TQ.PageTransitionEffect = (function () {
   }
 
   function doTransition(transition, callback) {
-    var outPage = transition.outPage,
-      inPage = transition.inPage;
-    editorService = angular.element(document.body).injector().get('EditorService');
+    var outPage = transition.outPage;
+    var inPage = transition.inPage;
+    editorService = angular.element(document.body).injector().get("EditorService");
     TQ.Log.debugInfo("page transition start...");
     isAnimating = true;
-    watchDogTask = TQ.WatchDog.start(function () {
-      if (isAnimating) {// 此变量是易变的， 所以，必须显式地clear dog
+    watchDogTask = TQ.WatchDog.start(function() {
+      if (isAnimating) { // 此变量是易变的， 所以，必须显式地clear dog
         onOutPageAnimeEnd();
         onInPageAnimeEnd();
       }
@@ -136,9 +136,8 @@ TQ.PageTransitionEffect = (function () {
     if (effectsList[name]) {
       return effectsList[name];
     }
-    return effectsList[defaultEffectName]
+    return effectsList[defaultEffectName];
   }
-
 }());
 
-TQ.PageTransitionEffect.EVENT_COMPLETED = 'page transition end';
+TQ.PageTransitionEffect.EVENT_COMPLETED = "page transition end";

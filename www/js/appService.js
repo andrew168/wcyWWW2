@@ -1,21 +1,20 @@
 /**
  * Created by Andrewz on 5/8/2016.
  */
-angular.module('starter').factory('AppService', AppService);
+angular.module("starter").factory("AppService", AppService);
 
-AppService.$inject = ['$stateParams', '$timeout', 'WCY', 'NetService', 'DeviceService',
-  'Setup', 'UserService'];
+AppService.$inject = ["$stateParams", "$timeout", "WCY", "NetService", "DeviceService",
+  "Setup", "UserService"];
 
 function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
   Setup, UserService) {
-
-  var STATE_LOADED = 1,
-    STATE_STARTING = 2,
-    STATE_STARTED = 3;
-  var _state = STATE_LOADED,
-    _initialized = false,
-    _onAppStarting = null,
-    _onAppStarted = null; // onAppStartDefault;
+  var STATE_LOADED = 1;
+  var STATE_STARTING = 2;
+  var STATE_STARTED = 3;
+  var _state = STATE_LOADED;
+  var _initialized = false;
+  var _onAppStarting = null;
+  var _onAppStarted = null; // onAppStartDefault;
 
   function configCanvas() {
     TQ.State.updateDeviceInfo();
@@ -25,8 +24,8 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
       TQ.DirtyFlag.setScene();
     }
 
-    TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight + ")"
-            + "orientation = " + TQ.Config.orientation);
+    TQ.Log.debugInfo("scren is: (" + TQ.Config.workingRegionWidth + ", " + TQ.Config.workingRegionHeight + ")" +
+            "orientation = " + TQ.Config.orientation);
   }
 
   function _init() {
@@ -38,10 +37,9 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
   }
 
   function doInit() {
-    //remove_debugger_begin
-    //TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
-    //remove_debugger_end
-
+    // remove_debugger_begin
+    // TQ.Log.setLevel(TQ.Log.INFO_LEVEL);
+    // remove_debugger_end
 
     // Chrome规定：必须用户操作之后，才能播放Audio和Video，
     // 如果是从shared link直接打开播放， 则必须要提示用户操作一下，否则video的不触发canplay事件
@@ -54,12 +52,12 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
       return;
     }
     if (!TQ.Utility.isSupportedEnvironment()) {
-      var msg = TQ.Locale.getStr('please use android mobile');
+      var msg = TQ.Locale.getStr("please use android mobile");
       // +' <a href="https://www.google.ca/chrome/browser/features.html" style="font-weight: bold; text-decoration: underline">' +
       // TQ.Locale.getStr('chrome') + '</a>！';
-      TQ.MessageBox.prompt(msg, function () {
-        msg = TQ.Locale.getStr('please copy this page to technical support') + ': support@udoido.com. \n\n\n\r\n\r';
-        $timeout(TQ.MessageBox.prompt(msg + navigator.userAgent + ' \n\r' + navigator.vendor));
+      TQ.MessageBox.prompt(msg, function() {
+        msg = TQ.Locale.getStr("please copy this page to technical support") + ": support@udoido.com. \n\n\n\r\n\r";
+        $timeout(TQ.MessageBox.prompt(msg + navigator.userAgent + " \n\r" + navigator.vendor));
       });
       return;
     }
@@ -73,18 +71,18 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     } else {
       onFileSystemReady();
     }
-    TQ.Log.checkPoint('file system ready');
+    TQ.Log.checkPoint("file system ready");
     if ((!TQ.Env || !TQ.Env.lang) && !TQ.QueryParams.noLocale) {
-      TQ.Log.error('must setup default language!');
+      TQ.Log.error("must setup default language!");
     }
-    angular.element(document).ready(function () {
+    angular.element(document).ready(function() {
       if (!(TQ.QueryParams && TQ.QueryParams.noLocale)) {
         TQ.Locale.initialize(TQ.Env.lang);
       }
     });
 
     if (_state < STATE_STARTING) { // 由于autoLogin的影响， 可能此段函数被滞后了。
-      _state = STATE_STARTING
+      _state = STATE_STARTING;
     }
 
     if (_onAppStarting) {
@@ -111,7 +109,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
       assertTrue("device要先ready", DeviceService.isReady());
     }
     if (_onAppStarted) {
-      $timeout(function () {
+      $timeout(function() {
         _onAppStarted();
       });
     }
@@ -121,7 +119,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
   function onAppStartDefault() {
     // $scope.testDownload();
 
-    var opus = TQ.Utility.getUrlParam('opus');
+    var opus = TQ.Utility.getUrlParam("opus");
     if (!opus && $stateParams.shareCode) {
       opus = $stateParams.shareCode;
     }
@@ -133,7 +131,7 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     } else {
       WCY.start();
     }
-    //WxService.init();
+    // WxService.init();
     // $cordovaProgress.hide();
   }
 
@@ -165,5 +163,5 @@ function AppService($stateParams, $timeout, WCY, NetService, DeviceService,
     configCanvas: configCanvas,
     onAppStarting: setOnAppStarting,
     onAppStarted: setOnAppStarted
-  }
+  };
 }

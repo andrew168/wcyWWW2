@@ -2,21 +2,21 @@
  * Created by Andrewz on 6/17/2016.
  */
 var TQ = TQ || {};
-TQ.MessageBox = (function () {
-  var TYPE_PROMPT = 'prompt',
-    TYPE_CONFIRM = 'confirm',
-    TYPE_SHOW = 'show',
-    TYPE_TOAST = 'toast',
-    TYPE_PROGRESS = 'progress';
-  var MESSAGE_CRITICAL = 9,
-    MESSAGE_NO = 0;
+TQ.MessageBox = (function() {
+  var TYPE_PROMPT = "prompt";
+  var TYPE_CONFIRM = "confirm";
+  var TYPE_SHOW = "show";
+  var TYPE_TOAST = "toast";
+  var TYPE_PROGRESS = "progress";
+  var MESSAGE_CRITICAL = 9;
+  var MESSAGE_NO = 0;
 
-  var isShowingByForce = false,
-    instances = {},
-    messageLevel = MESSAGE_NO,
-    timerNoFlash = null,
-    msgList = [],
-    timer = null;
+  var isShowingByForce = false;
+  var instances = {};
+  var messageLevel = MESSAGE_NO;
+  var timerNoFlash = null;
+  var msgList = [];
+  var timer = null;
 
   var instance = {
     getInstance: getInstance,
@@ -24,7 +24,7 @@ TQ.MessageBox = (function () {
     hasCriticalError: hasCriticalError,
     reset: reset,
     hideProgressBox: hideProgressBox,
-    prompt: prompt, //可以被reset.
+    prompt: prompt, // 可以被reset.
     promptNoFlash: promptNoFlash,
     promptWithNoCancel: promptWithNoCancel,
     confirm: confirm, // 有OK和Cancel两个按钮， 不能被reset, 用户必须click
@@ -98,7 +98,7 @@ TQ.MessageBox = (function () {
 
   function promptWithNoCancel(msg, onOk1) {
     messageLevel = MESSAGE_CRITICAL;
-    prompt(msg, onOKShell, null, true, {noCancel: true});
+    prompt(msg, onOKShell, null, true, { noCancel: true });
     function onOKShell() {
       messageLevel = MESSAGE_NO;
       if (onOk1) {
@@ -114,7 +114,7 @@ TQ.MessageBox = (function () {
 
     options.mustClick = !!mustClick;
     options.unsafeMessage = msg;
-    options.onOk = onOk1 ? onOk1 : onOk;
+    options.onOk = onOk1 || onOk;
 
     if (onCancel1) {
       options.onCancel = onCancel1;
@@ -130,7 +130,7 @@ TQ.MessageBox = (function () {
     if (timerNoFlash) {
       clearTimeout(timerNoFlash);
     }
-    timerNoFlash = setTimeout(function () {
+    timerNoFlash = setTimeout(function() {
       prompt(msg, onOk1, onCancel1, mustClick, options);
       timerNoFlash = null;
     }, NO_FLASH_TIME);
@@ -151,12 +151,12 @@ TQ.MessageBox = (function () {
   }
 
   function show(str) {
-    return doShow({unsafeMessage: str, type: TYPE_SHOW});
+    return doShow({ unsafeMessage: str, type: TYPE_SHOW });
   }
 
   function toast(str) {
     var duration = 1000;
-    return doShow({unsafeMessage: str, duration: duration, noOk:true, noCancel: true, type: TYPE_TOAST});
+    return doShow({ unsafeMessage: str, duration: duration, noOk: true, noCancel: true, type: TYPE_TOAST });
   }
 
   function onDuration() {
@@ -175,34 +175,34 @@ TQ.MessageBox = (function () {
   }
 
   function showWaiting(msg) {
-    var htmlStr = '<img src="/public/images/loading.gif"> ' + msg;
-    return doShow({unsafeMessage: htmlStr, position: 'bottom', type: TYPE_PROGRESS});
+    var htmlStr = "<img src=\"/public/images/loading.gif\"> " + msg;
+    return doShow({ unsafeMessage: htmlStr, position: "bottom", type: TYPE_PROGRESS });
   }
 
   function show2(options) {
     // {content: msg, onOk: onOk, onCancel: onCancel, duration: duration}
-    var buttons = [],
-      vexOptions = {
-        message: options.content,
-        showCloseButton: !!options.showCloseButton,
-        unsafeMessage: options.unsafeMessage,
-        overlayClosesOnClick: !!options.overlayClosesOnClick,
-        className: getClassName(options),
-        mustClick: options.mustClick,
-        callback: function (value) {
-          if (value) {
-            console.log('Ok');
-            if (options.onOk) {
-              options.onOk();
-            }
-          } else {
-            console.log('canceled!');
-            if (options.onCancel) {
-              options.onCancel();
-            }
+    var buttons = [];
+    var vexOptions = {
+      message: options.content,
+      showCloseButton: !!options.showCloseButton,
+      unsafeMessage: options.unsafeMessage,
+      overlayClosesOnClick: !!options.overlayClosesOnClick,
+      className: getClassName(options),
+      mustClick: options.mustClick,
+      callback: function(value) {
+        if (value) {
+          console.log("Ok");
+          if (options.onOk) {
+            options.onOk();
+          }
+        } else {
+          console.log("canceled!");
+          if (options.onCancel) {
+            options.onCancel();
           }
         }
-      };
+      }
+    };
 
     if (options.overlayClassName) {
       vexOptions.overlayClassName = options.overlayClassName;
@@ -210,21 +210,21 @@ TQ.MessageBox = (function () {
 
     if (!options.noOK) {
       if (!options.okText) {
-        options.okText = TQ.Locale.getStr('OK');
+        options.okText = TQ.Locale.getStr("OK");
       }
 
       if (options.okText) {
-        buttons.push($.extend({}, vex.dialog.buttons.YES, {text: options.okText}));
+        buttons.push($.extend({}, vex.dialog.buttons.YES, { text: options.okText }));
       }
     }
 
     if (!options.noCancel) {
       if (!options.cancelText) {
-        options.cancelText = TQ.Locale.getStr('Cancel');
+        options.cancelText = TQ.Locale.getStr("Cancel");
       }
 
       if (options.cancelText) {
-        buttons.push($.extend({}, vex.dialog.buttons.NO, {text: options.cancelText}));
+        buttons.push($.extend({}, vex.dialog.buttons.NO, { text: options.cancelText }));
       }
     }
 
@@ -239,14 +239,14 @@ TQ.MessageBox = (function () {
   }
 
   function getClassName(options) {
-    var name = 'vex-theme-default';
+    var name = "vex-theme-default";
     if (options.position) {
       switch (options.position) {
-        case 'top':
-          name = 'vex-theme-top';
+        case "top":
+          name = "vex-theme-top";
           break;
-        case 'bottom':
-          name = 'vex-theme-bottom-right-corner';
+        case "bottom":
+          name = "vex-theme-bottom-right-corner";
           break;
         default :
           break;
@@ -292,8 +292,7 @@ TQ.MessageBox = (function () {
     // popstate事件不close
     vex.defaultOptions.closeAllOnPopState = false;
   }
-
 })();
 
-TQ.MessageBubble = TQ.MessageBox;  // 为了兼容老的代码，被代替了，
+TQ.MessageBubble = TQ.MessageBox; // 为了兼容老的代码，被代替了，
 

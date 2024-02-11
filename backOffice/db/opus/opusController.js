@@ -3,17 +3,17 @@
  */
 // 实现数据库的增删改查
 var LATEST_OPUS_NUM = 100;
-var mongoose = require('mongoose'),
-  utils = require('../../common/utils'),
-  dbCommon = require('../dbCommonFunc.js'),
-  CONST = require('../../common/const'),
-  Opus = mongoose.model('Opus'); // 获取已经定义的model，（定义见opusSchema的setup)
+var mongoose = require("mongoose");
+var utils = require("../../common/utils");
+var dbCommon = require("../dbCommonFunc.js");
+var CONST = require("../../common/const");
+var Opus = mongoose.model("Opus"); // 获取已经定义的model，（定义见opusSchema的setup)
 
 function get(id) {
-  Opus.findOne({_id: id})
-    .exec(function (err, data) {
+  Opus.findOne({ _id: id })
+    .exec(function(err, data) {
       if (!data) {
-        console.error(404, {msg: 'not found!' + id});
+        console.error(404, { msg: "not found!" + id });
       } else {
         console.log(data);
       }
@@ -56,21 +56,21 @@ function onSaveOpus(err, model, onSuccess, onError) {
 // 管理员： 除了ban的都返回
 // 普通用户： 只是自己的，（除了ban的）（不包括他人的）
 function getList(user, callback) {
-  var userId = user.ID,
-    notBanned = {"state": {$ne: CONST.OPUS_STATE.BAN}},
-    userLimit = (userId === null) ? null : {"userId": userId},
-    condition = userLimit;
+  var userId = user.ID;
+  var notBanned = { "state": { $ne: CONST.OPUS_STATE.BAN }};
+  var userLimit = (userId === null) ? null : { "userId": userId };
+  var condition = userLimit;
 
   if (user.canBan || user.canApprove) {
     condition = null;
   }
 
   if (condition) {
-    condition = {$and: [notBanned, condition]};
+    condition = { $and: [notBanned, condition] };
   } else {
     condition = notBanned;
   }
-  Opus.find(condition).sort({lastModified: -1}).exec(function (err, data) {
+  Opus.find(condition).sort({ lastModified: -1 }).exec(function(err, data) {
     var result = composeOpusList(err, data);
     callback(result);
   });
@@ -78,35 +78,35 @@ function getList(user, callback) {
 
 function getPageList(user, pageId, callback) {
   var itemsPerPage = 10;
-  var userId = user.ID,
-    notBanned = {"state": {$ne: CONST.OPUS_STATE.BAN}},
-    userLimit = (userId === null) ? null : {"userId": userId},
-    condition = userLimit;
+  var userId = user.ID;
+  var notBanned = { "state": { $ne: CONST.OPUS_STATE.BAN }};
+  var userLimit = (userId === null) ? null : { "userId": userId };
+  var condition = userLimit;
 
   if (user.canBan || user.canApprove) {
     condition = null;
   }
 
   if (condition) {
-    condition = {$and: [notBanned, condition]};
+    condition = { $and: [notBanned, condition] };
   } else {
     condition = notBanned;
   }
   pageId = pageId !== 0 ? pageId : 1;
   itemsPerPage = pageId !== 0 ? itemsPerPage : 0;
-  Opus.find(condition).skip((pageId - 1) * itemsPerPage).limit(itemsPerPage).sort({lastModified: -1}).exec(function (err, data) {
+  Opus.find(condition).skip((pageId - 1) * itemsPerPage).limit(itemsPerPage).sort({ lastModified: -1 }).exec(function(err, data) {
     var result = composeOpusList(err, data);
     callback(result);
   });
 }
 
 function composeOpusList(err, data) {
-  var i,
-    result = [],
-    num;
+  var i;
+  var result = [];
+  var num;
 
   if (err || !data) {
-    console.error(404, {msg: 'not found!'});
+    console.error(404, { msg: "not found!" });
   } else {
     num = (!data ? 0 : Math.min(LATEST_OPUS_NUM, data.length));
     for (i = 0; i < num; i++) {
@@ -130,10 +130,10 @@ function upgradeRecord(doc) {
 }
 
 function getSpecifiedList(callback, stateRequested) {
-  var notBanned = {"state": {$ne: CONST.OPUS_STATE.BAN}},
-    condition = {"state": stateRequested};
-  condition = {$and: [notBanned, condition]};
-  Opus.find(condition).sort({lastModified: -1}).exec(function (err, data) {
+  var notBanned = { "state": { $ne: CONST.OPUS_STATE.BAN }};
+  var condition = { "state": stateRequested };
+  condition = { $and: [notBanned, condition] };
+  Opus.find(condition).sort({ lastModified: -1 }).exec(function(err, data) {
     var result = composeOpusList(err, data);
     callback(result);
   });
@@ -150,16 +150,16 @@ function getFineList(callback) {
 // 也更新wcy的记录，
 function updateScreenshot(userId, id, path, onSuccess, onError) {
   console.info("enter update Screenshot");
-  Opus.findOne({_id: id, userId: userId})
-    .exec(function (err, data) {
+  Opus.findOne({ _id: id, userId: userId })
+    .exec(function(err, data) {
       if (!data) {
-        console.error("opusId = " + id + 'userId = ' + userId); // 可能是不同的UserId，不能覆盖他人的作品
-        console.error(id + ' opus not found!'); // 可能是不同的UserId，不能覆盖他人的作品
+        console.error("opusId = " + id + "userId = " + userId); // 可能是不同的UserId，不能覆盖他人的作品
+        console.error(id + " opus not found!"); // 可能是不同的UserId，不能覆盖他人的作品
         add(userId, path, id, onSuccess, onError); // 因此， 以建立新文件， 注明是以他人的作品为模板的
       } else {
         console.log(data);
-        data.set('ssPath', path);
-        data.set('lastModified', Date.now());
+        data.set("ssPath", path);
+        data.set("lastModified", Date.now());
         data.save(onSaved);
       }
     });
@@ -170,12 +170,12 @@ function updateScreenshot(userId, id, path, onSuccess, onError) {
 }
 
 function getAuthor(opusId, onCompleted) {
-  Opus.findOne({_id: opusId})
-    .exec(function (err, doc) {
+  Opus.findOne({ _id: opusId })
+    .exec(function(err, doc) {
       var author;
       if (!doc) {
-        console.error(404, {msg: "couldn't find user for opus: !" + opusId});
-        author = {ID: 1};
+        console.error(404, { msg: "couldn't find user for opus: !" + opusId });
+        author = { ID: 1 };
       } else {
         console.log(doc);
         author = {
@@ -187,23 +187,23 @@ function getAuthor(opusId, onCompleted) {
         };
       }
 
-      onCompleted(author)
+      onCompleted(author);
     });
 }
 
 function applyToPublish(id, playerId, callback) {
   // 必须是自己的才能申请发表， 否则， 无效
-  Opus.findOne({$and: [{_id: id}, {userId: playerId}]})
-    .exec(function (err, data) {
+  Opus.findOne({ $and: [{ _id: id }, { userId: playerId }] })
+    .exec(function(err, data) {
       if (!data) {
-        console.error(404, {msg: 'not found! : ' + id + ", or not belong to : " + playerId});
+        console.error(404, { msg: "not found! : " + id + ", or not belong to : " + playerId });
       } else {
         console.log(data);
         var item = data._doc;
         if (item.state === CONST.OPUS_STATE.PRIVATE) {
           // state: Number, // 10, 私有的， 20： 申请公开， 30: 批准公开， 41: 禁用
-          data.set('state', CONST.OPUS_STATE.APPLY_TO_PUBLISH);
-          data.save(function (err, data) {
+          data.set("state", CONST.OPUS_STATE.APPLY_TO_PUBLISH);
+          data.save(function(err, data) {
             if (!err) {
               if (callback) {
                 callback(item._id);
@@ -219,14 +219,14 @@ function applyToPublish(id, playerId, callback) {
 
 function approveToPublish(operator, id, callback) {
   // 必须是自己的才能申请发表， 否则， 无效
-  dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.PUBLISHED, callback);
+  dbCommon.setProp(operator, Opus, id, "state", CONST.OPUS_STATE.PUBLISHED, callback);
 }
 function ban(operator, id, callback) {
-  dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.BAN, callback);
+  dbCommon.setProp(operator, Opus, id, "state", CONST.OPUS_STATE.BAN, callback);
 }
 
 function refine(operator, id, callback) {
-  dbCommon.setProp(operator, Opus, id, 'state', CONST.OPUS_STATE.FINE, callback);
+  dbCommon.setProp(operator, Opus, id, "state", CONST.OPUS_STATE.FINE, callback);
 }
 
 function getAuthorName(user) {

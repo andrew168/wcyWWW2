@@ -1,4 +1,4 @@
-var cloudinary = require('cloudinary');
+var cloudinary = require("cloudinary");
 
 cloudinary.config({
   cloud_name: "eplan",
@@ -9,18 +9,19 @@ cloudinary.config({
 
 cloudinary.v2.api.resources(
   {
-    type: 'upload',
+    type: "upload",
     max_results: 30,
-    start_at: '2018-02-12',
-    prefix: '' // add your folder
+    start_at: "2018-02-12",
+    prefix: "" // add your folder
   },
-  function (error, result) {
-    console.log(result, error);
-    if (result && result.resources) {
-      for (item of result.resources) {
-        console.log(item.secure_url);
-      }
+  function(error, result) {
+    if (error) {
+      console.log("Error:", error);
+    } else {
+      console.log("Result:", result);
+      result.resources.forEach(function(item) {
+        console.log(item.secure_url); // Log the secure URL of each item
+      });
     }
   });
-
 

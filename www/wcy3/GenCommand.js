@@ -5,8 +5,7 @@
 
 window.TQ = window.TQ || {};
 
-(function () {
-
+(function() {
   var fns = null;
   function GenCommand(cmdIdOrArray, ele, newValue, oldValue) {
     if (!fns) {
@@ -34,22 +33,22 @@ window.TQ = window.TQ || {};
   GenCommand.ADD_ITEM = "cmd_add_item";
   GenCommand.PINIT = "cmd_pin_it";
 
-  GenCommand.initialize = function () {
+  GenCommand.initialize = function() {
     fns = [];
-    fns[GenCommand.SCALE] = {dofn: "scaleTo",  undofn: "scaleTo"};
-    fns[GenCommand.SCALE_AND_ROTATE] = {dofn: "scaleAndRotateTo",  undofn: "scaleAndRotateTo"};
-    fns[GenCommand.MIN_JOINT_ANGLE] = {dofn: "setMinAngle",  undofn: "setMinAngle"};
-    fns[GenCommand.MAX_JOINT_ANGLE] = {dofn: "setMaxAngle",  undofn: "setMaxAngle"};
-    fns[GenCommand.CHANGE_LAYER] = {dofn: "moveZ",  undofn: "moveToZ"};
-    fns[GenCommand.SET_3D_OBJ] = {dofn: "attachTo",  undofn: "detach"};
-    fns[GenCommand.ADD_ITEM] = {dofn: "addElementDirect",  undofn: "deleteElement"};
-    fns[GenCommand.PINIT] = {dofn: "pinIt", undofn: "pinIt"};
+    fns[GenCommand.SCALE] = { dofn: "scaleTo", undofn: "scaleTo" };
+    fns[GenCommand.SCALE_AND_ROTATE] = { dofn: "scaleAndRotateTo", undofn: "scaleAndRotateTo" };
+    fns[GenCommand.MIN_JOINT_ANGLE] = { dofn: "setMinAngle", undofn: "setMinAngle" };
+    fns[GenCommand.MAX_JOINT_ANGLE] = { dofn: "setMaxAngle", undofn: "setMaxAngle" };
+    fns[GenCommand.CHANGE_LAYER] = { dofn: "moveZ", undofn: "moveToZ" };
+    fns[GenCommand.SET_3D_OBJ] = { dofn: "attachTo", undofn: "detach" };
+    fns[GenCommand.ADD_ITEM] = { dofn: "addElementDirect", undofn: "deleteElement" };
+    fns[GenCommand.PINIT] = { dofn: "pinIt", undofn: "pinIt" };
   };
   inherit(GenCommand, TQ.AbstractCommand);
 
   GenCommand.prototype.do = function() {
     this.receiver[this.dofn](this.newValue);
-    TQ.AssertExt.isTrue(typeof this.oldValue !== 'undefined', 'oldValue为什么没有赋值？');
+    TQ.AssertExt.isTrue(typeof this.oldValue !== "undefined", "oldValue为什么没有赋值？");
   };
 
   GenCommand.prototype.undo = function() {
@@ -58,30 +57,27 @@ window.TQ = window.TQ || {};
 
   GenCommand.prototype.redo = GenCommand.prototype.do;
 
-  GenCommand.name2='GenCommand';
+  GenCommand.name2 = "GenCommand";
   TQ.GenCommand = GenCommand;
 }());
 
-
 // extensions:
-(function () {
-
+(function() {
   TQ.CommandMgr.directScale = function(ele, newScale) {
     var cmd = new TQ.GenCommand(TQ.GenCommand.SCALE, ele, newScale, ele.getScaleInWorld());
     return TQ.CommandMgr.directDo(cmd);
   };
 
-
   TQ.CommandMgr.directScaleAndRotate = function(ele, scale, angle) {
     var oldValue = {
-        scale: ele.getScaleInWorld(),
-        angle: Math.truncate6(ele.jsonObj.rotation)
-      },
+      scale: ele.getScaleInWorld(),
+      angle: Math.truncate6(ele.jsonObj.rotation)
+    };
 
-      newScaleAndRotate = {
-        scale: scale,
-        angle: angle
-      };
+    var newScaleAndRotate = {
+      scale: scale,
+      angle: angle
+    };
 
     return TQ.CommandMgr.directDo(new TQ.GenCommand(TQ.GenCommand.SCALE_AND_ROTATE, ele, newScaleAndRotate, oldValue));
   };

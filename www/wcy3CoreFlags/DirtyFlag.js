@@ -16,7 +16,7 @@ var TQ = TQ || {};
   DirtyFlag.requestToUpdateAll = requestToUpdateAll;
 
   function setElementOnly(ele) {
-    if (!!ele) {
+    if (ele) {
       ele.dirty = true;
     }
   }
@@ -40,7 +40,7 @@ var TQ = TQ || {};
   }
 
   function setLevel(level, requestDirtyZ) {
-    if (!!level) {
+    if (level) {
       level.isDirty = true;
       if (requestDirtyZ) {
         level.isDirtyZ = true;

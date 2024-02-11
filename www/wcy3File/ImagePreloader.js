@@ -6,7 +6,6 @@
  在RM中用于调用image。
  */
 (function() {
-
   function ImagePreloader(item) {
     this.AbstractLoader_constructor(item, false, "loader");
     this.img = null;
@@ -34,10 +33,10 @@
 
   p.load = function() {
     this.img = new Image();
-    if (this._item.crossOrigin) {  // _item is defined by preloaderJS
-      this.img.crossOrigin="anonymous";
+    if (this._item.crossOrigin) { // _item is defined by preloaderJS
+      this.img.crossOrigin = "anonymous";
     }
-    this.img.crossOrigin="anonymous";
+    this.img.crossOrigin = "anonymous";
     this.img.onload = createjs.proxy(this.handleLoad, this);
     this.img.src = this._item.src;
   };
@@ -46,9 +45,7 @@
     this._sendComplete();
   };
   window.ImagePreloader = createjs.promote(ImagePreloader, "AbstractLoader");
-
 }());
-
 
 function init111() {
   if (window.top != window) {
@@ -57,7 +54,7 @@ function init111() {
 
   var loader = new createjs.LoadQueue();
   loader.installPlugin(ImagePreloader);
-  loader.loadFile("../_assets/art/Autumn.png")
+  loader.loadFile("../_assets/art/Autumn.png");
   loader.on("fileload", handleFileLoad);
   loader.load();
 }

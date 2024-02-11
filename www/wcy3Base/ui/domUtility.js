@@ -1,5 +1,5 @@
 var TQ = TQ || {};
-TQ.DomUtility = (function () {
+TQ.DomUtility = (function() {
   "use strict";
   return {
     createElement: createElement,
@@ -17,8 +17,8 @@ TQ.DomUtility = (function () {
 
   function createElement(parent, tag, id, eleClass) {
     var ele = document.createElement(tag);
-    ele.setAttribute('id', id);
-    ele.style.visibility = 'hidden';
+    ele.setAttribute("id", id);
+    ele.style.visibility = "hidden";
 
     if (eleClass) {
       ele.className = eleClass;
@@ -32,31 +32,31 @@ TQ.DomUtility = (function () {
   }
 
   function createButton(parent, id, eleClass, text, onClick, onTouchStart) {
-    var BUTTON_TAG = 'button';
+    var BUTTON_TAG = "button";
     var ele = createElement(parent, BUTTON_TAG, id, eleClass);
     ele.innerText = text;
     if (onTouchStart) {
-      ele.addEventListener('touchstart', onTouchStart, true); // act as soon as captured
+      ele.addEventListener("touchstart", onTouchStart, true); // act as soon as captured
     } else if (onClick) {
-      ele.addEventListener('click', onClick, true);
+      ele.addEventListener("click", onClick, true);
     }
-    ele.style.display = 'inline';
+    ele.style.display = "inline";
     return ele;
   }
 
   function createButtonInTable(parent, id, eleClass, text, callback) {
-    var cell = createElement(parent, 'tr', id + '-cell', null);
+    var cell = createElement(parent, "tr", id + "-cell", null);
     return createButton(cell, id, eleClass, text, callback);
   }
 
   function createButtonInTableRow(parent, id, eleClass, text, onClick, onTouchStart) {
-    var cell = createElement(parent, 'td', id + '-cell', null);
+    var cell = createElement(parent, "td", id + "-cell", null);
     return createButton(cell, id, eleClass, text, onClick, onTouchStart);
   }
 
   function hideElement(ele) {
-    ele.style.visibility = 'hidden';
-    ele.style.display = 'none';
+    ele.style.visibility = "hidden";
+    ele.style.display = "none";
   }
 
   function hideElements(eles) {
@@ -66,10 +66,10 @@ TQ.DomUtility = (function () {
   }
 
   function closeElement(ele) {
-    ele.setAttribute('style', '');
-    ele.style.cssText = '';
-    ele.style.display = 'none';
-    ele.style.visibility = 'hidden';
+    ele.setAttribute("style", "");
+    ele.style.cssText = "";
+    ele.style.display = "none";
+    ele.style.visibility = "hidden";
   }
 
   function closeElements(eles) {
@@ -79,13 +79,13 @@ TQ.DomUtility = (function () {
   }
 
   function showElement(ele) {
-    ele.style.visibility = 'visible';
-    ele.style.display = 'block';
+    ele.style.visibility = "visible";
+    ele.style.display = "block";
   }
 
   function showElementAsTable(ele) {
-    ele.style.visibility = 'visible';
-    ele.style.display = 'table';
+    ele.style.visibility = "visible";
+    ele.style.display = "table";
   }
 
   function showElements(eles) {

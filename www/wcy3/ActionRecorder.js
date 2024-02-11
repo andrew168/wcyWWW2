@@ -5,17 +5,15 @@
  */
 window.TQ = window.TQ || {};
 
-(function (){
-
-  function ActionRecorder()
-  {
+(function() {
+  function ActionRecorder() {
 
   }
   ActionRecorder.style = TQ.Channel.LINE_INTERPOLATION;
-  ActionRecorder.initialize = function () {};
+  ActionRecorder.initialize = function() {};
 
   // 参见: Decorder的说明
-  ActionRecorder.record = function (element, actionName, t) {
+  ActionRecorder.record = function(element, actionName, t) {
     var track = element.animeTrack;
     var jsonObj = element.jsonObj;
     t = TQ.FrameCounter.gridSnap(t);
@@ -33,7 +31,7 @@ window.TQ = window.TQ || {};
     }
 
     if (!track.action) {
-      track.action =  new TQ.OneChannel(actionName);
+      track.action = new TQ.OneChannel(actionName);
     } else {
       if (element.hasFlag(TQ.Element.ACTION_CHANGED)) { // 允许改变关节物体各个关节的可见性
         track.action.record(track, t, actionName, TQ.Channel.JUMP_INTERPOLATION);

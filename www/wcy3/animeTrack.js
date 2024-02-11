@@ -5,13 +5,13 @@
  */
 TQ = TQ || {};
 
-(function () {
-  function AnimeTrack (desc) {
+(function() {
+  function AnimeTrack(desc) {
     this.initialize(desc);
   }
-  var FALSE_NUM_0 = 0, // false
-    TRUE_NUM_1 = 1,
-    DEFAULT_SAG_IDLE_LENGTH = 0; // 每个元素，最少持续5s钟（包括入场，idle和出场）
+  var FALSE_NUM_0 = 0; // false
+  var TRUE_NUM_1 = 1;
+  var DEFAULT_SAG_IDLE_LENGTH = 0; // 每个元素，最少持续5s钟（包括入场，idle和出场）
   var p = AnimeTrack.prototype;
   p.erase = function(track) {
     if (this.x) this.x.erase();
@@ -22,8 +22,7 @@ TQ = TQ || {};
     if (this.visible) this.visible.erase();
   };
 
-  p.initialize = function(desc)
-  {
+  p.initialize = function(desc) {
     assertNotNull(TQ.Dictionary.FoundNull, desc); // 应该在element已经验证了, 补全了
     assertNotNull(TQ.Dictionary.FoundNull, desc.x);
     assertNotNull(TQ.Dictionary.FoundNull, desc.y);
@@ -86,7 +85,7 @@ TQ = TQ || {};
 
     if (!desc.animeTrack.visible) { // 即时添加的元素
       this.visible = new TQ.OneChannel(desc.isVis ? TRUE_NUM_1 : FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
-      if (!TQ.Config.insertAtT0On && !TQ.FrameCounter.isAtBeginning() ) {
+      if (!TQ.Config.insertAtT0On && !TQ.FrameCounter.isAtBeginning()) {
         this.visible.record(this, 0.0, FALSE_NUM_0, TQ.Channel.JUMP_INTERPOLATION);
       }
     } else { // 从文件中读入的元素
@@ -103,16 +102,16 @@ TQ = TQ || {};
     var self = this;
     t1 = TQ.FrameCounter.gridSnap(t1);
     t2 = TQ.FrameCounter.gridSnap(t2);
-    Object.keys(this).forEach(function(prop){
-      if (self[prop] instanceof  TQ.Channel) {
+    Object.keys(this).forEach(function(prop) {
+      if (self[prop] instanceof TQ.Channel) {
         self[prop].trim(t1, t2);
       }
-    })
+    });
   };
 
-  p.getSags = function () {
+  p.getSags = function() {
     var sags = null;
-    this.forEachChannel(function (channel) {
+    this.forEachChannel(function(channel) {
       var channelSags = channel.getSags();
       if (channelSags) {
         if (!sags) {
@@ -125,13 +124,13 @@ TQ = TQ || {};
     return sags;
   };
 
-  p.getInSag = function () {
-    var sags = this.getSags(),
-      sag = null;
+  p.getInSag = function() {
+    var sags = this.getSags();
+    var sag = null;
     if (sags && sags.length > 0) {
-      sags.some(function (channelSags) {
+      sags.some(function(channelSags) {
         return (channelSags && (sag = channelSags[TQ.AnimationManager.SagCategory.IN]));
-      })
+      });
     }
     return sag;
   };
@@ -150,9 +149,9 @@ TQ = TQ || {};
   };
 
   p.forEachChannel = function(callback) {
-    var prop,
-      channel,
-      self = this;
+    var prop;
+    var channel;
+    var self = this;
 
     for (prop in self) {
       channel = self[prop];
@@ -163,22 +162,22 @@ TQ = TQ || {};
   };
 
   AnimeTrack._validateOne = function(channel) {
-    channel.tid1 = (channel.tid1 == undefined) ? 0: channel.tid1;
-    channel.tid2 = (channel.tid2 == undefined) ? 0: channel.tid2;
+    channel.tid1 = (channel.tid1 == undefined) ? 0 : channel.tid1;
+    channel.tid2 = (channel.tid2 == undefined) ? 0 : channel.tid2;
   };
 
   p.calculateLastFrame = function() {
     var tMax = 0;
-    this.forEachChannel(function(channel){
+    this.forEachChannel(function(channel) {
       tMax = Math.max(tMax, channel.calculateLastFrame());
     });
 
-    ///基本假设：
+    // /基本假设：
     // * 对于SAG，  此时的tMax只是tInSagMax， 没有包括idleSag的时间
     // * SAG和自由绘制的动画是互斥的， 每个元素只能选其一，不能混合
     // * SAG元素的idle时间是弹性的，= 场景总长度 - 本元素inSagMax， 但是， 最少 5s (防止，简单场景只有进场， 没有停留时间)
     if (this.hasSag) {
-      var tIdleDuration = DEFAULT_SAG_IDLE_LENGTH/1000;
+      var tIdleDuration = DEFAULT_SAG_IDLE_LENGTH / 1000;
       tMax = tMax + tIdleDuration;
     }
 
@@ -209,7 +208,7 @@ TQ = TQ || {};
   }
 
   AnimeTrack.setButton = function(ele, t) {
-    var lifeTime = 3/20; // 3 frame;
+    var lifeTime = 3 / 20; // 3 frame;
     t = TQ.FrameCounter.gridSnap(t);
     ele.animeTrack.visible.reset();
     AnimeTrack.hideToNow(ele, t);
@@ -230,7 +229,7 @@ TQ = TQ || {};
             this.colorB.hasSag();
   };
 
-  AnimeTrack.upgradeTo3_8 = function (track) {
+  AnimeTrack.upgradeTo3_8 = function(track) {
     if (!track.hasSag) {
       return;
     }

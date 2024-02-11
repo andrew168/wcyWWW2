@@ -2,13 +2,13 @@
  * Created by Andrewz on 7/12/2016.
  */
 
-TQ.SocialFB = (function(){
+TQ.SocialFB = (function() {
   window.fbAsyncInit = function() {
     FB.init({
-      appId      : '273410813018932',
+      appId: "273410813018932",
       autoLogAppEvents: true,
-      xfbml      : false, // 不必parse我的DOM， 因为我没有使用FB的其它plugins
-      version    : 'v2.11'
+      xfbml: false, // 不必parse我的DOM， 因为我没有使用FB的其它plugins
+      version: "v2.11"
     });
   };
 
@@ -20,8 +20,8 @@ TQ.SocialFB = (function(){
       tooSlow = !TQ.State.fbAvailable;
     }
 
-    //var sdkUrl = "https://connect.facebook.net/en_US/sdk/debug.js";
-    var sdkUrl = '//connect.facebook.net/en_US/sdk.js';
+    // var sdkUrl = "https://connect.facebook.net/en_US/sdk/debug.js";
+    var sdkUrl = "//connect.facebook.net/en_US/sdk.js";
     TQ.LazyLoading.loadOne(sdkUrl, function() {
       if (!tooSlow) {
         TQ.State.fbAvailable = true;

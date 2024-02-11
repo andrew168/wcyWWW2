@@ -4,8 +4,8 @@
  */
 window.TQ = window.TQ || {};
 
-//存放全局的API， 需要在所有模块都调入之后， 才能够执行， 否则没有函数。
-(function () {
+// 存放全局的API， 需要在所有模块都调入之后， 才能够执行， 否则没有函数。
+(function() {
   function WCY() {
 
   }
@@ -110,7 +110,7 @@ window.TQ = window.TQ || {};
       WCY.currentScene.play();
     }
   };
-  WCY.emptyScene = function() {TQ.SceneEditor.emptyScene(); };
+  WCY.emptyScene = function() { TQ.SceneEditor.emptyScene(); };
 
   WCY.doPlayStop = function() {
     if (TQ.FrameCounter.isPlaying()) {
@@ -122,7 +122,7 @@ window.TQ = window.TQ || {};
 
   var canvas;
   // 进入/退出 全屏模式
-  WCY.fullscreenPlay = function (width, height){ // 屏幕分辨率的大小
+  WCY.fullscreenPlay = function(width, height) { // 屏幕分辨率的大小
     canvas = TQ.Graphics.getCanvas();
     canvas.width = Math.round(width);
     canvas.height = Math.round(height);
@@ -143,13 +143,11 @@ window.TQ = window.TQ || {};
     WCY.currentScene.deleteElement(ele);
   };
 
-  WCY.getCurrentLevelId = function()
-  {
+  WCY.getCurrentLevelId = function() {
     return WCY.currentScene.currentLevelId;
   };
 
-  WCY.getCurrentTime = function()
-  {
+  WCY.getCurrentTime = function() {
     return TQ.FrameCounter.t();
   };
 
@@ -188,7 +186,7 @@ window.TQ = window.TQ || {};
     TQ.Log.debugInfo(type);
   };
 
-  //------------- 以下的函数用于配置系统参数 -------------------------
+  // ------------- 以下的函数用于配置系统参数 -------------------------
   // 设置零件标志的大小， 默认是10：
   WCY.setMarkerSize = function(radius) {
     TQ.Marker.RADIUS = radius;

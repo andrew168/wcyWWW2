@@ -4,23 +4,23 @@
 var TQ = TQ || {};
 TQ.MatType = (function() {
   return {
-    //素材
+    // 素材
     BKG: 10, // 'bkgimage',
     PROP: 20, // 'propimage',
     PEOPLE: 30, // 'peopleimage',
-    SOUND: 40, //,'audio';
+    SOUND: 40, //, 'audio';
 
     // 作品
-    OPUS: 90,  //  "mywork",
-    TOPIC: 91,  // 主题
+    OPUS: 90, //  "mywork",
+    TOPIC: 91, // 主题
     PUBLISHED_OPUS: 92,
     FINE_OPUS: 93,
 
     // depreciated
     LOCAL: -1,
-    ALBUM : -2,
+    ALBUM: -2,
     CAMERA: -3,
-    toEType: function (matType) {
+    toEType: function(matType) {
       var eType;
       switch (matType) {
         case TQ.ElementType.GROUP_FILE:
@@ -44,7 +44,7 @@ TQ.MatType = (function() {
       }
       return eType;
     },
-    toElementType: function (matType) {
+    toElementType: function(matType) {
       var type;
       switch (matType) {
         case TQ.MatType.BKG:

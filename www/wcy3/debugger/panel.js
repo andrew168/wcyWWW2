@@ -2,7 +2,7 @@
  * Created by Andrewz on 2/26/19.
  */
 var TQDebugger = TQDebugger || {};
-TQDebugger.Panel = (function () {
+TQDebugger.Panel = (function() {
   var panel,
     eleLog;
   return {
@@ -18,30 +18,30 @@ TQDebugger.Panel = (function () {
       return;
     }
 
-    var htmlStr = '<button onclick="debugger_clear();">清空</button>' +
-      '<button onclick="debugger_close();">关闭</button>' +
-      '<div id="id-debug-info"></div>';
+    var htmlStr = "<button onclick=\"debugger_clear();\">清空</button>" +
+      "<button onclick=\"debugger_close();\">关闭</button>" +
+      "<div id=\"id-debug-info\"></div>";
 
-    window.debugger_clear = function (method) {
+    window.debugger_clear = function(method) {
       if (eleLog) {
-        eleLog.innerHTML = '';
+        eleLog.innerHTML = "";
       }
     };
-    window.debugger_close = function () {
+    window.debugger_close = function() {
       TQDebugger.Panel.close();
     };
 
-    panel = TQ.DomUtility.createElement(document.body, 'div', 'id-debug-panel', 'debug-panel-layer');
+    panel = TQ.DomUtility.createElement(document.body, "div", "id-debug-panel", "debug-panel-layer");
     panel.innerHTML = htmlStr;
     TQ.DomUtility.showElement(panel);
     panel.addEventListener("touchstart", onTouchStart, false);
     panel.addEventListener("touchmove", onTouchMove, false);
-    var startX, startY,
-      startTop = TQ.Utility.readLocalStorage('startTop', 200),
-      startLeft = TQ.Utility.readLocalStorage('startLeft', 0);
+    var startX; var startY;
+    var startTop = TQ.Utility.readLocalStorage("startTop", 200);
+    var startLeft = TQ.Utility.readLocalStorage("startLeft", 0);
 
-    panel.style.left = startLeft + 'px';
-    panel.style.top = startTop + 'px';
+    panel.style.left = startLeft + "px";
+    panel.style.top = startTop + "px";
 
     function onTouchStart(evt) {
       var touch = evt.touches[0];
@@ -56,17 +56,17 @@ TQDebugger.Panel = (function () {
     function onTouchMove(evt) {
       var touch = evt.touches[0];
       if (touch) {
-        var newLeft = startLeft + (touch.clientX - startX),
-          newTop = startTop + (touch.clientY - startY);
-        panel.style.left = newLeft + 'px';
-        panel.style.top = newTop + 'px';
-        TQ.Utility.writeLocalStorage('startTop', newTop);
-        TQ.Utility.writeLocalStorage('startLeft', newLeft);
+        var newLeft = startLeft + (touch.clientX - startX);
+        var newTop = startTop + (touch.clientY - startY);
+        panel.style.left = newLeft + "px";
+        panel.style.top = newTop + "px";
+        TQ.Utility.writeLocalStorage("startTop", newTop);
+        TQ.Utility.writeLocalStorage("startLeft", newLeft);
       }
     }
 
     if (!eleLog) {
-      eleLog = document.getElementById('id-debug-info');
+      eleLog = document.getElementById("id-debug-info");
     }
 
     // 要显示它？un comment下面的句子：
@@ -84,11 +84,11 @@ TQDebugger.Panel = (function () {
   function logInfo(msg) {
     var src = eleLog.innerHTML;
     while (src.length > 400) {
-      var pos= src.indexOf('</p>', 20);
+      var pos = src.indexOf("</p>", 20);
       src = src.substr(pos);
     }
     if (eleLog) {
-      eleLog.innerHTML = src + '<p>' + msg + '</p>';
+      eleLog.innerHTML = src + "<p>" + msg + "</p>";
     }
   }
 }());

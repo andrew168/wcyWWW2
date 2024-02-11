@@ -4,33 +4,33 @@
  */
 TQ = TQ || {};
 
-(function () {
-  var SOUND_TYPE_DUB = 0,  // 实时配音， 新配音可以自动覆盖旧的,缺省值
-    SOUNT_TYPE_EFFECT = 1; // 声音特效， 声音文件，从声音库添加，不能自动覆盖，必须手动删除旧的
-    // 用法: 1) 拖入, 只有声音的 resource 名称,
-    //       2) 从scene中读入, 是 JSON
-    //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
+(function() {
+  var SOUND_TYPE_DUB = 0; // 实时配音， 新配音可以自动覆盖旧的,缺省值
+  var SOUNT_TYPE_EFFECT = 1; // 声音特效， 声音文件，从声音库添加，不能自动覆盖，必须手动删除旧的
+  // 用法: 1) 拖入, 只有声音的 resource 名称,
+  //       2) 从scene中读入, 是 JSON
+  //  必须是用工厂生产这个元素, 因为, 是数据决定元素的类别.
   function SoundElement(level, jsonObj) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string'); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !== "string"); // 用工厂提前转为JSON OBJ,而且, 填充好Gap
     this.instance = null;
     this.isFirstTimePlay = true;
-    if (!!jsonObj.t0) { // 记录声音的插入点， 只在插入点开始播放
+    if (jsonObj.t0) { // 记录声音的插入点， 只在插入点开始播放
       this.t0 = jsonObj.t0;
     } else {
       this.t0 = 0;
     }
     TQ.Element.call(this, level, jsonObj);
-    this.isCrossLevel = (jsonObj.isCrossLevel !== undefined ? jsonObj.isCrossLevel :
-      (this.isVer2plus() ? true : false));
+    this.isCrossLevel = (jsonObj.isCrossLevel !== undefined ? jsonObj.isCrossLevel
+      : (!!this.isVer2plus()));
   }
 
   SoundElement.srcToObj = function(src) {
-    return ({type:"SOUND", src: src, isVis:1});
+    return ({ type: "SOUND", src: src, isVis: 1 });
   };
-  SoundElement.setAsDub = function (desc) {
+  SoundElement.setAsDub = function(desc) {
     desc.subType = SOUND_TYPE_DUB;
   };
-  SoundElement.setAsEffect = function (desc) {
+  SoundElement.setAsEffect = function(desc) {
     desc.subType = SOUNT_TYPE_EFFECT;
   };
 
@@ -47,12 +47,12 @@ TQ = TQ || {};
     }
   };
 
-  SoundElement.composeResource = function (res) {
+  SoundElement.composeResource = function(res) {
     // wav: 都可以用(似乎IE不行）, 已经被FF24.0，CM29.0， SF5.1.7都支持了！！！
     // MP3: IE, CM, SF： ==》 ogg: 火狐, opera
     var currentBrowser = createjs.BrowserDetect;
     var newRes = null;
-    if (currentBrowser.isFirefox || currentBrowser.isOpera ) {
+    if (currentBrowser.isFirefox || currentBrowser.isOpera) {
       newRes = res.replace("mp3", "ogg");
     } else {
       newRes = res.replace("ogg", "mp3");
@@ -61,7 +61,7 @@ TQ = TQ || {};
   };
 
   // 只允许MP3和ogg, 其余的必须转变
-  p._doLoad = function (desc) {
+  p._doLoad = function(desc) {
     if (!desc) {
       desc = this.jsonObj;
     }
@@ -70,7 +70,7 @@ TQ = TQ || {};
 
     var resource,
       resourceId;
-    if (!!desc.data) {
+    if (desc.data) {
       resource = desc.data;
       resourceId = desc.src;
       desc.data = null;
@@ -78,15 +78,15 @@ TQ = TQ || {};
       TQ.Log.info("start to play " + desc.src);
       var item = TQ.RM.getResource(desc.src);
       if (item) {
-        resource =   TQ.RM.getId(item);
+        resource = TQ.RM.getId(item);
         resourceId = item.ID;
       }
     }
     if (resource) {
       this.loaded = true;
       this.instance = new TQ.HowlerPlayer(resourceId, desc.sprite, desc.spriteMap); // 声音只用ID， 不要resouce data
-      //ToDo： 需要在这里play吗？
-      //this.instance.play(); //interruptValue, delay, offset, loop);
+      // ToDo： 需要在这里play吗？
+      // this.instance.play(); //interruptValue, delay, offset, loop);
       // this.setTRSAVZ(); 声音元素， 没有平移、比例、旋转等
       this._afterItemLoaded();
       // this.level.onItemLoaded(this);
@@ -97,7 +97,7 @@ TQ = TQ || {};
 
   p._parent_doAddItemToStage = p._doAddItemToStage;
   p._parent_doRemoveFromStage = p._doRemoveFromStage;
-  p._doAddItemToStage = function()   // 子类中定义的同名函数, 会覆盖父类, 让所有的兄弟类, 都有使用此函数.
+  p._doAddItemToStage = function() // 子类中定义的同名函数, 会覆盖父类, 让所有的兄弟类, 都有使用此函数.
   {
     // 这是sound的专用类，所以，执行到此的必然是sound，
     TQ.SoundMgr.addItem(this);
@@ -112,7 +112,7 @@ TQ = TQ || {};
     return (this.t0 + this.instance.duration / 1000); // duration 单位是ms
   };
 
-  SoundElement._composeFullPath = function (res) {
+  SoundElement._composeFullPath = function(res) {
     if (res.indexOf(TQ.Config.SOUNDS_PATH) < 0) {
       return TQ.Config.SOUNDS_PATH + res;
     }
@@ -128,7 +128,7 @@ TQ = TQ || {};
     }
   };
 
-  p.play = function (forceToPlay, spriteName) {
+  p.play = function(forceToPlay, spriteName) {
     if (!this.instance) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       TQ.Log.info(TQ.Dictionary.INVALID_LOGIC + "in SoundElement.resume");
@@ -150,7 +150,7 @@ TQ = TQ || {};
     if (this.isFirstTimePlay) {
       this.isFirstTimePlay = false;
       if (this.t0 === undefined) {
-        this.t0 = TQ.FrameCounter.t();   // ToDo:这个t0计算方法有误， 需要根据编辑时插入点的位置， 来计算； 如果播放时，跳开一个位移，则不是播放时的开始位置。
+        this.t0 = TQ.FrameCounter.t(); // ToDo:这个t0计算方法有误， 需要根据编辑时插入点的位置， 来计算； 如果播放时，跳开一个位移，则不是播放时的开始位置。
       }
       return this.instance.play(spriteName);
     }
@@ -185,9 +185,9 @@ TQ = TQ || {};
       return;
     } else {
       if (this.isCrossLevel) {
-        ts = this.toGlobalTime(this.t0);  // VER2版本引入的跨场景的声音
+        ts = this.toGlobalTime(this.t0); // VER2版本引入的跨场景的声音
       } else {
-        ts = this.t0;  // 兼容VER1版本中的 单一场景的声音。
+        ts = this.t0; // 兼容VER1版本中的 单一场景的声音。
       }
 
       if (this.isFirstTimePlay) {
@@ -210,11 +210,11 @@ TQ = TQ || {};
       return;
     }
 
-    if (!!instance.pause) {
+    if (instance.pause) {
       instance.pause();
-    } else if (!!instance.stop) {
+    } else if (instance.stop) {
       instance.stop();
-    } else if (!!instance.setPaused){
+    } else if (instance.setPaused) {
       instance.setPaused(true);
     } else {
       TQ.Assert.isTrue(false, "无法pause声音！！");
@@ -233,7 +233,7 @@ TQ = TQ || {};
     return (this.instance && this.instance.hasCompleted());
   };
 
-  p.stop = function () {
+  p.stop = function() {
     if (this.instance) {
       this.instance.stop();
     }
@@ -247,7 +247,7 @@ TQ = TQ || {};
     return result;
   };
 
-  p.isDub = function () {
+  p.isDub = function() {
     // 缺省的subType是配音
     return (!this.jsonObj.subType || this.jsonObj.subType === SOUND_TYPE_DUB);
   };

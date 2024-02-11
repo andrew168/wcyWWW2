@@ -4,17 +4,17 @@
  */
 TQ = TQ || {};
 
-(function () {
+(function() {
   /**
      * Animation, 是带有多个action的动作集合， Element是最多只有一个动作的元素。
      * @param jsonObj
      * @constructor
      */
   function Animation(jsonObj) {
-    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !='string');
+    assertTrue(TQ.Dictionary.INVALID_PARAMETER, typeof jsonObj !== "string");
     this.currentAction = null;
     this.actionTable = [];
-    this.fixedUp(jsonObj);  //用于从数据文件建立动画
+    this.fixedUp(jsonObj); // 用于从数据文件建立动画
   }
 
   var p = Animation.prototype;
@@ -43,7 +43,7 @@ TQ = TQ || {};
     }
   };
 
-  p.play = function (actionName) {
+  p.play = function(actionName) {
     this.currentAction = this._findAction(actionName);
     if (this.currentAction == TQ.ERROR) {
       TQ.MessageBubble.show(TQ.Dictionary.NAME_NOT_EXIST);
@@ -55,7 +55,7 @@ TQ = TQ || {};
     }
   };
 
-  p.pause = function () {
+  p.pause = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
     if (this.currentAction != null) {
       this.currentAction.stop();
@@ -69,7 +69,7 @@ TQ = TQ || {};
     }
   };
 
-  p.stop = function () {
+  p.stop = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
     if (this.currentAction != null) {
       this.currentAction.stop();
@@ -78,7 +78,7 @@ TQ = TQ || {};
   };
 
   p.addAction = function(action, forceToUpdate) {
-    var id  = this._findActionId(action.name);
+    var id = this._findActionId(action.name);
     if (id != TQ.ERROR) { // 避免重复同名的动作, （如果已经有同名的， 则替换之）
       if (!forceToUpdate) {
         return false;
@@ -121,7 +121,7 @@ TQ = TQ || {};
   p.isAnimation = function() { return true; };
   p.isPlaying = function() { return ((this.currentAction != null) && (this.currentAction.isPlaying())); };
   p.hasAction = function(actionName) {
-    return ((this._findAction(actionName) == TQ.ERROR) ? false :  true);
+    return (this._findAction(actionName) != TQ.ERROR);
   };
 
   TQ.Animation = Animation;

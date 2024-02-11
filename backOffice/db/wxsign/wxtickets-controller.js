@@ -3,18 +3,18 @@
  */
 // 实现数据库的增删改查
 // 只有一条记录， 就是最新的 ticket，token，及其时间戳
-var mongoose = require('mongoose'),
-  utils = require('../../common/utils'),
-  WxTickets = mongoose.model('WxTickets');
+var mongoose = require("mongoose");
+var utils = require("../../common/utils");
+var WxTickets = mongoose.model("WxTickets");
 
-var defaultRecord ={jsapiTicket: null,
+var defaultRecord = { jsapiTicket: null,
   jsapiTicketExpireTime: 0,
-  accessToken:  null,
-  accessTokenExpireTime: 0};
+  accessToken: null,
+  accessTokenExpireTime: 0 };
 
 function get(callback) {
   WxTickets.findOne()
-    .exec(function (err, data) {
+    .exec(function(err, data) {
       if (err) {
         console.error("first time");
         insert(defaultRecord, callback);
@@ -33,17 +33,17 @@ function insert(newData) {
 }
 
 function update(newData) {
-  var query = WxTickets.findOne({_id:newData._id});
-  query.exec(function (err, model) {
+  var query = WxTickets.findOne({ _id: newData._id });
+  query.exec(function(err, model) {
     console.error("need update to model.doc");
     if (err) { // not found, it's first time,
       throw "Unknown error in ticket db";
     } else {
       console.log(model);
-      var query2 = model.update({$set: {jsapiTicket: newData.jsapiTicket,
+      var query2 = model.update({ $set: { jsapiTicket: newData.jsapiTicket,
         jsapiTicketExpireTime: newData.jsapiTicketExpireTime,
-        accessToken:  newData.accessToken,
-        accessTokenExpireTime: newData.accessTokenExpireTime}});
+        accessToken: newData.accessToken,
+        accessTokenExpireTime: newData.accessTokenExpireTime }});
       query2.exec(utils.dumpDocument);
     }
   });

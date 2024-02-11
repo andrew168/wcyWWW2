@@ -1,43 +1,43 @@
 /* jshint node:true */
 
-'use strict';
-var srcPath = '.\\www',
-  testPath = '.\\test',
-  distPath = '.\\dist',
-  prjPath1 = '..\\udoido3\\www';
-const { series, parallel, src, dest } = require('gulp');
-var sourcemaps = require('gulp-sourcemaps');
-var exec = require('child_process').exec;
-var gettext = require('gulp-angular-gettext');
+"use strict";
+var srcPath = ".\\www";
+var testPath = ".\\test";
+var distPath = ".\\dist";
+var prjPath1 = "..\\udoido3\\www";
+const { series, parallel, src, dest } = require("gulp");
+var sourcemaps = require("gulp-sourcemaps");
+var exec = require("child_process").exec;
+var gettext = require("gulp-angular-gettext");
 
-var useref = require('gulp-useref'),
-  gulpif = require('gulp-if'),
-  gulp_size = require('gulp-size'),
-  gulp_zip = require('gulp-zip'),
-  gulpminifyCss = require('gulp-clean-css'),
-  gulp_replace = require('gulp-replace'),
-  gulp_rename = require('gulp-rename'),
-  gulp_header = require('gulp-header'),
-  gulp_minifyHtml = require('gulp-minify-html');
-var minify = require('gulp-minify');
-var uglify = require('gulp-uglify');
-var fs = require('fs');
-var del = require('del');
-const { delay1000, waitForFiles, doOnceExist } = require('./gulphelper.js');
-var args = require('yargs').argv;
+var useref = require("gulp-useref");
+var gulpif = require("gulp-if");
+var gulp_size = require("gulp-size");
+var gulp_zip = require("gulp-zip");
+var gulpminifyCss = require("gulp-clean-css");
+var gulp_replace = require("gulp-replace");
+var gulp_rename = require("gulp-rename");
+var gulp_header = require("gulp-header");
+var gulp_minifyHtml = require("gulp-minify-html");
+var minify = require("gulp-minify");
+var uglify = require("gulp-uglify");
+var fs = require("fs");
+var del = require("del");
+const { delay1000, waitForFiles, doOnceExist } = require("./gulphelper.js");
+var args = require("yargs").argv;
 JSON.minify = JSON.minify || require("node-json-minify");
 
 var config = {
   header: null,
   version: null,
   hash: null,
-  withDictionary: false //不再发布词典到后续项目
+  withDictionary: false // 不再发布词典到后续项目
 };
 
 async function doConfig() {
-  //ver info
+  // ver info
   config.header = "/*! wcy3 library " + new Date().toLocaleString() + " */\n";
-  config.version = require('./package.json').version;
+  config.version = require("./package.json").version;
   config.hash = "";
 
   config.app_js = "/wcy3all" + config.hash + ".js";
@@ -47,20 +47,20 @@ async function doConfig() {
 }
 
 async function wcylib_concat() {
-  await src('www/index.html', {sourcemaps: true})
-    .pipe(gulpif('*.css', gulp_rename(config.app_min_css)))
+  await src("www/index.html", { sourcemaps: true })
+    .pipe(gulpif("*.css", gulp_rename(config.app_min_css)))
     .pipe(gulpif(/wcy3all\.js/ && args.remove_logs, gulp_replace(/AuxLog\.log\(.*\);/gm, "")))
     .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
     .pipe(gulpif(/wcy3all\.js/, gulp_header(config.header)))
     .pipe(useref())
-    .pipe(gulpif('*.html', gulp_replace(/wcy3all\.js/g, config.app_js)))
-    .pipe(gulpif('*.css', gulpminifyCss()))
-    .pipe(gulpif('*.html', gulp_minifyHtml()))
+    .pipe(gulpif("*.html", gulp_replace(/wcy3all\.js/g, config.app_js)))
+    .pipe(gulpif("*.css", gulpminifyCss()))
+    .pipe(gulpif("*.html", gulp_minifyHtml()))
     .pipe(dest(distPath))
     .pipe(gulpif(/wcy3all\.js/, gulp_rename(config.app_js)))
-    .pipe(dest(prjPath1 + '\\lib-debug'));
+    .pipe(dest(prjPath1 + "\\lib-debug"));
 
-  console.log("concated => " + prjPath1 + '\\lib' + config.app_js);
+  console.log("concated => " + prjPath1 + "\\lib" + config.app_js);
   return Promise.resolve();
 }
 
@@ -68,29 +68,29 @@ async function wcylib_uglify() {
   await src("dist/" + config.app_js, { sourcemaps: true })
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(uglify())
-    .pipe(sourcemaps.write('../maps'))
+    .pipe(sourcemaps.write("../maps"))
     .pipe(dest("uglify/"), { sourcemaps: "." });
 
-  console.log("minified => " + 'uglify/' + config.app_min_js);
+  console.log("minified => " + "uglify/" + config.app_min_js);
 
   return Promise.resolve();
-};
+}
 
 async function wcylib_minify() {
   await waitForFiles("dist/" + config.app_js);
   await src("dist/" + config.app_js, { sourcemaps: true })
     .pipe(sourcemaps.init({ loadMaps: true }))
     .pipe(minify())
-    .pipe(sourcemaps.write('../maps'))
+    .pipe(sourcemaps.write("../maps"))
     // 不发布到udoido3，因为后者dev不使用min，也不发布min
     // .pipe(dest(prjPath1 + '\\lib\\'), { sourcemaps: true })
-    .pipe(dest(distPath + '\\lib\\'), { sourcemaps: true });
-  console.log("minified => " + prjPath1 + '\\lib' + config.app_min_js)
+    .pipe(dest(distPath + "\\lib\\"), { sourcemaps: true });
+  console.log("minified => " + prjPath1 + "\\lib" + config.app_min_js);
   return Promise.resolve();
 }
 
 async function clean() {
-  await del.bind(null, [distPath, 'src / tmp']);
+  await del.bind(null, [distPath, "src / tmp"]);
 }
 
 async function release_libs() {
@@ -102,11 +102,11 @@ async function release_libs() {
 async function del_extra_libs_js() {
   var files = [
     // prjPath1 + '\\lib-debug\\wcy3all.css',
-    prjPath1 + '\\lib\\ionic1.1.0.zip',
-    prjPath1 + '\\lib\\libs.js',
-    prjPath1 + '\\lib-debug\\comLibBasic.js'];
-  
-  files.forEach(function (item) {
+    prjPath1 + "\\lib\\ionic1.1.0.zip",
+    prjPath1 + "\\lib\\libs.js",
+    prjPath1 + "\\lib-debug\\comLibBasic.js"];
+
+  files.forEach(function(item) {
     console.log("del " + item);
     del.sync([item], { force: true });
   });
@@ -115,16 +115,16 @@ async function del_extra_libs_js() {
 }
 
 async function build() {
-  src('dist/**/*')
-    .pipe(gulp_size({ title: 'build', gzip: true }))
-    .pipe(gulp_zip('ionic' + config.version + '.zip'))
-    .pipe(dest(prjPath1 + '\\lib'));
+  src("dist/**/*")
+    .pipe(gulp_size({ title: "build", gzip: true }))
+    .pipe(gulp_zip("ionic" + config.version + ".zip"))
+    .pipe(dest(prjPath1 + "\\lib"));
   await Promise.resolve("Build completed!");
 }
 
 async function copy_debug_tools() {
   // 必须指定{ base: srcPath }, 否则，gulp会自带创建整个src路径
-  await src(srcPath + "\\wcy3\\debugger\\*.*", {base: srcPath})
+  await src(srcPath + "\\wcy3\\debugger\\*.*", { base: srcPath })
     .pipe(dest(prjPath1));
   return Promise.resolve();
 }
@@ -136,7 +136,7 @@ async function copy_build_tools() {
 }
 
 async function copy_lazyLoad_files() {
-  console.log("copy...")
+  console.log("copy...");
   await src(srcPath + "\\wcy3Social\\*.*", { base: srcPath })
     .pipe(dest(prjPath1));
   return Promise.resolve("copy completed");
@@ -144,13 +144,13 @@ async function copy_lazyLoad_files() {
 
 async function copy_worker_files() {
   var filesAndDirs = [
-    ["", "worker.js"],
-    //ToDo:        ["", "lame.min.js"]
+    ["", "worker.js"]
+    // ToDo:        ["", "lame.min.js"]
   ];
 
-  await filesAndDirs.forEach(async function (resource) {
-    src(srcPath + '\\' + resource[0] + '\\' + resource[1], { base: srcPath })
-      .pipe(dest(prjPath1 + '\\' + resource[0]));
+  await filesAndDirs.forEach(async function(resource) {
+    src(srcPath + "\\" + resource[0] + "\\" + resource[1], { base: srcPath })
+      .pipe(dest(prjPath1 + "\\" + resource[0]));
   });
   return Promise.resolve("copy_work_files completed!");
 }
@@ -173,13 +173,13 @@ async function hot_sync() {
 }
 
 async function extract_string_const() {
-  var source = [srcPath + '\\wcy3App\\wcyService.js'];
+  var source = [srcPath + "\\wcy3App\\wcyService.js"];
   // var source = ['www\\wcy3\\stringConstExtractDemo.js'];
   // var source = ['www\\wcy3\\**\\*.js'];
   await src(source)
-    .pipe(gettext.extract('template.pot', {
-      "startDelim": '"',
-      "endDelim": '"',
+    .pipe(gettext.extract("template.pot", {
+      "startDelim": "\"",
+      "endDelim": "\"",
       "markerName": "",
       "markerNames": [],
       "moduleName": "Locale",
@@ -192,23 +192,23 @@ async function extract_string_const() {
       "defaultLanguage": false,
       "requirejs": false
     }))
-    .pipe(dest('po/'));
+    .pipe(dest("po/"));
 
   return Promise.resolve();
 }
 
 async function translations() {
-  await src('po/**/*.po')
+  await src("po/**/*.po")
     .pipe(gettext.compile({
       // options to pass to angular-gettext-tools...
-      format: 'json'
+      format: "json"
     }))
-    .pipe(dest('dist/translations/'));
+    .pipe(dest("dist/translations/"));
   return Promise.resolve();
 }
 
 async function copyTestFiles() {
-  await src([srcPath + '/lib/ngStorage.js',
+  await src([srcPath + "/lib/ngStorage.js",
     srcPath + "/lib/ionic/css/ionic.css",
     srcPath + "/css/style.css",
     srcPath + "/css/weui.css",
@@ -231,7 +231,7 @@ async function copyTestFiles() {
     srcPath + "/js/convert.js",
     srcPath + "/js/controllers.js",
     srcPath + "/templates/*.*",
-    srcPath + "/dictionary/*.*",
+    srcPath + "/dictionary/*.*"
   ],
   { base: srcPath })
     .pipe(dest(testPath));
@@ -256,12 +256,12 @@ async function test() {
 
 async function makeFolders() {
   let waitFalg = false;
-  let folders = [
+  const folders = [
     testPath,
-    distPath,
+    distPath
   ];
 
-  folders.forEach(function (item) {
+  folders.forEach(function(item) {
     if (!fs.existsSync(item)) {
       exec("mkdir " + item);
       waitFalg = true;
@@ -287,13 +287,13 @@ exports.default = series(
   parallel(copy_worker_files, copy_lazyLoad_files, copy_debug_tools),
   parallel(copy_build_tools, copy_dictionary),
   hot_sync,
-  wcylib_concat,
+  wcylib_concat
 );
 
 //! 必须与concat一起分开用， 因为文件尚未写到磁盘，导致minify找不到
 exports.rel = series(
   doConfig,
-  wcylib_minify,  
+  wcylib_minify,
   build,
   release_libs,
   del_extra_libs_js

@@ -3,33 +3,33 @@
  */
 
 var TQ = TQ || {};
-TQ.TimerUI = (function () {
+TQ.TimerUI = (function() {
   var MIN_DURATION = 0; // 10 frames, ==> 0.5s
-  var isUserControlling = false,
-    isSagPanel = false,
-    initialized = false,
-    previousSync = null,
-    tPool = [],
-    tPoolMaxLength = 5,
-    unitSeries = [0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100, 500, 1000, 5000], // * 20 frame per second
-    rangeSlider = {
-      minValue: 0,
-      maxValue: 0,
-      options: {
-        floor: 0,
-        ceil: 100,
-        step: 1,
-        showTicks: true,
-        ticksArray: [10, 20, 30],
-        minRange: MIN_DURATION,
-        // maxRange: MIN_DURATION,
-        pushRange: true,
-        translate: onTranslate,
-        onStart: onMouseStart,
-        onEnd: onMouseStop,
-        onChange: onMouseAction // onChange,
-      }
-    };
+  var isUserControlling = false;
+  var isSagPanel = false;
+  var initialized = false;
+  var previousSync = null;
+  var tPool = [];
+  var tPoolMaxLength = 5;
+  var unitSeries = [0.05, 0.1, 0.5, 1, 2, 5, 10, 20, 50, 100, 500, 1000, 5000]; // * 20 frame per second
+  var rangeSlider = {
+    minValue: 0,
+    maxValue: 0,
+    options: {
+      floor: 0,
+      ceil: 100,
+      step: 1,
+      showTicks: true,
+      ticksArray: [10, 20, 30],
+      minRange: MIN_DURATION,
+      // maxRange: MIN_DURATION,
+      pushRange: true,
+      translate: onTranslate,
+      onStart: onMouseStart,
+      onEnd: onMouseStop,
+      onChange: onMouseAction // onChange,
+    }
+  };
 
   return {
     getTObject1: getTObject1,
@@ -42,7 +42,7 @@ TQ.TimerUI = (function () {
     setGlobalTime: setGlobalTime
   };
 
-  function initialize () {
+  function initialize() {
     if (initialized) {
       setTimeout(onRangeChanged, 100);
       return;
@@ -63,10 +63,9 @@ TQ.TimerUI = (function () {
     onRangeChanged();
   }
 
-  function onMouseStart () {
+  function onMouseStart() {
     isUserControlling = true;
   }
-
 
   function onMouseStop(sliderId, modelValue, highValue, pointerType) {
     if (TQ.State.showTrimTimeline) {
@@ -77,7 +76,7 @@ TQ.TimerUI = (function () {
     isUserControlling = false;
   }
 
-  /**消除抖动和快速移动中的中间过渡：
+  /** 消除抖动和快速移动中的中间过渡：
      *   200ms, 消除中间位置；
      *   在同一个位置停留1000ms，则sync到此位置
      */
@@ -115,10 +114,10 @@ TQ.TimerUI = (function () {
     }
 
     function calculateStatus() {
-      var sum = 0,
-        diff = 0,
-        maxDiff = 0,
-        base = tPool[tPool.length - 1];
+      var sum = 0;
+      var diff = 0;
+      var maxDiff = 0;
+      var base = tPool[tPool.length - 1];
       for (i = 0; i < tPool.length; i++) {
         sum += tPool[i];
         diff = Math.abs(tPool[i] - base);
@@ -147,10 +146,10 @@ TQ.TimerUI = (function () {
     } else {
       syncToCounter(modelValue);
     }
-    //ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
+    // ToDo: 移动时间轴的位置, 修改帧频率, 增加刻度的显示, 增加缩放
   }
 
-  function update (forceToUpdate) {
+  function update(forceToUpdate) {
     if (forceToUpdate || !(isUserControlling || isSagPanel)) {
       if (forceToUpdate || TQ.FrameCounter.isNew) {
         rangeSlider.minValue = TQ.FrameCounter.t2f(TQ.Scene.localT2Global(TQ.FrameCounter.t()));
@@ -172,7 +171,7 @@ TQ.TimerUI = (function () {
     rangeSlider.options.ceil = Math.ceil(TQ.FrameCounter.t2f(TQ.Scene.getTMax()));
     updateTicksArray();
 
-    var editorService = angular.element(document.body).injector().get('EditorService');
+    var editorService = angular.element(document.body).injector().get("EditorService");
     if (editorService && editorService.forceToRenderSlider) {
       editorService.forceToRenderSlider();
     }
@@ -198,13 +197,13 @@ TQ.TimerUI = (function () {
     var t,
       result;
     t = TQ.FrameCounter.f2t(value);
-    if ((which === 'model') ||(which === 'high')) {
+    if ((which === "model") || (which === "high")) {
       result = t.toFixed(1);
     } else {
-      if (which === 'floor') {
-        result = t.toFixed(0) + '';
-      } else if (which === 'ceil') {
-        result = t.toFixed(0) + 's';
+      if (which === "floor") {
+        result = t.toFixed(0) + "";
+      } else if (which === "ceil") {
+        result = t.toFixed(0) + "s";
       }
     }
     return result;
@@ -215,12 +214,12 @@ TQ.TimerUI = (function () {
       return;
     }
 
-    var totalLength = rangeSlider.options.ceil,
-      minUnit = totalLength / 20,
-      maxUnit = totalLength / 5,
-      ideaUnit = 1,
-      ticks = [];
-    unitSeries.some(function (unit) {
+    var totalLength = rangeSlider.options.ceil;
+    var minUnit = totalLength / 20;
+    var maxUnit = totalLength / 5;
+    var ideaUnit = 1;
+    var ticks = [];
+    unitSeries.some(function(unit) {
       ideaUnit = unit;
       return ((minUnit <= unit) && (unit <= maxUnit));
     });

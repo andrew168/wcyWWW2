@@ -14,7 +14,7 @@
  */
 var TQ = TQ || {};
 
-(function () {
+(function() {
   function DownloadManager() {
   }
   var p = DownloadManager;
@@ -27,12 +27,12 @@ var TQ = TQ || {};
   p.DOWNLOAD_EVENT = "download-to-cache";
   var _tasks = 0;
   var _files = {};
-  p.hasCached = function (name) {
+  p.hasCached = function(name) {
     var item = _files[name];
-    return (!!item  && !!item.cacheName);
+    return (!!item && !!item.cacheName);
   };
 
-  p.getCached = function (name) {
+  p.getCached = function(name) {
     var item = _files[name];
     TQ.Assert.isTrue(!!item, "必须存在");
     return (item.cacheName);
@@ -63,7 +63,7 @@ var TQ = TQ || {};
         TQ.Assert.isFalse(TQ.DownloadManager.hasCached(resourceId),
           "已经cache了！");
         _download(fullPathFs, cacheName, resourceId, onSuccess, onError);
-      }
+      };
     }
   };
 
@@ -83,7 +83,7 @@ var TQ = TQ || {};
     this.save();
     var callback;
     if (onSuccess) {
-      while (onSuccess.length >0) {
+      while (onSuccess.length > 0) {
         callback = onSuccess.shift();
         if (callback) {
           callback();
@@ -105,17 +105,17 @@ var TQ = TQ || {};
     _files[resourceId] = null; //  remove old one;
     this.save();
     if (!error.handled) {
-      if (typeof error.http_status !== 'undefined') {
+      if (typeof error.http_status !== "undefined") {
         if (error.http_status == 404) {
-          TQ.Log.error('找不到文件：' + name);
+          TQ.Log.error("找不到文件：" + name);
         } else {
-          TQ.Log.error('下载文件出错: target目录缺失？ 或者无空间：' + name);
+          TQ.Log.error("下载文件出错: target目录缺失？ 或者无空间：" + name);
         }
       } else {
-        TQ.Log.error('下载文件出错: ' + name);
+        TQ.Log.error("下载文件出错: " + name);
       }
     }
-    item.cacheName = null;  // no cache file
+    item.cacheName = null; // no cache file
     var onError = item.onError;
     item.onSuccess = [];
     item.onError = [];
@@ -132,18 +132,18 @@ var TQ = TQ || {};
   };
 
   p.hasCompleted = function() {
-    return (_tasks===0);
+    return (_tasks === 0);
   };
 
   p.clearCache = function() {
     _files = {};
     this.save();
 
-    //ToDo: remove file from cache
+    // ToDo: remove file from cache
   };
 
   p.save = function() {
-    localStorage.setItem('fileList', JSON.stringify(_files));
+    localStorage.setItem("fileList", JSON.stringify(_files));
   };
 
   p.downloadBulk = function(bulk) {
@@ -173,11 +173,11 @@ var TQ = TQ || {};
   };
 
   p.initialize = function() {
-    var str = localStorage.getItem('fileList');
-    if (!!str) {
+    var str = localStorage.getItem("fileList");
+    if (str) {
       _files = JSON.parse(str);
       if (_files) {
-        for (var i = 0; i <_files.length; i++) {
+        for (var i = 0; i < _files.length; i++) {
           var item = _files[i];
           if (item.onSuccess) {
             item.onSuccess.splice(0);
@@ -192,7 +192,7 @@ var TQ = TQ || {};
   };
 
   // private
-  function _toFullPathFs(name) { //File Server, such as udoido.com
+  function _toFullPathFs(name) { // File Server, such as udoido.com
     name = TQ.RM.toRelative(name);
     return urlConcat(this.FAST_SERVER, name);
   }
@@ -200,7 +200,7 @@ var TQ = TQ || {};
   function _download(name, cacheName, resourceId, onSuccess, onError) {
     var item = _files[resourceId];
     if (!item) {
-      _files[resourceId] = {onSuccess: [onSuccess], onError: [onError], cacheName: null};
+      _files[resourceId] = { onSuccess: [onSuccess], onError: [onError], cacheName: null };
     } else {
       item.onSuccess.push(onSuccess);
       item.onError.push(onError);
@@ -208,7 +208,7 @@ var TQ = TQ || {};
     }
 
     _tasks++;
-    TQ.Base.Utility.triggerEvent(document, this.DOWNLOAD_EVENT, {key: resourceId, source: name, target: cacheName});
+    TQ.Base.Utility.triggerEvent(document, this.DOWNLOAD_EVENT, { key: resourceId, source: name, target: cacheName });
   }
 
   TQ.DownloadManager = DownloadManager;

@@ -7,9 +7,9 @@
 TQ = TQ || {};
 TQ.UI = TQ.UI || {};
 
-(function () {
+(function() {
   var SelectSetUI = {};
-  SelectSetUI.initialize = function () {
+  SelectSetUI.initialize = function() {
     $(document).mousedown(function(e) {
       if ((e.target) && (e.target.id == "testCanvas")) {
         // 已经在 Element 的onPress中实现了

@@ -1,4 +1,4 @@
-var TQ = TQ ||{};
+var TQ = TQ || {};
 (function() {
   function CameraService() {
   }
@@ -14,7 +14,7 @@ var TQ = TQ ||{};
     }
   };
 
-  var _takeStaticImage = function (sourceType, onSuccess, onError, imageWidth, imageHeight) {
+  var _takeStaticImage = function(sourceType, onSuccess, onError, imageWidth, imageHeight) {
     if (!TQ.Base.Utility.isCordovaDevice()) {
       TQ.Log.info("isPC!");
     }
@@ -25,7 +25,7 @@ var TQ = TQ ||{};
       return;
     }
 
-    var options = {   quality: 50,
+    var options = { quality: 50,
       destinationType: Camera.DestinationType.FILE_URI,
       correctOrientation: true,
       // allowEdit : true, // to shrink the image, uncomment these 3 lines
@@ -33,8 +33,8 @@ var TQ = TQ ||{};
       targetHeight: imageHeight,
       saveToPhotoAlbum: false,
       // popoverOptions: CameraPopoverOptions, // ios-only features
-      sourceType: sourceType,      // 0:Photo Library, 1=Camera, 2=Saved Album
-      encodingType: 0     // 0=JPG 1=PNG
+      sourceType: sourceType, // 0:Photo Library, 1=Camera, 2=Saved Album
+      encodingType: 0 // 0=JPG 1=PNG
     };
 
     if (enabledBase64()) {
@@ -42,17 +42,17 @@ var TQ = TQ ||{};
     }
 
     navigator.camera.getPicture(
-      function (data) {
+      function(data) {
         onSuccess(data);
       },
-      function (error) {
+      function(error) {
         // hasImage = false; // probable take more pictures;
         var NORMAL_ACTION = "Camera cancelled";
         if (angular.isString(error) && error.indexOf(NORMAL_ACTION) >= 0) {
           return;
         }
 
-        TQ.Log.eroor('Error in camera call:' + angular.toJson(error));
+        TQ.Log.eroor("Error in camera call:" + angular.toJson(error));
         if (onError) {
           onError();
         }
@@ -63,7 +63,6 @@ var TQ = TQ ||{};
   };
 
   var _takeVideo = function(sourceType, onSuccess, onError) {
-
     if (!TQ.Base.Utility.isCordovaDevice()) {
       alert("isPC!");
     }
@@ -89,11 +88,11 @@ var TQ = TQ ||{};
 
     // capture error callback
     var captureError = function(error) {
-      TQ.Log.error('Camera Error: ' + error.code);
+      TQ.Log.error("Camera Error: " + error.code);
     };
 
     // start video capture
-    navigator.device.capture.captureVideo(captureSuccess, captureError, {limit:2});
+    navigator.device.capture.captureVideo(captureSuccess, captureError, { limit: 2 });
   };
 
   var enabledBase64 = function() {
@@ -102,16 +101,16 @@ var TQ = TQ ||{};
   };
 
   function insertFromCamera() {
-    var sourceType = 1;      // 0:Photo Library, 1=Camera, 2=Saved Album
+    var sourceType = 1; // 0:Photo Library, 1=Camera, 2=Saved Album
     var imageWidth = 660;
     var imageHeight = 1024;
 
     function onSuccess(imageUrl) {
-      var desc = {src: imageUrl, type:"Bitmap",  autoFit: TQ.Element.FitFlag.FULL_SCREEN};
+      var desc = { src: imageUrl, type: "Bitmap", autoFit: TQ.Element.FitFlag.FULL_SCREEN };
       TQ.SceneEditor.addItem(desc);
     }
 
-    function onError () {
+    function onError() {
 
     }
     takePicture(sourceType, onSuccess, onError, imageWidth, imageHeight);

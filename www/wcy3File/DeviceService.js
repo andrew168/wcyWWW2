@@ -1,9 +1,8 @@
 /**
  * Created by admin on 9/12/2015.
  */
-angular.module('starter').factory('DeviceService', DeviceService);
-function DeviceService()
-{
+angular.module("starter").factory("DeviceService", DeviceService);
+function DeviceService() {
   var rootFolder;
   var _isReady = false;
 
@@ -30,7 +29,7 @@ function DeviceService()
   function onFileSystemReady() {
     TQ.Log.debugInfo("onFileSystemReady .....");
     if (TQ.Base.Utility.isMobileDevice()) {
-      if (!TQ.Base.Utility.isCordovaDevice()) {// for Chrome simulator
+      if (!TQ.Base.Utility.isCordovaDevice()) { // for Chrome simulator
         rootFolder = ImgCache.getRoot();
       } else {
         rootFolder = cordova.file.dataDirectory;
@@ -40,8 +39,8 @@ function DeviceService()
     }
     TQ.Log.debugInfo("rootFolder = " + rootFolder);
 
-    if (rootFolder !== '') {
-      if ((rootFolder[rootFolder.length - 1] !== '/') && (rootFolder[rootFolder.length - 1] !== '\\')) {
+    if (rootFolder !== "") {
+      if ((rootFolder[rootFolder.length - 1] !== "/") && (rootFolder[rootFolder.length - 1] !== "\\")) {
         rootFolder += "/";
       }
     }
@@ -56,9 +55,9 @@ function DeviceService()
   return {
     initialize: initialize,
     isReady: isReady,
-    getRootFolder: function () {
+    getRootFolder: function() {
       return rootFolder;
     },
     getFullPath: getFullPath
-  }
+  };
 }

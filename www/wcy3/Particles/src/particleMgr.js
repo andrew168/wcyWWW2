@@ -9,18 +9,18 @@
  * ** 点粒子源：（鞭炮， 礼花），同时可以有多个
  */
 TQ = TQ || {};
-(function () {
+(function() {
   function ParticleMgr() {
   }
 
-  var items = [],
-    selectedElement = null,
-    counter = 0,
-    fullscreenEffect = TQ.SnowEffect,
-    feRefers = [],
-    children = {},
-    lastOps = null,
-    feReferCount = 0;
+  var items = [];
+  var selectedElement = null;
+  var counter = 0;
+  var fullscreenEffect = TQ.SnowEffect;
+  var feRefers = [];
+  var children = {};
+  var lastOps = null;
+  var feReferCount = 0;
 
   ParticleMgr.change = change;
   ParticleMgr.feStart = feStart;
@@ -78,7 +78,7 @@ TQ = TQ || {};
     }
   }
 
-  ParticleMgr.insertMoney =  function () {
+  ParticleMgr.insertMoney = function() {
     var existEle = children[TQ.FeParticle.MONEY];
     if (existEle) {
       existEle.show(true);
@@ -96,7 +96,7 @@ TQ = TQ || {};
     TQ.SceneEditor.addItem(desc);
   };
 
-  ParticleMgr.insertRain = function () {
+  ParticleMgr.insertRain = function() {
     var existEle = children[TQ.FeParticle.RAIN];
     if (existEle) {
       existEle.show(true);
@@ -115,7 +115,7 @@ TQ = TQ || {};
     TQ.SceneEditor.addItem(desc);
   };
 
-  ParticleMgr.insertSnow = function () {
+  ParticleMgr.insertSnow = function() {
     var existEle = children[TQ.FeParticle.SNOW];
     if (existEle) {
       existEle.show(true);
@@ -146,7 +146,7 @@ TQ = TQ || {};
     selectedElement = ele;
   };
 
-  ParticleMgr.unregister = function (ele) {
+  ParticleMgr.unregister = function(ele) {
     var id = items.indexOf(ele);
     if (id >= 0) {
       var temp = items.splice(id, 1);
@@ -156,19 +156,19 @@ TQ = TQ || {};
     }
   };
 
-  ParticleMgr.stop = function (evt) {
+  ParticleMgr.stop = function(evt) {
     if (evt) {
       evt.preventDefault();
       evt.stopPropagation();
     }
-    if (!!selectedElement) {
+    if (selectedElement) {
       // selectedElement.stop();
       TQ.CommandMgr.directDo(new TQ.HideCommand([selectedElement], false));
       selectedElement = null;
     }
   };
 
-  ParticleMgr.deleteItem = function (evt) {
+  ParticleMgr.deleteItem = function(evt) {
     if (evt) {
       evt.preventDefault();
       evt.stopPropagation();

@@ -7,8 +7,8 @@ var configSvr = {
     bindToken: "tuqiangkeji1111",
     udoido: {
       // UdoIdo服务号
-      appId: 'wx5fe65e70536d0258',
-      appSecret: '393e38d14682d6e2ee524dbc96b080bf'
+      appId: "wx5fe65e70536d0258",
+      appSecret: "393e38d14682d6e2ee524dbc96b080bf"
 
       // UdoIdo小程序
       // appId: 'wxf4837cf4c3f35e1d',
@@ -16,14 +16,14 @@ var configSvr = {
     },
     boneMiniprogram: {
       // bone教师邦小程序：贺年卡
-      appId: 'wx3fb982675950e960',
-      appSecret: '53cba2783f227a3e11e314081cf5d891'
+      appId: "wx3fb982675950e960",
+      appSecret: "53cba2783f227a3e11e314081cf5d891"
     }
   },
   host: "www.udoido.com",
 
   // dbServer: 'mongodb://webreaderw!981:savety#$7619@localhost:57098/test', //XX, 在断网的情况下,不能使用
-  dbServer: 'mongodb://webreaderw!981:savety%23$7619@127.0.0.1:57098/test' //  本机ip，在断网的情况下也可以使用
+  dbServer: "mongodb://webreaderw!981:savety%23$7619@127.0.0.1:57098/test" //  本机ip，在断网的情况下也可以使用
 };
 
 exports.host = configSvr.host;

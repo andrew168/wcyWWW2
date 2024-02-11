@@ -10,11 +10,11 @@
 
 this.TQ = this.TQ || {};
 
-this.TQ.ResourceSync = (function () {
-  var numActiveTasks = 0,
-    events = {
-      _oncomplete: [] // event name: 'complete'
-    };
+this.TQ.ResourceSync = (function() {
+  var numActiveTasks = 0;
+  var events = {
+    _oncomplete: [] // event name: 'complete'
+  };
 
   return {
     on: on,
@@ -32,33 +32,33 @@ this.TQ.ResourceSync = (function () {
   }
 
   function on(event, fn, once) {
-    var listeners = events['_on' + event];
+    var listeners = events["_on" + event];
 
-    if (typeof fn === 'function') {
-      listeners.push(once ? {fn: fn, once: once} : {fn: fn});
+    if (typeof fn === "function") {
+      listeners.push(once ? { fn: fn, once: once } : { fn: fn });
     }
   }
 
   function local2Cloud(ele, fileOrBuffer, matType) {
-    numActiveTasks ++;
+    numActiveTasks++;
     var option = {
       useBackgroundMode: true
     };
 
-    return angular.element(document.body).injector().get('NetService').uploadOne(fileOrBuffer, matType, option)
-      .then(function (res) {
+    return angular.element(document.body).injector().get("NetService").uploadOne(fileOrBuffer, matType, option)
+      .then(function(res) {
         TQ.Log.debugInfo(res.url);
         if (ele && ele.jsonObj) {
           ele.jsonObj.src = TQUtility.unifyFormat(ele.jsonObj.type, res.url);
         }
         numActiveTasks--;
-        if (numActiveTasks <=0) {
+        if (numActiveTasks <= 0) {
           tryShowCompleteInfo();
           var listeners;
           if (listeners = events._oncomplete) {
-            var num = listeners.length,
-              i;
-            for (i=0; i<num; i++) {
+            var num = listeners.length;
+            var i;
+            for (i = 0; i < num; i++) {
               if (listeners[i].fn) {
                 setTimeout(listeners[i].fn);
               }

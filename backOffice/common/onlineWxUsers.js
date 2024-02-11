@@ -4,17 +4,17 @@
  * 避免重复查找openid
  */
 
-var WX_OPEN_ID = 0,
-  NICK_NAME = 1,
-  TIME_STAMP = 2;
+var WX_OPEN_ID = 0;
+var NICK_NAME = 1;
+var TIME_STAMP = 2;
 
-var fs = require('fs'),
-  tempFileName = "/data/onlineWxUserDump2.txt",
-  dataReady = false,
-  readyToStop = false,
-  users = null,
-  wxCodes = null,
-  allowNRunningClient = true; //微信用户， 临时，允许多个用户同时用
+var fs = require("fs");
+var tempFileName = "/data/onlineWxUserDump2.txt";
+var dataReady = false;
+var readyToStop = false;
+var users = null;
+var wxCodes = null;
+var allowNRunningClient = true; // 微信用户， 临时，允许多个用户同时用
 
 function add(aUser, wxCode) {
   if (!users) {
@@ -23,7 +23,7 @@ function add(aUser, wxCode) {
   }
 
   obsoleteExistingToken(aUser);
-  users[wxCode] = aUser;  // 3rd: 用tokenId做索引
+  users[wxCode] = aUser; // 3rd: 用tokenId做索引
   console.log("after add2:" + JSON.stringify(users[wxCode]));
 }
 
@@ -50,7 +50,7 @@ function save(callback) {
 
   if (users) {
     obsoleteStaleToken();
-    fs.writeFile(tempFileName, JSON.stringify({users: users, wxCodes: wxCodes}), onSaved);
+    fs.writeFile(tempFileName, JSON.stringify({ users: users, wxCodes: wxCodes }), onSaved);
   } else {
     onSaved();
   }
@@ -73,7 +73,7 @@ function restore() {
   }
 
   try {
-    fs.readFile(tempFileName, 'utf8', setup);
+    fs.readFile(tempFileName, "utf8", setup);
   } catch (e) {
     setup(true, null);
   }
@@ -89,11 +89,11 @@ function obsoleteExistingToken(aUser) {
   }
 
   var ids = Object.keys(users);
-  ids.forEach(function (id) {
+  ids.forEach(function(id) {
     if (users[id].ID === aUser.ID) {
       delete users[id];
     }
-  })
+  });
 }
 
 function addWxOpenId(wxOpenId, nickName, wxCode) {
@@ -102,7 +102,7 @@ function addWxOpenId(wxOpenId, nickName, wxCode) {
     return;
   }
 
-  wxCodes[wxCode] = [wxOpenId, nickName, new Date().getTime()];  // 3rd: 用tokenId做索引
+  wxCodes[wxCode] = [wxOpenId, nickName, new Date().getTime()]; // 3rd: 用tokenId做索引
 }
 
 function getOpenId(wxCode) {
@@ -123,22 +123,22 @@ function getOpenId(wxCode) {
 
 function obsoleteStaleWxCode() {
   var ids = Object.keys(wxCodes);
-  var oldWxCodeTime = new Date().getTime() - (24*60*60*1000);
-  ids.forEach(function (codeExt) {
+  var oldWxCodeTime = new Date().getTime() - (24 * 60 * 60 * 1000);
+  ids.forEach(function(codeExt) {
     var t = wcCodes[codeExt][TIME_STAMP];
     if (t < oldWxCodeTime) {
       delete wcCodes[codeExt];
     }
-  })
+  });
 }
 
 function obsoleteStaleToken() {
   var ids = Object.keys(users);
-  ids.forEach(function (id) {
+  ids.forEach(function(id) {
     if (!isValidTokenId(id)) {
       delete users[id];
     }
-  })
+  });
 }
 
 function isValidTokenId(token) {

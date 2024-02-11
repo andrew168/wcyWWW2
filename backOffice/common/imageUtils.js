@@ -4,10 +4,10 @@
 /**
  * Created by admin on 12/5/2015.
  */
-var cSignature = require('./cloundarySignature'); // 后缀.js可以省略，Node会自动查找，
+var cSignature = require("./cloundarySignature"); // 后缀.js可以省略，Node会自动查找，
 
 function screenshotId2Name(id) {
-  return 's' + id;
+  return "s" + id;
 }
 
 function screenshotName2Id(name) {

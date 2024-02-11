@@ -6,7 +6,7 @@
  **/
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   var ScreenShot = {};
 
   function takeImage(bkgColor) {
@@ -24,9 +24,9 @@ window.TQ = window.TQ || {};
     return takeImage();
   };
 
-  ScreenShot.saveThumbnail = function (album, id) {
+  ScreenShot.saveThumbnail = function(album, id) {
     var img = new Image();
-    img.onload = function () {
+    img.onload = function() {
       album[id] = {
         src: imageResize(img, 100, 100),
         timestamp: Date.now()
@@ -44,12 +44,12 @@ window.TQ = window.TQ || {};
 			归一化到Iphone 6宽度尺寸，而且，高度改为4:3 ==》375*500 （全高度667）
 			也可用于和最新作品栏目
 		*/
-	  ScreenShot.getForPostAsync= function (onImageReady) {
-	    var WIDTH_IPHONE_6 = 375,
-	      HEIGHT_IPHONE_6 = 667,
-      fullScreenShot = new Image();
-    fullScreenShot.onload = function () {
-      var resultImage =  imageResize(fullScreenShot, WIDTH_IPHONE_6, HEIGHT_IPHONE_6);
+	  ScreenShot.getForPostAsync = function(onImageReady) {
+	    var WIDTH_IPHONE_6 = 375;
+	      var HEIGHT_IPHONE_6 = 667;
+    var fullScreenShot = new Image();
+    fullScreenShot.onload = function() {
+      var resultImage = imageResize(fullScreenShot, WIDTH_IPHONE_6, HEIGHT_IPHONE_6);
       if (onImageReady) {
         onImageReady(resultImage);
       }
@@ -58,7 +58,7 @@ window.TQ = window.TQ || {};
     fullScreenShot.src = takeImage(TQ.Graphics.getCanvasBkgColor());
 	  };
 
-  function determineScale(img, maxWidth, maxHeight) {//只缩小， 不放大
+  function determineScale(img, maxWidth, maxHeight) { // 只缩小， 不放大
     var scale = 1;
 
     if (img.height > maxHeight) {
@@ -72,11 +72,11 @@ window.TQ = window.TQ || {};
   }
 
   function imageResize(img, maxWidth, maxHeight) {
-    var scale = determineScale(img, maxWidth, maxHeight),
-      ctx,
-      neededHeight = Math.round(img.height * scale / 8) * 8,
-      neededWidth = Math.round(img.width * scale / 8) * 8,
-      canvasTemp;
+    var scale = determineScale(img, maxWidth, maxHeight);
+    var ctx;
+    var neededHeight = Math.round(img.height * scale / 8) * 8;
+    var neededWidth = Math.round(img.width * scale / 8) * 8;
+    var canvasTemp;
 
     if (!canvasTemp) {
       canvasTemp = document.createElement("canvas");
@@ -85,7 +85,7 @@ window.TQ = window.TQ || {};
     canvasTemp.height = neededHeight;
 
     ctx = canvasTemp.getContext("2d");
-    var xc = 0, yc = 0;
+    var xc = 0; var yc = 0;
     ctx.drawImage(img, xc, yc, neededWidth, neededHeight);
     return canvasTemp.toDataURL("image/png");
   }

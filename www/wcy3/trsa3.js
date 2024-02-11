@@ -2,8 +2,8 @@
  * Created by Andrewz on 12/24/2016.
  */
 var TQ = TQ || {};
-(function () {
-  'use strict';
+(function() {
+  "use strict";
   function Trsa3() {
   }
 
@@ -20,26 +20,26 @@ var TQ = TQ || {};
   Trsa3.onDrag = onDrag;
   Trsa3.reset = reset;
 
-  var isDithering = false,
-    startEle = null,
-    startLevel = null,
-    startOffsetInDcExt = null,
-    startTrsa = {
-      needReset: true,
-      ang: 0,
-      scale: {sx: 1, sy : 1}
-    },
-    deltaTrsa = {
-      ang: 0,
-      scale: new TQ.ScaleCalculator()
-    };
-  var pos = { x: 0, y: 0 },
-    isDragging = false,
-    isMultiTouching = false;
+  var isDithering = false;
+  var startEle = null;
+  var startLevel = null;
+  var startOffsetInDcExt = null;
+  var startTrsa = {
+    needReset: true,
+    ang: 0,
+    scale: { sx: 1, sy: 1 }
+  };
+  var deltaTrsa = {
+    ang: 0,
+    scale: new TQ.ScaleCalculator()
+  };
+  var pos = { x: 0, y: 0 };
+  var isDragging = false;
+  var isMultiTouching = false;
 
   function mCopy(evt) {
     if (TQ.SelectSet.isEmpty()) {
-      return TQ.MessageBox.prompt(TQ.Locale.getStr('please select an object first!'));
+      return TQ.MessageBox.prompt(TQ.Locale.getStr("please select an object first!"));
     }
 
     if (TQ.Utility.isDithering) {
@@ -50,7 +50,7 @@ var TQ = TQ || {};
     evt = touch2StageXY(evt);
     var results = currScene.currentLevel.cloneElement(TQ.SelectSet.members);
     results.forEach(function(ele) {
-      ele.moveTo(ele.dc2World2({x:evt.stageX, y:evt.stageY}));
+      ele.moveTo(ele.dc2World2({ x: evt.stageX, y: evt.stageY }));
     });
   }
 
@@ -107,7 +107,7 @@ var TQ = TQ || {};
     TQ.AnimationManager.reset(startEle);
     resetStartParams(e);
     if (TQ.Utility.isMouseEvent(e)) {
-      TQ.TouchManager.attachHandler('mousemove', onDrag);
+      TQ.TouchManager.attachHandler("mousemove", onDrag);
     }
     // showFloatToolbar(evt);
     // TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
@@ -141,7 +141,7 @@ var TQ = TQ || {};
     }
     var evt = touch2StageXY(e);
     target = startEle.getPositionInDc();
-    startOffsetInDcExt = {x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true};
+    startOffsetInDcExt = { x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true };
 
     deltaTrsa.scale.reset();
     deltaTrsa.ang = 0;
@@ -149,9 +149,9 @@ var TQ = TQ || {};
 
   function onTouchOrDragStart(e) { // ==mouse的onPressed，
     onKeyUp(); // 确保删除old handler
-    if (e.type === 'mousedown') {
-      document.addEventListener('keyup', onKeyUp);
-      document.addEventListener('mouseup', onKeyUp);
+    if (e.type === "mousedown") {
+      document.addEventListener("keyup", onKeyUp);
+      document.addEventListener("mouseup", onKeyUp);
     }
 
     TQ.Log.debugInfo("touch start or mousedown" + TQ.Utility.getTouchNumbers(e));
@@ -174,17 +174,17 @@ var TQ = TQ || {};
     if (startEle) {
       startTrsa.needReset = true;
     }
-    document.removeEventListener('keyup', onKeyUp);
-    document.removeEventListener('mouseup', onKeyUp);
+    document.removeEventListener("keyup", onKeyUp);
+    document.removeEventListener("mouseup", onKeyUp);
   }
 
-  function onTouchOrDragEnd(e) {// ==mouse的onUp，
+  function onTouchOrDragEnd(e) { // ==mouse的onUp，
     isDragging = false;
-    if (e.type === 'mouseup') {
-      document.removeEventListener('keyup', onKeyUp);
-      TQ.TouchManager.detachHandler('mousemove', onDrag);
+    if (e.type === "mouseup") {
+      document.removeEventListener("keyup", onKeyUp);
+      TQ.TouchManager.detachHandler("mousemove", onDrag);
     }
-    if (TQ.Utility.getTouchNumbers(e) >0) {// not real start, 不需要重新旋转物体， 但是需要refresh参数
+    if (TQ.Utility.getTouchNumbers(e) > 0) { // not real start, 不需要重新旋转物体， 但是需要refresh参数
       startTrsa.needReset = true;
       ditherStart();
     } else {
@@ -220,11 +220,11 @@ var TQ = TQ || {};
     isDithering = false;
   }
 
-  function onDrag(e) {  //// ==mouse的onMove，
+  function onDrag(e) { // // ==mouse的onMove，
     if (TQ.TouchManager && !TQ.TouchManager.hasStarted()) {
       return;
     }
-    if (e.type === 'mousemove') {
+    if (e.type === "mousemove") {
       return;
     }
 
@@ -274,22 +274,22 @@ var TQ = TQ || {};
     if (!startEle || !isValidOp(e)) {
       TQ.Log.debugInfo("pinch..." + TQ.Utility.getTouchNumbers(e));
     } else {
-      if (e.type.indexOf('rotate') >=0) {
+      if (e.type.indexOf("rotate") >= 0) {
         /*
                  * IONIC的gesture的角度方向： 顺时针为正， 用度数单位，
                  * ** 数值可能从 正直突然变为等价的负值
                  * ** 逆时针是负！！！！
                  */
-        deltaTrsa.ang = startEle.dc2World({rotation: e.gesture.rotation}).rotation;
+        deltaTrsa.ang = startEle.dc2World({ rotation: e.gesture.rotation }).rotation;
         TQ.Log.debugInfo("rotate: " + deltaTrsa.ang);
-      } else if (e.type.indexOf('pinch') >= 0) {
+      } else if (e.type.indexOf("pinch") >= 0) {
         deltaTrsa.scale.determineScale(startEle, e);
         TQ.Log.debugInfo("pinch" + deltaTrsa.scale.x + "," + deltaTrsa.scale.y);
       } else {
         TQ.Log.debugInfo("not pinch, rotate: " + e.type);
       }
-      var newScaleX = startTrsa.scale.sx * deltaTrsa.scale.sx,
-        newScaleY = startTrsa.scale.sy * deltaTrsa.scale.sy;
+      var newScaleX = startTrsa.scale.sx * deltaTrsa.scale.sx;
+      var newScaleY = startTrsa.scale.sy * deltaTrsa.scale.sy;
       if (!isNaN(newScaleX)) {
         if (Math.abs(newScaleX) < 0.00001) {
           console.warn("Too small");
@@ -311,14 +311,14 @@ var TQ = TQ || {};
   }
 
   // private:
-  var _showFloatToolbar = function (type) {
+  var _showFloatToolbar = function(type) {
     if ((TQ.FloatToolbar != undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
       TQ.FloatToolbar.setPosition(0, 0);
       TQ.FloatToolbar.show(type);
     }
   };
 
-  function touch2StageXY(e) { //让ionic的 touch 和mouse 兼容createJs格式中部分参数
+  function touch2StageXY(e) { // 让ionic的 touch 和mouse 兼容createJs格式中部分参数
     var touches = TQ.Utility.getTouches(e);
     if (touches.length > 0) {
       var touch = touches[0];

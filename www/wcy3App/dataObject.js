@@ -3,13 +3,13 @@
  */
 
 function DataObject(list) {
-  var IMAGE_PAGE_SIZE = 6,
-    SOUND_PAGE_SIZE = 4,
-    LARGE_PAGE_SIZE = 20000,
-    vm = this,
-    bakCurrentPageId = 0,
-    currentPageId = 0,
-    pages = [];
+  var IMAGE_PAGE_SIZE = 6;
+  var SOUND_PAGE_SIZE = 4;
+  var LARGE_PAGE_SIZE = 20000;
+  var vm = this;
+  var bakCurrentPageId = 0;
+  var currentPageId = 0;
+  var pages = [];
 
   // interface
   vm.getPage = getPage;
@@ -25,7 +25,7 @@ function DataObject(list) {
   function reset() {
     var page = null;
 
-    if (pages.length >= 1 ) {
+    if (pages.length >= 1) {
       pages.splice(1, pages.length - 1);
       page = pages[0];
     } else {
@@ -56,8 +56,8 @@ function DataObject(list) {
         items[i].extra = JSON.parse(items[i].extra);
       }
       if (!items[i].isProxy) {
-        var oldPath = (matType === TQ.MatType.TOPIC)? items[i].posterPicturePath :
-          items[i].path;
+        var oldPath = (matType === TQ.MatType.TOPIC) ? items[i].posterPicturePath
+          : items[i].path;
         if (oldPath === "/undefined") {
           oldPath = null;
         }
@@ -65,7 +65,7 @@ function DataObject(list) {
           items[i].thumbPath = null;
           items[i].path = null;
         } else {
-          if (TQ.Utility.isSoundResource(oldPath)) { //force to convert to mp3
+          if (TQ.Utility.isSoundResource(oldPath)) { // force to convert to mp3
             oldPath = TQ.Utility.forceExt(oldPath, ".mp3");
           } else if (!TQ.Utility.isImage(oldPath) && !TQ.Utility.isVideo(oldPath)) {
             TQ.Log.error("Found unknown format:" + oldPath);
@@ -103,8 +103,8 @@ function DataObject(list) {
   }
 
   function prepareColumn(props_local, pageSize) {
-    var i,
-      page = pages[pages.length - 1];
+    var i;
+    var page = pages[pages.length - 1];
 
     for (i = 0; i < props_local.length; i++) {
       if (page.length >= pageSize) {

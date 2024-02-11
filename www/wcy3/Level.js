@@ -4,10 +4,10 @@
  */
 window.TQ = window.TQ || {};
 
-(function () {
+(function() {
   var DEFAULT_T_MAX_FRAME = 3; // seconds
   function Level(description) {
-    TQ.AssertExt.isTrue(!description || (typeof description === 'object'), "必须是object, 不能是json字串");
+    TQ.AssertExt.isTrue(!description || (typeof description === "object"), "必须是object, 不能是json字串");
     this.background = null;
     this.latestElement = null; // 最新生成的复合物体
     this.tMaxFrame = 0; // 用户指定的时长， 缺省是0
@@ -17,26 +17,26 @@ window.TQ = window.TQ || {};
     this.updateCompletedHandlers = [];
     this.initialize(description);
   }
- 
-  Level.EVENT_START_SHOWING = 'level start showing';
 
-  Level.isCurrent = function (id) {
+  Level.EVENT_START_SHOWING = "level start showing";
+
+  Level.isCurrent = function(id) {
     return (currScene && (currScene.currentLevelId === id));
   };
 
   var p = Level.prototype;
-  p.isDirty = false;  //  变量赋值应该放在最前面, 确保在使用之前已经赋值. 小函数放在最后, 很少看.
+  p.isDirty = false; //  变量赋值应该放在最前面, 确保在使用之前已经赋值. 小函数放在最后, 很少看.
   p.isPreloading = false;
 
-  p.requestToUpdateAll = function () {
+  p.requestToUpdateAll = function() {
     this.isDirty = true;
-    this.elements.forEach(function (ele) {
+    this.elements.forEach(function(ele) {
       ele.isDirty = true;
     });
   };
 
-  p.initialize = function (description) {
-    //initialize with defaults
+  p.initialize = function(description) {
+    // initialize with defaults
     // 防止没有数据
     description = (!description) ? {} : description;
     description.elements = (!description.elements) ? [] : description.elements;
@@ -56,7 +56,7 @@ window.TQ = window.TQ || {};
     this.isDirty = true;
   };
 
-  p.onSelected = function () {
+  p.onSelected = function() {
     if (this.dataReady) {
       this.setupTimer2();
     }
@@ -65,12 +65,12 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.itemNum = function () {
+  p.itemNum = function() {
     assertDepreciated(TQ.Dictionary.isDepreciated);
     return this.elements.length;
   };
 
-  p.atomNum = function () {
+  p.atomNum = function() {
     var sum = 0;
     for (var i = 0; i < this.elements.length; i++) {
       assertNotNull(TQ.Dictionary.FoundNull, this.elements[i]);
@@ -79,7 +79,7 @@ window.TQ = window.TQ || {};
     return sum;
   };
 
-  p.joint = function (elements) {
+  p.joint = function(elements) {
     assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode); // jointIt 必须运行在零件模式下!!!
     if (elements.length < 2) return null;
     var parent = elements[0];
@@ -97,7 +97,7 @@ window.TQ = window.TQ || {};
   /*
 	打散本元件所在的关节链（整条链， 不是一个关节）
 	 */
-  p.unJoint = function (elements) {
+  p.unJoint = function(elements) {
     for (var i = 0; i < elements.length; i++) {
       // 先切断与 parent的联系（只有第一个元素有）， 再切断与孩子的联系
       var ele = elements[i];
@@ -106,9 +106,9 @@ window.TQ = window.TQ || {};
       }
 
       // 优先去除外层的附件，每次1层
-      let attachmentID = ele.findAttachment();
+      const attachmentID = ele.findAttachment();
       if (attachmentID >= 0) {
-        let attachment = ele.children[attachmentID];
+        const attachment = ele.children[attachmentID];
         ele.removeChild(attachment);
         this.addElementDirect(attachment);
         continue;
@@ -134,25 +134,25 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.uniqueBone = function (elements) {
-    //最多只能有1个Bone，保留首个，剔除多余的
-    let i = 0,
-      num = elements.length,
-      resultID = -1;        
-    for (i = num-1; i >= 0; i--) {
-      let x = elements[i];
+  p.uniqueBone = function(elements) {
+    // 最多只能有1个Bone，保留首个，剔除多余的
+    let i = 0;
+    const num = elements.length;
+    let resultID = -1;
+    for (i = num - 1; i >= 0; i--) {
+      const x = elements[i];
       if (x.isJoint() || x.isRoot()) {
         if (resultID > -1) {
           elements.splice(resultID, 1);
         }
-        resultID = i;          
-      } 
+        resultID = i;
+      }
     }
     return resultID;
-  }
+  };
 
-  p.doAttach = function (boneID, elements) {
-    let host = elements[boneID];
+  p.doAttach = function(boneID, elements) {
+    const host = elements[boneID];
     assertTrue("host must joint, not root", !!host && host.isJoint() && !host.isRoot());
     elements.splice(boneID, 1);
     assertTrue("empty elememts for group?", elements.length > 0);
@@ -162,19 +162,19 @@ window.TQ = window.TQ || {};
     return aGroup;
   };
 
-  p.groupIt = function (elements) {
+  p.groupIt = function(elements) {
     TQ.SelectSet.turnOff();
-    elements.forEach(function (ele) {
+    elements.forEach(function(ele) {
       if (ele && ele.hasBBox()) {
         ele.detachDecoration();
       }
     });
 
-    let boneID = this.uniqueBone(elements);
+    const boneID = this.uniqueBone(elements);
     let host = null;
     if (boneID > -1) {
       host = elements[boneID];
-      //case： 1个关节链， 转化为元件，
+      // case： 1个关节链， 转化为元件，
       if (host.isJoint() && !host.isRoot()) {
         return this.doAttach(boneID, elements);
       }
@@ -187,7 +187,7 @@ window.TQ = window.TQ || {};
     return aGroup;
   };
 
-  p.unGroup = function (elements) {
+  p.unGroup = function(elements) {
     for (var i = 0; i < elements.length; i++) {
       var ele = elements[i];
       // if (ele.isJoint() || ele.isRoot()) {
@@ -198,9 +198,9 @@ window.TQ = window.TQ || {};
       }
       if (ele == null) continue;
       if (ele.isGroup() || ele.children.length > 0) {
-        let needDelete = (ele.isGroup() ? true : false);
-        var parts = ele.explode(),
-          j;
+        const needDelete = (!!ele.isGroup());
+        var parts = ele.explode();
+        var j;
         for (j = 0; j < parts.length; j++) {
           this.addElementDirect(parts[j]);
         }
@@ -214,7 +214,7 @@ window.TQ = window.TQ || {};
     this.isDirtyZ = true;
   };
 
-  p.cloneElement = function (elements) {
+  p.cloneElement = function(elements) {
     var results = [];
     for (var i = 0; i < elements.length; i++) {
       // var marker = elements[i].detachDecoration();
@@ -234,7 +234,7 @@ window.TQ = window.TQ || {};
     return results;
   };
 
-  Level.removeMarker = function (desc) {
+  Level.removeMarker = function(desc) {
     if (!desc.children) return;
     for (var i = 0; i < desc.children.length; i++) { // 去除Marker部分
       if (desc.children[i].type == "JointMarker") {
@@ -245,7 +245,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.skinning = function (hostElement, skinElement) {
+  p.skinning = function(hostElement, skinElement) {
     TQ.AssertExt.depreciated(false, "ToDo: 是不是被changeSkin代替了？");
     assertNotNull(TQ.Dictionary.FoundNull, hostElement);
     assertNotNull(TQ.Dictionary.FoundNull, skinElement);
@@ -254,14 +254,14 @@ window.TQ = window.TQ || {};
   };
 
   // 在整体模式下, 找到根物体； 在零件模式下， 返回子物体本身
-  p.findAtom = function (displayObj) {
+  p.findAtom = function(displayObj) {
     // atom: 包括 元素element, 和 子元素subelement
     var result = null;
     for (var i = 0; i < this.elements.length; i++) {
       // 是结构性的虚拟物体, 例如Group的节点
-      if ((this.elements[i].displayObj != null)
-        && (this.elements[i].displayObj.id != undefined)
-        && (this.elements[i].displayObj.id == displayObj.id)) {
+      if ((this.elements[i].displayObj != null) &&
+        (this.elements[i].displayObj.id != undefined) &&
+        (this.elements[i].displayObj.id == displayObj.id)) {
         return (result = this.elements[i]);
       } else {
         result = this.elements[i].findChild(displayObj);
@@ -274,7 +274,7 @@ window.TQ = window.TQ || {};
     return result;
   };
 
-  p.findAllDub = function () {
+  p.findAllDub = function() {
     // 临时限制：一个场景中只能有1个配音，元件中的配音不能消除
     // ToDo: 将来允许多个配音， 可以选择是否消除元件中的配音，
     var result = [];
@@ -287,7 +287,7 @@ window.TQ = window.TQ || {};
     return result;
   };
 
-  p.pickOffChild = function (ele) {
+  p.pickOffChild = function(ele) {
     assertNotNull(TQ.Dictionary.PleaseSelectOne, ele);
     var id = this.elements.indexOf(ele);
     if (id >= 0) {
@@ -303,12 +303,12 @@ window.TQ = window.TQ || {};
     return ele;
   };
 
-  p.addElement = function (desc) {
+  p.addElement = function(desc) {
     var newItem = TQ.Element.build(this, desc);
     return this.addElementDirect(newItem);
   };
 
-  p.addElementDirect = function (ele) {
+  p.addElementDirect = function(ele) {
     assertNotNull(TQ.Dictionary.FoundNull, ele);
     // 记录新创建的元素到elements
     this.elements.push(ele);
@@ -325,23 +325,22 @@ window.TQ = window.TQ || {};
     return ele;
   };
 
-  p.getElements = function () {
+  p.getElements = function() {
     return this.elements;
   };
-
 
   /* 区别 delete 和 remove：
 		 remove: 只是移动， 从一个地方， 移到另外一个地方，比如： 在打包的时候， 从level下移到 复合体的下面。
 		 delete：包括了remove， 但是， 移到了 垃圾箱trash之中, 当undelete的时候， 可以恢复
 	*/
-  p.deleteElementAt = function (i) {
+  p.deleteElementAt = function(i) {
     var ele = this.removeElementAt(i);
     if (ele) {
       this.deleteElementFromStage(ele);
     }
   };
 
-  p.deleteElementFromStage = function (ele) {
+  p.deleteElementFromStage = function(ele) {
     if (this.background === ele) {
       this.background = null;
     }
@@ -355,17 +354,17 @@ window.TQ = window.TQ || {};
     return ele;
   };
 
-  p.removeElementAt = function (i) {
+  p.removeElementAt = function(i) {
     assertTrue(TQ.Dictionary.INVALID_PARAMETER, (i >= 0) && (i < this.elements.length)); // 数组超界
     TQ.DirtyFlag.setElement(this);
     return (this.elements.splice(i, 1))[0];
   };
 
-  p.getBackground = function () {
+  p.getBackground = function() {
     return this.background;
   };
 
-  p.getElement = function (id) {
+  p.getElement = function(id) {
     if (this.elements.length <= 0) {
       assertFalse(TQ.Dictionary.INVALID_LOGIC, false);
       return null;
@@ -377,9 +376,9 @@ window.TQ = window.TQ || {};
     return this.elements[id];
   };
 
-  p.getText = function (id) {
-    var j = 0,
-      n = this.elements.length;
+  p.getText = function(id) {
+    var j = 0;
+    var n = this.elements.length;
     for (var i = 0; i < n; i++) {
       if (this.elements[i].isText()) {
         if (j === id) {
@@ -391,7 +390,7 @@ window.TQ = window.TQ || {};
     return null;
   };
 
-  p.getSounds = function () {
+  p.getSounds = function() {
     var result = [];
     if (this.resourceReady) {
       var num = this.elements.length;
@@ -406,14 +405,14 @@ window.TQ = window.TQ || {};
     return result;
   };
 
-  p.setDisplaceX = function () {
+  p.setDisplaceX = function() {
     assertNotHere(TQ.Dictionary.isDepreciated); // "xxx0 已经被取代, 该函数将被取消"
   };
 
-  p.onLoaded = function () {
+  p.onLoaded = function() {
     this.resourceReady = true; // 适应于新建立的level， 他们没有元素，直接ready
     this.state = TQBase.LevelState.LOADED;
-    this.build();  // 从Resource 到 canvas
+    this.build(); // 从Resource 到 canvas
     if (this.isActive() && !this.isOverlay()) {
       this.setupTimer2();
     }
@@ -426,7 +425,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.doShow = function () {
+  p.doShow = function() {
     TQ.Log.checkPoint("doShow level: " + this.name);
     if (this.dataReady) {
       TQ.Log.info("data ready");
@@ -437,7 +436,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.show = function () {
+  p.show = function() {
     TQ.Log.checkPoint("ask to show level: " + this.name);
     if (this.dataReady) {
       this.doShow();
@@ -448,7 +447,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.build = function () {
+  p.build = function() {
     // 避免重复进入：
     if (this.dataReady) {
       return;
@@ -476,7 +475,7 @@ window.TQ = window.TQ || {};
     this.calculateLastFrame();
   };
 
-  p.fixupButtons = function () {
+  p.fixupButtons = function() {
     for (var i = 0; i < (this.elements.length); i++) {
       var ele = this.elements[i];
       if ((ele.isButton != undefined) && ele.isButton()) {
@@ -486,7 +485,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.findByDescId = function (descId) {
+  p.findByDescId = function(descId) {
     for (var i = 0; i < (this.elements.length); i++) {
       var ele = this.elements[i];
       if (ele.jsonObj.id == descId) return ele;
@@ -495,7 +494,7 @@ window.TQ = window.TQ || {};
     return null;
   };
 
-  p.setupPreloader = function () {
+  p.setupPreloader = function() {
     // send to RM
     // 避免重复进入：
     if (!this.hasSentToRM) {
@@ -504,12 +503,12 @@ window.TQ = window.TQ || {};
       return;
     }
 
-    if (!!this.elements) {
+    if (this.elements) {
       TQ.RM.addElementDescList(this.elements);
     }
   };
 
-  p.addAllItems = function () {
+  p.addAllItems = function() {
     // add到stage， == 显示，show
     TQ.StageBuffer.open();
     var num = this.elements.length;
@@ -521,32 +520,32 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.addLastItems = function () {
+  p.addLastItems = function() {
     // add到stage， == 显示，show
     assertDepreciated(TQ.Dictionary.isDepreciated);
     assertTrue(TQ.Dictionary.isDepreciated, false); // "应该只在临时添加的时候, 才调用"
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.hitTest = function () {
+  p.hitTest = function() {
     return;
     var n = this.elements.length;
     for (var i = 0; i < n; i++) {
       var displayObj = this.elements[i].displayObj;
       if (displayObj.hitTest(stage.mouseX, stage.mouseY)) {
-        displayObj.alpha = 0.5;  // 加框子
+        displayObj.alpha = 0.5; // 加框子
         stage.update();
       }
     }
   };
 
   p.onLevelRunning = null;
-  p.onLevelCreated = function () {
+  p.onLevelCreated = function() {
     if ((this.state === TQBase.LevelState.INITING) ||
       (this.state === TQBase.LevelState.LOADED) ||
       (this.state === TQBase.LevelState.EDITING) ||
       (this.state === TQBase.LevelState.EXIT)) {
-      //后续场景loaded是通过RM完成的， 所以可能还是INITING状态
+      // 后续场景loaded是通过RM完成的， 所以可能还是INITING状态
       if (!this.isOverlay()) {
         this.setupTimer();
       }
@@ -574,12 +573,12 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.watchRestart = function () {
+  p.watchRestart = function() {
     // draw all elements to the canvas:
     stage.update();
   };
 
-  p.removeNullElements = function () {
+  p.removeNullElements = function() {
     for (var i = 0; i < this.elements.length; ++i) {
       if (!this.elements[i]) {
         this.elements.splice(i, 1);
@@ -588,7 +587,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.update = function (t) {
+  p.update = function(t) {
     this.updateState();
     this.removeNullElements();
     if (!this.dataReady) return;
@@ -617,9 +616,9 @@ window.TQ = window.TQ || {};
       this.calculateLastFrame();
       if (this.isActive() && !TQ.Utility.equalWithin2(TQ.FrameCounter.maxTime(), this.getTime())) {
         TQ.FrameCounter.setTMax(this.getTime());
-        setTimeout(function () {
+        setTimeout(function() {
           TQ.DirtyFlag.setCurrentLevel();
-        })
+        });
       }
       stage.update();
     }
@@ -629,14 +628,14 @@ window.TQ = window.TQ || {};
     this.isDirtyZ = false;
     this.isDirty = false;
     if (this.updateCompletedHandlers.length > 0) {
-      for (let func of this.updateCompletedHandlers) {
+      for (const func of this.updateCompletedHandlers) {
         func();
       }
       this.updateCompletedHandlers.splice(0);
     }
   };
 
-  p.updateState = function () {
+  p.updateState = function() {
     // TQ.Log.info("update state");
     if (this.state <= TQBase.LevelState.INITING) {
       if (this.resourceReady) {
@@ -645,17 +644,17 @@ window.TQ = window.TQ || {};
     }
   };
 
-	  p.updateRenderFlag = function () {
+	  p.updateRenderFlag = function() {
     if (!this.inStage && this.readyToShow) {
       this.inStage = true;
       var levelId = currScene.currentLevelId;
-      setTimeout(function () {
-        TQ.Base.Utility.triggerEvent(document, Level.EVENT_START_SHOWING, {levelId: levelId});
+      setTimeout(function() {
+        TQ.Base.Utility.triggerEvent(document, Level.EVENT_START_SHOWING, { levelId: levelId });
       });
     }
   };
 
-  p.empty = function () {
+  p.empty = function() {
     if (this.isActive()) {
       this.cleanStage();
     }
@@ -666,7 +665,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.cleanStage = function () {
+  p.cleanStage = function() {
     TQ.DirtyFlag.setLevel(this);
     if (this.dataReady) {
       for (var i = 0; i < this.elements.length; i++) {
@@ -677,7 +676,7 @@ window.TQ = window.TQ || {};
     TQ.SceneEditor.cleanStage();
   };
 
-  p._removeAllItemsFromStage = function () {
+  p._removeAllItemsFromStage = function() {
     TQ.DirtyFlag.setLevel(this);
     // remove 从stage， 只是不显示， 数据还在
     if (this.elements && (this.elements.length > 0) && (this.elements[0].removeFromStage)) {
@@ -687,7 +686,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.delete = function () {
+  p.delete = function() {
     TQ.AssertExt.depreciated("是否已经被 cleanStage代替了？-2018.07.07");
     // 如果是EXIT， 则已经被exit()函数处理过了，
     TQ.DirtyFlag.setLevel(this);
@@ -696,11 +695,11 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.deleteElement = function (ele) {
-    //删除level的时候，其中pin的元素也应该被删除
-    //if (ele.isPinned()) {
+  p.deleteElement = function(ele) {
+    // 删除level的时候，其中pin的元素也应该被删除
+    // if (ele.isPinned()) {
     //  return;
-    //}
+    // }
 
     // 删除数据， 真删除
     var found = false;
@@ -723,7 +722,7 @@ window.TQ = window.TQ || {};
       return true;
     } else {
       this.deleteElementFromStage(ele);
-      TQ.AssertExt.invalidLogic(false, '在level上未找到此元素，但是显示在stage中，已经被删除了？');
+      TQ.AssertExt.invalidLogic(false, "在level上未找到此元素，但是显示在stage中，已经被删除了？");
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
     }
 
@@ -733,7 +732,7 @@ window.TQ = window.TQ || {};
   /*
 	stop sound, video, animations, etc.
 	 */
-  p.stop = function () {
+  p.stop = function() {
     for (var i = 0; i < this.elements.length; i++) {
       if (this.elements[i].stop) {
         this.elements[i].stop();
@@ -741,14 +740,14 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.play = function () {
+  p.play = function() {
     TQ.DirtyFlag.setLevel(this);
     for (var i = 0; i < this.elements.length; i++) {
       this.elements[i].play();
     }
   };
 
-  p.exit = function () {
+  p.exit = function() {
     TQ.SelectSet.empty();
     if (this.isEditMode()) {
       this.calculateLastFrame();
@@ -775,12 +774,12 @@ window.TQ = window.TQ || {};
     this.inStage = false;
   };
 
-  p.prepareForJSONOut = function () {
+  p.prepareForJSONOut = function() {
     TQ.AssertExt.invalidLogic(this.dataReady, "数据没有加载完成， 不能调用");
     this.persist(); // 固化z-Index值
   };
 
-  p.afterToJSON = function () {
+  p.afterToJSON = function() {
     if (this.dataReady) { // 只对load的 level做这个操作
       for (var i = 0; i < this.elements.length; i++) {
         this.elements[i].afterToJSON();
@@ -788,16 +787,16 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.persist = function () {
+  p.persist = function() {
     if (!this.isActive()) {
       return;
     }
-    for (var i = 0; i < this.elements.length; i++) {  //持久化zIndex, 只在退出时, 而不是每一个Cycle, 以节约时间
+    for (var i = 0; i < this.elements.length; i++) { // 持久化zIndex, 只在退出时, 而不是每一个Cycle, 以节约时间
       this.elements[i].persist();
     }
   };
 
-  p.sort = function () {
+  p.sort = function() {
     // 按照当前物体在显示列表中的顺序, 重新排列elements的数据.
     TQ.DirtyFlag.setLevel(this);
     assertNotNull(this.elements);
@@ -808,7 +807,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.trim = function (t1, t2) {
+  p.trim = function(t1, t2) {
     if (t1 < 0) {
       t1 = 0;
     }
@@ -817,14 +816,14 @@ window.TQ = window.TQ || {};
       return;
     }
 
-    this.elements.forEach(function (ele) {
+    this.elements.forEach(function(ele) {
       if (ele) {
         ele.trim(t1, t2);
       }
     });
   };
 
-  p.onItemLoaded = function (item) {
+  p.onItemLoaded = function(item) {
     TQ.DirtyFlag.setLevel(this);
     this.itemCounter++;
     if (this.isStageReady()) {
@@ -835,16 +834,16 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.setupTimer = function () {
-    if (TQ.FrameCounter.isPlaying()) {  // play mode
+  p.setupTimer = function() {
+    if (TQ.FrameCounter.isPlaying()) { // play mode
       this._t = 0;
       TQ.FrameCounter.gotoBeginning();
-    } else {                            // edit mode
+    } else { // edit mode
       TQ.FrameCounter.goto(this._t);
     }
   };
 
-  p.setupTimer2 = function () {
+  p.setupTimer2 = function() {
     TQ.FrameCounter.initialize(this._t, this.FPS, this);
     if (!TQBase.LevelState.isOperatingTimerUI()) {
       TQ.TimerUI.initialize();
@@ -854,13 +853,13 @@ window.TQ = window.TQ || {};
   };
 
   // 自动拓展微动漫的时间
-  p.calculateRealLastFrame = function () {
+  p.calculateRealLastFrame = function() {
     if (!this.dataReady) return this.tMaxFrame;
     // 在退出本level的时候才调用，以更新时间，
     //  ToDo: ?? 在编辑本Level的时候， 这个值基本上是没有用的
-    var tLastFrame = 0,
-      tGlobalLastFrame = 0,
-      ele;
+    var tLastFrame = 0;
+    var tGlobalLastFrame = 0;
+    var ele;
     for (var i = 0; i < this.elements.length; i++) {
       ele = this.elements[i];
       assertNotNull(TQ.Dictionary.FoundNull, ele);
@@ -878,7 +877,7 @@ window.TQ = window.TQ || {};
     return tLastFrame;
   };
 
-  p.calculateLastFrame = function () {
+  p.calculateLastFrame = function() {
     var tMaxFrameCalculated = this.calculateRealLastFrame();
     if (tMaxFrameCalculated > TQ.Config.MAX_LEVEL_LENGTH) {
       tMaxFrameCalculated = TQ.Config.MAX_LEVEL_LENGTH;
@@ -898,7 +897,7 @@ window.TQ = window.TQ || {};
 
   function findStep(delta) {
     var ideaStep = 1;
-    stepSeries.some(function (step) {
+    stepSeries.some(function(step) {
       if (delta > step) {
         ideaStep = step;
       }
@@ -908,9 +907,9 @@ window.TQ = window.TQ || {};
     return ideaStep;
   }
 
-  p.increaseTime = function () {
-    var oldMax = this.getTime(),
-      newMax = oldMax + findStep(oldMax * 0.2);
+  p.increaseTime = function() {
+    var oldMax = this.getTime();
+    var newMax = oldMax + findStep(oldMax * 0.2);
     if (newMax < 1) {
       newMax = 1;
     }
@@ -918,9 +917,9 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.decreaseTime = function () {
-    var oldMax = this.getTime(),
-      newMax = oldMax - findStep(oldMax * (1 - 1 / 1.2));
+  p.decreaseTime = function() {
+    var oldMax = this.getTime();
+    var newMax = oldMax - findStep(oldMax * (1 - 1 / 1.2));
     if (newMax === oldMax) {
       if ((newMax > 2)) {
         newMax--;
@@ -932,7 +931,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.setTime = function (t) { // 用户指定时长
+  p.setTime = function(t) { // 用户指定时长
     if (t > TQ.Config.MAX_LEVEL_LENGTH) {
       t = TQ.Config.MAX_LEVEL_LENGTH;
     }
@@ -944,7 +943,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.setCapacity = function (t) {
+  p.setCapacity = function(t) {
     if (t >= this.getTime()) {
       if (this.isActive()) {
         TQ.FrameCounter.setTMax(t);
@@ -952,59 +951,59 @@ window.TQ = window.TQ || {};
     }
   };
 
-  p.getTime = function () {
+  p.getTime = function() {
     return this.tMaxFrameMixed;
   };
 
-  p.getGlobalTime = function () {
+  p.getGlobalTime = function() {
     return this.tGlobalLastFrame;
   };
 
-  p.setT0 = function (t0) {
+  p.setT0 = function(t0) {
     this.t0 = t0;
   };
-  p.getT0 = function () {
+  p.getT0 = function() {
     return this.t0;
   };
 
-  p.isEmpty = function () {
+  p.isEmpty = function() {
     return (!this.elements || (this.elements.length <= 0));
   };
 
-  p.isStageReady = function () {
+  p.isStageReady = function() {
     return ((this.state === TQBase.LevelState.INITING) ||
       (this.isElementInStage()));
   };
 
-  p.isElementInStage = function () {
+  p.isElementInStage = function() {
     return ((this.state === TQBase.LevelState.EDITING) ||
       (this.state === TQBase.LevelState.RUNNING));
   };
 
-  p.isActive = function () {
+  p.isActive = function() {
     return (currScene && (currScene.currentLevel === this) || (this.isWaitingForShow));
   };
 
-  p.isShowing = function () {
+  p.isShowing = function() {
     return this.inStage;
   };
 
-  p.isOverlay = function () {
+  p.isOverlay = function() {
     return false;
   };
 
-  p.isEditMode = function () {
+  p.isEditMode = function() {
     return ((this.state === TQBase.LevelState.EDITING) &&
       (TQ.State.editorMode === TQ.SceneEditor.MODE.EDIT));
   };
 
-  p.hasAnimation = function () {
+  p.hasAnimation = function() {
     return !isStaticImage(this.tMaxFrame);
   };
 
-  p.hasGraph = function () {
+  p.hasGraph = function() {
     var result = false;
-    this.elements.some(function (ele) {
+    this.elements.some(function(ele) {
       if (ele.hasGraph()) {
         result = true;
         return true;
@@ -1014,8 +1013,8 @@ window.TQ = window.TQ || {};
     return result;
   };
 
-  //upgrade:
-  Level.upgradeEachElement = function (levelDesc, upgradeElement) {
+  // upgrade:
+  Level.upgradeEachElement = function(levelDesc, upgradeElement) {
     var elements;
 
     if (!levelDesc || !(elements = levelDesc.elements)) {
@@ -1027,7 +1026,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-  Level.upgrade3_4ToVer3_6 = function (levelDesc) {
+  Level.upgrade3_4ToVer3_6 = function(levelDesc) {
     var elements,
       eleDesc;
 
@@ -1045,10 +1044,10 @@ window.TQ = window.TQ || {};
     }
   };
 
-  Level.upgrade3_3ToVer3_4 = function (levelDesc) {
-    var foundBackground = false,
-      elements,
-      eleDesc;
+  Level.upgrade3_3ToVer3_4 = function(levelDesc) {
+    var foundBackground = false;
+    var elements;
+    var eleDesc;
 
     if (!levelDesc || !(elements = levelDesc.elements)) {
       return;
@@ -1068,7 +1067,7 @@ window.TQ = window.TQ || {};
 
   p.registerHandler = function(func) {
     this.updateCompletedHandlers.push(func);
-  }
+  };
 
   TQ.Level = Level;
 }());
