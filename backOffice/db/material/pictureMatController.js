@@ -12,9 +12,11 @@ var PictureMat = mongoose.model("PictureMat");
 
 // ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
 function get(userId, callback) {
-  PictureMat.find({ userId: userId, uploaded: true }).exec(function(err, data) {
-    if (!data) {
-      console.error(404, { msg: "not found!" + id });
+  PictureMat.find({ userId: userId, uploaded: true }).exec(function (err, data) {
+    if (err) {
+      console.error("Error", err);
+    } else if (!data) {
+      console.error(404, { msg: "not found for user: " + userId });
     } else {
       // console.log(data);
     }
@@ -96,7 +98,9 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
 
   function onSearchResult(err, data) {
     var result = [];
-    if (!data) {
+    if (err) {
+      console.error("Error", err);
+    } else if (!data) {
       console.error(404, { msg: "not found! userId = " + userId + ", matType =" + typeId });
     } else {
       data.forEach(copyItem);
@@ -126,7 +130,9 @@ function add(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onE
   }
 
   function onSearchResult(err, data) {
-    if (!data || (data.length < 1)) {
+    if (err) {
+      console.error("Error", err);
+    } else if (!data || (data.length < 1)) {
       doAdd(userId, picName, typeId, ip, isShared, onSuccess, onError);
     } else {
       onSuccess(data[0]._doc._id, data[0]._doc.path);
@@ -135,7 +141,7 @@ function add(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, onE
 }
 
 function addFromCloud(userId, iComponentId, picName, typeId, ip, isShared, path) {
-  condition = { "typeId": typeId, "path": path };
+  const condition = { "typeId": typeId, "path": path };
 
   PictureMat.find(condition).exec(function(err, data) {
     if (!err && (!data || (data.length < 1))) {
@@ -154,7 +160,7 @@ function doAdd(userId, iComponentId, picName, typeId, ip, isShared, onSuccess, o
     isShared: isShared
   });
 
-  if (path != "") {
+  if (path !== "") {
     aDoc.path = path;
   }
 
@@ -176,7 +182,9 @@ function isFullPath(url) {
 function update(id, path, callback) {
   PictureMat.findOne({ _id: id })
     .exec(function(err, data) {
-      if (!data) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!data) {
         console.error(404, { msg: "not found!" + id });
       } else {
         console.log(data);

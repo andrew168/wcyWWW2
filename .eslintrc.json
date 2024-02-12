@@ -1,8 +1,9 @@
 {
-  "env": {
+  "env":{
     "browser": true,
-    "node":  true, 
-    "es2021": true
+    "node": true,
+    "es2021": true,
+    "jquery": true
   },
   "plugins": [
     "eslint-plugin-html"
@@ -12,6 +13,9 @@
   ],
   "parserOptions": {
     "ecmaVersion": "latest"
+  },
+  "globals": {
+    "TQ": true
   },
   "rules": {
     "indent": [
@@ -171,13 +175,7 @@
     ],
     "no-unreachable": 2,
     "no-unsafe-finally": 2,
-    "no-unused-vars": [
-      2,
-      {
-        "vars": "all",
-        "args": "none"
-      }
-    ],
+    "no-unused-vars": "off",
     "no-useless-call": 2,
     "no-useless-computed-key": 2,
     "no-useless-constructor": 2,
@@ -201,7 +199,7 @@
       }
     ],
     "padded-blocks": [ 2, "never" ],
-    "quotes": ["error", "double"],
+    "quotes": [ "error", "double" ],
     "semi": [ "error", "always" ],
     "semi-spacing": [
       2,

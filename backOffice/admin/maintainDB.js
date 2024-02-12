@@ -34,29 +34,34 @@ function saveAllMatToDB() {
   cloudinary.v2.api.resources(
     options,
     function(error, result) {
-      next_cursor = result.next_cursor;
-
-      if (result && result.resources) {
-        for (var item of result.resources) {
-          console.log(item.created_at + ": " + item.secure_url);
-          addMatToDb(item.secure_url);
-        }
-      }
-      if (next_cursor) {
-        setTimeout(saveAllMatToDB, 100);
+      if (error) {
+        console.log("Error:", error);
       } else {
-        console.log("!!!!All images are listed above!!!!");
+        next_cursor = result.next_cursor;
+
+        if (result && result.resources) {
+          for (var item of result.resources) {
+            console.log(item.created_at + ": " + item.secure_url);
+            addMatToDb(item.secure_url);
+          }
+        }
+        if (next_cursor) {
+          setTimeout(saveAllMatToDB, 100);
+        } else {
+          console.log("!!!!All images are listed above!!!!");
+        }
       }
     });
 
   function addMatToDb(fullPath) {
-    userId = 10;
-    iComponentId = 0;
-    picName = "mat2020";
-    typeId = 20;
-    ip = null;
-    isShared = false;
-    path = utils.path2short(fullPath);
+    const userId = 10;
+    const iComponentId = 0;
+    const picName = "mat2020";
+    const typeId = 20;
+    const ip = null;
+    const isShared = false;
+    const path = utils.path2short(fullPath);
+
     pictureMat.addFromCloud(userId,
       iComponentId,
       picName,
@@ -67,6 +72,6 @@ function saveAllMatToDB() {
   }
 }
 
-maintainDB = {};
+const maintainDB = {};
 maintainDB.saveAllMatToDB = saveAllMatToDB;
 module.exports = maintainDB;

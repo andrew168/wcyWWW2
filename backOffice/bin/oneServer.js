@@ -155,7 +155,7 @@
       });
     }
 
-    console.log("current path:" + __dirname);
+    console.log("current path is:" + __dirname);
     console.log("client path (dynamic): " + clientPath);
     console.log("client path (static): " + clientPathStatic);
 
@@ -388,19 +388,19 @@
     /* Lets start with ?_escaped_fragment_=, this seems to be a standard, if we have this is part of the request,
          it should be either a search engine or a social media site askign for open graph rich sharing info
          */
-    if (urlRequest.search("\\?_escaped_fragment_=") != -1) { // bot who support # hashtag fragment
+    if (urlRequest.search("\\?_escaped_fragment_=") !== -1) { // bot who support # hashtag fragment
       botName = "ESCAPED_FRAGMENT_REQ";
       foundBot = true; // It says its a bot, so we believe it, lest figure out if it has a request before or after
       var reqBits = urlRequest.split("?_escaped_fragment_=");
       console.log(reqBits[1].length);
-      if (reqBits[1].length == 0) { // If 0 length, any request is infront
+      if (reqBits[1].length === 0) { // If 0 length, any request is infront
         botReqUrl = reqBits[0];
       } else {
         botReqUrl = reqBits[1];
       }
     } else {
       knownBots.some(function(item) {
-        if (userAgent.search(item) != -1) {
+        if (userAgent.search(item) !== -1) {
           foundBot = true;
           botReqUrl = urlRequest;
           botName = item;
@@ -410,7 +410,7 @@
       });
     }
 
-    if (foundBot == true) {
+    if (foundBot) {
       console.info({ botId: botName, botReq: botReqUrl });
     }
     return foundBot;

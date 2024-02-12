@@ -65,6 +65,11 @@ function ban(operator, matModel, id, newValue, callback) {
 
   matModel.findOne(condition)
     .exec(function(err, data) {
+      if (err) {
+        callback({ error: "Database error: " + err });
+        return;
+      }
+
       if (!data) {
         callback({ error: "not found! : " + id + ", or not belong to this user: " });
       } else {

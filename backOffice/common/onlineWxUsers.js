@@ -58,7 +58,7 @@ function save(callback) {
 
 function restore() {
   function setup(err, data) {
-    allData = (!err && data) ? JSON.parse(data) : {};
+    var allData = (!err && data) ? JSON.parse(data) : {};
     if (!allData) { // 防止 "null"
       allData = {};
     }
@@ -119,17 +119,6 @@ function getOpenId(wxCode) {
     openId: wxCodes[wxCode][WX_OPEN_ID],
     nickName: wxCodes[wxCode][NICK_NAME]
   };
-}
-
-function obsoleteStaleWxCode() {
-  var ids = Object.keys(wxCodes);
-  var oldWxCodeTime = new Date().getTime() - (24 * 60 * 60 * 1000);
-  ids.forEach(function(codeExt) {
-    var t = wcCodes[codeExt][TIME_STAMP];
-    if (t < oldWxCodeTime) {
-      delete wcCodes[codeExt];
-    }
-  });
 }
 
 function obsoleteStaleToken() {
