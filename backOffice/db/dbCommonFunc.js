@@ -47,13 +47,12 @@ function composeErrorMsg(err, extraMsg) {
 }
 
 function updateDate(dataModel, newObj) {
-  for (var prop in newObj) {
-    if (newObj.hasOwnProperty(prop) && (prop !== "_id")) {
+  for (const prop of Object.keys(newObj)) {
+    if (Object.prototype.hasOwnProperty.call(newObj, prop) && prop !== "_id") {
       dataModel.set(prop, newObj[prop]);
     }
   }
 }
-
 function ban(operator, matModel, id, newValue, callback) {
   var onlyMine = { userId: operator.ID };
   var condition = { $and: [{ _id: id }] };

@@ -360,7 +360,12 @@ router.put("/api/me", authHelper.ensureAuthenticated, function(req, res) {
     user.displayName = req.body.displayName || user.displayName;
     user.email = req.body.email || user.email;
     user.save(function(err) {
-      res.status(Const.HTTP.STATUS_200_OK).end();
+      if (err) {
+        console.error(err);
+        res.status(Const.HTTP.STATUS_500_INTERNAL_SERVER_ERROR);
+      } else {
+        res.status(Const.HTTP.STATUS_200_OK).end();
+      }
     });
   });
 });

@@ -66,7 +66,7 @@ function createPayment(req, res, next) {
       });
 
       // If redirect url present, redirect user
-      if (links.hasOwnProperty("approval_url")) {
+      if (Object.prototype.hasOwnProperty.call(links, "approval_url")) {
         // REDIRECT USER TO links['approval_url'].href
       } else {
         console.error("no redirect URI present");

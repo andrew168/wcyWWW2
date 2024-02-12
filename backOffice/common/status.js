@@ -23,7 +23,9 @@ var user = {
 
 function extendWithoutObject(target, source) {
   for (var prop in source) {
-    if (!source.hasOwnProperty(prop) || ((typeof (source[prop])) === "object")) {
+    if (!Object.prototype.hasOwnProperty.call(source, prop) ||
+      source[prop] === null ||
+      typeof source[prop] === "object") {
       continue;
     }
     target[prop] = source[prop];
