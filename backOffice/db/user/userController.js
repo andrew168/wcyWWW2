@@ -25,7 +25,9 @@ var PRIVILEGE_ARTIST = 0x200;
 function get(id) {
   User.findOne({ _id: id })
     .exec(function(err, data) {
-      if (!data) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!data) {
         console.error(404, { msg: "not found!" + id });
       } else {
         console.log(data);
@@ -125,7 +127,9 @@ function getList(aUser, callback) {
 
   User.find(null).sort({ _id: -1 })
     .exec(function(err, data) {
-      if (!data) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!data) {
         console.error(404, { msg: "not found!" });
         callback(result);
       }

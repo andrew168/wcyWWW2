@@ -27,6 +27,7 @@ function get(callback) {
 
 function insert(newData) {
   var newDoc = new WxTickets(newData);
+  const res = null;
   newDoc.save(function(err, doc) {
     utils.onResSave(err, doc, res);
   });
@@ -37,7 +38,7 @@ function update(newData) {
   query.exec(function(err, model) {
     console.error("need update to model.doc");
     if (err) { // not found, it's first time,
-      throw "Unknown error in ticket db";
+      console.error("Error", "Unknown error in ticket db");
     } else {
       console.log(model);
       var query2 = model.update({ $set: { jsapiTicket: newData.jsapiTicket,

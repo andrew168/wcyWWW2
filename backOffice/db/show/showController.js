@@ -8,7 +8,9 @@ var Show = mongoose.model("Show");
 function get(id) {
   Show.findOne({ _id: id })
     .exec(function(err, data) {
-      if (!data) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!data) {
         console.error(404, { msg: "not found!" + id });
       } else {
         console.log(data);

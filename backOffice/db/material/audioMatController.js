@@ -13,7 +13,7 @@ var AudioMat = mongoose.model("AudioMat");
 
 // ToDo: 限制：只选择所有的共享素材，和 我的素材。用Query的 and()操作
 function get(userId, callback) {
-  AudioMat.find({ uploaded: true }).exec(function (err, data) {
+  AudioMat.find({ uploaded: true }).exec(function(err, data) {
     if (err) {
       console.error("error", err);
     }
@@ -84,7 +84,7 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin) {
 
 function update(id, path, callback) {
   AudioMat.findOne({ _id: id })
-    .exec(function (err, data) {
+    .exec(function(err, data) {
       if (err) {
         console.error("Error", err);
       } else if (!data) {

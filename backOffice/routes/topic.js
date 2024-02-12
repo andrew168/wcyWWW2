@@ -32,7 +32,7 @@ router.post("/", authHelper.ensureAuthenticated, function(req, res, next) {
   if (isAudit) {
     auditResult = audit.process(req);
     if (auditResult.isAudit && ((user.canBan || user.canApprove))) {
-      function onAuditCompleted(result) {
+      var onAuditCompleted = function fn(result) {
         var data = {
           result: result,
           newValues: auditResult.newValues,
@@ -40,7 +40,7 @@ router.post("/", authHelper.ensureAuthenticated, function(req, res, next) {
         };
 
         res.json(data);
-      }
+      };
 
       return topicController.ban(user, auditResult._id, auditResult.newValues, onAuditCompleted);
     }

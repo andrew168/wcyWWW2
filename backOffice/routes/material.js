@@ -42,9 +42,9 @@ router.post("/", authHelper.ensureAuthenticated, function(req, res, next) {
   var auditResult = audit.process(req);
   if (auditResult.isAudit) {
     if (!public_id) {
-      if ((req.body._id != undefined) && (req.body._id >= 0)) {
+      if ((req.body._id !== undefined) && (req.body._id >= 0)) {
         public_id = req.body._id;
-      } else if ((req.body.id != undefined) && (req.body.id >= 0)) {
+      } else if ((req.body.id !== undefined) && (req.body.id >= 0)) {
         public_id = req.body.id;
       } else {
         assert.ok(false, "素材的public_id缺失!");
@@ -165,8 +165,8 @@ router.param("requestAll", function(req, res, next, id) {
 router.get("/list/:matType/topic/:topicId/option/:requestAll", authHelper.ensureAuthenticated, function(req, res, next) {
   var matType = req.params.matType;
   var requestAll = utils.getParamsBoolean(req.params.requestAll, false);
-  topicId = req.params.topicId || null,
-  user = status.getUserInfo2(req, res);
+  var topicId = req.params.topicId || null;
+  var user = status.getUserInfo2(req, res);
 
   if (!user) {
     return netCommon.notLogin(req, res);
@@ -199,8 +199,8 @@ function createMatId(req, res, iComponentId, matType, originalFilename) {
   } else {
     if (isNewMaterial(originalFilename)) {
       // 入库， 并获取新material ID，
-      function onSavedToDb(_matId, path) {
-        mat_id = _matId;
+      var onSavedToDb = function fn(_matId, path) {
+        const mat_id = _matId;
         var data = {
           public_id: utils.matId2Name(mat_id)
         };
@@ -209,7 +209,7 @@ function createMatId(req, res, iComponentId, matType, originalFilename) {
           data.existPath = path;
         }
         sendBack(data, res);
-      }
+      };
 
       // ToDo:
       var ip = null;
@@ -242,7 +242,7 @@ function banMatId(req, res, newValues, matType, matId) {
     if (result.error) {
       data = result;
     } else {
-      docId = result;
+      const docId = result;
       data = {
         public_id: utils.matId2Name(docId)
       };

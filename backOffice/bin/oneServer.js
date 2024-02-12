@@ -205,11 +205,11 @@
     app.use("/edit/*", state2index);
     app.use("/opus/*", state2index);
 
-    function state2index(req, res) {
+    function state2index(req, res, next) {
       if (isSharedPageHtml(req)) {
         return redirectToMainApp(req, res);
       } else if (!isStatePath(req.baseUrl)) {
-        next(req, res);
+        next();
       } else {
         res.sendFile(path.join(__dirname, appConfig.wwwRoot + "/index.html"));
       }

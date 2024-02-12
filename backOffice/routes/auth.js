@@ -136,7 +136,7 @@ router.post("/signup", function(req, res) {
   var psw = req.body.password || null;
   var groupId = req.body.groupId || "11111";
   var userType = req.body.userType || userController.USER_TYPE.STUDENT;
-  displayName = req.body.displayName || null;
+  let displayName = req.body.displayName || null;
 
   // status.logUser(req);
   var errorId = Const.ERROR.NO;
@@ -177,7 +177,7 @@ router.post("/signup", function(req, res) {
       var pkg = composeErrorPkg("Email is already taken", errorId);
       return responseError(res, Const.HTTP.STATUS_409_CONFLICT, pkg);
     }
-    var user = new User({
+    var userInfo = new User({
       name: email, // email or phone number
       displayName: displayName,
       groupId: groupId,
@@ -185,7 +185,7 @@ router.post("/signup", function(req, res) {
       email: email,
       password: psw
     });
-    saveAndResponse(req, res, user);
+    saveAndResponse(req, res, userInfo);
   });
 });
 
@@ -587,6 +587,11 @@ function doTwitterPart2(req, res, oauth_token, oauth_verifier) {
       oauth: profileOauth,
       json: true
     }, function(err, response, profile) {
+      if (err) {
+        console.error("Error", err);
+      }
+      console.info(response);
+
       var requestToLink = !!req.header("Authorization");
       var unifiedProfile = unifyProfile(
         profile.id,

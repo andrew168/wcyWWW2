@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Created by admin on 12/1/2015.
  */
 var MongoClient = require("mongodb").MongoClient;
@@ -80,8 +80,12 @@ var updateRestaurants = function(db, callback) {
     { "restaurant_id": "50002876" },
     { $set: { "address.street": "East 31st Street" }},
     function(err, results) {
-      console.log(results);
-      callback();
+      if (err) {
+        console.error("Error", err);
+      } else {
+        console.log(results);
+        callback();
+      }
     });
 };
 

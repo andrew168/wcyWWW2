@@ -90,7 +90,7 @@ function executePayment(req, res, next) {
       console.error(JSON.stringify(error));
       result = { error: error };
     } else {
-      if (payment.state == "approved") {
+      if (payment.state === "approved") {
         console.log("payment completed successfully");
       } else {
         console.log("payment not successful");

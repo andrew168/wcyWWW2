@@ -1,4 +1,4 @@
-﻿
+
 var bcrypt = require("bcryptjs");
 var mongoose = require("mongoose");
 var Schema = mongoose.Schema;
@@ -31,7 +31,13 @@ userSchema.pre("save", function(next) {
   }
 
   bcrypt.genSalt(10, function(err, salt) {
+    if (err) {
+      console.error("Error", err);
+    }
     bcrypt.hash(user.password, salt, function(err, hash) {
+      if (err) {
+        console.error("Error", err);
+      }
       user.password = hash;
       next();
     });

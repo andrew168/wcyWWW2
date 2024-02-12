@@ -12,7 +12,9 @@ var Opus = mongoose.model("Opus"); // 获取已经定义的model，（定义见o
 function get(id) {
   Opus.findOne({ _id: id })
     .exec(function(err, data) {
-      if (!data) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!data) {
         console.error(404, { msg: "not found!" + id });
       } else {
         console.log(data);
@@ -152,7 +154,9 @@ function updateScreenshot(userId, id, path, onSuccess, onError) {
   console.info("enter update Screenshot");
   Opus.findOne({ _id: id, userId: userId })
     .exec(function(err, data) {
-      if (!data) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!data) {
         console.error("opusId = " + id + "userId = " + userId); // 可能是不同的UserId，不能覆盖他人的作品
         console.error(id + " opus not found!"); // 可能是不同的UserId，不能覆盖他人的作品
         add(userId, path, id, onSuccess, onError); // 因此， 以建立新文件， 注明是以他人的作品为模板的
@@ -173,7 +177,9 @@ function getAuthor(opusId, onCompleted) {
   Opus.findOne({ _id: opusId })
     .exec(function(err, doc) {
       var author;
-      if (!doc) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!doc) {
         console.error(404, { msg: "couldn't find user for opus: !" + opusId });
         author = { ID: 1 };
       } else {
@@ -195,7 +201,9 @@ function applyToPublish(id, playerId, callback) {
   // 必须是自己的才能申请发表， 否则， 无效
   Opus.findOne({ $and: [{ _id: id }, { userId: playerId }] })
     .exec(function(err, data) {
-      if (!data) {
+      if (err) {
+        console.error("Error", err);
+      } else if (!data) {
         console.error(404, { msg: "not found! : " + id + ", or not belong to : " + playerId });
       } else {
         console.log(data);

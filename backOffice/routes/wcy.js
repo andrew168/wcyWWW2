@@ -63,16 +63,16 @@ router.post("/", authHelper.ensureAuthenticated, function(req, res) {
     res.send(msg);
   } else {
     var wcyId = req.query.wcyId || 0;
+    // 入库， 并获取新wcyID，
+    var onSavedToDb = function fn(_wcyId, ssPath) {
+      const wcyId = _wcyId;
+      _saveWcy(req, res, user, wcyId, ssPath, wcyData);
+    };
+
     if (isNewWcy(wcyId)) { // 新作品，
       opusController.add(user, ssPath, templateId, wcyDataObj, onSavedToDb, null);
     } else {
       opusController.updateScreenshot(user.ID, wcyId, ssPath, onSavedToDb);
-    }
-
-    // 入库， 并获取新wcyID，
-    function onSavedToDb(_wcyId, ssPath) {
-      wcyId = _wcyId;
-      _saveWcy(req, res, user, wcyId, ssPath, wcyData);
     }
   }
 });
@@ -130,7 +130,7 @@ function response(req, res, data, wcyId, authorData) {
   var shareId = 0;
   var shareCode = utils.composeShareCode(shareId, wcyId, userId);
 
-  var data = {
+  var dataPackage = {
     timestamp: utils.createTimestamp(),
     url: "url" + url,
     referer: "url" + req.headers.referer,
@@ -144,7 +144,7 @@ function response(req, res, data, wcyId, authorData) {
   };
 
   // console.log(req);
-  res.json(data);
+  res.json(dataPackage);
 }
 
 function wcyId2Filename(wcyId) {
