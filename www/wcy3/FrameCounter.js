@@ -3,7 +3,7 @@
  * 强大的创意动力源泉
  * 微创意拍摄和播放专用的Timer,(实际上在内部就是 Framer Counter, 对外,为了用户方便, 按照当前FPS转为时间),
  * FrameCounter记录实际拍摄的时刻(帧编号), 而不是日历时长. 时间轴的0点在片头, 终点在片尾..
- * 例如: 假设每秒20帧: FPS = 20; i.e. 一帧的对应1/20 秒, == 0.05秒.
+ * 例如: 假设每秒20帧: FPS = 20; i.e. 一帧的对应1/20 秒, === 0.05秒.
  * 片子的第一个画面(帧): FrameCounter =0, 第二个画面(帧): FrameCounter = 1, 或0.05秒, 依次类推,
  * 第100帧, FrameCounter = 100, 或5秒.
  * 在一个Scene内如此,
@@ -269,7 +269,7 @@ window.TQ = window.TQ || {};
   FrameCounter.isPlaying = function() { return ((state === STATE_GO) || (state === STATE_PAUSE)); };
   FrameCounter.isPaused = function() { return (FrameCounter.isPlaying() && (state === STATE_PAUSE)); };
   FrameCounter.isRecording = function() { return _isRecording; };
-  FrameCounter.isRequestedToStop = function() { return (requestState == STATE_STOP); };
+  FrameCounter.isRequestedToStop = function() { return (requestState === STATE_STOP); };
   FrameCounter.finished = function() { return (!_isRecording && (FrameCounter.v >= vMax)); };
   FrameCounter.abPreviewFinished = function() {
     return (abOptions && (FrameCounter.t() > abOptions.tEnd));

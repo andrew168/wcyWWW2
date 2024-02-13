@@ -65,7 +65,7 @@ function WxService($http, $q) {
   var imgUrl = urlConcat(urlConcat(TQ.Config.MAT_HOST, TQ.Config.IMAGES_CORE_PATH), "v1453298300/67.jpg");
   // TQ.Config.MAT_HOST + "v1453298300/67.jpg"; // "/mcImages/p10324.png",
   // imgUrl = TQ.Config.MAT_HOST + "/mcImages/animation1.gif",
-  imgData = imgUrl;
+  var imgData = imgUrl;
 
   // 微信配置
   var getSignature = function() {

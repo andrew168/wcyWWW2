@@ -62,8 +62,8 @@ this.tuqiangBase = this.tuqiangBase || {};
      */
   Trsa.displayClips = function(target) {
     var CLIP_WIDTH_HALF = 16 / 2;
-    if ((Trsa.clipPoints == undefined) || (Trsa.clipPoints == null) ||
-            (Trsa.clipPoints[0] == undefined)) {
+    if ((Trsa.clipPoints === undefined) || (Trsa.clipPoints === null) ||
+            (Trsa.clipPoints[0] === undefined)) {
       Trsa.generateClips();
     }
 
@@ -74,7 +74,7 @@ this.tuqiangBase = this.tuqiangBase || {};
     var h = target.getHeight();
     var w = target.getWidth();
 
-    offsets = [
+    var offsets = [
       { "x": 0, "y": 0 },
       { "x": 0, "y": h / 2 },
       { "x": 0, "y": h },
@@ -86,13 +86,13 @@ this.tuqiangBase = this.tuqiangBase || {};
       { "x": 0, "y": 0 }
     ];
 
-    for (i = 0; i < 8; i++) {
+    for (let i = 0; i < 8; i++) {
       Trsa.positionIt(Trsa.clipPoints[i], target.x + offsets[i].x - CLIP_WIDTH_HALF, target.y + offsets[i].y - CLIP_WIDTH_HALF);
     }
   };
 
   Trsa.positionIt = function(jsonObj, x, y) {
-    if (jsonObj.displayObj == undefined) {
+    if (jsonObj.displayObj === undefined) {
       return;
     }
 
@@ -113,7 +113,7 @@ this.tuqiangBase = this.tuqiangBase || {};
       { isVis: 1, x: 80.0, y: 11.0, ID: 7, isClipPoint: true, src: "assets/dragpoint.jpg" }
     ];
     Trsa.clipPoints = new Array(8);
-    for (i = 0; i < 8; i++) {
+    for (var i = 0; i < 8; i++) {
       Trsa.clipPoints[i] = currScene.addItem(jsonObjs[i], jsonObjs[i].x, jsonObjs[i].y, 1);
     }
   };
@@ -126,7 +126,7 @@ this.tuqiangBase = this.tuqiangBase || {};
     var sx = (target.x - item.getCenterX()) * 2 / item.naturalWidth();
     var sy = (target.y - item.getCenterY()) * 2 / item.naturalHeight();
 
-    clipID = this.getClipID(target);
+    const clipID = this.getClipID(target);
     switch (clipID) {
       case 3:
         item.scaleY = sy;

@@ -69,9 +69,8 @@ var TQDebugger = TQDebugger || {};
     }
 
     var n = elements.length;
-    var i;
 
-    for (i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
       dumpOne(depth, elements[i]);
     }
   }

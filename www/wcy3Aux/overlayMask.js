@@ -10,12 +10,13 @@ TQ.OverlayMask = (function() {
   var operations = ["touch", "touchstart", "click"];
   var _isOn = false;
   var _operateElementId;
-	      var _promptOnClick;
+  var _promptOnClick = null;
+  var _onClickToClose = null;
 
   return {
     isOn: function() { return _isOn; },
     startClickOtherPlaceToClose: startClickOtherPlaceToClose,
-	      startClickAnywhereToClose: startClickAnywhereToClose,
+    startClickAnywhereToClose: startClickAnywhereToClose,
     turnOn: turnOn,
     turnOff: turnOff
   };
@@ -36,7 +37,7 @@ TQ.OverlayMask = (function() {
   }
 
   function startClickAnywhereToClose(onClickToClose) {
-	    return startClickOtherPlaceToClose("no-object-defined", onClickToClose);
+    return startClickOtherPlaceToClose("no-object-defined", onClickToClose);
   }
 
   function startClickOtherPlaceToClose(operateElementId, onClickToClose) {
@@ -61,7 +62,7 @@ TQ.OverlayMask = (function() {
         turnOff();
         _onClickToClose();
       } else if (_promptOnClick) {
-            	TQ.MessageBubble.toast(_promptOnClick);
+        TQ.MessageBubble.toast(_promptOnClick);
       }
     }
   }

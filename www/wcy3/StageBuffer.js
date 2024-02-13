@@ -24,7 +24,7 @@ window.TQ = window.TQ || {};
     if ((!currScene) || (!currScene.currentLevel) || (!currScene.currentLevel.elements)) {
       return null;
     }
-    if (z == -1) { // group 物体， 不需要进入stage
+    if (z === -1) { // group 物体， 不需要进入stage
       return null;
     }
     return TQ.MathExt.findUpperBoundary(currScene.currentLevel.elements, z);

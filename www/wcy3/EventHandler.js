@@ -54,8 +54,8 @@ TQ = TQ || {};
     var arr = handlers[type];
     if (!arr) { return; }
     for (var i = 0, l = arr.length; i < l; i++) {
-      if (arr[i] == handler) {
-        if (l == 1) { delete (handlers[type]); } // allows for faster checks.
+      if (arr[i] === handler) {
+        if (l === 1) { delete (handlers[type]); } // allows for faster checks.
         else { arr.splice(i, 1); }
         break;
       }

@@ -57,8 +57,7 @@ this.TQ.ResourceSync = (function() {
           var listeners;
           if (listeners = events._oncomplete) {
             var num = listeners.length;
-            var i;
-            for (i = 0; i < num; i++) {
+            for (let i = 0; i < num; i++) {
               if (listeners[i].fn) {
                 setTimeout(listeners[i].fn);
               }

@@ -57,7 +57,7 @@ function getMetaValue(name) {
   var metaEle = document.getElementsByTagName("meta");
   var desc = "UdoIdo";
   if (metaEle && metaEle.length > 0) {
-    for (i = 0; i < metaEle.length; i++) {
+    for (let i = 0; i < metaEle.length; i++) {
       var ele = metaEle[i];
       if (ele["name"] === name) {
         desc = ele["content"];
@@ -72,7 +72,7 @@ function getFirstImageUrl() {
   var imgEles = document.getElementsByTagName("img");
   var imgUrl = null;
   if (imgEles && imgEles.length > 0) {
-    for (i = 0; i < imgEles.length; i++) {
+    for (let i = 0; i < imgEles.length; i++) {
       var ele = imgEles[i];
       if (ele["src"]) {
         imgUrl = ele["src"];

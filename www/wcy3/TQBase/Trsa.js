@@ -22,7 +22,7 @@ window.TQBase = window.TQBase || {};
       displayInfo2(TQ.Dictionary.Locked);
       return;
     }
-    if (target == null) {
+    if (target === null) {
       displayInfo2("empty object or deleted, element.TBD = " + element.TBD);
       return;
     }
@@ -112,8 +112,8 @@ window.TQBase = window.TQBase || {};
     }
 
     var CLIP_WIDTH_HALF = 16 / 2;
-    if ((Trsa.clipPoints == undefined) || (Trsa.clipPoints == null) ||
-            (Trsa.clipPoints[0] == undefined)) {
+    if ((Trsa.clipPoints === undefined) || (Trsa.clipPoints === null) ||
+            (Trsa.clipPoints[0] === undefined)) {
       Trsa.generateClips();
     }
 
@@ -142,7 +142,7 @@ window.TQBase = window.TQBase || {};
   };
 
   Trsa.positionIt = function(jsonObj, x, y) {
-    if (jsonObj.displayObj == undefined) {
+    if (jsonObj.displayObj === undefined) {
       return;
     }
 

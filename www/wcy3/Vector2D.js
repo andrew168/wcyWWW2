@@ -24,7 +24,7 @@ window.TQ = window.TQ || {};
   };
 
   p.angle360 = function() {
-    assertFalse("vector  not 0", ((this.elements[0] == 0) && (this.elements[1] == 0)));
+    assertFalse("vector  not 0", ((this.elements[0] === 0) && (this.elements[1] === 0)));
     TQ.AssertExt.invalidLogic(this.elements.length === 2, "必须是2D向量， 不能用齐次坐标");
     var angle = this.angleFrom($V([1, 0])) * TQ.MathExt.RAD_TO_DEG;
     var x = this.elements[0];

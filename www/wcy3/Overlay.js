@@ -32,7 +32,7 @@ window.TQ = window.TQ || {};
 
   p.hideClipPoint = function(isVisible) {
     for (var i = 0; i < this.elements.length; ++i) {
-      if (this.elements[i].isClipPoint() && (this.elements[i].displayObj != undefined)) {
+      if (this.elements[i].isClipPoint() && (this.elements[i].displayObj !== undefined)) {
         this.elements[i].show(isVisible);
       }
     }

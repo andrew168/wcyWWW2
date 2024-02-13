@@ -417,7 +417,7 @@ TQ.ImageCliper = (function() {
 
   function doDrag(pStart, evt) {
     if (!touchStarted) {
-      return onTouchOrDragStart(e);
+      return onTouchOrDragStart(evt);
     }
 
     xc = eleStart.xc + (evt.stageX - pStart.stageX);

@@ -19,7 +19,7 @@ TQ = TQ || {};
   var p = MultiView.prototype;
 
   p.fixedUp = function(jsonObj) {
-    if ((jsonObj != null) && (jsonObj.viewId != null)) {
+    if ((jsonObj !== null) && (jsonObj.viewId !== null)) {
       this.viewId = jsonObj.viewId;
     }
   };
@@ -27,27 +27,27 @@ TQ = TQ || {};
   p.setupView = function() {
     TQ.InputMap.registerAction(TQ.InputMap.LEFT_ARROW, function() {
       var ele = TQ.SelectSet.peek();
-      if ((ele != null) && (ele.viewCtrl != null)) {
+      if ((ele !== null) && (ele.viewCtrl !== null)) {
         ele.viewCtrl.changeView(-1);
       }
     });
     TQ.InputMap.registerAction(TQ.InputMap.RIGHT_ARROW, function() {
       var ele = TQ.SelectSet.peek();
-      if ((ele != null) && (ele.viewCtrl != null)) {
+      if ((ele !== null) && (ele.viewCtrl !== null)) {
         ele.viewCtrl.changeView(1);
       }
     });
   };
 
   p.changeView = function(adjust) {
-    if (this.parent == null) return;
+    if (this.parent === null) return;
 
     this.viewId += adjust;
     var num = this.parent.children.length;
     this.viewId = TQ.MathExt.range(this.viewId, 0, num - 1);
     for (var i = 0; i < num; i++) {
       var e = this.parent.children[i];
-      e.show(i == this.viewId);
+      e.show(i === this.viewId);
     }
   };
 
@@ -72,7 +72,7 @@ TQ = TQ || {};
   };
 
   p.attachTo = function(host) {
-    if (host != null) {
+    if (host !== null) {
       this.parent = host;
       host.viewCtrl = this;
       this.setupView();
@@ -82,7 +82,7 @@ TQ = TQ || {};
   };
 
   p.detach = function(host) {
-    if (host != null) {
+    if (host !== null) {
       this.unHideView();
       this.parent = null;
       host.viewCtrl = null;

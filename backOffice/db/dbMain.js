@@ -86,7 +86,7 @@ function doInit(app, appConfig, callback) {
     var dbAmount = dbList.length;
     var item, ctrl;
 
-    for (i = 0; i < dbAmount; i++) {
+    for (let i = 0; i < dbAmount; i++) {
       item = dbList[i];
       // 绑定Schema
       require(item.schema).setup(autoIncrement); // 注意文件名带 。js

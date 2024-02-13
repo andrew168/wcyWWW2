@@ -133,8 +133,7 @@ TQ = TQ || {};
 
   p._parent_doAddItemToStage = p._doAddItemToStage;
   p._parent_doRemoveFromStage = p._doRemoveFromStage;
-  p._doAddItemToStage = function() // 子类中定义的同名函数, 会覆盖父类, 让所有的兄弟类, 都有使用此函数.
-  {
+  p._doAddItemToStage = function() { // 子类中定义的同名函数, 会覆盖父类, 让所有的兄弟类, 都有使用此函数.
     // 这是video的专用类，所以，执行到此的必然是video，
     TQ.VideoMgr.addItem(this);
     this._parent_doAddItemToStage();

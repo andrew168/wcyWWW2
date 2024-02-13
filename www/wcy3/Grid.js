@@ -27,14 +27,14 @@ window.TQ = window.TQ || {};
     var yMax = canvas.height;
     var dx = xMax / (Grid.M - 1);
     var dy = yMax / (Grid.N - 1);
-    for (var i = 0; i < Grid.M; i++) {
+    for (let i = 0; i < Grid.M; i++) {
       var thickness = (i % 5) ? Grid.THIN : Grid.THICK;
       var ln1 = new TQ.Trace(Grid.COLOR, thickness);
       ln1.add(TQ.Utility.worldToDevioce(dx * i, 0));
       ln1.add(TQ.Utility.worldToDevioce(dx * i, yMax));
       Grid.grids.push(ln1);
     }
-    for (var i = 0; i < Grid.N; i++) {
+    for (let i = 0; i < Grid.N; i++) {
       thickness = (i % 5) ? Grid.THIN : Grid.THICK;
       ln1 = new TQ.Trace(Grid.COLOR, thickness);
       ln1.add(TQ.Utility.worldToDevioce(0, dy * i));

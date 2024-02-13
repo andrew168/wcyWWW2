@@ -48,7 +48,7 @@
 }());
 
 function init111() {
-  if (window.top != window) {
+  if (window.top !== window) {
     document.getElementById("header").style.display = "none";
   }
 

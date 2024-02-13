@@ -29,7 +29,7 @@ var TQ = TQ || {};
   CreateJSAdapter.attach = function(p) {
     for (var item in CreateJSAdapter) {
       if (typeof CreateJSAdapter[item] === "function") {
-        if (item == "attach") {
+        if (item === "attach") {
           continue;
         }
 

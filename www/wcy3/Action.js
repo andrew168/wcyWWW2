@@ -45,7 +45,7 @@ TQ = TQ || {};
 
   p.tMapping = function(t) {
     if ((t < this.tcn) || (t > this.te)) { // 配合倒退， 重播，等, 确保 t 在区间[tcn, te]内
-      if (this.style == Action.STYLE_REPEAT) { // 循环者， 修改tcn,te, n
+      if (this.style === Action.STYLE_REPEAT) { // 循环者， 修改tcn,te, n
         if (this.T > 0) {
           this.n = Math.floor((t - this.tc) / this.T);
           if (t < this.tc) {
@@ -71,7 +71,7 @@ TQ = TQ || {};
   };
 
   p.isPlaying = function() {
-    return (this.state == Action.PLAYING);
+    return (this.state === Action.PLAYING);
   };
 
   TQ.Action = Action;

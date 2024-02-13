@@ -30,7 +30,7 @@ TQ = TQ || {};
     用于从数据文件建立动画
      */
   p.fixedUp = function(jsonObj) {
-    if ((jsonObj != null) && (jsonObj.actionTable != null)) {
+    if ((jsonObj !== null) && (jsonObj.actionTable !== null)) {
       for (var i = 0; i < jsonObj.actionTable.length; i++) {
         var actionJson = jsonObj.actionTable[i];
         var fs = Number(actionJson.fs);
@@ -45,9 +45,9 @@ TQ = TQ || {};
 
   p.play = function(actionName) {
     this.currentAction = this._findAction(actionName);
-    if (this.currentAction == TQ.ERROR) {
+    if (this.currentAction === TQ.ERROR) {
       TQ.MessageBubble.show(TQ.Dictionary.NAME_NOT_EXIST);
-      if (actionName != "idle") {
+      if (actionName !== "idle") {
         this.play("idle");
       }
     } else {
@@ -57,21 +57,21 @@ TQ = TQ || {};
 
   p.pause = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
-    if (this.currentAction != null) {
+    if (this.currentAction !== null) {
       this.currentAction.stop();
     }
   };
 
   p.resume = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
-    if (this.currentAction != null) {
+    if (this.currentAction !== null) {
       this.currentAction.resume();
     }
   };
 
   p.stop = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
-    if (this.currentAction != null) {
+    if (this.currentAction !== null) {
       this.currentAction.stop();
       this.currentAction = null;
     }
@@ -79,7 +79,7 @@ TQ = TQ || {};
 
   p.addAction = function(action, forceToUpdate) {
     var id = this._findActionId(action.name);
-    if (id != TQ.ERROR) { // 避免重复同名的动作, （如果已经有同名的， 则替换之）
+    if (id !== TQ.ERROR) { // 避免重复同名的动作, （如果已经有同名的， 则替换之）
       if (!forceToUpdate) {
         return false;
       }
@@ -92,7 +92,7 @@ TQ = TQ || {};
 
   p.deleteAction = function(name) {
     var id = this._findActionId(name);
-    if (id == TQ.ERROR) {
+    if (id === TQ.ERROR) {
       TQ.MessageBubble.show(TQ.Dictionary.INVALID_PARAMETER + name);
     } else {
       this.actionTable.splice(id, 1);
@@ -102,7 +102,7 @@ TQ = TQ || {};
   // private function
   p._findActionId = function(actionName) {
     for (var i = 0; i < this.actionTable.length; i++) {
-      if (this.actionTable[i].name == actionName) {
+      if (this.actionTable[i].name === actionName) {
         return i;
       }
     }
@@ -112,16 +112,16 @@ TQ = TQ || {};
 
   p._findAction = function(actionName) {
     var id = this._findActionId(actionName);
-    if (id != TQ.ERROR) {
+    if (id !== TQ.ERROR) {
       return this.actionTable[id];
     }
     return TQ.ERROR; // !!!不能是null, 因为它和[0]元素是一样的。
   };
 
   p.isAnimation = function() { return true; };
-  p.isPlaying = function() { return ((this.currentAction != null) && (this.currentAction.isPlaying())); };
+  p.isPlaying = function() { return ((this.currentAction !== null) && (this.currentAction.isPlaying())); };
   p.hasAction = function(actionName) {
-    return (this._findAction(actionName) != TQ.ERROR);
+    return (this._findAction(actionName) !== TQ.ERROR);
   };
 
   TQ.Animation = Animation;

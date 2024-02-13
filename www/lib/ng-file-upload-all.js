@@ -180,7 +180,7 @@
           config.files = {};
           for (var i = 0; i < formData.data.length; i++) {
             var item = formData.data[i];
-            if (item.val != null && item.val.name != null && item.val.size != null && item.val.type != null) {
+            if (item.val !== null && item.val.name !== null && item.val.size !== null && item.val.type !== null) {
               config.files[item.key] = item.val;
             } else {
               config.data[item.key] = item.val;
@@ -384,7 +384,7 @@ if (!window.FileReader) {
 
     var constructEvent = function (type, evt) {
       var e = {type: type, target: _this, loaded: evt.loaded, total: evt.total, error: evt.error};
-      if (evt.result != null) e.target.result = evt.result;
+      if (evt.result !== null) e.target.result = evt.result;
       return e;
     };
     var listener = function (evt) {
@@ -478,7 +478,7 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
     }
 
     function getNotifyEvent(n) {
-      if (config._start != null && resumeSupported) {
+      if (config._start !== null && resumeSupported) {
         return {
           loaded: n.loaded + config._start, total: config._file.size, type: n.type, config: config,
           lengthComputable: true, target: n.target
@@ -605,7 +605,7 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
   };
 
   this.jsonBlob = function (val) {
-    if (val != null && !angular.isString(val)) {
+    if (val !== null && !angular.isString(val)) {
       val = JSON.stringify(val);
     }
     var blob = new Blob([val], {type: 'application/json'});
@@ -619,7 +619,7 @@ ngFileUpload.service('UploadBase', ['$http', '$q', '$timeout', function ($http, 
 
   this.upload = function (config) {
     function isFile(file) {
-      return file != null && (file instanceof Blob || (file.flashId && file.name && file.size));
+      return file !== null && (file instanceof Blob || (file.flashId && file.name && file.size));
     }
 
     function toResumeFile(file, formData) {

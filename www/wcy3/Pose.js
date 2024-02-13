@@ -37,10 +37,10 @@ window.TQ = window.TQ || {};
     //   所以可以做到: 有选择地拍摄, 录制.
 
     // Pose 是一个公共的地方, 你不赋值, 它就是上一个elemenet留下的.
-    if (parentPoseWorld == null) {
+    if (parentPoseWorld === null) {
       parentPoseWorld = _rootBoneDefault;
     }
-    if (parentPoseWorld.IM == undefined) {
+    if (parentPoseWorld.IM === undefined) {
       // 父矩阵是上一个迭代计算的, 对应拍摄的第一时刻, 没有.
       // 而且, 在播放的时候, 会生成新的M, 并清除上一个时刻的IM
       // ToDo:优化 如果正在拍摄, 可以直接利用拍摄的计算结果, 少算一次变换和矩阵.

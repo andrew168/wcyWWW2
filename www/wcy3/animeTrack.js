@@ -162,8 +162,8 @@ TQ = TQ || {};
   };
 
   AnimeTrack._validateOne = function(channel) {
-    channel.tid1 = (channel.tid1 == undefined) ? 0 : channel.tid1;
-    channel.tid2 = (channel.tid2 == undefined) ? 0 : channel.tid2;
+    channel.tid1 = (channel.tid1 === undefined) ? 0 : channel.tid1;
+    channel.tid2 = (channel.tid2 === undefined) ? 0 : channel.tid2;
   };
 
   p.calculateLastFrame = function() {

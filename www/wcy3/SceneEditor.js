@@ -290,7 +290,7 @@ var currScene = null;
   };
 
   SceneEditor.updateMode = function() {
-    if (SceneEditor._requestMode == null) return;
+    if (SceneEditor._requestMode === null) return;
     SceneEditor._mode = SceneEditor._requestMode;
     SceneEditor._requestMode = null;
   };
@@ -300,11 +300,11 @@ var currScene = null;
   };
   SceneEditor.isEditMode = function() {
     SceneEditor.updateMode();
-    return (SceneEditor.getMode() == TQBase.LevelState.EDITING);
+    return (SceneEditor.getMode() === TQBase.LevelState.EDITING);
   };
   SceneEditor.isPlayMode = function() {
     SceneEditor.updateMode();
-    return (SceneEditor.getMode() == TQBase.LevelState.RUNNING);
+    return (SceneEditor.getMode() === TQBase.LevelState.RUNNING);
   };
 
   SceneEditor.stageContainer = stageContainer;
@@ -404,7 +404,7 @@ var currScene = null;
   function deleteScene() {
     var title = currScene.title;
     if ((title.lastIndexOf(TQ.Config.DEMO_SCENE_NAME) < 0) && // 不能覆盖系统的演示文件
-      (title != TQ.Config.UNNAMED_SCENE)) { // 不能每名称
+      (title !== TQ.Config.UNNAMED_SCENE)) { // 不能每名称
       var filename = currScene.filename;
       TQ.TaskMgr.addTask(function() {
         netDelete(filename);
@@ -465,8 +465,8 @@ var currScene = null;
   function create3DElement() {
     if (TQ.SelectSet.groupIt()) { // 返回false肯定不成功, 不要做后续的
       var ele = currScene.currentLevel.latestElement;
-      if (ele != null) {
-        if (ele.viewCtrl == null) {
+      if (ele !== null) {
+        if (ele.viewCtrl === null) {
           var ctrl = new TQ.MultiView();
           TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.SET_3D_OBJ, ctrl, ele, ele));
         }
@@ -478,7 +478,7 @@ var currScene = null;
   function editActions() {
     var ele = TQ.SelectSet.peek();
 
-    if (ele != null) {
+    if (ele !== null) {
       TQ.Animation.unitTest(ele);
     }
   }

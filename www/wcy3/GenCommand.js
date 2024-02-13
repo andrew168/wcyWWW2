@@ -44,7 +44,7 @@ window.TQ = window.TQ || {};
     fns[GenCommand.ADD_ITEM] = { dofn: "addElementDirect", undofn: "deleteElement" };
     fns[GenCommand.PINIT] = { dofn: "pinIt", undofn: "pinIt" };
   };
-  inherit(GenCommand, TQ.AbstractCommand);
+  TQ.inherit(GenCommand, TQ.AbstractCommand);
 
   GenCommand.prototype.do = function() {
     this.receiver[this.dofn](this.newValue);

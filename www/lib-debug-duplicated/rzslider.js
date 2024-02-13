@@ -12,7 +12,7 @@
     // like Node.
     // to support bundler like browserify
     var angularObj = angular || require('angular');
-    if ((!angularObj || !angularObj.module) && typeof angular != 'undefined') {
+    if ((!angularObj || !angularObj.module) && typeof angular !== 'undefined') {
       angularObj = angular;
     }
     module.exports = factory(angularObj);
@@ -416,9 +416,9 @@
             return;
           if (newValue === oldValue)
             return;
-          if (newValue != null)
+          if (newValue !== null)
             thrHigh();
-          if (self.range && newValue == null || !self.range && newValue != null) {
+          if (self.range && newValue == null || !self.range && newValue !== null) {
             self.applyOptions();
             self.resetSlider();
           }
@@ -859,7 +859,7 @@
             this.highValue = this.roundStep(this.highValue);
         }
 
-        if (this.options.ceil != null)
+        if (this.options.ceil !== null)
           this.maxValue = this.options.ceil;
         else
           this.maxValue = this.options.ceil = this.range ? this.highValue : this.lowValue;
@@ -2108,11 +2108,11 @@
        */
       positionTrackingBar: function(newMinValue, newMaxValue) {
 
-        if (this.options.minLimit != null && newMinValue < this.options.minLimit) {
+        if (this.options.minLimit !== null && newMinValue < this.options.minLimit) {
           newMinValue = this.options.minLimit;
           newMaxValue = newMinValue + this.dragging.difference;
         }
-        if (this.options.maxLimit != null && newMaxValue > this.options.maxLimit) {
+        if (this.options.maxLimit !== null && newMaxValue > this.options.maxLimit) {
           newMaxValue = this.options.maxLimit;
           newMinValue = newMaxValue - this.dragging.difference;
         }
@@ -2195,9 +2195,9 @@
       },
 
       applyMinMaxLimit: function(newValue) {
-        if (this.options.minLimit != null && newValue < this.options.minLimit)
+        if (this.options.minLimit !== null && newValue < this.options.minLimit)
           return this.options.minLimit;
-        if (this.options.maxLimit != null && newValue > this.options.maxLimit)
+        if (this.options.maxLimit !== null && newValue > this.options.maxLimit)
           return this.options.maxLimit;
         return newValue;
       },
@@ -2205,7 +2205,7 @@
       applyMinMaxRange: function(newValue) {
         var oppositeValue = this.tracking === 'lowValue' ? this.highValue : this.lowValue,
           difference = Math.abs(newValue - oppositeValue);
-        if (this.options.minRange != null) {
+        if (this.options.minRange !== null) {
           if (difference < this.options.minRange) {
             if (this.tracking === 'lowValue')
               return this.highValue - this.options.minRange;
@@ -2213,7 +2213,7 @@
               return this.lowValue + this.options.minRange;
           }
         }
-        if (this.options.maxRange != null) {
+        if (this.options.maxRange !== null) {
           if (difference > this.options.maxRange) {
             if (this.tracking === 'lowValue')
               return this.highValue - this.options.maxRange;
@@ -2393,7 +2393,7 @@
   'use strict';
 
   $templateCache.put('rzSliderTpl.html',
-    "<div class=rzslider><span class=rz-bar-wrapper><span class=rz-bar></span></span> <span class=rz-bar-wrapper><span class=\"rz-bar rz-selection\" ng-style=barStyle></span></span> <span class=\"rz-pointer rz-pointer-min\" ng-style=minPointerStyle></span> <span class=\"rz-pointer rz-pointer-max\" ng-style=maxPointerStyle></span> <span class=\"rz-bubble rz-limit rz-floor\"></span> <span class=\"rz-bubble rz-limit rz-ceil\"></span> <span class=rz-bubble></span> <span class=rz-bubble></span> <span class=rz-bubble></span><ul ng-show=showTicks class=rz-ticks><li ng-repeat=\"t in ticks track by $index\" class=rz-tick ng-class=\"{'rz-selected': t.selected}\" ng-style=t.style ng-attr-uib-tooltip=\"{{ t.tooltip }}\" ng-attr-tooltip-placement={{t.tooltipPlacement}} ng-attr-tooltip-append-to-body=\"{{ t.tooltip ? true : undefined}}\"><span ng-if=\"t.value != null\" class=rz-tick-value ng-attr-uib-tooltip=\"{{ t.valueTooltip }}\" ng-attr-tooltip-placement={{t.valueTooltipPlacement}}>{{ t.value }}</span> <span ng-if=\"t.legend != null\" class=rz-tick-legend>{{ t.legend }}</span></li></ul></div>"
+    "<div class=rzslider><span class=rz-bar-wrapper><span class=rz-bar></span></span> <span class=rz-bar-wrapper><span class=\"rz-bar rz-selection\" ng-style=barStyle></span></span> <span class=\"rz-pointer rz-pointer-min\" ng-style=minPointerStyle></span> <span class=\"rz-pointer rz-pointer-max\" ng-style=maxPointerStyle></span> <span class=\"rz-bubble rz-limit rz-floor\"></span> <span class=\"rz-bubble rz-limit rz-ceil\"></span> <span class=rz-bubble></span> <span class=rz-bubble></span> <span class=rz-bubble></span><ul ng-show=showTicks class=rz-ticks><li ng-repeat=\"t in ticks track by $index\" class=rz-tick ng-class=\"{'rz-selected': t.selected}\" ng-style=t.style ng-attr-uib-tooltip=\"{{ t.tooltip }}\" ng-attr-tooltip-placement={{t.tooltipPlacement}} ng-attr-tooltip-append-to-body=\"{{ t.tooltip ? true : undefined}}\"><span ng-if=\"t.value !== null\" class=rz-tick-value ng-attr-uib-tooltip=\"{{ t.valueTooltip }}\" ng-attr-tooltip-placement={{t.valueTooltipPlacement}}>{{ t.value }}</span> <span ng-if=\"t.legend !== null\" class=rz-tick-legend>{{ t.legend }}</span></li></ul></div>"
   );
 
 }]);

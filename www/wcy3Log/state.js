@@ -113,7 +113,7 @@ var TQ = TQ || {};
     }
 
     designated = !currScene ? TQ.Scene.getDesignatedRegionDefault() : currScene.getDesignatedRegion();
-    scaleMin = Math.min(w / designated.w, h / designated.h);
+    const scaleMin = Math.min(w / designated.w, h / designated.h);
     TQ.Config.workingRegionWidth = scaleMin * designated.w;
     TQ.Config.workingRegionHeight = scaleMin * designated.h;
     if (TQ.Config.workingRegionHeight > TQ.Config.workingRegionWidth) {

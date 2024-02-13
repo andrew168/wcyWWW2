@@ -34,7 +34,7 @@ TQ.MoveCtrl = (function() {
   }
 
   function isSameItem(target) {
-    return (_lastItemId == target.id);
+    return (_lastItemId === target.id);
   }
 
   function moveZ(ele, offset, ev) {
@@ -44,7 +44,7 @@ TQ.MoveCtrl = (function() {
     var deltaY = TQ.Utility.deltaYinWorld(target, offset, ev);
     var step = Math.floor(deltaY / TQ.Config.MouseSensitivity);
     var deltaStep = (isSameItem(target)) ? (step - _accumulateStep) : step;
-    if (deltaStep != 0) {
+    if (deltaStep !== 0) {
       _accumulateStep = step;
       _doMoveZ(ele, deltaStep);
       TQ.Log.out("ID:" + _lastItemId + "sum" + _accumulateStep +
@@ -150,7 +150,7 @@ TQ.MoveCtrl = (function() {
   function _doMoveZ(ele, step) {
     var target = ele.displayObj;
     // move up the selected object toward more visible
-    if (target != null) {
+    if (target !== null) {
       _moveZOne(ele);
       _lastItemId = target.id;
       if (ele.children) {
@@ -196,15 +196,15 @@ TQ.MoveCtrl = (function() {
       }
       var step = _direction;
       // 上移一层但是已经到顶，或者下移一层但是已经到底， 就不再操作）
-      if ((step == 1) && ((_stage.getNumChildren() - 1) == _queue[0].id)) { return; }
-      if ((step == -1) && (_queue[0].id == 0)) { return; }
+      if ((step === 1) && ((_stage.getNumChildren() - 1) === _queue[0].id)) { return; }
+      if ((step === -1) && (_queue[0].id === 0)) { return; }
       // 到底、到顶操作：确保各个子元素的移动距离是一样的， 不能都奔到最顶最低
       if (step === TO_TOP) {
         step = (_stage.getNumChildren() - 1) - _queue[0].id;
       } else if (step === TO_BOTTOM) {
         step = -_queue[0].id;
       }
-      if (step == 0) return;
+      if (step === 0) return;
       for (var i = 0; i < num; i++) {
         var item = _queue.shift();
         _doMoveZOne(item.ele, step);
@@ -230,7 +230,7 @@ TQ.MoveCtrl = (function() {
     var id = _stage.getChildIndex(target);
     if (id >= 0) {
       var newId = TQ.MathExt.range(id + step, 0, _stage.getNumChildren() - 1);
-      if (id != newId) {
+      if (id !== newId) {
         if ((step > 1) || (step < -1)) { // move to Top, or Bottom
           _stage.setChildIndex(ele.displayObj, newId);
         } else {

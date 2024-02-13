@@ -139,7 +139,7 @@ var TQ = TQ || {};
   }
 
   function isFirstTouch(e) {
-    return (!started && !isMultiTouching);
+    return (!started); // && !isMultiTouching);
   }
 
   function disableBrowserZooming() {

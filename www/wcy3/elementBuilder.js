@@ -7,7 +7,7 @@ window.TQ = window.TQ || {};
 (function() {
   TQ.Element.upgradeToVer2 = function(desc) {
     desc.version = (!desc.version) ? TQ.Element.VER1 : desc.version;
-    if (desc.isPinned == undefined) { desc.isPinned = false; }
+    if (desc.isPinned === undefined) { desc.isPinned = false; }
   };
 
   // 工厂, 根据数据制作

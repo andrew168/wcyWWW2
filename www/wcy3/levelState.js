@@ -30,8 +30,8 @@ window.TQBase = window.TQBase || {};
   LevelState.OP_FLOATTOOLBAR = 0x11F;
   LevelState.operation = LevelState.OP_NO;
   LevelState.saveOperation = function(op) { LevelState.operation = op; };
-  LevelState.isOperatingCanvas = function() { return (LevelState.operation == LevelState.OP_CANVAS); };
-  LevelState.isOperatingTimerUI = function() { return (LevelState.operation == LevelState.OP_TIMER_UI); };
+  LevelState.isOperatingCanvas = function() { return (LevelState.operation === LevelState.OP_CANVAS); };
+  LevelState.isOperatingTimerUI = function() { return (LevelState.operation === LevelState.OP_TIMER_UI); };
   LevelState.reset = function() {
     LevelState.operation = 0;
   };

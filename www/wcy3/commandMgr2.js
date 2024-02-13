@@ -63,7 +63,7 @@ window.TQ = window.TQ || {};
     // 1) 每一次获取任务的时候, 都先检查高优先级的任务.
     // ToDo: 实现跳帧, 在绘制时间长的情况下, 只移动time, 不update和Render,直接绘制最新的帧.
     var cmd = _preferredQueue.shift();
-    if (cmd == null) {
+    if (cmd === null) {
       return _queue.shift();
     }
 
@@ -79,7 +79,7 @@ window.TQ = window.TQ || {};
     }
 
     var mergedCmd;
-    if ((mergedCmd = mergeCommand(_lastCmd, cmd)) != null) {
+    if ((mergedCmd = mergeCommand(_lastCmd, cmd)) !== null) {
       _undoStack.pop();
       cmd = mergedCmd;
     }
@@ -94,8 +94,8 @@ window.TQ = window.TQ || {};
             (_lastCmdGroupId === _cmdGroupId) &&
             (last.constructor.name2 === cmd.constructor.name2) &&
             (last.receiver.id === cmd.receiver.id)) {
-      if ((last.constructor.name2 == "DeleteEleCommand") ||
-                (last.constructor.name2 == "CompositeCommand")) {
+      if ((last.constructor.name2 === "DeleteEleCommand") ||
+                (last.constructor.name2 === "CompositeCommand")) {
         return null;
       } else {
         switch (cmd.constructor.name2) {
@@ -139,7 +139,7 @@ window.TQ = window.TQ || {};
 
   CommandMgr.directDo = function(cmd) {
     cmd.do();
-    if (cmd.constructor.name2 == "CompositeCommand") {
+    if (cmd.constructor.name2 === "CompositeCommand") {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, cmd.commands.length > 0);
     }
     if (!TQ.CompositeCommand.isOpen()) {
@@ -152,7 +152,7 @@ window.TQ = window.TQ || {};
   CommandMgr._runOnce = function() {
     _isWorking = true;
 
-    for (var cmd = CommandMgr._getCommand(); cmd != null; cmd = CommandMgr._getCommand()) {
+    for (var cmd = CommandMgr._getCommand(); cmd !== null; cmd = CommandMgr._getCommand()) {
       CommandMgr.directDo(cmd);
     }
 

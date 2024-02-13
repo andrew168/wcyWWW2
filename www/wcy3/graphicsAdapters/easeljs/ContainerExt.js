@@ -9,15 +9,15 @@
   // 覆盖原函数
   p.setChildIndex = function(child, index) {
     var kids = this.children; var l = kids.length;
-    if (child.parent != this || index < 0 || index >= l) {
+    if (child.parent !== this || index < 0 || index >= l) {
       return;
     }
     for (var i = 0; i < l; i++) {
-      if (kids[i] == child) {
+      if (kids[i] === child) {
         break;
       }
     }
-    if (i == l || i == index) {
+    if (i === l || i === index) {
       return;
     }
     kids.splice(i, 1);

@@ -177,12 +177,12 @@
               <button class="button button-positive" ng-click="testLogin('2222')" ng-show="false">22</button>
               <button class="button button-positive" ng-click="testLogin('3333')" ng-show="false">33</button>
               <button class="button button-positive" ng-click="testLogin('4444')" ng-show="false">44</button>
+              <button class="button button-positive" ng-click="testUserManagement()" ng-show="true">set user as admin</button>
               <button class="button button-positive" ng-click="testAuthenticate('facebook')" ng-show="false">fb登录</button>
               <button class="button button-positive" ng-click="testAuthenticate('twitter')" ng-show="false">twitter登录</button>
               <button class="button button-positive" ng-click="testAuthenticate('google')" ng-show="false">google+登录</button>
               <button class="button button-positive" ng-click="testAuthenticate('wechat')" ng-show="false">微信登录</button>
               <button class="button button-positive" ng-click="setAdmin()" ng-show="true">setAdmin</button>
-              <button class="button button-positive" ng-click="testUserAdmin()" ng-show="true">set user as admin</button>
               <button class="button button-positive" ng-click="testLogout()" ng-show="false">logout</button>
               <button class="button button-positive" ng-click="createWcy()" ng-show="false">{{getStr("new");}}</button>
               <button class="button button-positive" ng-click="EditorService.setWorkingRegion(414, 736, true)" ng-show="false">iPhone6+</button>
@@ -197,12 +197,12 @@
                 <button class="button button-positive" ng-click="share()" ng-show="false">分享1</button>
                 <button class="button button-positive" ng-click="shareFB()" ng-show="false">分享到FB</button>
                 <button class="button button-positive" ng-click="shareWx()" ng-show="false">分享到Wx</button>
-                    <div
-                        class="fb-like btn-md"
+                <div class="fb-like btn-md"
                      data-share="true"
                      data-width="450"
                      data-show-faces="true">
-                    </div></div>
+                </div>
+              </div>
 
 
               <!-- 素材管理 -->
@@ -235,7 +235,9 @@
               <button class="button button-positive" ng-click="insertIComponent()">元件</button>
               <button class="button button-positive" ng-click="testInsert()">文字</button>
               <button class="button button-positive" ng-click="EditorService.changeSkin('https://res.cloudinary.com/eplan/image/upload/v1501348053/c29.png')"
-                        ng-show="false">换皮肤</button>
+                      ng-show="false">
+                换皮肤
+              </button>
               <button class="button button-positive" ng-click="insertRectangle()">矩形</button>
               <button class="button button-positive" ng-click="insertCircle()">圆</button>
               <button class="button button-positive" ng-click="insertBkImageFromLocal()">+本地背景</button>
@@ -277,7 +279,8 @@
               <button class="button button-positive" ng-click="am.topOut($event)" ng-show="false">上边飞出</button>
               <ui-select ng-model="font.selected" theme="select2" style="min-width: 100px;"
                          on-select="onSelectCallback($item, $model)" title="Choose a size" ng-show="false">
-                    <ui-select-match placeholder="Select a size">{{$select.selected.size}}
+                <ui-select-match placeholder="Select a size">
+                  {{$select.selected.size}}
                 </ui-select-match>
                 <ui-select-choices repeat="font in fontSizes"
                                    position='down'>

@@ -31,7 +31,7 @@ TQ = TQ || {};
     stageContainer.addChildAt(ele.displayObj, expectedZ);
     ele.update(TQ.FrameCounter.t());
 
-    for (var i = 0; i < elements.length; i++) {
+    for (let i = 0; i < elements.length; i++) {
       level.pickOffChild(elements[i]);
       ele.addChild(elements[i]);
       if (TQ.Config.useCreateJSFullContainer) {
@@ -41,7 +41,7 @@ TQ = TQ || {};
     }
 
     if (TQ.Config.useCreateJSFullContainer) {
-      for (var i = 0; i < elements.length; i++) {
+      for (let i = 0; i < elements.length; i++) {
         stageContainer.addChild(elements[i].displayObj);
         ele.displayObj.removeChild(elements[i].displayObj);
       }
@@ -98,7 +98,7 @@ TQ = TQ || {};
     this.initialize(desc);
     TQ.StageBuffer.close();
     TQ.DirtyFlag.setElement(this); // 强制更新group元素的时间
-    self = this;
+    const self = this;
     currScene.currentLevel.registerHandler(function() {
       self.shrinkToStage();
     });
@@ -204,7 +204,7 @@ TQ = TQ || {};
     if (children) {
       pool = pool.concat(getChildrenFromDesc(children));
       pool.sort(compareDesc);
-      for (i = 0; i < pool.length; i++) {
+      for (let i = 0; i < pool.length; i++) {
         if (pool[i]) {
           pool[i].zIndex = zMax + i;
         }
@@ -224,9 +224,8 @@ TQ = TQ || {};
   };
 
   function getChildrenFromDesc(children) {
-    var i;
     var pool = [];
-    for (i = 0; i < children.length; i++) {
+    for (let i = 0; i < children.length; i++) {
       pool.push(children[i]);
       if (children[i].children) {
         pool = pool.concat(getChildrenFromDesc(children[i].children));

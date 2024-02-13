@@ -73,13 +73,13 @@ TQ = TQ || {};
   };
 
   function stopAllDirectVideo() {
-    for (id in directVideos) {
+    for (const id in directVideos) {
       VideoMgr.stop(id);
     }
   }
 
   function resetAllDirectVideo() {
-    for (id in directVideos) {
+    for (const id in directVideos) {
       directVideos[id].reset();
     }
   }

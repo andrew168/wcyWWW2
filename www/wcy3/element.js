@@ -30,7 +30,7 @@ window.TQ = window.TQ || {};
   var DescType = TQ.ElementType;
 
   function Element(level, desc) {
-    if (level != null) { // 适用于 子类的定义, 不做任何初始化,只需要prototype
+    if (level !== null) { // 适用于 子类的定义, 不做任何初始化,只需要prototype
       this.level = level;
       this.children = [];
       this.decorations = null;
@@ -38,7 +38,7 @@ window.TQ = window.TQ || {};
       this._isHighlighting = false;
       this.animeCtrl = null;
       this.viewCtrl = null;
-      this.state = (desc.state == undefined) ? 0 : desc.state;
+      this.state = (desc.state === undefined) ? 0 : desc.state;
       this.dirty = this.dirty2 = false; // dirty2是迫使记录某几个或全部数据
       if (desc.autoFit) { // 所有新加的元素都必须有此属性， 从文件中load的元素则无
         this.autoFitFlag = desc.autoFit;
@@ -174,8 +174,8 @@ window.TQ = window.TQ || {};
     this.dirty = false;
     this.dirty2 = false; // 仅当需要在game循环之外调用element.update强制"拍摄"的时候令它为true
     this.version = desc.version;
-    desc.x = (desc.x == null) ? 0 : desc.x;
-    desc.y = (desc.y == null) ? 0 : desc.y;
+    desc.x = (desc.x === null) ? 0 : desc.x;
+    desc.y = (desc.y === null) ? 0 : desc.y;
     this.jsonObj = this.fillGap(desc);
     switch (desc.type) {
       case DescType.GROUP_FILE:
@@ -200,20 +200,20 @@ window.TQ = window.TQ || {};
 
     (function(parentObj) {
       request.onreadystatechange = function() {
-        if (request.readyState == 4) {
-          if (request.status == 404) {
+        if (request.readyState === 4) {
+          if (request.status === 404) {
             console.info(desc.src + " does not exist");
           } else {
             var o = JSON.parse(request.responseText);
-            o.alias = (alias == null) ? "none" : alias;
+            o.alias = (alias === null) ? "none" : alias;
             o.remote = true;
             if (!o.type) {
               o.type = "BitmapAnimation";
             }
-            o.x = (o.x == undefined) ? desc.x : o.x;
-            o.y = (o.y == undefined) ? desc.y : o.y;
-            o.PivotX = (o.PivotX == undefined) ? TQ.Config.pivotX : o.PivotX;
-            o.PivotY = (o.PivotY == undefined) ? TQ.Config.pivotY : o.PivotY;
+            o.x = (o.x === undefined) ? desc.x : o.x;
+            o.y = (o.y === undefined) ? desc.y : o.y;
+            o.PivotX = (o.PivotX === undefined) ? TQ.Config.pivotX : o.PivotX;
+            o.PivotY = (o.PivotY === undefined) ? TQ.Config.pivotY : o.PivotY;
             parentObj.load(o);
           }
         }
@@ -245,7 +245,7 @@ window.TQ = window.TQ || {};
       desc.isVis = true;
     }
 
-    if (desc.isClipPoint == undefined) {
+    if (desc.isClipPoint === undefined) {
       desc.isClipPoint = false;
     }
 
@@ -305,7 +305,7 @@ window.TQ = window.TQ || {};
 
   p.fillGap2 = function() {
     var desc = this.jsonObj;
-    if ((desc.sx == undefined) || (desc.sy == undefined)) {
+    if ((desc.sx === undefined) || (desc.sy === undefined)) {
       if (this.isEditorEle()) {
         this.markerScaleOne(desc);
       } else {
@@ -332,7 +332,6 @@ window.TQ = window.TQ || {};
       case "Bitmap":
         return 1;
       default:
-        return 1;
     }
     return 1;
   };
@@ -340,7 +339,7 @@ window.TQ = window.TQ || {};
   p.load = function(desc) {
     TQ.Assert.isTrue(!!desc, "must define desc");
     // 记录到element中
-    if ((this.jsonObj.src != undefined) && (this.jsonObj.src != null)) {
+    if ((this.jsonObj.src !== undefined) && (this.jsonObj.src !== null)) {
       this.jsonObj.src = Element.upgrade(this.jsonObj.src);
     }
 
@@ -361,11 +360,11 @@ window.TQ = window.TQ || {};
       this.trace = TQ.Trace.build(desc.trace);
     }
 
-    if (desc.animeCtrl != null) {
+    if (desc.animeCtrl !== null) {
       this.animeCtrl = new TQ.Animation(desc.animeCtrl);
     }
 
-    if (desc.viewCtrl != null) {
+    if (desc.viewCtrl !== null) {
       this.viewCtrl = new TQ.MultiView(desc.viewCtrl);
     }
 
@@ -415,20 +414,20 @@ window.TQ = window.TQ || {};
   };
 
   p.findChild = function(childDisplayObj) {
-    if (this.children == null) {
+    if (this.children === null) {
       return null;
     }
 
     var result = null;
     for (var i = 0; i < this.children.length; i++) {
-      if (this.children[i].displayObj != null) {
-        if (this.children[i].displayObj.id == childDisplayObj.id) {
+      if (this.children[i].displayObj !== null) {
+        if (this.children[i].displayObj.id === childDisplayObj.id) {
           return this.children[i];
         }
       }
 
       result = this.children[i].findChild(childDisplayObj);
-      if (result != null) break;
+      if (result !== null) break;
     }
 
     return result;
@@ -436,7 +435,7 @@ window.TQ = window.TQ || {};
 
   p.addJoint = function(ele) {
     assertTrue(TQ.Dictionary.INVALID_LOGIC, TQ.InputCtrl.inSubobjectMode); // 在零件模式下
-    if (ele.state == undefined) {
+    if (ele.state === undefined) {
       ele.state = 0;
     }
 
@@ -451,7 +450,7 @@ window.TQ = window.TQ || {};
   };
 
   p.addChild = function(desc, isInObjectSpace) {
-    if (desc.displayObj != null) { // 在group或者joint物体的时候,出现
+    if (desc.displayObj !== null) { // 在group或者joint物体的时候,出现
       var child = desc; // 已经是物体了, 不用创建了. 但是,需要衔接jsonObj
       var t = TQ.FrameCounter.t();
       if (this.neverUpdated()) { // 新创建的元素，必须update以求出矩阵M
@@ -529,7 +528,7 @@ window.TQ = window.TQ || {};
   p.findAttachment = function() {
     if (this.isBone()) {
       const num = this.children.length;
-      for (i = num - 1; i >= 0; i--) {
+      for (let i = num - 1; i >= 0; i--) {
         if (!this.children[i].isBone()) {
           return i;
         }
@@ -641,7 +640,7 @@ window.TQ = window.TQ || {};
     if (hostType === DescType.BUTTON) {
       hostType = DescType.BITMAP;
     }
-    if (hostType != skin.getType()) {
+    if (hostType !== skin.getType()) {
       TQ.MessageBubble.show(TQ.Dictionary.SAME_TYPE_SKIN + skin.getType(), false);
       return;
     }
@@ -828,7 +827,7 @@ window.TQ = window.TQ || {};
     var sy = currScene.getDesignatedHeight() / this.getHeight();
     var desc = this.jsonObj;
     var pWorld = this.nw2World({ x: 0.5, y: 0.5 });
-    if (this.autoFitFlag != Element.FitFlag.NO) {
+    if (this.autoFitFlag !== Element.FitFlag.NO) {
       desc.x = pWorld.x;
       desc.y = pWorld.y;
       desc.sx = sx;
@@ -969,7 +968,7 @@ window.TQ = window.TQ || {};
   };
 
   p.destroy = function() {
-    if (this.children != null) {
+    if (this.children !== null) {
       for (var i = 0; i < this.children.length; i++) {
         this.children[i].destroy();
       }
@@ -986,7 +985,7 @@ window.TQ = window.TQ || {};
     // 从stage中移除当前的 皮肤,(不再显示),
     // 同时,重置回调函数,阻止用户操作; 切断指针以便于释放内容,
     this._doRemoveFromStage();
-    if (this.displayObj != null) {
+    if (this.displayObj !== null) {
       this.displayObj.jsonObj = null;
       this.displayObj.onPress = null;
       this.displayObj.onMouseOver = null;
@@ -1002,7 +1001,7 @@ window.TQ = window.TQ || {};
     this.animeTrack.erase();
     this.jsonObj.animeTrack = null;
     if (withChildren) {
-      if (this.children != null) {
+      if (this.children !== null) {
         for (var i = 0; i < this.children.length; i++) {
           if (!this.children[i].isHighlighter()) {
             this.children[i].eraseAnimeTrack(withChildren);
@@ -1033,7 +1032,7 @@ window.TQ = window.TQ || {};
 
   p.updateRecord2 = function(t) {
     this.updateRecord(t);
-    if (this.children != null) {
+    if (this.children !== null) {
       for (var i = 0; i < this.children.length; i++) {
         this.children[i].updateRecord2(t);
       }
@@ -1046,7 +1045,7 @@ window.TQ = window.TQ || {};
     //  return;
     // }
 
-    if (this.children == null) {
+    if (this.children === null) {
       return false;
     }
 
@@ -1073,7 +1072,7 @@ window.TQ = window.TQ || {};
     if (!this.isGroup()) {
       TQ.StageBuffer.add(this);
     }
-    if (this.children != null) {
+    if (this.children !== null) {
       for (var i = 0; i < this.children.length; i++) {
         var child = this.children[i];
         child.addItemToStage();
@@ -1097,16 +1096,16 @@ window.TQ = window.TQ || {};
   p._doAddItemToStage = function(upperEle, ignoreOldZ) {
     // 只需要加入一次， 之后， 都是自动更新坐标，角度等等， 不需要反复加入
     // 他们的坐标都控制在 displayObj中，
-    if (((this.displayObj == null) || this.isVirtualObject())) { // group物体的虚根
+    if (((this.displayObj === null) || this.isVirtualObject())) { // group物体的虚根
       if (TQ.Config.useCreateJSFullContainer && this.isGroup()) {
       } else {
         return;
       }
     }
 
-    if (this.jsonObj.zIndex == -1) {
+    if (this.jsonObj.zIndex === -1) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // -1, group物体应该在isVirtualObject中处理
-      this.jsonObj.zIndex == Element.TOP;
+      this.jsonObj.zIndex === Element.TOP;
     }
     var thislevel = this.level;
     var item = this.displayObj;
@@ -1133,7 +1132,7 @@ window.TQ = window.TQ || {};
       if (TQ.Config.useCreateJsTouch) {
         (function(ele) {
           var showFloatToolbar = function(evt) {
-            if ((TQ.FloatToolbar != undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
+            if ((TQ.FloatToolbar !== undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
               TQ.FloatToolbar.setPosition(evt.stageX, evt.stageY);
               TQ.FloatToolbar.show(this.getType());
             }
@@ -1146,7 +1145,7 @@ window.TQ = window.TQ || {};
             var ele2 = TQ.SelectSet.getEditableEle(ele);
             TQ.SelectSet.add(ele2);
             var target = ele2.displayObj;
-            if (target == null) return; // 防止 刚刚被删除的物体.
+            if (target === null) return; // 防止 刚刚被删除的物体.
             var offset = { x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true };
             // add a handler to the event object's onMouseMove callback
             // this will be active until the user releases the mouse button:
@@ -1192,7 +1191,7 @@ window.TQ = window.TQ || {};
       TQ.Log.criticalError(TQ.Dictionary.FoundNull);
       return;
     }
-    if (this._isHighlighting == enable) return;
+    if (this._isHighlighting === enable) return;
 
     if (TQ.Config.hightlightOn) {
       this._isHighlighting = enable;
@@ -1277,7 +1276,7 @@ window.TQ = window.TQ || {};
     graph.clear();
     graph.beginStroke("#F00");
     graph.moveTo(pts[0][0], pts[0][1]);
-    for (i = 0; i < pts.length; i++) {
+    for (let i = 0; i < pts.length; i++) {
       var dp = m_all.multiply($V([pts[i][0], pts[i][1], 1])).elements;
       var x = pos.x + dp[0];
       var y = pos.y + dp[1];
@@ -1327,7 +1326,7 @@ window.TQ = window.TQ || {};
       this.fillGapAtferAutoFit();
       this.animeTrack = this.jsonObj.animeTrack;
       if (this.level.isStageReady()) {
-        if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
+        if (this.jsonObj.t0 !== undefined) { // 必须是在 立即插入模式
           if (!this.jsonObj.isVis) {
             TQ.AnimeTrack.hide(this, this.jsonObj.t0); // 适合于3D视图，长期隐藏
           } else {
@@ -1348,7 +1347,7 @@ window.TQ = window.TQ || {};
       TQ.Log.out("element._afterItemLoaded"); // , 应该只在临时添加的时候, 才调用
       // assertTrue(TQ.Dictionary.INVALID_LOGIC, false); // 应该只在临时添加的时候, 才调用
       TQ.StageBuffer.add(this); // 统一进入 stage的渠道.
-      if ((this.jsonObj.zIndex != null) && (this.jsonObj.zIndex >= 0)) { // 原来是group, 没有皮肤, 所以是-1;
+      if ((this.jsonObj.zIndex !== null) && (this.jsonObj.zIndex >= 0)) { // 原来是group, 没有皮肤, 所以是-1;
         // this.getContainer().setChildIndex(this.displayObj, this.jsonObj.zIndex + 1); //ToDo: 为什么要加1 组合体才正确?
       }
       this._isNewSkin = false;
@@ -1400,7 +1399,7 @@ window.TQ = window.TQ || {};
     }
 
     // 输出孩子的资源
-    if (this.children != null) {
+    if (this.children !== null) {
       data.children = [];
       for (var i = 0; i < this.children.length; i++) {
         if (!this.children[i].isEditorEle()) {
@@ -1433,7 +1432,7 @@ window.TQ = window.TQ || {};
       data.trace = null;
       data.children.splice(0);
     }
-    if (this.children != null) {
+    if (this.children !== null) {
       for (var i = 0; i < this.children.length; i++) {
         this.children[i].afterToJSON();
       }
@@ -1504,7 +1503,7 @@ window.TQ = window.TQ || {};
 
   p.getActionSet = function() {
     var controller = this.getFirstAnimeCtrl();
-    if (controller != null) {
+    if (controller !== null) {
       return controller.actionTable;
     }
 
@@ -1539,7 +1538,7 @@ window.TQ = window.TQ || {};
     if (!this.currentActionName) {
       this.currentActionName = newName;
       isNewAction = true;
-    } else if (this.currentActionName != newName) {
+    } else if (this.currentActionName !== newName) {
       this.currentActionName = newName;
       isNewAction = true;
     }
@@ -1576,7 +1575,7 @@ window.TQ = window.TQ || {};
 
     // 播放过程:
     // 1) 生成世界坐标:
-    var parentTSR = (this.parent == null) ? null : this.parent.jsonObj;
+    var parentTSR = (this.parent === null) ? null : this.parent.jsonObj;
     var result = this.updateTSR(t, justRecorded, motionType);
     var tsrObj = result.tsrObj;
 
@@ -1599,7 +1598,7 @@ window.TQ = window.TQ || {};
     }
 
     if (this.hookInMove) {
-      this.hookInMove.call(this, this);
+      this.hookInMove(this, this);
     }
   };
 
@@ -1629,7 +1628,7 @@ window.TQ = window.TQ || {};
       // 先生成新的 物体坐标(TQ.Pose), 再转化到世界坐标系
       TQ.Log.debugInfo("update: regenerate coordinates 1: hasAnimation");
       var tt = t;
-      if (justRecorded && (TQ.TrackRecorder.style == TQ.Channel.JUMP_INTERPOLATION)) {
+      if (justRecorded && (TQ.TrackRecorder.style === TQ.Channel.JUMP_INTERPOLATION)) {
         tt = t + 0.01; // 在脉冲运动下，迫使系统采用最新的位置
       }
       if (this.isSound() && this.isCrossLevel) { // 支持跨场景的声音
@@ -1642,7 +1641,7 @@ window.TQ = window.TQ || {};
     } else if (this.isMarker()) {
       TQ.Log.debugInfo("update: regenerate coordinates 2: is Marker");
       tsrObj = this.getTsrInHostObj();
-    } else if ((motionType == 0) && this.dirty) {
+    } else if ((motionType === 0) && this.dirty) {
       // 1.2) 但是, 如果父物体移动了, 它也被动地被要更新
       TQ.Log.debugInfo("update: regenerate coordinates 3: 被动更新");
       tsrObj = TQ.CreateJSAdapter.getDefaultRootTsr();
@@ -1657,7 +1656,7 @@ window.TQ = window.TQ || {};
   };
 
   p.updateChildren = function(t) {
-    if (this.jsonObj.isClipPoint == false) {
+    if (this.jsonObj.isClipPoint === false) {
       assertArray(TQ.Dictionary.INVALID_LOGIC, this.children); // "children可以是空数组[], 但不能为null，或undefined"
       for (var i = 0; i < this.children.length; i++) {
         var child = this.children[i];
@@ -1847,7 +1846,7 @@ window.TQ = window.TQ || {};
 
   p.scaleAndRotateTo = function(scaleAndRotate) {
     TQ.Assert.isTrue((scaleAndRotate.angle !== undefined) &&
-      (scaleAndRotate.scale != undefined), "参数取值错误");
+      (scaleAndRotate.scale !== undefined), "参数取值错误");
     this.rotateTo(scaleAndRotate.angle);
     this.scaleTo(scaleAndRotate.scale);
   };
@@ -1878,7 +1877,7 @@ window.TQ = window.TQ || {};
     }
     for (var i = 0; i < this.decorations.length; i++) {
       var dec = this.decorations[i];
-      if ((dec != null) && dec.isUserControlling()) { // 迫使Market重新计算， Marker没有动画, 永远都在pivot点
+      if ((dec !== null) && dec.isUserControlling()) { // 迫使Market重新计算， Marker没有动画, 永远都在pivot点
         dec.apply(this);
       }
     }
@@ -1934,7 +1933,7 @@ window.TQ = window.TQ || {};
   };
 
   p.hasAnimation = function() {
-    return (!((this.animeTrack == undefined) || (this.animeTrack == null)));
+    return (!((this.animeTrack === undefined) || (this.animeTrack === null)));
   };
 
   p.is = function(type) {
@@ -2024,13 +2023,13 @@ window.TQ = window.TQ || {};
     return this.jsonObj.font;
   }; // 必须是Text
   p.isLeaf = function() {
-    return ((this.children == null) || (this.children.length < 1));
+    return ((this.children === null) || (this.children.length < 1));
   };
   p.isRoot = function() {
     return (this.hasFlag(Element.ROOT_JOINT));
   };
   p.isJoint = function() {
-    return ((this.parent != null) && (this.hasFlag(Element.JOINTED)));
+    return ((this.parent !== null) && (this.hasFlag(Element.JOINTED)));
   };
   p.isBone = function() {
     return this.isJoint() || this.isRoot();
@@ -2065,7 +2064,7 @@ window.TQ = window.TQ || {};
       return this.isSound();
     }
     assertNotNull(TQ.Dictionary.FoundNull, this.displayObj); // 应该有可显示对象
-    return ((this.displayObj.image == null) && (this.isGroup()));
+    return ((this.displayObj.image === null) && (this.isGroup()));
   };
   p.isValid = function() { // 非法的物体包括: 被删除的物体
     return (this.jsonObj || this.displayObj);
@@ -2097,7 +2096,7 @@ window.TQ = window.TQ || {};
 
   p.getRoot = function() { // 任何时候, 都是root, 唯一化
     if (this.isGrouped()) {
-      if (this.parent != null) return this.parent.getRoot();
+      if (this.parent !== null) return this.parent.getRoot();
     }
     return this;
   };
@@ -2109,10 +2108,10 @@ window.TQ = window.TQ || {};
     this.jsonObj.angleMax = newValue;
   };
   p.removeLimitation = function() {
-    if (this.jsonObj.angleMax != undefined) {
+    if (this.jsonObj.angleMax !== undefined) {
       this.jsonObj.angleMax = null;
     }
-    if (this.jsonObj.angleMin != undefined) {
+    if (this.jsonObj.angleMin !== undefined) {
       this.jsonObj.angleMin = null;
     }
   };
@@ -2290,7 +2289,7 @@ window.TQ = window.TQ || {};
   };
 
   p.forEachChildren = function(memberFunctionName) {
-    if (this.children != null) {
+    if (this.children !== null) {
       this.children.forEach(function(child) {
         TQ.Assert.isTrue(!!child[memberFunctionName], "调用不存在的成员函数： " + memberFunctionName);
         if (child[memberFunctionName]) {

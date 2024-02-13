@@ -12,7 +12,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
   var urlConcat = TQ.Base.Utility.urlConcat;
   var IMAGE_CLOUD_URL = TQ.Config.MAT_UPLOAD_API;
   var C_OPUS_URL = TQ.Config.MAN_HOST + "/wcyList";
-  C_MAN_URL = TQ.Config.MAN_HOST + "/material";
+  const C_MAN_URL = TQ.Config.MAN_HOST + "/material";
 
   function isFullPath(url) {
     var protocols = ["http://", "https://"];
@@ -29,7 +29,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
     var surplus = files.length;
 
     function _onSuccess() {
-      if ((--surplus) == 0) {
+      if ((--surplus) === 0) {
         onSuccess();
       }
     }

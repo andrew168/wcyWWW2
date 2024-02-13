@@ -74,8 +74,8 @@ var TQ = TQ || {};
 
     // capture callback
     var captureSuccess = function(mediaFiles) {
-      var i, path, len;
-      for (i = 0, len = mediaFiles.length; i < len; i += 1) {
+      var path, len;
+      for (let i = 0, len = mediaFiles.length; i < len; i += 1) {
         path = mediaFiles[i].fullPath;
         alert(path);
         // do something interesting with the file

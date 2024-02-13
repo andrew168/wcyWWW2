@@ -31,12 +31,12 @@ function displayJSON(data) {
 
 function isObject(obj) {
   if (obj == null) { return false; }
-  return (typeof (obj) === "object") && (obj.constructor == Object);
+  return (typeof (obj) === "object") && (obj.constructor === Object);
 }
 
 function isFunction(obj) {
   if (obj == null) { return false; }
-  return (typeof (obj) === "function") && (obj.constructor == Function);
+  return (typeof (obj) === "function") && (obj.constructor === Function);
 }
 
 function dumpObject(obj) {

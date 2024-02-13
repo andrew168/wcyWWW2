@@ -50,8 +50,7 @@ function DataObject(list) {
 
   // implementations (按照字母顺序排列，升序)
   function fixup(items, matType) {
-    var i;
-    for (i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
       if (items[i].extra) {
         items[i].extra = JSON.parse(items[i].extra);
       }
@@ -103,10 +102,9 @@ function DataObject(list) {
   }
 
   function prepareColumn(props_local, pageSize) {
-    var i;
     var page = pages[pages.length - 1];
 
-    for (i = 0; i < props_local.length; i++) {
+    for (let i = 0; i < props_local.length; i++) {
       if (page.length >= pageSize) {
         page = createPage();
       }

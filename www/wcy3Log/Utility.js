@@ -11,7 +11,7 @@ var TQUtility; //
 
   var urlAPI = (window.createObjectURL && window) ||
         (window.URL && URL.revokeObjectURL && URL) ||
-        (window.webkitURL && webkitURL);
+        (window.webkitURL);
 
   Utility.isIOS = isIOS;
   Utility.isAndroid = isAndroid;
@@ -215,8 +215,8 @@ var TQUtility; //
   Utility.readCache = function(item, defaultValue) {
     var result = localStorage.getItem(item);
     if (result == null || // Chrome, 没有找到
-      (result == "") || // Firefox, 没有找到， 就返回"",
-      (result == "null")) { // Chrome, 没有找到， 就返回"null",
+      (result === "") || // Firefox, 没有找到， 就返回"",
+      (result === "null")) { // Chrome, 没有找到， 就返回"null",
       result = defaultValue;
     } else {
       if (typeof defaultValue !== "string") {

@@ -82,7 +82,7 @@ window.TQ = window.TQ || {};
   });
 
   InputCtrl.isSameItem = function(target) {
-    return (InputCtrl._lastItemId == target.id);
+    return (InputCtrl._lastItemId === target.id);
   };
 
   InputCtrl.getDelta = function(mode, element, target, offset, ev) {
@@ -90,13 +90,13 @@ window.TQ = window.TQ || {};
     var deltaY = TQ.Utility.deltaYinWorld(target, offset, ev);
     var deltaX = (ev.stageX + offset.x) - target.x;
     var delta = deltaY + deltaX;
-    var sensitivity = (mode == InputCtrl.MODE_ROTATE)
+    var sensitivity = (mode === InputCtrl.MODE_ROTATE)
       ? TQ.Config.RotateSensitivity : TQ.Config.MouseSensitivity;
     InputCtrl.step = Math.floor(delta / sensitivity);
     var deltaStep = (InputCtrl.isSameItem(target)) ? (InputCtrl.step - InputCtrl._accumulateStep) : InputCtrl.step;
     TQ.Log.out("ID:" + InputCtrl._lastItemId + "sum" + InputCtrl._accumulateStep +
             ", step: " + InputCtrl.step + ", delta: " + deltaStep);
-    if (target != null) {
+    if (target !== null) {
       InputCtrl._lastItemId = target.id;
     }
     return deltaStep;
@@ -105,7 +105,7 @@ window.TQ = window.TQ || {};
   InputCtrl.scale = function(element, target, offset, ev) {
     var deltaStep = InputCtrl.getDelta(InputCtrl.MODE_SCALE, element, target, offset, ev);
     var coefficient = 1;
-    if (deltaStep == 0) {
+    if (deltaStep === 0) {
       return;
     } else if (deltaStep > 0) {
       coefficient = 1.1 * deltaStep;
@@ -113,7 +113,7 @@ window.TQ = window.TQ || {};
       coefficient = 0.9 * (-deltaStep);
     }
     coefficient = TQ.MathExt.range(coefficient, 0.8, 1.2);
-    if (target != null) {
+    if (target !== null) {
       InputCtrl.doScale(element, coefficient);
       InputCtrl._accumulateStep = InputCtrl.step;
     }

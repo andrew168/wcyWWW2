@@ -43,11 +43,11 @@ window.TQ = window.TQ || {};
   }
 
   function applyLimitation(child, angle) {
-    if ((child.jsonObj.angleMin != null) || (child.jsonObj.angleMax != null)) {
+    if ((child.jsonObj.angleMin !== null) || (child.jsonObj.angleMax !== null)) {
       var angleMin = child.jsonObj.angleMin; var angleMax = child.jsonObj.angleMax;
 
       var parentAngle = 0;
-      if (child.parent != null) {
+      if (child.parent !== null) {
         parentAngle = child.parent.jsonObj.rotation;
       }
       var relativeAngle = angle - parentAngle; // relative to parent;
@@ -66,30 +66,30 @@ window.TQ = window.TQ || {};
      */
   function setLimitation(type, angle) {
     var child = TQ.SelectSet.peek();
-    if (child == null) return;
-    if (angle == null) {
+    if (child === null) return;
+    if (angle === null) {
       angle = child.getRotation();
     }
     var parentAngle = 0;
-    if (child.parent != null) {
+    if (child.parent !== null) {
       parentAngle = child.parent.getRotation();
     }
     var relativeAngle = angle - parentAngle; // relative to parent;
 
     var oldValue;
     var cmd_type;
-    if (type == 0) {
-      oldValue = (child.jsonObj.angleMin == undefined) ? null : child.jsonObj.angleMin;
+    if (type === 0) {
+      oldValue = (child.jsonObj.angleMin === undefined) ? null : child.jsonObj.angleMin;
       cmd_type = TQ.GenCommand.MIN_JOINT_ANGLE;
     } else {
-      oldValue = (child.jsonObj.angleMax == undefined) ? null : child.jsonObj.angleMax;
+      oldValue = (child.jsonObj.angleMax === undefined) ? null : child.jsonObj.angleMax;
       cmd_type = TQ.GenCommand.MAX_JOINT_ANGLE;
     }
     TQ.CommandMgr.directDo(new TQ.GenCommand(cmd_type,
       child, relativeAngle, oldValue));
 
     // 检查合法性
-    if ((child.jsonObj.angleMin != null) && (child.jsonObj.angleMax != null)) {
+    if ((child.jsonObj.angleMin !== null) && (child.jsonObj.angleMax !== null)) {
       if (child.jsonObj.angleMin > child.jsonObj.angleMax) {
         TQ.MessageBubble(TQ.Dictionary.INVALID_PARAMETER);
       }
@@ -145,7 +145,7 @@ window.TQ = window.TQ || {};
     TQ.Log.debugInfo("ele.id =", element.id, "offest = ", JSON.stringify(offset));
     isSimpleRotationMode = isSimpleRotation;
     var target = TQ.SelectSet.peek();
-    if (target == null) {
+    if (target === null) {
       TQ.Log.debugInfo(TQ.Dictionary.PleaseSelectOne);
       return;
     }

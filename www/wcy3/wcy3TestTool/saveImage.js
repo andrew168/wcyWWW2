@@ -13,10 +13,13 @@ TQ.Tool = TQ.Tool || {};
 
   function resetDom() {
     var ele;
-    if (ele = document.getElementById(TEMP_IMG_NODE_ID)) {
+    ele = document.getElementById(TEMP_IMG_NODE_ID);
+    if (ele) {
       ele.remove();
     }
-    if (ele = document.getElementById(TEMP_LINK_NODE_ID)) {
+
+    ele = document.getElementById(TEMP_LINK_NODE_ID);
+    if (ele) {
       ele.remove();
     }
   }

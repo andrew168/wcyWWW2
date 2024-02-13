@@ -7,7 +7,7 @@
   // extended method
   p.getWidth = function(ignoreScale) {
     //  ���û�и�����, ��JS���� null, ���Զ�תΪfalse
-    scale = (ignoreScale) ? 1 : this.scaleY;
+    const scale = (ignoreScale) ? 1 : this.scaleY;
     if (this.sourceRect) {
       return scale * this.sourceRect.width;
     }
@@ -16,7 +16,7 @@
   };
 
   p.getHeight = function(ignoreScale) {
-    scale = (ignoreScale) ? 1 : this.scaleY;
+    const scale = (ignoreScale) ? 1 : this.scaleY;
     if (this.sourceRect) {
       return scale * this.sourceRect.height;
     }

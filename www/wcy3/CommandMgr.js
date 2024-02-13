@@ -44,7 +44,7 @@ window.TQ = window.TQ || {};
     return __openedComposite.addCommand(cmd);
   };
 
-  inherit(CompositeCommand, AbstractCommand);
+  TQ.inherit(CompositeCommand, AbstractCommand);
   CompositeCommand.prototype.do = function() {
     for (var i = 0; i < this.commands.length; i++) {
       this.commands[i].do();
@@ -73,11 +73,11 @@ window.TQ = window.TQ || {};
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return false;
     }
-    return (this.commands.splice(i, 1) != null);
+    return (this.commands.splice(i, 1) !== null);
   };
 
   CompositeCommand.prototype.getCommand = function(id) {
-    if (this.commands.length == 0) {
+    if (this.commands.length === 0) {
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return null;
     }
@@ -112,7 +112,7 @@ window.TQ = window.TQ || {};
     this.oldValue = Math.truncate6(ele.jsonObj.rotation);
   }
 
-  inherit(RotateCommand, AbstractCommand);
+  TQ.inherit(RotateCommand, AbstractCommand);
 
   RotateCommand.prototype.do = function() {
     this.receiver.rotateTo(this.newValue);
@@ -136,7 +136,7 @@ window.TQ = window.TQ || {};
     this.oldValue = ele.getScaleInWorld(); // {sx:ele.jsonObj.sx, sy: ele.jsonObj.sy};
   }
 
-  inherit(ScaleCommand, AbstractCommand);
+  TQ.inherit(ScaleCommand, AbstractCommand);
 
   ScaleCommand.prototype.do = function() {
     this.receiver.scaleTo(this.newValue);
@@ -160,7 +160,7 @@ window.TQ = window.TQ || {};
     this.oldValue = ele.getFontSize();
   }
 
-  inherit(SetSizeCommand, AbstractCommand);
+  TQ.inherit(SetSizeCommand, AbstractCommand);
 
   SetSizeCommand.prototype.do = function() {
     this.receiver.setSize(this.newValue);
@@ -184,7 +184,7 @@ window.TQ = window.TQ || {};
     this.oldValue = ele.getColor();
   }
 
-  inherit(SetColorCommand, AbstractCommand);
+  TQ.inherit(SetColorCommand, AbstractCommand);
 
   SetColorCommand.prototype.do = function() {
     this.receiver.setColor(this.newValue);
@@ -208,7 +208,7 @@ window.TQ = window.TQ || {};
     this.newValue = pos;
   }
 
-  inherit(MoveCommand, AbstractCommand);
+  TQ.inherit(MoveCommand, AbstractCommand);
 
   MoveCommand.prototype.do = function() {
     this.receiver.moveTo(this.newValue);
@@ -241,7 +241,7 @@ window.TQ = window.TQ || {};
     this.newValue = { pivot: pivot, pos: pos };
   }
 
-  inherit(MovePivotCommand, AbstractCommand);
+  TQ.inherit(MovePivotCommand, AbstractCommand);
 
   MovePivotCommand.prototype.do = function() {
     this.receiver.movePivot(this.newValue.pivot, this.newValue.pos, this.receiver2);
@@ -262,7 +262,7 @@ window.TQ = window.TQ || {};
     this.newValue = pos;
   }
 
-  inherit(MoveAnchorCommand, AbstractCommand);
+  TQ.inherit(MoveAnchorCommand, AbstractCommand);
 
   MoveAnchorCommand.prototype.do = function() {
     this.receiver.moveAnchorTo(this.newValue);
@@ -282,7 +282,7 @@ window.TQ = window.TQ || {};
     this.newValue = v;
   }
 
-  inherit(SetTimeCommand, AbstractCommand);
+  TQ.inherit(SetTimeCommand, AbstractCommand);
 
   SetTimeCommand.prototype.do = function() {
     this.receiver.gotoFrame(this.newValue);
@@ -296,7 +296,7 @@ window.TQ = window.TQ || {};
 
   function DeleteEleCommand(scene, ele) {
     this.receiver = scene;
-    if (ele.parent != null) {
+    if (ele.parent !== null) {
       this.receiver2 = ele.parent;
     } else {
       this.receiver2 = null;
@@ -305,14 +305,14 @@ window.TQ = window.TQ || {};
     this.newValue = ele;
   }
 
-  inherit(DeleteEleCommand, AbstractCommand);
+  TQ.inherit(DeleteEleCommand, AbstractCommand);
 
   DeleteEleCommand.prototype.do = function() {
     this.receiver.deleteElement(this.newValue);
   };
 
   DeleteEleCommand.prototype.undo = function() {
-    if (this.receiver2 != null) {
+    if (this.receiver2 !== null) {
       this.receiver2.undeleteChild(this.oldValue);
     } else {
       this.receiver.undeleteElement(this.oldValue);

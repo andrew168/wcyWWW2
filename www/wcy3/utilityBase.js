@@ -18,12 +18,11 @@ TQ = TQ || {};
 TQ.namespace = function(ns) {
   var parts = ns.split(".");
   var parent = TQ;
-  var i;
   if (parts[0] === "TQ") {
     parts = parts.slice(1);
   }
 
-  for (i = 0; i < parts.length; i++) {
+  for (let i = 0; i < parts.length; i++) {
     if (typeof parent[parts[i]] === "undefined") {
       parent[parts[i]] = {};
     }
@@ -54,3 +53,4 @@ Math.truncate6 = function(f) {
 
 // 定义常用的宏，     避免使用数字常量
 TQ.ERROR = -1;
+TQ.inherit = inherit;

@@ -11,13 +11,13 @@ TQ.UI = TQ.UI || {};
   var SelectSetUI = {};
   SelectSetUI.initialize = function() {
     $(document).mousedown(function(e) {
-      if ((e.target) && (e.target.id == "testCanvas")) {
+      if ((e.target) && (e.target.id === "testCanvas")) {
         // 已经在 Element 的onPress中实现了
         if (stage.selectedItem == null) {
-          SelectSet.clear();
+          TQ.SelectSet.clear();
         }
-      } else if ((e.target) && (e.target.tagName == "BODY")) { // 页面的空白处
-        SelectSet.clear();
+      } else if ((e.target) && (e.target.tagName === "BODY")) { // 页面的空白处
+        TQ.SelectSet.clear();
       }
     });
   };

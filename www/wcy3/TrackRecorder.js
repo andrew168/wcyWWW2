@@ -230,8 +230,7 @@ window.TQ = window.TQ || {};
 
     var sags = track.sags;
     var n = sags.length;
-    var i;
-    for (i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
       var item = sags[i];
       if (!item) {
         continue;
@@ -267,7 +266,7 @@ window.TQ = window.TQ || {};
   function trimOneChannel(channel, t) {
     // 处理特殊情况, 只有1帧:
     if (channel.t.length <= 1) {
-      assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 == 0); // 只有1帧
+      assertTrue(TQ.Dictionary.INVALID_PARAMETER, channel.tid1 === 0); // 只有1帧
       channel.tid1 = channel.tid2 = 0;
       return;
     }

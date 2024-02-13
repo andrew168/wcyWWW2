@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @module createjs
  */
 this.createjs = this.createjs || {};
@@ -14,7 +14,7 @@ this.createjs = this.createjs || {};
      * @param {Image} [image] The image to use for each particle. If no image is provided then a simple circle will be drawn.
      **/
   var ParticleEmitter = function(image) {
-    if (image != null) {
+    if (image !== null) {
       this.image = image;
     }
 
@@ -422,7 +422,7 @@ this.createjs = this.createjs || {};
     while (this._particles.length > 0) {
       var particle = this._particles[0];
 
-      if (particle.filters != null) {
+      if (particle.filters !== null) {
         for (var filterIndex in particle.filters) {
           createjs.Tween.removeTweens(particle.filters[filterIndex]);
         }
@@ -460,16 +460,16 @@ this.createjs = this.createjs || {};
     }
 
     // Update state
-    if (this.state == createjs.ParticleEmitterState.Created) {
+    if (this.state === createjs.ParticleEmitterState.Created) {
       this._timeStarted = currentTimeMilli;
       this.state = createjs.ParticleEmitterState.Running;
-    } else if (this.duration != this.INFINITE &&
+    } else if (this.duration !== this.INFINITE &&
             currentTimeMilli > (this._timeStarted + this.duration)) {
       this.state = createjs.ParticleEmitterState.Finished;
     }
 
     // If RUNNING, try to generate a particle
-    if (this.state == createjs.ParticleEmitterState.Running) {
+    if (this.state === createjs.ParticleEmitterState.Running) {
       switch (this.emitterType) {
         case createjs.ParticleEmitterType.OneShot:
           this._oneShot(currentTimeMilli);
@@ -479,9 +479,8 @@ this.createjs = this.createjs || {};
           this._emit(currentTimeMilli);
           break;
       }
-    }
-    // If FINISHED, remove from parent
-    else if (this.state == createjs.ParticleEmitterState.Finished) {
+    } else if (this.state === createjs.ParticleEmitterState.Finished) {
+      // If FINISHED, remove from parent
       if (this.autoRemoveOnFinished) {
         this.parent.removeChild(this);
       }
@@ -492,7 +491,7 @@ this.createjs = this.createjs || {};
     // Therefore if you wish to use color tweening, then we recommend trying to minimize:
     //  a) the emission rate, and
     //  b) the start and end size of the particles
-    if (this.endColor != p.REMAIN_UNCHANGED) {
+    if (this.endColor !== p.REMAIN_UNCHANGED) {
       for (var i = 0; i < this._particles.length; i++) {
         this._particles[i].updateCache();
       }
@@ -510,7 +509,7 @@ this.createjs = this.createjs || {};
   };
 
   p._oneShot = function(currentTimeMilli) {
-    if (this._particles.length == 0) {
+    if (this._particles.length === 0) {
       for (var i = 0; i < this.maxParticles; i++) {
         this._generateParticle();
       }
@@ -529,10 +528,10 @@ this.createjs = this.createjs || {};
     var startColor = this._getColor(this.startColor, this.startColorVar);
     var startSize = this._getVariedValue(this.startSize, this.startSizeVar, true);
     var startSpin = this._getVariedValue(this.startSpin, this.startSpinVar, false);
-    var endColor = this.endColor == this.REMAIN_UNCHANGED ? this.startColor : this._getColor(this.endColor, this.endColorVar);
-    var endSize = this.endSize == this.REMAIN_UNCHANGED ? this.startSize : this._getVariedValue(this.endSize, this.endSizeVar, true);
-    var endSpin = this.endSpin == this.REMAIN_UNCHANGED ? this.startSpin : this._getVariedValue(this.endSpin, this.endSpinVar, true);
-    var endOpacity = this.endOpacity == this.REMAIN_UNCHANGED ? this.startOpacity : this.endOpacity;
+    var endColor = this.endColor === this.REMAIN_UNCHANGED ? this.startColor : this._getColor(this.endColor, this.endColorVar);
+    var endSize = this.endSize === this.REMAIN_UNCHANGED ? this.startSize : this._getVariedValue(this.endSize, this.endSizeVar, true);
+    var endSpin = this.endSpin === this.REMAIN_UNCHANGED ? this.startSpin : this._getVariedValue(this.endSpin, this.endSpinVar, true);
+    var endOpacity = this.endOpacity === this.REMAIN_UNCHANGED ? this.startOpacity : this.endOpacity;
     var scale = endSize / startSize;
     var speed = this._getVariedValue(this.speed, this.speedVar, true);
     var life = this._getVariedValue(this.life, this.lifeVar, true);
@@ -554,7 +553,7 @@ this.createjs = this.createjs || {};
     var colorFilter = this._createColorFilter(shape, startColor);
 
     // Cache shape
-    if (this.image == null) {
+    if (this.image === null) {
       shape.cache(0, 0, startSize, startSize);
     } else {
       shape.cache(0, 0, this.image.width, this.image.height, startSize / this.image.width);
@@ -585,14 +584,14 @@ this.createjs = this.createjs || {};
   p._createParticle = function(position, color, alpha, size, spin, life, dx, dy) {
     var shape = null;
 
-    if (this.image != null) {
+    if (this.image !== null) {
       shape = this._createImageParticle(color, size);
     } else {
       shape = this._createCircleParticle(color, size);
     }
 
-    var originalWidth = this.image != null ? this.image.width : size;
-    var originalHeight = this.image != null ? this.image.height : size;
+    var originalWidth = this.image !== null ? this.image.width : size;
+    var originalHeight = this.image !== null ? this.image.height : size;
 
     shape._baseParticle.originX = this.position.x;
     shape._baseParticle.originY = this.position.y;
@@ -646,7 +645,7 @@ this.createjs = this.createjs || {};
   };
 
   p._getVariedValue = function(base, variance, applyLowerLimit) {
-    var plusOrMinus = this._intRandom(1) == 1 ? 1 : -1;
+    var plusOrMinus = this._intRandom(1) === 1 ? 1 : -1;
     var variedValue = base + (this._intRandom(variance) * plusOrMinus);
 
     if (applyLowerLimit || false) {
@@ -664,9 +663,9 @@ this.createjs = this.createjs || {};
   };
 
   p._getColor = function(base, variance) {
-    var r = variance == null ? base[0] : this._getVariedValue(base[0], variance[0]);
-    var g = variance == null ? base[1] : this._getVariedValue(base[1], variance[1]);
-    var b = variance == null ? base[2] : this._getVariedValue(base[2], variance[2]);
+    var r = variance === null ? base[0] : this._getVariedValue(base[0], variance[0]);
+    var g = variance === null ? base[1] : this._getVariedValue(base[1], variance[1]);
+    var b = variance === null ? base[2] : this._getVariedValue(base[2], variance[2]);
 
     r = this._rgbLimit(r);
     g = this._rgbLimit(g);
@@ -724,7 +723,7 @@ this.createjs = this.createjs || {};
     this._particles.splice(particleIndex, 1);
     this.parent.removeChild(particle);
 
-    if (this._particles.length == 0 && this.state == createjs.ParticleEmitterState.Running && this.emitterType == createjs.ParticleEmitterType.OneShot) {
+    if (this._particles.length === 0 && this.state === createjs.ParticleEmitterState.Running && this.emitterType === createjs.ParticleEmitterType.OneShot) {
       this.state = createjs.ParticleEmitterState.Finished;
     }
   };

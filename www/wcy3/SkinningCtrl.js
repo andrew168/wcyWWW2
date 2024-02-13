@@ -19,7 +19,7 @@ window.TQ = window.TQ || {};
   SkinningCtrl.oldSubjectMode = null;
   SkinningCtrl.start = function() {
     SkinningCtrl._hostObj = TQ.SelectSet.peek();
-    if (SkinningCtrl._hostObj == null) {
+    if (SkinningCtrl._hostObj === null) {
       displayInfo2(TQ.Dictionary.PleaseSelectOne);
       return;
     }
@@ -35,7 +35,7 @@ window.TQ = window.TQ || {};
   SkinningCtrl.getSkin = function() {
     var skin = TQ.SelectSet.pop();
     assertNotNull(TQ.Dictionary.PleaseSelectHost, SkinningCtrl._hostObj);
-    if ((skin != null) && (skin.displayObj.id != SkinningCtrl._hostObj.displayObj.id)) {
+    if ((skin !== null) && (skin.displayObj.id !== SkinningCtrl._hostObj.displayObj.id)) {
       SkinningCtrl._scene.skinning(SkinningCtrl._hostObj, skin);
       TQ.SelectSet.empty();
       SkinningCtrl.end();
@@ -46,7 +46,7 @@ window.TQ = window.TQ || {};
   SkinningCtrl.end = function() {
     if (SkinningCtrl.isWorking) {
       SkinningCtrl.isWorking = false;
-      if (SkinningCtrl.oldSubjectMode != null) {
+      if (SkinningCtrl.oldSubjectMode !== null) {
         TQ.InputCtrl.inSubobjectMode = SkinningCtrl.oldSubjectMode;
       }
       $(document).unbind("mousedown", SkinningCtrl.getSkin);

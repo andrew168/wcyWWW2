@@ -23,7 +23,7 @@ var Base64Binary = {
 
   removePaddingChars: function(input) {
     var lkey = this._keyStr.indexOf(input.charAt(input.length - 1));
-    if (lkey == 64) {
+    if (lkey === 64) {
       return input.substring(0, input.length - 1);
     }
     return input;
@@ -39,14 +39,13 @@ var Base64Binary = {
     var uarray;
     var chr1, chr2, chr3;
     var enc1, enc2, enc3, enc4;
-    var i = 0;
     var j = 0;
 
     if (arrayBuffer) { uarray = new Uint8Array(arrayBuffer); } else { uarray = new Uint8Array(bytes); }
 
     input = input.replace(/[^A-Za-z0-9\+\/\=]/g, "");
 
-    for (i = 0; i < bytes; i += 3) {
+    for (let i = 0; i < bytes; i += 3) {
       // get the 3 octects in 4 ascii chars
       enc1 = this._keyStr.indexOf(input.charAt(j++));
       enc2 = this._keyStr.indexOf(input.charAt(j++));
@@ -58,8 +57,8 @@ var Base64Binary = {
       chr3 = ((enc3 & 3) << 6) | enc4;
 
       uarray[i] = chr1;
-      if (enc3 != 64) uarray[i + 1] = chr2;
-      if (enc4 != 64) uarray[i + 2] = chr3;
+      if (enc3 !== 64) uarray[i + 1] = chr2;
+      if (enc4 !== 64) uarray[i + 2] = chr3;
     }
 
     return uarray;

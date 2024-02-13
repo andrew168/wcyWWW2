@@ -21,7 +21,7 @@ window.TQ = window.TQ || {};
     var track = ele.animeTrack;
     var tsrObj = TQ.Pose;
     // 计算本物体坐标系下的值
-    tsrObj.rotation = ((track.rotation == undefined) || (track.rotation == null))
+    tsrObj.rotation = ((track.rotation === undefined) || (track.rotation === null))
       ? TQ.poseDefault.rotation : TrackDecoder.calOneChannel(track, track.rotation, t);
 
     tsrObj.x = (!track.x)
@@ -62,7 +62,7 @@ window.TQ = window.TQ || {};
     return calOneChannelExt(trackTBD, channel, t).value;
   };
 
-  calOneChannelExt = function(trackTBD, channel, t) {
+  function calOneChannelExt(trackTBD, channel, t) {
     // ToDo: 在Sag控制的时间段，用SAG， 否则用普通的
     // * FlyIn: t < te;
     // * FlyOut: ts < t
@@ -83,7 +83,7 @@ window.TQ = window.TQ || {};
       return { value: vSag, isSag: true };
     }
     return { value: floorKfa.value, isSag: false };
-  };
+  }
 
   function findSag(channel, t) {
     if (!channel.hasSag()) {
@@ -92,13 +92,12 @@ window.TQ = window.TQ || {};
 
     var SagCategory = TQ.AnimationManager.SagCategory;
     var n = channel.sags.length;
-    var i;
     var item;
     var floorSag = {
       t: -1,
       sag: null
     };
-    for (i = 0; i < n; i++) {
+    for (let i = 0; i < n; i++) {
       item = channel.sags[i];
       if (!item) {
         continue;
@@ -241,7 +240,7 @@ window.TQ = window.TQ || {};
   function calTrack(channel, t) {
     var floorKfa = {};
     channel.searchInterval(t);
-    if (channel.tid1 == channel.tid2) {
+    if (channel.tid1 === channel.tid2) {
       floorKfa.t1 = floorKfa.t2 = channel.t[channel.tid1];
       floorKfa.value = channel.value[channel.tid1];
       return floorKfa;
@@ -265,7 +264,7 @@ window.TQ = window.TQ || {};
     } else if (t >= t2) { //  上超界，
       v = v2;
     } else {
-      if (channel.c[channel.tid2] == TQ.Channel.LINE_INTERPOLATION) { // 0： interpolation
+      if (channel.c[channel.tid2] === TQ.Channel.LINE_INTERPOLATION) { // 0： interpolation
         v = ((t - t1) * (v1 - v2) / (t1 - t2)) + v1;
       } else {
         v = v1;

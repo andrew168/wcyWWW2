@@ -102,7 +102,7 @@ function DashCtrl($scope, WCY,
 
   var testUserId = Date.now(); // // "TestAuth100007",
   $scope.setAdmin = function() {
-    TQ.AssertExt.InvalidLog(TQ.userProfile.name != "toronto1111"); // 必须登陆为User "toronto1111";
+    TQ.AssertExt.InvalidLog(TQ.userProfile.name !== "toronto1111"); // 必须登陆为User "toronto1111";
 
     // 设置User 1为Admin， 在之前、之后分别list全部user， 查看其权限，比较变化
     var userId = 1;
@@ -118,7 +118,20 @@ function DashCtrl($scope, WCY,
   };
 
   $scope.testSignUp = function() {
-    var email = "8" + (++testUserId) + "@samplexyz.com";
+    var name = "toronto1111";
+    UserService.signUp({
+      email: name,
+      password: "toronto1111",
+      displayName: "toronto1111",
+      userType: 4, // creative teacher
+      groupId: "1111"
+    }).then(function(data) {
+      console.log("signUp successfully!" + data);
+    });
+  };
+
+  /* $scope.testSignUp = function () {
+    var email = '8' + (++testUserId) + "@samplexyz.com";
     UserService.signUp({
       email: email,
       password: "pswwwwww" + testUserId,
@@ -128,6 +141,14 @@ function DashCtrl($scope, WCY,
     }).then(function(data) {
       console.log("signUp successfully!" + data);
     });
+  };
+  */
+
+  $scope.testUserManagement = function() {
+    // change user 2222 to type 4:
+    UserService.getUserList();
+    UserService.setAdmin(7);
+    UserService.getUserList();
   };
 
   $scope.testLogin = function(id) {
@@ -345,7 +366,7 @@ function DashCtrl($scope, WCY,
     if (TQUtility.isSoundFile(fileOrBlob)) {
       doAddLocalSound(desc, fileOrBlob);
     } else { // 实时录音
-      lastVoiceRecording = {
+      const lastVoiceRecording = {
         desc: desc,
         fileOrBlob: fileOrBlob
       };
@@ -396,7 +417,7 @@ function DashCtrl($scope, WCY,
         "cry": [2000, 800],
         "afraid": [3000, 1500]
       };
-        // howlerPlayer = new TQ.HowlerPlayer('v1528257405/c48.mp3', sprite, spriteMap);
+      // howlerPlayer = new TQ.HowlerPlayer('v1528257405/c48.mp3', sprite, spriteMap);
       howlerPlayer = EditorService.insertSound({
         src: "https://res.cloudinary.com/eplan/video/upload/v1528257405/c48.mp3",
         sprite: sprite,

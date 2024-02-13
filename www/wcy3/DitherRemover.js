@@ -32,7 +32,7 @@ window.TQ = window.TQ || {};
         assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
         return this.start(xx, yy);
       }
-      if (__user_level == 8) {
+      if (Window.__user_level === 8) {
         TQ.Log.debugInfo(xx + ", " + yy);
       }
       if (this.buffer.length >= this._LENGTH) {

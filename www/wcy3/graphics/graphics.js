@@ -136,11 +136,11 @@ TQ.Graphics = (function() {
     drawRectC(shape, xc, yc, w, h, radius, solidColor);
   }
 
-	  function drawSolidRect(shape, solidColor, x0, y0, w, h, radius) {
-	    return drawRect(shape, x0, y0, w, h, radius, solidColor);
-	  }
+  function drawSolidRect(shape, solidColor, x0, y0, w, h, radius) {
+    return drawRect(shape, x0, y0, w, h, radius, solidColor);
+  }
 
-	  function drawRectC(shape, xc, yc, w, h, radius, solidColor) {
+  function drawRectC(shape, xc, yc, w, h, radius, solidColor) {
     // 左下角， + pivot
     var thickness = 1;
     var edgeColor = "#000";
@@ -219,8 +219,7 @@ TQ.Graphics = (function() {
     var fillColor = "#DDD";
     var brush = shape.graphics.ss(thickness).beginStroke(edgeColor)
       .beginFill(fillColor);
-    var i;
-    for (i = 0; i < geoModel.length; i++) {
+    for (let i = 0; i < geoModel.length; i++) {
       var item = geoModel[i];
       switch (item.type) {
         case ET_MOVETO:

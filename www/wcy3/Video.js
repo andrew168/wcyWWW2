@@ -16,7 +16,7 @@ TQ = TQ || {};
   Video.UNKNOWN = 1;
   Video.LOADED = 2;
   Video.SHOW_FIRST_PAGE = 3;
-  Video.PLAY_SUCCEEDED = 100; // == PLAYING, STARTED
+  Video.PLAY_SUCCEEDED = 100; // === PLAYING, STARTED
   Video.PLAY_FINISHED = 230;
   Video.PLAY_INTERRUPTED = 300;
   Video.PLAY_FAILED = 310;

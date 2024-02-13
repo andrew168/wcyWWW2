@@ -64,8 +64,8 @@ var TQ = TQ || {};
   }
 
   function onTouchStage(evt) {
-    e.stopPropagation();
-    e.preventDefault();
+    evt.stopPropagation();
+    evt.preventDefault();
     var result = stage.hitTest(evt.stageX, evt.stageY);
     if (result) {
       TQ.Log.debugInfo("OK!");
@@ -312,7 +312,7 @@ var TQ = TQ || {};
 
   // private:
   var _showFloatToolbar = function(type) {
-    if ((TQ.FloatToolbar != undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
+    if ((TQ.FloatToolbar !== undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
       TQ.FloatToolbar.setPosition(0, 0);
       TQ.FloatToolbar.show(type);
     }

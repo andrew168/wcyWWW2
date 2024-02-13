@@ -12,15 +12,15 @@ TQ = TQ || {};
     assertTrue(TQ.Dictionary.INVALID_PARAMETER, !!host && !host.isVirtualObject());
     // 把Image元素最初的边界盒随物体一起旋转，再计算新的边界盒，
     // 结果是 一个比较大的边界盒
-    pivotX = host.jsonObj.pivotX,
-    pivotY = host.jsonObj.pivotY,
-    w = host.getWidth(),
-    h = host.getHeight(),
-    x1 = -pivotX * w,
-    y1 = -pivotY * h,
-    x2 = x1 + w,
-    y2 = y1 + h,
-    objPts = [
+    const pivotX = host.jsonObj.pivotX;
+    const pivotY = host.jsonObj.pivotY;
+    const w = host.getWidth();
+    const h = host.getHeight();
+    const x1 = -pivotX * w;
+    const y1 = -pivotY * h;
+    const x2 = x1 + w;
+    const y2 = y1 + h;
+    const objPts = [
       { x: x1, y: y1 },
       { x: x2, y: y1 },
       { x: x2, y: y2 },

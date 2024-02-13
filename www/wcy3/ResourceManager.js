@@ -157,14 +157,14 @@ this.TQ = this.TQ || {};
           TQ.Log.error(item.type + ": 未处理的资源类型!");
       }
 
-      if ((altResId != null) && (!!RM.items[altResId])) {
+      if ((altResId !== null) && (!!RM.items[altResId])) {
         result = RM.items[altResId].res;
       } else {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       }
 
       RM.items[resId] = { ID: resId, res: result, type: item.type };
-      if (result == null) {
+      if (result === null) {
         RM.addItem(altResId, function() {
           var item = RM.items[resId];
           var altItem = RM.items[altResId];
@@ -193,7 +193,7 @@ this.TQ = this.TQ || {};
   RM.onFileLoad = function(resId, result, event) {
     // check for callback
     for (var i = 0; i < RM.callbackList.length; i++) {
-      if (RM.callbackList[i].ID == resId) {
+      if (RM.callbackList[i].ID === resId) {
         TQ.Log.info("find immediate call back to do");
         var item = RM.callbackList.splice(i, 1);
         item[0].func(event);
@@ -425,7 +425,7 @@ this.TQ = this.TQ || {};
 
   RM.addElementDescList = function(jsonElements) {
     var foundInvalidElement = false;
-    for (var i = 0; i < jsonElements.length; i++) {
+    for (let i = 0; i < jsonElements.length; i++) {
       var desc = jsonElements[i];
       if (!desc || isBlob(desc)) {
         foundInvalidElement = true;
@@ -437,7 +437,7 @@ this.TQ = this.TQ || {};
     }
 
     if (foundInvalidElement) { // 删除非法element
-      for (i = jsonElements.length - 1; i >= 0; i--) {
+      for (let i = jsonElements.length - 1; i >= 0; i--) {
         if (!jsonElements[i]) {
           jsonElements.splice(i, 1);
         }
@@ -555,10 +555,10 @@ this.TQ = this.TQ || {};
   }
 
   function _removeMatFolder(pathname) {
-    if ((TQ.Config.IMAGES_CORE_PATH != "") && (pathname.indexOf(TQ.Config.IMAGES_CORE_PATH) >= 0)) {
+    if ((TQ.Config.IMAGES_CORE_PATH !== "") && (pathname.indexOf(TQ.Config.IMAGES_CORE_PATH) >= 0)) {
       pathname = pathname.substr(TQ.Config.IMAGES_CORE_PATH.length);
     }
-    if ((TQ.Config.SOUNDS_PATH != "") && (pathname.indexOf(TQ.Config.SOUNDS_PATH) >= 0)) {
+    if ((TQ.Config.SOUNDS_PATH !== "") && (pathname.indexOf(TQ.Config.SOUNDS_PATH) >= 0)) {
       pathname = pathname.substr(TQ.Config.SOUNDS_PATH.length);
     }
 
@@ -650,7 +650,7 @@ this.TQ = this.TQ || {};
       return false;
     }
 
-    TQ.Assert.isTrue(RM.BASE_PATH != "", "BASE_PATH是空，");
+    TQ.Assert.isTrue(RM.BASE_PATH !== "", "BASE_PATH是空，");
     return (name.indexOf(RM.BASE_PATH) >= 0);
   }
 
@@ -682,7 +682,7 @@ this.TQ = this.TQ || {};
 
     var folder = (TQ.Utility.isImage(name)) ? TQ.Config.IMAGES_CORE_PATH : TQ.Config.SOUNDS_PATH;
     var fullpath = urlConcat(urlConcat(TQ.Config.MAT_HOST, folder), name);
-    if (RM.BASE_PATH != "") {
+    if (RM.BASE_PATH !== "") {
       TQ.Assert.isTrue(urlParser(RM.BASE_PATH).hostname === urlParser(fullpath).hostname, "hostname 不一致");
     }
     return fullpath;
@@ -738,12 +738,12 @@ this.TQ = this.TQ || {};
   };
 
   function toOpusThumbNail(path) {
-    TQ.Assert.isTrue(path[0] != "/", "not separator");
+    TQ.Assert.isTrue(path[0] !== "/", "not separator");
     return (TQ.Utility.isImage(path) ? OPUS_THUMBNAIL_EXP : "") + path;
   }
 
   function toThumbNail(path) {
-    TQ.Assert.isTrue(path[0] != "/", "not separator");
+    TQ.Assert.isTrue(path[0] !== "/", "not separator");
     return (TQ.Utility.isImage(path) ? THUMBNAIL_EXP : "") + path;
   }
 

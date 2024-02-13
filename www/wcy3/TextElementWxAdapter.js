@@ -13,8 +13,8 @@ TQ.TextElementWxAdapter = (function() {
       return;
     }
     var stdTextDomEle = createElement200(document.body, "div", 200);
-    cssFontSize200 = TQ.Utility.getCssSize(window.getComputedStyle(stdTextDomEle).fontSize);
-    cssFontSizeFactor = 200 / cssFontSize200;
+    const cssFontSize200 = TQ.Utility.getCssSize(window.getComputedStyle(stdTextDomEle).fontSize);
+    const cssFontSizeFactor = 200 / cssFontSize200;
     document.body.removeChild(stdTextDomEle);
     TQ.TextElementWxAdapter.cssFontSizeFactor = cssFontSizeFactor;
   }

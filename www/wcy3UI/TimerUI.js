@@ -118,7 +118,7 @@ TQ.TimerUI = (function() {
       var diff = 0;
       var maxDiff = 0;
       var base = tPool[tPool.length - 1];
-      for (i = 0; i < tPool.length; i++) {
+      for (let i = 0; i < tPool.length; i++) {
         sum += tPool[i];
         diff = Math.abs(tPool[i] - base);
         if (diff > maxDiff) {

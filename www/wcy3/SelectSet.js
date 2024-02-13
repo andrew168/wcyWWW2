@@ -70,7 +70,7 @@ TQ = TQ || {};
 
   SelectSet.playAnimation = function(actionName) {
     var ele = SelectSet.peek();
-    if (ele != null) {
+    if (ele !== null) {
       ele.playAction(actionName);
     }
   };
@@ -87,7 +87,7 @@ TQ = TQ || {};
       return;
     }
     assertNotNull(TQ.Dictionary.PleaseSelectOne, element);
-    if ((element == null)) return;
+    if ((element === null)) return;
 
     if (TQ.InputMap.isPresseds[TQ.InputMap.LEFT_SHIFT]) {
       while (element.isMarker()) { //  Decoration 不能记入选择集
@@ -109,7 +109,7 @@ TQ = TQ || {};
 
     selectedMarkers.splice(0); // 换了物体， Decoration就可能不被选中了。
     if (!(TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL] || TQ.InputCtrl.vkeyCtrl)) {
-      if (!((SelectSet.members.length == 1) && (SelectSet.members.indexOf(element) == 0))) {
+      if (!((SelectSet.members.length === 1) && (SelectSet.members.indexOf(element) === 0))) {
         SelectSet.clear();
       }
     }
@@ -140,7 +140,7 @@ TQ = TQ || {};
 
   SelectSet.addElements = function(elements) {
     var nLen = elements.length;
-    if (nLen == 0) return;
+    if (nLen === 0) return;
     SelectSet.members.splice(0);
     for (var i = 0; i < nLen; i++) {
       var element = elements[i];
@@ -203,7 +203,7 @@ TQ = TQ || {};
   SelectSet.remove = function(ele) {
     assertNotNull(TQ.Dictionary.FoundNull, ele);
     for (var i = 0; i < SelectSet.members.length; i++) {
-      if (ele.id == SelectSet.members[i].id) {
+      if (ele.id === SelectSet.members[i].id) {
         if (ele.isValid()) { // 可能已经被前面的父物体一起删除了
           ele.highlight(false);
           ele.detachDecoration();
@@ -393,7 +393,7 @@ TQ = TQ || {};
     for (var i = 0; i < eles.length; i++) {
       var ele = eles[i];
       if (!allowIndividual) {
-        while (ele.isJoint() && (ele.parent != null)) { // find root for joints
+        while (ele.isJoint() && (ele.parent !== null)) { // find root for joints
           ele = ele.parent;
         }
       }
@@ -417,8 +417,8 @@ TQ = TQ || {};
   SelectSet.getElementUnderMouse = function() {
     TQ.Assert.isTrue(!!stage, "没有初始化stage！");
     var target = stage.selectedItem;
-    var element = (target == null) ? null : currScene.findAtom(target); // 包括点击菜单, 此函数也会响应
-    if (element != null) {
+    var element = (target === null) ? null : currScene.findAtom(target); // 包括点击菜单, 此函数也会响应
+    if (element !== null) {
       element = SelectSet.getEditableEle(element);
     }
 
@@ -427,7 +427,7 @@ TQ = TQ || {};
 
   SelectSet.getSelectedElement = function() {
     var element = SelectSet.getElementUnderMouse();
-    if (element != null) {
+    if (element !== null) {
       SelectSet.add(element);
     } else {
       if (!TQ.InputMap.isPresseds[TQ.InputMap.LEFT_CTRL]) {
@@ -448,12 +448,12 @@ TQ = TQ || {};
 
     // BBox 总是不可编辑的
     if (ele.isBBox()) {
-      if (ele.parent != null) return TQ.SelectSet.getEditableEle(ele.parent);
+      if (ele.parent !== null) return TQ.SelectSet.getEditableEle(ele.parent);
     }
     // marker仅仅在 移动pivot点的时候，是可以编辑的
     if (!ele.isJoint() && !ele.isMarker() && isPart(ele)) {
       if ((!TQ.InputCtrl.inSubobjectMode) || TQ.InputCtrl.showMarkerOnly) {
-        if (ele.parent != null) return TQ.SelectSet.getEditableEle(ele.parent);
+        if (ele.parent !== null) return TQ.SelectSet.getEditableEle(ele.parent);
       }
     }
     return ele;
@@ -644,7 +644,7 @@ TQ = TQ || {};
     this.newValue = hasUngroupFlag;
   }
 
-  inherit(GroupCommand, TQ.AbstractCommand);
+  TQ.inherit(GroupCommand, TQ.AbstractCommand);
 
   GroupCommand.prototype.do = function() {
     currScene.groupIt(this.receiver, this.newValue);
@@ -670,7 +670,7 @@ TQ = TQ || {};
     this.newValue = hasUnjointFlag;
   }
 
-  inherit(JointCommand, TQ.AbstractCommand);
+  TQ.inherit(JointCommand, TQ.AbstractCommand);
 
   JointCommand.prototype.do = function() {
     currScene.joint(this.receiver, this.newValue);
@@ -694,7 +694,7 @@ TQ = TQ || {};
     this.newValue = allowIndividual;
   }
 
-  inherit(HideCommand, TQ.AbstractCommand);
+  TQ.inherit(HideCommand, TQ.AbstractCommand);
 
   HideCommand.prototype.do = function() {
     SelectSet.doShow(this.receiver, this.newValue);

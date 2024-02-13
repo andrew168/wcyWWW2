@@ -26,6 +26,7 @@ function FileService($cordovaFile, DeviceService) {
         .then(function(success) {
           if (onSuccess) onSuccess(success);
         }, function(error) {
+          console.error(error);
           $cordovaFile.createDir(rootFolder, dir, false)
             .then(onSuccess, onError);
         });

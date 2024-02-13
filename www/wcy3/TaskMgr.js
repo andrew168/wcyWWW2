@@ -10,7 +10,7 @@ window.TQ = window.TQ || {};
   function Command(f, params, path) {
     this.f = f;
     this.params = params;
-    this.path = path == null ? true : path;
+    this.path = path === null ? true : path;
   }
 
   Command.prototype.exec = function(scope) { this.f.apply(scope, this.params); };
@@ -50,7 +50,7 @@ window.TQ = window.TQ || {};
     // 1) 每一次获取任务的时候, 都先检查高优先级的任务.
     // ToDo: 实现跳帧, 在绘制时间长的情况下, 只移动time, 不update和Render,直接绘制最新的帧.
     var task = TaskMgr.preferredQueue.shift();
-    if (task == null) {
+    if (task === null) {
       return TaskMgr.queue.shift();
     }
 
@@ -60,7 +60,7 @@ window.TQ = window.TQ || {};
   TaskMgr._runOnce = function() {
     TaskMgr.isWorking = true;
 
-    for (var task = TaskMgr._getTask(); task != null; task = TaskMgr._getTask()) {
+    for (var task = TaskMgr._getTask(); task !== null; task = TaskMgr._getTask()) {
       task.exec(TaskMgr);
     }
 

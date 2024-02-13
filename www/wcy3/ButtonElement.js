@@ -44,7 +44,7 @@ TQ = TQ || {};
   p._afterItemLoaded = function(desc) {
     this._parent_afterItemLoaded(desc);
     if (this.level.isStageReady()) {
-      if (this.jsonObj.t0 != undefined) { // 必须是在 立即插入模式
+      if (this.jsonObj.t0 !== undefined) { // 必须是在 立即插入模式
         TQ.AnimeTrack.setButton(this, this.jsonObj.t0);
       }
     }
@@ -55,7 +55,7 @@ TQ = TQ || {};
   p.doShow = function(isVisible) {
     this._parent_doShow(isVisible);
     if (isVisible) {
-      if (this.state2 == ButtonElement.INVISIBLE) { // first time
+      if (this.state2 === ButtonElement.INVISIBLE) { // first time
         this.state2 = ButtonElement.VISIBLE;
         if (TQ.FrameCounter.isPlaying()) {
           // 不能直接用item.onPress = ele.onClick()，因为对象的主题变了。响应的时候，对象是Bitmap，不是按钮元素
@@ -71,7 +71,7 @@ TQ = TQ || {};
         this.onVisible();
       }
     } else {
-      if (this.state2 != ButtonElement.INVISIBLE) {
+      if (this.state2 !== ButtonElement.INVISIBLE) {
         this.state2 = ButtonElement.INVISIBLE;
         TQ.ButtonMgr.deleteItem(this);
       }
@@ -85,8 +85,8 @@ TQ = TQ || {};
   };
 
   p.onVisible = function() {
-    if ((this.level.state == TQBase.LevelState.EDITING) ||
-            (this.level.state == TQBase.LevelState.RUNNING)) {
+    if ((this.level.state === TQBase.LevelState.EDITING) ||
+            (this.level.state === TQBase.LevelState.RUNNING)) {
       var t = TQ.FrameCounter.t();
       this.setButton(t);
       eval(this.onVisibleAction);
@@ -95,7 +95,7 @@ TQ = TQ || {};
 
   p.onClick = function() {
     if (!TQ.SceneEditor.isPlayMode()) return; // 不是播放状态, 不响应click
-    if (this.state2 == ButtonElement.VISIBLE) {
+    if (this.state2 === ButtonElement.VISIBLE) {
       this.state2 = ButtonElement.CLICKED;
       var item = this.displayObj;
       item.onPress = null;
@@ -112,7 +112,7 @@ TQ = TQ || {};
 
   p.addAction = function(ele, actionName) {
     var id = this._findAction(ele, actionName);
-    if (id == TQ.ERROR) {
+    if (id === TQ.ERROR) {
       this.actions.push({ ele: ele, action: actionName });
     } else {
       this.actions[id] = { ele: ele, action: actionName };
@@ -137,7 +137,7 @@ TQ = TQ || {};
       if (!action) { // 被删除了
         continue;
       }
-      if ((actionName == action.name) && (action.ele == ele)) {
+      if ((actionName === action.name) && (action.ele === ele)) {
         return i;
       }
     }

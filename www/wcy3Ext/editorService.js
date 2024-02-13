@@ -5,9 +5,9 @@
  */
 
 angular.module("starter").factory("EditorService", EditorService);
-EditorService.$inject = ["$q", "$rootScope", "$timeout", "NetService", "WxService", "WCY", "AppService"];
+EditorService.$inject = ["$q", "$rootScope", "$timeout", "NetService", "WxService", "WCY", "AppService", "StatService"];
 
-function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, AppService) {
+function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, AppService, StatService) {
   var CMD_UNKNOWN = "unknown";
   var CMD_MCOPYING_BEGIN = "mcopying begin";
   var CMD_MCOPYING_END = "mcopying end";
@@ -677,7 +677,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       isCrossLevel: isCrossLevel
     };
 
-    if (isObject(urlOrConfig)) {
+    if (angular.isObject(urlOrConfig)) {
       desc = TQUtility.extend(desc, urlOrConfig);
     } else {
       desc.src = urlOrConfig;
@@ -741,7 +741,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     assertNotNull(TQ.Dictionary.FoundNull, currScene); // 必须在微创意显示之后使用
     if (!currScene) return;
 
-    if (currScene && (currScene.currentLevelId != undefined) && (currScene.currentLevelId < (currScene.levelNum() - 1))) {
+    if (currScene && (currScene.currentLevelId !== undefined) && (currScene.currentLevelId < (currScene.levelNum() - 1))) {
       gotoLevel(currScene.currentLevelId + 1);
     }
   }
@@ -875,8 +875,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function stop() {
     // 新建立的账号，没有currScene，但是调用Stop()？
-    // assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
-    if (currScene != null) {
+    // assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
+    if (currScene !== null) {
       currScene.stop();
       updateMode();
     }
@@ -924,23 +924,23 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function play() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
-    if (currScene != null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
+    if (currScene !== null) {
       currScene.play();
     }
     _onPlay();
   }
 
   function pause() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
-    if (currScene != null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
+    if (currScene !== null) {
       TQ.FrameCounter.pause();
     }
   }
 
   function resume() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
-    if (currScene != null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
+    if (currScene !== null) {
       TQ.FrameCounter.resume();
     }
   }
@@ -1128,7 +1128,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     console.warn("TRIM: ...", tObj1, tObj2);
     var MAX_LENGTH = 99999.0;
     var leftLevel, rightLevel;
-    if (tObj1.levelId == tObj2.levelId) {
+    if (tObj1.levelId === tObj2.levelId) {
       leftLevel = currScene.getLevel(tObj1.levelId);
       leftLevel.trim(tObj1.t, tObj2.t);
     } else {
@@ -1389,17 +1389,17 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     }
 
     if (!state.isPreviewMode) {
-      if (state.isAddMode != (value = (isEditMode() && TQ.SelectSet.isEmpty()))) {
+      if (state.isAddMode !== (value = (isEditMode() && TQ.SelectSet.isEmpty()))) {
         state.isAddMode = value;
         hasChanged = true;
       }
 
-      if (state.isModifyMode != (value = (isEditMode() && !TQ.SelectSet.isEmpty()))) {
+      if (state.isModifyMode !== (value = (isEditMode() && !TQ.SelectSet.isEmpty()))) {
         state.isModifyMode = value;
         hasChanged = true;
       }
 
-      if (state.isPlayMode != (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
+      if (state.isPlayMode !== (value = (initialized() && TQ.SceneEditor.isPlayMode()))) {
         state.isPlayMode = value;
         hasChanged = true;
         updatePlayingState();
@@ -1655,6 +1655,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     lastCmd = currCmd;
     currCmd = CMD_UNKNOWN;
 
-    // ToDo: 　Joint, group
+    // ToDo: Joint, group
   }
 }

@@ -68,7 +68,7 @@ window.TQ = window.TQ || {};
   };
 
   Trace.prototype.isEmpty = function() {
-    return (this.points.length == 0);
+    return (this.points.length === 0);
   };
 
   Trace.prototype.add = function(pDevice) {
@@ -89,10 +89,9 @@ window.TQ = window.TQ || {};
     this.shape.uncache();
 
     var len = this.points.length;
-    var i = 0;
     if (len > 1) {
       this.graphics.moveTo(this.points[0].x, this.points[0].y);
-      for (i = 0; i < len; i++) {
+      for (let i = 0; i < len; i++) {
         this.graphics.lineTo(this.points[i].x, this.points[i].y);
       }
     }

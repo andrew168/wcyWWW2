@@ -9,7 +9,7 @@
   Stage.__debugOn = false;
   // extended method
   p.enableDOMEvents = function(enable) {
-    if (enable == null) {
+    if (enable === null) {
       enable = true;
     }
     var n; var o; var ls = this._eventListeners;
@@ -115,14 +115,14 @@
     }
 
     if (this.onMouseMove || this.hasEventListener("stagemousemove")) {
-      evt = new createjs.MouseEvent("stagemousemove", o.x, o.y, this, e, id, id == this._primaryPointerID, o.rawX, o.rawY);
+      evt = new createjs.MouseEvent("stagemousemove", o.x, o.y, this, e, id, id === this._primaryPointerID, o.rawX, o.rawY);
       this.onMouseMove && this.onMouseMove(evt);
       this.dispatchEvent(evt);
     }
 
     var oEvt = o.event;
     if (oEvt && (oEvt.onMouseMove || oEvt.hasEventListener("mousemove"))) {
-      evt = new createjs.MouseEvent("mousemove", o.x, o.y, oEvt.target, e, id, id == this._primaryPointerID, o.rawX, o.rawY);
+      evt = new createjs.MouseEvent("mousemove", o.x, o.y, oEvt.target, e, id, id === this._primaryPointerID, o.rawX, o.rawY);
       oEvt.onMouseMove && oEvt.onMouseMove(evt);
       oEvt.dispatchEvent(evt, oEvt.target);
     }
@@ -161,27 +161,27 @@
     var evt;
     TQ.DitherRemover.close();
     if (this.onMouseMove || this.hasEventListener("stagemouseup")) {
-      evt = new createjs.MouseEvent("stagemouseup", o.x, o.y, this, e, id, id == this._primaryPointerID, o.rawX, o.rawY);
+      evt = new createjs.MouseEvent("stagemouseup", o.x, o.y, this, e, id, id === this._primaryPointerID, o.rawX, o.rawY);
       this.onMouseUp && this.onMouseUp(evt);
       this.dispatchEvent(evt);
     }
 
     var oEvt = o.event;
     if (oEvt && (oEvt.onMouseUp || oEvt.hasEventListener("mouseup"))) {
-      evt = new createjs.MouseEvent("mouseup", o.x, o.y, oEvt.target, e, id, id == this._primaryPointerID, o.rawX, o.rawY);
+      evt = new createjs.MouseEvent("mouseup", o.x, o.y, oEvt.target, e, id, id === this._primaryPointerID, o.rawX, o.rawY);
       oEvt.onMouseUp && oEvt.onMouseUp(evt);
       oEvt.dispatchEvent(evt, oEvt.target);
     }
 
     var oTarget = o.target;
-    if (oTarget && (oTarget.onClick || oTarget.hasEventListener("click")) && this._getObjectsUnderPoint(o.x, o.y, null, true, (this._mouseOverIntervalID ? 3 : 1)) == oTarget) {
-      evt = new createjs.MouseEvent("click", o.x, o.y, oTarget, e, id, id == this._primaryPointerID, o.rawX, o.rawY);
+    if (oTarget && (oTarget.onClick || oTarget.hasEventListener("click")) && this._getObjectsUnderPoint(o.x, o.y, null, true, (this._mouseOverIntervalID ? 3 : 1)) === oTarget) {
+      evt = new createjs.MouseEvent("click", o.x, o.y, oTarget, e, id, id === this._primaryPointerID, o.rawX, o.rawY);
       oTarget.onClick && oTarget.onClick(evt);
       oTarget.dispatchEvent(evt);
     }
 
     if (clear) {
-      if (id == this._primaryPointerID) {
+      if (id === this._primaryPointerID) {
         this._primaryPointerID = null;
       }
       delete (this._pointerData[id]);
@@ -221,13 +221,13 @@
       y = e.touches[0].pageY;
     }
 
-    if (y != null) {
+    if (y !== null) {
       TQ.DitherRemover.start(x, y);
       this._updatePointerPosition(id, x, y);
     }
 
     if (this.onMouseDown || this.hasEventListener("stagemousedown")) {
-      var evt = new createjs.MouseEvent("stagemousedown", o.x, o.y, this, e, id, id == this._primaryPointerID, o.rawX, o.rawY);
+      var evt = new createjs.MouseEvent("stagemousedown", o.x, o.y, this, e, id, id === this._primaryPointerID, o.rawX, o.rawY);
       this.onMouseDown && this.onMouseDown(evt);
       this.dispatchEvent(evt);
     }
@@ -237,7 +237,7 @@
     if (target) {
       o.target = target;
       if (target.onPress || target.hasEventListener("mousedown")) {
-        evt = new createjs.MouseEvent("mousedown", o.x, o.y, target, e, id, id == this._primaryPointerID, o.rawX, o.rawY);
+        evt = new createjs.MouseEvent("mousedown", o.x, o.y, target, e, id, id === this._primaryPointerID, o.rawX, o.rawY);
         target.onPress && target.onPress(evt);
         target.dispatchEvent(evt);
 
@@ -259,7 +259,7 @@
     var target = this._getObjectsUnderPoint(o.x, o.y, null, (this._mouseOverIntervalID ? 3 : 1));
     this._setSelectedItem(target);
     if (target && (target.onDoubleClick || target.hasEventListener("dblclick"))) {
-      evt = new createjs.MouseEvent("dblclick", o.x, o.y, target, e, -1, true, o.rawX, o.rawY);
+      const evt = new createjs.MouseEvent("dblclick", o.x, o.y, target, e, -1, true, o.rawX, o.rawY);
       target.onDoubleClick && target.onDoubleClick(evt);
       target.dispatchEvent(evt);
     }
@@ -273,7 +273,7 @@
   };
 
   p._setSelectedItem = function(item) {
-    if (item == null) {
+    if (item === null) {
       this.selectedItem = item;
       this.selectedClipPoint = false;
       return;
