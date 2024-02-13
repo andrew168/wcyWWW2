@@ -1,4 +1,4 @@
-﻿var TQ = TQ || {};
+var TQ = TQ || {};
 
 (function() {
   "use strict";
@@ -101,7 +101,7 @@
         options.nDirection = options.direction;
       }
       if (options.nDensity === undefined) {
-        options.nDensity = options.nDensity;
+        options.nDensity = options.density;
       }
 
       if (options.imageSrc === undefined) {
