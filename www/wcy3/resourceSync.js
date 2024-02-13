@@ -54,8 +54,8 @@ this.TQ.ResourceSync = (function() {
         numActiveTasks--;
         if (numActiveTasks <= 0) {
           tryShowCompleteInfo();
-          var listeners;
-          if (listeners = events._oncomplete) {
+          var listeners = events._oncomplete;
+          if (listeners) {
             var num = listeners.length;
             for (let i = 0; i < num; i++) {
               if (listeners[i].fn) {

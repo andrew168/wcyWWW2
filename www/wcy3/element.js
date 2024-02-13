@@ -1113,72 +1113,71 @@ window.TQ = window.TQ || {};
     item.jsonObj = this.jsonObj; // 需要临时建立关系， 因为在NetIO时候可能破坏了。
     item.ele = this;
     var container = this.getContainer();
-    { // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
-      this.setFlag(Element.IN_STAGE);
-      if (!ignoreOldZ && ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj))) { // 没有在我之上的， 我就是top
+    // 不论是否可见， 都添加到stage中， 有visible来控制可见性， 确保层次关系是正确的
+    this.setFlag(Element.IN_STAGE);
+    if (!ignoreOldZ && ((item.jsonObj.zIndex === Element.TOP) || (!upperEle) || (!upperEle.displayObj))) { // 没有在我之上的， 我就是top
+      container.addChild(item);
+    } else {
+      var z = (!upperEle) ? 0 : container.getChildIndex(upperEle.displayObj);
+      if (z <= 0) { // 是 group， 或者其它不可显示的物体
         container.addChild(item);
       } else {
-        var z = (!upperEle) ? 0 : container.getChildIndex(upperEle.displayObj);
-        if (z <= 0) { // 是 group， 或者其它不可显示的物体
-          container.addChild(item);
-        } else {
-          assertTrue(TQ.Dictionary.INVALID_PARAMETER, z >= 0); // 第一个元素的z = 0
-          assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < container.getNumChildren());
-          container.addChildAt(item, z); // 把upperEle 顶起来
-        }
+        assertTrue(TQ.Dictionary.INVALID_PARAMETER, z >= 0); // 第一个元素的z = 0
+        assertTrue(TQ.Dictionary.INVALID_PARAMETER, z < container.getNumChildren());
+        container.addChildAt(item, z); // 把upperEle 顶起来
       }
+    }
 
-      // wrapper function to provide scope for the event handlers:
-      if (TQ.Config.useCreateJsTouch) {
-        (function(ele) {
-          var showFloatToolbar = function(evt) {
-            if ((TQ.FloatToolbar !== undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
-              TQ.FloatToolbar.setPosition(evt.stageX, evt.stageY);
-              TQ.FloatToolbar.show(this.getType());
-            }
-          };
+    // wrapper function to provide scope for the event handlers:
+    if (TQ.Config.useCreateJsTouch) {
+      (function(ele) {
+        var showFloatToolbar = function(evt) {
+          if ((TQ.FloatToolbar !== undefined) && TQ.FloatToolbar.setPosition && TQ.FloatToolbar.show) {
+            TQ.FloatToolbar.setPosition(evt.stageX, evt.stageY);
+            TQ.FloatToolbar.show(this.getType());
+          }
+        };
 
-          item.onPress = function(evt) {
+        item.onPress = function(evt) {
+          if (TQ.SceneEditor.isPlayMode()) {
+            return;
+          }
+          var ele2 = TQ.SelectSet.getEditableEle(ele);
+          TQ.SelectSet.add(ele2);
+          var target = ele2.displayObj;
+          if (target == null) return; // 防止 刚刚被删除的物体.
+          var offset = { x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true };
+          // add a handler to the event object's onMouseMove callback
+          // this will be active until the user releases the mouse button:
+          showFloatToolbar(evt);
+          TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
+          evt.onMouseMove = function(ev) {
             if (TQ.SceneEditor.isPlayMode()) {
               return;
             }
-            var ele2 = TQ.SelectSet.getEditableEle(ele);
-            TQ.SelectSet.add(ele2);
-            var target = ele2.displayObj;
-            if (target == null) return; // 防止 刚刚被删除的物体.
-            var offset = { x: target.x - evt.stageX, y: target.y - evt.stageY, firstTime: true };
-            // add a handler to the event object's onMouseMove callback
-            // this will be active until the user releases the mouse button:
+            TQ.FloatToolbar.close();
+            TQBase.Trsa.do(ele2, thislevel, offset, ev);
+          };
+          evt.onMouseUp = function(evt) {
             showFloatToolbar(evt);
-            TQBase.LevelState.saveOperation(TQBase.LevelState.OP_CANVAS);
-            evt.onMouseMove = function(ev) {
-              if (TQ.SceneEditor.isPlayMode()) {
-                return;
-              }
-              TQ.FloatToolbar.close();
-              TQBase.Trsa.do(ele2, thislevel, offset, ev);
-            };
-            evt.onMouseUp = function(evt) {
-              showFloatToolbar(evt);
-              evt.onMouseUp = null;
-            };
+            evt.onMouseUp = null;
+          };
 
-            if (TQ.displayUI && TQ.displayUI.displayMenu && TQ.displayUI.displayActionSet) {
-              TQ.displayUI.displayMenu(ele2, ele2.getEType());
-              TQ.displayUI.displayActionSet(ele2, ele2.getEType());
-            }
-          };
-          item.onMouseOver = function() {
-            ele.highlight(true);
-            thislevel.dirty = true;
-          };
-          item.onMouseOut = function() {
-            if (!TQ.SelectSet.isSelected(ele)) {
-              ele.highlight(false);
-            }
-          };
-        })(this);
-      }
+          if (TQ.displayUI && TQ.displayUI.displayMenu && TQ.displayUI.displayActionSet) {
+            TQ.displayUI.displayMenu(ele2, ele2.getEType());
+            TQ.displayUI.displayActionSet(ele2, ele2.getEType());
+          }
+        };
+        item.onMouseOver = function() {
+          ele.highlight(true);
+          thislevel.dirty = true;
+        };
+        item.onMouseOut = function() {
+          if (!TQ.SelectSet.isSelected(ele)) {
+            ele.highlight(false);
+          }
+        };
+      })(this);
     }
 
     TQ.DirtyFlag.setElement(this, true);

@@ -26,6 +26,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   var state = TQ.State;
   var levelThumbs = WCY.levelThumbs;
+  var addModeDoneCallback = null;
+  var hasTouch = false;
+  var hasMouse = false;
+
   state.isInBkg = false;
 
   return {
@@ -339,9 +343,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
       forceToRedraw(); // 迫使IOS系统重新绘制canvas上的图像
     }
   }
-
-  var hasTouch = false;
-  var hasMouse = false;
 
   function isSelectedEvent(e) {
     if (hasTouch) {
@@ -1237,7 +1238,6 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     return (initialized() && TQ.SceneEditor.isEditMode());
   }
 
-  var addModeDoneCallback = null;
   function onAddModeDone(callback) {
     addModeDoneCallback = callback;
   }
