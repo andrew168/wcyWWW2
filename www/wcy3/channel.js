@@ -320,7 +320,8 @@ window.TQ = window.TQ || {};
     var sags = [];
     for (const item in TQ.AnimationManager.SagCategory) {
       var sagType = TQ.AnimationManager.SagCategory[item];
-      if (sag = this.sags[sagType]) {
+      const sag = this.sags[sagType];
+      if (sag) {
         sags[sagType] = sag;
       }
     }

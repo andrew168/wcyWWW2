@@ -334,7 +334,7 @@ var LOG_LEVEL_ERROR = 3;
       filePath,
       function(entry) {
         entry.getMetadata(function(metadata) {
-          if (metadata && metadata.hasOwnProperty("size")) {
+          if (metadata && Object.prototype.hasOwnProperty.call(metadata, "size")) {
             ImgCache.overridables.log("Cached file size: " + metadata.size, LOG_LEVEL_INFO);
             Private.setCurrentSize(ImgCache.getCurrentSize() + parseInt(metadata.size, 10));
           } else {
@@ -526,4 +526,4 @@ var LOG_LEVEL_ERROR = 3;
     TQ.Assert.isTrue(start > 0, "target路径错误");
     return path.substr(start - 1);
   }
-})(window.jQuery || window.Zepto || function() { throw "jQuery is not available"; });
+})(window.jQuery || window.Zepto || function() { TQ.AssertExt.invalidLogic(0, "jQuery is not available"); });

@@ -223,7 +223,7 @@ this.TQ = this.TQ || {};
     resetPreloader();
     // RM.items.splice(0); 不行，因为不是数组，
     for (var item in RM.items) {
-      if (RM.items.hasOwnProperty(item)) {
+      if (Object.prototype.hasOwnProperty.call(RM.items, item)) {
         delete RM.items[item];
       }
     }

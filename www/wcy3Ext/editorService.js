@@ -697,7 +697,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     var desc = option || {};
     desc.src = url;
     desc.type = eleType;
-    if (!desc.hasOwnProperty("autoFit")) {
+    if (!Object.prototype.hasOwnProperty.call(desc, "autoFit")) {
       desc.autoFit = autoFitRule;
     }
     TQ.SceneEditor.addItem(desc);

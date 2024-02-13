@@ -173,7 +173,7 @@ TQ = TQ || {};
     } while (stateStack.length > 0);
 
     if (state) {
-      if (!options || !options.hasOwnProperty("levelId")) {
+      if (!options || !Object.prototype.hasOwnProperty.call(options, "levelId")) {
         TQ.TimerUI.setGlobalTime(state.tT);
       }
     } else {
@@ -889,7 +889,9 @@ TQ = TQ || {};
         var levelId = this.levelNum() - 1;
         this.deleteLevel(levelId);
       }
-      if (level = this.getLevel(0)) {
+
+      level = this.getLevel(0);
+      if (level) {
         level.empty();
       }
       this.selectLevel(0);
@@ -1362,7 +1364,8 @@ TQ = TQ || {};
   };
 
   p.setFilenameById = function(wcyId) {
-    return this.filename = wcyId;
+    this.filename = wcyId;
+    return this.filename;
   };
 
   p.hasFilename = function() {
