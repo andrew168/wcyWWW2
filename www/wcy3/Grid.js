@@ -11,7 +11,7 @@ window.TQ = window.TQ || {};
      * @static
      **/
   var Grid = function() {
-    throw "Grid cannot be instantiated";
+    TQ.AssertExt.invalidLogic(0, "Grid cannot be instantiated");
   };
 
   Grid._initialized = false;

@@ -1,5 +1,5 @@
 {
-  "env":{
+  "env": {
     "browser": true,
     "node": true,
     "es2021": true,
@@ -59,7 +59,12 @@
     "LZString": true,
     "CanvasInput": true,
     "easyDialog": true,
-
+    "loadImage": true,
+    "Camera": true,
+    "paypal": true,
+    "ImagePreloader": true,
+    "": true,
+    "": true
   },
   "rules": {
     "indent": [
@@ -162,7 +167,6 @@
     "no-floating-decimal": 2,
     "no-func-assign": 2,
     "no-implied-eval": 2,
-    "no-inner-declarations": [ 2, "functions" ],
     "no-invalid-regexp": 2,
     "no-irregular-whitespace": 2,
     "no-iterator": 2,
@@ -284,6 +288,9 @@
         "objectsInObjects": false
       }
     ],
-    "array-bracket-spacing": [ 2, "never" ]
+    "array-bracket-spacing": [ 2, "never" ],
+    "no-empty": "off",
+    // "no-inner-declarations": [ 2, "functions" ],
+    "no-inner-declarations": "off"
   }
 }

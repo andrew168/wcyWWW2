@@ -11,7 +11,7 @@ window.TQ = window.TQ || {};
      * @static
      **/
   var GarbageCollector = function() {
-    throw "GarbageCollector cannot be instantiated";
+    TQ.AssertExt.invalidLogic(0, "GarbageCollector cannot be instantiated");
   };
   GarbageCollector._members = [];
 

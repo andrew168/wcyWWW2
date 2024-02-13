@@ -55,8 +55,11 @@ TQ = TQ || {};
     if (!arr) { return; }
     for (var i = 0, l = arr.length; i < l; i++) {
       if (arr[i] === handler) {
-        if (l === 1) { delete (handlers[type]); } // allows for faster checks.
-        else { arr.splice(i, 1); }
+        if (l === 1) {
+          delete (handlers[type]);
+        } else { // allows for faster checks.
+          arr.splice(i, 1);
+        }
         break;
       }
     }

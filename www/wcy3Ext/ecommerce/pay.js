@@ -31,7 +31,7 @@ TQ.Pay = (function() {
       // onAuthorize() is called when the buyer approves the payment
       onAuthorize: function(data, actions) {
         // Set up the data you need to pass to your server
-        var data = {
+        data = {
           paymentId: data.paymentId,
           payerId: data.payerId
         };

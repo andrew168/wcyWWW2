@@ -318,7 +318,7 @@ window.TQ = window.TQ || {};
     }
 
     var sags = [];
-    for (item in TQ.AnimationManager.SagCategory) {
+    for (const item in TQ.AnimationManager.SagCategory) {
       var sagType = TQ.AnimationManager.SagCategory[item];
       if (sag = this.sags[sagType]) {
         sags[sagType] = sag;
@@ -337,7 +337,7 @@ window.TQ = window.TQ || {};
 
   Channel.upgradeTo3_8 = function(channel) {
     if (channel && channel.sags) {
-      for (sagType in channel.sags) {
+      for (const sagType in channel.sags) {
         var oneSag = channel.sags[sagType];
         if (oneSag) {
           if (oneSag.categoryID !== undefined) {

@@ -530,7 +530,7 @@ window.TQ = window.TQ || {};
   p.hitTest = function() {
     return;
     var n = this.elements.length;
-    for (var i = 0; i < n; i++) {
+    for (const i = 0; i < n; i++) {
       var displayObj = this.elements[i].displayObj;
       if (displayObj.hitTest(stage.mouseX, stage.mouseY)) {
         displayObj.alpha = 0.5; // 加框子
@@ -644,7 +644,7 @@ window.TQ = window.TQ || {};
     }
   };
 
-	  p.updateRenderFlag = function() {
+  p.updateRenderFlag = function() {
     if (!this.inStage && this.readyToShow) {
       this.inStage = true;
       var levelId = currScene.currentLevelId;

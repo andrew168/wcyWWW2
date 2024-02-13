@@ -12,7 +12,7 @@ window.TQ = window.TQ || {};
 
   HUD.prototype.getNumOfIcons = function() {
     return this.icons.length;
-  },
+  };
 
   HUD.prototype.createIcons = function() {
     // Define a spritesheet. Note that this data was exported by Zoë.

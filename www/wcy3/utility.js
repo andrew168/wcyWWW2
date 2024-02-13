@@ -248,10 +248,9 @@ window.TQ = window.TQ || {};
     return -worldRotation;
   };
 
-  Utility.toWorldCoord = function(canvasY)
+  Utility.toWorldCoord = function(canvasY) {
   // 这是Canvas设备的坐标， 不是浏览器整个client区的坐标，在Canvas只占用部分client区域的时候， 有用
   // 而 canvas的height， 就是workingRegionHeight
-  {
     return TQ.Config.workingRegionHeight - canvasY;
   };
 
@@ -268,9 +267,9 @@ window.TQ = window.TQ || {};
     return window.canvas.offsetTop + y;
   };
 
-  Utility.toDevicePivot = function(pivotY)
+  Utility.toDevicePivot = function(pivotY) {
   // 用户坐标系下（左下角为0,0）的Pivot定义，转为Device坐标系（top, left) 下的pivot 定义
-  {
+
     return 1 - pivotY;
   };
 

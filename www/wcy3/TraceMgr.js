@@ -15,7 +15,7 @@ window.TQ = window.TQ || {};
    * @static
    **/
   var TraceMgr = function() {
-    throw "TraceMgr cannot be instantiated";
+    TQ.AssertExt.invalidLogic(0, "TraceMgr cannot be instantiated");
   };
 
   TraceMgr.initialize = function() {

@@ -43,7 +43,8 @@
       }
     } catch (e) {
       if (!DisplayObject.suppressCrossDomainErrors) {
-        throw "An error has occurred. This is most likely due to security restrictions on reading canvas pixel data with local or cross-domain images.";
+        TQ.AssertExt.invalidLogic(0, "An error has occurred. This is most likely" +
+          "due to security restrictions on reading canvas pixel data with local or cross-domain images.");
       }
     }
     return hit;
