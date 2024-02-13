@@ -116,8 +116,8 @@ window.TQ = window.TQ || {};
 
       // 最后拆卸关节
       var parent = ele.parent;
-      if (parent !== null) {
-        assertTrue(TQ.Dictionary.INVALID_PARAMETER, parent !== null);
+      if (parent != null) {
+        assertTrue(TQ.Dictionary.INVALID_PARAMETER, parent != null);
         parent.removeChild(ele);
         ele.clearFlag(TQ.Element.JOINTED);
         this.addElementDirect(ele);
@@ -196,7 +196,7 @@ window.TQ = window.TQ || {};
       if (!ele.isVirtualObject() && !!ele.parent) {
         ele = ele.parent;
       }
-      if (ele === null) continue;
+      if (ele == null) continue;
       if (ele.isGroup() || ele.children.length > 0) {
         const needDelete = (!!ele.isGroup());
         var parts = ele.explode();
@@ -223,7 +223,7 @@ window.TQ = window.TQ || {};
       elements[i].afterToJSON();
       Level.removeMarker(desc);
       var newEle;
-      if (elements[i].parent === null) {
+      if (elements[i].parent == null) {
         newEle = this.addElementDirect(TQ.Element.build(this, desc));
       } else {
         newEle = elements[i].parent.addChild(desc);
@@ -259,13 +259,13 @@ window.TQ = window.TQ || {};
     var result = null;
     for (var i = 0; i < this.elements.length; i++) {
       // 是结构性的虚拟物体, 例如Group的节点
-      if ((this.elements[i].displayObj !== null) &&
+      if ((this.elements[i].displayObj != null) &&
         (this.elements[i].displayObj.id !== undefined) &&
         (this.elements[i].displayObj.id === displayObj.id)) {
         return (result = this.elements[i]);
       } else {
         result = this.elements[i].findChild(displayObj);
-        if (result !== null) {
+        if (result != null) {
           if ((!TQ.InputCtrl.inSubobjectMode) && (!result.isJoint())) result = this.elements[i];
           break;
         }
@@ -294,7 +294,7 @@ window.TQ = window.TQ || {};
       this.removeElementAt(id);
     } else {
       var parent = ele.parent;
-      assertTrue(TQ.Dictionary.FoundNull, parent !== null); // 应该有父元素
+      assertTrue(TQ.Dictionary.FoundNull, parent != null); // 应该有父元素
       if (parent) {
         parent.removeChild(ele);
       }
@@ -345,7 +345,7 @@ window.TQ = window.TQ || {};
       this.background = null;
     }
 
-    if (ele !== null) {
+    if (ele != null) {
       ele.removeFromStage();
       TQ.GarbageCollector.add(ele);
     }
@@ -458,7 +458,7 @@ window.TQ = window.TQ || {};
     this.elements = [];
     this.state = TQBase.LevelState.INITING;
     TQ.StageBuffer.open();
-    for (var i = 0; i < ((jsonElements !== null) && (jsonElements.length)); i++) {
+    for (var i = 0; i < ((jsonElements != null) && (jsonElements.length)); i++) {
       var desc = jsonElements[i];
       if (desc && TQ.Element.isValidDesc(desc)) {
         desc.src = TQUtility.unifyFormat(desc.type, desc.src);
@@ -561,7 +561,7 @@ window.TQ = window.TQ || {};
       stage.update();
       this.watchRestart();
       this.state = TQ.SceneEditor.getMode();
-      if (this.onLevelRunning !== null) this.onLevelRunning();
+      if (this.onLevelRunning != null) this.onLevelRunning();
       TQ.DirtyFlag.setLevel(this);
       if (this.isActive() && !this.inStage) {
         this.readyToShow = true;

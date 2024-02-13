@@ -150,7 +150,7 @@ TQ.MoveCtrl = (function() {
   function _doMoveZ(ele, step) {
     var target = ele.displayObj;
     // move up the selected object toward more visible
-    if (target !== null) {
+    if (target != null) {
       _moveZOne(ele);
       _lastItemId = target.id;
       if (ele.children) {

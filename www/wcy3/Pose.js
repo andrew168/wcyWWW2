@@ -37,7 +37,7 @@ window.TQ = window.TQ || {};
     //   所以可以做到: 有选择地拍摄, 录制.
 
     // Pose 是一个公共的地方, 你不赋值, 它就是上一个elemenet留下的.
-    if (parentPoseWorld === null) {
+    if (parentPoseWorld == null) {
       parentPoseWorld = _rootBoneDefault;
     }
     if (parentPoseWorld.IM === undefined) {

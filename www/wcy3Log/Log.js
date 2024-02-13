@@ -100,11 +100,11 @@ TQ.Log = (function() {
   function tsrDebugInfo(msg, obj) {
     if (logLevel >= self.INFO_LEVEL) {
       var newMsg = "(" + obj.x.toFixed(2) + "," + obj.y.toFixed(2) + ")";
-      if (obj.sx !== undefined && obj.sx !== null && !isNaN(obj.sx)) {
+      if (obj.sx !== undefined && obj.sx != null && !isNaN(obj.sx)) {
         newMsg += " Scale(" + obj.sx.toFixed(2) + "," + obj.sy.toFixed(2) + ")";
       }
 
-      if (obj.rotation !== undefined && obj.rotation !== null && !isNaN(obj.rotation)) {
+      if (obj.rotation !== undefined && obj.rotation != null && !isNaN(obj.rotation)) {
         newMsg += " A:" + obj.rotation.toFixed(2);
       }
 

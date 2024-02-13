@@ -30,7 +30,7 @@ TQ = TQ || {};
     用于从数据文件建立动画
      */
   p.fixedUp = function(jsonObj) {
-    if ((jsonObj !== null) && (jsonObj.actionTable !== null)) {
+    if ((jsonObj != null) && (jsonObj.actionTable != null)) {
       for (var i = 0; i < jsonObj.actionTable.length; i++) {
         var actionJson = jsonObj.actionTable[i];
         var fs = Number(actionJson.fs);
@@ -57,21 +57,21 @@ TQ = TQ || {};
 
   p.pause = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
-    if (this.currentAction !== null) {
+    if (this.currentAction != null) {
       this.currentAction.stop();
     }
   };
 
   p.resume = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
-    if (this.currentAction !== null) {
+    if (this.currentAction != null) {
       this.currentAction.resume();
     }
   };
 
   p.stop = function() {
     assertNotNull(TQ.Dictionary.INVALID_PARAMETER, this.currentAction);
-    if (this.currentAction !== null) {
+    if (this.currentAction != null) {
       this.currentAction.stop();
       this.currentAction = null;
     }
@@ -119,7 +119,7 @@ TQ = TQ || {};
   };
 
   p.isAnimation = function() { return true; };
-  p.isPlaying = function() { return ((this.currentAction !== null) && (this.currentAction.isPlaying())); };
+  p.isPlaying = function() { return ((this.currentAction != null) && (this.currentAction.isPlaying())); };
   p.hasAction = function(actionName) {
     return (this._findAction(actionName) !== TQ.ERROR);
   };

@@ -366,7 +366,7 @@ var TQUtility; //
   Utility.stringifyIgnoreCycle = function(obj) {
     var cache = [];
     return JSON.stringify(obj, function(key, value) {
-      if (typeof value === "object" && value !== null) {
+      if (typeof value === "object" && value != null) {
         if (cache.indexOf(value) !== -1) {
           return;
         }

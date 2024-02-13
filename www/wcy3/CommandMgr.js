@@ -73,7 +73,7 @@ window.TQ = window.TQ || {};
       assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       return false;
     }
-    return (this.commands.splice(i, 1) !== null);
+    return (this.commands.splice(i, 1) != null);
   };
 
   CompositeCommand.prototype.getCommand = function(id) {
@@ -296,7 +296,7 @@ window.TQ = window.TQ || {};
 
   function DeleteEleCommand(scene, ele) {
     this.receiver = scene;
-    if (ele.parent !== null) {
+    if (ele.parent != null) {
       this.receiver2 = ele.parent;
     } else {
       this.receiver2 = null;
@@ -312,7 +312,7 @@ window.TQ = window.TQ || {};
   };
 
   DeleteEleCommand.prototype.undo = function() {
-    if (this.receiver2 !== null) {
+    if (this.receiver2 != null) {
       this.receiver2.undeleteChild(this.oldValue);
     } else {
       this.receiver.undeleteElement(this.oldValue);

@@ -61,7 +61,7 @@ TQ = TQ || {};
       var self = this;
       if (!TQ.State.needUserClickToPlayAV) {
         var playPromise = this.domEle.play();
-        // if (playPromise !== null) {
+        // if (playPromise != null) {
         //   playPromise.catch(function(){self.domEle.play();});
         // }
 

@@ -60,7 +60,7 @@ function onSaveOpus(err, model, onSuccess, onError) {
 function getList(user, callback) {
   var userId = user.ID;
   var notBanned = { "state": { $ne: CONST.OPUS_STATE.BAN }};
-  var userLimit = (userId === null) ? null : { "userId": userId };
+  var userLimit = (userId == null) ? null : { "userId": userId };
   var condition = userLimit;
 
   if (user.canBan || user.canApprove) {
@@ -82,7 +82,7 @@ function getPageList(user, pageId, callback) {
   var itemsPerPage = 10;
   var userId = user.ID;
   var notBanned = { "state": { $ne: CONST.OPUS_STATE.BAN }};
-  var userLimit = (userId === null) ? null : { "userId": userId };
+  var userLimit = (userId == null) ? null : { "userId": userId };
   var condition = userLimit;
 
   if (user.canBan || user.canApprove) {

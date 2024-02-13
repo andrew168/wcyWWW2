@@ -9,7 +9,7 @@
   Stage.__debugOn = false;
   // extended method
   p.enableDOMEvents = function(enable) {
-    if (enable === null) {
+    if (enable == null) {
       enable = true;
     }
     var n; var o; var ls = this._eventListeners;
@@ -221,7 +221,7 @@
       y = e.touches[0].pageY;
     }
 
-    if (y !== null) {
+    if (y != null) {
       TQ.DitherRemover.start(x, y);
       this._updatePointerPosition(id, x, y);
     }
@@ -273,7 +273,7 @@
   };
 
   p._setSelectedItem = function(item) {
-    if (item === null) {
+    if (item == null) {
       this.selectedItem = item;
       this.selectedClipPoint = false;
       return;

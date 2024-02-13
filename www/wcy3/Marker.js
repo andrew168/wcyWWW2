@@ -135,7 +135,7 @@ TQ = TQ || {};
 
   Marker.getOne = function() {
     var decs = markers.pop();
-    if (decs === null) {
+    if (decs == null) {
       decs = TQ.Element.build(currScene.currentLevel, { isVis: 0, type: TQ.ElementType.JOINT_MARKER });
     }
     workingMarkers.push(decs);

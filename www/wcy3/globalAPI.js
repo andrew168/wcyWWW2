@@ -99,14 +99,14 @@ window.TQ = window.TQ || {};
   };
 
   WCY.doStop = function() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, WCY.currentScene !== null);
-    if (WCY.currentScene !== null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, WCY.currentScene != null);
+    if (WCY.currentScene != null) {
       WCY.currentScene.stop();
     }
   };
   WCY.doPlay = function() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, WCY.currentScene !== null);
-    if (WCY.currentScene !== null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, WCY.currentScene != null);
+    if (WCY.currentScene != null) {
       WCY.currentScene.play();
     }
   };

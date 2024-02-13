@@ -96,7 +96,7 @@ window.TQ = window.TQ || {};
     var deltaStep = (InputCtrl.isSameItem(target)) ? (InputCtrl.step - InputCtrl._accumulateStep) : InputCtrl.step;
     TQ.Log.out("ID:" + InputCtrl._lastItemId + "sum" + InputCtrl._accumulateStep +
             ", step: " + InputCtrl.step + ", delta: " + deltaStep);
-    if (target !== null) {
+    if (target != null) {
       InputCtrl._lastItemId = target.id;
     }
     return deltaStep;
@@ -113,7 +113,7 @@ window.TQ = window.TQ || {};
       coefficient = 0.9 * (-deltaStep);
     }
     coefficient = TQ.MathExt.range(coefficient, 0.8, 1.2);
-    if (target !== null) {
+    if (target != null) {
       InputCtrl.doScale(element, coefficient);
       InputCtrl._accumulateStep = InputCtrl.step;
     }

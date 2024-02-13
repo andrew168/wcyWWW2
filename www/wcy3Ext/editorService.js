@@ -228,7 +228,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     reset();
     TQ.PreviewMenu.initialize(state, onPreviewMenuOn, onPreviewMenuOff);
     onResize();
-    if (!currScene.outroInitialized && (outroId = currScene.getOutroId()) !== null) {
+    if (!currScene.outroInitialized && (outroId = currScene.getOutroId()) != null) {
       WCY.getOutro(outroId);
     }
 
@@ -875,8 +875,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
 
   function stop() {
     // 新建立的账号，没有currScene，但是调用Stop()？
-    // assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
-    if (currScene !== null) {
+    // assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
+    if (currScene != null) {
       currScene.stop();
       updateMode();
     }
@@ -924,23 +924,23 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function play() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
-    if (currScene !== null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
+    if (currScene != null) {
       currScene.play();
     }
     _onPlay();
   }
 
   function pause() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
-    if (currScene !== null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
+    if (currScene != null) {
       TQ.FrameCounter.pause();
     }
   }
 
   function resume() {
-    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene !== null);
-    if (currScene !== null) {
+    assertTrue(TQ.Dictionary.INVALID_LOGIC, currScene != null);
+    if (currScene != null) {
       TQ.FrameCounter.resume();
     }
   }
@@ -1439,7 +1439,7 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
   }
 
   function updatePosition(ele) {
-    if ((ele !== _lastSelected) || (_lastSelected === null)) {
+    if ((ele !== _lastSelected) || (_lastSelected == null)) {
       if (_lastSelected && !!_lastSelected.hookInMove) {
         _lastSelected.hookInMove = null;
       }

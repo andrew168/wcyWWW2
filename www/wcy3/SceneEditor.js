@@ -290,7 +290,7 @@ var currScene = null;
   };
 
   SceneEditor.updateMode = function() {
-    if (SceneEditor._requestMode === null) return;
+    if (SceneEditor._requestMode == null) return;
     SceneEditor._mode = SceneEditor._requestMode;
     SceneEditor._requestMode = null;
   };
@@ -465,8 +465,8 @@ var currScene = null;
   function create3DElement() {
     if (TQ.SelectSet.groupIt()) { // 返回false肯定不成功, 不要做后续的
       var ele = currScene.currentLevel.latestElement;
-      if (ele !== null) {
-        if (ele.viewCtrl === null) {
+      if (ele != null) {
+        if (ele.viewCtrl == null) {
           var ctrl = new TQ.MultiView();
           TQ.CommandMgr.addCommand(new TQ.GenCommand(TQ.GenCommand.SET_3D_OBJ, ctrl, ele, ele));
         }
@@ -478,7 +478,7 @@ var currScene = null;
   function editActions() {
     var ele = TQ.SelectSet.peek();
 
-    if (ele !== null) {
+    if (ele != null) {
       TQ.Animation.unitTest(ele);
     }
   }

@@ -23,7 +23,7 @@ window.TQ = window.TQ || {};
 
   p.update = function(deltaT) {
     this.Level_update(deltaT);
-    if (stage.selectedItem === null) {
+    if (stage.selectedItem == null) {
       this.hideClipPoint(true);
     } else {
       this.hideClipPoint(false);

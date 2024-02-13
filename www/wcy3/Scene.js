@@ -292,7 +292,7 @@ TQ = TQ || {};
     this.updateReadyFlag();
     this.updateLevelRange();
     // 谁都可以 要求Update， 不只是Player
-    if (this.currentLevel !== null) {
+    if (this.currentLevel != null) {
       this.currentLevel.update(t);
       if (this.version >= Scene.VER2) { // ToDo: 只在录制状态下才更新， 或者，初次运行的时候的时候才更新
         // this.updateTimeTable();
@@ -445,7 +445,7 @@ TQ = TQ || {};
     this.isDirty = true;
     var level = desc.dstLevel;
     delete (desc.dstLevel);
-    if ((desc.toOverlay === undefined) || (desc.toOverlay === null)) {
+    if ((desc.toOverlay === undefined) || (desc.toOverlay == null)) {
       if (desc.levelId !== undefined) {
         level = this.getLevel(desc.levelId);
       }
@@ -498,7 +498,7 @@ TQ = TQ || {};
   p.deleteElement = function(ele) {
     this.isDirty = true;
     assertNotNull(TQ.Dictionary.PleaseSelectOne, ele);
-    if (ele !== null) {
+    if (ele != null) {
       this.currentLevel.deleteElement(ele);
       if (ele.isSound()) {
         TQ.SoundMgr.deleteItem(ele);
@@ -597,7 +597,7 @@ TQ = TQ || {};
     this.isDirty = true;
     id = (id >= this.levelNumWithOutro()) ? (this.levelNumWithOutro() - 1) : id;
     id = (id < 0) ? 0 : id;
-    if (this.currentLevel !== null) {
+    if (this.currentLevel != null) {
       var level = self.getLevel(id);
       if (level.resourceReady) {
         self.doTransition(id);
@@ -662,7 +662,7 @@ TQ = TQ || {};
     } else {
       this._jsonStrToScene(this, fileInfo.content, "gameScene");
     }
-    if (this.overlay === null) {
+    if (this.overlay == null) {
       this.overlay = new TQ.Overlay({});
     }
     this.isDirty = true;
@@ -678,7 +678,7 @@ TQ = TQ || {};
     // ToDo:@UI   initMenu(); // 重新设置菜单
 
     // close current if  has one;
-    if (!((this.currentLevel === undefined) || (this.currentLevel === null))) {
+    if (!((this.currentLevel === undefined) || (this.currentLevel == null))) {
       this.stop();
       this.close();
     }
@@ -929,7 +929,7 @@ TQ = TQ || {};
       // 给一个空白文件， 确保可可持续进行
       objJson = getEmptySceneJSON();
     }
-    objJson.alias = (alias === null) ? "none" : alias;
+    objJson.alias = (alias == null) ? "none" : alias;
     if (!objJson.filename || objJson.filename === TQ.Config.UNNAMED_SCENE_ID) {
       objJson.filename = TQ.Config.UNNAMED_SCENE_ID;
       if (TQ.State.shareCode) {
@@ -954,7 +954,7 @@ TQ = TQ || {};
   function removeEmptyLevel(jsonObj) {
     for (var i = jsonObj.levels.length - 1; i >= 0; i--) {
       var desc = jsonObj.levels[i];
-      if ((desc.elements === null) || (desc.elements.length <= 0)) {
+      if ((desc.elements == null) || (desc.elements.length <= 0)) {
         if ((i !== 0) || (jsonObj.levels.length > 1)) { // 至少保留一个level, 不论空白与否。
           this.isDirty = true;
           jsonObj.levels.splice(i, 1);
@@ -1008,7 +1008,7 @@ TQ = TQ || {};
     this.topicId = objJson.topicId || 0;
     this.tMax = (objJson.tMax === undefined) ? this.tMax : objJson.tMax;
 
-    if (this.title === null) {
+    if (this.title == null) {
       this.title = this.filename;
     }
 
@@ -1022,7 +1022,7 @@ TQ = TQ || {};
     var num = (!objJson || !objJson.levels) ? 0 : objJson.levels.length;
     for (var i = 0; i < num; i++) {
       desc = objJson.levels[i];
-      if (desc.name === null) {
+      if (desc.name == null) {
         desc.name = "level-" + i.toString();
       }
       levels[i] = new TQ.Level(desc);
@@ -1046,7 +1046,7 @@ TQ = TQ || {};
 
     function loadOneLevel(level, levelToPreload) {
       if (levelToPreload === 0) {
-        if ((self.onsceneload !== undefined) && (self.onsceneload !== null)) {
+        if ((self.onsceneload !== undefined) && (self.onsceneload != null)) {
           self.onsceneload();
         }
       }
@@ -1189,7 +1189,7 @@ TQ = TQ || {};
   // / close current scene
   p.close = function(discard) {
     if (this.isSaved || this.isEmpty() || !!discard) {
-      if (this.currentLevel !== null) {
+      if (this.currentLevel != null) {
         TQ.RM.reset(); // 必须先停止RM，否则其中的callback如果引用了Level对象就会出错
         TQ.SoundMgr.reset();
         TQ.VideoMgr.reset();

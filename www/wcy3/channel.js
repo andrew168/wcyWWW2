@@ -7,7 +7,7 @@ window.TQ = window.TQ || {};
 
 (function() {
   function Channel(value, interpolationStyle) {
-    if ((value === undefined) || (value === null)) {
+    if ((value === undefined) || (value == null)) {
       value = 0;
     }
 
@@ -26,7 +26,7 @@ window.TQ = window.TQ || {};
   p.value = [];
   p.c = [];
   p.initialize = function(value, interpolationStyle) {
-    if ((value.value === undefined) || (value.value === null)) {
+    if ((value.value === undefined) || (value.value == null)) {
       var t = (TQ.Config.insertAtT0On ? 0 : TQ.FrameCounter.tGrid());
       this.t = [t]; // 只有一帧, 不能搞出来2
       this.value = [value];
@@ -47,7 +47,7 @@ window.TQ = window.TQ || {};
   p.record = function(track, t, v, interpolationMethod) {
     assertNotUndefined(TQ.Dictionary.FoundNull, this.tid1);
     assertNotNull(TQ.Dictionary.FoundNull, this.tid1);
-    interpolationMethod = (interpolationMethod === null) ? TQ.Channel.LINE_INTERPOLATION : interpolationMethod;
+    interpolationMethod = (interpolationMethod == null) ? TQ.Channel.LINE_INTERPOLATION : interpolationMethod;
     this.searchInterval(t, this);
     var tid1 = this.tid1;
     var tid2 = this.tid2;

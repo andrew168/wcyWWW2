@@ -136,7 +136,7 @@ var TQ = TQ || {};
     startLevel = currScene.currentLevel;
 
     var target = startEle.displayObj;
-    if (target === null) { // 防止 刚刚被删除的物体.
+    if (target == null) { // 防止 刚刚被删除的物体.
       return;
     }
     var evt = touch2StageXY(e);

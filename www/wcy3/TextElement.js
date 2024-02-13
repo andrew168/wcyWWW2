@@ -76,7 +76,7 @@ window.TQ = window.TQ || {};
     assertTrue(TQ.Dictionary.INVALID_PARAMETER, this.isText()); // 应该是Text元素
     // 此处不用再检验, 因为他不直接对用户, 只要那些直接对用户的函数, 把好关就行.
     // 但是一定要断言, 确信: 外围站岗的尽责了.
-    if (this.displayObj !== null) {
+    if (this.displayObj != null) {
       var txtObj = this.displayObj;
       if (str) {
         txtObj.text = this.jsonObj.text = str;
@@ -87,7 +87,7 @@ window.TQ = window.TQ || {};
   };
 
   p.setProperty = function(option) {
-    if (this.displayObj !== null) {
+    if (this.displayObj != null) {
       var txtObj = this.displayObj;
       if (option.text) {
         txtObj.text = this.jsonObj.text = option.text;
@@ -134,7 +134,7 @@ window.TQ = window.TQ || {};
     var jsonObj = this.jsonObj;
     var txtObj = this.displayObj = new createjs.Text(jsonObj.text, TQ.Utility.toCssFont(jsonObj), jsonObj.color);
     this.loaded = true;
-    if (jsonObj.textAlign === null) {
+    if (jsonObj.textAlign == null) {
       txtObj.textAlign = jsonObj.textAlign;
     } else {
       txtObj.textAlign = "left";

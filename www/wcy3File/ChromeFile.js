@@ -308,7 +308,7 @@ var LOG_LEVEL_ERROR = 3;
   ImgCache.getCurrentSize = function() {
     if (Private.hasLocalStorage()) {
       var curSize = localStorage.getItem("imgcache:" + ImgCache.options.localCacheFolder);
-      if (curSize === null) {
+      if (curSize == null) {
         return 0;
       }
       return parseInt(curSize, 10);
@@ -423,7 +423,7 @@ var LOG_LEVEL_ERROR = 3;
   // Answer to the question comes in response_callback as the second argument (first being the path)
   ImgCache.isCached = function(img_src, response_callback) {
     ImgCache.getCachedFile(img_src, function(src, file_entry) {
-      response_callback(src, file_entry !== null);
+      response_callback(src, file_entry != null);
     });
   };
 

@@ -65,7 +65,7 @@ var TOUCH_MOVING_FLAG = 999;
 
   InputMap.IsOperating = function() {
     return ((InputMap.isTouchMoving || InputMap.isMouseDown) &&
-      (InputMap.toolbarState === null));
+      (InputMap.toolbarState == null));
   };
 
   InputMap.maps = [];
@@ -117,7 +117,7 @@ var TOUCH_MOVING_FLAG = 999;
       }
       InputMap.updateSpecialKey(e);
       var action = InputMap.maps[InputMap.getCombination(e)];
-      if ((action !== null) && (!InputMap.isPresseds[e.which])) { // 有action, 而且首次按下
+      if ((action != null) && (!InputMap.isPresseds[e.which])) { // 有action, 而且首次按下
         // 一对down和up,复制一份, 持续按住不放, 只算一次.
         e.stopPropagation();
         e.preventDefault();

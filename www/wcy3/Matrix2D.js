@@ -60,7 +60,7 @@ window.TQ = window.TQ || {};
   };
 
   Matrix2D.rotation = function(thita) {
-    var radian = (thita === null) ? 0 : (thita * Matrix2D.DEG_TO_RAD);
+    var radian = (thita == null) ? 0 : (thita * Matrix2D.DEG_TO_RAD);
     var c = Math.cos(radian); var s = Math.sin(radian);
     return Matrix2D.create([
       [c, -s, 0],
@@ -73,11 +73,11 @@ window.TQ = window.TQ || {};
     // 这个复合矩阵是按照先比例，再旋转， 最后再平移的顺序推导出来的。 顺序不能变
     // M = Mt * Mr * Ms
     // 理论： 在显示物体的时候， 先把物体在物体坐标系里面缩放，再旋转，最后再平移到世界坐标系里面。
-    tx = (tx === null) ? 0 : tx;
-    ty = (ty === null) ? 0 : ty;
-    sx = (sx === null) ? 1 : sx;
-    sy = (sy === null) ? 1 : sy;
-    var radian = (thita === null) ? 0 : (thita * Matrix2D.DEG_TO_RAD);
+    tx = (tx == null) ? 0 : tx;
+    ty = (ty == null) ? 0 : ty;
+    sx = (sx == null) ? 1 : sx;
+    sy = (sy == null) ? 1 : sy;
+    var radian = (thita == null) ? 0 : (thita * Matrix2D.DEG_TO_RAD);
     var c = Math.cos(radian); var s = Math.sin(radian);
     return Matrix2D.create([
       [c * sx, -s * sy, tx],

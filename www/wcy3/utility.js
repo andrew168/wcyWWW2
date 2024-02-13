@@ -58,14 +58,14 @@ window.TQ = window.TQ || {};
     var reg2 = new RegExp("<" + tag + "[^<>]*?\\s" + attr + "=['\"]?(.*?)['\"]>(.*?)</" + tag + ">");
     try {
       var values = reg1.exec(str);
-      if (values !== null) {
+      if (values != null) {
         var result = null;
         if (values.length >= 2) result = values[1];
       }
 
-      if ((result === null) || (result === "")) {
+      if ((result == null) || (result === "")) {
         values = reg2.exec(str);
-        if (values !== null) {
+        if (values != null) {
           result = ((values.length >= 2) ? values[1] : defaultValue);
         } else {
           result = defaultValue;
@@ -81,7 +81,7 @@ window.TQ = window.TQ || {};
     var reg = new RegExp("<" + tag + "[^<>]*?>(.*?)</" + tag + ">");
     try {
       var values = reg.exec(str);
-      if (values !== null) {
+      if (values != null) {
         return ((values.length >= 2) ? values[1] : defaultValue);
       }
     } catch (e) {
@@ -216,10 +216,10 @@ window.TQ = window.TQ || {};
   };
 
   Utility.isJSON = function(desc) {
-    if (!((desc === undefined) || (desc === null))) {
-      if (!((desc.type === undefined) || (desc.type === null))) {
+    if (!((desc === undefined) || (desc == null))) {
+      if (!((desc.type === undefined) || (desc.type == null))) {
         return true;
-      } else if (!((desc.src === undefined) || (desc.src === null))) {
+      } else if (!((desc.src === undefined) || (desc.src == null))) {
         return true;
       }
     }
@@ -345,7 +345,7 @@ window.TQ = window.TQ || {};
         } // "/#/welcome"
       }
 
-      if (queryString !== null && queryString !== "") {
+      if (queryString != null && queryString !== "") {
         params = transformToAssocArray(queryString);
         if (!shareCode && params.sc) {
           shareCode = params.sc;
@@ -475,7 +475,7 @@ window.TQ = window.TQ || {};
     var result = false;
     if (isIOSChrome) { // chrome in IOS
       result = true;
-    } else if (isChromium !== null && isChromium !== undefined && vendorName === "Google Inc." && isOpera === false && isIEedge === false) {
+    } else if (isChromium != null && isChromium !== undefined && vendorName === "Google Inc." && isOpera === false && isIEedge === false) {
       result = true;
     } else {
       result = false;
@@ -550,7 +550,7 @@ window.TQ = window.TQ || {};
 
   Utility.isTouchEvent = function(e) {
     var e0 = getNativeEvent(e);
-    return (!!e0 && (e0.touches !== null) && (e0.changedTouches !== null));
+    return (!!e0 && (e0.touches != null) && (e0.changedTouches != null));
   };
 
   Utility.isMultiTouchEvent = function(e) {

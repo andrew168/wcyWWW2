@@ -83,7 +83,7 @@ TQ.TimerUI = (function() {
   function syncToCounter(v) {
     var t = TQ.FrameCounter.f2t(v);
     TQBase.LevelState.saveOperation(TQBase.LevelState.OP_TIMER_UI);
-    if (previousSync === null) {
+    if (previousSync == null) {
       tPool.splice(0);
     } else {
       clearTimeout(previousSync);

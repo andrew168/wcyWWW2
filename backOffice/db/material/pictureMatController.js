@@ -48,7 +48,7 @@ function getList(userId, typeId, topicId, onSuccess, isAdmin, requestAll) {
 			对于管理员：
 			1) 获取所有素材
 	 */
-  var userLimit = (userId === null) ? null : { "userId": userId };
+  var userLimit = (userId == null) ? null : { "userId": userId };
   var topicLimit = !hasValidTopic(topicId) ? null : { topicIds: topicId }; // 选topicIds数组中含有元素topicId的，
   var allShared = { "isShared": true };
   var typeLimit = { "typeId": typeId };
@@ -263,7 +263,7 @@ function ban(operator, id, newValue, callback) {
 }
 
 function hasValidTopic(topicId) {
-  return (topicId !== null) && (topicId > 0);
+  return (topicId != null) && (topicId > 0);
 }
 
 exports.add = add;

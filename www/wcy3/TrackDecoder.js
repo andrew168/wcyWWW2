@@ -21,7 +21,7 @@ window.TQ = window.TQ || {};
     var track = ele.animeTrack;
     var tsrObj = TQ.Pose;
     // 计算本物体坐标系下的值
-    tsrObj.rotation = ((track.rotation === undefined) || (track.rotation === null))
+    tsrObj.rotation = ((track.rotation === undefined) || (track.rotation == null))
       ? TQ.poseDefault.rotation : TrackDecoder.calOneChannel(track, track.rotation, t);
 
     tsrObj.x = (!track.x)

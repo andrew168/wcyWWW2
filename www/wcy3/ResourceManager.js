@@ -157,14 +157,14 @@ this.TQ = this.TQ || {};
           TQ.Log.error(item.type + ": 未处理的资源类型!");
       }
 
-      if ((altResId !== null) && (!!RM.items[altResId])) {
+      if ((altResId != null) && (!!RM.items[altResId])) {
         result = RM.items[altResId].res;
       } else {
         assertTrue(TQ.Dictionary.INVALID_LOGIC, false);
       }
 
       RM.items[resId] = { ID: resId, res: result, type: item.type };
-      if (result === null) {
+      if (result == null) {
         RM.addItem(altResId, function() {
           var item = RM.items[resId];
           var altItem = RM.items[altResId];
