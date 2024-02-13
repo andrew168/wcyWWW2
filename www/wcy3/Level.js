@@ -527,8 +527,8 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.hitTest = function() {
-    return;
+  p.hitTest = function () {
+    TQ.assertNotHere("not implemented: test if mouse hits element");
     var n = this.elements.length;
     for (let i = 0; i < n; i++) {
       var displayObj = this.elements[i].displayObj;
