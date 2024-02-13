@@ -788,21 +788,21 @@ window.TQ = window.TQ || {};
     TQ.Assert.isTrue(color[0] === "#", "颜色格式必须是#AABBCC");
   }
 
-  var isDithering = false;
-  function ditherStart() {
-    isDithering = true;
-    setTimeout(ditherEnd, 200);
-  }
+  Utility.isDithering = false;
+  Utility.ditherStart = function() {
+    Utility.isDithering = true;
+    setTimeout(Utility.ditherEnd, 200);
+  };
 
-  function ditherEnd() {
-    isDithering = false;
-  }
+  Utility.ditherEnd = function() {
+    Utility.isDithering = false;
+  };
 
-  function preventDither() {
-    var readyToGo = !isDithering;
-    ditherStart();
+  Utility.preventDither = function() {
+    var readyToGo = !Utility.isDithering;
+    Utility.ditherStart();
     return readyToGo;
-  }
+  };
 
   function createLocalId() {
     // localId是服务器Id（global Id）的补充，
@@ -814,6 +814,5 @@ window.TQ = window.TQ || {};
 
   Utility.createLocalId = createLocalId;
   Utility.parseUrl = parseUrl;
-  Utility.preventDither = preventDither;
   TQ.Utility = Utility;
 }());
