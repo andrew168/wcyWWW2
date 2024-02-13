@@ -403,7 +403,7 @@ this.createjs = this.createjs || {};
   p._timeLastParticleEmitted = 0;
 
   // All the particles currently managed by this emitter
-  p._particles = new Array();
+  p._particles = [];
 
   // #endregion
 

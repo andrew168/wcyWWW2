@@ -6,7 +6,7 @@ window.TQ = window.TQ || {};
 
 (function() {
   function HUD() {
-    this.icons = new Array();
+    this.icons = [];
     this.createIcons();
   }
 

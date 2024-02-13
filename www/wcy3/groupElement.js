@@ -138,7 +138,6 @@ TQ = TQ || {};
 
         if (opusDesc.version !== TQ.Scene.VER_LATEST) {
           TQ.Scene.upgradeToLatest(opusDesc);
-          opusDesc.version = opusDesc.version;
         }
 
         var groupEleDesc = pt._extractComponent(opusDesc, jsonFiledesc.x, jsonFiledesc.y, jsonFiledesc.zIndex);

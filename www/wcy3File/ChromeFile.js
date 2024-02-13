@@ -213,7 +213,7 @@ var LOG_LEVEL_ERROR = 3;
         error.target = localPath;
         error_callback(error);
       } else {
-        ImgCache.overridables.log(error, level);
+        ImgCache.overridables.log(error, LOG_LEVEL_ERROR);
       }
     };
     var xhr = new XMLHttpRequest();
