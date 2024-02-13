@@ -388,6 +388,7 @@ TQ = TQ || {};
     TQ.Log.checkPoint("entering level " + this.currentLevelId);
     TQ.FrameCounter.gotoBeginning();
     this.selectLevel(this.currentLevelId);
+    this.currentLevel.resetTimer();
     this.currentLevel.show();
     this.isDirty = true;
   };
@@ -896,6 +897,7 @@ TQ = TQ || {};
       }
       this.selectLevel(0);
       this.currentLevel.state = TQBase.LevelState.INITING;
+      this.currentLevel.resetTimer();
       this.currentLevel.show();
     } else {
       this.currentLevel.empty();// 主要是设置各种flag

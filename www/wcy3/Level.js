@@ -527,7 +527,7 @@ window.TQ = window.TQ || {};
     TQ.DirtyFlag.setLevel(this);
   };
 
-  p.hitTest = function () {
+  p.hitTest = function() {
     TQ.assertNotHere("not implemented: test if mouse hits element");
     var n = this.elements.length;
     for (let i = 0; i < n; i++) {
@@ -850,6 +850,11 @@ window.TQ = window.TQ || {};
     } else {
       this._t = TQ.FrameCounter.t();
     }
+  };
+
+  p.resetTimer = function() {
+    // 强制本level的_t为0, 避免在play返回之后，收到play之timer的影响
+    this._t = 0;
   };
 
   // 自动拓展微动漫的时间
