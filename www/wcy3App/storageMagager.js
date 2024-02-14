@@ -187,6 +187,7 @@ function StorageManager($q, $timeout, $http, NetService) {
   }
 
   return {
+    HTTP_RES_STATUS_OK: "OK",
     isReadyForClose: isReadyForClose,
     onReadyForClose: onReadyForClose,
     saveAll: saveAll,
