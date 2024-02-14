@@ -39,9 +39,9 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
   var _onStarted = null;
   var levelThumbs = [];
   var preloadedWcyData = null;
-  var isPreloadingWcy = false;
   var getWcyCalled = false;
 
+  TQ.isPreloadingWcy = false; // 因为要在index.html中使用， 不能归入TQ.State中
   TQ.State.shareCode = null;
 
   function isSafe() {
@@ -177,7 +177,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
     levelThumbs.splice(0);
     // TQ.MessageBox.showWaiting(TQ.Locale.getStr('is loading...'));
-    if (!preloadedWcyData && !isPreloadingWcy) {
+    if (!preloadedWcyData && !TQ.isPreloadingWcy) {
       doGetOpusFromServer(shareString).then(_onReceivedWcyData, _onFail);
     } else if (preloadedWcyData) {
       _onReceivedWcyData(preloadedWcyData);
@@ -193,10 +193,10 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
       return;
     }
 
-    isPreloadingWcy = true;
+    TQ.isPreloadingWcy = true;
     doGetOpusFromServer(shareString)
       .then(function(res) {
-        isPreloadingWcy = false;
+        TQ.isPreloadingWcy = false;
         if (getWcyCalled) {
           _onReceivedWcyData(res);
         } else {
