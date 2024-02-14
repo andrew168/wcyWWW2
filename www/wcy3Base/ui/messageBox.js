@@ -28,6 +28,7 @@ TQ.MessageBox = (function() {
     promptNoFlash: promptNoFlash,
     promptWithNoCancel: promptWithNoCancel,
     confirm: confirm, // 有OK和Cancel两个按钮， 不能被reset, 用户必须click
+    warn: warn,
     show: show, // show 就是alert，只有OK按钮
     show2: show2,
     showWaiting: showWaiting,
@@ -148,6 +149,10 @@ TQ.MessageBox = (function() {
     options.onOk = !onOk1 ? onOk : onOk1;
     options.type = TYPE_CONFIRM;
     return doShow(options);
+  }
+
+  function warn(msg) {
+    confirm(msg);
   }
 
   function show(str) {

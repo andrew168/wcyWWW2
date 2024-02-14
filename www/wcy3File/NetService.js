@@ -70,6 +70,7 @@ function NetService($q, $http, $cordovaFileTransfer, Upload) {
       .error(onError);
 
     function onError(event, status, headers, config) {
+      TQ.MessageBox.warn("hey, the network connection lost");
       TQ.Log.alertInfo("error" + angular.toJson(event));
       q.reject(event);
     }
