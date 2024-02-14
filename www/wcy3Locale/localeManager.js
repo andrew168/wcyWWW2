@@ -74,17 +74,23 @@ TQ.Locale = (function() {
     }
 
     TQ.AssertExt.isNotNull(dict);
-    if (!dict[tag]) {
-      dict[tag] = tag2String(tag);
+    const word = tag2Word(tag);
+    if (!dict[word]) {
+      dict[word] = tag2String(tag);
       console.error("need translation: " + tag);
       fondNewTag = true;
     }
 
-    return dict[tag];
+    return dict[word];
   }
 
   function tag2String(tag) {
     return tag.replace(/-/g, " ");
+  }
+
+  function tag2Word(tag) {
+    // 字典中的tag，必须是单一word，
+    return tag.replace(/ /g, "-");
   }
 
   function initialize(lang) {
@@ -98,7 +104,13 @@ TQ.Locale = (function() {
     if (!fondNewTag) {
       console.log("new new tag found!");
     } else {
-      console.log(JSON.stringify(dict));
+      var sortedKeys = Object.keys(dict).sort();
+      var sortedDict = {};
+      sortedKeys.forEach(function(key) {
+        const word = tag2Word(key);
+        sortedDict[word] = dict[key];
+        console.log("\"" + word + "\":" + "\"" + sortedDict[word] + "\",");
+      });
     }
   }
 
