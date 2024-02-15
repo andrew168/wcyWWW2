@@ -254,7 +254,11 @@ TQ.Graphics = (function() {
       displayObj = stageContainer.getChildAt(z);
       ele = (!displayObj) ? null : displayObj.ele;
       z += step;
-    } while ((z >= 0) && (z < num) && (ele.isEditorEle()));
+      if ((ele === null) || // virtual object
+        (ele.isEditorEle())) { // marker
+        continue;
+      }
+    } while ((z >= 0) && (z < num));
 
     while (ele && ele.parent) {
       ele = ele.parent;
