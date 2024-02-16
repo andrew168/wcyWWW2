@@ -136,15 +136,15 @@ window.TQ = window.TQ || {};
     }
 
     switch (sag.categoryId) {
-      case TQ.AnimationManager.IN:
-        track.inSagType = sag.type;
+      case TQ.AnimationManager.SagCategory.IN:
+        track.inSagType = sag.typeId;
         break;
-      case TQ.AnimationManager.IDLE:
-        track.idleSagType = sag.type;
+      case TQ.AnimationManager.SagCategory.IDLE:
+        track.idleSagType = sag.typeId;
         break;
-      case TQ.AnimationManager.OUT:
-      default :
-        track.outSagType = sag.type;
+      case TQ.AnimationManager.SagCategory.OUT:
+      default:
+        track.outSagType = sag.typeId;
     }
 
     track.hasSag = true;
