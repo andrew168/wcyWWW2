@@ -189,7 +189,7 @@ function WCY($q, $timeout, $http, FileService, WxService, NetService, StorageMan
 
   function preloadWcy() {
     var shareString = TQ.Utility.getShareCodeFromUrl();
-    if (!shareString) {
+    if (!shareString || shareString === "") {
       return;
     }
 
