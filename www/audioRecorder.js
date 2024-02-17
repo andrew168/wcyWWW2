@@ -8,7 +8,7 @@ TQ.AudioRecorder = (function() {
   var STATE_INITIALIZED = 1;
   var STATE_STARTED = 2;
   var STATE_PENDING = 3;
-  var recorder;
+  var recorder = null;
   var state = STATE_UNKNOWN;
   var onStopCallback;
 
@@ -26,7 +26,7 @@ TQ.AudioRecorder = (function() {
   };
 
   function init(onSuccess, onError) {
-    var recorder = new Recorder({
+    recorder = new Recorder({
       sampleRate: 44100, // 采样频率，默认为44100Hz(标准MP3采样率)
       bitRate: 128, // 比特率，默认为128kbps(标准MP3质量)
       success: function() { // //成功回调函数
