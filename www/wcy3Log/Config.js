@@ -127,7 +127,7 @@ window.TQ = window.TQ || {};
   Config.hightlightOn = true;
   Config.useHighlightBox = false; // 不显示red的亮显box
   Config.koutuOn = true; // 默认是不抠图， 如果打开，则自动抠图， 并且自动剔除周边的空白
-  Config.insertAtT0On = true; // 插入元素在t=0（缺省）, 或在当前时间点，
+  Config.insertAtT0On = false; // 插入元素在t=0（缺省）, 或在当前时间点，
   Config.useMarkerOn = false; // use marker or BBox?
   Config.removeWhiteMarginOnly = true; // 在抠图的情况下， 只去除空白边，比全面抠图
   Config.textBubbleOn = false;
