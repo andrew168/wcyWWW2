@@ -1,7 +1,7 @@
 
 #timer-bar-div, #timeline-trim-div {
     position: fixed;
-    left: 5%;
+    left: 16px; /* 紧靠左边， 直流指针的宽度*/
     top: 70%;
     height: 0px;
     width: 60%;

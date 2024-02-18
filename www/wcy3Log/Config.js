@@ -135,6 +135,7 @@ window.TQ = window.TQ || {};
   Config.ignoreCachedFile = true; // 忽略保存在cache中的文件数据， 等用户ID系统正常使用之后， 再考虑如何启用它。
 
   //
+  Config.hasTimeline = true;
   Config.hasWx = true; // 如果在微信之外使用，则自动关闭此功能： 支持微信服务器绑定，绑定到 udoido
   Config.isCnRegion = (window.location.href.toLocaleLowerCase().indexOf("udoido.cn") > -1);
   Config.hasFacebook = false; // !(Config.isCnRegion); // 中国区没有fb,

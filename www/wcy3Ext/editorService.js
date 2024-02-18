@@ -187,8 +187,8 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     state.isVisible = true;
     state.isLocked = false;
     state.isFont = false;
-    state.showTimer = false;
-    state.showTrimTimeline = false; // false;
+    state.showTimer = TQ.Config.hasTimeline;
+    state.showTrimTimeline = false; // 不论是否显示timeline，trim都不显示（默认）
 
     // editor's mode
     if (currScene && !TQ.State.isPlayOnly) {
