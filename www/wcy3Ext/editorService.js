@@ -1246,8 +1246,10 @@ function EditorService($q, $rootScope, $timeout, NetService, WxService, WCY, App
     if (TQ.FrameCounter.isPlaying() && currScene) {
       currScene.stop();
     }
-    TQ.Scene.restoreState(options);
+
     $timeout(function() {
+      // 在Preview stop之后，一些event尚未处理完成，所以，通过timeout，resetState
+      TQ.Scene.restoreState(options);
       TQ.SceneEditor.setMode(TQBase.LevelState.EDITING);
       TQ.SelectSet.empty();
       if (state.isPreviewMode) {
